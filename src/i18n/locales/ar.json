@@ -1,0 +1,761 @@
+{
+  "common": {
+    "appName": "كاسكو",
+    "loading": "جاري التحميل...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق",
+    "back": "السابق",
+    "next": "التالي",
+    "search": "بحث",
+    "language": "اللغة"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "dashboard": "لوحة التحكم",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "logout": "تسجيل الخروج"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "loginTitle": "تسجيل الدخول",
+    "loginSubtitle": "أهلاً بك، سعداء برؤيتك!",
+    "logout": "تسجيل الخروج",
+    "register": "سجّل هنا",
+    "registerNow": "سجّل الآن",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "noAccount": "ليس لديك حساب؟",
+    "hasAccount": "لديك حساب بالفعل؟",
+    "signIn": "تسجيل الدخول",
+    "signUp": "تسجيل",
+    "rememberMe": "تذكرني",
+    "signingIn": "جاري تسجيل الدخول..."
+  },
+  "errors": {
+    "generic": "حدث خطأ ما. يرجى المحاولة مرة أخرى."
+  },
+  "documentUpload": {
+    "uploaded": "تم الرفع",
+    "uploadedCount": "تم الرفع ({{count}})",
+    "waiting": "بإنتظار الرفع",
+    "selectFile": "حدد الملف",
+    "showFiles": "عرض الملفات",
+    "hideFiles": "إخفاء الملفات"
+  },
+  "validation": {
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
+    "passwordTooShort": "يجب أن تكون كلمة المرور 8 أحرف على الأقل",
+    "invalidMobile": "يرجى إدخال رقم جوال صالح (8–15 رقمًا)",
+    "fileTooLarge": "يجب ألا يتجاوز حجم الملف {{size}} ميجابايت"
+  },
+  "register": {
+    "title": "إنشاء حساب جديد",
+    "chooseEntityType": "يرجى اختيار نوع الجهة",
+    "progressLabel": "تقدم التسجيل",
+    "steps": {
+      "entityVerification": "بيانات الجهة والتحقق",
+      "legalOperational": "البيانات القانونية والتشغيلية",
+      "accountSetup": "إعداد الحساب"
+    },
+    "governmental": "جهة حكومية",
+    "privateSector": "قطاع خاص",
+    "thirdParty": "طرف ثالث",
+    "governmentAgency": "الجهة الحكومية",
+    "governmentAgencyPlaceholder": "اختر اسم الجهة الحكومية",
+    "organizationName": "اسم المنشأة",
+    "organizationNamePlaceholder": "اختر اسم المنشأة",
+    "sampleAgency1": "وزارة الصحة",
+    "sampleAgency2": "هيئة سلامة الغذاء",
+    "verify": "تحقق",
+    "emailVerification": "التحقق من البريد الإلكتروني",
+    "codeSentPrompt": "يرجى إدخال الرمز الذي تم إرساله",
+    "management": "الإدارة",
+    "managementPlaceholder": "أدخل اسم الإدارة",
+    "facilityOwner": "مالك/مدير المنشأة",
+    "facilityOwnerPlaceholder": "اكتب الاسم الكامل لمالك/مدير المنشأة",
+    "legalCapacity": "الصفة القانونية",
+    "legalCapacityPlaceholder": "أدخل الصفة القانونية",
+    "authorizationLetter": "خطاب تفويض للمفوض",
+    "fileUploadHint": "الحد الأقصى لحجم الملف <size>10</size> ميجابايت، أنواع الملفات: pdf فقط",
+    "selectFile": "اختر ملف",
+    "reselectFile": "يرجى إعادة الاختيار بعد العودة",
+    "activity": "النشاط",
+    "activityPlaceholder": "اختر النشاط",
+    "activityFood": "الأغذية والمشروبات",
+    "activityRetail": "التجزئة",
+    "country": "الدولة",
+    "countryPlaceholder": "اختر الدولة",
+    "selectCountryFirst": "اختر الدولة أولاً",
+    "loadingGovernorates": "جاري تحميل الولايات...",
+    "noGovernoratesAvailable": "لا توجد ولايات متاحة لهذه الدولة",
+    "governorate": "الولاية",
+    "governoratePlaceholder": "اختر الولاية",
+    "mobileNumber": "رقم الجوال",
+    "countryCode": "رمز الدولة",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "confirmPasswordPlaceholder": "أعد إدخال كلمة المرور",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين",
+    "agreePrivacyLead": "الموافقة على",
+    "privacyPolicy": "سياسة الخصوصية",
+    "createAccount": "إنشاء الحساب",
+    "creatingAccount": "جاري إنشاء الحساب...",
+    "sendingCode": "جاري الإرسال...",
+    "verifyEmail": "تحقق من البريد",
+    "verifyingEmail": "جاري التحقق..."
+  },
+  "accreditation": {
+    "title": "طلب منح",
+    "orderNumber": "رقم الطلب",
+    "assignedOfficer": "مسؤول الاعتماد المعين",
+    "timeAndDate": "الوقت والتاريخ",
+    "evening": "مساءً",
+    "january": "يناير",
+    "notifications": "الإشعارات",
+    "auditManager": "مدير التدقيق",
+    "sidebar": {
+      "expand": "توسيع الشريط الجانبي",
+      "collapse": "طي الشريط الجانبي",
+      "requests": "الطلبات",
+      "clients": "العملاء",
+      "payments": "المدفوعات",
+      "documents": "المستندات",
+      "accreditation": "الاعتماد",
+      "renewals": "التجديدات",
+      "invoices": "الفواتير"
+    },
+    "steps": {
+      "grantApplication": "طلب المنح",
+      "accreditationField": "اعتماد المجال",
+      "checklists": "قوائم التحقق",
+      "fileReview": "مراجعة الملف",
+      "documentReview": "الدراسة المكتبية",
+      "assessmentVisit": "الزيارة الميدانية",
+      "correctiveAction": "حالات عدم المطابقة",
+      "finalReport": "التقرير النهائي"
+    },
+    "entityData": {
+      "title": "بيانات الجهة",
+      "subtitle": "أدخل بيانات الجهة من فضلك",
+      "sections": {
+        "legalIdentity": "الهوية القانونية للمنشأة",
+        "scopeOfActivity": "نطاق النشاط والفروع",
+        "consultingReadiness": "الاستشارات وجاهزية نظام الإدارة",
+        "specificationQuestions": "أسئلة المواصفات",
+        "legalDeclarations": "الإقرارات القانونية"
+      },
+      "nav": {
+        "field": "المجال",
+        "documents": "المستندات",
+        "feedback": "الملاحظات"
+      },
+      "field": {
+        "pageTitle": "المجال",
+        "pageSubtitle": "اختر القطاع الإقتصادي من فضلك",
+        "searchPlaceholder": "البحث حسب النشاط (مثل: مستشفى، نسيج، هندسة)...",
+        "search": "بحث",
+        "selectionSummary": "ملخص الاختيار",
+        "selectedCount": "({{count}}) محدد",
+        "continueToCodes": "المتابعة لاختيار الرموز",
+        "codesTitle": "اختر رموز IAF",
+        "criticalCodeNote": "يمثل اللون الأحمر الرمز الحرج",
+        "standards": {
+          "iso9001": "ISO 9001",
+          "iso14001": "ISO 14001",
+          "iso45001": "ISO 45001"
+        },
+        "standardsFull": {
+          "iso9001": "نظم إدارة الجودة (ISO 9001)",
+          "iso14001": "نظم الإدارة البيئية (ISO 14001)",
+          "iso45001": "نظم إدارة الصحة والسلامة المهنية (ISO 45001)"
+        },
+        "sectors": {
+          "agriculture": {
+            "title": "الزراعة والغابات وصيد الأسماك",
+            "description": "يشمل أنشطة الإنتاج الزراعي والغابات وصيد الأسماك."
+          },
+          "miningAndQuarrying": {
+            "title": "التعدين واستغلال المحاجر",
+            "description": "يشمل أنشطة التعدين واستغلال المحاجر."
+          },
+          "food": {
+            "title": "الغذاء",
+            "description": "تشمل الأنشطة المرتبطة بالإنتاج الزراعي وتصنيع الأغذية وخدمات الضيافة."
+          },
+          "mechanicalIndustries": {
+            "title": "الصناعات الميكانيكية",
+            "description": "تشمل الصناعات الثقيلة وتصنيع المعدات والمنتجات المعدنية ووسائل النقل."
+          },
+          "paperAndPrinting": {
+            "title": "الورق والطباعة",
+            "description": "تشمل إنتاج الورق وأنشطة النشر والطباعة التجارية."
+          },
+          "metalsAndBuildingMaterials": {
+            "title": "المعادن ومواد البناء",
+            "description": "تشمل استخراج المعادن وتصنيع مواد البناء الأساسية."
+          },
+          "constructionAndBuilding": {
+            "title": "التشييد والبناء",
+            "description": "تشمل تنفيذ مشاريع البناء والخدمات الهندسية المرتبطة بها."
+          },
+          "industrialProduction": {
+            "title": "الإنتاج الصناعي",
+            "description": "تشمل الصناعات التحويلية وإنتاج السلع الاستهلاكية والصناعية."
+          },
+          "chemicalIndustries": {
+            "title": "الصناعات الكيميائية",
+            "description": "تشمل الصناعات المعتمدة على المعالجة الكيميائية وإنتاج المواد الصناعية."
+          },
+          "energySupplies": {
+            "title": "إمدادات الطاقة والمرافق",
+            "description": "تشمل خدمات إنتاج وتوزيع الطاقة والمياه."
+          },
+          "transportationAndWaste": {
+            "title": "النقل وإدارة النفايات",
+            "description": "تشمل خدمات النقل والخدمات اللوجستية وإدارة النفايات."
+          },
+          "services": {
+            "title": "الخدمات",
+            "description": "تشمل الأنشطة الخدمية والتجارية والتقنية والتعليمية."
+          },
+          "nuclearSector": {
+            "title": "القطاع النووي",
+            "description": "تشمل الأنشطة المرتبطة بإنتاج ومعالجة الوقود النووي."
+          },
+          "pharmaceuticalSector": {
+            "title": "القطاع الدوائي",
+            "description": "تشمل تصنيع المستحضرات الدوائية والمنتجات الطبية."
+          },
+          "aviationAndSpace": {
+            "title": "الطيران والفضاء",
+            "description": "تشمل تصميم وتصنيع وصيانة الطائرات والمركبات الفضائية والأنظمة المرتبطة بها."
+          },
+          "healthSector": {
+            "title": "قطاع الصحة",
+            "description": "تشمل خدمات الرعاية الصحية والدعم الاجتماعي المقدمة للأفراد والمجتمع."
+          }
+        },
+        "iafCodes": {
+          "agriculture": "الزراعة والغابات وصيد الأسماك",
+          "mining": "التعدين واستغلال المحاجر",
+          "foodBeverage": "المنتجات الغذائية والمشروبات والتبغ",
+          "textiles": "المنسوجات ومنتجات النسيج",
+          "leather": "الجلود والمنتجات الجلدية",
+          "wood": "الخشب والمنتجات الخشبية",
+          "paperProducts": "يقتصر على «المنتجات الورقية»",
+          "pulpPaper": "يقتصر على «صناعة اللب والورق»",
+          "publishing": "شركات النشر",
+          "printing": "شركات الطباعة",
+          "petroleum": "صناعة فحم الكوك والمنتجات البترولية المكررة",
+          "nuclearFuel": "الوقود النووي",
+          "chemicals": "الكيماويات والمنتجات الكيميائية والألياف",
+          "pharmaceuticals": "المستحضرات الصيدلانية",
+          "rubberPlastic": "منتجات المطاط والبلاستيك",
+          "nonMetallic": "المنتجات المعدنية اللافلزية",
+          "concrete": "الخرسانة والأسمنت والجير والجبس وغيرها",
+          "basicMetals": "المعادن الأساسية والمنتجات المعدنية المصنعة",
+          "fabricatedMetal": "يقتصر على «المنتجات المعدنية المصنعة»",
+          "baseMetals": "يقتصر على «إنتاج المعادن الأساسية»",
+          "machinery": "الآلات والمعدات",
+          "electrical": "المعدات الكهربائية والبصرية",
+          "shipbuilding": "بناء السفن",
+          "aerospace": "الطيران والفضاء",
+          "otherTransport": "معدات النقل الأخرى",
+          "otherManufacturing": "الصناعات التحويلية غير المصنفة في موضع آخر",
+          "recycling": "إعادة التدوير",
+          "electricity": "إمدادات الكهرباء",
+          "gas": "إمدادات الغاز",
+          "water": "إمدادات المياه",
+          "construction": "التشييد والبناء",
+          "wholesale": "تجارة الجملة والتجزئة؛ إصلاح المركبات والدراجات النارية والسلع الشخصية والمنزلية",
+          "hotels": "الفنادق والمطاعم",
+          "transport": "النقل والتخزين والاتصالات",
+          "financial": "الوساطة المالية؛ العقارات؛ التأجير",
+          "it": "تقنية المعلومات",
+          "engineering": "الخدمات الهندسية",
+          "otherServices": "الخدمات الأخرى",
+          "publicAdmin": "الإدارة العامة",
+          "education": "التعليم",
+          "health": "الصحة والعمل الاجتماعي",
+          "otherSocial": "الخدمات الاجتماعية الأخرى"
+        }
+      },
+      "documents": {
+        "pageTitle": "المستندات",
+        "pageSubtitle": "يرجى إرفاق المستندات المطلوبة",
+        "requiredTitle": "الوثائق والسجلات المطلوبة",
+        "requiredSubtitle": "يرجى إرفاق كافة الوثائق الإلزامية الموضحة أدناه لاستكمال إجراءات منح الشهادة.",
+        "otherTitle": "مستندات أخرى",
+        "otherSubtitle": "يمكنك رفع مستندات إضافية",
+        "attachAdditional": "إرفاق مستند إضافي",
+        "waitingForUpload": "بإنتظار الرفع",
+        "uploaded": "تم الرفع",
+        "selectFile": "حدد ملف",
+        "delete": "حذف",
+        "replace": "استبدال",
+        "guideline1": "يجب أن تكون جميع المستندات سارية وواضحة جداً.",
+        "guideline2": "يُسمح بتحميل أكثر من ملف لكل عنصر (بصيغ PDF و JPG و PNG) بحد أقصى 10 ميجابايت لكل ملف.",
+        "guideline3": "يتم تفعيل عنصر خطط HACCP تلقائياً عند اختيار معايير سلامة الغذاء.",
+        "items": {
+          "documentarySystem": "النظام الوثائقي للمنشأة (قائمة المستندات والسجلات)",
+          "organizationalStructure": "الهيكل التنظيمي للمنشأة",
+          "commercialRegistry": "نسخة من السجل التجاري / ترخيص المنشأة",
+          "vatCertificate": "شهادة تسجيل ضريبة القيمة المضافة",
+          "brandImage": "صورة العلامة التجارية",
+          "brandImageNote": "إذا اختلفت العلامة عن الاسم المذكور في السجل التجاري، يرجى إرسال شهادة الملكية الفكرية.",
+          "nationalAddress": "العنوان الوطني",
+          "qualityPolicy": "سياسة الجودة والأهداف."
+        }
+      },
+      "feedback": {
+        "pageTitle": "الملاحظات",
+        "pageSubtitle": "يمكنك استقبال والرد علي الملاحظات من هنا",
+        "reviewerName": "ديما السواط",
+        "reviewerRole": "مراجع اعتماد",
+        "reviewerTimestamp": "11 فبراير 2025 - 10:30 ص",
+        "reviewerMessage": "تحية طيبة، يرجى التكرم بتعديل اسم ممثل الجهة في ملف المنشأة ليتطابق مع البيانات المحدثة في السجل التجاري الأخير، حيث أن الاسم الحالي قديم.",
+        "goToCommentReview": "انتقل الي مراجعة التعليق",
+        "applicantName": "محمد المناوهلي",
+        "applicantRole": "مقدم الطلب",
+        "applicantTimestamp": "11 فبراير 2025 - 02:30 م",
+        "applicantMessage": "تم تحديث الاسم بنجاح كما هو مطلوب في السجل التجاري. يرجى مراجعة البيانات المحدثة وإفادتنا بالخطوات التالية.",
+        "replyPlaceholder": "اكتب ردك أو استفسارك هنا...",
+        "sendReply": "إرسال الرد",
+        "attach": "إرفاق ملف",
+        "insertLink": "إدراج رابط",
+        "bold": "غامق"
+      },
+      "fields": {
+        "common": {
+          "writeHere": "اكتب هنا"
+        },
+        "scope": {
+          "operationalData": "البيانات التشغيلية للمنشأة",
+          "scopeOfWork": "نطاق عمل المنظمة وفقًا للسجل التجاري / الترخيص",
+          "scopeOfWorkPlaceholder": "أدخل مجال العمل",
+          "economicField": "المجال الاقتصادي لنشاط المؤسسة",
+          "productsServicesNature": "طبيعة المنتجات / الخدمات التي تقدمها المنشأة:",
+          "annualProductionCapacity": "القدرة الإنتاجية السنوية للمنظمة:",
+          "technicalSpecifications": "المواصفات الفنية المستخدمة في الإنتاج:",
+          "branchCount": "عدد المواقع / الفروع (إن وجد):",
+          "addBranch": "إضافة فرع",
+          "removeBranch": "حذف الفرع",
+          "branchNumber": "الفرع {{number}}",
+          "branchEmployees": "عدد الموظفين في الفرع",
+          "auditScopeEmployees": "عدد الموظفين ضمن نطاق التدقيق",
+          "shiftCount": "عدد الورديات / النوبات",
+          "openingHours": "ساعات العمل",
+          "weeklyVacation": "الإجازة الأسبوعية",
+          "oneDay": "يوم واحد",
+          "twoDays": "يومان",
+          "productionLines": "عدد خطوط العمل / الإنتاج",
+          "productionLinesPlaceholder": "مثال: 4",
+          "firstPhaseDate": "ما هو التاريخ المتوقع لتنفيذ المرحلة الأولى؟",
+          "branchName": "اسم الفرع",
+          "branchNamePlaceholder": "اكتب اسم الفرع بالكامل",
+          "branchAddress": "عنوان الفرع",
+          "integratedSystem": "هل نظام الإدارة المطبق مشترك؟ (متكامل)",
+          "centralAdministration": "هل الفرع تابع للإدارة المركزية؟",
+          "activitiesToAudit": "الأنشطة المراد تدقيقها",
+          "chooseActivities": "اختر الأنشطة",
+          "productsServices": "المنتجات / الخدمات",
+          "technicalCommunication": "وسائل الاتصال التقنية"
+        },
+        "consulting": {
+          "title": "بيانات الاستشارات والتأهيل",
+          "qualifiedByConsultant": "هل تم تأهيل المنظمة من قبل إحدى جهات الاستشارة؟",
+          "consultantName": "إذا كانت الإجابة نعم، يرجى ذكر اسم الجهة.",
+          "consultantNamePlaceholder": "أدخل اسم جهة الاستشارة",
+          "cvAttached": "هل تم إرفاق السيرة الذاتية وملف الشركة المؤهلة بطلب منح أنظمة الإدارة؟",
+          "consultationPeriod": "ما مدة فترة الاستشارة بالأشهر؟",
+          "month": "شهر",
+          "consultantRating": "على مقياس من واحد إلى عشرة، ما تقييمك للمستشار؟",
+          "recommendationRating": "على مقياس من واحد إلى عشرة، هل توصي بهذا المستشار للآخرين في شبكتك؟",
+          "ratingNote": "ملاحظة: 1 يمثل أقل تقييم، و10 يمثل أعلى تقييم."
+        },
+        "readiness": {
+          "title": "جاهزية نظام الإدارة ومواقع العمل",
+          "systemLanguage": "اللغة التي تم إعداد نظام الإدارة بها",
+          "arabic": "العربية",
+          "english": "الإنجليزية",
+          "easySiteAccess": "سهولة الوصول إلى مواقع العمل",
+          "safetyProcedures": "توفر إجراءات السلامة في موقع التدقيق لأعضاء فريق التدقيق.",
+          "subcontracting": "هل تنفذ المنظمة أي أنشطة من خلال التعاقد من الباطن؟",
+          "previousGrants": "هل حصلت المنظمة من قبل على منح من جهة أخرى؟",
+          "otherManagementSystems": "أنظمة إدارة أخرى مطبقة (إن وجد):",
+          "otherSpecification": "إذا كانت هناك مواصفة أخرى، يرجى ذكرها",
+          "other": "أخرى",
+          "designActivities": "أنشطة التصميم",
+          "designActivity": "هل التصميم أحد أنشطة المنظمة؟",
+          "designExceptionReason": "في حال الإجابة بـ \"لا\"، يرجى توضيح سبب الاستثناء"
+        },
+        "spec": {
+          "iso50001": {
+            "energyConsumers": "ما هي العمليات / الخدمات / المنتجات / المعدات التي تستهلك أكبر نسبة من الطاقة في المنشأة؟",
+            "enpi": "ما مؤشرات أداء الطاقة (EnPIs) المستخدمة لقياس وتحسين كفاءة الطاقة؟",
+            "energyBaseline": "هل تم إنشاء خط أساس للطاقة؟",
+            "baselineUpdated": "إذا كانت الإجابة نعم، متى تم آخر تحديث له؟",
+            "monitoringTools": "ما الأدوات أو الأنظمة المستخدمة لمراقبة وتحليل استهلاك الطاقة؟"
+          },
+          "iso45001": {
+            "ohsSystemInPlace": "هل يوجد حالياً نظام إدارة للصحة والسلامة المهنية؟",
+            "ohsStartDate": "ما تاريخ بدء تنفيذ نظام الصحة والسلامة المهنية الحالي؟",
+            "risksIdentified": "هل تم تحديد جميع المخاطر المتعلقة بالأنشطة التشغيلية؟",
+            "criticalRisks": "يرجى تحديد مخاطر الصحة والسلامة المهنية الحرجة التي تم تحديدها",
+            "internalAudits": "هل تم إجراء أي تدقيقات داخلية للنظام؟",
+            "complianceLaws": "ما القوانين واللوائح المحلية والإقليمية التي تلتزم بها المنظمة فيما يخص الصحة والسلامة المهنية؟",
+            "legalViolations": "هل حدثت أي مخالفات قانونية أو غرامات متعلقة بالسلامة والصحة المهنية؟",
+            "ohsCertification": "هل حصلت المنظمة على شهادة ISO 45001 أو أي شهادات أخرى متعلقة بالصحة والسلامة المهنية؟",
+            "certifyingBody": "إذا كانت الإجابة نعم، ما اسم جهة منح الشهادة؟"
+          }
+        },
+        "legal": {
+          "sectionOneTitle": "القسم الأول: طلب الحصول على شهادة نظام الإدارة",
+          "sectionTwoTitle": "القسم الثاني: شروط السرية",
+          "certificateDataTitle": "البيانات كما ستظهر في الشهادة",
+          "greeting": "السادة الجهة المانحة للخدمات التجارية",
+          "applicationBody": "نحن مؤسسة اسم الجهة نرغب في الحصول على شهادة / شهادات المطابقة لنظام / أنظمة اسم المواصفة من خلال شركتكم، ونقر بأن البيانات الواردة في هذا الطلب والمرفقة صحيحة وتمثل نطاق المنح.",
+          "closing": "وتقبلوا خالص تحياتي...",
+          "authorizedSignatory": "الموقع المعتمد",
+          "signatoryPlaceholder": "اكتب الاسم كاملاً",
+          "date": "التاريخ",
+          "confidentialityIntro": "يلتزم موظفو ومدققو جهة المنح بالحفاظ على سرية المعلومات وعدم استخدامها أو الإفصاح عنها لأي طرف ثالث، والتي تم الحصول عليها من العميل أثناء أداء خدمات منح الشهادة. باستثناء الحالات التالية:",
+          "confidentialityItem1": "أي معلومات كانت لدى جهة المنح قبل قيام العميل بتقديمها.",
+          "confidentialityItem2": "أي معلومات متاحة للعامة أو ستدخل النطاق العام بشكل قانوني، أو حصلت عليها جهة المنح من مصدر مستقل غير العميل.",
+          "confidentialityItem3": "أي معلومات قد يطلب الإفصاح عنها لأي جهة قضائية أو مالية أو تنظيمية مختصة.",
+          "certificateNameAr": "الاسم كما سيظهر على شهادة الاعتماد بالعربية",
+          "certificateNameArPlaceholder": "مثال: شركة معيار العربية للخدمات التجارية",
+          "certificateNameEn": "الاسم كما سيظهر على شهادة الاعتماد بالإنجليزية",
+          "certificateAddressAr": "العنوان كما سيظهر على شهادة الاعتماد بالعربية",
+          "certificateAddressEn": "العنوان كما سيظهر على شهادة الاعتماد بالإنجليزية",
+          "certificateFieldAr": "المجال كما سيظهر على شهادة الاعتماد بالعربية",
+          "certificateFieldArPlaceholder": "مثال: الصناعات الكيميائية",
+          "certificateFieldEn": "المجال كما سيظهر على شهادة الاعتماد بالإنجليزية",
+          "submissionWarning": "لا يمكن تعديل الطلب بعد الإرسال. يرجى التأكد من مراجعة جميع البيانات والمرفقات قبل الإرسال النهائي.",
+          "acknowledgement": "أقر بأنني قد قرأت وفهمت ووافقت على جميع ما ورد أعلاه وأؤكد مراجعة جميع البيانات وأرغب في إرسال الطلب"
+        }
+      }
+    },
+    "form": {
+      "mainData": "البيانات الرئيسية",
+      "regulatoryData": "البيانات التنظيمية",
+      "requiredStandard": "المواصفة القياسية المطلوبة",
+      "otherStandard": "في حالة وجود مواصفات أخرى غير مدرجة، يرجى تحديدها.",
+      "otherStandardPlaceholder": "أدخل اسم المواصفة",
+      "organizationName": "اسم المنظمة",
+      "website": "الموقع الإلكتروني",
+      "headOfficeAddress": "عنوان المقر الرئيسي",
+      "auditPlaceAddress": "عنوان مكان التدقيق",
+      "commercialRegistrationNo": "رقم السجل التجاري",
+      "commercialRegistryFile": "ملف السجل التجاري",
+      "uploadCommercialRegister": "رفع ملف السجل التجاري",
+      "download": "تحميل",
+      "view": "عرض",
+      "edit": "تعديل",
+      "productionLinesActive": "هل جميع خطوط الإنتاج أو العمليات ضمن نطاق المنتج نشطة؟",
+      "ifNoStateWhy": "إذا لا، يرجى ذكر السبب",
+      "stateReasonPlaceholder": "اذكر السبب إن وجد",
+      "yes": "نعم",
+      "no": "لا",
+      "email": "البريد الإلكتروني",
+      "country": "الدولة",
+      "egypt": "جمهورية مصر العربية",
+      "representativeName": "اسم ممثل المنظمة",
+      "representativeNamePlaceholder": "اكتب الاسم الكامل لممثل المنشأة",
+      "representativeTitle": "منصب ممثل المنظمة",
+      "representativeTitlePlaceholder": "مثال: مدير العمليات",
+      "mobileNumber": "رقم الجوال",
+      "organizationType": "نوع المنظمة",
+      "governmentSector": "القطاع الحكومي",
+      "privateSector": "القطاع الخاص",
+      "thirdParty": "طرف ثالث",
+      "mainActivity": "النشاط الرئيسي",
+      "mainActivityPlaceholder": "أدخل النشاط الرئيسي للمنشأة",
+      "requestType": "نوع الطلب",
+      "newGranted": "جديد (ممنوح)"
+    },
+    "status": {
+      "approved": {
+        "title": "تمت الموافقة علي الطلب",
+        "subtitle": "شكراً لكم، برجاء انتظار التحديثات."
+      },
+      "underReview": {
+        "title": "الطلب قيد المراجعة الفنية حالياً",
+        "subtitle": "فريق المراجعة يدرس طلبكم. سيتم تحديث الحالة وسيتم إعلامكم فور صدور القرار النهائي. شكراً لكم."
+      },
+      "rejected": {
+        "title": "تم رفض طلبكم",
+        "subtitle": "نعتذر لم يتجاوز ملفكم مرحلة المراجعة الفنية.",
+        "contactUs": "تواصل معنا",
+        "fileTitle": "ملف توضيح أسباب الرفض",
+        "reviewDate": "تاريخ المراجعة:",
+        "reasons": {
+          "commercialExpired": {
+            "title": "ملف السجل التجاري منتهي",
+            "description": "تبين أثناء التدقيق السجل التجاري قد انتهت صلاحيته بتاريخ 27 / 12 / 2025 يرجى رفع ملف أحدث.",
+            "tag": "متطلب إلزامي"
+          },
+          "nonCompliance": {
+            "title": "عدم مطابقة الشروط  ( ISO 50001 )",
+            "description": "لم يتم توضيح نطاق الأعمال بشكل مفصل وهو من متطلبات الإعتماد.",
+            "tag": "نقص في التوثيق"
+          }
+        },
+        "correctionTitle": "هل انتم مستعدون للتصحيح؟",
+        "correctionSubtitle": "يمكنكم تعديل المطلوب ورفع المستندات الجديدة والتقديم مباشرة مرة أخرى.\nدون الحاجة لفتح طلب جديد.",
+        "editAndResubmit": "تعديل البيانات وإعادة التقديم",
+        "downloadReport": "تجميل التقرير الكامل لملف الرفض",
+        "downloadReportSuffix": "( pdf )",
+        "helpText": "هل تحتاج لمساعدة في فهم الشروط الفنية؟",
+        "talkToSupport": "تحدث مع الدعم الفني"
+      }
+    }
+  },
+  "forgotPassword": {
+    "title": "نسيت كلمة المرور؟",
+    "subtitle": "أدخل بريدك الإلكتروني وسنرسل لك رمز التحقق",
+    "otpTitle": "أدخل كود OTP",
+    "otpSubtitle": "أدخل الكود المكون من 6 أرقام المرسل إلى بريدك الإلكتروني",
+    "verifySubtitle": "يرجى إدخال رمز التحقق المرسل إلى بريدك الإلكتروني",
+    "resetTitle": "إعادة تعيين كلمة المرور",
+    "resetSubtitle": "أنشئ كلمة مرور جديدة لحسابك",
+    "sendCode": "إرسال الرمز",
+    "sendingCode": "جاري الإرسال...",
+    "confirm": "تأكيد",
+    "verifyingCode": "جاري التحقق...",
+    "resendIn": "إعادة إرسال خلال <time>{{time}}</time> ثانية",
+    "resend": "إعادة الإرسال",
+    "resetButton": "إعادة تعيين كلمة المرور",
+    "resetting": "جاري إعادة التعيين...",
+    "successTitle": "تمت إعادة تعيين كلمة المرور",
+    "successDescription": "تمت إعادة تعيين كلمة المرور بنجاح. يمكنك الآن تسجيل الدخول بكلمة المرور الجديدة.",
+    "backToLogin": "العودة لتسجيل الدخول",
+    "failureTitle": "فشل إعادة تعيين كلمة المرور",
+    "failureDescription": "تعذر إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى أو التواصل مع الدعم إذا استمرت المشكلة.",
+    "tryAgain": "حاول مرة أخرى"
+  },
+  "companyProfile": {
+    "title": "ملف الشركة",
+    "subtitle": "أكمل البيانات الأساسية لإنشاء ملف الشركة",
+    "breadcrumb": {
+      "settings": "الإعدادات",
+      "current": "ملف الشركة"
+    },
+    "steps": {
+      "basicData": "البيانات الأساسية",
+      "address": "العنوان",
+      "branches": "الفروع",
+      "officialDocs": "المستندات الرسمية"
+    },
+    "profileHeader": {
+      "companySummaryLabel": "ملخص الشركة",
+      "companySummaryPlaceholder": "أدخل البيانات الأساسية عن شركتك لبدء إنشاء ملف الشركة",
+      "industrySectorLabel": "المجال الصناعي",
+      "companyLogoLabel": "شعار الشركة",
+      "uploadTitle": "رفع الشعار",
+      "uploadSubtitle": "تنسيقات PNG وJPG وWEBP وSVG، بحجم يصل إلى 5 ميجابايت",
+      "selectFile": "حدد الملف",
+      "changeFile": "تغيير الشعار",
+      "deleteLogo": "حذف الشعار"
+    },
+    "mapCard": {
+      "title": "موقع الشركة",
+      "setLocation": "تحديد الموقع على الخريطة",
+      "changeLocation": "مسح الموقع"
+    },
+    "basicDataCard": {
+      "title": "البيانات الأساسية",
+      "companyNameLabel": "اسم الشركة",
+      "companyNamePlaceholder": "أدخل اسم الشركة",
+      "tradingNameLabel": "الاسم التجاري",
+      "tradingNamePlaceholder": "أدخل الاسم التجاري",
+      "commercialRegistryLabel": "رقم السجل التجاري",
+      "commercialRegistryPlaceholder": "أدخل رقم السجل التجاري",
+      "serialNumberLabel": "الرقم التسلسلي من الجهة المانحة",
+      "serialNumberPlaceholder": "أدخل الرقم",
+      "emailLabel": "البريد الإلكتروني",
+      "emailPlaceholder": "name@company.com",
+      "authorizedPersonLabel": "اسم الشخص المخول",
+      "authorizedPersonPlaceholder": "أدخل الاسم",
+      "companyStatusLabel": "حالة الشركة",
+      "companyStatusPlaceholder": "اختر حالة الشركة",
+      "phoneLabel": "رقم الهاتف",
+      "phonePlaceholder": "ex: 567XXXXXXXX",
+      "totalEmployeesLabel": "إجمالي عدد الموظفين في الشركة",
+      "totalEmployeesPlaceholder": "أدخل العدد",
+      "registrationDateLabel": "تاريخ التسجيل",
+      "registrationDatePlaceholder": "اختر تاريخ",
+      "statusOptions": {
+        "active": "نشطة",
+        "suspended": "متوقفة",
+        "underEstablishment": "قيد التأسيس",
+        "liquidated": "مصفّاة"
+      }
+    },
+    "stepSubtitles": {
+      "basicData": "أكمل البيانات الأساسية لإنشاء ملف الشركة",
+      "address": "أكمل بيانات العنوان",
+      "branches": "أضف وأدر فروع شركتك",
+      "officialDocs": "رفع المستندات الرسمية وربطها بملف العميل"
+    },
+    "completedSteps": {
+      "basicData": "البيانات الأساسية",
+      "address": "العنوان",
+      "branches": "الفروع",
+      "incompleteAddress": "ملف الشركة شبه مكتمل. يرجى إدخال العنوان",
+      "incompleteBranches": "ملف الشركة شبه مكتمل. يرجى إدخال الفروع",
+      "incompleteDocs": "ملف الشركة شبه مكتمل. يرجى رفع المستندات المتبقية",
+      "incomplete": "ملف الشركة شبه مكتمل يرجى إدخال الفروع"
+    },
+    "addressCard": {
+      "title": "العنوان الرئيسي",
+      "countryLabel": "البلد",
+      "countryPlaceholder": "اختر البلد",
+      "cityLabel": "المدينة",
+      "cityPlaceholder": "اكتب اسم المدينة",
+      "neighborhoodLabel": "الحي",
+      "neighborhoodPlaceholder": "حي الملك فهد",
+      "streetLabel": "عنوان الشارع",
+      "streetPlaceholder": "اكتب عنوان الشارع",
+      "buildingLabel": "رقم المبنى",
+      "buildingPlaceholder": "أدخل رقم المبنى",
+      "subNumberLabel": "الرقم الفرعي",
+      "subNumberPlaceholder": "أدخل الرقم الفرعي",
+      "postalCodeLabel": "الرمز البريدي",
+      "postalCodePlaceholder": "أدخل الرمز البريدي",
+      "unitLabel": "الموقع الإضافي / الوحدة",
+      "unitPlaceholder": "مثال: شقة B, الطابق الأول",
+      "googleMapLabel": "رابط Google Map",
+      "googleMapPlaceholder": "https://maps.google.com/...",
+      "nearbyLandmarkLabel": "معلم قريب",
+      "nearbyLandmarkPlaceholder": "مثال: بجوار محطة وقود أو مدرسة النور",
+      "hasNationalAddress": "هل لديك عنوان وطني",
+      "yes": "نعم",
+      "no": "لا",
+      "nationalAddressTitle": "العنوان الوطني",
+      "nationalAddressCode": "رقم العنوان الوطني",
+      "nationalAddressCodePlaceholder": "1040987600",
+      "saveButton": "حفظ العنوان"
+    },
+    "nationalAddress": {
+      "hasAddressTitle": "هل لديك عنوان وطني",
+      "yes": "نعم",
+      "no": "لا",
+      "formTitle": "العنوان الوطني",
+      "expiryDate": "تاريخ الانتهاء",
+      "issueDate": "تاريخ الإصدار",
+      "addressId": "رقم إثبات العنوان",
+      "street": "الشارع",
+      "buildingNo": "رقم المبنى",
+      "shortAddress": "العنوان المختصر",
+      "postalCode": "الرمز البريدي",
+      "subNumber": "الرقم الفرعي",
+      "neighborhood": "الحي",
+      "city": "المدينة",
+      "country": "الدولة / المملكة",
+      "previewLabel": "معاينة إثبات العنوان",
+      "viewLarger": "عرض بشكل أكبر",
+      "notesTitle": "ملاحظات الربط",
+      "note1": "تم جلب بيانات العنوان من منصة العنوان الوطني وهي معتمدة وموثقة.",
+      "note2": "في حال عدم تطابق أي بيانات، يمكنك تعديلها مع إرفاق المبرر في الخطوة التالية."
+    },
+    "officialDocs": {
+      "title": "المستندات الرسمية",
+      "otherDocsTitle": "مستندات أخرى",
+      "otherDocsSubtitle": "يمكنك رفع مستندات إضافية",
+      "addDocLabel": "أرفق مستند إضافي",
+      "selectFile": "حدد ملف",
+      "pendingUpload": "بإنتظار الرفع",
+      "uploadedLabel": "تم الرفع",
+      "uploadedCount": "تم الرفع ({{count}})",
+      "showFiles": "عرض الملفات",
+      "hideFiles": "إخفاء الملفات",
+      "docs": {
+        "nationalAddress": "شهادة العنوان الوطني",
+        "activityLicense": "رخصة مزاولة النشاط",
+        "taxCard": "البطاقة الضريبية",
+        "commercialRegistry": "السجل التجاري"
+      }
+    },
+    "branchesCard": {
+      "title": "الفروع التابعة للشركة",
+      "registryLabel": "رقم سجل الفرع",
+      "employeesLabel": "عدد الموظفين",
+      "employeeUnit": "موظف",
+      "view": "عرض",
+      "edit": "تعديل"
+    },
+    "addBranch": {
+      "title": "إضافة فرع",
+      "branchNameLabel": "اسم الفرع",
+      "branchNamePlaceholder": "أدخل اسم الفرع",
+      "registryLabel": "رقم سجل الفرع",
+      "registryPlaceholder": "أدخل رقم سجل الفرع",
+      "addressLabel": "عنوان الفرع",
+      "addressPlaceholder": "أدخل عنوان الفرع",
+      "googleMapLabel": "رابطـ Google Map",
+      "googleMapPlaceholder": "https://maps.google.com/...",
+      "phoneLabel": "رقم الهاتف",
+      "managerLabel": "مدير الفرع",
+      "managerPlaceholder": "أدخل اسم مدير الفرع",
+      "sectorLabel": "المجال",
+      "sectorPlaceholder": "اختر المجال",
+      "employeesLabel": "عدد الموظفين",
+      "employeesPlaceholder": "أدخل عدد الموظفين",
+      "branchTypeLabel": "نوع الفرع",
+      "permanent": "دائم",
+      "temporary": "مؤقت",
+      "saveButton": "حفظ الفرع",
+      "editTitle": "تعديل الفرع",
+      "updateButton": "تحديث الفرع",
+      "cancelEdit": "إلغاء التعديل"
+    },
+    "fileOperations": {
+      "title": "عمليات الملف",
+      "preview": "معاينة الملف التعريفي",
+      "previewSubtitle": "عرض محتويات الملف قبل الإرسال",
+      "download": "تحميل ملف الشركة PDF",
+      "downloadSubtitle": "تحميل الملف بصيغة PDF"
+    },
+    "footer": {
+      "next": "التالي",
+      "back": "السابق",
+      "saveDraft": "حفظ كمسودة",
+      "submit": "إرسال الملف"
+    },
+    "messages": {
+      "loading": "جاري تحميل ملف الشركة",
+      "draftSaved": "تم حفظ المسودة بنجاح",
+      "submitted": "تم إرسال ملف الشركة بنجاح",
+      "branchSaved": "تم حفظ الفرع بنجاح",
+      "branchDeleted": "تم حذف الفرع",
+      "documentUploaded": "تم رفع المستند بنجاح",
+      "documentDeleted": "تم حذف المستند",
+      "logoUploaded": "تم رفع الشعار بنجاح",
+      "logoDeleted": "تم حذف الشعار"
+    }
+  },
+  "certificationRequests": {
+    "title": "طلبات المنح",
+    "newRequest": "طلب منح جديد",
+    "interactiveInvoice": "الفاتورة التفاعلية",
+    "status": {
+      "underConstruction": "قيد الإنشاء",
+      "underReview": "تحت المراجعة",
+      "closedByDirector": "مغلق بقرار المدير",
+      "issued": "تم إصدار الشهادة"
+    },
+    "card": {
+      "orderNumber": "رقم الطلب",
+      "authorizedPerson": "اسم الشخص المخول",
+      "authorizedPersonName": "محمد المناوهلى",
+      "followUp": "متابعة الطلب",
+      "orderStatus": "حالة الطلب"
+    }
+  }
+}

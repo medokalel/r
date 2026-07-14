@@ -1,0 +1,761 @@
+{
+  "common": {
+    "appName": "CASCO",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "search": "Search",
+    "language": "Language"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "login": "Log In",
+    "loginTitle": "Log In",
+    "loginSubtitle": "Welcome, nice to see you!",
+    "logout": "Logout",
+    "register": "Register here",
+    "registerNow": "Register now",
+    "email": "Email",
+    "password": "Password",
+    "forgotPassword": "Forgot Password?",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signIn": "Log in",
+    "signUp": "Sign Up",
+    "rememberMe": "Remember Me",
+    "signingIn": "Signing in..."
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again."
+  },
+  "documentUpload": {
+    "uploaded": "Uploaded",
+    "uploadedCount": "Uploaded ({{count}})",
+    "waiting": "Awaiting Upload",
+    "selectFile": "Select File",
+    "showFiles": "Show files",
+    "hideFiles": "Hide files"
+  },
+  "validation": {
+    "invalidEmail": "Please enter a valid email address",
+    "passwordTooShort": "Password must be at least 8 characters",
+    "invalidMobile": "Please enter a valid mobile number (8–15 digits)",
+    "fileTooLarge": "File must be {{size}} MB or smaller"
+  },
+  "register": {
+    "title": "Create a new account",
+    "chooseEntityType": "Please select the entity type",
+    "progressLabel": "Registration progress",
+    "steps": {
+      "entityVerification": "Entity data and verification",
+      "legalOperational": "Legal and operational data",
+      "accountSetup": "Account setup"
+    },
+    "governmental": "Governmental entity",
+    "privateSector": "Private sector",
+    "thirdParty": "Third party",
+    "governmentAgency": "Government agency",
+    "governmentAgencyPlaceholder": "Choose the name of the government agency",
+    "organizationName": "Organization name",
+    "organizationNamePlaceholder": "Choose your organization name",
+    "sampleAgency1": "Ministry of Health",
+    "sampleAgency2": "Food Safety Authority",
+    "verify": "verify",
+    "emailVerification": "Email Verification",
+    "codeSentPrompt": "Please enter the code that was sent",
+    "management": "Management",
+    "managementPlaceholder": "Enter the administration name",
+    "facilityOwner": "Facility owner/manager",
+    "facilityOwnerPlaceholder": "Write the full name of the facility owner/manager",
+    "legalCapacity": "Legal capacity",
+    "legalCapacityPlaceholder": "Enter the legal capacity",
+    "authorizationLetter": "Authorization letter for authorized person",
+    "fileUploadHint": "Maximum file size <size>10</size>MB, file types: pdf only",
+    "selectFile": "Select file",
+    "reselectFile": "please re-select after returning",
+    "activity": "Activity",
+    "activityPlaceholder": "Choose the activity",
+    "activityFood": "Food & beverage",
+    "activityRetail": "Retail",
+    "country": "Country",
+    "countryPlaceholder": "Select country",
+    "selectCountryFirst": "Select a country first",
+    "loadingGovernorates": "Loading governorates...",
+    "noGovernoratesAvailable": "No governorates available for this country",
+    "governorate": "Governorate",
+    "governoratePlaceholder": "Select governorate",
+    "mobileNumber": "Mobile number",
+    "countryCode": "Country code",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter the password",
+    "passwordMismatch": "Passwords do not match",
+    "agreePrivacyLead": "Agree to the",
+    "privacyPolicy": "privacy policy",
+    "createAccount": "Create Account",
+    "creatingAccount": "Creating account...",
+    "sendingCode": "Sending...",
+    "verifyEmail": "Verify email",
+    "verifyingEmail": "Verifying..."
+  },
+  "accreditation": {
+    "title": "Certification request",
+    "orderNumber": "order number",
+    "assignedOfficer": "Assigned accreditation officer",
+    "timeAndDate": "Time and date",
+    "evening": "evening",
+    "january": "January",
+    "notifications": "Notifications",
+    "auditManager": "Audit Manager",
+    "sidebar": {
+      "expand": "Expand sidebar",
+      "collapse": "Collapse sidebar",
+      "requests": "Requests",
+      "clients": "Clients",
+      "payments": "Payments",
+      "documents": "Documents",
+      "accreditation": "Accreditation",
+      "renewals": "Renewals",
+      "invoices": "Invoices"
+    },
+    "steps": {
+      "grantApplication": "Certification application",
+      "accreditationField": "Accreditation Field",
+      "checklists": "Checklists",
+      "fileReview": "File Review",
+      "documentReview": "Document Review",
+      "assessmentVisit": "Assessment Visit",
+      "correctiveAction": "Corrective Action",
+      "finalReport": "Final Report"
+    },
+    "entityData": {
+      "title": "Entity data",
+      "subtitle": "Please enter the entity's information",
+      "sections": {
+        "legalIdentity": "Legal identity of the facility",
+        "scopeOfActivity": "Scope of activity and branches",
+        "consultingReadiness": "Consulting and management system readiness",
+        "specificationQuestions": "Specification questions",
+        "legalDeclarations": "Legal declarations"
+      },
+      "nav": {
+        "field": "Field",
+        "documents": "Documents",
+        "feedback": "Feedback"
+      },
+      "field": {
+        "pageTitle": "Field",
+        "pageSubtitle": "Please select the economic sector",
+        "searchPlaceholder": "Search by activity (e.g. hospital, textile, engineering)...",
+        "search": "Search",
+        "selectionSummary": "Selection summary",
+        "selectedCount": "({{count}}) selected",
+        "continueToCodes": "Continue to choose codes",
+        "codesTitle": "Select IAF codes",
+        "criticalCodeNote": "The red color represents critical code",
+        "standards": {
+          "iso9001": "ISO 9001",
+          "iso14001": "ISO 14001",
+          "iso45001": "ISO 45001"
+        },
+        "standardsFull": {
+          "iso9001": "Quality Management Systems (ISO 9001)",
+          "iso14001": "Environmental Management Systems (ISO 14001)",
+          "iso45001": "Occupational Health & Safety Management Systems (ISO 45001)"
+        },
+        "sectors": {
+          "agriculture": {
+            "title": "Agriculture, Forestry & Fishing",
+            "description": "Includes agricultural production, forestry and fishing activities."
+          },
+          "miningAndQuarrying": {
+            "title": "Mining & Quarrying",
+            "description": "Includes mining and quarrying activities."
+          },
+          "food": {
+            "title": "Food",
+            "description": "Includes activities associated with agricultural production, food processing and hospitality services."
+          },
+          "mechanicalIndustries": {
+            "title": "Mechanical industries",
+            "description": "Includes heavy industries, equipment manufacturing, metal products, and transportation."
+          },
+          "paperAndPrinting": {
+            "title": "Paper and printing",
+            "description": "Includes paper production, publishing and commercial printing activities."
+          },
+          "metalsAndBuildingMaterials": {
+            "title": "Metals and building materials",
+            "description": "Includes mineral extraction and manufacturing of basic building materials."
+          },
+          "constructionAndBuilding": {
+            "title": "Construction and building",
+            "description": "Includes implementation of construction projects and associated engineering services."
+          },
+          "industrialProduction": {
+            "title": "Industrial production",
+            "description": "Includes manufacturing industries and the production of consumer and industrial goods."
+          },
+          "chemicalIndustries": {
+            "title": "Chemical industries",
+            "description": "Includes industries based on chemical processing and production of industrial materials."
+          },
+          "energySupplies": {
+            "title": "Energy supplies and utilities",
+            "description": "Includes energy and water production and distribution services."
+          },
+          "transportationAndWaste": {
+            "title": "Transportation and waste management",
+            "description": "Services include transportation, logistics and waste management."
+          },
+          "services": {
+            "title": "Services",
+            "description": "Includes service, commercial, technical and educational activities."
+          },
+          "nuclearSector": {
+            "title": "Nuclear sector",
+            "description": "Includes activities associated with the production and processing of nuclear fuel."
+          },
+          "pharmaceuticalSector": {
+            "title": "Pharmaceutical sector",
+            "description": "Includes manufacturing pharmaceuticals and medical products."
+          },
+          "aviationAndSpace": {
+            "title": "Aviation and space",
+            "description": "Includes the design, manufacture and maintenance of aircraft, spacecraft and associated systems."
+          },
+          "healthSector": {
+            "title": "Health sector",
+            "description": "Includes health care services and activities associated with social support."
+          }
+        },
+        "iafCodes": {
+          "agriculture": "Agriculture, forestry and fishing",
+          "mining": "Mining and quarrying",
+          "foodBeverage": "Food products, beverages and tobacco",
+          "textiles": "Textiles and textile products",
+          "leather": "Leather and leather products",
+          "wood": "Wood and wood products",
+          "paperProducts": "Limited to “Paper products”",
+          "pulpPaper": "Limited to “Pulp and paper manufacturing”",
+          "publishing": "Publishing companies",
+          "printing": "Printing companies",
+          "petroleum": "Manufacture of coke and refined petroleum products",
+          "nuclearFuel": "Nuclear fuel",
+          "chemicals": "Chemicals, chemical products and fibres",
+          "pharmaceuticals": "Pharmaceuticals",
+          "rubberPlastic": "Rubber and plastic products",
+          "nonMetallic": "Non-metallic mineral products",
+          "concrete": "Concrete, cement, lime, plaster, etc.",
+          "basicMetals": "Basic metals and fabricated metal products",
+          "fabricatedMetal": "Limited to “Fabricated metal products”",
+          "baseMetals": "Limited to “Base metals production”",
+          "machinery": "Machinery and equipment",
+          "electrical": "Electrical and optical equipment",
+          "shipbuilding": "Shipbuilding",
+          "aerospace": "Aerospace",
+          "otherTransport": "Other transport equipment",
+          "otherManufacturing": "Manufacturing not elsewhere classified",
+          "recycling": "Recycling",
+          "electricity": "Electricity supply",
+          "gas": "Gas supply",
+          "water": "Water supply",
+          "construction": "Construction",
+          "wholesale": "Wholesale and retail trade; repair of motor vehicles, motorcycles and personal and household goods",
+          "hotels": "Hotels and restaurants",
+          "transport": "Transport, storage and communication",
+          "financial": "Financial intermediation; real estate; renting",
+          "it": "Information technology",
+          "engineering": "Engineering services",
+          "otherServices": "Other services",
+          "publicAdmin": "Public administration",
+          "education": "Education",
+          "health": "Health and social work",
+          "otherSocial": "Other social services"
+        }
+      },
+      "documents": {
+        "pageTitle": "Documents",
+        "pageSubtitle": "Please attach the required documents",
+        "requiredTitle": "Required documents and records",
+        "requiredSubtitle": "Please attach all mandatory documents shown below to complete the certification procedures.",
+        "otherTitle": "Other documents",
+        "otherSubtitle": "You can upload additional documents",
+        "attachAdditional": "Attach additional document",
+        "waitingForUpload": "Waiting for upload",
+        "uploaded": "Uploaded",
+        "selectFile": "Select file",
+        "delete": "Delete",
+        "replace": "Replace",
+        "guideline1": "All documents must be valid and very clear.",
+        "guideline2": "It is allowed to upload more than one file for each item (in PDF, JPG, PNG formats) with a maximum file size of 10 MB.",
+        "guideline3": "The HACCP plans item is automatically activated when selecting food safety standards.",
+        "items": {
+          "documentarySystem": "The facility's documentary system (list of documents and records)",
+          "organizationalStructure": "Organizational structure of the facility",
+          "commercialRegistry": "A copy of the commercial registry/establishment license",
+          "vatCertificate": "VAT registration certificate",
+          "brandImage": "Brand image",
+          "brandImageNote": "If the mark differs from the name mentioned in the commercial registry, please send the intellectual property certificate.",
+          "nationalAddress": "National address",
+          "qualityPolicy": "Quality policy and objectives."
+        }
+      },
+      "feedback": {
+        "pageTitle": "Feedback",
+        "pageSubtitle": "You can receive and respond to comments from here",
+        "reviewerName": "Dima Al-Swatt",
+        "reviewerRole": "Accreditation references",
+        "reviewerTimestamp": "11 Feb, 2025 - 10:30 AM",
+        "reviewerMessage": "Greetings,\nPlease kindly amend the name of the entity's representative in the establishment file to match the updated data in the latest commercial register, as the current name is old.",
+        "goToCommentReview": "Go to comment review",
+        "applicantName": "Muhammad Al-Manawahli",
+        "applicantRole": "applicant",
+        "applicantTimestamp": "11 Feb, 2025 - 02:30 PM",
+        "applicantMessage": "The name has been successfully updated as required by the commercial registry. Please review the updated data and let us know the next steps.",
+        "replyPlaceholder": "Write your response or inquiry here...",
+        "sendReply": "Send Reply",
+        "attach": "Attach file",
+        "insertLink": "Insert link",
+        "bold": "Bold"
+      },
+      "fields": {
+        "common": {
+          "writeHere": "Write here"
+        },
+        "scope": {
+          "operationalData": "Operational data of the facility",
+          "scopeOfWork": "The scope of work of the organization according to the commercial registration / license",
+          "scopeOfWorkPlaceholder": "Enter the field of work",
+          "economicField": "The economic field of activity of the enterprise",
+          "productsServicesNature": "The nature of the products / services provided by the establishment :",
+          "annualProductionCapacity": "Annual production capacity of the organization :",
+          "technicalSpecifications": "Technical specifications used in production :",
+          "branchCount": "Number of Locations/Branches (if any) :",
+          "addBranch": "Add Branch",
+          "removeBranch": "Remove branch",
+          "branchNumber": "Branch {{number}}",
+          "branchEmployees": "No. of employees in the branch",
+          "auditScopeEmployees": "No. of employees within the scope of the audit",
+          "shiftCount": "No. of shift/shifts",
+          "openingHours": "Opening Hours",
+          "weeklyVacation": "Weekly vacation",
+          "oneDay": "One day",
+          "twoDays": "Two days",
+          "productionLines": "No. of process/production lines",
+          "productionLinesPlaceholder": "example: 4",
+          "firstPhaseDate": "What is the expected date for implementation?",
+          "branchName": "Branch name",
+          "branchNamePlaceholder": "Type the full branch name",
+          "branchAddress": "Branch address",
+          "integratedSystem": "Is the management system implemented common? (Integrated)",
+          "centralAdministration": "Is the branch affiliated with the central administration?",
+          "activitiesToAudit": "Activities to be audited",
+          "chooseActivities": "Choose activities",
+          "productsServices": "Products/services",
+          "technicalCommunication": "Technical means of communication"
+        },
+        "consulting": {
+          "title": "Consultation and qualification data",
+          "qualifiedByConsultant": "Has the organization been qualified by one of the consulting bodies?",
+          "consultantName": "If yes, please mention the name of the entity.",
+          "consultantNamePlaceholder": "Enter the name of the consulting body",
+          "cvAttached": "Has the CV and profile of the eligible company been attached to the application for the management systems certificate?",
+          "consultationPeriod": "How long is the consultation period in months?",
+          "month": "month",
+          "consultantRating": "On a scale of one to ten, what do you rate for the consultant or consultant?",
+          "recommendationRating": "On a scale from one to ten, would you recommend this to the consultant or advisor to others in your network?",
+          "ratingNote": "Note: 1 represents the lowest rating, and 10 represents the highest rating."
+        },
+        "readiness": {
+          "title": "Readiness of the management system and work sites",
+          "systemLanguage": "The language in which the management system was set up",
+          "arabic": "Arabic",
+          "english": "English",
+          "easySiteAccess": "Easy access to job sites",
+          "safetyProcedures": "Availability of safety procedures at the audit site for members of the audit team.",
+          "subcontracting": "Does the organization carry out any activities through subcontracting?",
+          "previousGrants": "Has the organization ever obtained grants from another party before?",
+          "otherManagementSystems": "Other management systems applied (if any):",
+          "otherSpecification": "If there is another specification, please mention it",
+          "other": "Another",
+          "designActivities": "Design Activities",
+          "designActivity": "Is design one of the activities of the organization ?",
+          "designExceptionReason": "In case of answering \"No,\" please provide the reason for the exception"
+        },
+        "spec": {
+          "iso50001": {
+            "energyConsumers": "What are the processes / services / products / equipment that consume the largest percentage of energy in the facility?",
+            "enpi": "What Energy Performance Indicators (EnPIs) are used to measure and improve energy efficiency?",
+            "energyBaseline": "Has an energy baseline been established?",
+            "baselineUpdated": "If yes, when was it last updated?",
+            "monitoringTools": "What tools or systems are used to monitor and analyze energy consumption?"
+          },
+          "iso45001": {
+            "ohsSystemInPlace": "Is there currently an occupational health and safety management system in place?",
+            "ohsStartDate": "What is the start date of implementing the current occupational health and safety management system?",
+            "risksIdentified": "Have all risks related to operational activities been identified?",
+            "criticalRisks": "Please specify the critical occupational health and safety risks that have been identified",
+            "internalAudits": "Have any internal audits of the system been conducted?",
+            "complianceLaws": "What are the local and regional laws and regulations that the organization complies with regarding occupational health and safety?",
+            "legalViolations": "Have there ever been any legal violations or fines related to occupational safety and health?",
+            "ohsCertification": "Has the organization obtained ISO 45001 certification or any other occupational health and safety-related certifications?",
+            "certifyingBody": "If yes, what is the name of the certifying body?"
+          }
+        },
+        "legal": {
+          "sectionOneTitle": "Section One: Application for Certification of the Management System:",
+          "sectionTwoTitle": "Section Two: Confidentiality Terms",
+          "certificateDataTitle": "Data as it will appear on the certificate",
+          "greeting": "Dear [CB Name],",
+          "applicationBody": "We, [Name of the Entity], wish to obtain a certificate / certificates for the [Name of the Standard] management system(s) through your company. We hereby confirm that the information provided in this application and the attached documents is accurate.",
+          "closing": "Best regards,,",
+          "authorizedSignatory": "Authorized signatory",
+          "signatoryPlaceholder": "Type the full name",
+          "date": "Date",
+          "confidentialityIntro": "[CB Name] employees and auditors commit to maintaining the confidentiality and not using or disclosing to any third party any information obtained from the client during the performance of certification services, except in the following cases:",
+          "confidentialityItem1": "Any information that CB Name had prior to the client providing it.",
+          "confidentialityItem2": "Any information that is public or will legally enter the public domain, or that the company obtained from an independent source other than the client.",
+          "confidentialityItem3": "Any information that may be required to be disclosed to any court or financial or regulatory authority",
+          "certificateNameAr": "The name as it will appear on the accreditation certificate in Arabic",
+          "certificateNameArPlaceholder": "Example: Standard Arabia Company for Commercial Services",
+          "certificateNameEn": "Name as it will appear on the accreditation certificate in English",
+          "certificateAddressAr": "The address as it will appear on the accreditation certificate in Arabic",
+          "certificateAddressEn": "The address as it will appear on the accreditation certificate in English",
+          "certificateFieldAr": "The field as it will appear on the accreditation certificate in Arabic",
+          "certificateFieldArPlaceholder": "Example: chemical industries",
+          "certificateFieldEn": "The field as it will appear on the accreditation certificate in English",
+          "submissionWarning": "The order cannot be modified after submission. Please be sure to review all data and attachments before final submission.",
+          "acknowledgement": "I acknowledge that I have read, understood and agree to all of the above and confirm that I have reviewed all the data and wish to submit the application"
+        }
+      }
+    },
+    "form": {
+      "mainData": "Main data",
+      "regulatoryData": "Regulatory data",
+      "requiredStandard": "Required Standard Specification",
+      "otherStandard": "In case of others standard not listed, please specify it.",
+      "otherStandardPlaceholder": "Enter the specification name",
+      "organizationName": "Organization Name",
+      "website": "Website",
+      "headOfficeAddress": "Head Office Address",
+      "auditPlaceAddress": "Audit place location address",
+      "commercialRegistrationNo": "Commercial Registration No",
+      "commercialRegistryFile": "Commercial registry file",
+      "uploadCommercialRegister": "Upload the commercial register file",
+      "download": "Download",
+      "view": "View",
+      "edit": "Edit",
+      "productionLinesActive": "Are all production lines or processes within the product range active?",
+      "ifNoStateWhy": "If no, please state why",
+      "stateReasonPlaceholder": "State the reason, if any",
+      "yes": "Yes",
+      "no": "No",
+      "email": "E-mail",
+      "country": "Country",
+      "egypt": "Arab Republic of Egypt",
+      "representativeName": "Organization Representative Name",
+      "representativeNamePlaceholder": "Type the full name of the facility representative",
+      "representativeTitle": "Organization Representative Title",
+      "representativeTitlePlaceholder": "Example: Operations Manager",
+      "mobileNumber": "Mobile number",
+      "organizationType": "Organization type",
+      "governmentSector": "Government sector",
+      "privateSector": "Private sector",
+      "thirdParty": "Third party",
+      "mainActivity": "Main activity",
+      "mainActivityPlaceholder": "Enter the main activity of the facility",
+      "requestType": "Request type",
+      "newGranted": "New (granted)"
+    },
+    "status": {
+      "approved": {
+        "title": "The Request Has Been Approved",
+        "subtitle": "Thank you, please wait for updates."
+      },
+      "underReview": {
+        "title": "The Application Is Currently Under Technical Review",
+        "subtitle": "The review team is examining your application. The status will be updated and you will be notified once the final decision is issued. Thank you."
+      },
+      "rejected": {
+        "title": "Your request has been rejected",
+        "subtitle": "We apologize that your file has not passed the technical review stage.",
+        "contactUs": "Contact us",
+        "fileTitle": "File explaining the reasons for rejection",
+        "reviewDate": "Review date:",
+        "reasons": {
+          "commercialExpired": {
+            "title": "The commercial registration file has been completed",
+            "description": "During the audit, it was found that the commercial register had expired on 12/27/2025 Please upload a more recent file.",
+            "tag": "Mandatory requirement"
+          },
+          "nonCompliance": {
+            "title": "Non-compliance with conditions  (ISO 50001)",
+            "description": "The scope of work was not explained in detail and is one of the requirements for accreditation",
+            "tag": "Lack of documentation"
+          }
+        },
+        "correctionTitle": "Are you ready for correction?",
+        "correctionSubtitle": "You can amend the requirements, upload new documents, and apply directly again.\nWithout the need to open a new application.",
+        "editAndResubmit": "Edit data and resubmit",
+        "downloadReport": "Download the full report of the rejection file",
+        "downloadReportSuffix": "(pdf)",
+        "helpText": "Do you need help understanding the technical terms?",
+        "talkToSupport": "Talk to technical support"
+      }
+    }
+  },
+  "forgotPassword": {
+    "title": "Forgot Password?",
+    "subtitle": "Enter your email address and we'll send you a verification code",
+    "otpTitle": "Enter OTP Code",
+    "otpSubtitle": "Enter the 6-digit code sent to your email",
+    "verifySubtitle": "Please enter the verification code sent to your email",
+    "resetTitle": "Reset Password",
+    "resetSubtitle": "Create a new password for your account",
+    "sendCode": "Send Code",
+    "sendingCode": "Sending...",
+    "confirm": "Confirm",
+    "verifyingCode": "Verifying...",
+    "resendIn": "Resend in <time>{{time}}</time> seconds",
+    "resend": "Resend code",
+    "resetButton": "Reset Password",
+    "resetting": "Resetting...",
+    "successTitle": "Password reset successfully",
+    "successDescription": "Your password has been reset. You can now log in with your new password.",
+    "backToLogin": "Back to login",
+    "failureTitle": "Password reset failed",
+    "failureDescription": "We couldn't reset your password. Please try again or contact support if the problem continues.",
+    "tryAgain": "Try again"
+  },
+  "companyProfile": {
+    "title": "Company Profile",
+    "subtitle": "Complete the basic data to create your company profile",
+    "breadcrumb": {
+      "settings": "Settings",
+      "current": "Company Profile"
+    },
+    "steps": {
+      "basicData": "Basic Data",
+      "address": "Address",
+      "branches": "Branches",
+      "officialDocs": "Official Documents"
+    },
+    "profileHeader": {
+      "companySummaryLabel": "Company Summary",
+      "companySummaryPlaceholder": "Enter basic data about your company to start creating the company profile",
+      "industrySectorLabel": "Industrial Sector",
+      "companyLogoLabel": "Company Logo",
+      "uploadTitle": "Upload Logo",
+      "uploadSubtitle": "PNG, JPG, WEBP and SVG formats, up to 5 MB",
+      "selectFile": "Select File",
+      "changeFile": "Change Logo",
+      "deleteLogo": "Delete Logo"
+    },
+    "mapCard": {
+      "title": "Company Location",
+      "setLocation": "Set Location on Map",
+      "changeLocation": "Clear Location"
+    },
+    "basicDataCard": {
+      "title": "Basic Data",
+      "companyNameLabel": "Company Name",
+      "companyNamePlaceholder": "Enter company name",
+      "tradingNameLabel": "Trading Name",
+      "tradingNamePlaceholder": "Enter trading name",
+      "commercialRegistryLabel": "Commercial Registry Number",
+      "commercialRegistryPlaceholder": "Enter commercial registry number",
+      "serialNumberLabel": "Serial Number from Issuing Authority",
+      "serialNumberPlaceholder": "Enter number",
+      "emailLabel": "Email",
+      "emailPlaceholder": "name@company.com",
+      "authorizedPersonLabel": "Authorized Person Name",
+      "authorizedPersonPlaceholder": "Enter name",
+      "companyStatusLabel": "Company Status",
+      "companyStatusPlaceholder": "Choose company status",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "ex: 567XXXXXXXX",
+      "totalEmployeesLabel": "Total Number of Employees",
+      "totalEmployeesPlaceholder": "Enter number",
+      "registrationDateLabel": "Registration Date",
+      "registrationDatePlaceholder": "Choose date",
+      "statusOptions": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "underEstablishment": "Under Establishment",
+        "liquidated": "Liquidated"
+      }
+    },
+    "stepSubtitles": {
+      "basicData": "Complete the basic data to create your company profile",
+      "address": "Complete the address information",
+      "branches": "Add and manage your company branches",
+      "officialDocs": "Upload official documents and link them to the client file"
+    },
+    "completedSteps": {
+      "basicData": "Basic Data",
+      "address": "Address",
+      "branches": "Branches",
+      "incompleteAddress": "Company profile is almost complete. Please enter the address",
+      "incompleteBranches": "Company profile is almost complete. Please enter branches",
+      "incompleteDocs": "Company profile is almost complete. Please upload the remaining documents",
+      "incomplete": "Company profile is almost complete, please enter branches"
+    },
+    "addressCard": {
+      "title": "Main Address",
+      "countryLabel": "Country",
+      "countryPlaceholder": "Select country",
+      "cityLabel": "City",
+      "cityPlaceholder": "Enter city name",
+      "neighborhoodLabel": "Neighborhood",
+      "neighborhoodPlaceholder": "King Fahd District",
+      "streetLabel": "Street Address",
+      "streetPlaceholder": "Enter street address",
+      "buildingLabel": "Building Number",
+      "buildingPlaceholder": "Enter building number",
+      "subNumberLabel": "Sub Number",
+      "subNumberPlaceholder": "Enter sub number",
+      "postalCodeLabel": "Postal Code",
+      "postalCodePlaceholder": "Enter postal code",
+      "unitLabel": "Additional Location / Unit",
+      "unitPlaceholder": "e.g. Apt B, 1st Floor",
+      "googleMapLabel": "Google Map Link",
+      "googleMapPlaceholder": "https://maps.google.com/...",
+      "nearbyLandmarkLabel": "Nearby Landmark",
+      "nearbyLandmarkPlaceholder": "e.g. Near a gas station or Al-Nour School",
+      "hasNationalAddress": "Do you have a national address?",
+      "yes": "Yes",
+      "no": "No",
+      "nationalAddressTitle": "National Address",
+      "nationalAddressCode": "National Address Code",
+      "nationalAddressCodePlaceholder": "1040987600",
+      "saveButton": "Save Address"
+    },
+    "nationalAddress": {
+      "hasAddressTitle": "Do you have a national address?",
+      "yes": "Yes",
+      "no": "No",
+      "formTitle": "National Address",
+      "expiryDate": "Expiry Date",
+      "issueDate": "Issue Date",
+      "addressId": "Address Proof Number",
+      "street": "Street",
+      "buildingNo": "Building Number",
+      "shortAddress": "Short Address",
+      "postalCode": "Postal Code",
+      "subNumber": "Sub Number",
+      "neighborhood": "Neighborhood",
+      "city": "City",
+      "country": "Country / Kingdom",
+      "previewLabel": "Address Proof Preview",
+      "viewLarger": "View Larger",
+      "notesTitle": "Connection Notes",
+      "note1": "Address data was retrieved from the National Address platform and is certified and verified.",
+      "note2": "If any data does not match, you can edit it with justification in the next step."
+    },
+    "officialDocs": {
+      "title": "Official Documents",
+      "otherDocsTitle": "Other Documents",
+      "otherDocsSubtitle": "You can upload additional documents",
+      "addDocLabel": "Attach Additional Document",
+      "selectFile": "Select File",
+      "pendingUpload": "Awaiting Upload",
+      "uploadedLabel": "Uploaded",
+      "uploadedCount": "Uploaded ({{count}})",
+      "showFiles": "Show files",
+      "hideFiles": "Hide files",
+      "docs": {
+        "nationalAddress": "National Address Certificate",
+        "activityLicense": "Activity License",
+        "taxCard": "Tax Card",
+        "commercialRegistry": "Commercial Registry"
+      }
+    },
+    "branchesCard": {
+      "title": "Company Branches",
+      "registryLabel": "Branch Registry No.",
+      "employeesLabel": "Employees",
+      "employeeUnit": "employee",
+      "view": "View",
+      "edit": "Edit"
+    },
+    "addBranch": {
+      "title": "Add Branch",
+      "branchNameLabel": "Branch Name",
+      "branchNamePlaceholder": "Enter branch name",
+      "registryLabel": "Branch Registry Number",
+      "registryPlaceholder": "Enter branch registry number",
+      "addressLabel": "Branch Address",
+      "addressPlaceholder": "Enter branch address",
+      "googleMapLabel": "Google Map Link",
+      "googleMapPlaceholder": "https://maps.google.com/...",
+      "phoneLabel": "Phone Number",
+      "managerLabel": "Branch Manager",
+      "managerPlaceholder": "Enter branch manager name",
+      "sectorLabel": "Sector",
+      "sectorPlaceholder": "Choose sector",
+      "employeesLabel": "Number of Employees",
+      "employeesPlaceholder": "Enter number of employees",
+      "branchTypeLabel": "Branch Type",
+      "permanent": "Permanent",
+      "temporary": "Temporary",
+      "saveButton": "Save Branch",
+      "editTitle": "Edit Branch",
+      "updateButton": "Update Branch",
+      "cancelEdit": "Cancel Edit"
+    },
+    "fileOperations": {
+      "title": "File Operations",
+      "preview": "Preview Profile File",
+      "previewSubtitle": "View file contents before sending",
+      "download": "Download Company Profile PDF",
+      "downloadSubtitle": "Download file as PDF"
+    },
+    "footer": {
+      "next": "Next",
+      "back": "Previous",
+      "saveDraft": "Save as Draft",
+      "submit": "Submit Profile"
+    },
+    "messages": {
+      "loading": "Loading your company profile",
+      "draftSaved": "Draft saved successfully",
+      "submitted": "Company profile submitted successfully",
+      "branchSaved": "Branch saved successfully",
+      "branchDeleted": "Branch deleted",
+      "documentUploaded": "Document uploaded successfully",
+      "documentDeleted": "Document deleted",
+      "logoUploaded": "Logo uploaded successfully",
+      "logoDeleted": "Logo deleted"
+    }
+  },
+  "certificationRequests": {
+    "title": "Certification Requests",
+    "newRequest": "New Certification Request",
+    "interactiveInvoice": "Interactive invoice",
+    "status": {
+      "underConstruction": "Under construction",
+      "underReview": "Under review",
+      "closedByDirector": "Closed by director's decision",
+      "issued": "The certificate has been issued"
+    },
+    "card": {
+      "orderNumber": "Order number",
+      "authorizedPerson": "Name of the authorized person",
+      "authorizedPersonName": "Muhammad Al-Manawahli",
+      "followUp": "Follow up",
+      "orderStatus": "Order Status"
+    }
+  }
+}
