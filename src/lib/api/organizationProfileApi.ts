@@ -9,6 +9,19 @@ export type OrgDocumentType =
   | 'COMMERCIAL_REGISTER'
   | 'OTHER'
 
+export interface NationalAddressInput {
+  hasNationalAddress?: boolean | null
+  certificateNumber?: string | null
+  issueDate?: string | null
+  expiryDate?: string | null
+  street?: string | null
+  buildingNumber?: string | null
+  district?: string | null
+  additionalNumber?: string | null
+  postalCode?: string | null
+  city?: string | null
+}
+
 export interface OrgProfileInput {
   organizationName?: string | null
   tradeName?: string | null
@@ -26,6 +39,7 @@ export interface OrgProfileInput {
   logoUrl?: string | null
   allProductionLinesActive?: boolean | null
   inactiveReason?: string | null
+  nationalAddress?: NationalAddressInput | null
 }
 
 export interface OrgAddressInput {
