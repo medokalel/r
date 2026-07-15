@@ -1,6 +1,7 @@
 import { useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SelectDropdownIcon } from '@/components/auth/SelectDropdownIcon'
+import { SelectDropdownIcon } from '@/components/ui/SelectDropdownIcon'
+import { RequiredMark } from '@/components/ui/FormField'
 import { Button } from '@/components/ui/Button'
 import {
   AppIcon,
@@ -21,6 +22,7 @@ export interface UploadedDocumentFile {
 
 interface DocumentUploadFieldProps {
   title: string
+  required?: boolean
   note?: string
   files: UploadedDocumentFile[]
   busy?: boolean
@@ -98,6 +100,7 @@ function FileRow({
  */
 export function DocumentUploadField({
   title,
+  required,
   note,
   files,
   busy = false,
@@ -135,7 +138,10 @@ export function DocumentUploadField({
             {renderIcon ? renderIcon(uploaded) : <AppIcon icon={DocumentFileIcon} size={20} />}
           </span>
           <div className="flex min-w-0 flex-col">
-            <p className="text-[18px] font-medium leading-[1.6] text-neutral-900">{title}</p>
+            <p className="text-[18px] font-medium leading-[1.6] text-neutral-900">
+              {title}
+              {required && <RequiredMark />}
+            </p>
             {note && <p className="text-[14px] font-light leading-[1.6] text-[#666]">{note}</p>}
           </div>
         </div>

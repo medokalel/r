@@ -78,7 +78,7 @@ export function DashboardSidebar() {
       </div>
 
       {/* Logo */}
-      <div className={cn('shrink-0', expanded ? 'w-full px-4' : 'w-[128px] px-[6px]')}>
+      <div className={cn('shrink-0', expanded ? 'w-full px-4' : 'w-[116px] px-[6px]')}>
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
