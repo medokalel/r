@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { authFieldLabelClassName } from '@/components/auth/AuthFieldLabel'
+import { fieldLabelClassName, RequiredMark } from '@/components/ui'
 import { FileUploadIcon } from '@/components/auth/FileUploadIcon'
 import {
   isValidFileSize,
@@ -67,9 +67,9 @@ export function FileUploadField({
       >
         <FileUploadIcon className="size-10 shrink-0" />
         <div className="w-full space-y-2 text-center">
-          <p className={authFieldLabelClassName}>
+          <p className={fieldLabelClassName}>
             {label}
-            {required && <span className="text-error-500"> *</span>}
+            {required && <RequiredMark />}
           </p>
           <p className="text-body-2 text-neutral-600">
             {hint ?? (
