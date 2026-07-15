@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import {
   FormField,
   FormSection,
+  RequiredMark,
+  TextField,
   fieldBodyTextClassName,
-  fieldHeightClassName,
-  fieldInputClassName,
   fieldLabelClassName,
-} from '@/components/dashboard/FormField'
+} from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { cn } from '@/lib/utils'
@@ -49,10 +49,9 @@ export function LegalDeclarationsStep() {
               required
               variant="question"
             >
-              <input
+              <TextField
                 type="text"
                 placeholder={t('accreditation.entityData.fields.legal.signatoryPlaceholder')}
-                className={cn(fieldInputClassName, fieldHeightClassName)}
               />
             </FormField>
 
@@ -92,10 +91,9 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.entityData.fields.legal.certificateNameArPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
 
@@ -104,10 +102,9 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
+            <TextField
               type="text"
               defaultValue="Meyar Arabia Company For Commercial Services (MAC)"
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
@@ -118,11 +115,7 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
-              type="text"
-              defaultValue={defaultAddress}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
-            />
+            <TextField type="text" defaultValue={defaultAddress} />
           </FormField>
 
           <FormField
@@ -130,10 +123,9 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
+            <TextField
               type="text"
               defaultValue="Prince Miteb, Al Aziziyah District - Jeddah 23342 - 3041, Unit No.: 7 Kingdom of Saudi Arabia. 9000"
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
@@ -144,10 +136,9 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.entityData.fields.legal.certificateFieldArPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
 
@@ -156,11 +147,7 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <input
-              type="text"
-              defaultValue="Ex: Chemicals"
-              className={cn(fieldInputClassName, fieldHeightClassName)}
-            />
+            <TextField type="text" defaultValue="Ex: Chemicals" />
           </FormField>
         </div>
       </FormSection>
@@ -182,7 +169,7 @@ export function LegalDeclarationsStep() {
           />
           <span className={fieldLabelClassName}>
             {t('accreditation.entityData.fields.legal.acknowledgement')}
-            <span className="text-error-500"> *</span>
+            <RequiredMark />
           </span>
         </label>
       </div>
