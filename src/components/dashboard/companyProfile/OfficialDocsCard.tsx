@@ -24,7 +24,7 @@ import { DOC_ACCEPT, DOC_MAX_BYTES, DOC_TYPE_BY_KEY } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 
-function useDocumentActions(onBusyChange?: (busy: boolean) => void) {
+export function useDocumentActions(onBusyChange?: (busy: boolean) => void) {
   const { t } = useTranslation()
   const { refreshDocuments, notify, handleApiError } = useProfileForm()
 
@@ -86,6 +86,7 @@ function DocumentTypeField({ docKey, documents }: { docKey: string; documents: O
   return (
     <DocumentUploadField
       title={t(`companyProfile.officialDocs.docs.${docKey}`)}
+      required
       files={files}
       busy={busy}
       accept={DOC_ACCEPT}

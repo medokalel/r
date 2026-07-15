@@ -13,6 +13,32 @@ export const STEP_NUMBERS: Record<StepKey, number> = {
   officialDocs: 4,
 }
 
+export interface NationalAddressFormValues {
+  hasNationalAddress: boolean
+  certificateNumber: string
+  issueDate: Date | undefined
+  expiryDate: Date | undefined
+  street: string
+  buildingNumber: string
+  district: string
+  additionalNumber: string
+  postalCode: string
+  city: string
+}
+
+export const EMPTY_NATIONAL_ADDRESS: NationalAddressFormValues = {
+  hasNationalAddress: true,
+  certificateNumber: '',
+  issueDate: undefined,
+  expiryDate: undefined,
+  street: '',
+  buildingNumber: '',
+  district: '',
+  additionalNumber: '',
+  postalCode: '',
+  city: '',
+}
+
 export interface ProfileFormValues {
   // Step 1 – header
   companySummary: string
@@ -40,6 +66,8 @@ export interface ProfileFormValues {
   additionalNumber: string
   googleMapUrl: string
   location: LatLng | null
+  // Step 2 – national address (separate certificate-backed address, distinct from the general address above)
+  nationalAddress: NationalAddressFormValues
 }
 
 export const EMPTY_PROFILE_FORM: ProfileFormValues = {
@@ -66,6 +94,7 @@ export const EMPTY_PROFILE_FORM: ProfileFormValues = {
   additionalNumber: '',
   googleMapUrl: '',
   location: null,
+  nationalAddress: EMPTY_NATIONAL_ADDRESS,
 }
 
 export interface BranchFormValues {

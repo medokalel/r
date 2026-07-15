@@ -41,7 +41,9 @@ export function BasicDataStep() {
 export function AddressStep() {
   const { t } = useTranslation()
   const { form, update } = useProfileForm()
-  const [hasNationalAddress, setHasNationalAddress] = useState<'yes' | 'no'>('yes')
+  const hasNationalAddress = form.nationalAddress.hasNationalAddress ? 'yes' : 'no'
+  const setHasNationalAddress = (value: 'yes' | 'no') =>
+    update('nationalAddress', { ...form.nationalAddress, hasNationalAddress: value === 'yes' })
   // Only fill the form from geocoding after the user picks on the map,
   // never when the saved location is restored on load
   const fillFormFromGeocodeRef = useRef(false)

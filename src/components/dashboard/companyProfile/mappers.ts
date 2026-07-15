@@ -2,6 +2,7 @@ import { getCountries, getCountryCallingCode } from 'libphonenumber-js'
 import type { CountryCode } from '@/components/auth/CountryCodeSelect'
 import type { GeocodeResult, LatLng } from '@/components/maps/LocationPicker'
 import type {
+  NationalAddressInput,
   OrganizationProfileData,
   OrgBranch,
   OrgBranchInput,
@@ -9,7 +10,9 @@ import type {
 } from '@/lib/api/organizationProfileApi'
 import {
   EMPTY_BRANCH_FORM,
+  EMPTY_NATIONAL_ADDRESS,
   type BranchFormValues,
+  type NationalAddressFormValues,
   type ProfileFormValues,
 } from './types'
 
@@ -105,6 +108,41 @@ export function addressFieldsFromGeocode(result: GeocodeResult): GeocodedAddress
 
 export { formatFileSize } from '@/lib/files'
 
+export function nationalAddressFormFrom(
+  nationalAddress?: NationalAddressInput | null
+): NationalAddressFormValues {
+  if (!nationalAddress) return EMPTY_NATIONAL_ADDRESS
+  return {
+    hasNationalAddress: nationalAddress.hasNationalAddress ?? true,
+    certificateNumber: nationalAddress.certificateNumber ?? '',
+    issueDate: parseIsoDate(nationalAddress.issueDate),
+    expiryDate: parseIsoDate(nationalAddress.expiryDate),
+    street: nationalAddress.street ?? '',
+    buildingNumber: nationalAddress.buildingNumber ?? '',
+    district: nationalAddress.district ?? '',
+    additionalNumber: nationalAddress.additionalNumber ?? '',
+    postalCode: nationalAddress.postalCode ?? '',
+    city: nationalAddress.city ?? '',
+  }
+}
+
+export function nationalAddressPayloadFrom(
+  form: NationalAddressFormValues
+): NationalAddressInput {
+  return {
+    hasNationalAddress: form.hasNationalAddress,
+    certificateNumber: form.certificateNumber || undefined,
+    issueDate: form.issueDate ? toIsoDate(form.issueDate) : undefined,
+    expiryDate: form.expiryDate ? toIsoDate(form.expiryDate) : undefined,
+    street: form.street || undefined,
+    buildingNumber: form.buildingNumber || undefined,
+    district: form.district || undefined,
+    additionalNumber: form.additionalNumber || undefined,
+    postalCode: form.postalCode || undefined,
+    city: form.city || undefined,
+  }
+}
+
 export function formValuesFromProfile(data: OrganizationProfileData): ProfileFormValues {
   const profile = data.profile ?? {}
   const address = data.address ?? {}
@@ -139,6 +177,7 @@ export function formValuesFromProfile(data: OrganizationProfileData): ProfileFor
     additionalNumber: address.additionalNumber ?? '',
     googleMapUrl: address.googleMapUrl ?? '',
     location,
+    nationalAddress: nationalAddressFormFrom(profile.nationalAddress),
   }
 }
 
@@ -168,6 +207,7 @@ export function payloadFromForm(
       // The profile UI has no production-lines question; defaulted to true on
       // submit so the COMPLETED validation passes
       allProductionLinesActive: forSubmit ? true : undefined,
+      nationalAddress: nationalAddressPayloadFrom(form.nationalAddress),
     },
     address: {
       // Stored as the English country name (language-independent), per the API examples
