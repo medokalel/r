@@ -33,7 +33,7 @@ export function LanguageToggle({ variant = 'default', className }: LanguageToggl
             )}
             aria-label={t('common.language')}
           >
-            <AppIcon icon={GlobeIcon} size={32} />
+            <AppIcon icon={GlobeIcon} size={30} />
           </button>
         ) : (
           <button

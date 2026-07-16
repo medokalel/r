@@ -1,5 +1,6 @@
 import type { FC, SVGProps } from 'react'
 import type { IconProps } from 'iconsax-reactjs'
+import { defaultIconProps } from './constants'
 import {
   AddCircle,
   ArrowDown2,
@@ -54,10 +55,6 @@ import {
 
 export type AppIconComponent = FC<IconProps>
 
-export const defaultIconProps = {
-  variant: 'Linear' as const,
-  color: 'currentColor',
-}
 
 export function AppIcon({
   icon: Icon,

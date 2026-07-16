@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, NotificationIcon } from '@/components/icons'
+import { AppIcon, MailIcon, NotificationIcon } from '@/components/icons'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession } from '@/lib/authStorage'
@@ -19,9 +19,17 @@ function getPeriodKey(hour: number): 'morning' | 'afternoon' | 'evening' | 'nigh
 
 interface AccreditationHeaderProps {
   titleKey?: string
+  orderNumber?: string
+  officerName?: string
+  officerEmail?: string
 }
 
-export function AccreditationHeader({ titleKey = 'accreditation.title' }: AccreditationHeaderProps) {
+export function AccreditationHeader({
+  titleKey = 'accreditation.title',
+  orderNumber,
+  officerName,
+  officerEmail,
+}: AccreditationHeaderProps) {
   const { t, i18n } = useTranslation()
   const session = getAuthSession()
   const [user, setUser] = useState<UserProfile | null>(session?.user ?? null)
@@ -67,8 +75,35 @@ export function AccreditationHeader({ titleKey = 'accreditation.title' }: Accred
 
   return (
     <header className="flex shrink-0 items-center justify-between border-b-2 border-[#ececec] bg-white px-5 py-4">
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <h1 className="text-h3-semi text-primary whitespace-nowrap">{t(titleKey)}</h1>
+
+        {orderNumber && <HeaderDivider />}
+        {orderNumber && (
+          <div className="flex flex-col items-start gap-1">
+            <span className="w-fit rounded-[6px] bg-[#e8edfc] px-3 py-1 text-[13px] font-medium leading-[1.6] text-[#1236a3]">
+              {t('accreditation.orderNumber')}
+            </span>
+            <p className="text-h3-semi text-neutral-900 whitespace-nowrap">{orderNumber}</p>
+          </div>
+        )}
+
+        {orderNumber && officerName && <HeaderDivider />}
+
+        {officerName && (
+          <div className="flex flex-col items-start">
+            <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
+              {t('accreditation.assignedOfficer')}
+            </span>
+            <p className="text-body-2-medium text-neutral-900 whitespace-nowrap">{officerName}</p>
+            {officerEmail && (
+              <p className="flex items-center gap-1 text-body-3 text-primary whitespace-nowrap" dir="ltr">
+                <AppIcon icon={MailIcon} size={14} />
+                {officerEmail}
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-4">
@@ -92,8 +127,8 @@ export function AccreditationHeader({ titleKey = 'accreditation.title' }: Accred
           className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
           aria-label={t('accreditation.notifications')}
         >
-          <AppIcon icon={NotificationIcon} size={32} />
-          <span className="absolute -end-0.5 -top-0.5 flex size-[18px] items-center justify-center rounded-full bg-error-500 text-[11px] font-semibold leading-none text-white">
+          <AppIcon icon={NotificationIcon} size={30} />
+          <span className="absolute end-1 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-[#1236a3] px-2.5 py-2.5 text-[11px] font-semibold leading-none text-white">
             3
           </span>
         </button>

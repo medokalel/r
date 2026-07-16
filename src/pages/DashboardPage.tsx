@@ -159,7 +159,11 @@ export function DashboardPage() {
 
   return (
     <AppLayout>
-      <AccreditationHeader />
+      <AccreditationHeader
+        orderNumber="N-EMS-00022"
+        officerName="الاء طارق | Alaa Tarek"
+        officerEmail="alaatarek78@gmail.com"
+      />
       <ProcessStepper activeStep={0} />
 
       <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">

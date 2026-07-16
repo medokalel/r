@@ -110,8 +110,9 @@
     "verifyingEmail": "جاري التحقق..."
   },
   "accreditation": {
-    "title": "طلب منح",
+    "title": "طلب المنح",
     "orderNumber": "رقم الطلب",
+    "assignedOfficer": "مسؤول الاعتماد المكلف",
     "timeAndDate": "الوقت والتاريخ",
     "morning": "صباحا",
     "afternoon": "ظهرا",
