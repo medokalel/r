@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { fieldTitleClassName } from '@/components/dashboard/FormField'
+import { fieldTitleClassName } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import type { SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
 import { codesForStandardSector, sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'

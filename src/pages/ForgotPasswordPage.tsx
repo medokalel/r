@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Trans, useTranslation } from 'react-i18next'
 import { AuthFeedbackScreen } from '@/components/auth/AuthFeedbackScreen'
-import { authFieldLabelClassName } from '@/components/auth/AuthFieldLabel'
-import { authFieldValueClassName } from '@/components/auth/AuthTextField'
+import { TextField } from '@/components/ui'
 import { AuthLayout } from '@/components/auth/AuthLayout'
 import { OtpInput } from '@/components/auth/OtpInput'
 import {
@@ -15,7 +14,7 @@ import {
 } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
-import { englishDigitsClassName, englishDigitsLtrClassName } from '@/lib/englishDigits'
+import { englishDigitsLtrClassName } from '@/lib/englishDigits'
 import {
   resendResetCode,
   resetPassword,
@@ -24,18 +23,9 @@ import {
 } from '@/lib/api/authApi'
 import { ApiError } from '@/lib/api/client'
 import { isValidEmail } from '@/lib/authValidation'
-import { cn } from '@/lib/utils'
 
 const OTP_LENGTH = 6
 const RESEND_SECONDS = 40
-
-const inputClassName = cn(
-  'w-full h-12 rounded-[var(--radius-sm)] border border-neutral-200 bg-white',
-  authFieldValueClassName,
-  'placeholder:text-[16px] placeholder:font-light placeholder:leading-[1.6] placeholder:text-neutral-600',
-  'focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
-  'transition-colors'
-)
 
 const emptyOtp = () => Array.from({ length: OTP_LENGTH }, () => '')
 
@@ -261,91 +251,65 @@ export function ForgotPasswordPage() {
 
           <div className="space-y-6">
             {step === 1 && (
-              <div className="space-y-2">
-                <label htmlFor="forgot-email" className={authFieldLabelClassName}>
-                  {t('auth.email')}
-                </label>
-                <div className="relative">
-                  <span className="absolute inset-y-0 start-3 flex items-center text-blue-500 pointer-events-none">
-                    <AppIcon icon={MailIcon} size={16} />
-                  </span>
-                  <input
-                    id="forgot-email"
-                    type="email"
-                    lang="en"
-                    placeholder="ex: info@foods.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className={cn(inputClassName, englishDigitsClassName, 'ps-10 pe-4')}
-                  />
-                </div>
-              </div>
+              <TextField
+                id="forgot-email"
+                label={t('auth.email')}
+                icon={MailIcon}
+                type="email"
+                placeholder="ex: info@foods.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             )}
 
             {step === 2 && <OtpInput value={otp} onChange={setOtp} />}
 
             {step === 3 && (
               <>
-                <div className="space-y-2">
-                  <label htmlFor="new-password" className={authFieldLabelClassName}>
-                    {t('auth.password')}
-                  </label>
-                  <div className="relative">
-                    <span className="absolute inset-y-0 start-3 flex items-center text-blue-500 pointer-events-none">
-                      <AppIcon icon={LockIcon} size={16} />
-                    </span>
-                    <input
-                      id="new-password"
-                      type={showPassword ? 'text' : 'password'}
-                      lang="en"
-                      placeholder={t('auth.password')}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={cn(inputClassName, englishDigitsClassName, 'ps-10 pe-10')}
-                    />
+                <TextField
+                  id="new-password"
+                  label={t('auth.password')}
+                  icon={LockIcon}
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={t('auth.password')}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  trailing={
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       aria-label={showPassword ? 'Hide password' : 'Show password'}
-                      className="absolute inset-y-0 end-3 flex items-center text-neutral-400 hover:text-neutral-500 transition-colors"
+                      className="text-neutral-400 hover:text-neutral-600"
                     >
-                      <AppIcon icon={showPassword ? EyeIcon : EyeSlashIcon} size={16} />
+                      <AppIcon icon={showPassword ? EyeIcon : EyeSlashIcon} size={20} />
                     </button>
-                  </div>
-                </div>
+                  }
+                />
 
-                <div className="space-y-2">
-                  <label htmlFor="confirm-new-password" className={authFieldLabelClassName}>
-                    {t('register.confirmPassword')}
-                  </label>
-                  <div className="relative">
-                    <span className="absolute inset-y-0 start-3 flex items-center text-blue-500 pointer-events-none">
-                      <AppIcon icon={LockIcon} size={16} />
-                    </span>
-                    <input
-                      id="confirm-new-password"
-                      type={showConfirm ? 'text' : 'password'}
-                      lang="en"
-                      placeholder={t('register.confirmPasswordPlaceholder')}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      className={cn(inputClassName, englishDigitsClassName, 'ps-10 pe-10')}
-                    />
+                <TextField
+                  id="confirm-new-password"
+                  label={t('register.confirmPassword')}
+                  icon={LockIcon}
+                  type={showConfirm ? 'text' : 'password'}
+                  placeholder={t('register.confirmPasswordPlaceholder')}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  error={
+                    confirmPassword && !passwordsMatch
+                      ? t('register.passwordMismatch')
+                      : undefined
+                  }
+                  trailing={
                     <button
                       type="button"
                       onClick={() => setShowConfirm(!showConfirm)}
                       aria-label={showConfirm ? 'Hide password' : 'Show password'}
-                      className="absolute inset-y-0 end-3 flex items-center text-neutral-400 hover:text-neutral-500 transition-colors"
+                      className="text-neutral-400 hover:text-neutral-600"
                     >
-                      <AppIcon icon={showConfirm ? EyeIcon : EyeSlashIcon} size={16} />
+                      <AppIcon icon={showConfirm ? EyeIcon : EyeSlashIcon} size={20} />
                     </button>
-                  </div>
-                  {confirmPassword && !passwordsMatch && (
-                    <p className="text-small-light text-error-500">
-                      {t('register.passwordMismatch')}
-                    </p>
-                  )}
-                </div>
+                  }
+                />
               </>
             )}
 

@@ -4,13 +4,17 @@ import { useTranslation } from 'react-i18next'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { AuthLayout } from '@/components/auth/AuthLayout'
-import { AuthFieldLabel } from '@/components/auth/AuthFieldLabel'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { DEFAULT_COUNTRY_CODE, getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
-import { AuthSelectField } from '@/components/auth/AuthSelectField'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
-import { authInputClassName, AuthTextField, authFieldValueClassName, authPlaceholderClassName } from '@/components/auth/AuthTextField'
+import {
+  FormLabel,
+  SelectField,
+  TextField,
+  fieldInputClassName,
+  fieldInputTextClassName,
+} from '@/components/ui'
 import { EntityTypeOption, type EntityType } from '@/components/auth/EntityTypeOption'
 import { FileUploadField } from '@/components/auth/FileUploadField'
 import { OtpInput } from '@/components/auth/OtpInput'
@@ -401,7 +405,7 @@ function StepVerification({
 
   return (
     <div className="space-y-6 w-full">
-      <AuthSelectField
+      <SelectField
         id="government-agency"
         label={
           form.entityType === 'governmental'
@@ -415,16 +419,17 @@ function StepVerification({
             ? t('register.governmentAgencyPlaceholder')
             : t('register.organizationNamePlaceholder')
         }
-        onChange={(e) => onPatch({ governmentAgency: e.target.value })}
-      >
-        <option value="agency-1">{t('register.sampleAgency1')}</option>
-        <option value="agency-2">{t('register.sampleAgency2')}</option>
-      </AuthSelectField>
+        onChange={(value) => onPatch({ governmentAgency: value })}
+        options={[
+          { value: 'agency-1', label: t('register.sampleAgency1') },
+          { value: 'agency-2', label: t('register.sampleAgency2') },
+        ]}
+      />
 
       <div className="space-y-3">
-        <AuthFieldLabel htmlFor="reg-email" required>
+        <FormLabel htmlFor="reg-email" required>
           {t('auth.email')}
-        </AuthFieldLabel>
+        </FormLabel>
         <div
           className={cn(
             'flex h-12 items-center gap-3 rounded-[var(--radius-sm)] border bg-white ps-4 pe-1.5',
@@ -441,8 +446,7 @@ function StepVerification({
             onChange={(e) => onPatch({ email: toEnglishDigits(e.target.value) })}
             className={cn(
               'min-w-0 flex-1 bg-transparent pe-1 focus:outline-none',
-              authFieldValueClassName,
-              authPlaceholderClassName,
+              fieldInputTextClassName,
               englishDigitsClassName
             )}
           />
@@ -513,11 +517,6 @@ function StepLegal({
     }
   }, [form.country])
 
-  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const country = e.target.value as CountryCode
-    onPatch({ country, governorate: '' })
-  }
-
   const governoratePlaceholder = !form.country
     ? t('register.selectCountryFirst')
     : governoratesLoading
@@ -528,7 +527,7 @@ function StepLegal({
 
   return (
     <div className="space-y-6 w-full">
-      <AuthTextField
+      <TextField
         id="management"
         label={t('register.management')}
         required
@@ -536,7 +535,7 @@ function StepLegal({
         value={form.management}
         onChange={(e) => onPatch({ management: e.target.value })}
       />
-      <AuthTextField
+      <TextField
         id="facility-owner"
         label={t('register.facilityOwner')}
         icon={UserOctagonIcon}
@@ -545,7 +544,7 @@ function StepLegal({
         value={form.facilityOwner}
         onChange={(e) => onPatch({ facilityOwner: e.target.value })}
       />
-      <AuthTextField
+      <TextField
         id="legal-capacity"
         label={t('register.legalCapacity')}
         icon={LegalCapacityIcon}
@@ -561,46 +560,43 @@ function StepLegal({
         savedFileName={form.authorizationFileName}
         onChange={(authorizationFile) => onPatch({ authorizationFile })}
       />
-      <AuthSelectField
+      <SelectField
         id="activity"
         label={t('register.activity')}
         required
         value={form.activity}
         placeholder={t('register.activityPlaceholder')}
-        onChange={(e) => onPatch({ activity: e.target.value })}
-      >
-        <option value="food">{t('register.activityFood')}</option>
-        <option value="retail">{t('register.activityRetail')}</option>
-      </AuthSelectField>
-      <AuthSelectField
+        onChange={(value) => onPatch({ activity: value })}
+        options={[
+          { value: 'food', label: t('register.activityFood') },
+          { value: 'retail', label: t('register.activityRetail') },
+        ]}
+      />
+      <SelectField
         id="country"
         label={t('register.country')}
         required
         value={form.country}
         placeholder={t('register.countryPlaceholder')}
-        onChange={handleCountryChange}
-      >
-        {countries.map((country) => (
-          <option key={country.code} value={country.code}>
-            {country.flag} {country.name}
-          </option>
-        ))}
-      </AuthSelectField>
-      <AuthSelectField
+        onChange={(value) => onPatch({ country: value as CountryCode, governorate: '' })}
+        options={countries.map((country) => ({
+          value: country.code,
+          label: `${country.flag} ${country.name}`,
+        }))}
+      />
+      <SelectField
         id="governorate"
         label={t('register.governorate')}
         required
         value={form.governorate}
         placeholder={governoratePlaceholder}
-        onChange={(e) => onPatch({ governorate: e.target.value })}
+        onChange={(value) => onPatch({ governorate: value })}
         disabled={!form.country || governoratesLoading || governorates.length === 0}
-      >
-        {governorates.map((governorate) => (
-          <option key={governorate.id} value={governorate.id}>
-            {governorate.name}
-          </option>
-        ))}
-      </AuthSelectField>
+        options={governorates.map((governorate) => ({
+          value: governorate.id,
+          label: governorate.name,
+        }))}
+      />
     </div>
   )
 }
@@ -635,7 +631,7 @@ function StepAccount({
   return (
     <div className="space-y-6 w-full">
       <div className="space-y-3">
-        <AuthFieldLabel required>{t('register.mobileNumber')}</AuthFieldLabel>
+        <FormLabel required>{t('register.mobileNumber')}</FormLabel>
         <PhoneInputRow
           rowClassName="gap-3"
           value={form.country}
@@ -657,7 +653,7 @@ function StepAccount({
               value={form.mobile}
               onChange={(e) => onPatch({ mobile: toEnglishDigits(e.target.value) })}
               className={cn(
-                authInputClassName,
+                fieldInputClassName,
                 englishDigitsClassName,
                 'ps-12',
                 mobileError && 'border-error-400 focus:ring-error-400 focus:border-error-400'
@@ -668,7 +664,7 @@ function StepAccount({
         {mobileError && <p className="text-small-light text-error-500">{mobileError}</p>}
       </div>
 
-      <AuthTextField
+      <TextField
         id="password"
         label={t('auth.password')}
         icon={LockIcon}
@@ -690,7 +686,7 @@ function StepAccount({
         }
       />
 
-      <AuthTextField
+      <TextField
         id="confirm-password"
         label={t('register.confirmPassword')}
         icon={LockIcon}

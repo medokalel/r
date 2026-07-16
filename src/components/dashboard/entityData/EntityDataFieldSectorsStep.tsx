@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { AppIcon, SearchOutlineIcon } from '@/components/icons'
 import { SectorIcon } from '@/components/icons/sectorIcons'
 import {
-  fieldInputClassName,
   fieldHeightClassName,
   fieldTitleClassName,
-} from '@/components/dashboard/FormField'
+  TextField,
+} from '@/components/ui'
 import type { SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
 import { sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'
 import { StandardTabs } from '@/components/dashboard/entityData/StandardTabs'
@@ -109,12 +109,12 @@ export function EntityDataFieldSectorsStep({
             size={24}
             className="pointer-events-none absolute start-6 top-1/2 -translate-y-1/2 text-neutral-400"
           />
-          <input
+          <TextField
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             placeholder={t('accreditation.entityData.field.searchPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName, 'ps-14 pe-6')}
+            className="ps-14 pe-6"
           />
         </div>
         <Button

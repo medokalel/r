@@ -44,7 +44,7 @@ export function DashboardSidebar() {
   return (
     <aside
       className={cn(
-        'relative flex shrink-0 flex-col bg-white py-6 shadow-[0_5px_47px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out',
+        'relative flex shrink-0 flex-col bg-white py-6 shadow-[0_5px_1px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out',
         expanded ? 'w-[236px] gap-8 px-4' : 'w-[112px] items-center gap-10'
       )}
     >

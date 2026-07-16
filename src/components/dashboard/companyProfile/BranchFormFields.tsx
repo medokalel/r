@@ -1,12 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow, type CountryCode } from '@/components/auth/CountryCodeSelect'
-import {
-  FormField,
-  RadioGroup,
-  TagInput,
-  fieldInputClassName,
-  fieldHeightClassName,
-} from '@/components/dashboard/FormField'
+import { FormField, RadioGroup, MultiSelect, TextField } from '@/components/ui'
 import { LocationPicker, type LatLng } from '@/components/maps/LocationPicker'
 import { cn } from '@/lib/utils'
 import { BRANCH_SECTOR_OPTIONS } from './constants'
@@ -90,20 +84,18 @@ export function BranchFormFields({
     <>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <FormField label={t('companyProfile.addBranch.branchNameLabel')} required>
-          <input
+          <TextField
             type="text"
             placeholder={t('companyProfile.addBranch.branchNamePlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
             value={form.branchName}
             onChange={(e) => set('branchName', e.target.value)}
           />
         </FormField>
         <FormField label={t('companyProfile.addBranch.registryLabel')} required>
-          <input
+          <TextField
             type="text"
             dir="ltr"
             placeholder={t('companyProfile.addBranch.registryPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
             value={form.commercialRegisterNumber}
             onChange={(e) => set('commercialRegisterNumber', e.target.value)}
           />
@@ -111,10 +103,9 @@ export function BranchFormFields({
       </div>
 
       <FormField label={t('companyProfile.addBranch.addressLabel')} required>
-        <input
+        <TextField
           type="text"
           placeholder={t('companyProfile.addBranch.addressPlaceholder')}
-          className={cn(fieldInputClassName, fieldHeightClassName)}
           value={form.address}
           onChange={(e) => set('address', e.target.value)}
         />
@@ -136,10 +127,9 @@ export function BranchFormFields({
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <FormField label={t('companyProfile.addBranch.managerLabel')} required>
-          <input
+          <TextField
             type="text"
             placeholder={t('companyProfile.addBranch.managerPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
             value={form.branchManagerName}
             onChange={(e) => set('branchManagerName', e.target.value)}
           />
@@ -152,11 +142,11 @@ export function BranchFormFields({
             aria-label={t('companyProfile.addBranch.phoneLabel')}
             className="h-12 rounded-[var(--radius-sm)] border border-neutral-200"
           >
-            <input
+            <TextField
               type="tel"
               dir="ltr"
               placeholder={t('companyProfile.basicDataCard.phonePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName, 'flex-1')}
+              className="flex-1"
               value={form.phoneNumber}
               onChange={(e) => set('phoneNumber', e.target.value)}
             />
@@ -166,19 +156,18 @@ export function BranchFormFields({
 
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <FormField label={t('companyProfile.addBranch.sectorLabel')} required>
-          <TagInput
+          <MultiSelect
             tags={form.sectors}
             options={BRANCH_SECTOR_OPTIONS}
             onChange={(tags) => set('sectors', tags)}
           />
         </FormField>
         <FormField label={t('companyProfile.addBranch.employeesLabel')} required>
-          <input
+          <TextField
             type="number"
             dir="ltr"
             min={0}
             placeholder={t('companyProfile.addBranch.employeesPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
             value={form.employeeCount}
             onChange={(e) => set('employeeCount', e.target.value)}
           />

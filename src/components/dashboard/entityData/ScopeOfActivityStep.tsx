@@ -8,13 +8,11 @@ import {
   FormSection,
   RadioGroup,
   SelectField,
-  TagInput,
-  fieldHeightClassName,
-  fieldInputClassName,
-  fieldTextareaClassName,
-} from '@/components/dashboard/FormField'
+  MultiSelect,
+  TextField,
+  Textarea,
+} from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
-import { cn } from '@/lib/utils'
 
 const defaultBranchAddress =
   '9000 Prince Miteb, Al Aziziyah District - Jeddah 23342 - 3041, Unit No. 7, Kingdom of Saudi Arabia.'
@@ -57,12 +55,7 @@ function BranchForm({
           required
           variant="question"
         >
-          <input
-            type="number"
-            min={0}
-            defaultValue={12}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
-          />
+          <TextField type="number" min={0} defaultValue={12} />
         </FormField>
 
         <FormField
@@ -70,12 +63,7 @@ function BranchForm({
           required
           variant="question"
         >
-          <input
-            type="number"
-            min={0}
-            defaultValue={6}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
-          />
+          <TextField type="number" min={0} defaultValue={6} />
         </FormField>
       </div>
 
@@ -85,21 +73,11 @@ function BranchForm({
           required
           variant="question"
         >
-          <input
-            type="number"
-            min={0}
-            defaultValue={2}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
-          />
+          <TextField type="number" min={0} defaultValue={2} />
         </FormField>
 
         <FormField label={t('accreditation.entityData.fields.scope.openingHours')} variant="question">
-          <input
-            type="number"
-            min={0}
-            defaultValue={8}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
-          />
+          <TextField type="number" min={0} defaultValue={8} />
         </FormField>
       </div>
 
@@ -118,12 +96,11 @@ function BranchForm({
           label={t('accreditation.entityData.fields.scope.productionLines')}
           variant="question"
         >
-          <input
+          <TextField
             type="number"
             min={0}
             defaultValue={4}
             placeholder={t('accreditation.entityData.fields.scope.productionLinesPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
       </div>
@@ -142,10 +119,9 @@ function BranchForm({
           required
           variant="question"
         >
-          <input
+          <TextField
             type="text"
             placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
       </div>
@@ -155,11 +131,7 @@ function BranchForm({
         required
         variant="question"
       >
-        <input
-          type="text"
-          defaultValue={defaultBranchAddress}
-          className={cn(fieldInputClassName, fieldHeightClassName)}
-        />
+        <TextField type="text" defaultValue={defaultBranchAddress} />
       </FormField>
 
       <div className="grid gap-5 lg:grid-cols-2">
@@ -195,10 +167,9 @@ function BranchForm({
         required
         variant="question"
       >
-        <input
+        <TextField
           type="text"
           placeholder={t('accreditation.entityData.fields.scope.chooseActivities')}
-          className={cn(fieldInputClassName, fieldHeightClassName)}
         />
       </FormField>
 
@@ -207,10 +178,7 @@ function BranchForm({
         required
         variant="question"
       >
-        <textarea
-          placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          className={fieldTextareaClassName}
-        />
+        <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
       </FormField>
 
       <FormField
@@ -218,10 +186,7 @@ function BranchForm({
         required
         variant="question"
       >
-        <textarea
-          placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          className={fieldTextareaClassName}
-        />
+        <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
       </FormField>
     </FormSection>
   )
@@ -272,10 +237,9 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <input
+          <TextField
             type="text"
             placeholder={t('accreditation.entityData.fields.scope.scopeOfWorkPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
 
@@ -284,7 +248,7 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <TagInput
+          <MultiSelect
             tags={economicFields}
             options={economicFieldOptions}
             onChange={setEconomicFields}
@@ -296,10 +260,7 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <FormField
@@ -307,10 +268,7 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <FormField
@@ -318,10 +276,7 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <FormField

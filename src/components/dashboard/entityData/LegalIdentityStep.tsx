@@ -16,11 +16,12 @@ import {
   FormSection,
   RadioGroup,
   SelectField,
-  TagInput,
+  MultiSelect,
+  TextField,
+  Textarea,
   fieldHeightClassName,
-  fieldInputClassName,
   fieldTextClassName,
-} from '@/components/dashboard/FormField'
+} from '@/components/ui'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import {
@@ -76,33 +77,27 @@ export function LegalIdentityStep({
       <SectionHeading title={t('accreditation.form.mainData')} accordion>
         <div className="space-y-5">
         <FormField label={t('accreditation.form.requiredStandard')} required>
-          <TagInput tags={standardTags} options={standardOptions} onChange={onStandardTagsChange} />
+          <MultiSelect tags={standardTags} options={standardOptions} onChange={onStandardTagsChange} />
         </FormField>
 
         <FormField label={t('accreditation.form.otherStandard')}>
-          <input
+          <TextField
             type="text"
             placeholder={t('accreditation.form.otherStandardPlaceholder')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
 
         <div className="grid gap-5 lg:grid-cols-2">
           <FormField label={t('accreditation.form.organizationName')} required>
-            <input
+            <TextField
               type="text"
               defaultValue="Example: Standard Arabia Company for Commercial Services"
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
 
           <FormField label={t('accreditation.form.website')}>
             <div className="relative">
-              <input
-                type="url"
-                defaultValue="www.mac-cs.sa"
-                className={cn(fieldInputClassName, fieldHeightClassName, 'pe-10')}
-              />
+              <TextField type="url" defaultValue="www.mac-cs.sa" className="pe-10" />
               <span className="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden>
                 ↗
               </span>
@@ -112,19 +107,11 @@ export function LegalIdentityStep({
 
         <div className="grid gap-5 lg:grid-cols-2">
           <FormField label={t('accreditation.form.headOfficeAddress')} required>
-            <textarea
-              defaultValue={defaultAddress}
-              rows={3}
-              className={cn(fieldInputClassName, 'min-h-[60px] resize-none py-2.5')}
-            />
+            <Textarea defaultValue={defaultAddress} rows={3} className="min-h-[60px]" />
           </FormField>
 
           <FormField label={t('accreditation.form.auditPlaceAddress')} required>
-            <textarea
-              defaultValue={defaultAddress}
-              rows={3}
-              className={cn(fieldInputClassName, 'min-h-[60px] resize-none py-2.5')}
-            />
+            <Textarea defaultValue={defaultAddress} rows={3} className="min-h-[60px]" />
           </FormField>
         </div>
 
@@ -185,10 +172,9 @@ export function LegalIdentityStep({
           </FormField>
 
           <FormField label={t('accreditation.form.ifNoStateWhy')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.form.stateReasonPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
@@ -227,18 +213,16 @@ export function LegalIdentityStep({
 
         <div className="grid gap-5 lg:grid-cols-2">
           <FormField label={t('accreditation.form.representativeName')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.form.representativeNamePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
 
           <FormField label={t('accreditation.form.representativeTitle')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.form.representativeTitlePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
@@ -286,23 +270,18 @@ export function LegalIdentityStep({
 
         <div className="grid gap-5 lg:grid-cols-2">
           <FormField label={t('accreditation.form.mainActivity')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.form.mainActivityPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
 
           <FormField label={t('accreditation.form.requestType')} required>
-            <input
+            <TextField
               type="text"
               readOnly
               value={t('accreditation.form.newGranted')}
-              className={cn(
-                fieldInputClassName,
-                fieldHeightClassName,
-                'cursor-not-allowed bg-[#efefef] text-neutral-900'
-              )}
+              className="cursor-not-allowed bg-[#efefef] text-neutral-900"
             />
           </FormField>
         </div>

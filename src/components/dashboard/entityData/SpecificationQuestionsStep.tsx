@@ -4,13 +4,11 @@ import {
   FormField,
   FormSection,
   RadioGroup,
-  fieldHeightClassName,
-  fieldInputClassName,
-  fieldTextareaClassName,
-} from '@/components/dashboard/FormField'
+  TextField,
+  Textarea,
+} from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
-import { cn } from '@/lib/utils'
 
 export function SpecificationQuestionsStep() {
   const { t } = useTranslation()
@@ -37,10 +35,7 @@ export function SpecificationQuestionsStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <FormField
@@ -48,10 +43,7 @@ export function SpecificationQuestionsStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <div className="grid gap-5 lg:grid-cols-2">
@@ -82,10 +74,7 @@ export function SpecificationQuestionsStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
       </FormSection>
 
@@ -132,10 +121,7 @@ export function SpecificationQuestionsStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <FormField
@@ -156,10 +142,7 @@ export function SpecificationQuestionsStep() {
           required
           variant="question"
         >
-          <textarea
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={fieldTextareaClassName}
-          />
+          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
         </FormField>
 
         <div className="grid gap-5 lg:grid-cols-2">
@@ -191,10 +174,9 @@ export function SpecificationQuestionsStep() {
         </div>
 
         <FormField label={t('accreditation.entityData.fields.spec.iso45001.certifyingBody')}>
-          <input
+          <TextField
             type="text"
             placeholder={t('accreditation.entityData.fields.common.writeHere')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
       </FormSection>

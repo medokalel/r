@@ -2,14 +2,8 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { DatePicker } from '@/components/ui/DatePicker'
-import {
-  FormField,
-  SelectField,
-  fieldInputClassName,
-  fieldHeightClassName,
-} from '@/components/dashboard/FormField'
+import { FormField, SelectField, TextField } from '@/components/ui'
 import { AppIcon, MailIcon, UserIcon } from '@/components/icons'
-import { cn } from '@/lib/utils'
 import { STATUS_OPTIONS } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
@@ -51,19 +45,17 @@ export function BasicDataCard() {
       <div className="flex flex-col gap-5">
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.companyNameLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.basicDataCard.companyNamePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.organizationName}
               onChange={(e) => update('organizationName', e.target.value)}
             />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.tradingNameLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.basicDataCard.tradingNamePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.tradeName}
               onChange={(e) => update('tradeName', e.target.value)}
             />
@@ -72,25 +64,20 @@ export function BasicDataCard() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.commercialRegistryLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.basicDataCard.commercialRegistryPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.commercialRegisterNumber}
               onChange={(e) => update('commercialRegisterNumber', e.target.value)}
             />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.serialNumberLabel')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.basicDataCard.serialNumberPlaceholder')}
               readOnly
               value={form.unifiedNumber}
-              className={cn(
-                fieldInputClassName,
-                fieldHeightClassName,
-                'cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] text-neutral-400'
-              )}
+              className="cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] text-neutral-400"
             />
           </FormField>
         </div>
@@ -98,10 +85,10 @@ export function BasicDataCard() {
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.authorizedPersonLabel')} required>
             <div className="relative flex items-center">
-              <input
+              <TextField
                 type="text"
                 placeholder={t('companyProfile.basicDataCard.authorizedPersonPlaceholder')}
-                className={cn(fieldInputClassName, fieldHeightClassName, 'ps-10')}
+                className="ps-10"
                 value={form.authorizedPersonName}
                 onChange={(e) => update('authorizedPersonName', e.target.value)}
               />
@@ -112,11 +99,11 @@ export function BasicDataCard() {
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.emailLabel')} required>
             <div className="relative flex items-center">
-              <input
+              <TextField
                 type="email"
                 dir="ltr"
                 placeholder={t('companyProfile.basicDataCard.emailPlaceholder')}
-                className={cn(fieldInputClassName, fieldHeightClassName, 'pl-10')}
+                className="pl-10"
                 value={form.email}
                 onChange={(e) => update('email', e.target.value)}
               />
@@ -136,11 +123,11 @@ export function BasicDataCard() {
               aria-label={t('companyProfile.basicDataCard.phoneLabel')}
               className="h-12 rounded-[var(--radius-sm)] border border-neutral-200"
             >
-              <input
+              <TextField
                 type="tel"
                 dir="ltr"
                 placeholder={t('companyProfile.basicDataCard.phonePlaceholder')}
-                className={cn(fieldInputClassName, fieldHeightClassName, 'flex-1')}
+                className="flex-1"
                 value={form.phoneNumber}
                 onChange={(e) => update('phoneNumber', e.target.value)}
               />
@@ -157,11 +144,10 @@ export function BasicDataCard() {
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.totalEmployeesLabel')} required>
-            <input
+            <TextField
               type="number"
               min={0}
               placeholder={t('companyProfile.basicDataCard.totalEmployeesPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.employeeCount}
               onChange={(e) => update('employeeCount', e.target.value)}
             />

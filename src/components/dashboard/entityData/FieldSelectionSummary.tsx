@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { fieldTextClassName } from '@/components/dashboard/FormField'
+import { fieldTextClassName } from '@/components/ui'
 import type { SectorKey } from '@/components/dashboard/entityData/fieldTypes'
 import { cn } from '@/lib/utils'
 

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { SelectDropdownIcon } from '@/components/auth/SelectDropdownIcon'
+import { SelectDropdownIcon } from '@/components/ui/SelectDropdownIcon'
 import { SectionTitle } from '@/components/dashboard/SectionTitle'
 import { AppIcon, SuccessCircleIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'

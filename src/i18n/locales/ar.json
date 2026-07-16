@@ -112,9 +112,11 @@
   "accreditation": {
     "title": "طلب منح",
     "orderNumber": "رقم الطلب",
-    "assignedOfficer": "مسؤول الاعتماد المعين",
     "timeAndDate": "الوقت والتاريخ",
-    "evening": "مساءً",
+    "morning": "صباحا",
+    "afternoon": "ظهرا",
+    "evening": "مساء",
+    "night": "ليلا",
     "january": "يناير",
     "notifications": "الإشعارات",
     "auditManager": "مدير التدقيق",

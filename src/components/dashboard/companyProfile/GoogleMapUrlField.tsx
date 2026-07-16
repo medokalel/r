@@ -1,9 +1,4 @@
-import {
-  FormField,
-  fieldInputClassName,
-  fieldHeightClassName,
-} from '@/components/dashboard/FormField'
-import { cn } from '@/lib/utils'
+import { FormField, TextField } from '@/components/ui'
 import { GoogleMapIcon } from './Primitives'
 
 interface GoogleMapUrlFieldProps {
@@ -27,11 +22,11 @@ export function GoogleMapUrlField({
         <span className="pointer-events-none absolute start-3">
           <GoogleMapIcon />
         </span>
-        <input
+        <TextField
           type="url"
           dir="ltr"
           placeholder={placeholder}
-          className={cn(fieldInputClassName, fieldHeightClassName, 'ps-10')}
+          className="ps-10"
           value={value}
           onChange={(e) => onChange(e.target.value)}
         />

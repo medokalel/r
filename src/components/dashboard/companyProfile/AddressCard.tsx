@@ -2,13 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
-import {
-  FormField,
-  SelectField,
-  fieldInputClassName,
-  fieldHeightClassName,
-} from '@/components/dashboard/FormField'
-import { cn } from '@/lib/utils'
+import { FormField, SelectField, TextField } from '@/components/ui'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import type { CountryCode } from '@/lib/countries'
 import { GoogleMapUrlField } from './GoogleMapUrlField'
@@ -87,10 +81,9 @@ export function AddressCard() {
                 onChange={(value) => update('city', value)}
               />
             ) : (
-              <input
+              <TextField
                 type="text"
                 placeholder={t('companyProfile.addressCard.cityPlaceholder')}
-                className={cn(fieldInputClassName, fieldHeightClassName)}
                 value={form.city}
                 onChange={(e) => update('city', e.target.value)}
               />
@@ -101,19 +94,17 @@ export function AddressCard() {
         {/* Row 2: Neighborhood | Street */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.addressCard.neighborhoodLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.addressCard.neighborhoodPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.district}
               onChange={(e) => update('district', e.target.value)}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.streetLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.addressCard.streetPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.street}
               onChange={(e) => update('street', e.target.value)}
             />
@@ -123,29 +114,26 @@ export function AddressCard() {
         {/* Row 3: Building | Sub Number | Postal Code */}
         <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
           <FormField label={t('companyProfile.addressCard.buildingLabel')} required>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.addressCard.buildingPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.buildingNumber}
               onChange={(e) => update('buildingNumber', e.target.value)}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.subNumberLabel')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('companyProfile.addressCard.subNumberPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.additionalNumber}
               onChange={(e) => update('additionalNumber', e.target.value)}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.postalCodeLabel')} required>
-            <input
+            <TextField
               type="text"
               dir="ltr"
               placeholder={t('companyProfile.addressCard.postalCodePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
               value={form.postalCode}
               onChange={(e) => update('postalCode', e.target.value)}
             />

@@ -1,7 +1,7 @@
 import { useMemo, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SelectDropdownIcon } from '@/components/auth/SelectDropdownIcon'
-import { authSelectFieldClassName } from '@/components/auth/AuthTextField'
+import { SelectDropdownIcon } from '@/components/ui/SelectDropdownIcon'
+import { nativeSelectClassName } from '@/components/ui/fieldStyles'
 import {
   DEFAULT_COUNTRY_CODE,
   getCountryOptions,
@@ -64,7 +64,7 @@ export function CountryCodeSelect({
         disabled={disabled}
         onChange={(e) => onChange(e.target.value as CountryCode)}
         className={cn(
-          authSelectFieldClassName(selected.code),
+          nativeSelectClassName(true),
           'h-full w-full cursor-pointer appearance-none border-0 px-2 pe-5 text-transparent',
           disabled && 'cursor-not-allowed opacity-60'
         )}

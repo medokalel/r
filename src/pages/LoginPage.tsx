@@ -6,22 +6,13 @@ import { ApiError } from '@/lib/api/client'
 import { getAuthToken, saveAuthSession } from '@/lib/authStorage'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
-import { authFieldLabelClassName } from '@/components/auth/AuthFieldLabel'
-import { authFieldValueClassName } from '@/components/auth/AuthTextField'
+import { TextField } from '@/components/ui'
 import { AuthLayout } from '@/components/auth/AuthLayout'
 import { isValidEmail } from '@/lib/authValidation'
-import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { Button } from '@/components/ui/Button'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
-
-const inputClassName = cn(
-  'w-full h-12 rounded-[var(--radius-sm)] border border-neutral-200 bg-white text-body-2 text-neutral-900',
-  'placeholder-body-2-light placeholder:text-neutral-400',
-  'focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500',
-  'transition-colors'
-)
 
 export function LoginPage() {
   const { t } = useTranslation()
@@ -78,68 +69,36 @@ export function LoginPage() {
       <p className="text-body-1 text-neutral-500 mb-10">{t('auth.loginSubtitle')}</p>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <label htmlFor="email" className={authFieldLabelClassName}>
-            {t('auth.email')}
-          </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 start-3 flex items-center text-blue-500 pointer-events-none">
-              <AppIcon icon={MailIcon} size={16} />
-            </span>
-            <input
-              id="email"
-              type="email"
-              lang="en"
-              placeholder="ex: info@foods.com"
-              value={form.email}
-              onChange={(e) =>
-                setForm({ ...form, email: toEnglishDigits(e.target.value) })
-              }
-              required
-              className={cn(
-                'w-full h-12 rounded-[var(--radius-sm)] border bg-white',
-                emailError
-                  ? 'border-error-400 focus:ring-error-400 focus:border-error-400'
-                  : 'border-neutral-200 focus:ring-blue-500 focus:border-blue-500',
-                authFieldValueClassName,
-                'placeholder:text-[16px] placeholder:font-light placeholder:leading-[1.6] placeholder:text-neutral-600',
-                'focus:outline-none focus:ring-1 transition-colors',
-                englishDigitsClassName,
-                'ps-10 pe-4'
-              )}
-            />
-          </div>
-          {emailError && <p className="text-small-light text-error-500">{emailError}</p>}
-        </div>
+        <TextField
+          id="email"
+          label={t('auth.email')}
+          icon={MailIcon}
+          type="email"
+          placeholder="ex: info@foods.com"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          error={emailError}
+        />
 
-        <div className="space-y-2">
-          <label htmlFor="password" className={authFieldLabelClassName}>
-            {t('auth.password')}
-          </label>
-          <div className="relative">
-            <span className="absolute inset-y-0 start-3 flex items-center text-blue-500 pointer-events-none">
-              <AppIcon icon={LockIcon} size={16} />
-            </span>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              lang="en"
-              placeholder={t('auth.password')}
-              value={form.password}
-              onChange={(e) => setForm({ ...form, password: e.target.value })}
-              required
-              className={cn(inputClassName, englishDigitsClassName, 'ps-10 pe-10')}
-            />
+        <TextField
+          id="password"
+          label={t('auth.password')}
+          icon={LockIcon}
+          type={showPassword ? 'text' : 'password'}
+          placeholder={t('auth.password')}
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
+          trailing={
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
-              className="absolute inset-y-0 end-3 flex items-center text-neutral-400 hover:text-neutral-500 transition-colors"
+              className="text-neutral-400 hover:text-neutral-600"
             >
-              <AppIcon icon={showPassword ? EyeIcon : EyeSlashIcon} size={16} />
+              <AppIcon icon={showPassword ? EyeIcon : EyeSlashIcon} size={20} />
             </button>
-          </div>
-        </div>
+          }
+        />
 
         <div className="flex items-center gap-2.5">
           <Checkbox.Root

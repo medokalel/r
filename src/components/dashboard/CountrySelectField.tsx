@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SelectField } from '@/components/dashboard/FormField'
+import { SelectField } from '@/components/ui'
 import { getCountryOptions, type CountryCode, type CountryOption } from '@/lib/countries'
 
 interface CountrySelectFieldProps {

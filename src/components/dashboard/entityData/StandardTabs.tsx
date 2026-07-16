@@ -3,7 +3,7 @@ import {
   fieldStandardTabActiveClassName,
   fieldStandardTabClassName,
   fieldStandardTabInactiveClassName,
-} from '@/components/dashboard/FormField'
+} from '@/components/ui'
 import type { StandardKey } from '@/components/dashboard/entityData/fieldTypes'
 import { WesternDigits } from '@/components/WesternDigits'
 import { cn } from '@/lib/utils'

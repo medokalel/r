@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
-import { FormField, TagInput, fieldTextareaClassName } from '@/components/dashboard/FormField'
+import { FormField, MultiSelect, Textarea } from '@/components/ui'
 import { AppIcon, BuildingIcon, UploadOutlineIcon } from '@/components/icons'
 import {
   uploadOrganizationLogo,
@@ -131,8 +131,7 @@ export function ProfileHeaderCard() {
       {/* Summary + sector */}
       <div className="flex min-w-0 flex-1 flex-col gap-5">
         <FormField label={t('companyProfile.profileHeader.companySummaryLabel')} required>
-          <textarea
-            className={fieldTextareaClassName}
+          <Textarea
             placeholder={t('companyProfile.profileHeader.companySummaryPlaceholder')}
             rows={4}
             value={form.companySummary}
@@ -141,7 +140,7 @@ export function ProfileHeaderCard() {
         </FormField>
 
         <FormField label={t('companyProfile.profileHeader.industrySectorLabel')} required>
-          <TagInput
+          <MultiSelect
             tags={form.industries}
             options={SECTOR_OPTIONS}
             onChange={(tags) => update('industries', tags)}

@@ -7,7 +7,7 @@ import {
   type UploadedDocumentFile,
 } from '@/components/dashboard/DocumentUploadField'
 import { DocumentsSectionHeader } from '@/components/dashboard/entityData/DocumentsSectionHeader'
-import { fieldBodyTextClassName, fieldTitleClassName } from '@/components/dashboard/FormField'
+import { fieldBodyTextClassName, fieldTitleClassName } from '@/components/ui'
 import { formatFileSize } from '@/lib/files'
 import { cn } from '@/lib/utils'
 

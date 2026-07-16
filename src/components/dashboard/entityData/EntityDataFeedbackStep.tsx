@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, AttachIcon, BoldIcon, ExternalLinkIcon, LinkIcon, UserIcon } from '@/components/icons'
-import { fieldTitleClassName } from '@/components/dashboard/FormField'
+import { fieldTitleClassName } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { cn } from '@/lib/utils'

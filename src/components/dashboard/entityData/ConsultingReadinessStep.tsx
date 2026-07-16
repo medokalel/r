@@ -5,10 +5,9 @@ import {
   FormSection,
   RadioGroup,
   RatingScale,
-  fieldHeightClassName,
-  fieldInputClassName,
+  TextField,
   fieldTextClassName,
-} from '@/components/dashboard/FormField'
+} from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { cn } from '@/lib/utils'
 
@@ -62,10 +61,9 @@ export function ConsultingReadinessStep() {
           </FormField>
 
           <FormField label={t('accreditation.entityData.fields.consulting.consultantName')} variant="question">
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.entityData.fields.consulting.consultantNamePlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
@@ -87,12 +85,7 @@ export function ConsultingReadinessStep() {
             label={t('accreditation.entityData.fields.consulting.consultationPeriod')}
             variant="question"
           >
-            <input
-              type="number"
-              min={1}
-              placeholder="0"
-              className={cn(fieldInputClassName, fieldHeightClassName)}
-            />
+            <TextField type="number" min={1} placeholder="0" />
           </FormField>
         </div>
 
@@ -232,10 +225,9 @@ export function ConsultingReadinessStep() {
         </FormField>
 
         <FormField label={t('accreditation.entityData.fields.readiness.otherSpecification')}>
-          <input
+          <TextField
             type="text"
             placeholder={t('accreditation.entityData.fields.readiness.other')}
-            className={cn(fieldInputClassName, fieldHeightClassName)}
           />
         </FormField>
       </FormSection>
@@ -257,10 +249,9 @@ export function ConsultingReadinessStep() {
           </FormField>
 
           <FormField label={t('accreditation.entityData.fields.readiness.designExceptionReason')}>
-            <input
+            <TextField
               type="text"
               placeholder={t('accreditation.form.stateReasonPlaceholder')}
-              className={cn(fieldInputClassName, fieldHeightClassName)}
             />
           </FormField>
         </div>
