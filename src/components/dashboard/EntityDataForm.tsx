@@ -16,10 +16,12 @@ interface EntityDataFormProps {
   section: EntityDataSubSection
   viewTab: EntityDataViewTab
   fieldPhase?: FieldPhase
-  selectedSectors?: SectorKey[]
-  onSelectedSectorsChange?: (sectors: SectorKey[]) => void
+  selectedSectors?: Record<string, SectorKey[]>
+  onSelectedSectorsChange?: (standard: StandardKey, sectors: SectorKey[]) => void
   selectedStandards?: StandardKey[]
   onSelectedStandardsChange?: (standards: StandardKey[]) => void
+  selectedCodes?: Record<string, string[]>
+  onSelectedCodesChange?: (codes: Record<string, string[]>) => void
 }
 
 interface EntityDataSectionsStepProps {
@@ -58,10 +60,12 @@ export function EntityDataForm({
   section,
   viewTab,
   fieldPhase = 'sectors',
-  selectedSectors = ['food'],
+  selectedSectors = {},
   onSelectedSectorsChange,
   selectedStandards,
   onSelectedStandardsChange,
+  selectedCodes = {},
+  onSelectedCodesChange,
 }: EntityDataFormProps) {
   switch (viewTab) {
     case 'field':
@@ -71,6 +75,8 @@ export function EntityDataForm({
           selectedSectors={selectedSectors}
           onSelectedSectorsChange={onSelectedSectorsChange ?? (() => undefined)}
           selectedStandards={selectedStandards}
+          selectedCodes={selectedCodes}
+          onSelectedCodesChange={onSelectedCodesChange ?? (() => undefined)}
         />
       )
     case 'documents':

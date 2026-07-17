@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   FormField,
@@ -9,22 +8,13 @@ import {
   fieldTextClassName,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
+import type { YesNo } from '@/components/dashboard/entityData/applicationTypes'
 import { cn } from '@/lib/utils'
 
 export function ConsultingReadinessStep() {
   const { t } = useTranslation()
-  const [qualifiedByConsultant, setQualifiedByConsultant] = useState('yes')
-  const [cvAttached, setCvAttached] = useState('yes')
-  const [consultantRating, setConsultantRating] = useState<number | null>(5)
-  const [recommendationRating, setRecommendationRating] = useState<number | null>(5)
-  const [systemLanguage, setSystemLanguage] = useState('arabic')
-  const [easySiteAccess, setEasySiteAccess] = useState('yes')
-  const [safetyProcedures, setSafetyProcedures] = useState('yes')
-  const [subcontracting, setSubcontracting] = useState('yes')
-  const [previousGrants, setPreviousGrants] = useState('yes')
-  const [otherSelected, setOtherSelected] = useState(false)
-  const [selectedISOs, setSelectedISOs] = useState<string[]>([])
-  const [designActivity, setDesignActivity] = useState('yes')
+  const { form, update } = useApplicationForm()
 
   const yesNoOptions = [
     { value: 'yes', label: t('accreditation.form.yes') },
@@ -54,8 +44,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="qualifiedByConsultant"
-              value={qualifiedByConsultant}
-              onChange={setQualifiedByConsultant}
+              value={form.usedConsultant}
+              onChange={(v) => update('usedConsultant', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -63,6 +53,8 @@ export function ConsultingReadinessStep() {
           <FormField label={t('accreditation.entityData.fields.consulting.consultantName')} variant="question">
             <TextField
               type="text"
+              value={form.consultantName}
+              onChange={(e) => update('consultantName', e.target.value)}
               placeholder={t('accreditation.entityData.fields.consulting.consultantNamePlaceholder')}
             />
           </FormField>
@@ -75,8 +67,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="cvAttached"
-              value={cvAttached}
-              onChange={setCvAttached}
+              value={form.consultantCvAttached}
+              onChange={(v) => update('consultantCvAttached', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -85,7 +77,13 @@ export function ConsultingReadinessStep() {
             label={t('accreditation.entityData.fields.consulting.consultationPeriod')}
             variant="question"
           >
-            <TextField type="number" min={1} placeholder="0" />
+            <TextField
+              type="number"
+              min={1}
+              value={form.consultancyMonths}
+              onChange={(e) => update('consultancyMonths', e.target.value)}
+              placeholder="0"
+            />
           </FormField>
         </div>
 
@@ -93,7 +91,10 @@ export function ConsultingReadinessStep() {
           label={t('accreditation.entityData.fields.consulting.consultantRating')}
           variant="question"
         >
-          <RatingScale value={consultantRating} onChange={setConsultantRating} />
+          <RatingScale
+            value={form.qualificationRate}
+            onChange={(value) => update('qualificationRate', value)}
+          />
           <p className="text-body-3 text-neutral-600">
             {t('accreditation.entityData.fields.consulting.ratingNote')}
           </p>
@@ -103,7 +104,10 @@ export function ConsultingReadinessStep() {
           label={t('accreditation.entityData.fields.consulting.recommendationRating')}
           variant="question"
         >
-          <RatingScale value={recommendationRating} onChange={setRecommendationRating} />
+          <RatingScale
+            value={form.recommendationRate}
+            onChange={(value) => update('recommendationRate', value)}
+          />
           <p className="text-body-3 text-neutral-600">
             {t('accreditation.entityData.fields.consulting.ratingNote')}
           </p>
@@ -119,8 +123,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="systemLanguage"
-              value={systemLanguage}
-              onChange={setSystemLanguage}
+              value={form.systemLanguage}
+              onChange={(v) => update('systemLanguage', v as 'arabic' | 'english')}
               options={languageOptions}
             />
           </FormField>
@@ -131,8 +135,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="easySiteAccess"
-              value={easySiteAccess}
-              onChange={setEasySiteAccess}
+              value={form.easyAccess}
+              onChange={(v) => update('easyAccess', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -145,8 +149,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="safetyProcedures"
-              value={safetyProcedures}
-              onChange={setSafetyProcedures}
+              value={form.safetyProcedures}
+              onChange={(v) => update('safetyProcedures', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -157,8 +161,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="subcontracting"
-              value={subcontracting}
-              onChange={setSubcontracting}
+              value={form.usesSubcontractors}
+              onChange={(v) => update('usesSubcontractors', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -171,8 +175,8 @@ export function ConsultingReadinessStep() {
         >
           <RadioGroup
             name="previousGrants"
-            value={previousGrants}
-            onChange={setPreviousGrants}
+            value={form.previousGrants}
+            onChange={(v) => update('previousGrants', v as YesNo)}
             options={yesNoOptions}
           />
         </FormField>
@@ -187,18 +191,19 @@ export function ConsultingReadinessStep() {
                 key={opt.value}
                 className={cn(
                   'flex items-center gap-2',
-                  otherSelected ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'
+                  form.otherSystemSelected ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'
                 )}
               >
                 <input
                   type="checkbox"
-                  checked={selectedISOs.includes(opt.value)}
-                  disabled={otherSelected}
+                  checked={form.currentSystems.includes(opt.value)}
+                  disabled={form.otherSystemSelected}
                   onChange={() =>
-                    setSelectedISOs((prev) =>
-                      prev.includes(opt.value)
-                        ? prev.filter((v) => v !== opt.value)
-                        : [...prev, opt.value]
+                    update(
+                      'currentSystems',
+                      form.currentSystems.includes(opt.value)
+                        ? form.currentSystems.filter((v) => v !== opt.value)
+                        : [...form.currentSystems, opt.value]
                     )
                   }
                   className="size-5 accent-primary"
@@ -210,10 +215,10 @@ export function ConsultingReadinessStep() {
               <input
                 type="radio"
                 name="otherSystem"
-                checked={otherSelected}
+                checked={form.otherSystemSelected}
                 onChange={() => {
-                  if (!otherSelected) setSelectedISOs([])
-                  setOtherSelected((prev) => !prev)
+                  if (!form.otherSystemSelected) update('currentSystems', [])
+                  update('otherSystemSelected', !form.otherSystemSelected)
                 }}
                 className="size-5 accent-primary"
               />
@@ -227,6 +232,8 @@ export function ConsultingReadinessStep() {
         <FormField label={t('accreditation.entityData.fields.readiness.otherSpecification')}>
           <TextField
             type="text"
+            value={form.otherSpecification}
+            onChange={(e) => update('otherSpecification', e.target.value)}
             placeholder={t('accreditation.entityData.fields.readiness.other')}
           />
         </FormField>
@@ -242,8 +249,8 @@ export function ConsultingReadinessStep() {
           >
             <RadioGroup
               name="designActivity"
-              value={designActivity}
-              onChange={setDesignActivity}
+              value={form.designActivity}
+              onChange={(v) => update('designActivity', v as YesNo)}
               options={yesNoOptions}
             />
           </FormField>
@@ -251,6 +258,8 @@ export function ConsultingReadinessStep() {
           <FormField label={t('accreditation.entityData.fields.readiness.designExceptionReason')}>
             <TextField
               type="text"
+              value={form.designException}
+              onChange={(e) => update('designException', e.target.value)}
               placeholder={t('accreditation.form.stateReasonPlaceholder')}
             />
           </FormField>

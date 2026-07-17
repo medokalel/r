@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { fieldTitleClassName } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
@@ -14,6 +13,10 @@ interface EntityDataFieldCodesStepProps {
   availableStandards: StandardKey[]
   activeStandard: StandardKey
   onActiveStandardChange: (standard: StandardKey) => void
+  /** Selections keyed by `${standard}:${sector}` so switching tabs doesn't mix codes. */
+  selectedCodes: Record<string, string[]>
+  onSelectedCodesChange: (codes: Record<string, string[]>) => void
+  standardCounts?: Record<string, number>
 }
 
 interface IafCodeCardProps {
@@ -85,10 +88,11 @@ export function EntityDataFieldCodesStep({
   availableStandards,
   activeStandard,
   onActiveStandardChange,
+  selectedCodes,
+  onSelectedCodesChange,
+  standardCounts,
 }: EntityDataFieldCodesStepProps) {
   const { t } = useTranslation()
-  // Selections are kept per standard so switching tabs doesn't mix codes
-  const [selectedCodes, setSelectedCodes] = useState<Record<string, string[]>>({})
 
   const sectorTitle = (sector: SectorKey) => t(`accreditation.entityData.field.sectors.${sector}.title`)
 
@@ -98,15 +102,13 @@ export function EntityDataFieldCodesStep({
   const selectionKey = (sector: SectorKey) => `${activeStandard}:${sector}`
 
   const toggleCode = (sector: SectorKey, code: string) => {
-    setSelectedCodes((current) => {
-      const key = selectionKey(sector)
-      const sectorCodes = current[key] ?? []
-      return {
-        ...current,
-        [key]: sectorCodes.includes(code)
-          ? sectorCodes.filter((item) => item !== code)
-          : [...sectorCodes, code],
-      }
+    const key = selectionKey(sector)
+    const sectorCodes = selectedCodes[key] ?? []
+    onSelectedCodesChange({
+      ...selectedCodes,
+      [key]: sectorCodes.includes(code)
+        ? sectorCodes.filter((item) => item !== code)
+        : [...sectorCodes, code],
     })
   }
 
@@ -133,6 +135,7 @@ export function EntityDataFieldCodesStep({
         standards={availableStandards}
         activeStandard={activeStandard}
         onChange={onActiveStandardChange}
+        counts={standardCounts}
       />
 
       {visibleSectors.map((sector) => {

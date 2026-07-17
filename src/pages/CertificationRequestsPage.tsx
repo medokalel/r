@@ -1,8 +1,17 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
+import { RequestCardsSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { AddCircle } from 'iconsax-reactjs'
+import { ApiError } from '@/lib/api/client'
+import {
+  listApplications,
+  type ApplicationResponse,
+  type ApplicationStatus,
+} from '@/lib/api/certificationApplicationApi'
+import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
 
 type RequestStatus = 'underConstruction' | 'underReview' | 'closedByDirector' | 'issued'
@@ -10,17 +19,17 @@ type RequestStatus = 'underConstruction' | 'underReview' | 'closedByDirector' | 
 interface CertificationRequest {
   id: string
   orderNumber: string
+  authorizedPerson: string
   status: RequestStatus
 }
 
-const mockRequestStatuses: { id: string; orderNumber: string; status: RequestStatus }[] = [
-  { id: '1', orderNumber: 'PE-QMS-00011-01', status: 'underConstruction' },
-  { id: '2', orderNumber: 'PE-QMS-00011-01', status: 'underReview' },
-  { id: '3', orderNumber: 'PE-QMS-00011-01', status: 'closedByDirector' },
-  { id: '4', orderNumber: 'PE-QMS-00011-01', status: 'issued' },
-  { id: '5', orderNumber: 'PE-QMS-00011-01', status: 'underReview' },
-  { id: '6', orderNumber: 'PE-QMS-00011-01', status: 'underConstruction' },
-]
+const API_STATUS_TO_UI: Record<ApplicationStatus, RequestStatus> = {
+  DRAFT: 'underConstruction',
+  SUBMITTED: 'underReview',
+  UNDER_REVIEW: 'underReview',
+  APPROVED: 'issued',
+  REJECTED: 'closedByDirector',
+}
 
 const statusConfig: Record<
   RequestStatus,
@@ -89,9 +98,10 @@ function StatusIcon({ status }: { status: RequestStatus }) {
 
 interface RequestCardProps {
   request: CertificationRequest
+  onFollowUp: () => void
 }
 
-function RequestCard({ request }: RequestCardProps) {
+function RequestCard({ request, onFollowUp }: RequestCardProps) {
   const { t } = useTranslation()
   const { bgColor, borderColor, textColor } = statusConfig[request.status]
 
@@ -133,13 +143,14 @@ function RequestCard({ request }: RequestCardProps) {
         </div>
         <div className="flex flex-col items-center">
           <p className="text-[20px] font-medium leading-[1.6] tracking-[-0.6px] text-[#1a1a1a]">
-            {t('certificationRequests.card.authorizedPersonName')}
+            {request.authorizedPerson}
           </p>
         </div>
       </div>
 
       <button
         type="button"
+        onClick={onFollowUp}
         className="flex h-12 w-full items-center justify-center rounded-[8px] bg-[#1236a3] text-[16px] leading-[1.6] text-white transition-colors hover:bg-[#0f2d8a]"
       >
         {t('certificationRequests.card.followUp')}
@@ -157,6 +168,43 @@ function RequestCard({ request }: RequestCardProps) {
 export function CertificationRequestsPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [requests, setRequests] = useState<CertificationRequest[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    let cancelled = false
+    ;(async () => {
+      try {
+        const applications = await listApplications()
+        if (cancelled) return
+        setRequests(
+          applications.map((app: ApplicationResponse) => ({
+            id: app.id,
+            orderNumber: app.orderNumber ?? t('certificationRequests.card.draftOrderNumber'),
+            authorizedPerson:
+              app.legalInfo?.representativeName ||
+              app.legalInfo?.organizationName ||
+              '—',
+            status: API_STATUS_TO_UI[app.status] ?? 'underConstruction',
+          }))
+        )
+      } catch (err) {
+        if (cancelled) return
+        if (err instanceof ApiError && err.status === 401) {
+          clearAuthSession()
+          navigate('/login', { replace: true })
+          return
+        }
+        setError(err instanceof ApiError ? err.message : t('errors.generic'))
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [navigate, t])
 
   return (
     <AppLayout>
@@ -183,11 +231,25 @@ export function CertificationRequestsPage() {
 
         {/* Cards grid */}
         <div className="px-5 pb-8">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-            {mockRequestStatuses.map((request) => (
-              <RequestCard key={request.id} request={request} />
-            ))}
-          </div>
+          {loading ? (
+            <RequestCardsSkeleton />
+          ) : error ? (
+            <p className="py-10 text-center text-[16px] text-error-500">{error}</p>
+          ) : requests.length === 0 ? (
+            <p className="py-10 text-center text-[16px] text-neutral-600">
+              {t('certificationRequests.empty')}
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+              {requests.map((request) => (
+                <RequestCard
+                  key={request.id}
+                  request={request}
+                  onFollowUp={() => navigate(`/certification-request?id=${request.id}`)}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </AppLayout>

@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import { EntityDataForm } from '@/components/dashboard/EntityDataForm'
@@ -9,10 +10,15 @@ import {
   type EntityDataSubSection,
   type EntityDataViewTab,
 } from '@/components/dashboard/EntityDataNav'
+import { ApplicationFormContext } from '@/components/dashboard/entityData/ApplicationFormContext'
+import { ApplicationLoadingSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { FieldSelectionSummary } from '@/components/dashboard/entityData/FieldSelectionSummary'
 import type { FieldPhase, SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
+import { isSectionComplete } from '@/components/dashboard/entityData/applicationValidation'
+import { useApplicationState } from '@/components/dashboard/entityData/useApplicationState'
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { cn } from '@/lib/utils'
 
 const STATUS_VIEWS: EntityDataViewTab[] = ['approved', 'underReview', 'rejected']
 
@@ -41,12 +47,31 @@ const viewTabCopyKeys: Record<EntityDataViewTab, { title: string; subtitle: stri
 export function DashboardPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
+  const navigate = useNavigate()
   const [activeSubSection, setActiveSubSection] = useState<EntityDataSubSection>('legalIdentity')
   const [activeViewTab, setActiveViewTab] = useState<EntityDataViewTab>('entityData')
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('sectors')
-  const [selectedSectors, setSelectedSectors] = useState<SectorKey[]>(['food'])
-  const [selectedStandards, setSelectedStandards] = useState<StandardKey[]>([])
   const contentRef = useRef<HTMLDivElement>(null)
+
+  const { contextValue, loading, saving, submitting, notification, saveDraft, submit } =
+    useApplicationState()
+  const { form, update } = contextValue
+
+  const selectedSectors = form.selectedSectors
+  const selectedStandards = form.selectedStandards
+  const setSelectedSectors = useCallback(
+    (standard: StandardKey, sectors: SectorKey[]) =>
+      update('selectedSectors', { ...form.selectedSectors, [standard]: sectors }),
+    [form.selectedSectors, update]
+  )
+  const setSelectedStandards = useCallback(
+    (standards: StandardKey[]) => update('selectedStandards', standards),
+    [update]
+  )
+  const setSelectedCodes = useCallback(
+    (codes: Record<string, string[]>) => update('selectedCodes', codes),
+    [update]
+  )
 
   const activeIndex = subSections.indexOf(activeSubSection)
   const copyKeys =
@@ -106,7 +131,18 @@ export function DashboardPage() {
     handleSubSectionChange(subSections[activeIndex - 1])
   }, [activeIndex, activeViewTab, fieldPhase, handleSubSectionChange, handleViewTabChange, scrollToContent])
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
+    // The last form step submits the whole application instead of advancing
+    if (activeViewTab === 'documents') {
+      const submitted = await submit()
+      if (submitted) navigate('/certification-requests')
+      return
+    }
+
+    // Every other step persists the draft before moving on
+    const saved = await saveDraft()
+    if (!saved) return
+
     if (activeViewTab === 'field' && fieldPhase === 'sectors') {
       setFieldPhase('codes')
       scrollToContent()
@@ -115,11 +151,6 @@ export function DashboardPage() {
 
     if (activeViewTab === 'field' && fieldPhase === 'codes') {
       handleViewTabChange('documents')
-      return
-    }
-
-    if (activeViewTab === 'documents') {
-      handleViewTabChange('feedback')
       return
     }
 
@@ -135,95 +166,177 @@ export function DashboardPage() {
       }
       handleSubSectionChange(subSections[activeIndex + 1])
     }
-  }, [activeIndex, activeViewTab, fieldPhase, handleSubSectionChange, handleViewTabChange, scrollToContent])
+  }, [
+    activeIndex,
+    activeViewTab,
+    fieldPhase,
+    handleSubSectionChange,
+    handleViewTabChange,
+    navigate,
+    saveDraft,
+    scrollToContent,
+    submit,
+  ])
 
   const isFieldSectorsView = activeViewTab === 'field' && fieldPhase === 'sectors'
   const isStatusView = STATUS_VIEWS.includes(activeViewTab)
+  const busy = saving || submitting
+
+  // Submit validation requires every chosen standard to have at least one
+  // sector and at least one IAF code of its own
+  const standardsMissingSectors = selectedStandards.filter(
+    (standard) => (selectedSectors[standard] ?? []).length === 0
+  )
+  const standardsMissingCodes = selectedStandards.filter(
+    (standard) =>
+      !Object.entries(form.selectedCodes).some(
+        ([key, codes]) => key.startsWith(`${standard}:`) && codes.length > 0
+      )
+  )
+  const anySectorSelected = Object.values(selectedSectors).some(
+    (sectors) => sectors.length > 0
+  )
 
   const footerBackDisabled =
+    busy ||
     isStatusView ||
     (activeViewTab === 'entityData' && activeIndex === 0) ||
     (activeViewTab === 'field' && fieldPhase === 'sectors')
 
   const footerNextDisabled =
+    busy ||
+    loading ||
     isStatusView ||
-    (activeViewTab === 'field' && fieldPhase === 'sectors' && selectedSectors.length === 0)
+    (activeViewTab === 'entityData' && !isSectionComplete(activeSubSection, form)) ||
+    (activeViewTab === 'field' &&
+      fieldPhase === 'sectors' &&
+      (!anySectorSelected || standardsMissingSectors.length > 0)) ||
+    (activeViewTab === 'field' && fieldPhase === 'codes' && standardsMissingCodes.length > 0) ||
+    (activeViewTab === 'documents' && !form.agreed)
 
-  const footerNextLabel = isFieldSectorsView
-    ? t('accreditation.entityData.field.continueToCodes')
-    : undefined
+  const footerNextLabel = busy
+    ? t('common.loading')
+    : activeViewTab === 'documents'
+      ? t('accreditation.messages.submitRequest')
+      : isFieldSectorsView
+        ? t('accreditation.entityData.field.continueToCodes')
+        : undefined
 
-  const footerStartContent = isFieldSectorsView ? (
-    <FieldSelectionSummary selectedSectors={selectedSectors} />
+  const standardLabel = (standard: StandardKey) =>
+    t(`accreditation.entityData.field.standards.${standard}`)
+  const listSeparator = isRTL ? '، ' : ', '
+  const missingHint =
+    activeViewTab === 'field' && fieldPhase === 'sectors' && standardsMissingSectors.length > 0
+      ? t('accreditation.entityData.field.missingSectorsHint', {
+          standards: standardsMissingSectors.map(standardLabel).join(listSeparator),
+        })
+      : activeViewTab === 'field' && fieldPhase === 'codes' && standardsMissingCodes.length > 0
+        ? t('accreditation.entityData.field.missingCodesHint', {
+            standards: standardsMissingCodes.map(standardLabel).join(listSeparator),
+          })
+        : null
+
+  const footerStartContent = notification ? (
+    <p
+      className={cn(
+        'min-w-0 truncate text-[14px] font-medium',
+        notification.type === 'success' ? 'text-[#26a65b]' : 'text-error-500'
+      )}
+    >
+      {notification.message}
+    </p>
+  ) : missingHint ? (
+    <div className="flex min-w-0 flex-wrap items-center gap-3">
+      {isFieldSectorsView && (
+        <FieldSelectionSummary
+          selectedSectors={[...new Set(Object.values(selectedSectors).flat())]}
+        />
+      )}
+      <p className="min-w-0 rounded-[var(--radius-sm)] bg-[#fef3c6] px-3 py-1.5 text-[14px] font-medium text-[#a58401]">
+        {missingHint}
+      </p>
+    </div>
+  ) : isFieldSectorsView ? (
+    <FieldSelectionSummary
+      selectedSectors={[...new Set(Object.values(selectedSectors).flat())]}
+    />
   ) : undefined
 
   return (
     <AppLayout>
-      <AccreditationHeader
-        orderNumber="N-EMS-00022"
-        officerName="الاء طارق | Alaa Tarek"
-        officerEmail="alaatarek78@gmail.com"
-      />
-      <ProcessStepper activeStep={0} />
+      <ApplicationFormContext.Provider value={contextValue}>
+        <AccreditationHeader
+          orderNumber="N-EMS-00022"
+          officerName="الاء طارق | Alaa Tarek"
+          officerEmail="alaatarek78@gmail.com"
+        />
+        <ProcessStepper activeStep={0} />
 
-      <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-        {!isStatusView && copyKeys.title && (
-          <div className="space-y-2">
-            <h2 className="text-h3-semi text-neutral-900">{t(copyKeys.title)}</h2>
-            <p className={`text-body-2 text-neutral-600${isRTL ? ' font-light' : ''}`}>{t(copyKeys.subtitle)}</p>
-          </div>
-        )}
-
-        {isStatusView && (
-          <div className="flex items-center gap-2">
-            {(['approved', 'underReview', 'rejected'] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => handleViewTabChange(s)}
-                className={`rounded px-3 py-1 text-small font-medium transition-colors ${
-                  activeViewTab === s
-                    ? 'bg-primary text-white'
-                    : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                }`}
-              >
-                {s === 'approved' ? '✓ Approved' : s === 'underReview' ? '⏳ Under Review' : '✗ Rejected'}
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div className="flex flex-1 gap-5">
-          {!isStatusView && (
-            <EntityDataNav
-              activeSubSection={activeSubSection}
-              activeViewTab={activeViewTab}
-              onSubSectionChange={handleSubSectionChange}
-              onViewTabChange={handleViewTabChange}
-            />
+        <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+          {!isStatusView && copyKeys.title && (
+            <div className="space-y-2">
+              <h2 className="text-h3-semi text-neutral-900">{t(copyKeys.title)}</h2>
+              <p className={`text-body-2 text-neutral-600${isRTL ? ' font-light' : ''}`}>{t(copyKeys.subtitle)}</p>
+            </div>
           )}
-          <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-            <EntityDataForm
-              section={activeSubSection}
-              viewTab={activeViewTab}
-              fieldPhase={fieldPhase}
-              selectedSectors={selectedSectors}
-              onSelectedSectorsChange={setSelectedSectors}
-              selectedStandards={selectedStandards}
-              onSelectedStandardsChange={setSelectedStandards}
-            />
+
+          {isStatusView && (
+            <div className="flex items-center gap-2">
+              {(['approved', 'underReview', 'rejected'] as const).map((s) => (
+                <button
+                  key={s}
+                  type="button"
+                  onClick={() => handleViewTabChange(s)}
+                  className={`rounded px-3 py-1 text-small font-medium transition-colors ${
+                    activeViewTab === s
+                      ? 'bg-primary text-white'
+                      : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
+                  }`}
+                >
+                  {s === 'approved' ? '✓ Approved' : s === 'underReview' ? '⏳ Under Review' : '✗ Rejected'}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div className="flex flex-1 gap-5">
+            {!isStatusView && (
+              <EntityDataNav
+                activeSubSection={activeSubSection}
+                activeViewTab={activeViewTab}
+                onSubSectionChange={handleSubSectionChange}
+                onViewTabChange={handleViewTabChange}
+              />
+            )}
+            <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              {loading ? (
+                <ApplicationLoadingSkeleton />
+              ) : (
+                <EntityDataForm
+                  section={activeSubSection}
+                  viewTab={activeViewTab}
+                  fieldPhase={fieldPhase}
+                  selectedSectors={selectedSectors}
+                  onSelectedSectorsChange={setSelectedSectors}
+                  selectedStandards={selectedStandards}
+                  onSelectedStandardsChange={setSelectedStandards}
+                  selectedCodes={form.selectedCodes}
+                  onSelectedCodesChange={setSelectedCodes}
+                />
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      <DashboardFooter
-        backDisabled={footerBackDisabled}
-        nextDisabled={footerNextDisabled}
-        nextLabel={footerNextLabel}
-        startContent={footerStartContent}
-        onBack={handleBack}
-        onNext={handleNext}
-      />
+        <DashboardFooter
+          backDisabled={footerBackDisabled}
+          nextDisabled={footerNextDisabled}
+          nextLabel={footerNextLabel}
+          startContent={footerStartContent}
+          onBack={handleBack}
+          onNext={handleNext}
+        />
+      </ApplicationFormContext.Provider>
     </AppLayout>
   )
 }

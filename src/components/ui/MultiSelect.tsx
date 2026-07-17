@@ -64,7 +64,7 @@ export function MultiSelect({ tags, options, onChange, className }: MultiSelectP
                       onChange(tags.filter((item) => item !== tag))
                     }
                   }}
-                  className="flex size-4 cursor-pointer items-center justify-center rounded-full bg-error-50 text-base font-bold leading-none text-error-500 hover:bg-error-100 hover:text-error-700"
+                  className="flex size-4 cursor-pointer items-center justify-center rounded-full  text-base font-bold leading-none text-primary"
                   aria-label={`Remove ${tag}`}
                 >
                   ×

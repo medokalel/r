@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, DownloadIcon, EyeIcon, RefreshIcon, TrashIcon } from '@/components/icons'
+import { AppIcon, DownloadIcon, EyeIcon, TrashIcon } from '@/components/icons'
 import { DocumentIcon, type DocumentIconKey } from '@/components/icons/documentIcons'
 import {
   DocumentUploadField,
   type UploadedDocumentFile,
 } from '@/components/dashboard/DocumentUploadField'
 import { DocumentsSectionHeader } from '@/components/dashboard/entityData/DocumentsSectionHeader'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
+import type { ApplicationDocumentEntry } from '@/components/dashboard/entityData/applicationTypes'
 import { fieldBodyTextClassName, fieldTitleClassName } from '@/components/ui'
 import { formatFileSize } from '@/lib/files'
 import { cn } from '@/lib/utils'
@@ -28,70 +30,29 @@ const requiredDocuments: DocumentItem[] = [
   { id: 'qualityPolicy', titleKey: 'qualityPolicy', icon: 'qualityPolicy' },
 ]
 
-const otherUploadedFile = {
-  name: 'organizational_chart_v2.pdf',
-  size: '1.4 MB',
-  date: '10/24/2024',
-}
-
-function DocumentActionButtons({
-  viewLabel,
-  downloadLabel,
-  deleteLabel,
-  replaceLabel,
-}: {
-  viewLabel: string
-  downloadLabel: string
-  deleteLabel: string
-  replaceLabel: string
-}) {
-  const actionButtonClassName =
-    'flex size-[42px] items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50'
-
-  return (
-    <div className="flex shrink-0 items-center gap-1">
-      <button type="button" className={actionButtonClassName} aria-label={viewLabel}>
-        <AppIcon icon={EyeIcon} size={20} />
-      </button>
-      <button type="button" className={actionButtonClassName} aria-label={downloadLabel}>
-        <AppIcon icon={DownloadIcon} size={20} />
-      </button>
-      <button type="button" className={actionButtonClassName} aria-label={deleteLabel}>
-        <AppIcon icon={TrashIcon} size={20} />
-      </button>
-      <button type="button" className={actionButtonClassName} aria-label={replaceLabel}>
-        <AppIcon icon={RefreshIcon} size={20} />
-      </button>
-    </div>
-  )
-}
-
 export function EntityDataDocumentsStep() {
   const { t, i18n } = useTranslation()
+  const { form, uploadDocument, removeDocument, uploading } = useApplicationForm()
   const otherInputRef = useRef<HTMLInputElement>(null)
-  // Local state until this form is wired to an API — multiple files per document
-  const [filesByDoc, setFilesByDoc] = useState<Record<string, UploadedDocumentFile[]>>({})
 
   const docKey = (key: string) => t(`accreditation.entityData.documents.items.${key}`)
 
-  const addFile = (docId: string, file: File) => {
-    const entry: UploadedDocumentFile = {
-      id: crypto.randomUUID(),
-      name: file.name,
-      sizeLabel: formatFileSize(file.size),
-      dateLabel: new Date().toLocaleDateString(i18n.language),
-    }
-    setFilesByDoc((current) => ({
-      ...current,
-      [docId]: [entry, ...(current[docId] ?? [])],
-    }))
-  }
+  const toUploadedFile = (doc: ApplicationDocumentEntry): UploadedDocumentFile => ({
+    id: doc.localId,
+    name: doc.originalName || doc.fileName,
+    sizeLabel: formatFileSize(doc.fileSize),
+    dateLabel: new Date().toLocaleDateString(i18n.language),
+  })
 
-  const deleteFile = (docId: string, fileId: string) => {
-    setFilesByDoc((current) => ({
-      ...current,
-      [docId]: (current[docId] ?? []).filter((file) => file.id !== fileId),
-    }))
+  const filesForSlot = (slotId: string) =>
+    form.documents.filter((doc) => doc.slotId === slotId).map(toUploadedFile)
+
+  const otherDocuments = form.documents.filter((doc) => doc.slotId === 'other')
+
+  const onSelectOtherFile = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (file) void uploadDocument('other', file)
+    event.target.value = ''
   }
 
   return (
@@ -110,12 +71,12 @@ export function EntityDataDocumentsStep() {
               key={doc.id}
               title={docKey(doc.titleKey)}
               note={doc.noteKey ? docKey(doc.noteKey) : undefined}
-              files={filesByDoc[doc.id] ?? []}
+              files={filesForSlot(doc.id)}
               renderIcon={(uploaded) => (
                 <DocumentIcon icon={doc.icon} uploaded={uploaded} className="size-6" />
               )}
-              onSelectFile={(file) => addFile(doc.id, file)}
-              onDeleteFile={(fileId) => deleteFile(doc.id, fileId)}
+              onSelectFile={(file) => void uploadDocument(doc.id, file)}
+              onDeleteFile={(fileId) => void removeDocument(fileId)}
             />
           ))}
         </div>
@@ -137,35 +98,71 @@ export function EntityDataDocumentsStep() {
           <button
             type="button"
             onClick={() => otherInputRef.current?.click()}
-            className="flex h-12 w-[170px] items-center justify-center rounded-[var(--radius-sm)] border border-[#e6e6e6] bg-white px-6 text-[16px] font-semibold text-primary hover:bg-neutral-50"
+            disabled={uploading}
+            className="flex h-12 w-[170px] items-center justify-center rounded-[var(--radius-sm)] border border-[#e6e6e6] bg-white px-6 text-[16px] font-semibold text-primary hover:bg-neutral-50 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {t('accreditation.entityData.documents.selectFile')}
           </button>
-          <input ref={otherInputRef} type="file" className="hidden" accept=".pdf,.jpg,.jpeg,.png" />
-        </div>
-
-        <div className="mx-5 flex min-h-[102px] flex-wrap items-center gap-4 rounded-[12px] border-b border-[#82e3aa] bg-[#f4fcf7] px-8 py-2">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[#eafaf1]">
-            <DocumentIcon icon="other" uploaded className="size-6" />
-          </span>
-
-          <div className="min-w-0 flex-1">
-            <p className={cn(fieldTitleClassName, 'text-neutral-900')}>{otherUploadedFile.name}</p>
-            <p className="text-[14px] leading-[1.6] text-neutral-600">
-              {otherUploadedFile.size} | {otherUploadedFile.date}
-            </p>
-          </div>
-
-          <span className="shrink-0 px-6 py-2.5 text-[16px] font-medium text-[#2ecc70]">
-            {t('accreditation.entityData.documents.uploaded')}
-          </span>
-          <DocumentActionButtons
-            viewLabel={t('accreditation.form.view')}
-            downloadLabel={t('accreditation.form.download')}
-            deleteLabel={t('accreditation.entityData.documents.delete')}
-            replaceLabel={t('accreditation.entityData.documents.replace')}
+          <input
+            ref={otherInputRef}
+            type="file"
+            className="hidden"
+            accept=".pdf,.jpg,.jpeg,.png"
+            onChange={onSelectOtherFile}
           />
         </div>
+
+        {otherDocuments.map((doc) => (
+          <div
+            key={doc.localId}
+            className="mx-5 flex min-h-[102px] flex-wrap items-center gap-4 rounded-[12px] border-b border-[#82e3aa] bg-[#f4fcf7] px-8 py-2"
+          >
+            <span className="flex size-12 shrink-0 items-center justify-center rounded-[var(--radius-md)] bg-[#eafaf1]">
+              <DocumentIcon icon="other" uploaded className="size-6" />
+            </span>
+
+            <div className="min-w-0 flex-1">
+              <p className={cn(fieldTitleClassName, 'text-neutral-900')}>
+                {doc.originalName || doc.fileName}
+              </p>
+              <p className="text-[14px] leading-[1.6] text-neutral-600">
+                {formatFileSize(doc.fileSize)}
+              </p>
+            </div>
+
+            <span className="shrink-0 px-6 py-2.5 text-[16px] font-medium text-[#2ecc70]">
+              {t('accreditation.entityData.documents.uploaded')}
+            </span>
+            <div className="flex shrink-0 items-center gap-1">
+              <button
+                type="button"
+                onClick={() => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
+                className="flex size-[42px] items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
+                aria-label={t('accreditation.form.view')}
+              >
+                <AppIcon icon={EyeIcon} size={20} />
+              </button>
+              <a
+                href={doc.fileUrl || undefined}
+                download={doc.originalName || doc.fileName}
+                target="_blank"
+                rel="noopener"
+                className="flex size-[42px] items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
+                aria-label={t('accreditation.form.download')}
+              >
+                <AppIcon icon={DownloadIcon} size={20} />
+              </a>
+              <button
+                type="button"
+                onClick={() => void removeDocument(doc.localId)}
+                className="flex size-[42px] items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
+                aria-label={t('accreditation.entityData.documents.delete')}
+              >
+                <AppIcon icon={TrashIcon} size={20} />
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
 
       <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-6">

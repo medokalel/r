@@ -15,10 +15,12 @@ export function RadioGroup({ name, value, onChange, options, className }: RadioG
   return (
     <div
       className={cn(
-        'flex',
+        // Fills the shared 48px field height so the options are vertically
+        // centered next to inputs while staying aligned to the start
+        'flex min-h-12 justify-start',
         inline
           ? 'flex-row flex-wrap items-center gap-x-8 gap-y-2'
-          : 'flex-col gap-2 2xl:flex-row 2xl:flex-wrap 2xl:items-center 2xl:gap-8',
+          : 'flex-col justify-center gap-2 2xl:flex-row 2xl:flex-wrap 2xl:items-center 2xl:gap-8 2xl:justify-start',
         className
       )}
     >
@@ -35,6 +37,8 @@ export function RadioGroup({ name, value, onChange, options, className }: RadioG
           <span
             className={cn(
               fieldTextClassName,
+              // Hug the text so the circle centers on it exactly
+              'leading-none',
               value === opt.value ? 'font-normal text-neutral-900' : 'font-normal text-neutral-600'
             )}
           >

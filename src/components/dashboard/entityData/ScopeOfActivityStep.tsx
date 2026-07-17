@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { useTranslation } from 'react-i18next'
 import { TrashIcon } from '@/components/icons'
@@ -13,9 +13,11 @@ import {
   Textarea,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
-
-const defaultBranchAddress =
-  '9000 Prince Miteb, Al Aziziyah District - Jeddah 23342 - 3041, Unit No. 7, Kingdom of Saudi Arabia.'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
+import type {
+  BranchFormValues,
+  YesNo,
+} from '@/components/dashboard/entityData/applicationTypes'
 
 const economicFieldOptions = [
   '01 A Agriculture, hunting, forestry and fishing',
@@ -27,24 +29,33 @@ const economicFieldOptions = [
   '45 G Wholesale and retail trade',
 ]
 
-interface Branch {
-  id: number
-  integratedSystem: string
-  centralAdministration: string
-}
-
 function BranchForm({
   branch,
   onChange,
 }: {
-  branch: Branch
-  onChange: (id: number, field: keyof Branch, value: string) => void
+  branch: BranchFormValues
+  onChange: (localId: number, patch: Partial<BranchFormValues>) => void
 }) {
   const { t } = useTranslation()
+  const { orgBranches } = useApplicationForm()
+
+  const selectOrgBranch = (id: string) => {
+    const source = orgBranches.find((orgBranch) => orgBranch.id === id)
+    onChange(branch.localId, {
+      sourceBranchId: id,
+      branchName: source?.branchName ?? '',
+      address: branch.address || source?.address || '',
+    })
+  }
 
   const yesNoOptions = [
     { value: 'yes', label: t('accreditation.form.yes') },
     { value: 'no', label: t('accreditation.form.no') },
+  ]
+
+  const weeklyHolidayOptions = [
+    t('accreditation.entityData.fields.scope.oneDay'),
+    t('accreditation.entityData.fields.scope.twoDays'),
   ]
 
   return (
@@ -55,7 +66,12 @@ function BranchForm({
           required
           variant="question"
         >
-          <TextField type="number" min={0} defaultValue={12} />
+          <TextField
+            type="number"
+            min={0}
+            value={branch.employees}
+            onChange={(e) => onChange(branch.localId, { employees: e.target.value })}
+          />
         </FormField>
 
         <FormField
@@ -63,7 +79,12 @@ function BranchForm({
           required
           variant="question"
         >
-          <TextField type="number" min={0} defaultValue={6} />
+          <TextField
+            type="number"
+            min={0}
+            value={branch.employeesInScope}
+            onChange={(e) => onChange(branch.localId, { employeesInScope: e.target.value })}
+          />
         </FormField>
       </div>
 
@@ -73,22 +94,30 @@ function BranchForm({
           required
           variant="question"
         >
-          <TextField type="number" min={0} defaultValue={2} />
+          <TextField
+            type="number"
+            min={0}
+            value={branch.shifts}
+            onChange={(e) => onChange(branch.localId, { shifts: e.target.value })}
+          />
         </FormField>
 
         <FormField label={t('accreditation.entityData.fields.scope.openingHours')} variant="question">
-          <TextField type="number" min={0} defaultValue={8} />
+          <TextField
+            type="number"
+            min={0}
+            value={branch.workingHours}
+            onChange={(e) => onChange(branch.localId, { workingHours: e.target.value })}
+          />
         </FormField>
       </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <FormField label={t('accreditation.entityData.fields.scope.weeklyVacation')} variant="question">
           <SelectField
-            value={t('accreditation.entityData.fields.scope.twoDays')}
-            options={[
-              t('accreditation.entityData.fields.scope.oneDay'),
-              t('accreditation.entityData.fields.scope.twoDays'),
-            ]}
+            value={branch.weeklyHoliday}
+            onChange={(value) => onChange(branch.localId, { weeklyHoliday: value })}
+            options={weeklyHolidayOptions}
           />
         </FormField>
 
@@ -99,8 +128,10 @@ function BranchForm({
           <TextField
             type="number"
             min={0}
-            defaultValue={4}
+            value={branch.productionLines}
+            onChange={(e) => onChange(branch.localId, { productionLines: e.target.value })}
             placeholder={t('accreditation.entityData.fields.scope.productionLinesPlaceholder')}
+            className="rtl:placeholder:text-right"
           />
         </FormField>
       </div>
@@ -111,7 +142,10 @@ function BranchForm({
           required
           variant="question"
         >
-          <DatePicker />
+          <DatePicker
+            value={branch.phase1ExpectedDate}
+            onChange={(date) => onChange(branch.localId, { phase1ExpectedDate: date })}
+          />
         </FormField>
 
         <FormField
@@ -119,48 +153,66 @@ function BranchForm({
           required
           variant="question"
         >
-          <TextField
-            type="text"
-            placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
-          />
+          {orgBranches.length > 0 ? (
+            <SelectField
+              value={branch.sourceBranchId ?? ''}
+              onChange={selectOrgBranch}
+              options={orgBranches.map((orgBranch) => ({
+                value: orgBranch.id,
+                label: orgBranch.branchName ?? orgBranch.id,
+              }))}
+              placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
+            />
+          ) : (
+            <TextField
+              type="text"
+              value={branch.branchName}
+              onChange={(e) => onChange(branch.localId, { branchName: e.target.value })}
+              placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
+            />
+          )}
         </FormField>
       </div>
 
-      <FormField
-        label={t('accreditation.entityData.fields.scope.branchAddress')}
-        required
-        variant="question"
-      >
-        <TextField type="text" defaultValue={defaultBranchAddress} />
-      </FormField>
-
       <div className="grid gap-5 lg:grid-cols-2">
+        <FormField
+          label={t('accreditation.entityData.fields.scope.branchAddress')}
+          required
+          variant="question"
+        >
+          <TextField
+            type="text"
+            value={branch.address}
+            onChange={(e) => onChange(branch.localId, { address: e.target.value })}
+          />
+        </FormField>
+
         <FormField
           label={t('accreditation.entityData.fields.scope.integratedSystem')}
           required
           variant="question"
         >
           <RadioGroup
-            name={`integratedSystem-${branch.id}`}
+            name={`integratedSystem-${branch.localId}`}
             value={branch.integratedSystem}
-            onChange={(v) => onChange(branch.id, 'integratedSystem', v)}
-            options={yesNoOptions}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.centralAdministration')}
-          required
-          variant="question"
-        >
-          <RadioGroup
-            name={`centralAdministration-${branch.id}`}
-            value={branch.centralAdministration}
-            onChange={(v) => onChange(branch.id, 'centralAdministration', v)}
+            onChange={(v) => onChange(branch.localId, { integratedSystem: v as YesNo })}
             options={yesNoOptions}
           />
         </FormField>
       </div>
+
+      <FormField
+        label={t('accreditation.entityData.fields.scope.centralAdministration')}
+        required
+        variant="question"
+      >
+        <RadioGroup
+          name={`centralAdministration-${branch.localId}`}
+          value={branch.centralManagement}
+          onChange={(v) => onChange(branch.localId, { centralManagement: v as YesNo })}
+          options={yesNoOptions}
+        />
+      </FormField>
 
       <FormField
         label={t('accreditation.entityData.fields.scope.activitiesToAudit')}
@@ -169,6 +221,8 @@ function BranchForm({
       >
         <TextField
           type="text"
+          value={branch.activities}
+          onChange={(e) => onChange(branch.localId, { activities: e.target.value })}
           placeholder={t('accreditation.entityData.fields.scope.chooseActivities')}
         />
       </FormField>
@@ -178,7 +232,11 @@ function BranchForm({
         required
         variant="question"
       >
-        <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
+        <Textarea
+          value={branch.products}
+          onChange={(e) => onChange(branch.localId, { products: e.target.value })}
+          placeholder={t('accreditation.entityData.fields.common.writeHere')}
+        />
       </FormField>
 
       <FormField
@@ -186,43 +244,33 @@ function BranchForm({
         required
         variant="question"
       >
-        <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
+        <Textarea
+          value={branch.technicalCommunication}
+          onChange={(e) =>
+            onChange(branch.localId, { technicalCommunication: e.target.value })
+          }
+          placeholder={t('accreditation.entityData.fields.common.writeHere')}
+        />
       </FormField>
     </FormSection>
   )
 }
 
-let nextId = 2
-
 export function ScopeOfActivityStep() {
   const { t } = useTranslation()
-  const [economicFields, setEconomicFields] = useState([
-    '01 A Agriculture, hunting, forestry and fishing',
-    '03 C Food, beverage and tobacco products',
-  ])
-  const [branches, setBranches] = useState<Branch[]>([
-    { id: 1, integratedSystem: 'yes', centralAdministration: 'yes' },
-  ])
+  const { form, update, updateBranch, addBranch, removeBranch } = useApplicationForm()
   const branchRefs = useRef<Map<number, HTMLDivElement>>(new Map())
 
-  function addBranch() {
-    const newId = nextId++
-    setBranches((prev) => [
-      ...prev,
-      { id: newId, integratedSystem: 'yes', centralAdministration: 'yes' },
-    ])
+  function handleAddBranch() {
+    const newId = addBranch()
     setTimeout(() => {
       branchRefs.current.get(newId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 50)
   }
 
-  function removeBranch(id: number) {
-    branchRefs.current.delete(id)
-    setBranches((prev) => prev.filter((b) => b.id !== id))
-  }
-
-  function updateBranch(id: number, field: keyof Branch, value: string) {
-    setBranches((prev) => prev.map((b) => (b.id === id ? { ...b, [field]: value } : b)))
+  function handleRemoveBranch(localId: number) {
+    branchRefs.current.delete(localId)
+    removeBranch(localId)
   }
 
   const branchLabel = (index: number) =>
@@ -239,6 +287,8 @@ export function ScopeOfActivityStep() {
         >
           <TextField
             type="text"
+            value={form.fieldOfWork}
+            onChange={(e) => update('fieldOfWork', e.target.value)}
             placeholder={t('accreditation.entityData.fields.scope.scopeOfWorkPlaceholder')}
           />
         </FormField>
@@ -249,9 +299,9 @@ export function ScopeOfActivityStep() {
           variant="question"
         >
           <MultiSelect
-            tags={economicFields}
+            tags={form.economicFields}
             options={economicFieldOptions}
-            onChange={setEconomicFields}
+            onChange={(tags) => update('economicFields', tags)}
           />
         </FormField>
 
@@ -260,7 +310,11 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
+          <Textarea
+            value={form.productsServices}
+            onChange={(e) => update('productsServices', e.target.value)}
+            placeholder={t('accreditation.entityData.fields.common.writeHere')}
+          />
         </FormField>
 
         <FormField
@@ -268,7 +322,11 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
+          <Textarea
+            value={form.annualCapacity}
+            onChange={(e) => update('annualCapacity', e.target.value)}
+            placeholder={t('accreditation.entityData.fields.common.writeHere')}
+          />
         </FormField>
 
         <FormField
@@ -276,7 +334,11 @@ export function ScopeOfActivityStep() {
           required
           variant="question"
         >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
+          <Textarea
+            value={form.technicalSpecifications}
+            onChange={(e) => update('technicalSpecifications', e.target.value)}
+            placeholder={t('accreditation.entityData.fields.common.writeHere')}
+          />
         </FormField>
 
         <FormField
@@ -286,7 +348,7 @@ export function ScopeOfActivityStep() {
         >
           <button
             type="button"
-            onClick={addBranch}
+            onClick={handleAddBranch}
             className="flex w-full items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-primary bg-primary-subtle py-3 text-primary transition-colors hover:bg-[#dbe4fa]"
           >
             <span className="text-xl leading-none">+</span>
@@ -295,14 +357,14 @@ export function ScopeOfActivityStep() {
         </FormField>
       </FormSection>
 
-      {branches.map((branch, index) => (
-        <div key={branch.id} ref={(el) => { if (el) branchRefs.current.set(branch.id, el); }}>
+      {form.branches.map((branch, index) => (
+        <div key={branch.localId} ref={(el) => { if (el) branchRefs.current.set(branch.localId, el); }}>
           <div className="flex items-center justify-between">
             <SectionHeading title={branchLabel(index)} />
             {index > 0 && (
               <button
                 type="button"
-                onClick={() => removeBranch(branch.id)}
+                onClick={() => handleRemoveBranch(branch.localId)}
                 className="flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-error-500 transition-colors hover:bg-error-50"
                 aria-label={t('accreditation.entityData.fields.scope.removeBranch')}
               >

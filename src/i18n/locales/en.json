@@ -111,13 +111,16 @@
   },
   "accreditation": {
     "title": "Certification request",
+    "messages": {
+      "draftSaved": "Draft saved successfully.",
+      "submitted": "Your request has been submitted successfully. Order number: {{orderNumber}}",
+      "submitRequest": "Submit request"
+    },
     "orderNumber": "order number",
     "assignedOfficer": "Assigned certification officer",
     "timeAndDate": "Time and date",
-    "morning": "morning",
-    "afternoon": "afternoon",
-    "evening": "evening",
-    "night": "night",
+    "am": "AM",
+    "pm": "PM",
     "january": "January",
     "notifications": "Notifications",
     "auditManager": "Audit Manager",
@@ -167,6 +170,9 @@
         "continueToCodes": "Continue to choose codes",
         "codesTitle": "Select IAF codes",
         "criticalCodeNote": "The red color represents critical code",
+        "tabNeedsSelection": "No selections yet for this standard",
+        "missingSectorsHint": "Select at least one sector for each standard — still missing: {{standards}}",
+        "missingCodesHint": "Select at least one IAF code for each standard — still missing: {{standards}}",
         "standards": {
           "iso9001": "ISO 9001",
           "iso14001": "ISO 14001",
@@ -398,6 +404,23 @@
           "designExceptionReason": "In case of answering \"No,\" please provide the reason for the exception"
         },
         "spec": {
+          "noQuestions": "There are no specification questions for the standards you selected.",
+          "iso9001": {
+            "qmsSystemInPlace": "Is a quality management system currently in place?",
+            "qmsStartDate": "When did the implementation of the current quality management system start?",
+            "keyProcesses": "What are the key processes covered by the quality management system?",
+            "internalAudits": "Have any internal audits of the system been conducted?",
+            "managementReview": "Has a management review of the system been carried out?",
+            "customerComplaints": "How are customer complaints handled and customer satisfaction measured?"
+          },
+          "iso14001": {
+            "emsSystemInPlace": "Is an environmental management system currently in place?",
+            "emsStartDate": "When did the implementation of the current environmental management system start?",
+            "environmentalAspects": "What significant environmental aspects and impacts have been identified?",
+            "legalCompliance": "What local and regional environmental laws and regulations does the organization comply with?",
+            "internalAudits": "Have any internal audits of the system been conducted?",
+            "environmentalIncidents": "Have any environmental incidents or legal violations occurred?"
+          },
           "iso50001": {
             "energyConsumers": "What are the processes / services / products / equipment that consume the largest percentage of energy in the facility?",
             "enpi": "What Energy Performance Indicators (EnPIs) are used to measure and improve energy efficiency?",
@@ -747,6 +770,7 @@
     "title": "Certification Requests",
     "newRequest": "New Certification Request",
     "interactiveInvoice": "Interactive invoice",
+    "empty": "You have no certification requests yet.",
     "status": {
       "underConstruction": "Under construction",
       "underReview": "Under review",
@@ -756,7 +780,7 @@
     "card": {
       "orderNumber": "Order number",
       "authorizedPerson": "Name of the authorized person",
-      "authorizedPersonName": "Muhammad Al-Manawahli",
+      "draftOrderNumber": "Draft — not submitted",
       "followUp": "Follow up",
       "orderStatus": "Order Status"
     }

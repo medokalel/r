@@ -19,7 +19,7 @@ export const fieldPlaceholderClassName =
   'placeholder:text-[16px] placeholder:font-light placeholder:leading-[1.6] placeholder:text-neutral-500'
 export const fieldInputTextClassName = cn(
   fieldTextClassName,
-  'font-light text-neutral-900',
+  'font-normal text-neutral-900',
   fieldPlaceholderClassName
 )
 

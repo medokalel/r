@@ -10,11 +10,8 @@ function HeaderDivider() {
   return <div className="h-14 w-px shrink-0 bg-neutral-200" aria-hidden />
 }
 
-function getPeriodKey(hour: number): 'morning' | 'afternoon' | 'evening' | 'night' {
-  if (hour >= 5 && hour < 12) return 'morning'
-  if (hour >= 12 && hour < 17) return 'afternoon'
-  if (hour >= 17 && hour < 21) return 'evening'
-  return 'night'
+function getPeriodKey(hour: number): 'am' | 'pm' {
+  return hour < 12 ? 'am' : 'pm'
 }
 
 interface AccreditationHeaderProps {
@@ -57,7 +54,7 @@ export function AccreditationHeader({
   const displayName = session?.organization?.name ?? user?.email ?? ''
   const secondaryLine = session?.organization?.name ? (user?.email ?? '') : (session?.role?.name ?? '')
 
-  const timeLabel = new Intl.DateTimeFormat(i18n.language, { hour: 'numeric', minute: '2-digit', hour12: true })
+  const timeLabel = new Intl.DateTimeFormat(i18n.language, { hour: '2-digit', minute: '2-digit', hour12: true })
     .formatToParts(now)
     .filter((part) => part.type !== 'dayPeriod')
     .map((part) => part.value)

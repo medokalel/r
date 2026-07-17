@@ -12,15 +12,26 @@ interface StandardTabsProps {
   standards: StandardKey[]
   activeStandard: StandardKey
   onChange: (standard: StandardKey) => void
+  /**
+   * Selection count per standard. When provided, each tab shows a badge so
+   * the user can tell at a glance which certificates still need choices.
+   */
+  counts?: Record<string, number>
 }
 
-export function StandardTabs({ standards, activeStandard, onChange }: StandardTabsProps) {
+export function StandardTabs({
+  standards,
+  activeStandard,
+  onChange,
+  counts,
+}: StandardTabsProps) {
   const { t } = useTranslation()
 
   return (
     <div className="inline-flex self-start rounded-[var(--radius-md)] border border-[#ececec] bg-[#f4f4f4] p-1">
       {standards.map((standard) => {
         const isActive = activeStandard === standard
+        const count = counts?.[standard]
         return (
           <button
             key={standard}
@@ -29,12 +40,30 @@ export function StandardTabs({ standards, activeStandard, onChange }: StandardTa
             onClick={() => onChange(standard)}
             className={cn(
               fieldStandardTabClassName,
+              'flex items-center gap-2',
               isActive ? fieldStandardTabActiveClassName : fieldStandardTabInactiveClassName
             )}
           >
             <WesternDigits>
               {t(`accreditation.entityData.field.standards.${standard}`)}
             </WesternDigits>
+            {counts && (
+              <span
+                className={cn(
+                  'flex size-6 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold',
+                  count
+                    ? 'bg-[#eafaf1] text-[#26a65b]'
+                    : 'bg-[#fef3c6] text-[#a58401]'
+                )}
+                title={
+                  count
+                    ? undefined
+                    : t('accreditation.entityData.field.tabNeedsSelection')
+                }
+              >
+                <WesternDigits>{String(count ?? 0)}</WesternDigits>
+              </span>
+            )}
           </button>
         )
       })}

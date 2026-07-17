@@ -97,20 +97,19 @@ export function EntityDataNav({
                     {!isLast && (
                       <span
                         className={cn(
-                          'absolute start-[17px] top-[calc(50%+8px)] w-0.5',
-                          index === activeIndex ? 'bg-primary' : 'bg-[#bdbdbd]'
+                          'absolute start-[17px] top-[22px] w-0.5 -bottom-4',
+                          index === activeIndex ? 'bg-primary' : 'bg-[#ffffff]'
                         )}
-                        style={{ height: 'calc(100% - 16px)' }}
                         aria-hidden
                       />
                     )}
 
                     <span
                       className={cn(
-                        'absolute z-10 shrink-0 rounded-full top-1/2 -translate-y-1/2',
+                        'absolute z-10 shrink-0 rounded-full top-[22px] -translate-y-1/2',
                         isActive
-                          ? 'start-[13px] size-[10px] bg-primary ring-2 ring-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
-                          : 'start-[14px] size-[7px] bg-[#bdbdbd]'
+                          ? 'start-[13px] size-[10px] bg-primary ring-3 ring-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
+                          : 'start-[15px] size-[7px] bg-[#bdbdbd]'
                       )}
                       aria-hidden
                     />

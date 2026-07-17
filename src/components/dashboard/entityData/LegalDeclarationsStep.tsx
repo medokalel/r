@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   FormField,
@@ -10,10 +9,8 @@ import {
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import { cn } from '@/lib/utils'
-
-const defaultAddress =
-  '9000 Prince Miteb, Al Aziziyah District - Jeddah 23342 - 3041, Unit No. 7, Kingdom of Saudi Arabia.'
 
 const AR_BOLD_PHRASES = ['اسم الجهة', 'اسم المواصفة', 'جهة المنح']
 
@@ -29,7 +26,7 @@ function boldPlaceholders(text: string) {
 
 export function LegalDeclarationsStep() {
   const { t } = useTranslation()
-  const [acknowledged, setAcknowledged] = useState(false)
+  const { form, update } = useApplicationForm()
 
   return (
     <div className="flex-1 space-y-5">
@@ -51,12 +48,17 @@ export function LegalDeclarationsStep() {
             >
               <TextField
                 type="text"
+                value={form.signatoryName}
+                onChange={(e) => update('signatoryName', e.target.value)}
                 placeholder={t('accreditation.entityData.fields.legal.signatoryPlaceholder')}
               />
             </FormField>
 
             <FormField label={t('accreditation.entityData.fields.legal.date')} required variant="question">
-              <DatePicker />
+              <DatePicker
+                value={form.declarationDate}
+                onChange={(date) => update('declarationDate', date)}
+              />
             </FormField>
           </div>
         </div>
@@ -93,6 +95,8 @@ export function LegalDeclarationsStep() {
           >
             <TextField
               type="text"
+              value={form.certificateNameAr}
+              onChange={(e) => update('certificateNameAr', e.target.value)}
               placeholder={t('accreditation.entityData.fields.legal.certificateNameArPlaceholder')}
             />
           </FormField>
@@ -104,7 +108,8 @@ export function LegalDeclarationsStep() {
           >
             <TextField
               type="text"
-              defaultValue="Meyar Arabia Company For Commercial Services (MAC)"
+              value={form.certificateNameEn}
+              onChange={(e) => update('certificateNameEn', e.target.value)}
             />
           </FormField>
         </div>
@@ -115,7 +120,11 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <TextField type="text" defaultValue={defaultAddress} />
+            <TextField
+              type="text"
+              value={form.certificateAddressAr}
+              onChange={(e) => update('certificateAddressAr', e.target.value)}
+            />
           </FormField>
 
           <FormField
@@ -125,7 +134,8 @@ export function LegalDeclarationsStep() {
           >
             <TextField
               type="text"
-              defaultValue="Prince Miteb, Al Aziziyah District - Jeddah 23342 - 3041, Unit No.: 7 Kingdom of Saudi Arabia. 9000"
+              value={form.certificateAddressEn}
+              onChange={(e) => update('certificateAddressEn', e.target.value)}
             />
           </FormField>
         </div>
@@ -138,6 +148,8 @@ export function LegalDeclarationsStep() {
           >
             <TextField
               type="text"
+              value={form.certificateScopeAr}
+              onChange={(e) => update('certificateScopeAr', e.target.value)}
               placeholder={t('accreditation.entityData.fields.legal.certificateFieldArPlaceholder')}
             />
           </FormField>
@@ -147,7 +159,12 @@ export function LegalDeclarationsStep() {
             required
             variant="question"
           >
-            <TextField type="text" defaultValue="Ex: Chemicals" />
+            <TextField
+              type="text"
+              value={form.certificateScopeEn}
+              onChange={(e) => update('certificateScopeEn', e.target.value)}
+              placeholder="Ex: Chemicals"
+            />
           </FormField>
         </div>
       </FormSection>
@@ -163,8 +180,8 @@ export function LegalDeclarationsStep() {
         <label className="flex cursor-pointer items-start gap-2">
           <input
             type="checkbox"
-            checked={acknowledged}
-            onChange={(e) => setAcknowledged(e.target.checked)}
+            checked={form.agreed}
+            onChange={(e) => update('agreed', e.target.checked)}
             className="mt-1 size-5 accent-primary"
           />
           <span className={fieldLabelClassName}>

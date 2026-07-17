@@ -110,14 +110,16 @@
     "verifyingEmail": "جاري التحقق..."
   },
   "accreditation": {
-    "title": "طلب المنح",
+    "title": "طلب منح",
+    "messages": {
+      "draftSaved": "تم حفظ المسودة بنجاح.",
+      "submitted": "تم إرسال طلبك بنجاح. رقم الطلب: {{orderNumber}}",
+      "submitRequest": "إرسال الطلب"
+    },
     "orderNumber": "رقم الطلب",
     "assignedOfficer": "مسؤول الاعتماد المكلف",
-    "timeAndDate": "الوقت والتاريخ",
-    "morning": "صباحا",
-    "afternoon": "ظهرا",
-    "evening": "مساء",
-    "night": "ليلا",
+    "am": "صباحا",
+    "pm": "مساء",
     "january": "يناير",
     "notifications": "الإشعارات",
     "auditManager": "مدير التدقيق",
@@ -167,6 +169,9 @@
         "continueToCodes": "المتابعة لاختيار الرموز",
         "codesTitle": "اختر رموز IAF",
         "criticalCodeNote": "يمثل اللون الأحمر الرمز الحرج",
+        "tabNeedsSelection": "لم يتم الاختيار لهذه المواصفة بعد",
+        "missingSectorsHint": "اختر قطاعاً واحداً على الأقل لكل مواصفة — متبقٍ: {{standards}}",
+        "missingCodesHint": "اختر رمز IAF واحداً على الأقل لكل مواصفة — متبقٍ: {{standards}}",
         "standards": {
           "iso9001": "ISO 9001",
           "iso14001": "ISO 14001",
@@ -398,6 +403,23 @@
           "designExceptionReason": "في حال الإجابة بـ \"لا\"، يرجى توضيح سبب الاستثناء"
         },
         "spec": {
+          "noQuestions": "لا توجد أسئلة مواصفات للمعايير التي اخترتها.",
+          "iso9001": {
+            "qmsSystemInPlace": "هل يوجد حالياً نظام إدارة جودة مطبق؟",
+            "qmsStartDate": "ما تاريخ بدء تنفيذ نظام إدارة الجودة الحالي؟",
+            "keyProcesses": "ما العمليات الرئيسية المشمولة بنظام إدارة الجودة؟",
+            "internalAudits": "هل تم إجراء أي تدقيقات داخلية للنظام؟",
+            "managementReview": "هل تم إجراء مراجعة إدارية للنظام؟",
+            "customerComplaints": "كيف يتم التعامل مع شكاوى العملاء وقياس رضاهم؟"
+          },
+          "iso14001": {
+            "emsSystemInPlace": "هل يوجد حالياً نظام إدارة بيئية مطبق؟",
+            "emsStartDate": "ما تاريخ بدء تنفيذ نظام الإدارة البيئية الحالي؟",
+            "environmentalAspects": "ما الجوانب والتأثيرات البيئية الهامة التي تم تحديدها؟",
+            "legalCompliance": "ما القوانين واللوائح البيئية المحلية والإقليمية التي تلتزم بها المنظمة؟",
+            "internalAudits": "هل تم إجراء أي تدقيقات داخلية للنظام؟",
+            "environmentalIncidents": "هل حدثت أي حوادث بيئية أو مخالفات قانونية؟"
+          },
           "iso50001": {
             "energyConsumers": "ما هي العمليات / الخدمات / المنتجات / المعدات التي تستهلك أكبر نسبة من الطاقة في المنشأة؟",
             "enpi": "ما مؤشرات أداء الطاقة (EnPIs) المستخدمة لقياس وتحسين كفاءة الطاقة؟",
@@ -747,6 +769,7 @@
     "title": "طلبات المنح",
     "newRequest": "طلب منح جديد",
     "interactiveInvoice": "الفاتورة التفاعلية",
+    "empty": "لا توجد لديك طلبات منح حتى الآن.",
     "status": {
       "underConstruction": "قيد الإنشاء",
       "underReview": "تحت المراجعة",
@@ -756,7 +779,7 @@
     "card": {
       "orderNumber": "رقم الطلب",
       "authorizedPerson": "اسم الشخص المخول",
-      "authorizedPersonName": "محمد المناوهلى",
+      "draftOrderNumber": "مسودة — لم يتم الإرسال",
       "followUp": "متابعة الطلب",
       "orderStatus": "حالة الطلب"
     }

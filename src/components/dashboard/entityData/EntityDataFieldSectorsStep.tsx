@@ -19,6 +19,7 @@ interface EntityDataFieldSectorsStepProps {
   onActiveStandardChange: (standard: StandardKey) => void
   selectedSectors: SectorKey[]
   onSelectedSectorsChange: (sectors: SectorKey[]) => void
+  standardCounts?: Record<string, number>
 }
 
 interface SectorCardProps {
@@ -71,6 +72,7 @@ export function EntityDataFieldSectorsStep({
   onActiveStandardChange,
   selectedSectors,
   onSelectedSectorsChange,
+  standardCounts,
 }: EntityDataFieldSectorsStepProps) {
   const { t } = useTranslation()
   const [searchQuery, setSearchQuery] = useState('')
@@ -107,7 +109,7 @@ export function EntityDataFieldSectorsStep({
           <AppIcon
             icon={SearchOutlineIcon}
             size={24}
-            className="pointer-events-none absolute start-6 top-1/2 -translate-y-1/2 text-neutral-400"
+            className="pointer-events-none absolute start-6 top-1/2 -translate-y-1/2 text-primary"
           />
           <TextField
             type="search"
@@ -130,6 +132,7 @@ export function EntityDataFieldSectorsStep({
         standards={availableStandards}
         activeStandard={activeStandard}
         onChange={onActiveStandardChange}
+        counts={standardCounts}
       />
 
       <div className="sectors-grid grid gap-5 sm:grid-cols-2">

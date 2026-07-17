@@ -1,185 +1,112 @@
-import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   FormField,
   FormSection,
   RadioGroup,
-  TextField,
   Textarea,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
+import {
+  SPEC_QUESTIONS,
+  type SpecQuestionDef,
+} from '@/components/dashboard/entityData/applicationTypes'
+import type { StandardKey } from '@/components/dashboard/entityData/fieldTypes'
+
+/** Display order and section titles of the question groups. */
+const SECTION_ORDER: { standard: string; title: string }[] = [
+  { standard: 'iso9001', title: 'ISO 9001:2015' },
+  { standard: 'iso14001', title: 'ISO 14001:2015' },
+  { standard: 'iso45001', title: 'ISO 45001:2018' },
+  { standard: 'iso50001', title: 'ISO 50001:2018' },
+]
+
+function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
+  const { t } = useTranslation()
+  const { form, setSpecAnswer } = useApplicationForm()
+
+  const label = t(`accreditation.entityData.fields.spec.${question.labelKey}`)
+  const raw = form.specAnswers[question.questionKey] ?? ''
+
+  if (question.questionType === 'BOOLEAN') {
+    const yesNoOptions = [
+      { value: 'yes', label: t('accreditation.form.yes') },
+      { value: 'no', label: t('accreditation.form.no') },
+    ]
+    return (
+      <FormField label={label} required variant="question">
+        <RadioGroup
+          name={question.questionKey}
+          value={raw}
+          onChange={(v) => setSpecAnswer(question.questionKey, v)}
+          options={yesNoOptions}
+        />
+      </FormField>
+    )
+  }
+
+  if (question.questionType === 'DATE') {
+    const date = raw ? new Date(raw) : undefined
+    const value = date && !Number.isNaN(date.getTime()) ? date : undefined
+    return (
+      <FormField label={label} required variant="question">
+        <DatePicker
+          value={value}
+          onChange={(next) => setSpecAnswer(question.questionKey, next.toISOString())}
+        />
+      </FormField>
+    )
+  }
+
+  return (
+    <FormField label={label} required variant="question" className="lg:col-span-2">
+      <Textarea
+        value={raw}
+        onChange={(e) => setSpecAnswer(question.questionKey, e.target.value)}
+        placeholder={t('accreditation.entityData.fields.common.writeHere')}
+      />
+    </FormField>
+  )
+}
 
 export function SpecificationQuestionsStep() {
   const { t } = useTranslation()
-  const [energyBaseline, setEnergyBaseline] = useState('yes')
-  const [baselineUpdatedDate, setBaselineUpdatedDate] = useState<Date | undefined>()
-  const [ohsSystemInPlace, setOhsSystemInPlace] = useState('yes')
-  const [ohsStartDate, setOhsStartDate] = useState<Date | undefined>()
-  const [risksIdentified, setRisksIdentified] = useState('yes')
-  const [internalAudits, setInternalAudits] = useState('yes')
-  const [legalViolations, setLegalViolations] = useState('yes')
-  const [ohsCertification, setOhsCertification] = useState('yes')
+  const { form } = useApplicationForm()
 
-  const yesNoOptions = [
-    { value: 'yes', label: t('accreditation.form.yes') },
-    { value: 'no', label: t('accreditation.form.no') },
-  ]
+  // Only the question groups of the certificates picked in "Required Standard
+  // Specification" are shown
+  const sections = SECTION_ORDER.filter(({ standard }) =>
+    form.selectedStandards.includes(standard as StandardKey)
+  )
+    .map(({ standard, title }) => ({
+      title,
+      questions: SPEC_QUESTIONS.filter(
+        (question) => question.certificateCode === standard.toUpperCase()
+      ),
+    }))
+    .filter((section) => section.questions.length > 0)
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title="ISO 50001:2018" />
-      <FormSection>
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso50001.energyConsumers')}
-          required
-          variant="question"
-        >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
-        </FormField>
+      {sections.length === 0 && (
+        <p className="rounded-[var(--radius-sm)] bg-neutral-50 p-5 text-body-2 text-neutral-600">
+          {t('accreditation.entityData.fields.spec.noQuestions')}
+        </p>
+      )}
 
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso50001.enpi')}
-          required
-          variant="question"
-        >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
-        </FormField>
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso50001.energyBaseline')}
-            required
-            variant="question"
-          >
-            <RadioGroup
-              name="energyBaseline"
-              value={energyBaseline}
-              onChange={setEnergyBaseline}
-              options={yesNoOptions}
-            />
-          </FormField>
-
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso50001.baselineUpdated')}
-            required
-            variant="question"
-          >
-            <DatePicker value={baselineUpdatedDate} onChange={setBaselineUpdatedDate} />
-          </FormField>
+      {sections.map((section) => (
+        <div key={section.title} className="space-y-5">
+          <SectionHeading title={section.title} />
+          <FormSection>
+            <div className="grid gap-5 lg:grid-cols-2">
+              {section.questions.map((question) => (
+                <SpecQuestionField key={question.questionKey} question={question} />
+              ))}
+            </div>
+          </FormSection>
         </div>
-
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso50001.monitoringTools')}
-          required
-          variant="question"
-        >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
-        </FormField>
-      </FormSection>
-
-      <SectionHeading title="ISO 45001:2018" />
-      <FormSection>
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso45001.ohsSystemInPlace')}
-            required
-            variant="question"
-          >
-            <RadioGroup
-              name="ohsSystemInPlace"
-              value={ohsSystemInPlace}
-              onChange={setOhsSystemInPlace}
-              options={yesNoOptions}
-            />
-          </FormField>
-
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso45001.ohsStartDate')}
-            required
-            variant="question"
-          >
-            <DatePicker value={ohsStartDate} onChange={setOhsStartDate} />
-          </FormField>
-        </div>
-
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso45001.risksIdentified')}
-          required
-          variant="question"
-        >
-          <RadioGroup
-            name="risksIdentified"
-            value={risksIdentified}
-            onChange={setRisksIdentified}
-            options={yesNoOptions}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso45001.criticalRisks')}
-          required
-          variant="question"
-        >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso45001.internalAudits')}
-          required
-          variant="question"
-        >
-          <RadioGroup
-            name="internalAudits"
-            value={internalAudits}
-            onChange={setInternalAudits}
-            options={yesNoOptions}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.spec.iso45001.complianceLaws')}
-          required
-          variant="question"
-        >
-          <Textarea placeholder={t('accreditation.entityData.fields.common.writeHere')} />
-        </FormField>
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso45001.legalViolations')}
-            required
-            variant="question"
-          >
-            <RadioGroup
-              name="legalViolations"
-              value={legalViolations}
-              onChange={setLegalViolations}
-              options={yesNoOptions}
-            />
-          </FormField>
-
-          <FormField
-            label={t('accreditation.entityData.fields.spec.iso45001.ohsCertification')}
-            required
-            variant="question"
-          >
-            <RadioGroup
-              name="ohsCertification"
-              value={ohsCertification}
-              onChange={setOhsCertification}
-              options={yesNoOptions}
-            />
-          </FormField>
-        </div>
-
-        <FormField label={t('accreditation.entityData.fields.spec.iso45001.certifyingBody')}>
-          <TextField
-            type="text"
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          />
-        </FormField>
-      </FormSection>
+      ))}
     </div>
   )
 }
