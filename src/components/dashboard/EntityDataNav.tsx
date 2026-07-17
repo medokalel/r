@@ -97,7 +97,7 @@ export function EntityDataNav({
                     {!isLast && (
                       <span
                         className={cn(
-                          'absolute start-[17px] top-[calc(50%+8px)] w-px',
+                          'absolute start-[17px] top-[calc(50%+8px)] w-0.5',
                           index === activeIndex ? 'bg-primary' : 'bg-[#bdbdbd]'
                         )}
                         style={{ height: 'calc(100% - 16px)' }}

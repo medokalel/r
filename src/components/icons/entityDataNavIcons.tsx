@@ -7,12 +7,13 @@ interface EntityDataNavIconProps {
 
 function NavIconSvg({
   className,
+  viewBox = '0 0 24 24',
   children,
-}: EntityDataNavIconProps & { children: ReactNode }) {
+}: EntityDataNavIconProps & { children: ReactNode; viewBox?: string }) {
   return (
     <svg
       className={cn('size-5 shrink-0', className)}
-      viewBox="0 0 24 24"
+      viewBox={viewBox}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden
@@ -24,31 +25,18 @@ function NavIconSvg({
 
 export function EntityDataNavEntityIcon({ className }: EntityDataNavIconProps) {
   return (
-    <NavIconSvg className={className}>
-      <path
-        d="M4 21V9.5C4 8.12 5.12 7 6.5 7h11C18.88 7 20 8.12 20 9.5V21"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path d="M2 21h20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="8" cy="10" r="0.85" fill="currentColor" />
-      <circle cx="12" cy="10" r="0.85" fill="currentColor" />
-      <circle cx="16" cy="10" r="0.85" fill="currentColor" />
-      <circle cx="8" cy="13.5" r="0.85" fill="currentColor" />
-      <circle cx="12" cy="13.5" r="0.85" fill="currentColor" />
-      <circle cx="16" cy="13.5" r="0.85" fill="currentColor" />
-      <circle cx="8" cy="17" r="0.85" fill="currentColor" />
-      <circle cx="12" cy="17" r="0.85" fill="currentColor" />
-      <circle cx="16" cy="17" r="0.85" fill="currentColor" />
-      <path
-        d="M10.5 21v-3.5h3V21"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+    <NavIconSvg className={className} viewBox="0 0 20 20">
+      <path d="M10 8.33301H10.0083" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 11.667H10.0083" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M10 5H10.0083" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.332 8.33301H13.3404" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.332 11.667H13.3404" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.332 5H13.3404" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6.66797 8.33301H6.6763" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6.66797 11.667H6.6763" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M6.66797 5H6.6763" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7.5 18.3333V15.8333C7.5 15.3731 7.8731 15 8.33333 15H11.6667C12.1269 15 12.5 15.3731 12.5 15.8333V18.3333" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M4.9987 1.66699H14.9987C15.9192 1.66699 16.6654 2.41318 16.6654 3.33366V16.667C16.6654 17.5875 15.9192 18.3337 14.9987 18.3337H4.9987C4.07822 18.3337 3.33203 17.5875 3.33203 16.667V3.33366C3.33203 2.41318 4.07822 1.66699 4.9987 1.66699V1.66699" stroke="currentColor" strokeWidth="1.66667" strokeLinecap="round" strokeLinejoin="round" />
     </NavIconSvg>
   )
 }

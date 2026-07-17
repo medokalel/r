@@ -3,29 +3,29 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
-  DashboardIcon,
-  FileTextIcon,
-  LogoutIcon,
-  MenuRowsIcon,
-  ReceiptIcon,
-  RefreshIcon,
-  SettingsIcon,
+  DashboardGridIcon,
+  RequestsListIcon,
+  WalletCardIcon,
+  DocumentsSidebarIcon,
   ShieldIcon,
+  RenewalsIcon,
+  LogoutIcon,
+  ReceiptIcon,
+  SettingsIcon,
   UsersIcon,
-  WalletIcon,
 } from '@/components/icons'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
 
-const navItems: { icon: typeof DashboardIcon; labelKey: string; href?: string }[] = [
-  { icon: DashboardIcon, labelKey: 'nav.dashboard', href: '/certification-request' },
-  { icon: MenuRowsIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
+const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
+  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/certification-request' },
+  { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.clients' },
-  { icon: WalletIcon, labelKey: 'accreditation.sidebar.payments' },
-  { icon: FileTextIcon, labelKey: 'accreditation.sidebar.documents' },
+  { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments' },
+  { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
-  { icon: RefreshIcon, labelKey: 'accreditation.sidebar.renewals' },
+  { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals' },
   { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices' },
   { icon: SettingsIcon, labelKey: 'nav.settings', href: '/settings/company-profile' },
 ]

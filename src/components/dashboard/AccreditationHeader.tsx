@@ -116,7 +116,7 @@ export function AccreditationHeader({
           </span>
           {/* time and date */}
           <p className="text-body-2-medium text-neutral-600 whitespace-nowrap">
-            {timeLabel} {periodLabel} <span className="text-neutral-300">|</span> {dateLabel}
+            {timeLabel} {periodLabel} <span className="text-neutral-100">|</span> {dateLabel}
           </p>
         </div>
 

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ExternalLinkArrowIcon } from '@/components/icons'
 import {
   AppIcon,
   DownloadTrayIcon,
@@ -98,8 +99,8 @@ export function LegalIdentityStep({
           <FormField label={t('accreditation.form.website')}>
             <div className="relative">
               <TextField type="url" defaultValue="www.mac-cs.sa" className="pe-10" />
-              <span className="absolute end-3 top-1/2 -translate-y-1/2 text-neutral-400" aria-hidden>
-                ↗
+              <span className="absolute end-3 top-1/2 -translate-y-1/2 text-primary" aria-hidden>
+                <ExternalLinkArrowIcon size={16} />
               </span>
             </div>
           </FormField>

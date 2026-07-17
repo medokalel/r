@@ -98,9 +98,6 @@ function RequestCard({ request }: RequestCardProps) {
   return (
     <div className="flex flex-col gap-3 overflow-hidden rounded-[16px] border border-[#a3b8f5] bg-[rgba(243,246,253,0.5)] px-5 py-6">
       <div className="flex items-center justify-between">
-        <div className="flex size-10 items-center justify-center rounded-[12px] bg-white shadow-[0_6px_20px_rgba(153,155,168,0.1)]">
-          <StatusIcon status={request.status} />
-        </div>
         <div
           className={cn(
             'flex h-10 items-center justify-center rounded-[8px] border px-[13px] py-[5px] text-[12px] font-medium leading-[1.6]',
@@ -110,6 +107,9 @@ function RequestCard({ request }: RequestCardProps) {
           )}
         >
           {t(`certificationRequests.status.${request.status}`)}
+        </div>
+        <div className="flex size-10 items-center justify-center rounded-[12px] bg-white shadow-[0_6px_20px_rgba(153,155,168,0.1)]">
+          <StatusIcon status={request.status} />
         </div>
       </div>
 
@@ -164,18 +164,18 @@ export function CertificationRequestsPage() {
       <div className="flex flex-1 flex-col overflow-auto">
 
         {/* Action buttons */}
-        <div className="flex items-center gap-5 px-5 py-5">
+        <div className="flex items-center justify-end gap-5 px-5 py-5">
           <button
             type="button"
             onClick={() => navigate('/certification-request')}
-            className="flex h-12 items-center gap-3 rounded-[8px] bg-[#1236a3] pl-4 pr-6 text-[16px] leading-[1.6] text-white transition-colors hover:bg-[#0f2d8a]"
+            className="flex h-12 items-center gap-3 rounded-[8px] bg-[#1236a3] pl-4 pr-6 text-body-3-semibold leading-[1.6] text-white transition-colors hover:bg-[#1236a3]"
           >
             <AddCircle size={24} color="white" variant="Linear" />
             {t('certificationRequests.newRequest')}
           </button>
           <button
             type="button"
-            className="flex h-12 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-[16px] leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd]"
+            className="flex h-12 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-body-2-semibold leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd]"
           >
             {t('certificationRequests.interactiveInvoice')}
           </button>
@@ -183,7 +183,7 @@ export function CertificationRequestsPage() {
 
         {/* Cards grid */}
         <div className="px-5 pb-8">
-          <div className="grid grid-cols-4 gap-5 xl:grid-cols-3 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
             {mockRequestStatuses.map((request) => (
               <RequestCard key={request.id} request={request} />
             ))}
