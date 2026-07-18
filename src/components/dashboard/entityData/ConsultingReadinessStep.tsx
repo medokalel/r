@@ -213,10 +213,10 @@ export function ConsultingReadinessStep() {
             ))}
             <label className="flex cursor-pointer items-center gap-2">
               <input
-                type="radio"
-                name="otherSystem"
+                type="checkbox"
                 checked={form.otherSystemSelected}
                 onChange={() => {
+                  // "Other" is exclusive — picking it clears the ISO choices
                   if (!form.otherSystemSelected) update('currentSystems', [])
                   update('otherSystemSelected', !form.otherSystemSelected)
                 }}
@@ -250,7 +250,11 @@ export function ConsultingReadinessStep() {
             <RadioGroup
               name="designActivity"
               value={form.designActivity}
-              onChange={(v) => update('designActivity', v as YesNo)}
+              onChange={(v) => {
+                update('designActivity', v as YesNo)
+                // The exception reason only applies when the answer is "no"
+                if (v === 'yes') update('designException', '')
+              }}
               options={yesNoOptions}
             />
           </FormField>
@@ -261,6 +265,8 @@ export function ConsultingReadinessStep() {
               value={form.designException}
               onChange={(e) => update('designException', e.target.value)}
               placeholder={t('accreditation.form.stateReasonPlaceholder')}
+              disabled={form.designActivity !== 'no'}
+              className="disabled:cursor-not-allowed disabled:bg-[#efefef]"
             />
           </FormField>
         </div>

@@ -11,6 +11,8 @@ import {
   ExternalLinkArrowIcon,
 } from '@/components/icons'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
+import { isValidEmail, isValidWebsite, isValidPhoneNumber } from '@/lib/validators'
 import type { CountryCode } from '@/lib/countries'
 import {
   FormField,
@@ -42,6 +44,14 @@ export function LegalIdentityStep({
 }: LegalIdentityStepProps) {
   const { t } = useTranslation()
   const { form, update, uploadCommercialRegister, uploading } = useApplicationForm()
+  
+const { fieldProps } = useFieldValidation(form, {
+    email: (value) => (!isValidEmail(value) ? t('validation.invalidEmail') : undefined),
+    website: (value) => (!isValidWebsite(value) ? t('validation.invalidWebsite') : undefined),
+    mobileNumber: (value) =>
+      !isValidPhoneNumber(value, form.mobileCountryCode) ? t('validation.invalidMobile') : undefined,
+  })
+
   const commercialRegisterInputRef = useRef<HTMLInputElement>(null)
 
   const standardKeys = selectedStandards ?? form.selectedStandards
@@ -111,6 +121,7 @@ export function LegalIdentityStep({
                 value={form.website}
                 onChange={(e) => update('website', e.target.value)}
                 className="pe-10"
+                {...fieldProps('website')}
               />
               <span className="absolute end-3 top-1/2 -translate-y-1/2 text-primary" aria-hidden>
                 <ExternalLinkArrowIcon size={16} />
@@ -247,6 +258,7 @@ export function LegalIdentityStep({
               value={form.email}
               onChange={(e) => update('email', e.target.value)}
               placeholder="info@example.com"
+              {...fieldProps('email')}
             />
           </FormField>
 
@@ -293,6 +305,7 @@ export function LegalIdentityStep({
                   value={form.mobileNumber}
                   onChange={(e) => update('mobileNumber', e.target.value)}
                   placeholder="567XXXXXXXX"
+                  {...fieldProps('mobileNumber')}
                 />
               </div>
             </PhoneInputRow>

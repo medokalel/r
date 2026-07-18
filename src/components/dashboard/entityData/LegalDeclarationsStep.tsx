@@ -12,21 +12,42 @@ import { DatePicker } from '@/components/ui/DatePicker'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import { cn } from '@/lib/utils'
 
+/** Name of the granting certification body shown in the declaration letter. */
+const CB_NAME = 'iCasco'
+
 const AR_BOLD_PHRASES = ['اسم الجهة', 'اسم المواصفة', 'جهة المنح']
 
-function boldPlaceholders(text: string) {
+function boldPlaceholders(text: string, replacements: Record<string, string>) {
   return text
     .split(new RegExp(`(\\[.*?\\]|${AR_BOLD_PHRASES.join('|')})`, 'g'))
     .map((part, i) =>
-      /^\[.*\]$/.test(part) || AR_BOLD_PHRASES.includes(part)
-        ? <span key={i} className="font-semibold">{part}</span>
-        : part
+      /^\[.*\]$/.test(part) || AR_BOLD_PHRASES.includes(part) ? (
+        <span key={i} className="font-semibold">
+          {replacements[part] || part}
+        </span>
+      ) : (
+        part
+      )
     )
 }
 
 export function LegalDeclarationsStep() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { form, update } = useApplicationForm()
+
+  const standardNames = form.selectedStandards
+    .map((standard) => t(`accreditation.entityData.field.standards.${standard}`))
+    .join(i18n.dir() === 'rtl' ? '، ' : ', ')
+
+  // The bold placeholder phrases render the real application data once known
+  const replacements: Record<string, string> = {
+    'اسم الجهة': form.organizationName,
+    '[Name of the Entity]': form.organizationName,
+    'اسم المواصفة': standardNames,
+    '[Name of the Standard]': standardNames,
+    'جهة المنح': CB_NAME,
+    '[CB Name]': CB_NAME,
+  }
 
   return (
     <div className="flex-1 space-y-5">
@@ -34,9 +55,9 @@ export function LegalDeclarationsStep() {
       <SectionHeading title={t('accreditation.entityData.fields.legal.sectionOneTitle')} />
       <FormSection>
         <div className="space-y-5 rounded-[var(--radius-sm)] bg-white p-5 text-neutral-900">
-          <p className={cn(fieldBodyTextClassName, 'field-text')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.greeting'))}</p>
+          <p className={cn(fieldBodyTextClassName, 'field-text')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.greeting'), replacements)}</p>
           <p className={cn(fieldBodyTextClassName, 'field-text whitespace-pre-wrap')}>
-            {boldPlaceholders(t('accreditation.entityData.fields.legal.applicationBody'))}
+            {boldPlaceholders(t('accreditation.entityData.fields.legal.applicationBody'), replacements)}
           </p>
           <p className={cn(fieldBodyTextClassName, 'field-text')}>{t('accreditation.entityData.fields.legal.closing')}</p>
 
@@ -68,7 +89,7 @@ export function LegalDeclarationsStep() {
       <SectionHeading title={t('accreditation.entityData.fields.legal.sectionTwoTitle')} />
       <FormSection>
         <div className="rounded-[var(--radius-sm)] bg-white p-5 text-[#3d3d3d]">
-          <p className={cn(fieldBodyTextClassName, 'field-text mb-4')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.confidentialityIntro'))}</p>
+          <p className={cn(fieldBodyTextClassName, 'field-text mb-4')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.confidentialityIntro'), replacements)}</p>
           <ul className="space-y-2 ps-2">
             {[
               t('accreditation.entityData.fields.legal.confidentialityItem1'),

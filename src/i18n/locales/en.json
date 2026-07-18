@@ -50,6 +50,7 @@
   },
   "validation": {
     "invalidEmail": "Please enter a valid email address",
+    "invalidWebsite": "Please enter a valid website URL",
     "passwordTooShort": "Password must be at least 8 characters",
     "invalidMobile": "Please enter a valid mobile number (8–15 digits)",
     "fileTooLarge": "File must be {{size}} MB or smaller"

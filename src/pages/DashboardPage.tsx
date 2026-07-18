@@ -1,6 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import { EntityDataForm } from '@/components/dashboard/EntityDataForm'
@@ -47,15 +47,36 @@ const viewTabCopyKeys: Record<EntityDataViewTab, { title: string; subtitle: stri
 export function DashboardPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
-  const navigate = useNavigate()
   const [activeSubSection, setActiveSubSection] = useState<EntityDataSubSection>('legalIdentity')
   const [activeViewTab, setActiveViewTab] = useState<EntityDataViewTab>('entityData')
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('sectors')
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const { contextValue, loading, saving, submitting, notification, saveDraft, submit } =
+  const { contextValue, loading, saving, submitting, status, notification, saveDraft, submit } =
     useApplicationState()
   const { form, update } = contextValue
+  const [searchParams] = useSearchParams()
+  const requestedView = searchParams.get('view')
+  // Keeps the skeleton up until the landing tab is decided, so the form
+  // chrome never flashes before switching to a status/feedback view
+  const [viewReady, setViewReady] = useState(!searchParams.get('id'))
+
+  // Land on the tab the listing asked for: "feedback" (follow up) opens the
+  // feedback tab for submitted applications; a draft under construction opens
+  // on the first form tab instead so the user can continue filling it
+  useEffect(() => {
+    if (loading) return
+    if (requestedView === 'feedback' && status !== 'DRAFT') {
+      setActiveViewTab('feedback')
+    } else if (status === 'SUBMITTED' || status === 'UNDER_REVIEW') {
+      setActiveViewTab('underReview')
+    } else if (status === 'APPROVED') {
+      setActiveViewTab('approved')
+    } else if (status === 'REJECTED') {
+      setActiveViewTab('rejected')
+    }
+    setViewReady(true)
+  }, [loading, requestedView, status])
 
   const selectedSectors = form.selectedSectors
   const selectedStandards = form.selectedStandards
@@ -135,7 +156,7 @@ export function DashboardPage() {
     // The last form step submits the whole application instead of advancing
     if (activeViewTab === 'documents') {
       const submitted = await submit()
-      if (submitted) navigate('/certification-requests')
+      if (submitted) handleViewTabChange('underReview')
       return
     }
 
@@ -172,7 +193,6 @@ export function DashboardPage() {
     fieldPhase,
     handleSubSectionChange,
     handleViewTabChange,
-    navigate,
     saveDraft,
     scrollToContent,
     submit,
@@ -267,35 +287,22 @@ export function DashboardPage() {
       <ApplicationFormContext.Provider value={contextValue}>
         <AccreditationHeader
           orderNumber="N-EMS-00022"
-          officerName="الاء طارق | Alaa Tarek"
-          officerEmail="alaatarek78@gmail.com"
+          // officerName="الاء طارق | Alaa Tarek"
+          // officerEmail="alaatarek78@gmail.com"
         />
         <ProcessStepper activeStep={0} />
 
         <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+          {loading || !viewReady ? (
+            <div className="flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              <ApplicationLoadingSkeleton />
+            </div>
+          ) : (
+            <>
           {!isStatusView && copyKeys.title && (
             <div className="space-y-2">
               <h2 className="text-h3-semi text-neutral-900">{t(copyKeys.title)}</h2>
               <p className={`text-body-2 text-neutral-600${isRTL ? ' font-light' : ''}`}>{t(copyKeys.subtitle)}</p>
-            </div>
-          )}
-
-          {isStatusView && (
-            <div className="flex items-center gap-2">
-              {(['approved', 'underReview', 'rejected'] as const).map((s) => (
-                <button
-                  key={s}
-                  type="button"
-                  onClick={() => handleViewTabChange(s)}
-                  className={`rounded px-3 py-1 text-small font-medium transition-colors ${
-                    activeViewTab === s
-                      ? 'bg-primary text-white'
-                      : 'bg-neutral-100 text-neutral-600 hover:bg-neutral-200'
-                  }`}
-                >
-                  {s === 'approved' ? '✓ Approved' : s === 'underReview' ? '⏳ Under Review' : '✗ Rejected'}
-                </button>
-              ))}
             </div>
           )}
 
@@ -309,23 +316,21 @@ export function DashboardPage() {
               />
             )}
             <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-              {loading ? (
-                <ApplicationLoadingSkeleton />
-              ) : (
-                <EntityDataForm
-                  section={activeSubSection}
-                  viewTab={activeViewTab}
-                  fieldPhase={fieldPhase}
-                  selectedSectors={selectedSectors}
-                  onSelectedSectorsChange={setSelectedSectors}
-                  selectedStandards={selectedStandards}
-                  onSelectedStandardsChange={setSelectedStandards}
-                  selectedCodes={form.selectedCodes}
-                  onSelectedCodesChange={setSelectedCodes}
-                />
-              )}
+              <EntityDataForm
+                section={activeSubSection}
+                viewTab={activeViewTab}
+                fieldPhase={fieldPhase}
+                selectedSectors={selectedSectors}
+                onSelectedSectorsChange={setSelectedSectors}
+                selectedStandards={selectedStandards}
+                onSelectedStandardsChange={setSelectedStandards}
+                selectedCodes={form.selectedCodes}
+                onSelectedCodesChange={setSelectedCodes}
+              />
             </div>
           </div>
+            </>
+          )}
         </div>
 
         <DashboardFooter

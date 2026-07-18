@@ -99,9 +99,10 @@ function StatusIcon({ status }: { status: RequestStatus }) {
 interface RequestCardProps {
   request: CertificationRequest
   onFollowUp: () => void
+  onOrderStatus: () => void
 }
 
-function RequestCard({ request, onFollowUp }: RequestCardProps) {
+function RequestCard({ request, onFollowUp, onOrderStatus }: RequestCardProps) {
   const { t } = useTranslation()
   const { bgColor, borderColor, textColor } = statusConfig[request.status]
 
@@ -157,6 +158,7 @@ function RequestCard({ request, onFollowUp }: RequestCardProps) {
       </button>
       <button
         type="button"
+        onClick={onOrderStatus}
         className="flex h-12 w-full items-center justify-center rounded-[8px] bg-[#e8edfc] text-[16px] leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#d1dbfa]"
       >
         {t('certificationRequests.card.orderStatus')}
@@ -171,9 +173,12 @@ export function CertificationRequestsPage() {
   const [requests, setRequests] = useState<CertificationRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     let cancelled = false
+    setLoading(true)
+    setError(null)
     ;(async () => {
       try {
         const applications = await listApplications()
@@ -204,7 +209,7 @@ export function CertificationRequestsPage() {
     return () => {
       cancelled = true
     }
-  }, [navigate, t])
+  }, [navigate, reloadKey, t])
 
   return (
     <AppLayout>
@@ -245,7 +250,12 @@ export function CertificationRequestsPage() {
                 <RequestCard
                   key={request.id}
                   request={request}
-                  onFollowUp={() => navigate(`/certification-request?id=${request.id}`)}
+                  onFollowUp={() =>
+                    navigate(`/certification-request?id=${request.id}&view=feedback`)
+                  }
+                  onOrderStatus={() =>
+                    navigate(`/certification-request?id=${request.id}&view=status`)
+                  }
                 />
               ))}
             </div>

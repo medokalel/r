@@ -6,19 +6,29 @@ export interface IpLocation {
   lng: number
 }
 
+const FETCH_TIMEOUT_MS = 5000
+
 // Module-level cache — fetch runs once for the whole app lifetime
 let cached: Promise<IpLocation | null> | null = null
 
 function fetchIpLocation(): Promise<IpLocation | null> {
   if (!cached) {
-    cached = fetch('https://ipapi.co/json/')
+    const controller = new AbortController()
+    const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
+
+    cached = fetch('https://ipapi.co/json/', { signal: controller.signal })
       .then((r) => r.json())
       .then((d) =>
         d.latitude && d.longitude && d.country_code
-          ? { countryCode: d.country_code as string, lat: d.latitude as number, lng: d.longitude as number }
+          ? {
+              countryCode: String(d.country_code).toUpperCase(),
+              lat: d.latitude as number,
+              lng: d.longitude as number,
+            }
           : null
       )
       .catch(() => null)
+      .finally(() => clearTimeout(timeout))
   }
   return cached
 }
