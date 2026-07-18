@@ -246,6 +246,8 @@ export function DashboardPage() {
     (activeViewTab === 'entityData' && activeIndex === 0) ||
     (activeViewTab === 'field' && fieldPhase === 'sectors')
 
+  const footerSaveDraftDisabled = busy || loading || isStatusView
+
   const footerNextDisabled =
     busy ||
     loading ||
@@ -261,9 +263,7 @@ export function DashboardPage() {
     ? t('common.loading')
     : activeViewTab === 'documents'
       ? t('accreditation.messages.submitRequest')
-      : isFieldSectorsView
-        ? t('accreditation.entityData.field.continueToCodes')
-        : undefined
+      : undefined
 
   const standardLabel = (standard: StandardKey) =>
     t(`accreditation.entityData.field.standards.${standard}`)
@@ -370,6 +370,9 @@ export function DashboardPage() {
           startContent={footerStartContent}
           onBack={handleBack}
           onNext={handleNext}
+          onSaveDraft={saveDraft}
+          saveDraftDisabled={footerSaveDraftDisabled}
+          saveDraftLoading={saving}
         />
       </ApplicationFormContext.Provider>
     </AppLayout>

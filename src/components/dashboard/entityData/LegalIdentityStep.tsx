@@ -248,99 +248,100 @@ const { fieldProps } = useFieldValidation(form, {
         </div>
       </SectionHeading>
 
-      <SectionHeading title={t('accreditation.form.regulatoryData')} />
-      <FormSection>
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.email')}>
-            <TextField
-              type="email"
-              icon={MailIcon}
-              value={form.email}
-              onChange={(e) => update('email', e.target.value)}
-              placeholder="info@example.com"
-              {...fieldProps('email')}
-            />
-          </FormField>
+      <SectionHeading title={t('accreditation.form.regulatoryData')} accordion>
+        <FormSection>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.email')}>
+              <TextField
+                type="email"
+                icon={MailIcon}
+                value={form.email}
+                onChange={(e) => update('email', e.target.value)}
+                placeholder="info@example.com"
+                {...fieldProps('email')}
+              />
+            </FormField>
 
-          <FormField label={t('accreditation.form.country')} required>
-            <CountrySelectField
-              value={form.country}
-              onChange={(country) => update('country', country)}
-            />
-          </FormField>
-        </div>
+            <FormField label={t('accreditation.form.country')} required>
+              <CountrySelectField
+                value={form.country}
+                onChange={(country) => update('country', country)}
+              />
+            </FormField>
+          </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.representativeName')}>
-            <TextField
-              type="text"
-              value={form.representativeName}
-              onChange={(e) => update('representativeName', e.target.value)}
-              placeholder={t('accreditation.form.representativeNamePlaceholder')}
-            />
-          </FormField>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.representativeName')}>
+              <TextField
+                type="text"
+                value={form.representativeName}
+                onChange={(e) => update('representativeName', e.target.value)}
+                placeholder={t('accreditation.form.representativeNamePlaceholder')}
+              />
+            </FormField>
 
-          <FormField label={t('accreditation.form.representativeTitle')}>
-            <TextField
-              type="text"
-              value={form.jobTitle}
-              onChange={(e) => update('jobTitle', e.target.value)}
-              placeholder={t('accreditation.form.representativeTitlePlaceholder')}
-            />
-          </FormField>
-        </div>
+            <FormField label={t('accreditation.form.representativeTitle')}>
+              <TextField
+                type="text"
+                value={form.jobTitle}
+                onChange={(e) => update('jobTitle', e.target.value)}
+                placeholder={t('accreditation.form.representativeTitlePlaceholder')}
+              />
+            </FormField>
+          </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.mobileNumber')}>
-            <PhoneInputRow
-              rowClassName="gap-3"
-              value={form.mobileCountryCode}
-              onChange={(code: CountryCode) => update('mobileCountryCode', code)}
-              aria-label={t('accreditation.form.mobileNumber')}
-            >
-              <div className="min-w-0 flex-1">
-                <TextField
-                  type="tel"
-                  icon={PhoneIcon}
-                  value={form.mobileNumber}
-                  onChange={(e) => update('mobileNumber', e.target.value)}
-                  placeholder="567XXXXXXXX"
-                  {...fieldProps('mobileNumber')}
-                />
-              </div>
-            </PhoneInputRow>
-          </FormField>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.mobileNumber')}>
+              <PhoneInputRow
+                rowClassName="gap-3"
+                value={form.mobileCountryCode}
+                onChange={(code: CountryCode) => update('mobileCountryCode', code)}
+                aria-label={t('accreditation.form.mobileNumber')}
+              >
+                <div className="min-w-0 flex-1">
+                  <TextField
+                    type="tel"
+                    icon={PhoneIcon}
+                    value={form.mobileNumber}
+                    onChange={(e) => update('mobileNumber', e.target.value)}
+                    placeholder="567XXXXXXXX"
+                    {...fieldProps('mobileNumber')}
+                  />
+                </div>
+              </PhoneInputRow>
+            </FormField>
 
-          <FormField label={t('accreditation.form.organizationType')}>
-            <RadioGroup
-              name="orgType"
-              value={form.organizationNature}
-              onChange={(v) => update('organizationNature', v)}
-              options={orgTypeOptions}
-            />
-          </FormField>
-        </div>
+            <FormField label={t('accreditation.form.organizationType')}>
+              <RadioGroup
+                name="orgType"
+                value={form.organizationNature}
+                onChange={(v) => update('organizationNature', v)}
+                options={orgTypeOptions}
+              />
+            </FormField>
+          </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.mainActivity')} required>
-            <TextField
-              type="text"
-              value={form.mainActivity}
-              onChange={(e) => update('mainActivity', e.target.value)}
-              placeholder={t('accreditation.form.mainActivityPlaceholder')}
-            />
-          </FormField>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.mainActivity')} required>
+              <TextField
+                type="text"
+                value={form.mainActivity}
+                onChange={(e) => update('mainActivity', e.target.value)}
+                placeholder={t('accreditation.form.mainActivityPlaceholder')}
+              />
+            </FormField>
 
-          <FormField label={t('accreditation.form.requestType')} required>
-            <TextField
-              type="text"
-              readOnly
-              value={t('accreditation.form.newGranted')}
-              className="cursor-not-allowed bg-[#efefef] text-neutral-900"
-            />
-          </FormField>
-        </div>
-      </FormSection>
+            <FormField label={t('accreditation.form.requestType')} required>
+              <TextField
+                type="text"
+                readOnly
+                value={t('accreditation.form.newGranted')}
+                className="cursor-not-allowed bg-[#efefef] text-neutral-900"
+              />
+            </FormField>
+          </div>
+        </FormSection>
+      </SectionHeading>
     </div>
   )
 }

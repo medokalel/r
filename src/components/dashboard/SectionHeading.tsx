@@ -9,6 +9,8 @@ interface SectionHeadingProps {
   accordion?: boolean
   children?: ReactNode
   defaultOpen?: boolean
+  /** Extra controls (e.g. a "remove" button) rendered in the header, before the chevron */
+  headerActions?: ReactNode
 }
 
 export function SectionHeading({
@@ -16,6 +18,7 @@ export function SectionHeading({
   accordion = false,
   children,
   defaultOpen = true,
+  headerActions,
 }: SectionHeadingProps) {
   const [open, setOpen] = useState(defaultOpen)
 
@@ -27,6 +30,11 @@ export function SectionHeading({
       aria-expanded={accordion ? open : undefined}
     >
       <SectionTitle title={title} className="flex-1" />
+      {headerActions && (
+        <div onClick={(e) => e.stopPropagation()} className="shrink-0">
+          {headerActions}
+        </div>
+      )}
       {accordion && (
         <span
           className={cn(

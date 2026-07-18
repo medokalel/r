@@ -278,7 +278,7 @@ export function ScopeOfActivityStep() {
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title={t('accreditation.entityData.fields.scope.operationalData')} />
+      <SectionHeading title={t('accreditation.entityData.fields.scope.operationalData')} accordion>
       <FormSection>
         <FormField
           label={t('accreditation.entityData.fields.scope.scopeOfWork')}
@@ -356,24 +356,29 @@ export function ScopeOfActivityStep() {
           </button>
         </FormField>
       </FormSection>
+      </SectionHeading>
 
       {form.branches.map((branch, index) => (
         <div key={branch.localId} ref={(el) => { if (el) branchRefs.current.set(branch.localId, el); }}>
-          <div className="flex items-center justify-between">
-            <SectionHeading title={branchLabel(index)} />
-            {index > 0 && (
-              <button
-                type="button"
-                onClick={() => handleRemoveBranch(branch.localId)}
-                className="flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-error-500 transition-colors hover:bg-error-50"
-                aria-label={t('accreditation.entityData.fields.scope.removeBranch')}
-              >
-                <AppIcon icon={TrashIcon} size={16} />
-                <span className="text-body-3">{t('accreditation.entityData.fields.scope.removeBranch')}</span>
-              </button>
-            )}
-          </div>
-          <BranchForm branch={branch} onChange={updateBranch} />
+          <SectionHeading
+            title={branchLabel(index)}
+            accordion
+            headerActions={
+              index > 0 ? (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveBranch(branch.localId)}
+                  className="flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-error-500 transition-colors hover:bg-error-50"
+                  aria-label={t('accreditation.entityData.fields.scope.removeBranch')}
+                >
+                  <AppIcon icon={TrashIcon} size={16} />
+                  <span className="text-body-3">{t('accreditation.entityData.fields.scope.removeBranch')}</span>
+                </button>
+              ) : undefined
+            }
+          >
+            <BranchForm branch={branch} onChange={updateBranch} />
+          </SectionHeading>
         </div>
       ))}
     </div>

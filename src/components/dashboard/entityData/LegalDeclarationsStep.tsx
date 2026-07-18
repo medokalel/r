@@ -52,143 +52,146 @@ export function LegalDeclarationsStep() {
   return (
     <div className="flex-1 space-y-5">
       {/* Section 1 */}
-      <SectionHeading title={t('accreditation.entityData.fields.legal.sectionOneTitle')} />
-      <FormSection>
-        <div className="space-y-5 rounded-[var(--radius-sm)] bg-white p-5 text-neutral-900">
-          <p className={cn(fieldBodyTextClassName, 'field-text')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.greeting'), replacements)}</p>
-          <p className={cn(fieldBodyTextClassName, 'field-text whitespace-pre-wrap')}>
-            {boldPlaceholders(t('accreditation.entityData.fields.legal.applicationBody'), replacements)}
-          </p>
-          <p className={cn(fieldBodyTextClassName, 'field-text')}>{t('accreditation.entityData.fields.legal.closing')}</p>
+      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+        <FormSection>
+          <div className="space-y-5 rounded-[var(--radius-sm)] bg-white p-5 text-neutral-900">
+            <p className={cn(fieldBodyTextClassName, 'field-text')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.greeting'), replacements)}</p>
+            <p className={cn(fieldBodyTextClassName, 'field-text whitespace-pre-wrap')}>
+              {boldPlaceholders(t('accreditation.entityData.fields.legal.applicationBody'), replacements)}
+            </p>
+            <p className={cn(fieldBodyTextClassName, 'field-text')}>{t('accreditation.entityData.fields.legal.closing')}</p>
 
-          <div className="grid gap-5 pt-2 lg:grid-cols-2">
+            <div className="grid gap-5 pt-2 lg:grid-cols-2">
+              <FormField
+                label={t('accreditation.entityData.fields.legal.authorizedSignatory')}
+                required
+                variant="question"
+              >
+                <TextField
+                  type="text"
+                  value={form.signatoryName}
+                  onChange={(e) => update('signatoryName', e.target.value)}
+                  placeholder={t('accreditation.entityData.fields.legal.signatoryPlaceholder')}
+                />
+              </FormField>
+
+              <FormField label={t('accreditation.entityData.fields.legal.date')} required variant="question">
+                <DatePicker
+                  value={form.declarationDate}
+                  onChange={(date) => update('declarationDate', date)}
+                />
+              </FormField>
+            </div>
+          </div>
+        </FormSection>
+      </SectionHeading>
+
+      {/* Section 2 */}
+      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+        <FormSection>
+          <div className="rounded-[var(--radius-sm)] bg-white p-5 text-[#3d3d3d]">
+            <p className={cn(fieldBodyTextClassName, 'field-text mb-4')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.confidentialityIntro'), replacements)}</p>
+            <ul className="space-y-2 ps-2">
+              {[
+                t('accreditation.entityData.fields.legal.confidentialityItem1'),
+                t('accreditation.entityData.fields.legal.confidentialityItem2'),
+                t('accreditation.entityData.fields.legal.confidentialityItem3'),
+              ].map((item, i) => (
+                <li key={i} className={cn(fieldBodyTextClassName, 'field-text flex gap-2')}>
+                  <span className="mt-1 shrink-0">•</span>
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </FormSection>
+      </SectionHeading>
+
+      {/* Certificate Data */}
+      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+        <FormSection>
+          <div className="grid gap-5 lg:grid-cols-2">
             <FormField
-              label={t('accreditation.entityData.fields.legal.authorizedSignatory')}
+              label={t('accreditation.entityData.fields.legal.certificateNameAr')}
               required
               variant="question"
             >
               <TextField
                 type="text"
-                value={form.signatoryName}
-                onChange={(e) => update('signatoryName', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.signatoryPlaceholder')}
+                value={form.certificateNameAr}
+                onChange={(e) => update('certificateNameAr', e.target.value)}
+                placeholder={t('accreditation.entityData.fields.legal.certificateNameArPlaceholder')}
               />
             </FormField>
 
-            <FormField label={t('accreditation.entityData.fields.legal.date')} required variant="question">
-              <DatePicker
-                value={form.declarationDate}
-                onChange={(date) => update('declarationDate', date)}
+            <FormField
+              label={t('accreditation.entityData.fields.legal.certificateNameEn')}
+              required
+              variant="question"
+            >
+              <TextField
+                type="text"
+                value={form.certificateNameEn}
+                onChange={(e) => update('certificateNameEn', e.target.value)}
               />
             </FormField>
           </div>
-        </div>
-      </FormSection>
 
-      {/* Section 2 */}
-      <SectionHeading title={t('accreditation.entityData.fields.legal.sectionTwoTitle')} />
-      <FormSection>
-        <div className="rounded-[var(--radius-sm)] bg-white p-5 text-[#3d3d3d]">
-          <p className={cn(fieldBodyTextClassName, 'field-text mb-4')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.confidentialityIntro'), replacements)}</p>
-          <ul className="space-y-2 ps-2">
-            {[
-              t('accreditation.entityData.fields.legal.confidentialityItem1'),
-              t('accreditation.entityData.fields.legal.confidentialityItem2'),
-              t('accreditation.entityData.fields.legal.confidentialityItem3'),
-            ].map((item, i) => (
-              <li key={i} className={cn(fieldBodyTextClassName, 'field-text flex gap-2')}>
-                <span className="mt-1 shrink-0">•</span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </FormSection>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField
+              label={t('accreditation.entityData.fields.legal.certificateAddressAr')}
+              required
+              variant="question"
+            >
+              <TextField
+                type="text"
+                value={form.certificateAddressAr}
+                onChange={(e) => update('certificateAddressAr', e.target.value)}
+              />
+            </FormField>
 
-      {/* Certificate Data */}
-      <SectionHeading title={t('accreditation.entityData.fields.legal.certificateDataTitle')} />
-      <FormSection>
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateNameAr')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateNameAr}
-              onChange={(e) => update('certificateNameAr', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.legal.certificateNameArPlaceholder')}
-            />
-          </FormField>
+            <FormField
+              label={t('accreditation.entityData.fields.legal.certificateAddressEn')}
+              required
+              variant="question"
+            >
+              <TextField
+                type="text"
+                value={form.certificateAddressEn}
+                onChange={(e) => update('certificateAddressEn', e.target.value)}
+              />
+            </FormField>
+          </div>
 
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateNameEn')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateNameEn}
-              onChange={(e) => update('certificateNameEn', e.target.value)}
-            />
-          </FormField>
-        </div>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField
+              label={t('accreditation.entityData.fields.legal.certificateFieldAr')}
+              required
+              variant="question"
+            >
+              <TextField
+                type="text"
+                value={form.certificateScopeAr}
+                onChange={(e) => update('certificateScopeAr', e.target.value)}
+                placeholder={t('accreditation.entityData.fields.legal.certificateFieldArPlaceholder')}
+              />
+            </FormField>
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateAddressAr')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateAddressAr}
-              onChange={(e) => update('certificateAddressAr', e.target.value)}
-            />
-          </FormField>
-
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateAddressEn')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateAddressEn}
-              onChange={(e) => update('certificateAddressEn', e.target.value)}
-            />
-          </FormField>
-        </div>
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateFieldAr')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateScopeAr}
-              onChange={(e) => update('certificateScopeAr', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.legal.certificateFieldArPlaceholder')}
-            />
-          </FormField>
-
-          <FormField
-            label={t('accreditation.entityData.fields.legal.certificateFieldEn')}
-            required
-            variant="question"
-          >
-            <TextField
-              type="text"
-              value={form.certificateScopeEn}
-              onChange={(e) => update('certificateScopeEn', e.target.value)}
-              placeholder="Ex: Chemicals"
-            />
-          </FormField>
-        </div>
-      </FormSection>
+            <FormField
+              label={t('accreditation.entityData.fields.legal.certificateFieldEn')}
+              required
+              variant="question"
+            >
+              <TextField
+                type="text"
+                value={form.certificateScopeEn}
+                onChange={(e) => update('certificateScopeEn', e.target.value)}
+                placeholder="Ex: Chemicals"
+              />
+            </FormField>
+          </div>
+        </FormSection>
+      </SectionHeading>
 
       {/* Acknowledgement */}
       <div className="space-y-4 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-6">

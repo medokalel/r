@@ -6,8 +6,11 @@ import { cn } from '@/lib/utils'
 interface DashboardFooterProps {
   onBack?: () => void
   onNext?: () => void
+  onSaveDraft?: () => void
   backDisabled?: boolean
   nextDisabled?: boolean
+  saveDraftDisabled?: boolean
+  saveDraftLoading?: boolean
   nextLabel?: string
   startContent?: ReactNode
   className?: string
@@ -16,8 +19,11 @@ interface DashboardFooterProps {
 export function DashboardFooter({
   onBack,
   onNext,
+  onSaveDraft,
   backDisabled = true,
   nextDisabled = false,
+  saveDraftDisabled = false,
+  saveDraftLoading = false,
   nextLabel,
   startContent,
   className,
@@ -34,6 +40,16 @@ export function DashboardFooter({
     >
       {startContent}
       <div className="flex flex-wrap gap-5">
+        {onSaveDraft && (
+          <Button
+            variant="tertiary"
+            disabled={saveDraftDisabled}
+            onClick={onSaveDraft}
+            className="min-w-[200px] rounded-[var(--radius-sm)] bg-[#F3F6FD] disabled:opacity-50"
+          >
+            {saveDraftLoading ? t('common.loading') : t('common.saveDraft')}
+          </Button>
+        )}
         <Button
           variant="secondary"
           disabled={backDisabled}
