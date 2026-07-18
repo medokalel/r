@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, MailIcon, NotificationIcon } from '@/components/icons'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession } from '@/lib/authStorage'
 import { getUserProfile, type UserProfile } from '@/lib/api/userApi'
@@ -71,17 +72,21 @@ export function AccreditationHeader({
   const dateLabel = `${day} ${month} ${year}`
 
   return (
-    <header className="flex shrink-0 items-center justify-between border-b-2 border-[#ececec] bg-white px-5 py-4">
-      <div className="flex items-center gap-6">
+    <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-4 border-b-2 border-[#ececec] bg-white px-5 py-4">
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
         <h1 className="text-h3-semi text-primary whitespace-nowrap">{t(titleKey)}</h1>
 
         {orderNumber && <HeaderDivider />}
         {orderNumber && (
-          <div className="flex flex-col items-start gap-1">
+          <div className="flex min-w-0 flex-col items-start gap-1">
             <span className="w-fit rounded-[6px] bg-[#e8edfc] px-3 py-1 text-[13px] font-medium leading-[1.6] text-[#1236a3]">
               {t('accreditation.orderNumber')}
             </span>
-            <p className="text-h3-semi text-neutral-900 whitespace-nowrap">{orderNumber}</p>
+            <Tooltip label={orderNumber} side="bottom" align="start">
+              <p className="max-w-[220px] truncate text-h3-semi text-neutral-900" dir="ltr">
+                {orderNumber}
+              </p>
+            </Tooltip>
           </div>
         )}
 
@@ -103,8 +108,8 @@ export function AccreditationHeader({
         )}
       </div>
 
-      <div className="flex items-center gap-4">
-        
+      <div className="flex flex-wrap items-center gap-4">
+
         {/* Time and date container */}
         <div className="flex flex-col items-start gap-1">
           {/* badge */}

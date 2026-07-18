@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import { EntityDataForm } from '@/components/dashboard/EntityDataForm'
@@ -10,6 +10,7 @@ import {
   type EntityDataSubSection,
   type EntityDataViewTab,
 } from '@/components/dashboard/EntityDataNav'
+import { listApplications } from '@/lib/api/certificationApplicationApi'
 import { ApplicationFormContext } from '@/components/dashboard/entityData/ApplicationFormContext'
 import { ApplicationLoadingSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { FieldSelectionSummary } from '@/components/dashboard/entityData/FieldSelectionSummary'
@@ -18,6 +19,7 @@ import { isSectionComplete } from '@/components/dashboard/entityData/application
 import { useApplicationState } from '@/components/dashboard/entityData/useApplicationState'
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { ErrorState } from '@/components/ui'
 import { cn } from '@/lib/utils'
 
 const STATUS_VIEWS: EntityDataViewTab[] = ['approved', 'underReview', 'rejected']
@@ -52,11 +54,32 @@ export function DashboardPage() {
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('sectors')
   const contentRef = useRef<HTMLDivElement>(null)
 
-  const { contextValue, loading, saving, submitting, status, notification, saveDraft, submit } =
+  const { contextValue, loading, saving, submitting, status, orderNumber, notification, loadError, reload, saveDraft, submit } =
     useApplicationState()
   const { form, update } = contextValue
   const [searchParams] = useSearchParams()
   const requestedView = searchParams.get('view')
+  const [lastReviewOrderNumber, setLastReviewOrderNumber] = useState<string | null>(null)
+
+  // On a new request there is no order number yet, so the header falls back to
+  // the most recent under-review order's number
+  useEffect(() => {
+    if (searchParams.get('id')) return
+    let cancelled = false
+    listApplications()
+      .then((apps) => {
+        if (cancelled) return
+        const latest = apps.find(
+          (app) =>
+            (app.status === 'UNDER_REVIEW' || app.status === 'SUBMITTED') && app.orderNumber
+        )
+        setLastReviewOrderNumber(latest?.orderNumber ?? null)
+      })
+      .catch(() => undefined)
+    return () => {
+      cancelled = true
+    }
+  }, [searchParams])
   // Keeps the skeleton up until the landing tab is decided, so the form
   // chrome never flashes before switching to a status/feedback view
   const [viewReady, setViewReady] = useState(!searchParams.get('id'))
@@ -285,15 +308,22 @@ export function DashboardPage() {
   return (
     <AppLayout>
       <ApplicationFormContext.Provider value={contextValue}>
-        <AccreditationHeader
-          orderNumber="N-EMS-00022"
-          // officerName="الاء طارق | Alaa Tarek"
-          // officerEmail="alaatarek78@gmail.com"
-        />
+        <AccreditationHeader orderNumber={orderNumber ?? lastReviewOrderNumber ?? undefined} />
         <ProcessStepper activeStep={0} />
 
         <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-          {loading || !viewReady ? (
+          {loadError ? (
+            <div className="flex flex-1 items-center justify-center rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              <ErrorState
+                variant={loadError === 'rateLimit' ? 'rateLimit' : 'generic'}
+                title={loadError === 'rateLimit' ? t('errors.rateLimit.title') : undefined}
+                description={
+                  loadError === 'rateLimit' ? t('errors.rateLimit.description') : undefined
+                }
+                onRetry={reload}
+              />
+            </div>
+          ) : loading || !viewReady ? (
             <div className="flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
               <ApplicationLoadingSkeleton />
             </div>

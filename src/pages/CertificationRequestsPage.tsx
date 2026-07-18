@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
+import { ErrorState } from '@/components/ui'
 import { RequestCardsSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { AddCircle } from 'iconsax-reactjs'
 import { ApiError } from '@/lib/api/client'
@@ -172,13 +173,15 @@ export function CertificationRequestsPage() {
   const navigate = useNavigate()
   const [requests, setRequests] = useState<CertificationRequest[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [hasError, setHasError] = useState(false)
+  const [isRateLimited, setIsRateLimited] = useState(false)
   const [reloadKey, setReloadKey] = useState(0)
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    setError(null)
+    setHasError(false)
+    setIsRateLimited(false)
     ;(async () => {
       try {
         const applications = await listApplications()
@@ -201,7 +204,8 @@ export function CertificationRequestsPage() {
           navigate('/login', { replace: true })
           return
         }
-        setError(err instanceof ApiError ? err.message : t('errors.generic'))
+        setIsRateLimited(err instanceof ApiError && err.status === 429)
+        setHasError(true)
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -238,8 +242,13 @@ export function CertificationRequestsPage() {
         <div className="px-5 pb-8">
           {loading ? (
             <RequestCardsSkeleton />
-          ) : error ? (
-            <p className="py-10 text-center text-[16px] text-error-500">{error}</p>
+          ) : hasError ? (
+            <ErrorState
+              variant={isRateLimited ? 'rateLimit' : 'generic'}
+              title={isRateLimited ? t('errors.rateLimit.title') : undefined}
+              description={isRateLimited ? t('errors.rateLimit.description') : undefined}
+              onRetry={() => setReloadKey((key) => key + 1)}
+            />
           ) : requests.length === 0 ? (
             <p className="py-10 text-center text-[16px] text-neutral-600">
               {t('certificationRequests.empty')}

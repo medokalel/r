@@ -41,7 +41,10 @@ export interface ApplicationState {
   saving: boolean
   submitting: boolean
   status: ApplicationStatus
+  orderNumber: string | null
   notification: ApplicationNotification | null
+  loadError: 'rateLimit' | 'generic' | null
+  reload: () => void
   saveDraft: () => Promise<boolean>
   submit: () => Promise<boolean>
 }
@@ -55,11 +58,14 @@ export function useApplicationState(): ApplicationState {
     searchParams.get('id')
   )
   const [status, setStatus] = useState<ApplicationStatus>('DRAFT')
+  const [orderNumber, setOrderNumber] = useState<string | null>(null)
   const [loading, setLoading] = useState(Boolean(searchParams.get('id')))
   const [saving, setSaving] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [notification, setNotification] = useState<ApplicationNotification | null>(null)
+  const [loadError, setLoadError] = useState<'rateLimit' | 'generic' | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
   const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([])
   const orgBranchIdsRef = useRef<string[]>([])
   const nextBranchIdRef = useRef(2)
@@ -97,17 +103,22 @@ export function useApplicationState(): ApplicationState {
     [navigate, t]
   )
 
+  const reload = useCallback(() => setReloadKey((key) => key + 1), [])
+
   // Load an existing application when arriving with ?id=… (e.g. continuing a draft)
   useEffect(() => {
     const id = searchParams.get('id')
     if (!id) return
     let cancelled = false
+    setLoading(true)
+    setLoadError(null)
     ;(async () => {
       try {
         const app = await getApplication(id)
         if (cancelled) return
         setApplicationId(app.id)
         setStatus(app.status)
+        setOrderNumber(app.orderNumber ?? null)
         const values = formValuesFromApplication(app)
         nextBranchIdRef.current = values.branches.length + 1
         // A saved country/mobile wins over the IP-based default
@@ -116,7 +127,15 @@ export function useApplicationState(): ApplicationState {
         }
         setForm(values)
       } catch (error) {
-        if (!cancelled) handleApiError(error)
+        if (cancelled) return
+        if (error instanceof ApiError && error.status === 401) {
+          clearAuthSession()
+          navigate('/login', { replace: true })
+          return
+        }
+        setLoadError(
+          error instanceof ApiError && error.status === 429 ? 'rateLimit' : 'generic'
+        )
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -125,7 +144,7 @@ export function useApplicationState(): ApplicationState {
       cancelled = true
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [reloadKey])
 
   // Default the country and phone code from the visitor's IP until the user
   // (or a loaded draft) provides real values
@@ -310,6 +329,7 @@ export function useApplicationState(): ApplicationState {
       }
       const result = await submitApplication(id)
       setStatus(result.status)
+      setOrderNumber(result.orderNumber)
       setNotification({
         type: 'success',
         message: t('accreditation.messages.submitted', {
@@ -370,7 +390,10 @@ export function useApplicationState(): ApplicationState {
     saving,
     submitting,
     status,
+    orderNumber,
     notification,
+    loadError,
+    reload,
     saveDraft,
     submit,
   }

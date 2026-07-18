@@ -38,7 +38,13 @@
     "signingIn": "Signing in..."
   },
   "errors": {
-    "generic": "Something went wrong. Please try again."
+    "title": "Something went wrong",
+    "generic": "We couldn't complete your request. Please try again.",
+    "retry": "Try again",
+    "rateLimit": {
+      "title": "Too many requests",
+      "description": "You've made too many requests in a short time. Please wait a moment and try again."
+    }
   },
   "documentUpload": {
     "uploaded": "Uploaded",
@@ -338,7 +344,11 @@
         "sendReply": "Send Reply",
         "attach": "Attach file",
         "insertLink": "Insert link",
-        "bold": "Bold"
+        "bold": "Bold",
+        "boldPlaceholder": "bold text",
+        "linkPrompt": "Enter the link URL",
+        "linkText": "link",
+        "removeAttachment": "Remove attachment"
       },
       "fields": {
         "common": {
