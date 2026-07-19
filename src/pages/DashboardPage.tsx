@@ -49,9 +49,13 @@ const viewTabCopyKeys: Record<EntityDataViewTab, { title: string; subtitle: stri
 export function DashboardPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
+  const navigate = useNavigate()
   const [activeSubSection, setActiveSubSection] = useState<EntityDataSubSection>('legalIdentity')
   const [activeViewTab, setActiveViewTab] = useState<EntityDataViewTab>('entityData')
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('sectors')
+  // Which footer button triggered the in-flight save, so only that button
+  // shows the loading state (Next and Save draft both call saveDraft)
+  const [activeAction, setActiveAction] = useState<'next' | 'draft' | null>(null)
   const contentRef = useRef<HTMLDivElement>(null)
 
   const { contextValue, loading, saving, submitting, status, orderNumber, notification, loadError, reload, saveDraft, submit } =
@@ -61,10 +65,15 @@ export function DashboardPage() {
   const requestedView = searchParams.get('view')
   const [lastReviewOrderNumber, setLastReviewOrderNumber] = useState<string | null>(null)
 
-  // On a new request there is no order number yet, so the header falls back to
-  // the most recent under-review order's number
+  // On a brand-new request (no ?id=) there is no order number yet, so the
+  // header falls back to the most recent under-review order's number. When
+  // editing a specific application, only that application's own order number
+  // may show — the fallback must never leak in from a prior "new request" view.
   useEffect(() => {
-    if (searchParams.get('id')) return
+    if (searchParams.get('id')) {
+      setLastReviewOrderNumber(null)
+      return
+    }
     let cancelled = false
     listApplications()
       .then((apps) => {
@@ -176,39 +185,45 @@ export function DashboardPage() {
   }, [activeIndex, activeViewTab, fieldPhase, handleSubSectionChange, handleViewTabChange, scrollToContent])
 
   const handleNext = useCallback(async () => {
-    // The last form step submits the whole application instead of advancing
-    if (activeViewTab === 'documents') {
-      const submitted = await submit()
-      if (submitted) handleViewTabChange('underReview')
-      return
-    }
-
-    // Every other step persists the draft before moving on
-    const saved = await saveDraft()
-    if (!saved) return
-
-    if (activeViewTab === 'field' && fieldPhase === 'sectors') {
-      setFieldPhase('codes')
-      scrollToContent()
-      return
-    }
-
-    if (activeViewTab === 'field' && fieldPhase === 'codes') {
-      handleViewTabChange('documents')
-      return
-    }
-
-    if (activeViewTab === 'feedback') {
-      handleViewTabChange('approved')
-      return
-    }
-
-    if (activeViewTab === 'entityData') {
-      if (activeIndex >= subSections.length - 1) {
-        handleViewTabChange('field')
+    setActiveAction('next')
+    try {
+      // The last form step submits the whole application instead of advancing
+      if (activeViewTab === 'documents') {
+        const submitted = await submit()
+        if (submitted) handleViewTabChange('underReview')
         return
       }
-      handleSubSectionChange(subSections[activeIndex + 1])
+
+      // Feedback is a terminal view — Next returns to the requests list
+      if (activeViewTab === 'feedback') {
+        navigate('/certification-requests')
+        return
+      }
+
+      // Every other step persists the draft before moving on
+      const saved = await saveDraft()
+      if (!saved) return
+
+      if (activeViewTab === 'field' && fieldPhase === 'sectors') {
+        setFieldPhase('codes')
+        scrollToContent()
+        return
+      }
+
+      if (activeViewTab === 'field' && fieldPhase === 'codes') {
+        handleViewTabChange('documents')
+        return
+      }
+
+      if (activeViewTab === 'entityData') {
+        if (activeIndex >= subSections.length - 1) {
+          handleViewTabChange('field')
+          return
+        }
+        handleSubSectionChange(subSections[activeIndex + 1])
+      }
+    } finally {
+      setActiveAction(null)
     }
   }, [
     activeIndex,
@@ -216,10 +231,20 @@ export function DashboardPage() {
     fieldPhase,
     handleSubSectionChange,
     handleViewTabChange,
+    navigate,
     saveDraft,
     scrollToContent,
     submit,
   ])
+
+  const handleSaveDraftClick = useCallback(async () => {
+    setActiveAction('draft')
+    try {
+      await saveDraft()
+    } finally {
+      setActiveAction(null)
+    }
+  }, [saveDraft])
 
   const isFieldSectorsView = activeViewTab === 'field' && fieldPhase === 'sectors'
   const isStatusView = STATUS_VIEWS.includes(activeViewTab)
@@ -259,11 +284,12 @@ export function DashboardPage() {
     (activeViewTab === 'field' && fieldPhase === 'codes' && standardsMissingCodes.length > 0) ||
     (activeViewTab === 'documents' && !form.agreed)
 
-  const footerNextLabel = busy
-    ? t('common.loading')
-    : activeViewTab === 'documents'
-      ? t('accreditation.messages.submitRequest')
-      : undefined
+  const footerNextLabel =
+    busy && activeAction === 'next'
+      ? t('common.loading')
+      : activeViewTab === 'documents'
+        ? t('accreditation.messages.submitRequest')
+        : undefined
 
   const standardLabel = (standard: StandardKey) =>
     t(`accreditation.entityData.field.standards.${standard}`)
@@ -370,9 +396,9 @@ export function DashboardPage() {
           startContent={footerStartContent}
           onBack={handleBack}
           onNext={handleNext}
-          onSaveDraft={saveDraft}
+          onSaveDraft={handleSaveDraftClick}
           saveDraftDisabled={footerSaveDraftDisabled}
-          saveDraftLoading={saving}
+          saveDraftLoading={saving && activeAction === 'draft'}
         />
       </ApplicationFormContext.Provider>
     </AppLayout>

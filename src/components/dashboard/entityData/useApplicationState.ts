@@ -16,12 +16,15 @@ import {
 } from '@/lib/api/certificationApplicationApi'
 import {
   getOrganizationProfile,
+  saveOrganizationProfile,
+  type OrganizationProfileData,
   type OrgBranch,
 } from '@/lib/api/organizationProfileApi'
 import {
   formValuesFromApplication,
   payloadFromForm,
   prefillFromOrganization,
+  profilePayloadFromForm,
 } from '@/components/dashboard/entityData/applicationMappers'
 import type { ApplicationFormContextValue } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
@@ -68,6 +71,7 @@ export function useApplicationState(): ApplicationState {
   const [reloadKey, setReloadKey] = useState(0)
   const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([])
   const orgBranchIdsRef = useRef<string[]>([])
+  const orgProfileRef = useRef<OrganizationProfileData | null>(null)
   const nextBranchIdRef = useRef(2)
   const ipLocation = useIpLocation()
   const ipDefaultsBlockedRef = useRef(false)
@@ -168,6 +172,7 @@ export function useApplicationState(): ApplicationState {
       try {
         const data = await getOrganizationProfile()
         if (cancelled) return
+        orgProfileRef.current = data
         setOrgBranches(data.branches ?? [])
         orgBranchIdsRef.current = (data.branches ?? []).map((branch) => branch.id)
         if (!editingId) {
@@ -285,6 +290,25 @@ export function useApplicationState(): ApplicationState {
     [handleApiError]
   )
 
+  // Mirror the shared legal-identity fields back to the company profile on Next.
+  // Best-effort — a profile-save failure never blocks the application draft.
+  const syncOrganizationProfile = useCallback(async () => {
+    const snapshot = orgProfileRef.current
+    if (!snapshot) return
+    const payload = profilePayloadFromForm(form, snapshot)
+    try {
+      const updated = await saveOrganizationProfile(payload)
+      orgProfileRef.current = {
+        ...snapshot,
+        profile: payload.profile ?? snapshot.profile,
+        address: payload.address ?? snapshot.address,
+        status: updated.status,
+      }
+    } catch {
+      // Ignore — the application draft is the primary save here
+    }
+  }, [form])
+
   const saveDraft = useCallback(async (): Promise<boolean> => {
     // Submitted applications can be browsed but no longer edited
     if (status !== 'DRAFT') return true
@@ -292,13 +316,16 @@ export function useApplicationState(): ApplicationState {
     setNotification(null)
     try {
       const payload = payloadFromForm(form, t, orgBranchIdsRef.current)
-      if (applicationId) {
-        await updateDraftApplication(applicationId, payload)
+      let id = applicationId
+      if (id) {
+        await updateDraftApplication(id, payload)
       } else {
         const created = await createDraftApplication(payload)
-        setApplicationId(created.id)
-        setSearchParams({ id: created.id }, { replace: true })
+        id = created.id
+        setApplicationId(id)
+        setSearchParams({ id }, { replace: true })
       }
+      await syncOrganizationProfile()
       setNotification({
         type: 'success',
         message: t('accreditation.messages.draftSaved'),
@@ -310,7 +337,7 @@ export function useApplicationState(): ApplicationState {
     } finally {
       setSaving(false)
     }
-  }, [applicationId, form, handleApiError, setSearchParams, status, t])
+  }, [applicationId, form, handleApiError, setSearchParams, status, syncOrganizationProfile, t])
 
   const submit = useCallback(async (): Promise<boolean> => {
     if (status !== 'DRAFT') return true

@@ -122,7 +122,8 @@
     "messages": {
       "draftSaved": "Draft saved successfully.",
       "submitted": "Your request has been submitted successfully. Order number: {{orderNumber}}",
-      "submitRequest": "Submit request"
+      "submitRequest": "Submit request",
+      "nextAndSave": "Next & Save"
     },
     "orderNumber": "order number",
     "assignedOfficer": "Assigned certification officer",
@@ -483,21 +484,27 @@
       "mainData": "Main data",
       "regulatoryData": "Regulatory data",
       "requiredStandard": "Required Standard Specification",
-      "otherStandard": "In case of others standard not listed, please specify it.",
-      "otherStandardPlaceholder": "Enter the specification name",
+      "requiredStandardPlaceholder": "Select a standard specification",
+      "otherStandard": "Other Standard",
+      "otherStandardPlaceholder": "Enter the standard specification",
       "organizationName": "Organization Name",
+      "organizationNamePlaceholder": "Enter organization name",
       "website": "Website",
+      "websitePlaceholder": "Enter website URL",
       "headOfficeAddress": "Head Office Address",
-      "auditPlaceAddress": "Audit place location address",
-      "commercialRegistrationNo": "Commercial Registration No",
-      "commercialRegistryFile": "Commercial registry file",
-      "uploadCommercialRegister": "Upload the commercial register file",
+      "headOfficeAddressPlaceholder": "Enter head office address",
+      "auditPlaceAddress": "Audit Site Address",
+      "auditPlaceAddressPlaceholder": "Enter audit site address",
+      "commercialRegistrationNo": "Commercial Registration No.",
+      "commercialRegistrationNoPlaceholder": "Enter commercial registration number",
+      "commercialRegistryFile": "Commercial Registration File",
+      "uploadCommercialRegister": "Upload commercial registration file",
       "download": "Download",
       "view": "View",
       "edit": "Edit",
       "productionLinesActive": "Are all production lines or processes within the product range active?",
-      "ifNoStateWhy": "If no, please state why",
-      "stateReasonPlaceholder": "State the reason, if any",
+      "ifNoStateWhy": "Reason (if No)",
+      "stateReasonPlaceholder": "Enter the reason",
       "yes": "Yes",
       "no": "No",
       "email": "E-mail",
@@ -520,11 +527,11 @@
     "status": {
       "approved": {
         "title": "The Request Has Been Approved",
-        "subtitle": "Thank you, please wait for updates."
+        "subtitle": "You’ll receive updates as the certification process progresses."
       },
       "underReview": {
         "title": "The Application Is Currently Under Technical Review",
-        "subtitle": "The review team is examining your application. The status will be updated and you will be notified once the final decision is issued. Thank you."
+        "subtitle": "Your application is under technical review. You’ll be notified once the review is complete."
       },
       "rejected": {
         "title": "Your request has been rejected",

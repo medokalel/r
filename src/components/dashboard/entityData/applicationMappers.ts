@@ -2,7 +2,10 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js'
 import type { TFunction } from 'i18next'
 import type { CountryCode } from '@/lib/countries'
 import { formatPhoneNumber } from '@/lib/api/authApi'
-import type { OrganizationProfileData } from '@/lib/api/organizationProfileApi'
+import type {
+  OrganizationProfileData,
+  SaveProfileRequest,
+} from '@/lib/api/organizationProfileApi'
 import type {
   ApplicationBranch,
   ApplicationCertificate,
@@ -338,6 +341,35 @@ export function prefillFromOrganization(
     mainActivity:
       form.mainActivity || data.originalRegistrationData?.activity || '',
   }
+}
+
+// Maps the shared legal-identity fields into a partial organization-profile
+// update, merged over the current snapshot so untouched fields are preserved.
+export function profilePayloadFromForm(
+  form: ApplicationFormValues,
+  snapshot: OrganizationProfileData
+): SaveProfileRequest {
+  const profile = { ...(snapshot.profile ?? {}) }
+  const address = { ...(snapshot.address ?? {}) }
+
+  profile.organizationName = text(form.organizationName) ?? profile.organizationName ?? null
+  profile.commercialRegisterNumber =
+    text(form.commercialRegisterNumber) ?? profile.commercialRegisterNumber ?? null
+  profile.email = text(form.email) ?? profile.email ?? null
+  profile.authorizedPersonName =
+    text(form.representativeName) ?? profile.authorizedPersonName ?? null
+  if (text(form.mobileNumber)) {
+    profile.phoneNumber = form.mobileNumber.trim()
+    profile.phoneCountryCode = form.mobileCountryCode
+  }
+  const productionLines = boolFromYesNo(form.allProductionLinesIncluded)
+  if (productionLines !== undefined) profile.allProductionLinesActive = productionLines
+  profile.inactiveReason = text(form.excludedReason) ?? profile.inactiveReason ?? null
+
+  if (form.country) address.country = form.country
+  if (text(form.headOfficeAddress)) address.street = form.headOfficeAddress.trim()
+
+  return { profile, address }
 }
 
 function dateFromApi(value?: string | null): Date | undefined {

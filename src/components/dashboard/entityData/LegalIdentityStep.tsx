@@ -94,6 +94,7 @@ const { fieldProps } = useFieldValidation(form, {
         <div className="space-y-5">
         <FormField label={t('accreditation.form.requiredStandard')} required>
           <MultiSelect tags={standardTags} options={standardOptions} onChange={onStandardTagsChange} />
+          
         </FormField>
 
         <FormField label={t('accreditation.form.otherStandard')}>
@@ -110,6 +111,7 @@ const { fieldProps } = useFieldValidation(form, {
             <TextField
               type="text"
               value={form.organizationName}
+              placeholder={t('accreditation.form.organizationNamePlaceholder')}
               onChange={(e) => update('organizationName', e.target.value)}
             />
           </FormField>
@@ -120,6 +122,7 @@ const { fieldProps } = useFieldValidation(form, {
                 type="url"
                 value={form.website}
                 onChange={(e) => update('website', e.target.value)}
+                placeholder={t('accreditation.form.websitePlaceholder')}
                 className="pe-10"
                 {...fieldProps('website')}
               />
@@ -135,6 +138,7 @@ const { fieldProps } = useFieldValidation(form, {
             <Textarea
               value={form.headOfficeAddress}
               onChange={(e) => update('headOfficeAddress', e.target.value)}
+              placeholder={t('accreditation.form.headOfficeAddressPlaceholder')}
               rows={3}
               className="min-h-[60px]"
             />
@@ -144,6 +148,7 @@ const { fieldProps } = useFieldValidation(form, {
             <Textarea
               value={form.auditSiteAddress}
               onChange={(e) => update('auditSiteAddress', e.target.value)}
+              placeholder={t('accreditation.form.auditPlaceAddressPlaceholder')}
               rows={3}
               className="min-h-[60px]"
             />
@@ -157,6 +162,7 @@ const { fieldProps } = useFieldValidation(form, {
               inputMode="numeric"
               value={form.commercialRegisterNumber}
               onChange={(e) => update('commercialRegisterNumber', e.target.value)}
+              placeholder={t('accreditation.form.commercialRegistrationNoPlaceholder')}
             />
           </FormField>
 

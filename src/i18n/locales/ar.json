@@ -122,7 +122,8 @@
     "messages": {
       "draftSaved": "تم حفظ المسودة بنجاح.",
       "submitted": "تم إرسال طلبك بنجاح. رقم الطلب: {{orderNumber}}",
-      "submitRequest": "إرسال الطلب"
+      "submitRequest": "إرسال الطلب",
+      "nextAndSave": "التالي والحفظ"
     },
     "orderNumber": "رقم الطلب",
     "assignedOfficer": "مسؤول الاعتماد المكلف",
@@ -486,10 +487,15 @@
       "otherStandard": "في حالة وجود مواصفات أخرى غير مدرجة، يرجى تحديدها.",
       "otherStandardPlaceholder": "أدخل اسم المواصفة",
       "organizationName": "اسم المنظمة",
+      "organizationNamePlaceholder": "مثال: شركة معيار العربية للخدمات التجارية",
       "website": "الموقع الإلكتروني",
+      "websitePlaceholder": "www.mac-cs.sa",
       "headOfficeAddress": "عنوان المقر الرئيسي",
+      "headOfficeAddressPlaceholder": "مثال: 9000 الامير متعب حي العزيزية – جدة 23342 – 3041 ، رقم الوحدة:7 المملكة العربية السعودية.",
       "auditPlaceAddress": "عنوان مكان التدقيق",
+      "auditPlaceAddressPlaceholder": "مثال: 9000 الامير متعب حي العزيزية – جدة 23342 – 3041 ، رقم الوحدة:7 المملكة العربية السعودية.",
       "commercialRegistrationNo": "رقم السجل التجاري",
+      "commercialRegistrationNoPlaceholder": "مثال: 7028618044",
       "commercialRegistryFile": "ملف السجل التجاري",
       "uploadCommercialRegister": "رفع ملف السجل التجاري",
       "download": "تحميل",
@@ -519,12 +525,12 @@
     },
     "status": {
       "approved": {
-        "title": "تمت الموافقة علي الطلب",
-        "subtitle": "شكراً لكم، برجاء انتظار التحديثات."
+        "title": "تمت الموافقة على طلبكم.",
+        "subtitle": "سيتم إشعاركم بتحديثات مراحل منح الشهادة"
       },
       "underReview": {
         "title": "الطلب قيد المراجعة الفنية حالياً",
-        "subtitle": "فريق المراجعة يدرس طلبكم. سيتم تحديث الحالة وسيتم إعلامكم فور صدور القرار النهائي. شكراً لكم."
+        "subtitle": "طلبكم قيد المراجعة الفنية. سيتم إشعاركم عند اكتمال المراجعة"
       },
       "rejected": {
         "title": "تم رفض طلبكم",

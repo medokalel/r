@@ -6,8 +6,10 @@ const buttonVariants = cva(
   [
     'inline-flex items-center justify-center gap-2',
     'rounded-[var(--radius-default)] text-[16px] font-semibold',
-    'transition-colors duration-150',
+    'transition-[background-color,color,border-color,transform] duration-150',
     'cursor-pointer disabled:cursor-not-allowed',
+    // Press feedback: a quick, subtle scale-down on click, skipped when disabled
+    'active:scale-[0.97] disabled:active:scale-100',
     'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
   ].join(' '),
   {
