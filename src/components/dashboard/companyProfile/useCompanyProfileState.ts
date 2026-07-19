@@ -49,6 +49,7 @@ export function useCompanyProfileState(): CompanyProfileState {
   const [submitting, setSubmitting] = useState(false)
   const [notification, setNotification] = useState<ProfileNotification | null>(null)
   const apiCountryCodeRef = useRef(false)
+  const apiAddressRef = useRef(false)
 
   const update = useCallback(
     <K extends keyof ProfileFormValues>(key: K, value: ProfileFormValues[K]) => {
@@ -88,6 +89,7 @@ export function useCompanyProfileState(): CompanyProfileState {
     setBranches(data.branches ?? [])
     setDocuments(data.documents ?? [])
     if (data.profile?.phoneCountryCode) apiCountryCodeRef.current = true
+    if (data.address?.country) apiAddressRef.current = true
   }, [])
 
   const refreshProfile = useCallback(async () => {
@@ -118,6 +120,19 @@ export function useCompanyProfileState(): CompanyProfileState {
     if (loading || apiCountryCodeRef.current || !ipLocation?.countryCode) return
     update('countryCode', ipLocation.countryCode as CountryCode)
   }, [ipLocation, loading, update])
+
+  // Default address country + city from IP, once, only when the API
+  // didn't provide an address yet (mirrors the phone-country default above)
+  useEffect(() => {
+    if (loading || apiAddressRef.current || !ipLocation?.countryCode) return
+    apiAddressRef.current = true
+    setForm((prev) => ({
+      ...prev,
+      country: prev.country ?? (ipLocation.countryCode as CountryCode),
+      city: prev.city || ipLocation.city || prev.city,
+    }))
+  }, [ipLocation, loading])
+
 
   const refreshBranches = useCallback(async () => {
     setBranches(await getBranches())

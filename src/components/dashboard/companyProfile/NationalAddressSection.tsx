@@ -12,6 +12,7 @@ import {
 } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import { formatFileSize } from '@/lib/files'
+import { useBlobUrl } from '@/hooks/useBlobUrl'
 import { DOC_ACCEPT } from './constants'
 import { countryDisplayName } from './mappers'
 import { useDocumentActions } from './OfficialDocsCard'
@@ -80,6 +81,10 @@ function CertificateUploadPreview() {
   const isPdf = certificateDoc?.mimeType === 'application/pdf'
   const isImage = certificateDoc?.mimeType?.startsWith('image/')
 
+  // The API host refuses to be framed (X-Frame-Options), so PDFs preview
+  // through a local blob: URL instead of the remote URL directly
+  const pdfPreview = useBlobUrl(isPdf ? certificateDoc?.fileUrl : null)
+
   const onFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     event.target.value = ''
@@ -99,11 +104,29 @@ function CertificateUploadPreview() {
       >
         {certificateDoc ? (
           isPdf ? (
-            <iframe
-              src={certificateDoc.fileUrl ?? undefined}
-              title={certificateDoc.originalName ?? certificateDoc.fileName ?? undefined}
-              className="h-full w-full"
-            />
+            pdfPreview.blobUrl ? (
+              // White matte + FitH zoom hide the PDF viewer's gray backdrop so
+              // the preview reads like a document card, not an embedded browser
+              <div className="h-full w-full rounded-[8px] bg-white p-2 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+                <iframe
+                  src={`${pdfPreview.blobUrl}#navpanes=0&view=FitH`}
+                  title={certificateDoc.originalName ?? certificateDoc.fileName ?? undefined}
+                  className="h-full w-full rounded-[6px] border border-[#f2f2f2]"
+                />
+              </div>
+            ) : pdfPreview.loading ? (
+              <div className="skeleton h-full w-full" aria-hidden />
+            ) : (
+              <div className="flex flex-col items-center gap-3 p-4">
+                <AppIcon icon={DocumentFileIcon} size={40} className="text-primary" />
+                <p dir="ltr" className="max-w-full truncate text-center text-[13px] text-neutral-600">
+                  {certificateDoc.originalName ?? certificateDoc.fileName}
+                </p>
+                <span dir="ltr" className="text-[12px] font-light text-[#666]">
+                  {formatFileSize(certificateDoc.fileSize)}
+                </span>
+              </div>
+            )
           ) : isImage ? (
             <img
               src={certificateDoc.fileUrl ?? undefined}
@@ -191,16 +214,16 @@ export function NationalAddressFormCard() {
         {/* Form grid */}
         <div className="flex flex-1 flex-col gap-5">
           <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-            <FormField label={t('companyProfile.nationalAddress.expiryDate')}>
-              <DatePicker
-                value={form.nationalAddress.expiryDate}
-                onChange={(date) => setField('expiryDate', date)}
-              />
-            </FormField>
             <FormField label={t('companyProfile.nationalAddress.issueDate')}>
               <DatePicker
                 value={form.nationalAddress.issueDate}
                 onChange={(date) => setField('issueDate', date)}
+              />
+            </FormField>
+            <FormField label={t('companyProfile.nationalAddress.expiryDate')}>
+              <DatePicker
+                value={form.nationalAddress.expiryDate}
+                onChange={(date) => setField('expiryDate', date)}
               />
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.addressId')}>

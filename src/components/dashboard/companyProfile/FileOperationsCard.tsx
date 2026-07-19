@@ -1,21 +1,30 @@
 import { useTranslation } from 'react-i18next'
 import { AppIcon, DownloadIcon, EyeIcon } from '@/components/icons'
 import { CardHeader } from './Primitives'
+import { buildProfileDocumentHtml, openProfileDocument } from './profileDocument'
+import { useProfileForm } from './ProfileFormContext'
 
 export function FileOperationsCard() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const { form, branches } = useProfileForm()
+
+  const openDocument = (print: boolean) => {
+    const html = buildProfileDocumentHtml({ form, branches, t, lang: i18n.language })
+    openProfileDocument(html, { print })
+  }
 
   return (
     <div className="flex flex-col gap-4 rounded-[12px] border border-[#ececec] bg-white p-6">
       <CardHeader title={t('companyProfile.fileOperations.title')} />
       <div className="flex flex-col gap-3">
         {[
-          { icon: EyeIcon, label: 'preview', subtitle: 'previewSubtitle' },
-          { icon: DownloadIcon, label: 'download', subtitle: 'downloadSubtitle' },
-        ].map(({ icon, label, subtitle }) => (
+          { icon: EyeIcon, label: 'preview', subtitle: 'previewSubtitle', print: false },
+          { icon: DownloadIcon, label: 'download', subtitle: 'downloadSubtitle', print: true },
+        ].map(({ icon, label, subtitle, print }) => (
           <button
             key={label}
             type="button"
+            onClick={() => openDocument(print)}
             className="flex h-20 items-center gap-3 rounded-[8px] border border-dashed border-primary/60 bg-[#f3f6fd] px-4 transition-colors hover:bg-[#e8edfc]"
           >
             <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-white shadow-sm">

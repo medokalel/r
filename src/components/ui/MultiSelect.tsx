@@ -10,6 +10,7 @@ interface MultiSelectProps {
   tags: string[]
   options: string[]
   onChange: (tags: string[]) => void
+  placeholder?: string
   className?: string
 }
 
@@ -17,7 +18,7 @@ interface MultiSelectProps {
  * Multi-select dropdown: shows chosen values as removable chips in the trigger
  * and a checkbox-style checklist in the popover.
  */
-export function MultiSelect({ tags, options, onChange, className }: MultiSelectProps) {
+export function MultiSelect({ tags, options, onChange, placeholder, className }: MultiSelectProps) {
   const { dir } = useDirection()
   const toggleTag = (option: string) => {
     onChange(
@@ -37,6 +38,9 @@ export function MultiSelect({ tags, options, onChange, className }: MultiSelectP
           )}
         >
           <div className="flex flex-1 flex-wrap gap-3">
+            {tags.length === 0 && placeholder && (
+              <span className="text-[16px] font-light leading-[1.6] text-neutral-500">{placeholder}</span>
+            )}
             {tags.map((tag) => (
               <span
                 key={tag}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 export interface IpLocation {
   countryCode: string
+  city: string | null
   lat: number
   lng: number
 }
@@ -22,6 +23,7 @@ function fetchIpLocation(): Promise<IpLocation | null> {
         d.latitude && d.longitude && d.country_code
           ? {
               countryCode: String(d.country_code).toUpperCase(),
+              city: typeof d.city === 'string' && d.city ? d.city : null,
               lat: d.latitude as number,
               lng: d.longitude as number,
             }

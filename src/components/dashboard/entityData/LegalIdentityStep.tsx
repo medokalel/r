@@ -93,8 +93,12 @@ const { fieldProps } = useFieldValidation(form, {
       <SectionHeading title={t('accreditation.form.mainData')} accordion>
         <div className="space-y-5">
         <FormField label={t('accreditation.form.requiredStandard')} required>
-          <MultiSelect tags={standardTags} options={standardOptions} onChange={onStandardTagsChange} />
-          
+          <MultiSelect
+            tags={standardTags}
+            options={standardOptions}
+            onChange={onStandardTagsChange}
+            placeholder={t('accreditation.form.requiredStandardPlaceholder')}
+          />
         </FormField>
 
         <FormField label={t('accreditation.form.otherStandard')}>
