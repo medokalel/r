@@ -44,12 +44,15 @@ export function DashboardSidebar() {
   return (
     <aside
       className={cn(
-        'relative hidden shrink-0 flex-col bg-white py-6 shadow-[0_5px_1px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out min-[923px]:flex',
-        expanded ? 'w-[236px] gap-8 px-4' : 'w-[112px] items-center gap-10'
+        'relative hidden shrink-0 flex-col bg-white py-6 shadow-[0_5px_1px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out',
+        'md:flex md:w-[112px] md:items-center md:gap-10',
+        expanded
+          ? 'lg:w-[236px] lg:items-stretch lg:gap-8 lg:px-4'
+          : 'lg:w-[112px] lg:items-center lg:gap-10'
       )}
     >
-      {/* Collapse toggle */}
-      <div className="flex shrink-0 w-full justify-end px-2">
+      {/* Collapse toggle — desktop only, tablet stays permanently collapsed */}
+      <div className="hidden shrink-0 w-full justify-end px-2 lg:flex">
         <button
           type="button"
           onClick={() => setExpanded((prev) => !prev)}

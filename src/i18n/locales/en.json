@@ -640,20 +640,20 @@
   },
   "companyProfile": {
     "title": "Company Profile",
-    "subtitle": "Complete the basic data to create your company profile",
+    "subtitle": "Complete the main data to create your company profile",
     "breadcrumb": {
       "settings": "Settings",
       "current": "Company Profile"
     },
     "steps": {
-      "basicData": "Basic Data",
+      "basicData": "Main Data",
       "address": "Address",
       "branches": "Branches",
       "officialDocs": "Official Documents"
     },
     "profileHeader": {
       "companySummaryLabel": "Company Summary",
-      "companySummaryPlaceholder": "Enter basic data about your company to start creating the company profile",
+      "companySummaryPlaceholder": "Enter main data about your company to start creating the company profile",
       "industrySectorLabel": "Industrial Sector",
       "companyLogoLabel": "Company Logo",
       "uploadTitle": "Upload Logo",
@@ -668,7 +668,7 @@
       "changeLocation": "Clear Location"
     },
     "basicDataCard": {
-      "title": "Basic Data",
+      "title": "Mian Data",
       "companyNameLabel": "Company Name",
       "companyNamePlaceholder": "Enter company name",
       "tradingNameLabel": "Trading Name",
@@ -697,13 +697,13 @@
       }
     },
     "stepSubtitles": {
-      "basicData": "Complete the basic data to create your company profile",
+      "basicData": "Complete the main data to create your company profile",
       "address": "Complete the address information",
       "branches": "Add and manage your company branches",
       "officialDocs": "Upload official documents and link them to the client file"
     },
     "completedSteps": {
-      "basicData": "Basic Data",
+      "basicData": "Main Data",
       "address": "Address",
       "branches": "Branches",
       "incompleteAddress": "Company profile is almost complete. Please enter the address",

@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, MailIcon, NotificationIcon } from '@/components/icons'
+import { AppIcon, MailIcon, NotificationIcon, LogoutIcon } from '@/components/icons'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
-import { getAuthSession } from '@/lib/authStorage'
+import { getAuthSession, clearAuthSession } from '@/lib/authStorage'
 import { getUserProfile, type UserProfile } from '@/lib/api/userApi'
 import { cn } from '@/lib/utils'
+import { useNavigate } from 'react-router-dom'
 
 function HeaderDivider({ className }: { className?: string }) {
   return <div className={cn('h-14 w-px shrink-0 bg-neutral-200', className)} aria-hidden />
@@ -33,6 +34,13 @@ export function AccreditationHeader({
   const session = getAuthSession()
   const [user, setUser] = useState<UserProfile | null>(session?.user ?? null)
   const [now, setNow] = useState(() => new Date())
+  const navigate = useNavigate()
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  const handleLogout = () => {
+    clearAuthSession()
+    navigate('/login', { replace: true })
+  }
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 60_000)
@@ -75,14 +83,14 @@ export function AccreditationHeader({
   return (
     <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-4 border-b-2 border-[#ececec] bg-white px-5 py-4">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap min-[923px]:block">
-          {t(titleKey)}
-        </h1>
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
-          className="h-20 w-auto min-[923px]:hidden"
+          className="h-20 w-auto min-[767px]:hidden"
         />
+        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap min-[767px]:block">
+          {t(titleKey)}
+        </h1>
 
         {orderNumber && <HeaderDivider />}
         {orderNumber && (
@@ -152,13 +160,50 @@ export function AccreditationHeader({
         <HeaderDivider className="hidden min-[400px]:block" />
 
         <div className="flex items-center gap-6">
-          <div className="text-end">
-            <p className="text-body-1-medium text-neutral-900">{displayName}</p>
+          {/* Name + email — desktop only */}
+          <div className="hidden text-end min-[924px]:block">
+            <p className="text-body-3-medium text-neutral-900">{displayName}</p>
             {secondaryLine && (
-              <p className="text-body-3-medium text-neutral-600" dir="ltr">{secondaryLine}</p>
+              <p className="text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>
             )}
           </div>
-          <UserAvatar alt={displayName} className="size-14 border-2" />
+
+          {/* Avatar — tapping it on mobile opens name/email/logout */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="min-[924px]:pointer-events-none"
+              aria-label={displayName}
+              aria-expanded={mobileMenuOpen}
+            >
+              <UserAvatar alt={displayName} className="size-14 border-2" />
+            </button>
+
+            {mobileMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-30 min-[924px]:hidden"
+                  onClick={() => setMobileMenuOpen(false)}
+                  aria-hidden
+                />
+                <div className="absolute end-0 top-full z-40 mt-2 w-56 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] min-[924px]:hidden">
+                  <p className="truncate text-body-3-medium text-neutral-900">{displayName}</p>
+                  {secondaryLine && (
+                    <p className="truncate text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>
+                  )}
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="mt-3 flex w-full items-center gap-2 rounded-[var(--radius-sm)] px-2 py-2 text-error-500 hover:bg-[#fef2f2]"
+                  >
+                    <AppIcon icon={LogoutIcon} size={18} />
+                    <span className="text-body-3">{t('nav.logout')}</span>
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </header>
