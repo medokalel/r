@@ -6,9 +6,10 @@ import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession } from '@/lib/authStorage'
 import { getUserProfile, type UserProfile } from '@/lib/api/userApi'
+import { cn } from '@/lib/utils'
 
-function HeaderDivider() {
-  return <div className="h-14 w-px shrink-0 bg-neutral-200" aria-hidden />
+function HeaderDivider({ className }: { className?: string }) {
+  return <div className={cn('h-14 w-px shrink-0 bg-neutral-200', className)} aria-hidden />
 }
 
 function getPeriodKey(hour: number): 'am' | 'pm' {
@@ -74,7 +75,14 @@ export function AccreditationHeader({
   return (
     <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-4 border-b-2 border-[#ececec] bg-white px-5 py-4">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
-        <h1 className="text-h3-semi text-primary whitespace-nowrap">{t(titleKey)}</h1>
+        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap min-[923px]:block">
+          {t(titleKey)}
+        </h1>
+        <img
+          src="/casco-logo.svg"
+          alt={t('common.appName')}
+          className="h-20 w-auto min-[923px]:hidden"
+        />
 
         {orderNumber && <HeaderDivider />}
         {orderNumber && (
@@ -111,7 +119,7 @@ export function AccreditationHeader({
       <div className="flex flex-wrap items-center gap-4">
 
         {/* Time and date container */}
-        <div className="flex flex-col items-start gap-1">
+        <div className="hidden min-[1150px]:flex flex-col items-start gap-1">
           {/* badge */}
           <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
             {t('accreditation.timeAndDate')}
@@ -122,7 +130,7 @@ export function AccreditationHeader({
           </p>
         </div>
 
-        <HeaderDivider />
+        <HeaderDivider className="hidden min-[1150px]:block" />
 
         <button
           type="button"
@@ -135,17 +143,19 @@ export function AccreditationHeader({
           </span>
         </button>
 
-        <HeaderDivider />
+        <HeaderDivider className="hidden min-[400px]:block" />
 
-        <LanguageToggle variant="icon" />
+        <div className="hidden min-[400px]:block">
+          <LanguageToggle variant="icon" />
+        </div>
 
-        <HeaderDivider />
+        <HeaderDivider className="hidden min-[400px]:block" />
 
         <div className="flex items-center gap-6">
           <div className="text-end">
-            <p className="text-body-3-medium text-neutral-900">{displayName}</p>
+            <p className="text-body-1-medium text-neutral-900">{displayName}</p>
             {secondaryLine && (
-              <p className="text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>
+              <p className="text-body-3-medium text-neutral-600" dir="ltr">{secondaryLine}</p>
             )}
           </div>
           <UserAvatar alt={displayName} className="size-14 border-2" />

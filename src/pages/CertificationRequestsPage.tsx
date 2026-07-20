@@ -6,6 +6,7 @@ import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { ErrorState } from '@/components/ui'
 import { RequestCardsSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { AddCircle } from 'iconsax-reactjs'
+import { AppIcon, ReceiptIcon } from '@/components/icons'
 import { ApiError } from '@/lib/api/client'
 import {
   listApplications,
@@ -221,7 +222,7 @@ export function CertificationRequestsPage() {
       <div className="flex flex-1 flex-col overflow-auto">
 
         {/* Action buttons */}
-        <div className="flex items-center justify-end gap-5 px-5 py-5">
+        <div className="hidden items-center justify-end gap-5 px-5 py-5 min-[923px]:flex">
           <button
             type="button"
             onClick={() => navigate('/certification-request')}
@@ -235,6 +236,25 @@ export function CertificationRequestsPage() {
             className="flex h-12 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-body-2-semibold leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd]"
           >
             {t('certificationRequests.interactiveInvoice')}
+          </button>
+        </div>
+
+        {/* Mobile floating action buttons */}
+        <div className="fixed end-4 top-1/3 z-20 flex flex-col gap-3 min-[923px]:hidden">
+          <button
+            type="button"
+            className="flex size-15 items-center justify-center rounded-full border-1 border-[#1236a3] bg-white text-[#1236a3] shadow-[0_6px_20px_rgba(153,155,168,0.2)]"
+            aria-label={t('certificationRequests.interactiveInvoice')}
+          >
+            <AppIcon icon={ReceiptIcon} size={26} />
+          </button>
+          <button
+            type="button"
+            onClick={() => navigate('/certification-request')}
+            className="flex size-15 items-center justify-center rounded-full bg-[#1236a3] text-white shadow-[0_6px_20px_rgba(18,54,163,0.3)]"
+            aria-label={t('certificationRequests.newRequest')}
+          >
+            <AddCircle size={26} color="white" variant="Linear" />
           </button>
         </div>
 

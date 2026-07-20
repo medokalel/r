@@ -11,6 +11,9 @@
     "back": "Back",
     "next": "Next",
     "saveDraft": "Save as Draft",
+    "saving": "Saving...",
+    "savedJustNow": "Saved just now",
+    "savedMinutesAgo": "Saved {{count}} min ago",
     "search": "Search",
     "language": "Language"
   },
@@ -185,12 +188,22 @@
         "standards": {
           "iso9001": "ISO 9001",
           "iso14001": "ISO 14001",
-          "iso45001": "ISO 45001"
+          "iso45001": "ISO 45001",
+          "iso50001": "ISO 50001",
+          "iso22000": "ISO 22000",
+          "iso22301": "ISO 22301",
+          "iso27001": "ISO/IEC 27001",
+          "iso13485": "ISO 13485"
         },
         "standardsFull": {
           "iso9001": "Quality Management Systems (ISO 9001)",
           "iso14001": "Environmental Management Systems (ISO 14001)",
-          "iso45001": "Occupational Health & Safety Management Systems (ISO 45001)"
+          "iso45001": "Occupational Health & Safety Management Systems (ISO 45001)",
+          "iso50001": "Energy Management Systems (ISO 50001)",
+          "iso22000": "Food Safety Management Systems (ISO 22000)",
+          "iso22301": "Business Continuity Management Systems (ISO 22301)",
+          "iso27001": "Information Security Management Systems (ISO/IEC 27001)",
+          "iso13485": "Medical Devices Quality Management Systems (ISO 13485)"
         },
         "sectors": {
           "agriculture": {
@@ -419,38 +432,79 @@
         "spec": {
           "noQuestions": "There are no specification questions for the standards you selected.",
           "iso9001": {
-            "qmsSystemInPlace": "Is a quality management system currently in place?",
-            "qmsStartDate": "When did the implementation of the current quality management system start?",
-            "keyProcesses": "What are the key processes covered by the quality management system?",
-            "internalAudits": "Have any internal audits of the system been conducted?",
-            "managementReview": "Has a management review of the system been carried out?",
-            "customerComplaints": "How are customer complaints handled and customer satisfaction measured?"
+            "qmsSystemInPlace": "Do you have a Quality Management System?",
+            "qmsStartDate": "If yes, since when?",
+            "sitesCount": "How many sites are included in the certification scope?",
+            "productsServicesScope": "Which products or services are in scope?",
+            "outsourcedKeyProcesses": "Do you outsource any key processes?",
+            "outsourcedProcessesList": "If yes, list them.",
+            "requirementsNotApplicable": "Are any ISO 9001 requirements not applicable?",
+            "notApplicableDetails": "If yes, specify.",
+            "priorCertification": "Have you held ISO 9001 certification before?",
+            "certifyingBody": "Name the certification body."
           },
           "iso14001": {
-            "emsSystemInPlace": "Is an environmental management system currently in place?",
-            "emsStartDate": "When did the implementation of the current environmental management system start?",
-            "environmentalAspects": "What significant environmental aspects and impacts have been identified?",
-            "legalCompliance": "What local and regional environmental laws and regulations does the organization comply with?",
-            "internalAudits": "Have any internal audits of the system been conducted?",
-            "environmentalIncidents": "Have any environmental incidents or legal violations occurred?"
+            "permitsCount": "How many environmental permits do you hold?",
+            "hazardousMaterials": "Do you handle hazardous materials or waste?",
+            "emissionsMonitoring": "Do emissions or wastewater require monitoring?",
+            "environmentalViolations": "Any environmental violations in the past 3 years?",
+            "outsourcedEnvironmentalActivities": "Do you outsource significant environmental activities?",
+            "sensitiveAreasNearby": "Are sensitive environmental areas nearby?"
           },
           "iso50001": {
-            "energyConsumers": "What are the processes / services / products / equipment that consume the largest percentage of energy in the facility?",
-            "enpi": "What Energy Performance Indicators (EnPIs) are used to measure and improve energy efficiency?",
-            "energyBaseline": "Has an energy baseline been established?",
-            "baselineUpdated": "If yes, when was it last updated?",
-            "monitoringTools": "What tools or systems are used to monitor and analyze energy consumption?"
+            "energyConsumers": "What are your main energy uses?",
+            "enpi": "Which Energy Performance Indicators (EnPIs) do you monitor?",
+            "energyBaseline": "Do you have an energy baseline?",
+            "baselineUpdated": "When was it updated?",
+            "monitoringTools": "How do you monitor energy consumption?",
+            "seuCount": "How many Significant Energy Uses (SEUs) have you identified?",
+            "monitoringAutomated": "Is energy monitoring automated?"
           },
           "iso45001": {
-            "ohsSystemInPlace": "Is there currently an occupational health and safety management system in place?",
-            "ohsStartDate": "What is the start date of implementing the current occupational health and safety management system?",
-            "risksIdentified": "Have all risks related to operational activities been identified?",
-            "criticalRisks": "Please specify the critical occupational health and safety risks that have been identified",
-            "internalAudits": "Have any internal audits of the system been conducted?",
-            "complianceLaws": "What are the local and regional laws and regulations that the organization complies with regarding occupational health and safety?",
-            "legalViolations": "Have there ever been any legal violations or fines related to occupational safety and health?",
-            "ohsCertification": "Has the organization obtained ISO 45001 certification or any other occupational health and safety-related certifications?",
-            "certifyingBody": "If yes, what is the name of the certifying body?"
+            "ohsSystemInPlace": "Do you have an OH&S management system?",
+            "ohsStartDate": "If yes, since when?",
+            "risksIdentified": "Have operational OH&S risks been identified?",
+            "criticalRisks": "What are your critical OH&S risks?",
+            "complianceLaws": "Which OH&S laws apply to your operations?",
+            "legalViolations": "Any OH&S violations or fines?",
+            "ohsCertification": "Have you held an OH&S certification before?",
+            "certifyingBody": "Name the certification body.",
+            "internalAudits": "Have you conducted internal OH&S audits?"
+          },
+          "iso22000": {
+            "haccpPlansCount": "How many HACCP or food safety plans do you have?",
+            "ccpCount": "How many Critical Control Points (CCPs) have you identified?",
+            "foodCategoriesScope": "Which food categories or products are in scope?",
+            "allergensHandled": "Do you handle controlled allergens?",
+            "allergensList": "If yes, list them.",
+            "outsourcedFoodSafety": "Do you outsource critical food safety processes?",
+            "foodSafetyIncidents": "Any food safety incidents, recalls, or violations in the past 3 years?",
+            "productionSeasonality": "Is production year-round or seasonal?"
+          },
+          "iso22301": {
+            "criticalActivitiesCount": "How many critical activities are within the BCMS scope?",
+            "mtpd": "What is the MTPD for your most critical activity?",
+            "biaCompleted": "Have you completed a Business Impact Analysis (BIA)?",
+            "biaDate": "If yes, when?",
+            "planTested": "Has the business continuity plan been tested in the past 12 months?",
+            "singleCriticalSupplier": "Do you rely on a single critical supplier or outsourced service?",
+            "majorDisruptions": "Any major disruptions in the past 3 years?"
+          },
+          "iso27001": {
+            "criticalAssetsCount": "How many critical information assets or systems are in scope?",
+            "annexAControlsCount": "How many Annex A controls are applicable?",
+            "processesRegulatedData": "Do you process regulated data?",
+            "securityIncidents": "Any data breaches or security incidents in the past 3 years?",
+            "outsourcedIT": "Do you outsource any IT infrastructure or security services?",
+            "locationsCount": "How many physical or logical locations are in scope?"
+          },
+          "iso13485": {
+            "deviceFamiliesCount": "How many medical device families are in scope?",
+            "deviceClasses": "Which device classes apply?",
+            "designOrManufacture": "Do you design medical devices or manufacture to another party's design?",
+            "sterilizationInHouse": "Do you perform sterilization in-house or externally?",
+            "recallsOrEvents": "Any recalls, field safety actions, or adverse events in the past 3 years?",
+            "regulatoryMarkets": "Which regulatory markets or registrations apply?"
           }
         },
         "legal": {

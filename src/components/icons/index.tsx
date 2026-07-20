@@ -28,6 +28,7 @@ import {
   Logout,
   MessageEdit,
   Monitor,
+  More,
   Notification,
   PictureFrame,
   Profile2User,
@@ -361,4 +362,5 @@ export {
   Buildings as BuildingsIcon,
   LocationAdd as LocationAddIcon,
   AddCircle as AddCircleIcon,
+  More as MoreIcon,
 }

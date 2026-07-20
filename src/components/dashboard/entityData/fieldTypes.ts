@@ -4,7 +4,16 @@
  * Certification Bodies), Issue 2, Version 2 — sections 5, 6 and 7.
  */
 
-export const standards = ['iso9001', 'iso14001', 'iso45001'] as const
+export const standards = [
+  'iso9001',
+  'iso14001',
+  'iso45001',
+  'iso50001',
+  'iso22000',
+  'iso22301',
+  'iso27001',
+  'iso13485',
+] as const
 
 export type StandardKey = (typeof standards)[number]
 
@@ -12,6 +21,11 @@ export const standardLabels: Record<StandardKey, string> = {
   iso9001: 'ISO 9001',
   iso14001: 'ISO 14001',
   iso45001: 'ISO 45001',
+  iso50001: 'ISO 50001',
+  iso22000: 'ISO 22000',
+  iso22301: 'ISO 22301',
+  iso27001: 'ISO/IEC 27001',
+  iso13485: 'ISO 13485',
 }
 
 export const sectorKeys = [
@@ -335,6 +349,13 @@ export const STANDARD_CLUSTERS: Record<StandardKey, StandardCluster[]> = {
   iso9001: ISO_9001_CLUSTERS,
   iso14001: ISO_14001_CLUSTERS,
   iso45001: ISO_45001_CLUSTERS,
+  // TEMPORARY: reusing ISO 9001's sector/IAF code table as a placeholder
+  // until the real cluster data for these standards is provided.
+  iso50001: ISO_9001_CLUSTERS,
+  iso22000: ISO_9001_CLUSTERS,
+  iso22301: ISO_9001_CLUSTERS,
+  iso27001: ISO_9001_CLUSTERS,
+  iso13485: ISO_9001_CLUSTERS,
 }
 
 export function sectorsForStandard(standard: StandardKey): SectorKey[] {

@@ -216,32 +216,79 @@ export interface SpecQuestionDef {
 }
 
 export const SPEC_QUESTIONS: SpecQuestionDef[] = [
+  // ISO 9001:2015 — Quality Management Systems
   { questionKey: 'iso9001.qmsSystemInPlace', certificateCode: 'ISO9001', labelKey: 'iso9001.qmsSystemInPlace', questionType: 'BOOLEAN' },
   { questionKey: 'iso9001.qmsStartDate', certificateCode: 'ISO9001', labelKey: 'iso9001.qmsStartDate', questionType: 'DATE' },
-  { questionKey: 'iso9001.keyProcesses', certificateCode: 'ISO9001', labelKey: 'iso9001.keyProcesses', questionType: 'TEXT' },
-  { questionKey: 'iso9001.internalAudits', certificateCode: 'ISO9001', labelKey: 'iso9001.internalAudits', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.managementReview', certificateCode: 'ISO9001', labelKey: 'iso9001.managementReview', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.customerComplaints', certificateCode: 'ISO9001', labelKey: 'iso9001.customerComplaints', questionType: 'TEXT' },
-  { questionKey: 'iso14001.emsSystemInPlace', certificateCode: 'ISO14001', labelKey: 'iso14001.emsSystemInPlace', questionType: 'BOOLEAN' },
-  { questionKey: 'iso14001.emsStartDate', certificateCode: 'ISO14001', labelKey: 'iso14001.emsStartDate', questionType: 'DATE' },
-  { questionKey: 'iso14001.environmentalAspects', certificateCode: 'ISO14001', labelKey: 'iso14001.environmentalAspects', questionType: 'TEXT' },
-  { questionKey: 'iso14001.legalCompliance', certificateCode: 'ISO14001', labelKey: 'iso14001.legalCompliance', questionType: 'TEXT' },
-  { questionKey: 'iso14001.internalAudits', certificateCode: 'ISO14001', labelKey: 'iso14001.internalAudits', questionType: 'BOOLEAN' },
-  { questionKey: 'iso14001.environmentalIncidents', certificateCode: 'ISO14001', labelKey: 'iso14001.environmentalIncidents', questionType: 'BOOLEAN' },
+  { questionKey: 'iso9001.sitesCount', certificateCode: 'ISO9001', labelKey: 'iso9001.sitesCount', questionType: 'NUMBER' },
+  { questionKey: 'iso9001.productsServicesScope', certificateCode: 'ISO9001', labelKey: 'iso9001.productsServicesScope', questionType: 'TEXT' },
+  { questionKey: 'iso9001.outsourcedKeyProcesses', certificateCode: 'ISO9001', labelKey: 'iso9001.outsourcedKeyProcesses', questionType: 'BOOLEAN' },
+  { questionKey: 'iso9001.outsourcedProcessesList', certificateCode: 'ISO9001', labelKey: 'iso9001.outsourcedProcessesList', questionType: 'TEXT' },
+  { questionKey: 'iso9001.requirementsNotApplicable', certificateCode: 'ISO9001', labelKey: 'iso9001.requirementsNotApplicable', questionType: 'BOOLEAN' },
+  { questionKey: 'iso9001.notApplicableDetails', certificateCode: 'ISO9001', labelKey: 'iso9001.notApplicableDetails', questionType: 'TEXT' },
+  { questionKey: 'iso9001.priorCertification', certificateCode: 'ISO9001', labelKey: 'iso9001.priorCertification', questionType: 'BOOLEAN' },
+  { questionKey: 'iso9001.certifyingBody', certificateCode: 'ISO9001', labelKey: 'iso9001.certifyingBody', questionType: 'TEXT' },
+
+  // ISO 14001:2026 — Environmental Management Systems
+  { questionKey: 'iso14001.permitsCount', certificateCode: 'ISO14001', labelKey: 'iso14001.permitsCount', questionType: 'NUMBER' },
+  { questionKey: 'iso14001.hazardousMaterials', certificateCode: 'ISO14001', labelKey: 'iso14001.hazardousMaterials', questionType: 'BOOLEAN' },
+  { questionKey: 'iso14001.emissionsMonitoring', certificateCode: 'ISO14001', labelKey: 'iso14001.emissionsMonitoring', questionType: 'BOOLEAN' },
+  { questionKey: 'iso14001.environmentalViolations', certificateCode: 'ISO14001', labelKey: 'iso14001.environmentalViolations', questionType: 'BOOLEAN' },
+  { questionKey: 'iso14001.outsourcedEnvironmentalActivities', certificateCode: 'ISO14001', labelKey: 'iso14001.outsourcedEnvironmentalActivities', questionType: 'BOOLEAN' },
+  { questionKey: 'iso14001.sensitiveAreasNearby', certificateCode: 'ISO14001', labelKey: 'iso14001.sensitiveAreasNearby', questionType: 'BOOLEAN' },
   { questionKey: 'iso50001.energyConsumers', certificateCode: 'ISO50001', labelKey: 'iso50001.energyConsumers', questionType: 'TEXT' },
   { questionKey: 'iso50001.enpi', certificateCode: 'ISO50001', labelKey: 'iso50001.enpi', questionType: 'TEXT' },
   { questionKey: 'iso50001.energyBaseline', certificateCode: 'ISO50001', labelKey: 'iso50001.energyBaseline', questionType: 'BOOLEAN' },
   { questionKey: 'iso50001.baselineUpdated', certificateCode: 'ISO50001', labelKey: 'iso50001.baselineUpdated', questionType: 'DATE' },
   { questionKey: 'iso50001.monitoringTools', certificateCode: 'ISO50001', labelKey: 'iso50001.monitoringTools', questionType: 'TEXT' },
+  { questionKey: 'iso50001.seuCount', certificateCode: 'ISO50001', labelKey: 'iso50001.seuCount', questionType: 'NUMBER' },
+  { questionKey: 'iso50001.monitoringAutomated', certificateCode: 'ISO50001', labelKey: 'iso50001.monitoringAutomated', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.ohsSystemInPlace', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsSystemInPlace', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.ohsStartDate', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsStartDate', questionType: 'DATE' },
   { questionKey: 'iso45001.risksIdentified', certificateCode: 'ISO45001', labelKey: 'iso45001.risksIdentified', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.criticalRisks', certificateCode: 'ISO45001', labelKey: 'iso45001.criticalRisks', questionType: 'TEXT' },
-  { questionKey: 'iso45001.internalAudits', certificateCode: 'ISO45001', labelKey: 'iso45001.internalAudits', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.complianceLaws', certificateCode: 'ISO45001', labelKey: 'iso45001.complianceLaws', questionType: 'TEXT' },
   { questionKey: 'iso45001.legalViolations', certificateCode: 'ISO45001', labelKey: 'iso45001.legalViolations', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.ohsCertification', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsCertification', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.certifyingBody', certificateCode: 'ISO45001', labelKey: 'iso45001.certifyingBody', questionType: 'TEXT' },
+  { questionKey: 'iso45001.internalAudits', certificateCode: 'ISO45001', labelKey: 'iso45001.internalAudits', questionType: 'BOOLEAN' },
+
+  // ISO 22000:2022 — Food Safety Management
+  { questionKey: 'iso22000.haccpPlansCount', certificateCode: 'ISO22000', labelKey: 'iso22000.haccpPlansCount', questionType: 'NUMBER' },
+  { questionKey: 'iso22000.ccpCount', certificateCode: 'ISO22000', labelKey: 'iso22000.ccpCount', questionType: 'NUMBER' },
+  { questionKey: 'iso22000.foodCategoriesScope', certificateCode: 'ISO22000', labelKey: 'iso22000.foodCategoriesScope', questionType: 'TEXT' },
+  { questionKey: 'iso22000.allergensHandled', certificateCode: 'ISO22000', labelKey: 'iso22000.allergensHandled', questionType: 'BOOLEAN' },
+  { questionKey: 'iso22000.allergensList', certificateCode: 'ISO22000', labelKey: 'iso22000.allergensList', questionType: 'TEXT' },
+  { questionKey: 'iso22000.outsourcedFoodSafety', certificateCode: 'ISO22000', labelKey: 'iso22000.outsourcedFoodSafety', questionType: 'BOOLEAN' },
+  { questionKey: 'iso22000.foodSafetyIncidents', certificateCode: 'ISO22000', labelKey: 'iso22000.foodSafetyIncidents', questionType: 'BOOLEAN' },
+  // TEMPORARY: Single Select in the source doc, rendered as free text until the option list is provided
+  { questionKey: 'iso22000.productionSeasonality', certificateCode: 'ISO22000', labelKey: 'iso22000.productionSeasonality', questionType: 'TEXT' },
+
+  // ISO 22301:2019 — Business Continuity Management
+  { questionKey: 'iso22301.criticalActivitiesCount', certificateCode: 'ISO22301', labelKey: 'iso22301.criticalActivitiesCount', questionType: 'NUMBER' },
+  { questionKey: 'iso22301.mtpd', certificateCode: 'ISO22301', labelKey: 'iso22301.mtpd', questionType: 'TEXT' },
+  { questionKey: 'iso22301.biaCompleted', certificateCode: 'ISO22301', labelKey: 'iso22301.biaCompleted', questionType: 'BOOLEAN' },
+  { questionKey: 'iso22301.biaDate', certificateCode: 'ISO22301', labelKey: 'iso22301.biaDate', questionType: 'DATE' },
+  { questionKey: 'iso22301.planTested', certificateCode: 'ISO22301', labelKey: 'iso22301.planTested', questionType: 'BOOLEAN' },
+  { questionKey: 'iso22301.singleCriticalSupplier', certificateCode: 'ISO22301', labelKey: 'iso22301.singleCriticalSupplier', questionType: 'BOOLEAN' },
+  { questionKey: 'iso22301.majorDisruptions', certificateCode: 'ISO22301', labelKey: 'iso22301.majorDisruptions', questionType: 'BOOLEAN' },
+
+  // ISO/IEC 27001:2022 — Information Security Management
+  { questionKey: 'iso27001.criticalAssetsCount', certificateCode: 'ISO27001', labelKey: 'iso27001.criticalAssetsCount', questionType: 'NUMBER' },
+  { questionKey: 'iso27001.annexAControlsCount', certificateCode: 'ISO27001', labelKey: 'iso27001.annexAControlsCount', questionType: 'NUMBER' },
+  { questionKey: 'iso27001.processesRegulatedData', certificateCode: 'ISO27001', labelKey: 'iso27001.processesRegulatedData', questionType: 'BOOLEAN' },
+  { questionKey: 'iso27001.securityIncidents', certificateCode: 'ISO27001', labelKey: 'iso27001.securityIncidents', questionType: 'BOOLEAN' },
+  { questionKey: 'iso27001.outsourcedIT', certificateCode: 'ISO27001', labelKey: 'iso27001.outsourcedIT', questionType: 'BOOLEAN' },
+  { questionKey: 'iso27001.locationsCount', certificateCode: 'ISO27001', labelKey: 'iso27001.locationsCount', questionType: 'NUMBER' },
+
+  // ISO 13485:2016 — Medical Devices Quality Management
+  { questionKey: 'iso13485.deviceFamiliesCount', certificateCode: 'ISO13485', labelKey: 'iso13485.deviceFamiliesCount', questionType: 'NUMBER' },
+  // TEMPORARY: Multi Select in the source doc, rendered as free text until the option list is provided
+  { questionKey: 'iso13485.deviceClasses', certificateCode: 'ISO13485', labelKey: 'iso13485.deviceClasses', questionType: 'TEXT' },
+  { questionKey: 'iso13485.designOrManufacture', certificateCode: 'ISO13485', labelKey: 'iso13485.designOrManufacture', questionType: 'BOOLEAN' },
+  { questionKey: 'iso13485.sterilizationInHouse', certificateCode: 'ISO13485', labelKey: 'iso13485.sterilizationInHouse', questionType: 'BOOLEAN' },
+  { questionKey: 'iso13485.recallsOrEvents', certificateCode: 'ISO13485', labelKey: 'iso13485.recallsOrEvents', questionType: 'BOOLEAN' },
+  // TEMPORARY: Multi Select in the source doc, rendered as free text until the option list is provided
+  { questionKey: 'iso13485.regulatoryMarkets', certificateCode: 'ISO13485', labelKey: 'iso13485.regulatoryMarkets', questionType: 'TEXT' },
 ]
 
 /** Upload slots on the documents step → API document types. */

@@ -4,6 +4,7 @@ import {
   FormSection,
   RadioGroup,
   Textarea,
+  TextField,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -17,9 +18,13 @@ import type { StandardKey } from '@/components/dashboard/entityData/fieldTypes'
 /** Display order and section titles of the question groups. */
 const SECTION_ORDER: { standard: string; title: string }[] = [
   { standard: 'iso9001', title: 'ISO 9001:2015' },
-  { standard: 'iso14001', title: 'ISO 14001:2015' },
+  { standard: 'iso14001', title: 'ISO 14001:2026' },
   { standard: 'iso45001', title: 'ISO 45001:2018' },
-  { standard: 'iso50001', title: 'ISO 50001:2018' },
+  { standard: 'iso50001', title: 'ISO 50001:2022' },
+  { standard: 'iso22000', title: 'ISO 22000:2022' },
+  { standard: 'iso22301', title: 'ISO 22301:2019' },
+  { standard: 'iso27001', title: 'ISO/IEC 27001:2022' },
+  { standard: 'iso13485', title: 'ISO 13485:2016' },
 ]
 
 function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
@@ -54,6 +59,20 @@ function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
         <DatePicker
           value={value}
           onChange={(next) => setSpecAnswer(question.questionKey, next.toISOString())}
+        />
+      </FormField>
+    )
+  }
+
+  if (question.questionType === 'NUMBER') {
+    return (
+      <FormField label={label} required variant="question">
+        <TextField
+          type="number"
+          min={0}
+          value={raw}
+          onChange={(e) => setSpecAnswer(question.questionKey, e.target.value)}
+          placeholder={t('accreditation.entityData.fields.common.writeHere')}
         />
       </FormField>
     )
