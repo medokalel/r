@@ -18,7 +18,7 @@ import { OfficialDocsCard } from './OfficialDocsCard'
 import { CompletedStepRow } from './Primitives'
 import { ProfileHeaderCard } from './ProfileHeaderCard'
 import { useProfileForm } from './ProfileFormContext'
-import { addressFieldsFromGeocode, googleMapsUrlFor } from './mappers'
+import { addressFieldsFromGeocode, googleMapsUrlFor, parseLatLngFromGoogleMapsUrl } from './mappers'
 
 export function BasicDataStep() {
   // Company location preview — independent from the official address on step 2
@@ -66,6 +66,17 @@ export function AddressStep() {
     if (fields.postalCode) update('postalCode', fields.postalCode)
   }
 
+  // Pasting a Google Maps link: drop the pin on the map and, once it
+  // geocodes, autofill country/city/etc — same path as picking on the map.
+  const handleGoogleMapUrlChange = (value: string) => {
+    update('googleMapUrl', value)
+    const location = parseLatLngFromGoogleMapsUrl(value)
+    if (location && (form.location?.lat !== location.lat || form.location?.lng !== location.lng)) {
+      fillFormFromGeocodeRef.current = true
+      update('location', location)
+    }
+  }
+
   return (
     <>
       <CompletedStepRow label={t('companyProfile.completedSteps.basicData')} />
@@ -79,7 +90,7 @@ export function AddressStep() {
           />
         </div>
         <div className="min-w-0 flex-1">
-          <AddressCard />
+          <AddressCard onGoogleMapUrlChange={handleGoogleMapUrlChange} />
         </div>
       </div>
       <NationalAddressToggleCard value={hasNationalAddress} onChange={setHasNationalAddress} />

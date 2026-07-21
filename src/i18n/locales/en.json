@@ -563,6 +563,8 @@
       "no": "No",
       "email": "E-mail",
       "country": "Country",
+      "city": "City",
+      "cityPlaceholder": "Enter city name",
       "egypt": "Arab Republic of Egypt",
       "representativeName": "Organization Representative Name",
       "representativeNamePlaceholder": "Type the full name of the facility representative",

@@ -1,14 +1,17 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { MailIcon, PhoneIcon, ExternalLinkArrowIcon } from '@/components/icons'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { isValidEmail, isValidWebsite, isValidPhoneNumber } from '@/lib/validators'
 import type { CountryCode } from '@/lib/countries'
+import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import {
   FormField,
   FormSection,
   RadioGroup,
   MultiSelect,
+  SelectField,
   TextField,
   Textarea,
 } from '@/components/ui'
@@ -31,6 +34,47 @@ export function LegalIdentityStep({
 }: LegalIdentityStepProps) {
   const { t } = useTranslation()
   const { form, update } = useApplicationForm()
+
+  const [loadedGovernorates, setLoadedGovernorates] = useState<{
+    country: CountryCode
+    options: GovernorateOption[]
+  } | null>(null)
+
+  // City options follow the selected country
+  useEffect(() => {
+    const country = form.country
+    if (!country) return
+    let cancelled = false
+    fetchGovernorateOptions(country)
+      .then((options) => {
+        if (!cancelled) setLoadedGovernorates({ country, options })
+      })
+      .catch(() => {
+        if (!cancelled) setLoadedGovernorates({ country, options: [] })
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [form.country])
+
+  const governorates = useMemo(
+    () =>
+      form.country && loadedGovernorates?.country === form.country
+        ? loadedGovernorates.options
+        : [],
+    [form.country, loadedGovernorates]
+  )
+
+  const onCountryChange = (country: CountryCode) => {
+    if (country === form.country) return
+    update('country', country)
+    update('city', '')
+  }
+
+  const cityOptions = useMemo(() => {
+    const names = governorates.map((governorate) => governorate.name)
+    return form.city && !names.includes(form.city) ? [form.city, ...names] : names
+  }, [governorates, form.city])
   
 const { fieldProps } = useFieldValidation(form, {
     email: (value) => (!isValidEmail(value) ? t('validation.invalidEmail') : undefined),
@@ -192,12 +236,26 @@ const { fieldProps } = useFieldValidation(form, {
             </FormField>
 
             <FormField label={t('accreditation.form.country')} required>
-              <CountrySelectField
-                value={form.country}
-                onChange={(country) => update('country', country)}
-              />
+              <CountrySelectField value={form.country} onChange={onCountryChange} />
             </FormField>
           </div>
+
+          <FormField label={t('accreditation.form.city')} required>
+            {cityOptions.length > 0 ? (
+              <SelectField
+                value={form.city}
+                options={cityOptions}
+                onChange={(value) => update('city', value)}
+              />
+            ) : (
+              <TextField
+                type="text"
+                placeholder={t('accreditation.form.cityPlaceholder')}
+                value={form.city}
+                onChange={(e) => update('city', e.target.value)}
+              />
+            )}
+          </FormField>
 
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField label={t('accreditation.form.representativeName')}>

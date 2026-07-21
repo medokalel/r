@@ -562,6 +562,8 @@
       "no": "لا",
       "email": "البريد الإلكتروني",
       "country": "الدولة",
+      "city": "المدينة",
+      "cityPlaceholder": "أدخل اسم المدينة",
       "egypt": "جمهورية مصر العربية",
       "representativeName": "اسم ممثل المنظمة",
       "representativeNamePlaceholder": "اكتب الاسم الكامل لممثل المنشأة",

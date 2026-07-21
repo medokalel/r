@@ -40,9 +40,10 @@ interface DatePickerProps {
   onChange?: (date: Date) => void
   placeholder?: string
   className?: string
+  disabled?: boolean
 }
 
-export function DatePicker({ value, onChange, placeholder, className }: DatePickerProps) {
+export function DatePicker({ value, onChange, placeholder, className, disabled }: DatePickerProps) {
   const { i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
   const displayPlaceholder = placeholder ?? (isRTL ? 'يوم/شهر/سنة' : 'DD/MM/YYYY')
@@ -89,6 +90,7 @@ export function DatePicker({ value, onChange, placeholder, className }: DatePick
   const POPOVER_HEIGHT = 420
 
   function handleOpen() {
+    if (disabled) return
     const base = selected ?? today
     setViewYear(base.getFullYear())
     setViewMonth(base.getMonth())
@@ -115,11 +117,13 @@ export function DatePicker({ value, onChange, placeholder, className }: DatePick
       <button
         type="button"
         onClick={handleOpen}
+        disabled={disabled}
         className={cn(
           fieldInputClassName,
           fieldHeightClassName,
           'flex w-full items-center justify-between gap-2 text-start',
-          !selected && 'text-neutral-400'
+          !selected && 'text-neutral-400',
+          disabled && 'cursor-not-allowed bg-[#efefef] opacity-70'
         )}
       >
         <span>{selected ? toDisplay(selected) : displayPlaceholder}</span>

@@ -7,9 +7,10 @@ interface RadioGroupProps {
   onChange: (value: string) => void
   options: { value: string; label: string }[]
   className?: string
+  disabled?: boolean
 }
 
-export function RadioGroup({ name, value, onChange, options, className }: RadioGroupProps) {
+export function RadioGroup({ name, value, onChange, options, className, disabled }: RadioGroupProps) {
   // Two choices always fit on one row; only larger groups stack on small screens
   const inline = options.length <= 2
   return (
@@ -25,14 +26,18 @@ export function RadioGroup({ name, value, onChange, options, className }: RadioG
       )}
     >
       {options.map((opt) => (
-        <label key={opt.value} className="flex cursor-pointer items-center gap-2">
+        <label
+          key={opt.value}
+          className={cn('flex items-center gap-2', disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer')}
+        >
           <input
             type="radio"
             name={name}
             value={opt.value}
             checked={value === opt.value}
             onChange={() => onChange(opt.value)}
-            className="size-5 accent-primary"
+            disabled={disabled}
+            className="size-5 accent-primary disabled:cursor-not-allowed"
           />
           <span
             className={cn(

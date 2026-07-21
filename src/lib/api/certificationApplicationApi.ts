@@ -29,6 +29,7 @@ export interface ApplicationLegalInfo {
   allProductionLinesIncluded?: boolean
   excludedReason?: string
   country?: string
+  // TODO: wire up once backend adds legalInfo.city — add `city?: string` here
   email?: string
   representativeName?: string
   jobTitle?: string
