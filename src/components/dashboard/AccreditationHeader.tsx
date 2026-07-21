@@ -86,15 +86,15 @@ export function AccreditationHeader({
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
-          className="h-20 w-auto min-[767px]:hidden"
+          className="h-20 w-auto md:hidden"
         />
-        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap min-[767px]:block">
+        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap md:block">
           {t(titleKey)}
         </h1>
 
-        {orderNumber && <HeaderDivider />}
+        {orderNumber && <HeaderDivider className="hidden lg:block" />}
         {orderNumber && (
-          <div className="flex min-w-0 flex-col items-start gap-1">
+          <div className="hidden min-w-0 flex-col items-start gap-1 lg:flex">
             <span className="w-fit rounded-[6px] bg-[#e8edfc] px-3 py-1 text-[13px] font-medium leading-[1.6] text-[#1236a3]">
               {t('accreditation.orderNumber')}
             </span>
@@ -106,10 +106,10 @@ export function AccreditationHeader({
           </div>
         )}
 
-        {orderNumber && officerName && <HeaderDivider />}
+        {orderNumber && officerName && <HeaderDivider className="hidden lg:block" />}
 
         {officerName && (
-          <div className="flex flex-col items-start">
+          <div className="hidden flex-col items-start lg:flex">
             <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
               {t('accreditation.assignedOfficer')}
             </span>
@@ -127,7 +127,7 @@ export function AccreditationHeader({
       <div className="flex flex-wrap items-center gap-4">
 
         {/* Time and date container */}
-        <div className="hidden min-[1150px]:flex flex-col items-start gap-1">
+        <div className="hidden lg:flex flex-col items-start gap-1">
           {/* badge */}
           <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
             {t('accreditation.timeAndDate')}
@@ -138,7 +138,7 @@ export function AccreditationHeader({
           </p>
         </div>
 
-        <HeaderDivider className="hidden min-[1150px]:block" />
+        <HeaderDivider className="hidden lg:block" />
 
         <button
           type="button"

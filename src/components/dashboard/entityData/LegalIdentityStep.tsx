@@ -1,15 +1,5 @@
-import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  AppIcon,
-  MailIcon,
-  PhoneIcon,
-  UploadTrayIcon,
-  DownloadTrayIcon,
-  EyeIcon,
-  EditIcon,
-  ExternalLinkArrowIcon,
-} from '@/components/icons'
+import { MailIcon, PhoneIcon, ExternalLinkArrowIcon } from '@/components/icons'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { isValidEmail, isValidWebsite, isValidPhoneNumber } from '@/lib/validators'
@@ -21,8 +11,6 @@ import {
   MultiSelect,
   TextField,
   Textarea,
-  fieldHeightClassName,
-  fieldTextClassName,
 } from '@/components/ui'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
@@ -31,7 +19,6 @@ import {
   standards as allStandards,
   type StandardKey,
 } from '@/components/dashboard/entityData/fieldTypes'
-import { cn } from '@/lib/utils'
 
 interface LegalIdentityStepProps {
   selectedStandards?: StandardKey[]
@@ -43,7 +30,7 @@ export function LegalIdentityStep({
   onSelectedStandardsChange,
 }: LegalIdentityStepProps) {
   const { t } = useTranslation()
-  const { form, update, uploadCommercialRegister, uploading } = useApplicationForm()
+  const { form, update } = useApplicationForm()
   
 const { fieldProps } = useFieldValidation(form, {
     email: (value) => (!isValidEmail(value) ? t('validation.invalidEmail') : undefined),
@@ -51,8 +38,6 @@ const { fieldProps } = useFieldValidation(form, {
     mobileNumber: (value) =>
       !isValidPhoneNumber(value, form.mobileCountryCode) ? t('validation.invalidMobile') : undefined,
   })
-
-  const commercialRegisterInputRef = useRef<HTMLInputElement>(null)
 
   const standardKeys = selectedStandards ?? form.selectedStandards
   const setStandardKeys =
@@ -79,14 +64,6 @@ const { fieldProps } = useFieldValidation(form, {
     { value: 'private', label: t('accreditation.form.privateSector') },
     { value: 'thirdParty', label: t('accreditation.form.thirdParty') },
   ]
-
-  const onSelectCommercialRegisterFile = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const file = event.target.files?.[0]
-    if (file) void uploadCommercialRegister(file)
-    event.target.value = ''
-  }
 
   return (
     <div className="flex-1 space-y-5">
@@ -159,7 +136,7 @@ const { fieldProps } = useFieldValidation(form, {
           </FormField>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-2">
+        
           <FormField label={t('accreditation.form.commercialRegistrationNo')} required>
             <TextField
               type="text"
@@ -169,65 +146,7 @@ const { fieldProps } = useFieldValidation(form, {
               placeholder={t('accreditation.form.commercialRegistrationNoPlaceholder')}
             />
           </FormField>
-
-          <FormField label={t('accreditation.form.commercialRegistryFile')} required>
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => commercialRegisterInputRef.current?.click()}
-                disabled={uploading}
-                className={cn(
-                  'flex min-w-0 flex-1 items-center gap-3 rounded-[var(--radius-sm)]',
-                  'border border-dashed border-blue-300 bg-[#f3f6fd] px-3 text-start',
-                  'disabled:cursor-not-allowed disabled:opacity-60',
-                  fieldHeightClassName
-                )}
-              >
-                <AppIcon icon={UploadTrayIcon} size={24} className="shrink-0 text-primary" />
-                <span className={cn(fieldTextClassName, 'truncate text-neutral-600')}>
-                  {form.commercialRegisterFile
-                    ? form.commercialRegisterFile.split('/').pop()
-                    : t('accreditation.form.uploadCommercialRegister')}
-                </span>
-              </button>
-              <input
-                ref={commercialRegisterInputRef}
-                type="file"
-                accept=".pdf,.jpg,.jpeg,.png"
-                className="hidden"
-                onChange={onSelectCommercialRegisterFile}
-              />
-              <div className="flex gap-2">
-                <button
-                  type="button"
-                  className="flex size-12 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
-                  aria-label={t('accreditation.form.download')}
-                >
-                  <AppIcon icon={DownloadTrayIcon} size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() =>
-                    form.commercialRegisterFile &&
-                    window.open(form.commercialRegisterFile, '_blank', 'noopener')
-                  }
-                  className="flex size-12 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
-                  aria-label={t('accreditation.form.view')}
-                >
-                  <AppIcon icon={EyeIcon} size={20} />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => commercialRegisterInputRef.current?.click()}
-                  className="flex size-12 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white hover:bg-neutral-50"
-                  aria-label={t('accreditation.form.edit')}
-                >
-                  <AppIcon icon={EditIcon} size={20} />
-                </button>
-              </div>
-            </div>
-          </FormField>
-        </div>
+        
 
         <div className="grid gap-5 lg:grid-cols-2">
 
