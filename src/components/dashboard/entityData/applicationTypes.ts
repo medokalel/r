@@ -21,8 +21,6 @@ export interface BranchFormValues {
   localId: number
   /** Organization-profile branch this application branch is copied from. */
   sourceBranchId?: string
-  /** True when the fields were auto-filled from an existing org branch — read-only in the UI. */
-  isLocked?: boolean
   branchName: string
   address: string
   employees: string
@@ -80,8 +78,6 @@ export interface ApplicationFormValues {
   productsServices: string
   annualCapacity: string
   technicalSpecifications: string
-  /** Local UI-only gate — not sent to the backend, the branches array itself carries the meaning. */
-  hasBranches: YesNo
   branches: BranchFormValues[]
 
   // Consulting & readiness
@@ -125,10 +121,9 @@ export interface ApplicationFormValues {
   documents: ApplicationDocumentEntry[]
 }
 
-export function createEmptyBranch(localId: number, isLocked = false): BranchFormValues {
+export function createEmptyBranch(localId: number): BranchFormValues {
   return {
     localId,
-    isLocked,
     branchName: '',
     address: '',
     employees: '',
@@ -171,8 +166,7 @@ export const EMPTY_APPLICATION_FORM: ApplicationFormValues = {
   productsServices: '',
   annualCapacity: '',
   technicalSpecifications: '',
-  hasBranches: '',
-  branches: [],
+  branches: [createEmptyBranch(1)],
 
   usedConsultant: '',
   consultantName: '',
