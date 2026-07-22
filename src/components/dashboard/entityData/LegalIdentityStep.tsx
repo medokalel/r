@@ -91,11 +91,20 @@ const { fieldProps } = useFieldValidation(form, {
   // Standards covered by IAF MD 17:2023 (sections 5, 6 and 7)
   const standardLabel = (key: StandardKey) =>
     t(`accreditation.entityData.field.standardsFull.${key}`)
-  const standardOptions = allStandards.map(standardLabel)
-  const standardTags = standardKeys.map(standardLabel)
+  const otherOptionLabel = t('accreditation.form.otherStandardOption')
+  const standardOptions = [...allStandards.map(standardLabel), otherOptionLabel]
+  const standardTags = [
+    ...standardKeys.map(standardLabel),
+    ...(form.otherStandardSelected ? [otherOptionLabel] : []),
+  ]
 
   const onStandardTagsChange = (labels: string[]) => {
     setStandardKeys(allStandards.filter((key) => labels.includes(standardLabel(key))))
+    const otherSelected = labels.includes(otherOptionLabel)
+    update('otherStandardSelected', otherSelected)
+    // Clear the free-text field once "Other" is deselected so stale text
+    // can't be sent if the user re-picks it later without noticing.
+    if (!otherSelected) update('otherStandard', '')
   }
 
   const yesNoOptions = [
@@ -122,14 +131,19 @@ const { fieldProps } = useFieldValidation(form, {
           />
         </FormField>
 
-        <FormField label={t('accreditation.form.otherStandard')}>
-          <TextField
-            type="text"
-            value={form.otherStandard}
-            onChange={(e) => update('otherStandard', e.target.value)}
-            placeholder={t('accreditation.form.otherStandardPlaceholder')}
-          />
-        </FormField>
+        {form.otherStandardSelected && (
+          <FormField label={t('accreditation.form.otherStandard')} required>
+            {/* TODO: not yet wired to the backend — legalInfo has no field for
+                this (see certificationApplicationApi.ts). Confirmed with
+                backend to add it; comes back once that's ready. */}
+            <TextField
+              type="text"
+              value={form.otherStandard}
+              onChange={(e) => update('otherStandard', e.target.value)}
+              placeholder={t('accreditation.form.otherStandardPlaceholder')}
+            />
+          </FormField>
+        )}
 
         <div className="grid gap-5 lg:grid-cols-2">
           <FormField label={t('accreditation.form.organizationName')} required>
@@ -207,16 +221,16 @@ const { fieldProps } = useFieldValidation(form, {
             />
           </FormField>
 
-          <FormField label={t('accreditation.form.ifNoStateWhy')}>
-            <TextField
-              type="text"
-              value={form.excludedReason}
-              onChange={(e) => update('excludedReason', e.target.value)}
-              placeholder={t('accreditation.form.stateReasonPlaceholder')}
-              disabled={form.allProductionLinesIncluded !== 'no'}
-              className="disabled:cursor-not-allowed disabled:bg-[#efefef]"
-            />
-          </FormField>
+          {form.allProductionLinesIncluded === 'no' && (
+            <FormField label={t('accreditation.form.ifNoStateWhy')} required>
+              <TextField
+                type="text"
+                value={form.excludedReason}
+                onChange={(e) => update('excludedReason', e.target.value)}
+                placeholder={t('accreditation.form.stateReasonPlaceholder')}
+              />
+            </FormField>
+          )}
         </div>
         </div>
       </SectionHeading>

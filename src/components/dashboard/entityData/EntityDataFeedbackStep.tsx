@@ -188,7 +188,10 @@ export function EntityDataFeedbackStep() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [loading, setLoading] = useState(false)
+  // TODO: backend integration — استبدل الدالة دي بنداء API حقيقي لما الـ endpoint يجهز
+  // Kept as real state (not hardcoded `false` inline) so re-enabling this is
+  // quick: add `setLoading` back here and uncomment the effect below.
+  const [loading] = useState(false)
 
   // TODO: backend integration — استبدل الدالة دي بنداء API حقيقي لما الـ endpoint يجهز
 

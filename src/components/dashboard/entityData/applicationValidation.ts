@@ -10,6 +10,7 @@ const filled = (value: string) => value.trim().length > 0
 function isLegalIdentityComplete(form: ApplicationFormValues): boolean {
   return (
     form.selectedStandards.length > 0 &&
+    (!form.otherStandardSelected || filled(form.otherStandard)) &&
     filled(form.organizationName) &&
     filled(form.headOfficeAddress) &&
     filled(form.auditSiteAddress) &&

@@ -537,6 +537,7 @@
       "mainData": "Main data",
       "regulatoryData": "Regulatory data",
       "requiredStandard": "Required Standard Specification",
+      "otherStandardOption": "Other",
       "requiredStandardPlaceholder": "Select a standard specification",
       "otherStandard": "Other Standard",
       "otherStandardPlaceholder": "Enter the standard specification",

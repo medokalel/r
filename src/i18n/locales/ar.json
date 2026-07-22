@@ -537,6 +537,7 @@
       "mainData": "البيانات الرئيسية",
       "regulatoryData": "البيانات التنظيمية",
       "requiredStandard": "المواصفة القياسية المطلوبة",
+      "otherStandardOption": "أخرى",
       "otherStandard": "في حالة وجود مواصفات أخرى غير مدرجة، يرجى تحديدها.",
       "otherStandardPlaceholder": "أدخل اسم المواصفة",
       "organizationName": "اسم المنظمة",

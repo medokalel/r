@@ -53,6 +53,7 @@ export interface ApplicationDocumentEntry {
 export interface ApplicationFormValues {
   // Legal identity
   selectedStandards: StandardKey[]
+  otherStandardSelected: boolean
   otherStandard: string
   organizationName: string
   website: string
@@ -143,6 +144,7 @@ export function createEmptyBranch(localId: number): BranchFormValues {
 
 export const EMPTY_APPLICATION_FORM: ApplicationFormValues = {
   selectedStandards: [],
+  otherStandardSelected: false,
   otherStandard: '',
   organizationName: '',
   website: '',
