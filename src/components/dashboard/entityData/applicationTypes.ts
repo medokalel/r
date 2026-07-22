@@ -170,7 +170,7 @@ export const EMPTY_APPLICATION_FORM: ApplicationFormValues = {
   annualCapacity: '',
   technicalSpecifications: '',
   hasBranches: '',
-  branches: [createEmptyBranch(1)],
+  branches: [],
 
   usedConsultant: '',
   consultantName: '',

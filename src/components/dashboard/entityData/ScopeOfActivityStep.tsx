@@ -290,7 +290,6 @@ export function ScopeOfActivityStep() {
   const onHasBranchesChange = (value: string) => {
     update('hasBranches', value as YesNo)
     if (value === 'no') update('branches', [])
-    else if (value === 'yes' && form.branches.length === 0) update('branches', [createEmptyBranch(1)])
   }
 
   const branchRefs = useRef<Map<number, HTMLDivElement>>(new Map())
@@ -399,7 +398,7 @@ export function ScopeOfActivityStep() {
               />
             </FormField>
 
-            {form.hasBranches !== 'no' && (
+            {form.hasBranches === 'yes' && (
               <FormField
                 label={t('accreditation.entityData.fields.scope.branchCount')}
                 variant="question"
@@ -425,7 +424,7 @@ export function ScopeOfActivityStep() {
         </FormSection>
       </SectionHeading>
 
-      {form.hasBranches !== 'no' &&
+      {form.hasBranches === 'yes' &&
         form.branches.map((branch, index) => (
           <div key={branch.localId} ref={(el) => { if (el) branchRefs.current.set(branch.localId, el); }}>
             <SectionHeading
