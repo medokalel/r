@@ -14,10 +14,10 @@ function isLegalIdentityComplete(form: ApplicationFormValues): boolean {
     filled(form.headOfficeAddress) &&
     filled(form.auditSiteAddress) &&
     filled(form.commercialRegisterNumber) &&
-    filled(form.commercialRegisterFile) &&
     form.allProductionLinesIncluded !== '' &&
     (form.allProductionLinesIncluded !== 'no' || filled(form.excludedReason)) &&
     form.country !== null &&
+    filled(form.city) &&
     filled(form.mainActivity)
   )
 }
@@ -29,7 +29,11 @@ function isScopeComplete(form: ApplicationFormValues): boolean {
     form.economicFields.length > 0 &&
     filled(form.productsServices) &&
     filled(form.annualCapacity) &&
-    filled(form.technicalSpecifications)
+    filled(form.technicalSpecifications) &&
+    form.hasBranches !== ''
+
+  // No branches to validate when the user said they don't have any
+  if (form.hasBranches === 'no') return operationalComplete
 
   const branchesComplete = form.branches.every(
     (branch) =>

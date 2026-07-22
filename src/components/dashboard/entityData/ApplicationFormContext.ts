@@ -16,6 +16,8 @@ export interface ApplicationFormContextValue {
   updateBranch: (localId: number, patch: Partial<BranchFormValues>) => void
   addBranch: () => number
   removeBranch: (localId: number) => void
+  /** Creates a real organization-profile branch for a brand-new branch row. */
+  saveOrgBranch: (localId: number, branchName: string) => Promise<void>
   setSpecAnswer: (questionKey: string, value: string) => void
   uploadDocument: (slotId: string, file: File) => Promise<void>
   removeDocument: (localId: string) => Promise<void>

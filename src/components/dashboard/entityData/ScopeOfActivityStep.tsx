@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { useTranslation } from 'react-i18next'
 import { TrashIcon } from '@/components/icons'
@@ -14,10 +14,13 @@ import {
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
-import type {
-  BranchFormValues,
-  YesNo,
+import {
+  createEmptyBranch,
+  type BranchFormValues,
+  type YesNo,
 } from '@/components/dashboard/entityData/applicationTypes'
+
+const NEW_BRANCH_VALUE = '__new__'
 
 const economicFieldOptions = [
   '01 A Agriculture, hunting, forestry and fishing',
@@ -37,15 +40,27 @@ function BranchForm({
   onChange: (localId: number, patch: Partial<BranchFormValues>) => void
 }) {
   const { t } = useTranslation()
-  const { orgBranches } = useApplicationForm()
+  const { orgBranches, saveOrgBranch } = useApplicationForm()
+  const [addingNew, setAddingNew] = useState(false)
 
   const selectOrgBranch = (id: string) => {
+    if (id === NEW_BRANCH_VALUE) {
+      setAddingNew(true)
+      onChange(branch.localId, { sourceBranchId: undefined, branchName: '' })
+      return
+    }
     const source = orgBranches.find((orgBranch) => orgBranch.id === id)
     onChange(branch.localId, {
       sourceBranchId: id,
       branchName: source?.branchName ?? '',
       address: branch.address || source?.address || '',
     })
+  }
+
+  const showManualEntry = orgBranches.length === 0 || addingNew
+
+  const handleBranchNameBlur = () => {
+    if (!branch.sourceBranchId) void saveOrgBranch(branch.localId, branch.branchName)
   }
 
   const yesNoOptions = [
@@ -153,14 +168,20 @@ function BranchForm({
           required
           variant="question"
         >
-          {orgBranches.length > 0 ? (
+          {!showManualEntry ? (
             <SelectField
               value={branch.sourceBranchId ?? ''}
               onChange={selectOrgBranch}
-              options={orgBranches.map((orgBranch) => ({
-                value: orgBranch.id,
-                label: orgBranch.branchName ?? orgBranch.id,
-              }))}
+              options={[
+                ...orgBranches.map((orgBranch) => ({
+                  value: orgBranch.id,
+                  label: orgBranch.branchName ?? orgBranch.id,
+                })),
+                {
+                  value: NEW_BRANCH_VALUE,
+                  label: t('accreditation.entityData.fields.scope.addNewBranchOption'),
+                },
+              ]}
               placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
             />
           ) : (
@@ -168,6 +189,7 @@ function BranchForm({
               type="text"
               value={branch.branchName}
               onChange={(e) => onChange(branch.localId, { branchName: e.target.value })}
+              onBlur={handleBranchNameBlur}
               placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
             />
           )}
@@ -258,15 +280,37 @@ function BranchForm({
 
 export function ScopeOfActivityStep() {
   const { t } = useTranslation()
-  const { form, update, updateBranch, addBranch, removeBranch } = useApplicationForm()
+  const { form, update, updateBranch, addBranch, removeBranch, orgBranches } = useApplicationForm()
+
+  const yesNoOptions = [
+    { value: 'yes', label: t('accreditation.form.yes') },
+    { value: 'no', label: t('accreditation.form.no') },
+  ]
+
+  const onHasBranchesChange = (value: string) => {
+    update('hasBranches', value as YesNo)
+    if (value === 'no') update('branches', [])
+    else if (value === 'yes' && form.branches.length === 0) update('branches', [createEmptyBranch(1)])
+  }
+
   const branchRefs = useRef<Map<number, HTMLDivElement>>(new Map())
 
-  function handleAddBranch() {
-    const newId = addBranch()
-    setTimeout(() => {
-      branchRefs.current.get(newId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
+  function handleAddBranchSelect(value: string) {
+  const newId = addBranch()
+  if (value !== NEW_BRANCH_VALUE) {
+    const source = orgBranches.find((orgBranch) => orgBranch.id === value)
+    if (source) {
+      updateBranch(newId, {
+        sourceBranchId: source.id,
+        branchName: source.branchName ?? '',
+        address: source.address ?? '',
+      })
+    }
   }
+  setTimeout(() => {
+    branchRefs.current.get(newId)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, 50)
+}
 
   function handleRemoveBranch(localId: number) {
     branchRefs.current.delete(localId)
@@ -279,108 +323,132 @@ export function ScopeOfActivityStep() {
   return (
     <div className="flex-1 space-y-5">
       <SectionHeading title={t('accreditation.entityData.fields.scope.operationalData')} accordion>
-      <FormSection>
-        <FormField
-          label={t('accreditation.entityData.fields.scope.scopeOfWork')}
-          required
-          variant="question"
-        >
-          <TextField
-            type="text"
-            value={form.fieldOfWork}
-            onChange={(e) => update('fieldOfWork', e.target.value)}
-            placeholder={t('accreditation.entityData.fields.scope.scopeOfWorkPlaceholder')}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.economicField')}
-          required
-          variant="question"
-        >
-          <MultiSelect
-            tags={form.economicFields}
-            options={economicFieldOptions}
-            onChange={(tags) => update('economicFields', tags)}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.productsServicesNature')}
-          required
-          variant="question"
-        >
-          <Textarea
-            value={form.productsServices}
-            onChange={(e) => update('productsServices', e.target.value)}
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.annualProductionCapacity')}
-          required
-          variant="question"
-        >
-          <Textarea
-            value={form.annualCapacity}
-            onChange={(e) => update('annualCapacity', e.target.value)}
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.technicalSpecifications')}
-          required
-          variant="question"
-        >
-          <Textarea
-            value={form.technicalSpecifications}
-            onChange={(e) => update('technicalSpecifications', e.target.value)}
-            placeholder={t('accreditation.entityData.fields.common.writeHere')}
-          />
-        </FormField>
-
-        <FormField
-          label={t('accreditation.entityData.fields.scope.branchCount')}
-          variant="question"
-          className="max-w-xl"
-        >
-          <button
-            type="button"
-            onClick={handleAddBranch}
-            className="flex w-full items-center justify-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-primary bg-primary-subtle py-3 text-primary transition-colors hover:bg-[#dbe4fa]"
+        <FormSection>
+          <FormField
+            label={t('accreditation.entityData.fields.scope.scopeOfWork')}
+            required
+            variant="question"
           >
-            <span className="text-xl leading-none">+</span>
-            <span className="text-body-2">{t('accreditation.entityData.fields.scope.addBranch')}</span>
-          </button>
-        </FormField>
-      </FormSection>
+            <TextField
+              type="text"
+              value={form.fieldOfWork}
+              onChange={(e) => update('fieldOfWork', e.target.value)}
+              placeholder={t('accreditation.entityData.fields.scope.scopeOfWorkPlaceholder')}
+            />
+          </FormField>
+
+          <FormField
+            label={t('accreditation.entityData.fields.scope.economicField')}
+            required
+            variant="question"
+          >
+            <MultiSelect
+              tags={form.economicFields}
+              options={economicFieldOptions}
+              onChange={(tags) => update('economicFields', tags)}
+            />
+          </FormField>
+
+          <FormField
+            label={t('accreditation.entityData.fields.scope.productsServicesNature')}
+            required
+            variant="question"
+          >
+            <Textarea
+              value={form.productsServices}
+              onChange={(e) => update('productsServices', e.target.value)}
+              placeholder={t('accreditation.entityData.fields.common.writeHere')}
+            />
+          </FormField>
+
+          <FormField
+            label={t('accreditation.entityData.fields.scope.annualProductionCapacity')}
+            required
+            variant="question"
+          >
+            <Textarea
+              value={form.annualCapacity}
+              onChange={(e) => update('annualCapacity', e.target.value)}
+              placeholder={t('accreditation.entityData.fields.common.writeHere')}
+            />
+          </FormField>
+
+          <FormField
+            label={t('accreditation.entityData.fields.scope.technicalSpecifications')}
+            required
+            variant="question"
+          >
+            <Textarea
+              value={form.technicalSpecifications}
+              onChange={(e) => update('technicalSpecifications', e.target.value)}
+              placeholder={t('accreditation.entityData.fields.common.writeHere')}
+            />
+          </FormField>
+
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField
+              label={t('accreditation.entityData.fields.scope.hasBranches')}
+              required
+              variant="question"
+            >
+              <RadioGroup
+                name="hasBranches"
+                value={form.hasBranches}
+                onChange={onHasBranchesChange}
+                options={yesNoOptions}
+              />
+            </FormField>
+
+            {form.hasBranches !== 'no' && (
+              <FormField
+                label={t('accreditation.entityData.fields.scope.branchCount')}
+                variant="question"
+              >
+                <SelectField
+                  value=""
+                  onChange={handleAddBranchSelect}
+                  options={[
+                    ...orgBranches.map((orgBranch) => ({
+                      value: orgBranch.id,
+                      label: orgBranch.branchName ?? orgBranch.id,
+                    })),
+                    {
+                      value: NEW_BRANCH_VALUE,
+                      label: t('accreditation.entityData.fields.scope.addNewBranchOption'),
+                    },
+                  ]}
+                  placeholder={t('accreditation.entityData.fields.scope.addBranch')}
+                />
+              </FormField>
+            )}
+          </div>
+        </FormSection>
       </SectionHeading>
 
-      {form.branches.map((branch, index) => (
-        <div key={branch.localId} ref={(el) => { if (el) branchRefs.current.set(branch.localId, el); }}>
-          <SectionHeading
-            title={branchLabel(index)}
-            accordion
-            headerActions={
-              index > 0 ? (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveBranch(branch.localId)}
-                  className="flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-error-500 transition-colors hover:bg-error-50"
-                  aria-label={t('accreditation.entityData.fields.scope.removeBranch')}
-                >
-                  <AppIcon icon={TrashIcon} size={16} />
-                  <span className="text-body-3">{t('accreditation.entityData.fields.scope.removeBranch')}</span>
-                </button>
-              ) : undefined
-            }
-          >
-            <BranchForm branch={branch} onChange={updateBranch} />
-          </SectionHeading>
-        </div>
-      ))}
+      {form.hasBranches !== 'no' &&
+        form.branches.map((branch, index) => (
+          <div key={branch.localId} ref={(el) => { if (el) branchRefs.current.set(branch.localId, el); }}>
+            <SectionHeading
+              title={branchLabel(index)}
+              accordion
+              headerActions={
+                index > 0 ? (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveBranch(branch.localId)}
+                    className="flex items-center gap-1.5 rounded-[var(--radius-sm)] px-3 py-1.5 text-error-500 transition-colors hover:bg-error-50"
+                    aria-label={t('accreditation.entityData.fields.scope.removeBranch')}
+                  >
+                    <AppIcon icon={TrashIcon} size={16} />
+                    <span className="text-body-3">{t('accreditation.entityData.fields.scope.removeBranch')}</span>
+                  </button>
+                ) : undefined
+              }
+            >
+              <BranchForm branch={branch} onChange={updateBranch} />
+            </SectionHeading>
+          </div>
+        ))}
     </div>
   )
 }

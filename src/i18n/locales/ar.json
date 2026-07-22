@@ -185,6 +185,7 @@
         "tabNeedsSelection": "لم يتم الاختيار لهذه المواصفة بعد",
         "missingSectorsHint": "اختر قطاعاً واحداً على الأقل لكل مواصفة — متبقٍ: {{standards}}",
         "missingCodesHint": "اختر رمز IAF واحداً على الأقل لكل مواصفة — متبقٍ: {{standards}}",
+        "noStandardsSelected": "من فضلك اختر المواصفات المطلوبة أولًا من خطوة الهوية القانونية.",
         "standards": {
           "iso9001": "ISO 9001",
           "iso14001": "ISO 14001",
@@ -346,15 +347,11 @@
       "feedback": {
         "pageTitle": "الملاحظات",
         "pageSubtitle": "يمكنك استقبال والرد علي الملاحظات من هنا",
-        "reviewerName": "ديما السواط",
-        "reviewerRole": "مراجع اعتماد",
-        "reviewerTimestamp": "11 فبراير 2025 - 10:30 ص",
-        "reviewerMessage": "تحية طيبة، يرجى التكرم بتعديل اسم ممثل الجهة في ملف المنشأة ليتطابق مع البيانات المحدثة في السجل التجاري الأخير، حيث أن الاسم الحالي قديم.",
+        "loading": "جاري التحميل...",
+        "noFeedback": "لا توجد ملاحظات حتى الآن على طلبك.",
         "goToCommentReview": "انتقل الي مراجعة التعليق",
         "applicantName": "محمد المناوهلي",
         "applicantRole": "مقدم الطلب",
-        "applicantTimestamp": "11 فبراير 2025 - 02:30 م",
-        "applicantMessage": "تم تحديث الاسم بنجاح كما هو مطلوب في السجل التجاري. يرجى مراجعة البيانات المحدثة وإفادتنا بالخطوات التالية.",
         "replyPlaceholder": "اكتب ردك أو استفسارك هنا...",
         "sendReply": "إرسال الرد",
         "attach": "إرفاق ملف",
@@ -370,6 +367,7 @@
           "writeHere": "اكتب هنا"
         },
         "scope": {
+          "hasBranches": "هل لديك أي فروع؟",
           "operationalData": "البيانات التشغيلية للمنشأة",
           "scopeOfWork": "نطاق عمل المنظمة وفقًا للسجل التجاري / الترخيص",
           "scopeOfWorkPlaceholder": "أدخل مجال العمل",
@@ -380,6 +378,7 @@
           "branchCount": "عدد المواقع / الفروع (إن وجد):",
           "addBranch": "إضافة فرع",
           "removeBranch": "حذف الفرع",
+          "addNewBranchOption": "+ إضافة فرع جديد",
           "branchNumber": "الفرع {{number}}",
           "branchEmployees": "عدد الموظفين في الفرع",
           "auditScopeEmployees": "عدد الموظفين ضمن نطاق التدقيق",

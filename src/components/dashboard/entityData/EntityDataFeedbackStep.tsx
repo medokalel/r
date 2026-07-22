@@ -188,25 +188,19 @@ export function EntityDataFeedbackStep() {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const [messages, setMessages] = useState<FeedbackMessage[]>(() => [
-    {
-      id: 'seed-reviewer',
-      author: 'reviewer',
-      name: t('accreditation.entityData.feedback.reviewerName'),
-      role: t('accreditation.entityData.feedback.reviewerRole'),
-      timestamp: t('accreditation.entityData.feedback.reviewerTimestamp'),
-      text: t('accreditation.entityData.feedback.reviewerMessage'),
-      showCommentLink: true,
-    },
-    {
-      id: 'seed-applicant',
-      author: 'applicant',
-      name: applicantName,
-      role: applicantRole,
-      timestamp: t('accreditation.entityData.feedback.applicantTimestamp'),
-      text: t('accreditation.entityData.feedback.applicantMessage'),
-    },
-  ])
+  const [loading, setLoading] = useState(false)
+
+  // TODO: backend integration — استبدل الدالة دي بنداء API حقيقي لما الـ endpoint يجهز
+
+  // useEffect(() => {
+  //   setLoading(true)
+  //   getApplicationFeedback(applicationId)
+  //     .then(setMessages)
+  //     .finally(() => setLoading(false))
+  // }, [applicationId])
+  const loadFeedbackMessages = (): FeedbackMessage[] => []
+
+  const [messages, setMessages] = useState<FeedbackMessage[]>(loadFeedbackMessages)
 
   const formatNow = () =>
     new Intl.DateTimeFormat(i18n.language, {
@@ -275,12 +269,22 @@ export function EntityDataFeedbackStep() {
   return (
     <div className="flex flex-1 flex-col gap-5">
       <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-6">
+      {loading ? (
+        <p className="text-center text-[14px] text-neutral-500">
+          {t('accreditation.entityData.feedback.loading')}
+        </p>
+      ) : messages.length === 0 ? (
+        <p className="text-center text-[14px] text-neutral-500">
+          {t('accreditation.entityData.feedback.noFeedback')}
+        </p>
+      ) : (
         <div className="flex flex-col gap-5">
           {messages.map((message) => (
             <MessageBubble key={message.id} message={message} />
           ))}
         </div>
-      </div>
+      )}
+    </div>
 
       <div className="rounded-[var(--radius-md)] border border-[#e2e8f0] bg-white p-[17px] shadow-[0_6px_20px_rgba(153,155,168,0.1)]">
         <div className="rounded-[var(--radius-md)] bg-[#f4f4f4] p-2">

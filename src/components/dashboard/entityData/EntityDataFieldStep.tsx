@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { FieldPhase, SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
-import { standards } from '@/components/dashboard/entityData/fieldTypes'
 import { EntityDataFieldCodesStep } from '@/components/dashboard/entityData/EntityDataFieldCodesStep'
 import { EntityDataFieldSectorsStep } from '@/components/dashboard/entityData/EntityDataFieldSectorsStep'
 
@@ -22,15 +22,25 @@ export function EntityDataFieldStep({
   selectedCodes,
   onSelectedCodesChange,
 }: EntityDataFieldStepProps) {
-  // Tabs are limited to what the user picked in "Required Standard Specification";
-  // fall back to all IAF MD 17 standards when nothing is picked yet
-  const availableStandards =
-    selectedStandards && selectedStandards.length > 0 ? selectedStandards : [...standards]
+  const { t } = useTranslation()
 
-  const [activeStandard, setActiveStandard] = useState<StandardKey>(availableStandards[0])
-  const effectiveStandard = availableStandards.includes(activeStandard)
+  // Tabs are limited to what the user picked in "Required Standard Specification"
+  const availableStandards = selectedStandards ?? []
+
+  const [activeStandard, setActiveStandard] = useState<StandardKey | undefined>(
+    availableStandards[0]
+  )
+  const effectiveStandard = activeStandard && availableStandards.includes(activeStandard)
     ? activeStandard
     : availableStandards[0]
+
+  if (!effectiveStandard) {
+    return (
+      <p className="rounded-[var(--radius-sm)] bg-neutral-50 p-5 text-body-2 text-neutral-600">
+        {t('accreditation.entityData.field.noStandardsSelected')}
+      </p>
+    )
+  }
 
   const activeSectors = selectedSectors[effectiveStandard] ?? []
 

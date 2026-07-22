@@ -185,6 +185,7 @@
         "tabNeedsSelection": "No selections yet for this standard",
         "missingSectorsHint": "Select at least one sector for each standard — still missing: {{standards}}",
         "missingCodesHint": "Select at least one IAF code for each standard — still missing: {{standards}}",
+        "noStandardsSelected": "Please select the required standards on the Legal Identity step first.",
         "standards": {
           "iso9001": "ISO 9001",
           "iso14001": "ISO 14001",
@@ -346,15 +347,11 @@
       "feedback": {
         "pageTitle": "Feedback",
         "pageSubtitle": "You can receive and respond to comments from here",
-        "reviewerName": "Dima Al-Swatt",
-        "reviewerRole": "Accreditation references",
-        "reviewerTimestamp": "11 Feb, 2025 - 10:30 AM",
-        "reviewerMessage": "Greetings,\nPlease kindly amend the name of the entity's representative in the establishment file to match the updated data in the latest commercial register, as the current name is old.",
-        "goToCommentReview": "Go to comment review",
+        "loading": "Loading...",
+        "noFeedback": "No feedback yet on your request.",
         "applicantName": "Muhammad Al-Manawahli",
         "applicantRole": "applicant",
-        "applicantTimestamp": "11 Feb, 2025 - 02:30 PM",
-        "applicantMessage": "The name has been successfully updated as required by the commercial registry. Please review the updated data and let us know the next steps.",
+        "goToCommentReview": "Go to comment review",
         "replyPlaceholder": "Write your response or inquiry here...",
         "sendReply": "Send Reply",
         "attach": "Attach file",
@@ -370,6 +367,7 @@
           "writeHere": "Write here"
         },
         "scope": {
+          "hasBranches": "Do you have any branches?",
           "operationalData": "Operational data of the facility",
           "scopeOfWork": "The scope of work of the organization according to the commercial registration / license",
           "scopeOfWorkPlaceholder": "Enter the field of work",
@@ -379,6 +377,7 @@
           "technicalSpecifications": "Technical specifications used in production :",
           "branchCount": "Number of Locations/Branches (if any) :",
           "addBranch": "Add Branch",
+          "addNewBranchOption": "+ Add new branch",
           "removeBranch": "Remove branch",
           "branchNumber": "Branch {{number}}",
           "branchEmployees": "No. of employees in the branch",

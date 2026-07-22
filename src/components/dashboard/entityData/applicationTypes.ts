@@ -78,6 +78,7 @@ export interface ApplicationFormValues {
   productsServices: string
   annualCapacity: string
   technicalSpecifications: string
+  hasBranches: YesNo
   branches: BranchFormValues[]
 
   // Consulting & readiness
@@ -166,6 +167,7 @@ export const EMPTY_APPLICATION_FORM: ApplicationFormValues = {
   productsServices: '',
   annualCapacity: '',
   technicalSpecifications: '',
+  hasBranches: '',
   branches: [createEmptyBranch(1)],
 
   usedConsultant: '',

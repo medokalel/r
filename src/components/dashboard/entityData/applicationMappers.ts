@@ -97,11 +97,7 @@ const CURRENT_SYSTEM_NAMES: Record<string, string> = {
   iso22000: 'ISO 22000',
 }
 
-function branchToApi(
-  branch: BranchFormValues,
-  index: number,
-  orgBranchIds: string[]
-): ApplicationBranch | undefined {
+function branchToApi(branch: BranchFormValues): ApplicationBranch | undefined {
   const fields = compact<ApplicationBranch>({
     branchName: text(branch.branchName),
     address: text(branch.address),
@@ -122,7 +118,7 @@ function branchToApi(
   // the backend requires branchName on every stored branch
   if (!fields) return undefined
   return {
-    sourceBranchId: branch.sourceBranchId ?? orgBranchIds[index] ?? orgBranchIds[0],
+    sourceBranchId: branch.sourceBranchId,
     branchName: fields.branchName ?? '',
     ...fields,
   }
@@ -204,7 +200,6 @@ function documentsToApi(form: ApplicationFormValues): ApplicationDocument[] {
 export function payloadFromForm(
   form: ApplicationFormValues,
   t: TFunction,
-  orgBranchIds: string[] = []
 ): DraftApplicationRequest {
   const legalInfo = compact({
     organizationName: text(form.organizationName),
@@ -271,7 +266,7 @@ export function payloadFromForm(
   })
 
   const branches = form.branches
-    .map((branch, index) => branchToApi(branch, index, orgBranchIds))
+    .map((branch) => branchToApi(branch))
     .filter((branch): branch is ApplicationBranch => branch !== undefined)
 
   const payload: DraftApplicationRequest = {}

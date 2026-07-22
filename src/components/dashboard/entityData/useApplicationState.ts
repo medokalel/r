@@ -17,6 +17,7 @@ import {
 import {
   getOrganizationProfile,
   saveOrganizationProfile,
+  createBranch as createOrgBranch,
   type OrganizationProfileData,
   type OrgBranch,
 } from '@/lib/api/organizationProfileApi'
@@ -150,8 +151,8 @@ export function useApplicationState(): ApplicationState {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reloadKey])
 
-  // Default the country and phone code from the visitor's IP until the user
-  // (or a loaded draft) provides real values
+  // Default the country, city, and phone code from the visitor's IP until the
+  // user (or a loaded draft) provides real values
   useEffect(() => {
     if (loading || ipDefaultsBlockedRef.current || !ipLocation?.countryCode) return
     ipDefaultsBlockedRef.current = true
@@ -159,6 +160,7 @@ export function useApplicationState(): ApplicationState {
     setForm((prev) => ({
       ...prev,
       country: prev.country ?? code,
+      city: prev.city || ipLocation.city || prev.city,
       mobileCountryCode: code,
     }))
   }, [ipLocation, loading])
@@ -215,6 +217,26 @@ export function useApplicationState(): ApplicationState {
       branches: prev.branches.filter((branch) => branch.localId !== localId),
     }))
   }, [])
+
+  // Creates a real branch in the organization profile so a brand-new
+  // application branch always carries a genuine sourceBranchId
+  const saveOrgBranch = useCallback(
+    async (localId: number, branchName: string) => {
+      const name = branchName.trim()
+      if (!name) return
+      try {
+        const created = await createOrgBranch({ branchName: name })
+        setOrgBranches((prev) => [...prev, created])
+        updateBranch(localId, { sourceBranchId: created.id })
+      } catch {
+        notify({
+          type: 'error',
+          message: "We couldn't complete your request. Please try again",
+        })
+      }
+    },
+    [notify, updateBranch]
+  )
 
   const setSpecAnswer = useCallback((questionKey: string, value: string) => {
     setForm((prev) => ({
@@ -315,7 +337,7 @@ export function useApplicationState(): ApplicationState {
     setSaving(true)
     setNotification(null)
     try {
-      const payload = payloadFromForm(form, t, orgBranchIdsRef.current)
+      const payload = payloadFromForm(form, t)
       let id = applicationId
       if (id) {
         await updateDraftApplication(id, payload)
@@ -344,7 +366,7 @@ export function useApplicationState(): ApplicationState {
     setSubmitting(true)
     setNotification(null)
     try {
-      const payload = payloadFromForm(form, t, orgBranchIdsRef.current)
+      const payload = payloadFromForm(form, t)
       let id = applicationId
       if (id) {
         await updateDraftApplication(id, payload)
@@ -379,6 +401,7 @@ export function useApplicationState(): ApplicationState {
       updateBranch,
       addBranch,
       removeBranch,
+      saveOrgBranch,
       setSpecAnswer,
       uploadDocument,
       removeDocument,
@@ -397,6 +420,7 @@ export function useApplicationState(): ApplicationState {
       updateBranch,
       addBranch,
       removeBranch,
+      saveOrgBranch,
       setSpecAnswer,
       uploadDocument,
       removeDocument,
