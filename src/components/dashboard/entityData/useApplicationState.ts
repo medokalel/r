@@ -219,20 +219,31 @@ export function useApplicationState(): ApplicationState {
   }, [])
 
   // Creates a real branch in the organization profile so a brand-new
-  // application branch always carries a genuine sourceBranchId
+  // application branch always carries a genuine sourceBranchId.
+  // Sends the same full field shape as the working Company Profile "Add
+  // Branch" form (branchType/employeeCount included as safe defaults),
+  // since the backend rejects a branch payload with only branchName.
   const saveOrgBranch = useCallback(
-    async (localId: number, branchName: string) => {
+    async (localId: number, branchName: string, address: string) => {
       const name = branchName.trim()
       if (!name) return
       try {
-        const created = await createOrgBranch({ branchName: name })
+        const created = await createOrgBranch({
+          branchName: name,
+          address: address || undefined,
+          branchType: 'PERMANENT',
+          employeeCount: 0,
+        })
         setOrgBranches((prev) => [...prev, created])
         updateBranch(localId, { sourceBranchId: created.id })
-      } catch {
-        notify({
-          type: 'error',
-          message: "We couldn't complete your request. Please try again",
-        })
+      } catch (error) {
+        // Surface the backend's real validation message (if any) instead of
+        // a generic one, so a future rejection is diagnosable immediately
+        const message =
+          error instanceof ApiError
+            ? [error.message, ...(error.errors ?? [])].join('. ')
+            : "We couldn't complete your request. Please try again"
+        notify({ type: 'error', message })
       }
     },
     [notify, updateBranch]

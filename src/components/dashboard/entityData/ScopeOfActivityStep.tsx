@@ -15,7 +15,6 @@ import {
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
-  createEmptyBranch,
   type BranchFormValues,
   type YesNo,
 } from '@/components/dashboard/entityData/applicationTypes'
@@ -60,7 +59,7 @@ function BranchForm({
   const showManualEntry = orgBranches.length === 0 || addingNew
 
   const handleBranchNameBlur = () => {
-    if (!branch.sourceBranchId) void saveOrgBranch(branch.localId, branch.branchName)
+    if (!branch.sourceBranchId) void saveOrgBranch(branch.localId, branch.branchName, branch.address)
   }
 
   const yesNoOptions = [
