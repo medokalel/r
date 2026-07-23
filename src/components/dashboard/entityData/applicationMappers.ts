@@ -481,7 +481,6 @@ export function formValuesFromApplication(
     products: branch.products ?? '',
     technicalCommunication: branch.technicalCommunication ?? '',
   }))
-  if (form.branches.length === 0) form.branches = [createEmptyBranch(1)]
 
   for (const certificate of app.certificates ?? []) {
     const standard = codeToStandard(certificate.certificateCode)
