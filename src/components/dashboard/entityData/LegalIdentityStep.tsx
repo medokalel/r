@@ -122,78 +122,77 @@ const { fieldProps } = useFieldValidation(form, {
     <div className="flex-1 space-y-5">
       <SectionHeading title={t('accreditation.form.mainData')} accordion>
         <div className="space-y-5">
-        <FormField label={t('accreditation.form.requiredStandard')} required>
-          <MultiSelect
-            tags={standardTags}
-            options={standardOptions}
-            onChange={onStandardTagsChange}
-            placeholder={t('accreditation.form.requiredStandardPlaceholder')}
-          />
-        </FormField>
-
-        {form.otherStandardSelected && (
-          <FormField label={t('accreditation.form.otherStandard')} required>
-            {/* TODO: not yet wired to the backend — legalInfo has no field for
-                this (see certificationApplicationApi.ts). Confirmed with
-                backend to add it; comes back once that's ready. */}
-            <TextField
-              type="text"
-              value={form.otherStandard}
-              onChange={(e) => update('otherStandard', e.target.value)}
-              placeholder={t('accreditation.form.otherStandardPlaceholder')}
-            />
-          </FormField>
-        )}
-
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.organizationName')} required>
-            <TextField
-              type="text"
-              value={form.organizationName}
-              placeholder={t('accreditation.form.organizationNamePlaceholder')}
-              onChange={(e) => update('organizationName', e.target.value)}
+          <FormField label={t('accreditation.form.requiredStandard')} required>
+            <MultiSelect
+              tags={standardTags}
+              options={standardOptions}
+              onChange={onStandardTagsChange}
+              placeholder={t('accreditation.form.requiredStandardPlaceholder')}
             />
           </FormField>
 
-          <FormField label={t('accreditation.form.website')}>
-            <div className="relative">
+          {form.otherStandardSelected && (
+            <FormField label={t('accreditation.form.otherStandard')} required>
+              {/* TODO: not yet wired to the backend — legalInfo has no field for
+                  this (see certificationApplicationApi.ts). Confirmed with
+                  backend to add it; comes back once that's ready. */}
               <TextField
-                type="url"
-                value={form.website}
-                onChange={(e) => update('website', e.target.value)}
-                placeholder={t('accreditation.form.websitePlaceholder')}
-                className="pe-10"
-                {...fieldProps('website')}
+                type="text"
+                value={form.otherStandard}
+                onChange={(e) => update('otherStandard', e.target.value)}
+                placeholder={t('accreditation.form.otherStandardPlaceholder')}
               />
-              <span className="absolute end-3 top-1/2 -translate-y-1/2 text-primary" aria-hidden>
-                <ExternalLinkArrowIcon size={16} />
-              </span>
-            </div>
-          </FormField>
-        </div>
+            </FormField>
+          )}
 
-        <div className="grid gap-5 lg:grid-cols-2">
-          <FormField label={t('accreditation.form.headOfficeAddress')} required>
-            <Textarea
-              value={form.headOfficeAddress}
-              onChange={(e) => update('headOfficeAddress', e.target.value)}
-              placeholder={t('accreditation.form.headOfficeAddressPlaceholder')}
-              rows={3}
-              className="min-h-[60px]"
-            />
-          </FormField>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.organizationName')} required>
+              <TextField
+                type="text"
+                value={form.organizationName}
+                placeholder={t('accreditation.form.organizationNamePlaceholder')}
+                onChange={(e) => update('organizationName', e.target.value)}
+              />
+            </FormField>
 
-          <FormField label={t('accreditation.form.auditPlaceAddress')} required>
-            <Textarea
-              value={form.auditSiteAddress}
-              onChange={(e) => update('auditSiteAddress', e.target.value)}
-              placeholder={t('accreditation.form.auditPlaceAddressPlaceholder')}
-              rows={3}
-              className="min-h-[60px]"
-            />
-          </FormField>
-        </div>
+            <FormField label={t('accreditation.form.website')}>
+              <div className="relative">
+                <TextField
+                  type="url"
+                  value={form.website}
+                  onChange={(e) => update('website', e.target.value)}
+                  placeholder={t('accreditation.form.websitePlaceholder')}
+                  className="pe-10"
+                  {...fieldProps('website')}
+                />
+                <span className="absolute end-3 top-1/2 -translate-y-1/2 text-primary" aria-hidden>
+                  <ExternalLinkArrowIcon size={16} />
+                </span>
+              </div>
+            </FormField>
+          </div>
 
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.form.headOfficeAddress')} required>
+              <Textarea
+                value={form.headOfficeAddress}
+                onChange={(e) => update('headOfficeAddress', e.target.value)}
+                placeholder={t('accreditation.form.headOfficeAddressPlaceholder')}
+                rows={3}
+                className="min-h-[60px]"
+              />
+            </FormField>
+
+            <FormField label={t('accreditation.form.auditPlaceAddress')} required>
+              <Textarea
+                value={form.auditSiteAddress}
+                onChange={(e) => update('auditSiteAddress', e.target.value)}
+                placeholder={t('accreditation.form.auditPlaceAddressPlaceholder')}
+                rows={3}
+                className="min-h-[60px]"
+              />
+            </FormField>
+          </div>
         
           <FormField label={t('accreditation.form.commercialRegistrationNo')} required>
             <TextField
@@ -205,33 +204,32 @@ const { fieldProps } = useFieldValidation(form, {
             />
           </FormField>
         
+          <div className="grid gap-5 lg:grid-cols-2">
 
-        <div className="grid gap-5 lg:grid-cols-2">
-
-          <FormField label={t('accreditation.form.productionLinesActive')} required variant="question">
-            <RadioGroup
-              name="productionActive"
-              value={form.allProductionLinesIncluded}
-              onChange={(v) => {
-                update('allProductionLinesIncluded', v as '' | 'yes' | 'no')
-                // The reason only applies when the answer is "no"
-                if (v === 'yes') update('excludedReason', '')
-              }}
-              options={yesNoOptions}
-            />
-          </FormField>
-
-          {form.allProductionLinesIncluded === 'no' && (
-            <FormField label={t('accreditation.form.ifNoStateWhy')} required>
-              <TextField
-                type="text"
-                value={form.excludedReason}
-                onChange={(e) => update('excludedReason', e.target.value)}
-                placeholder={t('accreditation.form.stateReasonPlaceholder')}
+            <FormField label={t('accreditation.form.productionLinesActive')} required variant="question">
+              <RadioGroup
+                name="productionActive"
+                value={form.allProductionLinesIncluded}
+                onChange={(v) => {
+                  update('allProductionLinesIncluded', v as '' | 'yes' | 'no')
+                  // The reason only applies when the answer is "no"
+                  if (v === 'yes') update('excludedReason', '')
+                }}
+                options={yesNoOptions}
               />
             </FormField>
-          )}
-        </div>
+
+            {form.allProductionLinesIncluded === 'no' && (
+              <FormField label={t('accreditation.form.ifNoStateWhy')} required>
+                <TextField
+                  type="text"
+                  value={form.excludedReason}
+                  onChange={(e) => update('excludedReason', e.target.value)}
+                  placeholder={t('accreditation.form.stateReasonPlaceholder')}
+                />
+              </FormField>
+            )}
+          </div>
         </div>
       </SectionHeading>
 

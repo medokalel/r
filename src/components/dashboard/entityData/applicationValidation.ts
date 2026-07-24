@@ -56,7 +56,10 @@ function isScopeComplete(form: ApplicationFormValues): boolean {
 
 /** Only the design-activity question is marked required on this step. */
 function isConsultingComplete(form: ApplicationFormValues): boolean {
-  return form.designActivity !== ''
+  return (
+    (form.usedConsultant !== 'yes' || filled(form.consultantName)) &&
+    form.designActivity !== ''
+  )
 }
 
 /** All specification questions of the selected standards must be answered. */

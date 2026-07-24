@@ -8,13 +8,27 @@ import {
   fieldTextClassName,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import {
+  DocumentUploadField,
+  type UploadedDocumentFile,
+} from '@/components/dashboard/DocumentUploadField'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import type { YesNo } from '@/components/dashboard/entityData/applicationTypes'
+import { formatFileSize } from '@/lib/files'
 import { cn } from '@/lib/utils'
 
 export function ConsultingReadinessStep() {
   const { t } = useTranslation()
-  const { form, update } = useApplicationForm()
+  const { form, update, uploadDocument, removeDocument, uploading } = useApplicationForm()
+
+  const consultantCvFiles: UploadedDocumentFile[] = form.documents
+    .filter((doc) => doc.slotId === 'consultantCv')
+    .map((doc) => ({
+      id: doc.localId,
+      name: doc.originalName || doc.fileName,
+      sizeLabel: formatFileSize(doc.fileSize),
+      url: doc.fileUrl,
+    }))
 
   const yesNoOptions = [
     { value: 'yes', label: t('accreditation.form.yes') },
@@ -45,19 +59,29 @@ export function ConsultingReadinessStep() {
               <RadioGroup
                 name="qualifiedByConsultant"
                 value={form.usedConsultant}
-                onChange={(v) => update('usedConsultant', v as YesNo)}
+                onChange={(v) => {
+                  update('usedConsultant', v as YesNo)
+                  // The consultant name only applies when the answer is "yes"
+                  if (v === 'no') update('consultantName', '')
+                }}
                 options={yesNoOptions}
               />
             </FormField>
 
-            <FormField label={t('accreditation.entityData.fields.consulting.consultantName')} variant="question">
-              <TextField
-                type="text"
-                value={form.consultantName}
-                onChange={(e) => update('consultantName', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.consulting.consultantNamePlaceholder')}
-              />
-            </FormField>
+            {form.usedConsultant === 'yes' && (
+              <FormField
+                label={t('accreditation.entityData.fields.consulting.consultantName')}
+                required
+                variant="question"
+              >
+                <TextField
+                  type="text"
+                  value={form.consultantName}
+                  onChange={(e) => update('consultantName', e.target.value)}
+                  placeholder={t('accreditation.entityData.fields.consulting.consultantNamePlaceholder')}
+                />
+              </FormField>
+            )}
           </div>
 
           <div className="grid gap-5 lg:grid-cols-2">
@@ -87,6 +111,17 @@ export function ConsultingReadinessStep() {
             </FormField>
           </div>
 
+          {form.consultantCvAttached === 'yes' && (
+            <DocumentUploadField
+              title={t('accreditation.entityData.fields.consulting.consultantCvUpload')}
+              files={consultantCvFiles}
+              busy={uploading}
+              onSelectFile={(file) => void uploadDocument('consultantCv', file)}
+              onDeleteFile={(fileId) => void removeDocument(fileId)}
+              onOpenFile={(file) => file.url && window.open(file.url, '_blank', 'noopener')}
+            />
+          )}
+
           <FormField
             label={t('accreditation.entityData.fields.consulting.consultantRating')}
             variant="question"
@@ -95,7 +130,7 @@ export function ConsultingReadinessStep() {
               value={form.qualificationRate}
               onChange={(value) => update('qualificationRate', value)}
             />
-            <p className="text-body-3 text-neutral-600">
+            <p className="text-body-3 text-[#1236A3]">
               {t('accreditation.entityData.fields.consulting.ratingNote')}
             </p>
           </FormField>
@@ -108,7 +143,7 @@ export function ConsultingReadinessStep() {
               value={form.recommendationRate}
               onChange={(value) => update('recommendationRate', value)}
             />
-            <p className="text-body-3 text-neutral-600">
+            <p className="text-body-3 text-[#1236A3]">
               {t('accreditation.entityData.fields.consulting.ratingNote')}
             </p>
           </FormField>
@@ -219,6 +254,8 @@ export function ConsultingReadinessStep() {
                   onChange={() => {
                     // "Other" is exclusive — picking it clears the ISO choices
                     if (!form.otherSystemSelected) update('currentSystems', [])
+                    // Clear the specification text if "Other" gets unchecked
+                    else update('otherSpecification', '')
                     update('otherSystemSelected', !form.otherSystemSelected)
                   }}
                   className="size-5 accent-primary"
@@ -230,14 +267,16 @@ export function ConsultingReadinessStep() {
             </div>
           </FormField>
 
-          <FormField label={t('accreditation.entityData.fields.readiness.otherSpecification')}>
-            <TextField
-              type="text"
-              value={form.otherSpecification}
-              onChange={(e) => update('otherSpecification', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.readiness.other')}
-            />
-          </FormField>
+          {form.otherSystemSelected && (
+            <FormField label={t('accreditation.entityData.fields.readiness.otherSpecification')}>
+              <TextField
+                type="text"
+                value={form.otherSpecification}
+                onChange={(e) => update('otherSpecification', e.target.value)}
+                placeholder={t('accreditation.entityData.fields.readiness.other')}
+              />
+            </FormField>
+          )}
         </FormSection>
       </SectionHeading>
 
@@ -261,16 +300,16 @@ export function ConsultingReadinessStep() {
               />
             </FormField>
 
-            <FormField label={t('accreditation.entityData.fields.readiness.designExceptionReason')}>
-              <TextField
-                type="text"
-                value={form.designException}
-                onChange={(e) => update('designException', e.target.value)}
-                placeholder={t('accreditation.form.stateReasonPlaceholder')}
-                disabled={form.designActivity !== 'no'}
-                className="disabled:cursor-not-allowed disabled:bg-[#efefef]"
-              />
-            </FormField>
+            {form.designActivity === 'no' && (
+              <FormField label={t('accreditation.entityData.fields.readiness.designExceptionReason')}>
+                <TextField
+                  type="text"
+                  value={form.designException}
+                  onChange={(e) => update('designException', e.target.value)}
+                  placeholder={t('accreditation.form.stateReasonPlaceholder')}
+                />
+              </FormField>
+            )}
           </div>
         </FormSection>
       </SectionHeading>

@@ -380,7 +380,7 @@ const SLOT_FROM_DOCUMENT_TYPE: Record<string, string> = {
   COMMERCIAL_REGISTER: 'commercialRegistry',
   ORGANIZATION_CHART: 'organizationalStructure',
   QUALITY_MANUAL: 'documentarySystem',
-  CONSULTANT_CV: 'other',
+  CONSULTANT_CV: 'consultantCv',
   AUTHORIZATION_LETTER: 'other',
   OTHER: 'other',
 }

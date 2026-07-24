@@ -406,6 +406,7 @@
           "consultantName": "If yes, please mention the name of the entity.",
           "consultantNamePlaceholder": "Enter the name of the consulting body",
           "cvAttached": "Has the CV and profile of the eligible company been attached to the application for the management systems certificate?",
+          "consultantCvUpload": "Upload the CV and company profile",
           "consultationPeriod": "How long is the consultation period in months?",
           "month": "month",
           "consultantRating": "On a scale of one to ten, what do you rate for the consultant or consultant?",

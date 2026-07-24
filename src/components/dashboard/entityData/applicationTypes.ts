@@ -306,5 +306,6 @@ export const DOCUMENT_SLOT_TYPES: Record<string, string> = {
   brandImage: 'OTHER',
   nationalAddress: 'OTHER',
   qualityPolicy: 'QUALITY_MANUAL',
+  consultantCv: 'CONSULTANT_CV',
   other: 'OTHER',
 }
