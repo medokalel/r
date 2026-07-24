@@ -99,6 +99,7 @@ export function useApplicationState(): ApplicationState {
         navigate('/login', { replace: true })
         return
       }
+      console.error('[handleApiError]', error)
       const message =
         error instanceof ApiError
           ? [error.message, ...(error.errors ?? [])].join('. ')

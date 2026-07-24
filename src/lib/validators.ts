@@ -42,8 +42,13 @@ export function normalizeWebsiteUrl(value: string): string {
   return /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`
 }
 
+// Same invisible marks stripped at input time in englishDigits.ts — kept
+// here too so values loaded from an existing draft (saved before that fix
+// existed) still validate correctly instead of failing on invisible junk.
+const INVISIBLE_MARKS = /[\u200B-\u200F\u061C\uFEFF]/g
+
 export function isValidPhoneNumber(value: string, countryCode: CountryCode): boolean {
-  const trimmed = value.trim()
+  const trimmed = value.replace(INVISIBLE_MARKS, '').trim()
   if (!trimmed) return true
   return isValidPhoneNumberLib(trimmed, countryCode)
 }

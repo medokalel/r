@@ -325,7 +325,9 @@ export function prefillFromOrganization(
     mobileNumber: form.mobileNumber || profile.phoneNumber || '',
     mobileCountryCode:
       !form.mobileNumber && profile.phoneCountryCode
-        ? (profile.phoneCountryCode as CountryCode)
+        ? parsePhoneNumberFromString(
+            `${profile.phoneCountryCode}${profile.phoneNumber ?? ''}`
+          )?.country as CountryCode ?? form.mobileCountryCode
         : form.mobileCountryCode,
     headOfficeAddress: form.headOfficeAddress || composedAddress,
     auditSiteAddress: form.auditSiteAddress || composedAddress,

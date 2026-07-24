@@ -77,15 +77,15 @@ export function ApplicationLoadingSkeleton() {
 /** Shimmer placeholder for the certification requests card grid. */
 export function RequestCardsSkeleton() {
   return (
-    <div className="grid grid-cols-4 gap-5 xl:grid-cols-3 lg:grid-cols-2" aria-hidden>
-      {Array.from({ length: 4 }).map((_, index) => (
+    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4" aria-hidden>
+      {Array.from({ length: 8 }).map((_, index) => (
         <div
           key={index}
           className="flex flex-col gap-3 rounded-[16px] border border-[#ececec] bg-white px-5 py-6"
         >
           <div className="flex items-center justify-between">
-            <SkeletonBlock className="size-10 rounded-[12px]" />
             <SkeletonBlock className="h-10 w-28 rounded-[8px]" />
+            <SkeletonBlock className="size-10 rounded-[12px]" />
           </div>
           <div className="flex flex-col items-center gap-2 py-2">
             <SkeletonBlock className="h-4 w-1/3" />

@@ -107,8 +107,6 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
       />
     )
 
-  if (!label && !error) return field
-
   return (
     <div className="space-y-2">
       {label && (
