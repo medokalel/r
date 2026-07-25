@@ -2,6 +2,7 @@ import { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { RequireAuth } from '@/components/auth/RequireAuth'
 import { DirectionProvider } from '@/context/DirectionContext'
+import { CertificationRequestFormPage } from '@/pages/CertificationRequestFormPage'
 import { CertificationRequestsPage } from '@/pages/CertificationRequestsPage'
 import { CompanyProfilePage } from '@/pages/CompanyProfilePage'
 import { DashboardPage } from '@/pages/DashboardPage'
@@ -31,6 +32,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <DashboardPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/certification-request/new"
+              element={
+                <RequireAuth>
+                  <CertificationRequestFormPage />
                 </RequireAuth>
               }
             />

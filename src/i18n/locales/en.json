@@ -862,5 +862,48 @@
       "followUp": "Follow up",
       "orderStatus": "Order Status"
     }
+  },
+  "dashboard": {
+    "stats": {
+      "approvedCertificates": "Approved certificates",
+      "currentOrders": "Current orders",
+      "pendingRequests": "Pending requests",
+      "users": "Users"
+    },
+    "tasks": {
+      "title": "Tasks required now",
+      "viewAll": "View All",
+      "applicantName": "Applicant's name",
+      "taskType": "Task type",
+      "statusHeader": "Status",
+      "procedures": "Procedures",
+      "companyCode": "Company code",
+      "openDocument": "Open the document",
+      "sendContract": "Send Contract",
+      "sendMessage": "Send a message",
+      "status": {
+        "urgent": "urgent",
+        "underReview": "Under review",
+        "pending": "Pending"
+      },
+      "type": {
+        "documentReview": "Document review",
+        "contractProcessing": "Contract processing",
+        "feeCollection": "Collection of fees"
+      }
+    },
+    "activities": {
+      "title": "Latest activities",
+      "viewAll": "View full activity history",
+      "minutesAgo": "{{count}} minutes ago",
+      "hourAgo": "An hour ago",
+      "hoursAgo": "{{count}} hours ago",
+      "items": {
+        "documentReceived": "A document has been received from",
+        "correspondenceSent": "An official correspondence has been sent to",
+        "statusChanged": "The status of a request has been changed by"
+      },
+      "movedToAwaitingDocuments": "Moved to awaiting documents"
+    }
   }
 }

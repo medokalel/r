@@ -1,0 +1,124 @@
+import { useTranslation } from 'react-i18next'
+import type { DashboardTask, DashboardTaskStatus } from '@/lib/api/dashboardApi'
+import { cn } from '@/lib/utils'
+
+const statusStyles: Record<DashboardTaskStatus, string> = {
+  urgent: 'bg-[#fef3c6] text-[#a58401]',
+  underReview: 'bg-[#f3f4f6] text-[#4b5563]',
+  pending: 'bg-[#e0e7ff] text-[#1236a3]',
+}
+
+const procedureLabelKeys: Record<DashboardTask['taskType'], string> = {
+  documentReview: 'dashboard.tasks.openDocument',
+  contractProcessing: 'dashboard.tasks.sendContract',
+  feeCollection: 'dashboard.tasks.sendMessage',
+}
+
+interface DashboardTasksTableProps {
+  tasks: DashboardTask[]
+  loading: boolean
+  onViewAll?: () => void
+  onProcedureClick?: (task: DashboardTask) => void
+}
+
+export function DashboardTasksTable({
+  tasks,
+  loading,
+  onViewAll,
+  onProcedureClick,
+}: DashboardTasksTableProps) {
+  const { t } = useTranslation()
+
+  return (
+    <div className="flex flex-1 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
+      <div className="mb-4 mx-5 flex items-center justify-between">
+        <h2 className="text-[20px] font-semibold text-neutral-900">
+          {t('dashboard.tasks.title')}
+        </h2>
+        {onViewAll && (
+          <button
+            type="button"
+            onClick={onViewAll}
+            className="text-[14px] font-medium text-primary hover:underline"
+          >
+            {t('dashboard.tasks.viewAll')}
+          </button>
+        )}
+      </div>
+
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[640px] border-collapse text-start">
+          <thead className="border-b border-[#ececec]">
+            <tr className="rounded-[10px] bg-[#1236a3] text-white">
+              <th className="px-4 py-3 text-start text-[14px] font-medium">
+                {t('dashboard.tasks.applicantName')}
+              </th>
+              <th className="px-4 py-3 text-start text-[14px] font-medium">
+                {t('dashboard.tasks.taskType')}
+              </th>
+              <th className="px-4 py-3 text-start text-[14px] font-medium">
+                {t('dashboard.tasks.statusHeader')}
+              </th>
+              <th className="px-4 py-3 text-start text-[14px] font-medium">
+                {t('dashboard.tasks.procedures')}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-neutral-500">
+                  {t('common.loading')}
+                </td>
+              </tr>
+            ) : tasks.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-4 py-6 text-center text-neutral-500">
+                  —
+                </td>
+              </tr>
+            ) : (
+              tasks.map((task, index) => (
+                <tr
+                  key={task.id}
+                  className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}
+                >
+                  <td className="px-4 py-4">
+                    <p className="text-[15px] font-medium text-neutral-900">
+                      {task.applicantName}
+                    </p>
+                    <p className="text-[13px] text-neutral-500">
+                      {t('dashboard.tasks.companyCode')} {task.companyCode}
+                    </p>
+                  </td>
+                  <td className="px-4 py-4 text-[15px] text-neutral-700">
+                    {t(`dashboard.tasks.type.${task.taskType}`)}
+                  </td>
+                  <td className="px-4 py-4">
+                    <span
+                      className={cn(
+                        'inline-flex rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                        statusStyles[task.status]
+                      )}
+                    >
+                      {t(`dashboard.tasks.status.${task.status}`)}
+                    </span>
+                  </td>
+                  <td className="px-4 py-4">
+                    <button
+                      type="button"
+                      onClick={() => onProcedureClick?.(task)}
+                      className="text-[14px] font-medium text-primary hover:underline"
+                    >
+                      {t(procedureLabelKeys[task.taskType])}
+                    </button>
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  )
+}

@@ -861,5 +861,48 @@
       "followUp": "متابعة الطلب",
       "orderStatus": "حالة الطلب"
     }
+  },
+  "dashboard": {
+    "stats": {
+      "approvedCertificates": "الشهادات المعتمدة",
+      "currentOrders": "الطلبات الحالية",
+      "pendingRequests": "الطلبات المعلقة",
+      "users": "المستخدمون"
+    },
+    "tasks": {
+      "title": "المهام المطلوبة الآن",
+      "viewAll": "عرض الكل",
+      "applicantName": "اسم مقدم الطلب",
+      "taskType": "نوع المهمة",
+      "statusHeader": "الحالة",
+      "procedures": "الإجراءات",
+      "companyCode": "كود الشركة",
+      "openDocument": "فتح المستند",
+      "sendContract": "إرسال العقد",
+      "sendMessage": "إرسال رسالة",
+      "status": {
+        "urgent": "عاجل",
+        "underReview": "قيد المراجعة",
+        "pending": "معلق"
+      },
+      "type": {
+        "documentReview": "مراجعة المستندات",
+        "contractProcessing": "معالجة العقد",
+        "feeCollection": "تحصيل الرسوم"
+      }
+    },
+    "activities": {
+      "title": "آخر الأنشطة",
+      "viewAll": "عرض سجل النشاط الكامل",
+      "minutesAgo": "منذ {{count}} دقائق",
+      "hourAgo": "منذ ساعة",
+      "hoursAgo": "منذ {{count}} ساعات",
+      "items": {
+        "documentReceived": "تم استلام مستند من قبل",
+        "correspondenceSent": "تم إرسال مراسلة رسمية إلى",
+        "statusChanged": "تم تغيير حالة طلب"
+      },
+      "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"
+    }
   }
 }

@@ -39,10 +39,10 @@ import {
 } from '@/lib/registerDraftStorage'
 import {
   isValidRequiredEmail ,
-  isValidMobile,
   isValidPassword,
   passwordsMatch,
 } from '@/lib/authValidation'
+import { isValidPhoneNumber } from '@/lib/validators'
 import {
   formatPhoneNumber,
   register,
@@ -165,7 +165,7 @@ export function RegisterPage() {
 
   const otpComplete = form.otp.every((d) => d.length === 1)
   const emailValid = isValidRequiredEmail(form.email)
-  const mobileValid = isValidMobile(form.mobile)
+  const mobileValid = isValidPhoneNumber(form.mobile, form.country)
   const passwordValid = isValidPassword(form.password)
   const passwordsMatchValue = passwordsMatch(form.password, form.confirmPassword)
 
@@ -620,7 +620,7 @@ function StepAccount({
 }) {
   const { t } = useTranslation()
   const mobileError =
-    form.mobile.trim().length > 0 && !isValidMobile(form.mobile)
+    form.mobile.trim().length > 0 && !isValidPhoneNumber(form.mobile, form.country)
       ? t('validation.invalidMobile')
       : undefined
   const passwordError =
