@@ -22,7 +22,7 @@ import {
   verifyResetCode,
 } from '@/lib/api/authApi'
 import { ApiError } from '@/lib/api/client'
-import { isValidEmail } from '@/lib/authValidation'
+import { isValidRequiredEmail  } from '@/lib/authValidation'
 
 const OTP_LENGTH = 6
 const RESEND_SECONDS = 40
@@ -80,7 +80,7 @@ export function ForgotPasswordPage() {
 
   const { countdown, canResend, restart } = useResendTimer(step === 2)
 
-  const emailValid = isValidEmail(email)
+  const emailValid = isValidRequiredEmail(email)
   const otpComplete = otp.every((digit) => digit.length === 1)
   const passwordsMatch = password === confirmPassword && password.length > 0
 

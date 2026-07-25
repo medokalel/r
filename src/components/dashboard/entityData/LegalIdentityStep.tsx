@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { MailIcon, PhoneIcon, ExternalLinkArrowIcon } from '@/components/icons'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
-import { isValidEmail, isValidWebsite, isValidPhoneNumber } from '@/lib/validators'
+import { isValidEmailFormat, isValidWebsite, isValidPhoneNumber } from '@/lib/validators'
 import type { CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import {
@@ -77,7 +77,7 @@ export function LegalIdentityStep({
   }, [governorates, form.city])
   
 const { fieldProps } = useFieldValidation(form, {
-    email: (value) => (!isValidEmail(value) ? t('validation.invalidEmail') : undefined),
+    email: (value) => (!isValidEmailFormat(value) ? t('validation.invalidEmail') : undefined),
     website: (value) => (!isValidWebsite(value) ? t('validation.invalidWebsite') : undefined),
     mobileNumber: (value) =>
       !isValidPhoneNumber(value, form.mobileCountryCode) ? t('validation.invalidMobile') : undefined,

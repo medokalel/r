@@ -427,7 +427,9 @@
           "other": "Another",
           "designActivities": "Design Activities",
           "designActivity": "Is design one of the activities of the organization ?",
-          "designExceptionReason": "In case of answering \"No,\" please provide the reason for the exception"
+          "designExceptionReason": "In case of answering \"No,\" please provide the reason for the exception",
+          "systemLanguagePlaceholder": "Select a language",
+          "searchLanguage": "Search language..."
         },
         "spec": {
           "noQuestions": "There are no specification questions for the standards you selected.",
@@ -518,7 +520,7 @@
           "signatoryPlaceholder": "Type the full name",
           "date": "Date",
           "confidentialityIntro": "[CB Name] employees and auditors commit to maintaining the confidentiality and not using or disclosing to any third party any information obtained from the client during the performance of certification services, except in the following cases:",
-          "confidentialityItem1": "Any information that CB Name had prior to the client providing it.",
+          "confidentialityItem1": "Any information that [CB Name] had prior to the client providing it.",
           "confidentialityItem2": "Any information that is public or will legally enter the public domain, or that the company obtained from an independent source other than the client.",
           "confidentialityItem3": "Any information that may be required to be disclosed to any court or financial or regulatory authority",
           "certificateNameAr": "The name as it will appear on the accreditation certificate in Arabic",

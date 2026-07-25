@@ -8,7 +8,7 @@ import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { TextField } from '@/components/ui'
 import { AuthLayout } from '@/components/auth/AuthLayout'
-import { isValidEmail } from '@/lib/authValidation'
+import { isValidRequiredEmail  } from '@/lib/authValidation'
 import { Button } from '@/components/ui/Button'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
@@ -30,12 +30,12 @@ export function LoginPage() {
   }, [navigate])
 
   const emailError =
-    form.email.trim().length > 0 && !isValidEmail(form.email)
+    form.email.trim().length > 0 && !isValidRequiredEmail(form.email)
       ? t('validation.invalidEmail')
       : undefined
 
   const canSubmit =
-    isValidEmail(form.email) &&
+    isValidRequiredEmail(form.email) &&
     form.password.trim().length > 0 &&
     !isSubmitting
 

@@ -427,6 +427,8 @@
           "other": "أخرى",
           "designActivities": "أنشطة التصميم",
           "designActivity": "هل التصميم أحد أنشطة المنظمة؟",
+          "systemLanguagePlaceholder": "اختر اللغة",
+          "searchLanguage": "ابحث عن اللغة...",
           "designExceptionReason": "في حال الإجابة بـ \"لا\"، يرجى توضيح سبب الاستثناء"
         },
         "spec": {

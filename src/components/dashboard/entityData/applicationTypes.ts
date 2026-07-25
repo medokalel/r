@@ -89,7 +89,7 @@ export interface ApplicationFormValues {
   consultancyMonths: string
   qualificationRate: number | null
   recommendationRate: number | null
-  systemLanguage: 'arabic' | 'english'
+  systemLanguage: string
   easyAccess: YesNo
   safetyProcedures: YesNo
   usesSubcontractors: YesNo
@@ -178,7 +178,7 @@ export const EMPTY_APPLICATION_FORM: ApplicationFormValues = {
   consultancyMonths: '',
   qualificationRate: null,
   recommendationRate: null,
-  systemLanguage: 'arabic',
+  systemLanguage: '',
   easyAccess: '',
   safetyProcedures: '',
   usesSubcontractors: '',

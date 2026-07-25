@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import type { CountryCode } from '@/lib/countries'
-import { useIpLocation } from '@/hooks/useIpLocation'
-import { ApiError } from '@/lib/api/client'
-import { clearAuthSession } from '@/lib/authStorage'
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import type { CountryCode } from "@/lib/countries";
+import { useIpLocation } from "@/hooks/useIpLocation";
+import { ApiError } from "@/lib/api/client";
+import { clearAuthSession } from "@/lib/authStorage";
 import {
   createDraftApplication,
   deleteApplicationDocument,
@@ -13,21 +13,21 @@ import {
   updateDraftApplication,
   uploadApplicationDocument,
   type ApplicationStatus,
-} from '@/lib/api/certificationApplicationApi'
+} from "@/lib/api/certificationApplicationApi";
 import {
   getOrganizationProfile,
   saveOrganizationProfile,
   createBranch as createOrgBranch,
   type OrganizationProfileData,
   type OrgBranch,
-} from '@/lib/api/organizationProfileApi'
+} from "@/lib/api/organizationProfileApi";
 import {
   formValuesFromApplication,
   payloadFromForm,
   prefillFromOrganization,
   profilePayloadFromForm,
-} from '@/components/dashboard/entityData/applicationMappers'
-import type { ApplicationFormContextValue } from '@/components/dashboard/entityData/ApplicationFormContext'
+} from "@/components/dashboard/entityData/applicationMappers";
+import type { ApplicationFormContextValue } from "@/components/dashboard/entityData/ApplicationFormContext";
 import {
   createEmptyBranch,
   DOCUMENT_SLOT_TYPES,
@@ -35,240 +35,271 @@ import {
   type ApplicationFormValues,
   type ApplicationNotification,
   type BranchFormValues,
-} from '@/components/dashboard/entityData/applicationTypes'
+} from "@/components/dashboard/entityData/applicationTypes";
 
-const NOTIFICATION_TIMEOUT_MS = 5000
+const NOTIFICATION_TIMEOUT_MS = 5000;
 
 export interface ApplicationState {
-  contextValue: ApplicationFormContextValue
-  loading: boolean
-  saving: boolean
-  submitting: boolean
-  status: ApplicationStatus
-  orderNumber: string | null
-  notification: ApplicationNotification | null
-  loadError: 'rateLimit' | 'generic' | null
-  reload: () => void
-  saveDraft: () => Promise<boolean>
-  submit: () => Promise<boolean>
+  contextValue: ApplicationFormContextValue;
+  loading: boolean;
+  saving: boolean;
+  submitting: boolean;
+  status: ApplicationStatus;
+  orderNumber: string | null;
+  notification: ApplicationNotification | null;
+  loadError: "rateLimit" | "generic" | null;
+  reload: () => void;
+  saveDraft: () => Promise<boolean>;
+  submit: () => Promise<boolean>;
 }
 
 export function useApplicationState(): ApplicationState {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-  const [searchParams, setSearchParams] = useSearchParams()
-  const [form, setForm] = useState<ApplicationFormValues>(EMPTY_APPLICATION_FORM)
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [form, setForm] = useState<ApplicationFormValues>(
+    EMPTY_APPLICATION_FORM,
+  );
   const [applicationId, setApplicationId] = useState<string | null>(
-    searchParams.get('id')
-  )
-  const [status, setStatus] = useState<ApplicationStatus>('DRAFT')
-  const [orderNumber, setOrderNumber] = useState<string | null>(null)
-  const [loading, setLoading] = useState(Boolean(searchParams.get('id')))
-  const [saving, setSaving] = useState(false)
-  const [submitting, setSubmitting] = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [notification, setNotification] = useState<ApplicationNotification | null>(null)
-  const [loadError, setLoadError] = useState<'rateLimit' | 'generic' | null>(null)
-  const [reloadKey, setReloadKey] = useState(0)
-  const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([])
-  const orgBranchIdsRef = useRef<string[]>([])
-  const orgProfileRef = useRef<OrganizationProfileData | null>(null)
-  const nextBranchIdRef = useRef(2)
-  const ipLocation = useIpLocation()
-  const ipDefaultsBlockedRef = useRef(false)
+    searchParams.get("id"),
+  );
+  const [status, setStatus] = useState<ApplicationStatus>("DRAFT");
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
+  const [loading, setLoading] = useState(Boolean(searchParams.get("id")));
+  const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [notification, setNotification] =
+    useState<ApplicationNotification | null>(null);
+  const [loadError, setLoadError] = useState<"rateLimit" | "generic" | null>(
+    null,
+  );
+  const [reloadKey, setReloadKey] = useState(0);
+  const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([]);
+  const orgBranchIdsRef = useRef<string[]>([]);
+  const orgProfileRef = useRef<OrganizationProfileData | null>(null);
+  const nextBranchIdRef = useRef(2);
+  const ipLocation = useIpLocation();
+  const ipDefaultsBlockedRef = useRef(false);
 
   const update = useCallback(
-    <K extends keyof ApplicationFormValues>(key: K, value: ApplicationFormValues[K]) => {
-      setForm((prev) => ({ ...prev, [key]: value }))
+    <K extends keyof ApplicationFormValues>(
+      key: K,
+      value: ApplicationFormValues[K],
+    ) => {
+      setForm((prev) => ({ ...prev, [key]: value }));
     },
-    []
-  )
+    [],
+  );
 
-  const notify = useCallback((n: ApplicationNotification) => setNotification(n), [])
+  const notify = useCallback(
+    (n: ApplicationNotification) => setNotification(n),
+    [],
+  );
 
   useEffect(() => {
-    if (!notification) return
-    const timer = setTimeout(() => setNotification(null), NOTIFICATION_TIMEOUT_MS)
-    return () => clearTimeout(timer)
-  }, [notification])
+    if (!notification) return;
+    const timer = setTimeout(
+      () => setNotification(null),
+      NOTIFICATION_TIMEOUT_MS,
+    );
+    return () => clearTimeout(timer);
+  }, [notification]);
 
   const handleApiError = useCallback(
     (error: unknown) => {
       if (error instanceof ApiError && error.status === 401) {
-        clearAuthSession()
-        navigate('/login', { replace: true })
-        return
+        clearAuthSession();
+        navigate("/login", { replace: true });
+        return;
       }
-      console.error('[handleApiError]', error)
+      console.error("[handleApiError]", error);
       const message =
         error instanceof ApiError
-          ? [error.message, ...(error.errors ?? [])].join('. ')
-          : t('errors.generic')
-      setNotification({ type: 'error', message })
+          ? [error.message, ...(error.errors ?? [])].join(". ")
+          : t("errors.generic");
+      setNotification({ type: "error", message });
     },
-    [navigate, t]
-  )
+    [navigate, t],
+  );
 
-  const reload = useCallback(() => setReloadKey((key) => key + 1), [])
+  const reload = useCallback(() => setReloadKey((key) => key + 1), []);
 
   // Load an existing application when arriving with ?id=… (e.g. continuing a draft)
   useEffect(() => {
-    const id = searchParams.get('id')
-    if (!id) return
-    let cancelled = false
-    setLoading(true)
-    setLoadError(null)
-    ;(async () => {
+    const id = searchParams.get("id");
+    if (!id) return;
+    let cancelled = false;
+    setLoading(true);
+    setLoadError(null);
+    (async () => {
       try {
-        const app = await getApplication(id)
-        if (cancelled) return
-        setApplicationId(app.id)
-        setStatus(app.status)
-        setOrderNumber(app.orderNumber ?? null)
-        const values = formValuesFromApplication(app)
-        nextBranchIdRef.current = values.branches.length + 1
+        const app = await getApplication(id);
+        if (cancelled) return;
+        setApplicationId(app.id);
+        setStatus(app.status);
+        setOrderNumber(app.orderNumber ?? null);
+        const values = formValuesFromApplication(app);
+        nextBranchIdRef.current = values.branches.length + 1;
         // A saved country/mobile wins over the IP-based default
         if (app.legalInfo?.country || app.legalInfo?.mobile) {
-          ipDefaultsBlockedRef.current = true
+          ipDefaultsBlockedRef.current = true;
         }
-        setForm(values)
+        setForm(values);
       } catch (error) {
-        if (cancelled) return
+        if (cancelled) return;
         if (error instanceof ApiError && error.status === 401) {
-          clearAuthSession()
-          navigate('/login', { replace: true })
-          return
+          clearAuthSession();
+          navigate("/login", { replace: true });
+          return;
         }
         setLoadError(
-          error instanceof ApiError && error.status === 429 ? 'rateLimit' : 'generic'
-        )
+          error instanceof ApiError && error.status === 429
+            ? "rateLimit"
+            : "generic",
+        );
       } finally {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) setLoading(false);
       }
-    })()
+    })();
     return () => {
-      cancelled = true
-    }
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reloadKey])
+  }, [reloadKey]);
 
   // Default the country, city, and phone code from the visitor's IP until the
   // user (or a loaded draft) provides real values
   useEffect(() => {
-    if (loading || ipDefaultsBlockedRef.current || !ipLocation?.countryCode) return
-    ipDefaultsBlockedRef.current = true
-    const code = ipLocation.countryCode as CountryCode
+    if (loading || ipDefaultsBlockedRef.current || !ipLocation?.countryCode)
+      return;
+    ipDefaultsBlockedRef.current = true;
+    const code = ipLocation.countryCode as CountryCode;
     setForm((prev) => ({
       ...prev,
       country: prev.country ?? code,
       city: prev.city || ipLocation.city || prev.city,
       mobileCountryCode: code,
-    }))
-  }, [ipLocation, loading])
+    }));
+  }, [ipLocation, loading]);
 
   // The organization profile supplies the branch ids that application branches
   // reference (sourceBranchId) and prefills a brand-new application's legal data
   useEffect(() => {
-    const editingId = searchParams.get('id')
-    let cancelled = false
-    ;(async () => {
+    const editingId = searchParams.get("id");
+    let cancelled = false;
+    (async () => {
       try {
-        const data = await getOrganizationProfile()
-        if (cancelled) return
-        orgProfileRef.current = data
-        setOrgBranches(data.branches ?? [])
-        orgBranchIdsRef.current = (data.branches ?? []).map((branch) => branch.id)
+        const data = await getOrganizationProfile();
+        if (cancelled) return;
+        orgProfileRef.current = data;
+        setOrgBranches(data.branches ?? []);
+        orgBranchIdsRef.current = (data.branches ?? []).map(
+          (branch) => branch.id,
+        );
         if (!editingId) {
-          setForm((prev) => prefillFromOrganization(prev, data))
+          setForm((prev) => prefillFromOrganization(prev, data));
         }
       } catch {
         // Prefill is best-effort; the draft can still be saved without it
       }
-    })()
+    })();
     return () => {
-      cancelled = true
-    }
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, []);
 
   const updateBranch = useCallback(
     (localId: number, patch: Partial<BranchFormValues>) => {
       setForm((prev) => ({
         ...prev,
         branches: prev.branches.map((branch) =>
-          branch.localId === localId ? { ...branch, ...patch } : branch
+          branch.localId === localId ? { ...branch, ...patch } : branch,
         ),
-      }))
+      }));
     },
-    []
-  )
+    [],
+  );
 
   const addBranch = useCallback((): number => {
-    const localId = nextBranchIdRef.current++
+    const localId = nextBranchIdRef.current++;
     setForm((prev) => ({
       ...prev,
       branches: [...prev.branches, createEmptyBranch(localId)],
-    }))
-    return localId
-  }, [])
+    }));
+    return localId;
+  }, []);
 
   const removeBranch = useCallback((localId: number) => {
     setForm((prev) => ({
       ...prev,
       branches: prev.branches.filter((branch) => branch.localId !== localId),
-    }))
-  }, [])
+    }));
+  }, []);
 
-  // Creates a real branch in the organization profile so a brand-new
-  // application branch always carries a genuine sourceBranchId.
-  // Sends the same full field shape as the working Company Profile "Add
-  // Branch" form (branchType/employeeCount included as safe defaults),
-  // since the backend rejects a branch payload with only branchName.
+  // Tracks in-flight saveOrgBranch calls (keyed by branch localId), so we can
+  // both (a) skip a duplicate call for the same row while one is running, and
+  // (b) let saveDraft/submit wait for them to finish before sending the payload.
+  const pendingOrgBranchSavesRef = useRef<Map<number, Promise<void>>>(
+    new Map(),
+  );
+
   const saveOrgBranch = useCallback(
-    async (localId: number, branchName: string, address: string) => {
-      const name = branchName.trim()
-      if (!name) return
-      try {
-        const created = await createOrgBranch({
-          branchName: name,
-          address: address || undefined,
-          branchType: 'PERMANENT',
-          employeeCount: 0,
-        })
-        setOrgBranches((prev) => [...prev, created])
-        updateBranch(localId, { sourceBranchId: created.id })
-      } catch (error) {
-        // Surface the backend's real validation message (if any) instead of
-        // a generic one, so a future rejection is diagnosable immediately
-        const message =
-          error instanceof ApiError
-            ? [error.message, ...(error.errors ?? [])].join('. ')
-            : "We couldn't complete your request. Please try again"
-        notify({ type: 'error', message })
-      }
+    (localId: number, branchName: string, address: string) => {
+      const name = branchName.trim();
+      if (!name) return;
+      if (pendingOrgBranchSavesRef.current.has(localId)) return;
+
+      const promise = (async () => {
+        try {
+          const created = await createOrgBranch({
+            branchName: name,
+            address: address || undefined,
+            branchType: "PERMANENT",
+            employeeCount: 0,
+          });
+          setOrgBranches((prev) => [...prev, created]);
+          updateBranch(localId, { sourceBranchId: created.id });
+        } catch (error) {
+          const message =
+            error instanceof ApiError
+              ? [error.message, ...(error.errors ?? [])].join(". ")
+              : "We couldn't complete your request. Please try again";
+          notify({ type: "error", message });
+        } finally {
+          pendingOrgBranchSavesRef.current.delete(localId);
+        }
+      })();
+
+      pendingOrgBranchSavesRef.current.set(localId, promise);
     },
-    [notify, updateBranch]
-  )
+    [notify, updateBranch],
+  );
+
+  const waitForPendingBranchSaves = useCallback(async () => {
+    await Promise.all(pendingOrgBranchSavesRef.current.values());
+  }, []);
 
   const setSpecAnswer = useCallback((questionKey: string, value: string) => {
     setForm((prev) => ({
       ...prev,
       specAnswers: { ...prev.specAnswers, [questionKey]: value },
-    }))
-  }, [])
+    }));
+  }, []);
 
   const uploadDocument = useCallback(
     async (slotId: string, file: File) => {
-      setUploading(true)
+      setUploading(true);
       try {
-        const result = await uploadApplicationDocument(file)
+        const result = await uploadApplicationDocument(file);
         setForm((prev) => ({
           ...prev,
           documents: [
             {
               localId: crypto.randomUUID(),
               slotId,
-              documentType: DOCUMENT_SLOT_TYPES[slotId] ?? 'OTHER',
+              documentType: DOCUMENT_SLOT_TYPES[slotId] ?? "OTHER",
               fileUrl: result.fileUrl,
               filePath: result.filePath,
               fileName: result.fileName,
@@ -278,133 +309,155 @@ export function useApplicationState(): ApplicationState {
             },
             ...prev.documents,
           ],
-        }))
+        }));
       } catch (error) {
-        handleApiError(error)
+        handleApiError(error);
       } finally {
-        setUploading(false)
+        setUploading(false);
       }
     },
-    [handleApiError]
-  )
+    [handleApiError],
+  );
 
   const removeDocument = useCallback(
     async (localId: string) => {
-      const doc = form.documents.find((entry) => entry.localId === localId)
-      if (!doc) return
+      const doc = form.documents.find((entry) => entry.localId === localId);
+      if (!doc) return;
       try {
-        if (doc.fileName) await deleteApplicationDocument(doc.fileName)
+        if (doc.fileName) await deleteApplicationDocument(doc.fileName);
       } catch (error) {
         // A missing file on the server should not block removing it from the form
         if (!(error instanceof ApiError && error.status === 404)) {
-          handleApiError(error)
-          return
+          handleApiError(error);
+          return;
         }
       }
       setForm((prev) => ({
         ...prev,
         documents: prev.documents.filter((entry) => entry.localId !== localId),
-      }))
+      }));
     },
-    [form.documents, handleApiError]
-  )
+    [form.documents, handleApiError],
+  );
 
   const uploadCommercialRegister = useCallback(
     async (file: File) => {
-      setUploading(true)
+      setUploading(true);
       try {
-        const result = await uploadApplicationDocument(file)
-        setForm((prev) => ({ ...prev, commercialRegisterFile: result.fileUrl }))
+        const result = await uploadApplicationDocument(file);
+        setForm((prev) => ({
+          ...prev,
+          commercialRegisterFile: result.fileUrl,
+        }));
       } catch (error) {
-        handleApiError(error)
+        handleApiError(error);
       } finally {
-        setUploading(false)
+        setUploading(false);
       }
     },
-    [handleApiError]
-  )
+    [handleApiError],
+  );
 
   // Mirror the shared legal-identity fields back to the company profile on Next.
   // Best-effort — a profile-save failure never blocks the application draft.
   const syncOrganizationProfile = useCallback(async () => {
-    const snapshot = orgProfileRef.current
-    if (!snapshot) return
-    const payload = profilePayloadFromForm(form, snapshot)
+    const snapshot = orgProfileRef.current;
+    if (!snapshot) return;
+    const payload = profilePayloadFromForm(form, snapshot);
     try {
-      const updated = await saveOrganizationProfile(payload)
+      const updated = await saveOrganizationProfile(payload);
       orgProfileRef.current = {
         ...snapshot,
         profile: payload.profile ?? snapshot.profile,
         address: payload.address ?? snapshot.address,
         status: updated.status,
-      }
+      };
     } catch {
       // Ignore — the application draft is the primary save here
     }
-  }, [form])
+  }, [form]);
 
   const saveDraft = useCallback(async (): Promise<boolean> => {
     // Submitted applications can be browsed but no longer edited
-    if (status !== 'DRAFT') return true
-    setSaving(true)
-    setNotification(null)
+    if (status !== "DRAFT") return true;
+    setSaving(true);
+    setNotification(null);
     try {
-      const payload = payloadFromForm(form, t)
-      let id = applicationId
+      await waitForPendingBranchSaves();
+      const payload = payloadFromForm(form, t);
+      let id = applicationId;
       if (id) {
-        await updateDraftApplication(id, payload)
+        await updateDraftApplication(id, payload);
       } else {
-        const created = await createDraftApplication(payload)
-        id = created.id
-        setApplicationId(id)
-        setSearchParams({ id }, { replace: true })
+        const created = await createDraftApplication(payload);
+        id = created.id;
+        setApplicationId(id);
+        setSearchParams({ id }, { replace: true });
       }
-      await syncOrganizationProfile()
+      await syncOrganizationProfile();
       setNotification({
-        type: 'success',
-        message: t('accreditation.messages.draftSaved'),
-      })
-      return true
+        type: "success",
+        message: t("accreditation.messages.draftSaved"),
+      });
+      return true;
     } catch (error) {
-      handleApiError(error)
-      return false
+      handleApiError(error);
+      return false;
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }, [applicationId, form, handleApiError, setSearchParams, status, syncOrganizationProfile, t])
+  }, [
+    applicationId,
+    form,
+    handleApiError,
+    setSearchParams,
+    status,
+    syncOrganizationProfile,
+    t,
+    waitForPendingBranchSaves,
+  ]);
 
   const submit = useCallback(async (): Promise<boolean> => {
-    if (status !== 'DRAFT') return true
-    setSubmitting(true)
-    setNotification(null)
+    if (status !== "DRAFT") return true;
+    setSubmitting(true);
+    setNotification(null);
     try {
-      const payload = payloadFromForm(form, t)
-      let id = applicationId
+      await waitForPendingBranchSaves();
+      const payload = payloadFromForm(form, t);
+      let id = applicationId;
       if (id) {
-        await updateDraftApplication(id, payload)
+        await updateDraftApplication(id, payload);
       } else {
-        const created = await createDraftApplication(payload)
-        id = created.id
-        setApplicationId(id)
-        setSearchParams({ id }, { replace: true })
+        const created = await createDraftApplication(payload);
+        id = created.id;
+        setApplicationId(id);
+        setSearchParams({ id }, { replace: true });
       }
-      const result = await submitApplication(id)
-      setStatus(result.status)
-      setOrderNumber(result.orderNumber)
+      const result = await submitApplication(id);
+      setStatus(result.status);
+      setOrderNumber(result.orderNumber);
       setNotification({
-        type: 'success',
-        message: t('accreditation.messages.submitted', {
+        type: "success",
+        message: t("accreditation.messages.submitted", {
           orderNumber: result.orderNumber,
         }),
-      })
-      return true
+      });
+      return true;
     } catch (error) {
-      handleApiError(error)
-      return false
+      handleApiError(error);
+      return false;
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }, [applicationId, form, handleApiError, setSearchParams, status, t])
+  }, [
+    applicationId,
+    form,
+    handleApiError,
+    setSearchParams,
+    status,
+    t,
+    waitForPendingBranchSaves,
+  ]);
 
   const contextValue = useMemo<ApplicationFormContextValue>(
     () => ({
@@ -444,8 +497,8 @@ export function useApplicationState(): ApplicationState {
       uploading,
       notify,
       handleApiError,
-    ]
-  )
+    ],
+  );
 
   return {
     contextValue,
@@ -459,5 +512,5 @@ export function useApplicationState(): ApplicationState {
     reload,
     saveDraft,
     submit,
-  }
+  };
 }

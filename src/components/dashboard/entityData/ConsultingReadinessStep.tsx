@@ -4,6 +4,7 @@ import {
   FormSection,
   RadioGroup,
   RatingScale,
+  SearchableSelect,
   TextField,
   fieldTextClassName,
 } from '@/components/ui'
@@ -15,6 +16,7 @@ import {
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import type { YesNo } from '@/components/dashboard/entityData/applicationTypes'
 import { formatFileSize } from '@/lib/files'
+import { LANGUAGE_OPTIONS } from '@/lib/languages'
 import { cn } from '@/lib/utils'
 
 export function ConsultingReadinessStep() {
@@ -35,10 +37,10 @@ export function ConsultingReadinessStep() {
     { value: 'no', label: t('accreditation.form.no') },
   ]
 
-  const languageOptions = [
-    { value: 'arabic', label: t('accreditation.entityData.fields.readiness.arabic') },
-    { value: 'english', label: t('accreditation.entityData.fields.readiness.english') },
-  ]
+  const languageOptions = LANGUAGE_OPTIONS.map((lang) => ({
+    value: lang.code,
+    label: lang.name,
+  }))
 
   const isoSystemOptions = [
     { value: 'iso9001', label: 'ISO 9001' },
@@ -157,11 +159,12 @@ export function ConsultingReadinessStep() {
               label={t('accreditation.entityData.fields.readiness.systemLanguage')}
               variant="question"
             >
-              <RadioGroup
-                name="systemLanguage"
+              <SearchableSelect
                 value={form.systemLanguage}
-                onChange={(v) => update('systemLanguage', v as 'arabic' | 'english')}
+                onChange={(v) => update('systemLanguage', v)}
                 options={languageOptions}
+                placeholder={t('accreditation.entityData.fields.readiness.systemLanguagePlaceholder')}
+                searchPlaceholder={t('accreditation.entityData.fields.readiness.searchLanguage')}
               />
             </FormField>
 

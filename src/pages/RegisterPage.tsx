@@ -38,7 +38,7 @@ import {
   saveRegisterDraft,
 } from '@/lib/registerDraftStorage'
 import {
-  isValidEmail,
+  isValidRequiredEmail ,
   isValidMobile,
   isValidPassword,
   passwordsMatch,
@@ -164,7 +164,7 @@ export function RegisterPage() {
   const back = () => setStep((s) => Math.max(s - 1, 1))
 
   const otpComplete = form.otp.every((d) => d.length === 1)
-  const emailValid = isValidEmail(form.email)
+  const emailValid = isValidRequiredEmail(form.email)
   const mobileValid = isValidMobile(form.mobile)
   const passwordValid = isValidPassword(form.password)
   const passwordsMatchValue = passwordsMatch(form.password, form.confirmPassword)
@@ -399,7 +399,7 @@ function StepVerification({
   onSendCode: () => void
 }) {
   const { t } = useTranslation()
-  const emailValid = isValidEmail(form.email)
+  const emailValid = isValidRequiredEmail(form.email)
   const emailError =
     form.email.trim().length > 0 && !emailValid ? t('validation.invalidEmail') : undefined
 

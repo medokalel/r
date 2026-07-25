@@ -8,9 +8,10 @@ import type { CountryCode } from '@/lib/countries'
  * is a separate concern handled by applicationValidation.ts.
  */
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+export const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-export function isValidEmail(value: string): boolean {
+/** Format-only check — an empty value is considered valid (not yet typed). */
+export function isValidEmailFormat(value: string): boolean {
   const trimmed = value.trim()
   if (!trimmed) return true
   return EMAIL_PATTERN.test(trimmed)

@@ -1,4 +1,4 @@
-import { isValidEmail } from '@/lib/authValidation'
+import { isValidRequiredEmail } from '@/lib/authValidation'
 import type { OrgBranch, OrgDocument } from '@/lib/api/organizationProfileApi'
 import { REQUIRED_DOC_TYPES } from './constants'
 import type {
@@ -17,7 +17,7 @@ export function isBasicDataComplete(form: ProfileFormValues): boolean {
       form.tradeName.trim() &&
       form.commercialRegisterNumber.trim() &&
       form.authorizedPersonName.trim() &&
-      isValidEmail(form.email) &&
+      isValidRequiredEmail(form.email) &&
       form.phoneNumber.trim() &&
       form.organizationStatus &&
       form.employeeCount !== '' &&
