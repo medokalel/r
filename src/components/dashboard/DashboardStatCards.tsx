@@ -1,5 +1,11 @@
 import { useTranslation } from 'react-i18next'
-import { ClipboardText, Refresh2, ShieldTick, Profile2User } from 'iconsax-reactjs'
+import {
+  AppIcon,
+  CertificateBadgeIcon,
+  OrdersFolderIcon,
+  PendingBurstIcon,
+  UsersShieldIcon,
+} from '@/components/icons'
 import type { DashboardStats } from '@/lib/api/dashboardApi'
 import { cn } from '@/lib/utils'
 
@@ -8,7 +14,7 @@ interface StatCardConfig {
   labelKey: string
   bgColor: string
   iconColor: string
-  icon: typeof ShieldTick
+  icon: typeof CertificateBadgeIcon
 }
 
 const statCards: StatCardConfig[] = [
@@ -17,28 +23,28 @@ const statCards: StatCardConfig[] = [
     labelKey: 'dashboard.stats.approvedCertificates',
     bgColor: 'bg-[#dbeafe]',
     iconColor: 'text-[#1447e6]',
-    icon: ShieldTick,
+    icon: CertificateBadgeIcon,
   },
   {
     key: 'currentOrders',
     labelKey: 'dashboard.stats.currentOrders',
     bgColor: 'bg-[#fef3c6]',
     iconColor: 'text-[#a58401]',
-    icon: ClipboardText,
+    icon: OrdersFolderIcon,
   },
   {
     key: 'pendingRequests',
     labelKey: 'dashboard.stats.pendingRequests',
     bgColor: 'bg-[#d7f4f0]',
     iconColor: 'text-[#0f9488]',
-    icon: Refresh2,
+    icon: PendingBurstIcon,
   },
   {
     key: 'users',
     labelKey: 'dashboard.stats.users',
     bgColor: 'bg-[#e2e5f9]',
     iconColor: 'text-[#3730a3]',
-    icon: Profile2User,
+    icon: UsersShieldIcon,
   },
 ]
 
@@ -60,7 +66,7 @@ export function DashboardStatCards({ stats, loading }: DashboardStatCardsProps) 
             bgColor
           )}
         >
-          <Icon size={28} variant="Bulk" className={iconColor} />
+          <AppIcon icon={Icon} size={38} className={iconColor} />
           <div className="flex flex-col gap-1">
             <p className="text-[32px] font-semibold leading-[1.3] text-neutral-900">
               {loading || !stats ? '—' : stats[key].toLocaleString()}
