@@ -99,7 +99,7 @@ export function LegalDeclarationsStep() {
               ].map((item, i) => (
                 <li key={i} className={cn(fieldBodyTextClassName, 'field-text flex gap-2')}>
                   <span className="mt-1 shrink-0">•</span>
-                  <span>{item}</span>
+                  <span>{boldPlaceholders(item, replacements)}</span>
                 </li>
               ))}
             </ul>
