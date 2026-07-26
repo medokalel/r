@@ -6,6 +6,7 @@ import { CertificationRequestFormPage } from '@/pages/CertificationRequestFormPa
 import { CertificationRequestsPage } from '@/pages/CertificationRequestsPage'
 import { CompanyProfilePage } from '@/pages/CompanyProfilePage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { UsersPage } from '@/pages/UsersPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
@@ -56,6 +57,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <CompanyProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/users"
+              element={
+                <RequireAuth>
+                  <UsersPage />
                 </RequireAuth>
               }
             />

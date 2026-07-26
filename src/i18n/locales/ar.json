@@ -141,6 +141,7 @@
       "collapse": "طي الشريط الجانبي",
       "requests": "الطلبات",
       "clients": "العملاء",
+      "users": "المستخدمين",
       "payments": "المدفوعات",
       "documents": "المستندات",
       "accreditation": "الاعتماد",
@@ -902,7 +903,37 @@
         "correspondenceSent": "تم إرسال مراسلة رسمية إلى",
         "statusChanged": "تم تغيير حالة طلب"
       },
-      "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"
+        "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"
+    }
+  },
+  "users": {
+    "pageTitle": "المستخدمين",
+    "stats": {
+      "inactive": "مستخدم غير نشط",
+      "active": "المستخدمين النشطين",
+      "total": "إجمالي المستخدمين"
+    },
+    "addUser": "إضافة مستخدم",
+    "searchPlaceholder": "بحث...",
+    "search": "بحث",
+    "table": {
+      "index": "#",
+      "name": "اسم المستخدم",
+      "role": "الدور",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "status": "الحالة",
+      "actions": "الإجراءات",
+      "edit": "تعديل",
+      "delete": "حذف"
+    },
+    "status": {
+      "active": "نشط",
+      "inactive": "غير نشط"
+    },
+    "roles": {
+      "auditor": "مدقق",
+      "reviewer": "مراجع"
     }
   }
 }

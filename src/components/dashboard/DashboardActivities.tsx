@@ -1,15 +1,22 @@
 import { useTranslation } from 'react-i18next'
-import { Refresh2, Sms, TickCircle } from 'iconsax-reactjs'
+import {
+  AppIcon,
+  CorrespondenceSentIcon,
+  DocumentReceivedIcon,
+  RefreshIcon,
+  StatusChangedIcon,
+  type AppIconComponent,
+} from '@/components/icons'
 import type { DashboardActivity, DashboardActivityType } from '@/lib/api/dashboardApi'
 import { cn } from '@/lib/utils'
 
 const activityIconConfig: Record<
   DashboardActivityType,
-  { icon: typeof TickCircle; bgColor: string; iconColor: string }
+  { icon: AppIconComponent; bgColor: string }
 > = {
-  documentReceived: { icon: TickCircle, bgColor: 'bg-[#d0fae5]', iconColor: 'text-[#00994d]' },
-  correspondenceSent: { icon: Sms, bgColor: 'bg-[#dbeafe]', iconColor: 'text-[#1447e6]' },
-  statusChanged: { icon: Refresh2, bgColor: 'bg-[#fef3c6]', iconColor: 'text-[#a58401]' },
+  documentReceived: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
+  correspondenceSent: { icon: CorrespondenceSentIcon, bgColor: 'bg-[#dbeafe]' },
+  statusChanged: { icon: StatusChangedIcon, bgColor: 'bg-[#fef3c6]' },
 }
 
 function relativeTimeLabel(
@@ -24,6 +31,25 @@ function relativeTimeLabel(
   return t('dashboard.activities.hoursAgo', { count: diffHours })
 }
 
+/**
+ * Renders the detail sentence with the entity name highlighted, e.g.
+ * "Insurance certificate uploaded by <Food Solutions Company>".
+ * The translated string always contains the entity name verbatim once
+ * (from the {{entityName}} interpolation), so a plain split is enough —
+ * no need for react-i18next's <Trans> component just for this.
+ */
+function detailWithHighlightedEntity(detail: string, entityName: string) {
+  const index = detail.indexOf(entityName)
+  if (index === -1) return detail
+  return (
+    <>
+      {detail.slice(0, index)}
+      <span className="font-medium text-primary">{entityName}</span>
+      {detail.slice(index + entityName.length)}
+    </>
+  )
+}
+
 interface DashboardActivitiesProps {
   activities: DashboardActivity[]
   loading: boolean
@@ -35,8 +61,8 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
 
   return (
     <div className="flex w-full max-w-[400px] flex-col rounded-[16px] border border-[#ececec] bg-white p-5">
-      <div className="mb-4 flex items-center gap-2">
-        <Refresh2 size={20} variant="Bulk" className="text-primary" />
+      <div className="mb-4 flex items-center gap-2 rounded-[10px] bg-[#f3f6fd] px-3 py-2.5">
+        <AppIcon icon={RefreshIcon} size={20} className="text-primary" />
         <h2 className="text-[18px] font-semibold text-neutral-900">
           {t('dashboard.activities.title')}
         </h2>
@@ -49,34 +75,35 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
           <p className="py-6 text-center text-neutral-500">—</p>
         ) : (
           activities.map((activity, index) => {
-            const { icon: Icon, bgColor, iconColor } = activityIconConfig[activity.type]
+            const { icon, bgColor } = activityIconConfig[activity.type]
+            const isLast = index === activities.length - 1
+            const detail = t(`${activity.titleKey}.detail`, { entityName: activity.entityName })
+
             return (
-              <div
-                key={activity.id}
-                className={cn(
-                  'flex gap-3 py-4',
-                  index < activities.length - 1 && 'border-b border-[#f0f0f0]'
-                )}
-              >
-                <span
-                  className={cn(
-                    'flex size-9 shrink-0 items-center justify-center rounded-full',
-                    bgColor
-                  )}
-                >
-                  <Icon size={18} variant="Bold" className={iconColor} />
-                </span>
-                <div className="min-w-0 flex-1">
+              <div key={activity.id} className="flex gap-3">
+                {/* Icon badge + connecting timeline line down to the next item */}
+                <div className="flex flex-col items-center">
+                  <span
+                    className={cn(
+                      'flex size-9 shrink-0 items-center justify-center rounded-[10px]',
+                      bgColor
+                    )}
+                  >
+                    <AppIcon icon={icon} size={18} />
+                  </span>
+                  {!isLast && <span className="my-1 w-px flex-1 bg-[#e2e2e2]" />}
+                </div>
+
+                <div className={cn('min-w-0 flex-1', isLast ? 'pb-1' : 'pb-6')}>
                   <p className="text-[13px] text-neutral-500">
                     {relativeTimeLabel(activity.occurredAt, t)}
                   </p>
-                  <p className="text-[15px] leading-[1.6] text-neutral-900">
-                    {t(activity.titleKey)}{' '}
-                    <span className="font-medium text-primary">{activity.entityName}</span>
+                  <p className="text-[15px] font-semibold leading-[1.6] text-neutral-900">
+                    {t(`${activity.titleKey}.title`)}
                   </p>
-                  {activity.statusNote && (
-                    <p className="text-[13px] text-neutral-500">{t(activity.statusNote)}</p>
-                  )}
+                  <p className="text-[14px] leading-[1.6] text-neutral-600">
+                    {detailWithHighlightedEntity(detail, activity.entityName)}
+                  </p>
                 </div>
               </div>
             )

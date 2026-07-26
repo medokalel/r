@@ -141,6 +141,7 @@
       "collapse": "Collapse sidebar",
       "requests": "Requests",
       "clients": "Clients",
+      "users": "Users",
       "payments": "Payments",
       "documents": "Documents",
       "accreditation": "Accreditation",
@@ -903,7 +904,37 @@
         "correspondenceSent": "An official correspondence has been sent to",
         "statusChanged": "The status of a request has been changed by"
       },
-      "movedToAwaitingDocuments": "Moved to awaiting documents"
+        "movedToAwaitingDocuments": "Moved to awaiting documents"
+    }
+  },
+  "users": {
+    "pageTitle": "Users",
+    "stats": {
+      "inactive": "Inactive user",
+      "active": "Active users",
+      "total": "Total users"
+    },
+    "addUser": "Add user",
+    "searchPlaceholder": "Search...",
+    "search": "Search",
+    "table": {
+      "index": "#",
+      "name": "User Name",
+      "role": "Role",
+      "email": "Email",
+      "phone": "Phone Number",
+      "status": "Status",
+      "actions": "Actions",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "roles": {
+      "auditor": "Auditor",
+      "reviewer": "Reviewer"
     }
   }
 }

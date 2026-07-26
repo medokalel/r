@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/certification-request' },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
-  { icon: UsersIcon, labelKey: 'accreditation.sidebar.clients' },
+  { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: '/users' },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments' },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },

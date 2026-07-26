@@ -31,15 +31,15 @@ export function DashboardTasksTable({
 
   return (
     <div className="flex flex-1 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-      <div className="mb-4 mx-5 flex items-center justify-between">
-        <h2 className="text-[20px] font-semibold text-neutral-900">
+      <div className="mb-5 mt-1 mx-5 flex items-center justify-between">
+        <h2 className="text-[24px] font-semibold text-neutral-900">
           {t('dashboard.tasks.title')}
         </h2>
         {onViewAll && (
           <button
             type="button"
             onClick={onViewAll}
-            className="text-[14px] font-medium text-primary hover:underline"
+            className="text-[16px] font-medium text-primary hover:underline"
           >
             {t('dashboard.tasks.viewAll')}
           </button>
@@ -47,19 +47,19 @@ export function DashboardTasksTable({
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[640px] border-collapse text-start">
+        <table className="w-full min-w-[640px] border-collapse text-center">
           <thead className="border-b border-[#ececec]">
             <tr className="rounded-[10px] bg-[#1236a3] text-white">
-              <th className="px-4 py-3 text-start text-[14px] font-medium">
+              <th className="px-4 py-3 text-center text-[14px] font-medium">
                 {t('dashboard.tasks.applicantName')}
               </th>
-              <th className="px-4 py-3 text-start text-[14px] font-medium">
+              <th className="px-4 py-3 text-center text-[14px] font-medium">
                 {t('dashboard.tasks.taskType')}
               </th>
-              <th className="px-4 py-3 text-start text-[14px] font-medium">
+              <th className="px-4 py-3 text-center text-[14px] font-medium">
                 {t('dashboard.tasks.statusHeader')}
               </th>
-              <th className="px-4 py-3 text-start text-[14px] font-medium">
+              <th className="px-4 py-3 text-center text-[14px] font-medium">
                 {t('dashboard.tasks.procedures')}
               </th>
             </tr>
@@ -97,7 +97,7 @@ export function DashboardTasksTable({
                   <td className="px-4 py-4">
                     <span
                       className={cn(
-                        'inline-flex rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                        'inline-flex w-[126px] items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
                         statusStyles[task.status]
                       )}
                     >
