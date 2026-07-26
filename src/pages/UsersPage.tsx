@@ -47,7 +47,7 @@ export function UsersPage() {
     <AppLayout>
       <AccreditationHeader titleKey="users.pageTitle" />
 
-      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+      <div className="flex flex-col gap-5 overflow-auto p-5">
         <UsersStatCards stats={stats} loading={loading} />
 
         <UsersTable

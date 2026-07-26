@@ -32,7 +32,7 @@ export function UsersTable({
   )
 
   return (
-    <div className="flex flex-1 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
+    <div className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-5">
         <div className="flex items-center gap-2">
           <div className="relative">

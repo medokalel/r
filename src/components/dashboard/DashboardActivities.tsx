@@ -3,20 +3,20 @@ import {
   AppIcon,
   CorrespondenceSentIcon,
   DocumentReceivedIcon,
-  RefreshIcon,
   StatusChangedIcon,
+  StatusReviewIcon,
   type AppIconComponent,
 } from '@/components/icons'
 import type { DashboardActivity, DashboardActivityType } from '@/lib/api/dashboardApi'
 import { cn } from '@/lib/utils'
 
-const activityIconConfig: Record<
+const activityIconConfig: Record <
   DashboardActivityType,
   { icon: AppIconComponent; bgColor: string }
 > = {
   documentReceived: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
-  correspondenceSent: { icon: CorrespondenceSentIcon, bgColor: 'bg-[#dbeafe]' },
-  statusChanged: { icon: StatusChangedIcon, bgColor: 'bg-[#fef3c6]' },
+  correspondenceSent: { icon: StatusChangedIcon, bgColor: 'bg-[#dbeafe]' },
+  statusChanged: { icon: StatusReviewIcon, bgColor: 'bg-[#fef3c6]' },
 }
 
 function relativeTimeLabel(
@@ -60,15 +60,15 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
   const { t } = useTranslation()
 
   return (
-    <div className="flex w-full max-w-[400px] flex-col rounded-[16px] border border-[#ececec] bg-white p-5">
-      <div className="mb-4 flex items-center gap-2 rounded-[10px] bg-[#f3f6fd] px-3 py-2.5">
-        <AppIcon icon={RefreshIcon} size={20} className="text-primary" />
-        <h2 className="text-[18px] font-semibold text-neutral-900">
+    <div className="flex w-full max-w-[400px] flex-col rounded-[16px] border border-[#ececec] bg-white ">
+      <div className="mb-4 flex items-center border border-[#ececec] border-t-0 border-l-0 border-r-0 gap-2 rounded-t-[16px] bg-[#f3f6fd] p-[25px]">
+        <AppIcon icon={CorrespondenceSentIcon} size={32} className="text-primary" />
+        <h2 className="text-[22px] font-semibold text-neutral-900">
           {t('dashboard.activities.title')}
         </h2>
       </div>
 
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col p-[24px] overflow-y-auto">
         {loading ? (
           <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
         ) : activities.length === 0 ? (
@@ -89,7 +89,7 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
                       bgColor
                     )}
                   >
-                    <AppIcon icon={icon} size={18} />
+                    <AppIcon icon={icon} size={26} />
                   </span>
                   {!isLast && <span className="my-1 w-px flex-1 bg-[#e2e2e2]" />}
                 </div>
@@ -115,7 +115,7 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
         <button
           type="button"
           onClick={onViewAll}
-          className="mt-2 flex h-12 w-full items-center justify-center rounded-[8px] bg-[#f3f6fd] text-[15px] font-medium text-primary transition-colors hover:bg-[#e8edfc]"
+          className="mb-4 flex h-14 m-auto w-90 items-center justify-center rounded-[8px] bg-[#f3f6fd] text-[18px] font-medium  transition-colors hover:bg-[#e8edfc]"
         >
           {t('dashboard.activities.viewAll')}
         </button>

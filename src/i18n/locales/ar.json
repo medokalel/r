@@ -899,11 +899,20 @@
       "hourAgo": "منذ ساعة",
       "hoursAgo": "منذ {{count}} ساعات",
       "items": {
-        "documentReceived": "تم استلام مستند من قبل",
-        "correspondenceSent": "تم إرسال مراسلة رسمية إلى",
-        "statusChanged": "تم تغيير حالة طلب"
+        "documentReceived": {
+          "title": "تم استلام مستند",
+          "detail": "تم استلام مستند من {{entityName}}"
+        },
+        "correspondenceSent": {
+          "title": "تم إرسال مراسلة",
+          "detail": "تم إرسال مراسلة رسمية إلى {{entityName}}"
+        },
+        "statusChanged": {
+          "title": "تم تغيير الحالة",
+          "detail": "تم تغيير حالة الطلب بواسطة {{entityName}}"
+        }
       },
-        "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"
+      "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"
     }
   },
   "users": {

@@ -46,7 +46,7 @@ export function DashboardPage() {
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
         <DashboardStatCards stats={stats} loading={loading} />
 
-        <div className="flex flex-1 flex-col gap-5 lg:flex-row">
+        <div className="flex flex-col gap-5 lg:flex-row">
           <DashboardTasksTable
             tasks={tasks}
             loading={loading}

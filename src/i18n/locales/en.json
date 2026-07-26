@@ -900,11 +900,20 @@
       "hourAgo": "An hour ago",
       "hoursAgo": "{{count}} hours ago",
       "items": {
-        "documentReceived": "A document has been received from",
-        "correspondenceSent": "An official correspondence has been sent to",
-        "statusChanged": "The status of a request has been changed by"
+        "documentReceived": {
+          "title": "Document received",
+          "detail": "A document has been received from {{entityName}}"
+        },
+        "correspondenceSent": {
+          "title": "Correspondence sent",
+          "detail": "An official correspondence has been sent to {{entityName}}"
+        },
+        "statusChanged": {
+          "title": "Status changed",
+          "detail": "The status of a request has been changed by {{entityName}}"
+        }
       },
-        "movedToAwaitingDocuments": "Moved to awaiting documents"
+      "movedToAwaitingDocuments": "Moved to awaiting documents"
     }
   },
   "users": {

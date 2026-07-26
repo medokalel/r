@@ -50,16 +50,16 @@ export function DashboardTasksTable({
         <table className="w-full min-w-[640px] border-collapse text-center">
           <thead className="border-b border-[#ececec]">
             <tr className="rounded-[10px] bg-[#1236a3] text-white">
-              <th className="px-4 py-3 text-center text-[14px] font-medium">
+              <th className="p-[18px] text-center text-[14px] font-medium">
                 {t('dashboard.tasks.applicantName')}
               </th>
-              <th className="px-4 py-3 text-center text-[14px] font-medium">
+              <th className="p-[18px] text-center text-[14px] font-medium">
                 {t('dashboard.tasks.taskType')}
               </th>
-              <th className="px-4 py-3 text-center text-[14px] font-medium">
+              <th className="p-[18px] text-center text-[14px] font-medium">
                 {t('dashboard.tasks.statusHeader')}
               </th>
-              <th className="px-4 py-3 text-center text-[14px] font-medium">
+              <th className="p-[18px] text-center text-[14px] font-medium">
                 {t('dashboard.tasks.procedures')}
               </th>
             </tr>
