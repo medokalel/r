@@ -4,6 +4,10 @@ import { AppLayout } from '@/components/layout/AppLayout'
 import { UsersStatCards } from '@/components/dashboard/users/UsersStatCards'
 import { UsersTable } from '@/components/dashboard/users/UsersTable'
 import {
+  UsersStatsSkeleton,
+  UsersTableSkeleton,
+} from '@/components/dashboard/users/UsersLoadingSkeleton'
+import {
   deleteUser,
   getUsersStats,
   listUsers,
@@ -48,18 +52,22 @@ export function UsersPage() {
       <AccreditationHeader titleKey="users.pageTitle" />
 
       <div className="flex flex-col gap-5 overflow-auto p-5">
-        <UsersStatCards stats={stats} loading={loading} />
+        {loading ? <UsersStatsSkeleton /> : <UsersStatCards stats={stats} loading={loading} />}
 
-        <UsersTable
-          users={users}
-          loading={loading}
-          onStatusChange={handleStatusChange}
-          onDeleteUser={handleDeleteUser}
-          // TODO: wire up an add/edit user form once the backend exposes
-          // create/update endpoints — see usersApi.ts
-          onAddUser={() => undefined}
-          onEditUser={() => undefined}
-        />
+        {loading ? (
+          <UsersTableSkeleton />
+        ) : (
+          <UsersTable
+            users={users}
+            loading={loading}
+            onStatusChange={handleStatusChange}
+            onDeleteUser={handleDeleteUser}
+            // TODO: wire up an add/edit user form once the backend exposes
+            // create/update endpoints — see usersApi.ts
+            onAddUser={() => undefined}
+            onEditUser={() => undefined}
+          />
+        )}
       </div>
     </AppLayout>
   )

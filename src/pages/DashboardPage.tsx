@@ -4,6 +4,11 @@ import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardActivities } from '@/components/dashboard/DashboardActivities'
 import { DashboardStatCards } from '@/components/dashboard/DashboardStatCards'
 import { DashboardTasksTable } from '@/components/dashboard/DashboardTasksTable'
+import {
+  DashboardActivitiesSkeleton,
+  DashboardStatsSkeleton,
+  DashboardTasksTableSkeleton,
+} from '@/components/dashboard/DashboardLoadingSkeleton'
 import { AppLayout } from '@/components/layout/AppLayout'
 import {
   getDashboardActivities,
@@ -44,26 +49,30 @@ export function DashboardPage() {
       <AccreditationHeader titleKey="nav.dashboard" />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-        <DashboardStatCards stats={stats} loading={loading} />
+        {loading ? <DashboardStatsSkeleton /> : <DashboardStatCards stats={stats} loading={loading} />}
 
         <div className="flex flex-col gap-5 lg:flex-row">
-          <DashboardTasksTable
-            tasks={tasks}
-            loading={loading}
-            onViewAll={() => navigate('/certification-requests')}
-            onProcedureClick={(task) => {
-              // Document-review tasks map to the application feedback view;
-              // other task types don't have a dedicated page yet.
-              if (task.taskType === 'documentReview') {
-                navigate(`/certification-request/new?id=${task.id}&view=feedback`)
-              }
-            }}
-          />
-          <DashboardActivities
-            activities={activities}
-            loading={loading}
-            onViewAll={() => undefined}
-          />
+          {loading ? (
+            <DashboardTasksTableSkeleton />
+          ) : (
+            <DashboardTasksTable
+              tasks={tasks}
+              loading={loading}
+              onViewAll={() => navigate('/certification-requests')}
+              onProcedureClick={(task) => {
+                // Document-review tasks map to the application feedback view;
+                // other task types don't have a dedicated page yet.
+                if (task.taskType === 'documentReview') {
+                  navigate(`/certification-request/new?id=${task.id}&view=feedback`)
+                }
+              }}
+            />
+          )}
+          {loading ? (
+            <DashboardActivitiesSkeleton />
+          ) : (
+            <DashboardActivities activities={activities} loading={loading} onViewAll={() => undefined} />
+          )}
         </div>
       </div>
     </AppLayout>
