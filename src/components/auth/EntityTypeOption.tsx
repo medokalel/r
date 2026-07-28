@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { EntityTypeIcon } from '@/components/auth/EntityTypeIcon'
 import { cn } from '@/lib/utils'
 
-export type EntityType = 'governmental' | 'private' | 'third_party'
+export type EntityType = 'ACCREDITATION_BODY' | 'CERTIFICATION_BODY' | 'CONSULTATION_BODY'
 
 const options: { type: EntityType; labelKey: string }[] = [
-  { type: 'governmental', labelKey: 'register.governmental' },
-  { type: 'private', labelKey: 'register.privateSector' },
-  { type: 'third_party', labelKey: 'register.thirdParty' },
+  { type: 'ACCREDITATION_BODY', labelKey: 'register.accreditationBodies' },
+  { type: 'CERTIFICATION_BODY', labelKey: 'register.certificationBodies' },
+  { type: 'CONSULTATION_BODY', labelKey: 'register.auditClients' },
 ]
 
 interface EntityTypeOptionProps {

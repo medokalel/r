@@ -75,6 +75,9 @@
       "legalOperational": "البيانات القانونية والتشغيلية",
       "accountSetup": "إعداد الحساب"
     },
+    "accreditationBodies": "جهات الاعتماد",
+    "certificationBodies": "جهات إصدار الشهادات",
+    "auditClients": "عملاء التدقيق / الجهات الخاضعة للتدقيق",
     "governmental": "جهة حكومية",
     "privateSector": "قطاع خاص",
     "thirdParty": "طرف ثالث",

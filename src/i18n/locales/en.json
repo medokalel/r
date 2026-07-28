@@ -75,6 +75,9 @@
       "legalOperational": "Legal and operational data",
       "accountSetup": "Account setup"
     },
+    "accreditationBodies": "Accreditation Bodies",
+    "certificationBodies": "Certification Bodies",
+    "auditClients": "Audit Clients / Auditees",
     "governmental": "Governmental entity",
     "privateSector": "Private sector",
     "thirdParty": "Third party",
