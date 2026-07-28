@@ -1,8 +1,10 @@
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Dialog from '@radix-ui/react-dialog'
 import { Button } from '@/components/ui/Button'
 import { AppIcon, RiyalSymbolIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
+import { AddInvoiceItemModal } from './AddInvoiceItemModal'
 
 export interface InvoiceLineItem {
   id: string
@@ -32,9 +34,13 @@ export function InteractiveInvoiceModal({
   onAdd,
 }: InteractiveInvoiceModalProps) {
   const { t } = useTranslation()
-  const total = items.reduce((sum, item) => sum + item.amount * item.quantity, 0)
+  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [addedItems, setAddedItems] = useState<InvoiceLineItem[]>([])
+  const allItems = [...items, ...addedItems]
+  const total = allItems.reduce((sum, item) => sum + item.amount * item.quantity, 0)
 
   return (
+    <>
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50" />
@@ -90,7 +96,7 @@ export function InteractiveInvoiceModal({
                   </tr>
                 </thead>
                 <tbody>
-                  {items.map((item, index) => (
+                  {allItems.map((item, index) => (
                     <tr key={item.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
                       <td className="px-4 py-4 text-[15px] font-medium text-neutral-900">
                         {index + 1}
@@ -147,10 +153,7 @@ export function InteractiveInvoiceModal({
                 variant="primary"
                 size="lg"
                 className="min-w-[160px]"
-                onClick={() => {
-                  onAdd?.()
-                  onOpenChange(false)
-                }}
+                onClick={() => setIsAddOpen(true)}
               >
                 {t('certificationRequests.invoiceModal.add')}
               </Button>
@@ -159,5 +162,15 @@ export function InteractiveInvoiceModal({
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+
+    <AddInvoiceItemModal
+      open={isAddOpen}
+      onOpenChange={setIsAddOpen}
+      onAdd={(newItem) => {
+        setAddedItems((prev) => [...prev, newItem])
+        onAdd?.()
+      }}
+    />
+    </>
   )
 }

@@ -876,7 +876,8 @@
       "noProcedure": "-",
       "total": "Total",
       "add": "Add",
-      "lineItem": "Submission and review of documents: 3000 riyals for each application for granting/renewing/expanding the scope of accreditation (laboratories)"
+      "lineItem": "Submission and review of documents: 3000 riyals for each application for granting/renewing/expanding the scope of accreditation (laboratories)",
+      "addItemTitle": "Add an interactive invoice"
     }
   },
   "dashboard": {
