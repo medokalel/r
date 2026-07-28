@@ -863,6 +863,20 @@
       "draftOrderNumber": "Draft — not submitted",
       "followUp": "Follow up",
       "orderStatus": "Order Status"
+    },
+    "invoiceModal": {
+      "title": "Interactive invoice",
+      "index": "#",
+      "item": "Item",
+      "amount": "Amount",
+      "number": "Number",
+      "totalAmount": "Total amount",
+      "currency": "Currency",
+      "procedures": "Procedures",
+      "noProcedure": "-",
+      "total": "Total",
+      "add": "Add",
+      "lineItem": "Submission and review of documents: 3000 riyals for each application for granting/renewing/expanding the scope of accreditation (laboratories)"
     }
   },
   "dashboard": {

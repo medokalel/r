@@ -82,16 +82,14 @@ export function useApplicationState(): ApplicationState {
   const ipLocation = useIpLocation();
   const ipDefaultsBlockedRef = useRef(false);
 
-  // Marked true the moment the user (or a UI control) explicitly sets the
-  // mobile country code, so the IP-based default below never overwrites it.
-  const mobileCodeTouchedRef = useRef(false)
-
   const update = useCallback(
-    <K extends keyof ApplicationFormValues>(key: K, value: ApplicationFormValues[K]) => {
-      if (key === 'mobileCountryCode') mobileCodeTouchedRef.current = true
-      setForm((prev) => ({ ...prev, [key]: value }))
+    <K extends keyof ApplicationFormValues>(
+      key: K,
+      value: ApplicationFormValues[K],
+    ) => {
+      setForm((prev) => ({ ...prev, [key]: value }));
     },
-    []
+    [],
   );
 
   const notify = useCallback(
@@ -173,15 +171,16 @@ export function useApplicationState(): ApplicationState {
   // Default the country, city, and phone code from the visitor's IP until the
   // user (or a loaded draft) provides real values
   useEffect(() => {
-    if (loading || ipDefaultsBlockedRef.current || !ipLocation?.countryCode) return
-    ipDefaultsBlockedRef.current = true
-    const code = ipLocation.countryCode as CountryCode
+    if (loading || ipDefaultsBlockedRef.current || !ipLocation?.countryCode)
+      return;
+    ipDefaultsBlockedRef.current = true;
+    const code = ipLocation.countryCode as CountryCode;
     setForm((prev) => ({
       ...prev,
       country: prev.country ?? code,
       city: prev.city || ipLocation.city || prev.city,
-      mobileCountryCode: mobileCodeTouchedRef.current ? prev.mobileCountryCode : code,
-    }))
+      mobileCountryCode: code,
+    }));
   }, [ipLocation, loading]);
 
   // The organization profile supplies the branch ids that application branches

@@ -490,6 +490,12 @@ export const StatusReviewIcon: AppIconComponent = ({ size = 24, className }) => 
   )
 }
 
+export const RiyalSymbolIcon: AppIconComponent = ({ size = 20, className }) => (
+  <svg width={size} height={size} viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" className={className}>
+    <path d="M17.7 3.5V16.1L20.3 15.4V17.9L17.7 18.6V21.4L20.3 20.7V23.2L17.7 23.9V26.5L15.1 27.2V24.6L11 25.7V22.1L4.9 23.75V21.05L15.1 18.3V16L4.9 18.75V16.05L15.1 13.3V0.7L17.7 0V3.5Z" fill="currentColor"/>
+  </svg>
+)
+
 export {
   Sms as MailIcon,
   Lock1 as LockIcon,

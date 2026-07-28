@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
+import { InteractiveInvoiceModal } from '@/components/dashboard/InteractiveInvoiceModal'
 import { ErrorState } from '@/components/ui'
 import { RequestCardsSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { AddCircle } from 'iconsax-reactjs'
@@ -177,6 +178,7 @@ export function CertificationRequestsPage() {
   const [hasError, setHasError] = useState(false)
   const [isRateLimited, setIsRateLimited] = useState(false)
   const [reloadKey, setReloadKey] = useState(0)
+  const [isInvoiceOpen, setIsInvoiceOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -222,7 +224,6 @@ export function CertificationRequestsPage() {
       <div className="mt-4 flex flex-1 flex-col overflow-auto min-[924px]:mt-0">
 
         {/* Action buttons */}
-        {/* Action buttons */}
         <div className="hidden md:flex md:items-center md:gap-3 md:px-5 md:py-5 lg:justify-end lg:gap-5">
           <button
             type="button"
@@ -234,6 +235,7 @@ export function CertificationRequestsPage() {
           </button>
           <button
             type="button"
+            onClick={() => setIsInvoiceOpen(true)}
             className="flex h-12 flex-1 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-body-2-semibold leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd] lg:flex-none"
           >
             {t('certificationRequests.interactiveInvoice')}
@@ -244,6 +246,7 @@ export function CertificationRequestsPage() {
         <div className="fixed end-4 top-1/3 z-20 flex flex-col gap-3 md:hidden">
           <button
             type="button"
+            onClick={() => setIsInvoiceOpen(true)}
             className="flex size-15 items-center justify-center rounded-full border-1 border-[#1236a3] bg-white text-[#1236a3] shadow-[0_6px_20px_rgba(153,155,168,0.2)]"
             aria-label={t('certificationRequests.interactiveInvoice')}
           >
@@ -293,6 +296,7 @@ export function CertificationRequestsPage() {
           )}
         </div>
       </div>
+      <InteractiveInvoiceModal open={isInvoiceOpen} onOpenChange={setIsInvoiceOpen} />
     </AppLayout>
   )
 }
