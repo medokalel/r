@@ -6,7 +6,7 @@ import { AppIcon, EditIcon, LockIcon, MailIcon, PhoneIcon } from '@/components/i
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
 import { TextField } from '@/components/ui/TextField'
-import { fieldInputClassName } from '@/components/ui/fieldStyles'
+import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
 import { createUser, type AppUserRole, type CreateUserInput } from '@/lib/api/usersApi'
 import { cn } from '@/lib/utils'
 
@@ -63,7 +63,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
   return (
     <>
       {/* Fixed header: title at start, circular close at end */}
-      <div className="flex shrink-0 items-center justify-between border-b border-[#f0f0f0] px-6 py-5">
+      <div className="flex shrink-0 items-center justify-between px-6 pt-5">
         <Dialog.Title className="text-[24px] font-semibold leading-[1.6] text-neutral-900">
           {t('users.addUserModal.title')}
         </Dialog.Title>
@@ -71,9 +71,9 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
           <button
             type="button"
             aria-label={t('common.close')}
-            className="flex size-10 items-center justify-center rounded-full border border-neutral-200 text-neutral-500 transition-colors hover:border-neutral-400 hover:text-neutral-700"
+            className="flex size-10 items-center justify-center rounded-full border-2 border-[#000000] text-[#000000] transition-colors"
           >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
@@ -129,7 +129,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
                 placeholder="ex: 567XXXXXXXX"
                 value={form.phone}
                 onChange={(e) => set('phone', e.target.value)}
-                className={cn(fieldInputClassName, 'ps-12')}
+                className={cn(fieldInputClassName, fieldHeightClassName, 'ps-12')}
               />
             </div>
           </PhoneInputRow>
