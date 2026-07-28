@@ -7,6 +7,7 @@
     "confirm": "Confirm",
     "delete": "Delete",
     "edit": "Edit",
+    "change": "Change",
     "close": "Close",
     "back": "Back",
     "next": "Next",
@@ -69,6 +70,7 @@
   "register": {
     "title": "Create a new account",
     "chooseEntityType": "Please select the entity type",
+    "selectedEntityLabel": "Registering as:",
     "progressLabel": "Registration progress",
     "steps": {
       "entityVerification": "Entity data and verification",
@@ -85,6 +87,12 @@
     "governmentAgencyPlaceholder": "Choose the name of the government agency",
     "organizationName": "Organization name",
     "organizationNamePlaceholder": "Choose your organization name",
+    "accreditationBodyName": "Accreditation body name",
+    "accreditationBodyNamePlaceholder": "Choose the accreditation body name",
+    "certificationBodyName": "Certification body name",
+    "certificationBodyNamePlaceholder": "Choose the certification body name",
+    "auditClientName": "Audit client / auditee name",
+    "auditClientNamePlaceholder": "Choose the audit client name",
     "sampleAgency1": "Ministry of Health",
     "sampleAgency2": "Food Safety Authority",
     "verify": "verify",

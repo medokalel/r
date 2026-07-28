@@ -1,14 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { EntityTypeIcon } from '@/components/auth/EntityTypeIcon'
+import { ENTITY_TYPE_OPTIONS, type EntityType } from '@/lib/entityTypes'
 import { cn } from '@/lib/utils'
 
-export type EntityType = 'ACCREDITATION_BODY' | 'CERTIFICATION_BODY' | 'CONSULTATION_BODY'
-
-const options: { type: EntityType; labelKey: string }[] = [
-  { type: 'ACCREDITATION_BODY', labelKey: 'register.accreditationBodies' },
-  { type: 'CERTIFICATION_BODY', labelKey: 'register.certificationBodies' },
-  { type: 'CONSULTATION_BODY', labelKey: 'register.auditClients' },
-]
+export type { EntityType }
 
 interface EntityTypeOptionProps {
   selected: EntityType | null
@@ -20,7 +15,7 @@ export function EntityTypeOption({ selected, onSelect }: EntityTypeOptionProps) 
 
   return (
     <div className="flex flex-col gap-4 w-full">
-      {options.map(({ type, labelKey }) => {
+      {ENTITY_TYPE_OPTIONS.map(({ type, labelKey }) => {
         const isSelected = selected === type
         return (
           <button

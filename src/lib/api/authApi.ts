@@ -8,12 +8,6 @@ export type OrganizationType =
   | 'CERTIFICATION_BODY'
   | 'CONSULTATION_BODY'
 
-const ENTITY_TYPE_MAP: Record<EntityType, OrganizationType> = {
-  governmental: 'ACCREDITATION_BODY',
-  private: 'CERTIFICATION_BODY',
-  third_party: 'CONSULTATION_BODY',
-}
-
 export interface LoginResponseData {
   token: string
   user: {
@@ -97,9 +91,9 @@ export async function register(payload: RegisterPayload): Promise<{
   organizationId: string
 }> {
   return apiRequest('/auth/register', {
-    method: 'POST',
+    method: 'POST', 
     body: JSON.stringify({
-      type: ENTITY_TYPE_MAP[payload.entityType],
+      type: payload.entityType,
       email: payload.email,
       organizationName: payload.organizationName,
       administrationName: payload.administrationName,

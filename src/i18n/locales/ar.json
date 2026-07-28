@@ -7,6 +7,7 @@
     "confirm": "تأكيد",
     "delete": "حذف",
     "edit": "تعديل",
+    "change": "تغيير",
     "close": "إغلاق",
     "back": "السابق",
     "next": "التالي",
@@ -69,6 +70,7 @@
   "register": {
     "title": "إنشاء حساب جديد",
     "chooseEntityType": "يرجى اختيار نوع الجهة",
+    "selectedEntityLabel": "بتسجل كـ:",
     "progressLabel": "تقدم التسجيل",
     "steps": {
       "entityVerification": "بيانات الجهة والتحقق",
@@ -85,6 +87,12 @@
     "governmentAgencyPlaceholder": "اختر اسم الجهة الحكومية",
     "organizationName": "اسم المنشأة",
     "organizationNamePlaceholder": "اختر اسم المنشأة",
+    "accreditationBodyName": "اسم جهة الاعتماد",
+    "accreditationBodyNamePlaceholder": "اختر اسم جهة الاعتماد",
+    "certificationBodyName": "اسم جهة إصدار الشهادات",
+    "certificationBodyNamePlaceholder": "اختر اسم جهة إصدار الشهادات",
+    "auditClientName": "اسم عميل التدقيق / الجهة الخاضعة للتدقيق",
+    "auditClientNamePlaceholder": "اختر اسم عميل التدقيق",
     "sampleAgency1": "وزارة الصحة",
     "sampleAgency2": "هيئة سلامة الغذاء",
     "verify": "تحقق",

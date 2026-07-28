@@ -16,6 +16,7 @@ import {
   fieldInputTextClassName,
 } from '@/components/ui'
 import { EntityTypeOption, type EntityType } from '@/components/auth/EntityTypeOption'
+import { ENTITY_TYPE_OPTIONS } from '@/lib/entityTypes'
 import { FileUploadField } from '@/components/auth/FileUploadField'
 import { OtpInput } from '@/components/auth/OtpInput'
 import { RegisterStepNav } from '@/components/auth/RegisterStepNav'
@@ -101,8 +102,13 @@ function createInitialState() {
     return { step: 1, form: initialForm, codeSent: false }
   }
 
+  // The saved step is intentionally NOT restored — every visit must pass
+  // through entity-type selection again, so a user can never get "stuck" on
+  // an entity they picked by mistake with no way back to this screen. Only
+  // the form DATA is restored, so re-picking the same entity type loses
+  // nothing.
   return {
-    step: draft.step,
+    step: 1,
     codeSent: draft.codeSent,
     form: {
       ...initialForm,
@@ -279,6 +285,27 @@ export function RegisterPage() {
       ) : (
         <>
           <h1 className="text-h1 text-neutral-900 mb-6">{t('register.title')}</h1>
+
+          {form.entityType && (
+            <p className="text-body-2 text-neutral-500 -mt-4 mb-6">
+              {t('register.selectedEntityLabel')}{' '}
+              <span className="text-body-2-semibold text-neutral-900">
+                {t(
+                  ENTITY_TYPE_OPTIONS.find((option) => option.type === form.entityType)
+                    ?.labelKey ?? ''
+                )}
+              </span>{' '}
+              ·{' '}
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="text-body-2-semibold text-primary underline underline-offset-2"
+              >
+                {t('common.change')}
+              </button>
+            </p>
+          )}
+
           <RegisterStepNav current={(step - 1) as 1 | 2 | 3} className="mb-6" />
 
           {step === 2 && (
@@ -385,6 +412,26 @@ function StepEntityType({
   )
 }
 
+// Each entity type sees a field label/placeholder tailored to it, instead of
+// one generic "Organization name" for everyone
+const ORGANIZATION_FIELD_LABELS: Record <
+  EntityType,
+  { labelKey: string; placeholderKey: string }
+> = {
+  ACCREDITATION_BODY: {
+    labelKey: 'register.accreditationBodyName',
+    placeholderKey: 'register.accreditationBodyNamePlaceholder',
+  },
+  CERTIFICATION_BODY: {
+    labelKey: 'register.certificationBodyName',
+    placeholderKey: 'register.certificationBodyNamePlaceholder',
+  },
+  CONSULTATION_BODY: {
+    labelKey: 'register.auditClientName',
+    placeholderKey: 'register.auditClientNamePlaceholder',
+  },
+}
+
 function StepVerification({
   form,
   codeSent,
@@ -402,21 +449,24 @@ function StepVerification({
   const emailValid = isValidRequiredEmail(form.email)
   const emailError =
     form.email.trim().length > 0 && !emailValid ? t('validation.invalidEmail') : undefined
+  const organizationFieldLabels = form.entityType
+    ? ORGANIZATION_FIELD_LABELS[form.entityType]
+    : undefined
 
   return (
     <div className="space-y-6 w-full">
       <SelectField
         id="government-agency"
         label={
-          form.entityType === 'governmental'
-            ? t('register.governmentAgency')
+          organizationFieldLabels
+            ? t(organizationFieldLabels.labelKey)
             : t('register.organizationName')
         }
         required
         value={form.governmentAgency}
         placeholder={
-          form.entityType === 'governmental'
-            ? t('register.governmentAgencyPlaceholder')
+          organizationFieldLabels
+            ? t(organizationFieldLabels.placeholderKey)
             : t('register.organizationNamePlaceholder')
         }
         onChange={(value) => onPatch({ governmentAgency: value })}
