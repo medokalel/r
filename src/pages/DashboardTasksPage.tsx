@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Filter, DocumentDownload } from 'iconsax-reactjs'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
-import { AppIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import { getDashboardTasks } from '@/lib/api/dashboardApi'
 import type { DashboardTask, DashboardTaskStatus } from '@/lib/api/dashboardApi'
 import { cn } from '@/lib/utils'
@@ -83,23 +82,23 @@ export function DashboardTasksPage() {
                 aria-label={t('common.filter')}
                 className="flex size-11 shrink-0 items-center justify-center rounded-[8px] bg-[#f3f6fd] text-primary hover:bg-[#e8edfc]"
               >
-                <Filter size={18} variant="Bold" />
+                <AppIcon icon={FilterFunnelIcon} size={20} />
               </button>
             </div>
 
             <div className="flex shrink-0 items-center gap-3">
               <button
                 type="button"
-                className="flex h-11 items-center gap-2 rounded-[8px] border border-[#fecaca] px-4 text-[14px] font-medium text-[#dc2626] hover:bg-[#fef2f2]"
+                className="flex h-13 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium"
               >
-                <DocumentDownload size={18} variant="Bold" className="text-[#dc2626]" />
+                <AppIcon icon={PdfFileIcon} size={26} />
                 {t('dashboard.tasks.downloadPdf')}
               </button>
               <button
                 type="button"
-                className="flex h-11 items-center gap-2 rounded-[8px] border border-[#bbf7d0] px-4 text-[14px] font-medium text-[#16a34a] hover:bg-[#f0fdf4]"
+                className="flex h-13 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium"
               >
-                <DocumentDownload size={18} variant="Bold" className="text-[#16a34a]" />
+                <AppIcon icon={ExcelFileIcon} size={26} />
                 {t('dashboard.tasks.exportExcel')}
               </button>
             </div>
@@ -107,7 +106,7 @@ export function DashboardTasksPage() {
 
           {/* Table */}
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse text-start">
+            <table className="w-full min-w-[720px] border-collapse text-center">
               <thead className="border-b border-[#ececec]">
                 <tr className="rounded-[10px] bg-[#1236a3] text-white">
                   <th className="p-[18px] text-center text-[14px] font-medium">
@@ -154,7 +153,7 @@ export function DashboardTasksPage() {
                       <td className="px-4 py-4">
                         <span
                           className={cn(
-                            'inline-flex rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                            'inline-flex w-[126px] items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
                             statusStyles[task.status]
                           )}
                         >
