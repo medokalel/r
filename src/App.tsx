@@ -6,6 +6,7 @@ import { CertificationRequestFormPage } from '@/pages/CertificationRequestFormPa
 import { CertificationRequestsPage } from '@/pages/CertificationRequestsPage'
 import { CompanyProfilePage } from '@/pages/CompanyProfilePage'
 import { DashboardPage } from '@/pages/DashboardPage'
+import { DashboardTasksPage } from '@/pages/DashboardTasksPage'
 import { UsersPage } from '@/pages/UsersPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
@@ -49,6 +50,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <CertificationRequestsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/dashboard/tasks"
+              element={
+                <RequireAuth>
+                  <DashboardTasksPage />
                 </RequireAuth>
               }
             />

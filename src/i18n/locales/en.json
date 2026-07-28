@@ -15,7 +15,8 @@
     "savedJustNow": "Saved just now",
     "savedMinutesAgo": "Saved {{count}} min ago",
     "search": "Search",
-    "language": "Language"
+    "language": "Language",
+    "filter": "Filter"
   },
   "nav": {
     "home": "Home",
@@ -891,7 +892,13 @@
         "documentReview": "Document review",
         "contractProcessing": "Contract processing",
         "feeCollection": "Collection of fees"
-      }
+      },
+      "searchPlaceholder": "search ....",
+      "search": "Search",
+      "downloadPdf": "Download to PDF",
+      "exportExcel": "Export to Excel",
+      "next": "Next",
+      "previous": "Previous"
     },
     "activities": {
       "title": "Latest activities",

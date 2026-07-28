@@ -58,7 +58,7 @@ export function DashboardPage() {
             <DashboardTasksTable
               tasks={tasks}
               loading={loading}
-              onViewAll={() => navigate('/certification-requests')}
+              onViewAll={() => navigate('/dashboard/tasks')}
               onProcedureClick={(task) => {
                 // Document-review tasks map to the application feedback view;
                 // other task types don't have a dedicated page yet.

@@ -15,7 +15,8 @@
     "savedJustNow": "تم الحفظ الآن",
     "savedMinutesAgo": "تم الحفظ منذ {{count}} دقيقة",
     "search": "بحث",
-    "language": "اللغة"
+    "language": "اللغة",
+    "filter": "تصفية"
   },
   "nav": {
     "home": "الرئيسية",
@@ -890,7 +891,13 @@
         "documentReview": "مراجعة المستندات",
         "contractProcessing": "معالجة العقد",
         "feeCollection": "تحصيل الرسوم"
-      }
+      },
+      "searchPlaceholder": "بحث ....",
+      "search": "بحث",
+      "downloadPdf": "تحميل PDF",
+      "exportExcel": "تصدير إلى Excel",
+      "next": "التالي",
+      "previous": "السابق"
     },
     "activities": {
       "title": "آخر الأنشطة",
