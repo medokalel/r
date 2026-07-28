@@ -85,3 +85,26 @@ export function deleteUser(id: string): Promise<void> {
   if (index !== -1) MOCK_USERS.splice(index, 1)
   return delay(undefined)
 }
+
+export interface CreateUserInput {
+  name: string
+  role: AppUserRole
+  phone: string
+  email: string
+  password: string
+}
+
+// TODO: replace with `authorizedRequest('/users', { method: 'POST', body: input })`
+// once the backend exposes this endpoint.
+export function createUser(input: CreateUserInput): Promise<AppUser> {
+  const user: AppUser = {
+    id: crypto.randomUUID(),
+    name: input.name,
+    role: input.role,
+    email: input.email,
+    phone: input.phone,
+    status: 'active',
+  }
+  MOCK_USERS.unshift(user)
+  return delay(user)
+}

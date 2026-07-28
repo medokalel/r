@@ -951,6 +951,18 @@
     "roles": {
       "auditor": "Auditor",
       "reviewer": "Reviewer"
+    },
+    "addUserModal": {
+      "title": "Add user",
+      "username": "Username",
+      "usernamePlaceholder": "Example: Muhammad Khaled",
+      "role": "The role",
+      "rolePlaceholder": "Select a role",
+      "mobileNumber": "Mobile number",
+      "email": "e-mail",
+      "password": "Password",
+      "createPassword": "Create a password",
+      "add": "Add"
     }
   }
 }

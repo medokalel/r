@@ -950,6 +950,18 @@
     "roles": {
       "auditor": "مدقق",
       "reviewer": "مراجع"
+    },
+    "addUserModal": {
+      "title": "إضافة مستخدم",
+      "username": "اسم المستخدم",
+      "usernamePlaceholder": "مثال: محمد خالد",
+      "role": "الدور",
+      "rolePlaceholder": "اختر الدور",
+      "mobileNumber": "رقم الجوال",
+      "email": "البريد الإلكتروني",
+      "password": "كلمة المرور",
+      "createPassword": "إنشاء كلمة مرور",
+      "add": "إضافة"
     }
   }
 }

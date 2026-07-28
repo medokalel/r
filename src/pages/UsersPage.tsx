@@ -1,12 +1,9 @@
 import { useEffect, useState } from 'react'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { AddUserModal } from '@/components/dashboard/users/AddUserModal'
 import { UsersStatCards } from '@/components/dashboard/users/UsersStatCards'
 import { UsersTable } from '@/components/dashboard/users/UsersTable'
-import {
-  UsersStatsSkeleton,
-  UsersTableSkeleton,
-} from '@/components/dashboard/users/UsersLoadingSkeleton'
 import {
   deleteUser,
   getUsersStats,
@@ -16,11 +13,16 @@ import {
   type AppUserStatus,
   type UsersStats,
 } from '@/lib/api/usersApi'
+import {
+  UsersStatsSkeleton,
+  UsersTableSkeleton,
+} from '@/components/dashboard/users/UsersLoadingSkeleton'
 
 export function UsersPage() {
   const [stats, setStats] = useState<UsersStats | null>(null)
   const [users, setUsers] = useState<AppUser[]>([])
   const [loading, setLoading] = useState(true)
+  const [showAddUser, setShowAddUser] = useState(false)
 
   const load = () => {
     setLoading(true)
@@ -56,19 +58,25 @@ export function UsersPage() {
 
         {loading ? (
           <UsersTableSkeleton />
-        ) : (
-          <UsersTable
+          ) : (
+            <UsersTable
             users={users}
             loading={loading}
             onStatusChange={handleStatusChange}
             onDeleteUser={handleDeleteUser}
-            // TODO: wire up an add/edit user form once the backend exposes
-            // create/update endpoints — see usersApi.ts
-            onAddUser={() => undefined}
+            onAddUser={() => setShowAddUser(true)}
+            // TODO: wire up an edit-user form once the backend exposes
+            // an update endpoint — see usersApi.ts
             onEditUser={() => undefined}
           />
         )}
       </div>
+
+      <AddUserModal
+        open={showAddUser}
+        onClose={() => setShowAddUser(false)}
+        onCreated={load}
+      />
     </AppLayout>
   )
 }
