@@ -57,7 +57,7 @@ export function CountryCodeSelect({
     countries[0]
 
   return (
-    <div className={cn('relative w-[66px] shrink-0 rounded-[8px] bg-white', className)}>
+    <div className={cn('relative h-12 w-[66px] shrink-0 rounded-[8px] bg-white', className)}>
       <select
         value={selected.code}
         aria-label={ariaLabel}

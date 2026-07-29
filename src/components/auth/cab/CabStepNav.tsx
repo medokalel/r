@@ -19,7 +19,7 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
 
   return (
     <nav
-      className={cn('flex flex-wrap gap-2', className)}
+      className={cn('flex flex-nowrap items-center gap-4 overflow-x-auto', className)}
       aria-label={t('register.progressLabel')}
     >
       {CAB_STEPS.map((step) => {
@@ -29,8 +29,8 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
           <div
             key={step.number}
             className={cn(
-              'flex items-center gap-2 rounded-[var(--radius-sm)] px-3 py-2',
-              isActive ? 'bg-primary text-white' : 'bg-[#f4f4f4] text-neutral-500'
+              'flex shrink-0 items-center gap-2',
+              isActive && 'rounded-[var(--radius-sm)] bg-primary px-3 py-2'
             )}
           >
             <span
@@ -39,13 +39,16 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
               className={cn(
                 'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold',
                 englishDigitsLtrClassName,
-                isActive ? 'bg-white text-primary' : 'bg-white text-neutral-500'
+                isActive ? 'bg-white text-primary' : 'bg-[#f4f4f4] text-neutral-500'
               )}
             >
               {step.number}
             </span>
             <span
-              className={cn('text-[14px] leading-none', isActive ? 'font-semibold' : undefined)}
+              className={cn(
+                'whitespace-nowrap text-[14px] leading-none',
+                isActive ? 'font-semibold text-white' : 'text-neutral-500'
+              )}
             >
               {t(step.key)}
             </span>

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, MailIcon, PhoneIcon } from '@/components/icons'
-import { FormLabel, SelectField, TextField, fieldInputClassName } from '@/components/ui'
+import { FormLabel, SelectField, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
@@ -110,11 +110,12 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
                 value={form.mobile}
                 onChange={(e) => onPatch({ mobile: toEnglishDigits(e.target.value) })}
                 className={cn(
-                  fieldInputClassName,
-                  englishDigitsClassName,
-                  'ps-12',
-                  mobileError && 'border-error-400 focus:ring-error-400 focus:border-error-400'
-                )}
+                fieldInputClassName,
+                fieldHeightClassName,
+                englishDigitsClassName,
+                'ps-12',
+                mobileError && 'border-error-400 focus:ring-error-400 focus:border-error-400'
+              )}
               />
             </div>
           </PhoneInputRow>
