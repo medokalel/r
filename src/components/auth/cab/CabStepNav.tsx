@@ -30,16 +30,16 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
             key={step.number}
             className={cn(
               'flex shrink-0 items-center gap-2',
-              isActive && 'rounded-[var(--radius-sm)] bg-primary px-3 py-2'
+              isActive && 'rounded-[var(--radius-sm)] border border-[#a3b8f5] bg-primary-subtle px-1 py-3'
             )}
           >
             <span
               lang="en"
               dir="ltr"
               className={cn(
-                'flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-[13px] font-semibold',
+                'flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] text-[13px] font-semibold',
                 englishDigitsLtrClassName,
-                isActive ? 'bg-white text-primary' : 'bg-[#f4f4f4] text-neutral-500'
+                isActive ? 'bg-primary text-white' : 'bg-[#f4f4f4] text-neutral-500'
               )}
             >
               {step.number}
@@ -47,7 +47,7 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
             <span
               className={cn(
                 'whitespace-nowrap text-[14px] leading-none',
-                isActive ? 'font-semibold text-white' : 'text-neutral-500'
+                isActive ? 'font-semibold text-primary' : 'text-neutral-500'
               )}
             >
               {t(step.key)}
