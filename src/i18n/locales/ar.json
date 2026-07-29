@@ -71,6 +71,41 @@
     "title": "إنشاء حساب جديد",
     "chooseEntityType": "يرجى اختيار نوع الجهة",
     "selectedEntityLabel": "بتسجل كـ:",
+    "cab": {
+      "title": "إنشاء حساب CAB جديد",
+      "comingSoon": "هذه الخطوة قريبًا.",
+      "steps": {
+        "details": "بيانات CAB",
+        "scopeModules": "النطاق والوحدات",
+        "verification": "التحقق",
+        "accountSetup": "إعداد الحساب"
+      },
+      "cabType": "نوع CAB",
+      "cabTypePlaceholder": "اختر نوع CAB",
+      "cabName": "اسم CAB",
+      "cabNamePlaceholder": "أدخل الاسم القانوني لـ CAB",
+      "cabNameSearchPlaceholder": "بحث...",
+      "accreditationBodyName": "اسم جهة الاعتماد",
+      "accreditationBodyNamePlaceholder": "اختر جهات الاعتماد",
+      "officialEmail": "البريد الإلكتروني الرسمي",
+      "mobileNumber": "رقم الهاتف المحمول",
+      "cabCountry": "دولة CAB",
+      "cabCountryPlaceholder": "اختر الدولة",
+      "contactPerson": "الشخص المسؤول",
+      "contactPersonPlaceholder": "الاسم الكامل",
+      "role": "الدور",
+      "rolePlaceholder": "اختر الدور",
+      "cabTypes": {
+        "product": "شهادة منتج",
+        "managementSystem": "شهادة نظام إدارة",
+        "personnel": "شهادة أفراد"
+      },
+      "roles": {
+        "owner": "مالك",
+        "manager": "مدير",
+        "authorizedRepresentative": "ممثل مفوض"
+      }
+    },
     "progressLabel": "تقدم التسجيل",
     "steps": {
       "entityVerification": "بيانات الجهة والتحقق",

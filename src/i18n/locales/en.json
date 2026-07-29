@@ -71,6 +71,41 @@
     "title": "Create a new account",
     "chooseEntityType": "Please select the entity type",
     "selectedEntityLabel": "Registering as:",
+    "cab": {
+      "title": "Create New CAB Account",
+      "comingSoon": "This step is coming soon.",
+      "steps": {
+        "details": "CAB Details",
+        "scopeModules": "Scope & Modules",
+        "verification": "Verification",
+        "accountSetup": "Account setup"
+      },
+      "cabType": "CAB Type",
+      "cabTypePlaceholder": "Select CAB type",
+      "cabName": "CAB Name",
+      "cabNamePlaceholder": "Enter CAB legal name",
+      "cabNameSearchPlaceholder": "Search...",
+      "accreditationBodyName": "Accreditation Body Name",
+      "accreditationBodyNamePlaceholder": "Select accreditation bodies",
+      "officialEmail": "Official Email",
+      "mobileNumber": "Mobile number",
+      "cabCountry": "CAB Country",
+      "cabCountryPlaceholder": "Select country",
+      "contactPerson": "Contact Person",
+      "contactPersonPlaceholder": "Full name",
+      "role": "Role",
+      "rolePlaceholder": "Select role",
+      "cabTypes": {
+        "product": "Product Certification",
+        "managementSystem": "Management System Certification",
+        "personnel": "Personnel Certification"
+      },
+      "roles": {
+        "owner": "Owner",
+        "manager": "Manager",
+        "authorizedRepresentative": "Authorized Representative"
+      }
+    },
     "progressLabel": "Registration progress",
     "steps": {
       "entityVerification": "Entity data and verification",

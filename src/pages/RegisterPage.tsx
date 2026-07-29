@@ -8,6 +8,7 @@ import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { DEFAULT_COUNTRY_CODE, getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
+import { CabRegisterFlow } from '@/components/auth/cab/CabRegisterFlow'
 import {
   FormLabel,
   SelectField,
@@ -282,6 +283,8 @@ export function RegisterPage() {
 
       {step === 1 ? (
         <StepEntityType selected={form.entityType} onSelect={handleEntitySelect} />
+      ) : form.entityType === 'CERTIFICATION_BODY' ? (
+        <CabRegisterFlow onBackToEntityType={() => setStep(1)} />
       ) : (
         <>
           <h1 className="text-h1 text-neutral-900 mb-6">{t('register.title')}</h1>
