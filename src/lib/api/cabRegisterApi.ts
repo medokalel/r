@@ -16,6 +16,7 @@ export const CAB_TYPE_OPTIONS: CabOption[] = [
   { value: 'PRODUCT_CERTIFICATION', labelKey: 'register.cab.cabTypes.product' },
   { value: 'MANAGEMENT_SYSTEM_CERTIFICATION', labelKey: 'register.cab.cabTypes.managementSystem' },
   { value: 'PERSONNEL_CERTIFICATION', labelKey: 'register.cab.cabTypes.personnel' },
+  { value: 'INSPECTION_BODY', labelKey: 'register.cab.cabTypes.inspectionBody' },
 ]
 
 // TODO: replace with a real lookup once the backend defines contact roles

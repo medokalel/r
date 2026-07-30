@@ -86,6 +86,7 @@
       "cabNamePlaceholder": "أدخل الاسم القانوني لـ CAB",
       "cabNameSearchPlaceholder": "بحث...",
       "accreditationBodyName": "اسم جهة الاعتماد",
+      "accreditationBodyPlaceholder": "اختر جهة الاعتماد",
       "accreditationBodyNamePlaceholder": "اختر جهات الاعتماد",
       "officialEmail": "البريد الإلكتروني الرسمي",
       "mobileNumber": "رقم الهاتف المحمول",
@@ -98,7 +99,8 @@
       "cabTypes": {
         "product": "شهادة منتج",
         "managementSystem": "شهادة نظام إدارة",
-        "personnel": "شهادة أفراد"
+        "personnel": "شهادة أفراد",
+        "inspectionBody": "هيئة تفتيش"
       },
       "roles": {
         "owner": "مالك",

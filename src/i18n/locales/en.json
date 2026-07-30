@@ -87,6 +87,7 @@
       "cabNameSearchPlaceholder": "Search...",
       "accreditationBodyName": "Accreditation Body Name",
       "accreditationBodyNamePlaceholder": "Select accreditation bodies",
+      "accreditationBodyPlaceholder": "Select accreditation body",
       "officialEmail": "Official Email",
       "mobileNumber": "Mobile number",
       "cabCountry": "CAB Country",
@@ -98,7 +99,8 @@
       "cabTypes": {
         "product": "Product Certification",
         "managementSystem": "Management System Certification",
-        "personnel": "Personnel Certification"
+        "personnel": "Personnel Certification",
+        "inspectionBody": "Inspection Body"
       },
       "roles": {
         "owner": "Owner",

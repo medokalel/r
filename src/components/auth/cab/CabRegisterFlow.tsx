@@ -7,7 +7,12 @@ import {
   CabDetailsStep,
   type CabDetailsForm,
 } from '@/components/auth/cab/CabDetailsStep'
-import { emptyCabDetailsForm, isCabDetailsComplete } from '@/lib/cabDetailsForm'
+import { CabAccreditationScopesStep } from '@/components/auth/cab/CabAccreditationScopesStep'
+import {
+  emptyCabDetailsForm,
+  isCabDetailsComplete,
+  isCabAccreditationScopesComplete,
+} from '@/lib/cabDetailsForm'
 
 interface CabRegisterFlowProps {
   /** Lets the user back out to entity-type selection from CAB step 1. */
@@ -24,6 +29,10 @@ const STEP_TITLE_KEYS = [
 export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const { t } = useTranslation()
   const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  // Step 1 ("CAB Details") is split into two screens: the base details form,
+  // then a continuation screen for accreditation scopes. The step nav stays
+  // on "1" for both — this only tracks which screen within step 1 to show.
+  const [detailsSubStep, setDetailsSubStep] = useState<1 | 2>(1)
   const [detailsForm, setDetailsForm] = useState<CabDetailsForm>(emptyCabDetailsForm)
 
   const patchDetails = (f: Partial<CabDetailsForm>) =>
@@ -31,19 +40,35 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
 
   const handleBack = () => {
     if (step === 1) {
+      if (detailsSubStep === 2) {
+        setDetailsSubStep(1)
+        return
+      }
       onBackToEntityType()
       return
+    }
+    if (step === 2) {
+      setDetailsSubStep(2)
     }
     setStep((s) => (s - 1) as 1 | 2 | 3 | 4)
   }
 
   const handleNext = () => {
+    if (step === 1 && detailsSubStep === 1) {
+      setDetailsSubStep(2)
+      return
+    }
     // TODO: steps 2-4 aren't built yet — once they are, this should validate
     // and submit the same way the existing register() flow does.
     setStep((s) => Math.min(s + 1, 4) as 1 | 2 | 3 | 4)
   }
 
-  const nextDisabled = step === 1 && !isCabDetailsComplete(detailsForm)
+  const nextDisabled =
+    step === 1 && detailsSubStep === 1
+      ? !isCabDetailsComplete(detailsForm)
+      : step === 1 && detailsSubStep === 2
+        ? !isCabAccreditationScopesComplete(detailsForm)
+        : false
 
   return (
     <>
@@ -66,7 +91,12 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
 
       <CabStepNav current={step} className="mb-6" />
 
-      {step === 1 && <CabDetailsStep form={detailsForm} onPatch={patchDetails} />}
+      {step === 1 && detailsSubStep === 1 && (
+        <CabDetailsStep form={detailsForm} onPatch={patchDetails} />
+      )}
+      {step === 1 && detailsSubStep === 2 && (
+        <CabAccreditationScopesStep form={detailsForm} onPatch={patchDetails} />
+      )}
       {step > 1 && <CabComingSoonStep titleKey={STEP_TITLE_KEYS[step - 1]} />}
 
       <AuthStepActions

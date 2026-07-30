@@ -1,5 +1,10 @@
 import type { CountryCode } from '@/lib/countries'
 
+export interface CabAccreditationScopeDetail {
+  accreditationBody: string
+  country: CountryCode
+}
+
 export interface CabDetailsForm {
   cabType: string
   cabName: string
@@ -10,6 +15,10 @@ export interface CabDetailsForm {
   country: CountryCode
   contactPerson: string
   role: string
+  /** Continuation screen (still step 1): CAB types the org is accredited for. */
+  accreditationScopes: string[]
+  /** Per-scope accreditation body + country, keyed by the scope's value. */
+  accreditationDetails: Record<string, CabAccreditationScopeDetail>
 }
 
 export const emptyCabDetailsForm: CabDetailsForm = {
@@ -22,6 +31,8 @@ export const emptyCabDetailsForm: CabDetailsForm = {
   country: '' as CountryCode,
   contactPerson: '',
   role: '',
+  accreditationScopes: [],
+  accreditationDetails: {},
 }
 
 export function isCabDetailsComplete(form: CabDetailsForm): boolean {
@@ -34,4 +45,12 @@ export function isCabDetailsComplete(form: CabDetailsForm): boolean {
       form.contactPerson.trim() &&
       form.role
   )
+}
+
+export function isCabAccreditationScopesComplete(form: CabDetailsForm): boolean {
+  if (form.accreditationScopes.length === 0) return false
+  return form.accreditationScopes.every((scope) => {
+    const detail = form.accreditationDetails[scope]
+    return Boolean(detail?.accreditationBody && detail?.country)
+  })
 }
