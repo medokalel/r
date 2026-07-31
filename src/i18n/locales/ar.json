@@ -96,6 +96,11 @@
       "contactPersonPlaceholder": "الاسم الكامل",
       "role": "الدور",
       "rolePlaceholder": "اختر الدور",
+      "adminName": "اسم المسؤول",
+      "adminNamePlaceholder": "الاسم الكامل",
+      "adminRole": "دور المسؤول",
+      "adminRolePlaceholder": "اختر الدور",
+      "adminEmail": "البريد الإلكتروني للمسؤول",
       "cabTypes": {
         "product": "شهادة منتج",
         "managementSystem": "شهادة نظام إدارة",

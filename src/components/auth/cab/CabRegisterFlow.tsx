@@ -12,6 +12,10 @@ import { CabScopeModulesStep } from '@/components/auth/cab/CabScopeModulesStep'
 import { CabModulesStep } from '@/components/auth/cab/CabModulesStep'
 import { CabVerificationStep } from '@/components/auth/cab/CabVerificationStep'
 import {
+  CabAccountSetupStep,
+  type CabAccountSetupForm,
+} from '@/components/auth/cab/CabAccountSetupStep'
+import {
   emptyCabDetailsForm,
   isCabDetailsComplete,
   isCabAccreditationScopesComplete,
@@ -22,6 +26,7 @@ import {
   isCabModulesComplete,
   type CabScopeModulesForm,
 } from '@/lib/cabScopeModulesForm'
+import { emptyCabAccountSetupForm, isCabAccountSetupComplete } from '@/lib/cabAccountSetupForm'
 import { SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/cabRegisterApi'
 import { isValidRequiredEmail } from '@/lib/authValidation'
 import { sendVerificationCode, verifyEmail } from '@/lib/api/authApi'
@@ -53,6 +58,9 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const [scopeModulesSubStep, setScopeModulesSubStep] = useState<1 | 2>(1)
   const [detailsForm, setDetailsForm] = useState<CabDetailsForm>(emptyCabDetailsForm)
   const [scopeModulesForm, setScopeModulesForm] = useState<CabScopeModulesForm>(emptyCabScopeModulesForm)
+  const [accountSetupForm, setAccountSetupForm] = useState<CabAccountSetupForm>(
+    emptyCabAccountSetupForm
+  )
 
   // Step 3 ("verification") — same email + OTP pattern as RegisterPage.
   const [verificationEmail, setVerificationEmail] = useState('')
@@ -67,6 +75,8 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
     setDetailsForm((prev) => ({ ...prev, ...f }))
   const patchScopeModules = (f: Partial<CabScopeModulesForm>) =>
     setScopeModulesForm((prev) => ({ ...prev, ...f }))
+  const patchAccountSetup = (f: Partial<CabAccountSetupForm>) =>
+    setAccountSetupForm((prev) => ({ ...prev, ...f }))
 
   const emailValid = isValidRequiredEmail(verificationEmail)
   const otpComplete = otp.every((digit) => digit.length === 1)
@@ -149,8 +159,9 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
       setStep(4)
       return
     }
-    // TODO: step 4 isn't built yet — once it is, this should submit the same
-    // way the existing register() flow does.
+    // TODO: no CAB submission endpoint exists yet — once the backend adds
+    // one, this should submit detailsForm/scopeModulesForm/accountSetupForm
+    // together the same way the existing register() flow does.
     setStep((s) => Math.min(s + 1, 4) as 1 | 2 | 3 | 4)
   }
 
@@ -169,7 +180,9 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
             ? !isCabModulesComplete(scopeModulesForm)
             : step === 3
               ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
-              : false
+              : step === 4
+                ? !isCabAccountSetupComplete(accountSetupForm)
+                : false
 
   const nextLabel =
     step === 3 && codeSent && !emailVerified
@@ -226,7 +239,10 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
           onSendCode={() => void handleSendCode()}
         />
       )}
-      {step > 3 && <CabComingSoonStep titleKey={STEP_TITLE_KEYS[step - 1]} />}
+      {step === 4 && (
+        <CabAccountSetupStep form={accountSetupForm} onPatch={patchAccountSetup} />
+      )}
+      {step > 4 && <CabComingSoonStep titleKey={STEP_TITLE_KEYS[step - 1]} />}
 
       {verificationError && step === 3 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>

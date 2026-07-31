@@ -96,6 +96,11 @@
       "contactPersonPlaceholder": "Full name",
       "role": "Role",
       "rolePlaceholder": "Select role",
+      "adminName": "Admin Name",
+      "adminNamePlaceholder": "Full name",
+      "adminRole": "Admin Role",
+      "adminRolePlaceholder": "Select role",
+      "adminEmail": "Admin Email",
       "cabTypes": {
         "product": "Product Certification",
         "managementSystem": "Management System Certification",
