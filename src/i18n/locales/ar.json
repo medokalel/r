@@ -106,6 +106,12 @@
         "owner": "مالك",
         "manager": "مدير",
         "authorizedRepresentative": "ممثل مفوض"
+      },
+      "scopeModules": {
+        "schemeName": "اسم المخطط",
+        "schemeOwners": "الجهات المالكة للمخطط",
+        "noStandards": "لا توجد معايير محددة لهذا النوع حتى الآن.",
+        "whichModule": "ما هي الوحدة التي تبحث عنها؟"
       }
     },
     "progressLabel": "تقدم التسجيل",

@@ -43,3 +43,141 @@ export const MOCK_CAB_NAMES: { value: string; label: string }[] = [
   { value: 'big-chips', label: 'Big Chips' },
   { value: 'foods-egypt', label: 'Foods Egypt' },
 ]
+
+export interface ScopeStandardOption {
+  value: string
+  name: string
+  description: string
+}
+
+/** Schemes like Management System Certification: standards shown directly. */
+export interface FlatSchemeCatalog {
+  kind: 'flat'
+  sectionTitle: string
+  standards: ScopeStandardOption[]
+  defaultSelected: string[]
+}
+
+/** Schemes like Product Certification: pick a scheme owner first (e.g. SASO), then its standards. */
+export interface SchemeOwnerOption {
+  value: string
+  label: string
+  sectionTitle: string
+  standards: ScopeStandardOption[]
+  defaultSelected: string[]
+}
+
+export interface OwnerBasedSchemeCatalog {
+  kind: 'byOwner'
+  owners: SchemeOwnerOption[]
+}
+
+export type SchemeStandardsCatalog = FlatSchemeCatalog | OwnerBasedSchemeCatalog
+
+// TODO: replace with a real lookup once the backend exposes the applicable
+// standards catalog per scheme (Step 2, "Scope & Modules"). Only Management
+// System Certification and Product Certification have real catalogs for
+// now, matching the design — other scheme types (Personnel Certification,
+// Inspection Body) fall back to an empty-state message until their
+// catalogs are defined. Standard/owner names are kept as published, not
+// translated (same convention as MOCK_CAB_NAMES above).
+export const SCOPE_STANDARDS_BY_TYPE: Record<string, SchemeStandardsCatalog> = {
+  MANAGEMENT_SYSTEM_CERTIFICATION: {
+    kind: 'flat',
+    sectionTitle: 'Applicable ISO/IEC 17021 family standards',
+    standards: [
+      {
+        value: 'ISO_IEC_17021_1',
+        name: 'ISO/IEC 17021-1',
+        description: 'Requirements for bodies providing audit and certification of management systems',
+      },
+      {
+        value: 'ISO_IEC_17021_2',
+        name: 'ISO/IEC 17021-2',
+        description: 'Environmental management systems competence requirements',
+      },
+      {
+        value: 'ISO_IEC_17021_3',
+        name: 'ISO/IEC 17021-3',
+        description: 'Quality management systems competence requirements',
+      },
+      {
+        value: 'ISO_IEC_17021_10',
+        name: 'ISO/IEC 17021-10',
+        description: 'Occupational health and safety management systems',
+      },
+    ],
+    defaultSelected: ['ISO_IEC_17021_1', 'ISO_IEC_17021_3'],
+  },
+  PRODUCT_CERTIFICATION: {
+    kind: 'byOwner',
+    owners: [
+      {
+        value: 'SASO',
+        label: 'SASO',
+        sectionTitle: 'SASO sub-standards / categories',
+        standards: [
+          { value: 'SASO_QUALITY_MARK', name: 'SASO Quality Mark', description: 'Product quality mark certification' },
+          { value: 'SABER_PRODUCT_COC', name: 'SABER / Product CoC', description: 'Product conformity workflow' },
+          { value: 'IECEE_RECOGNITION', name: 'IECEE Recognition', description: 'Electrical products recognition' },
+          { value: 'ENERGY_EFFICIENCY', name: 'Energy Efficiency', description: 'Energy performance and labeling' },
+        ],
+        defaultSelected: ['SASO_QUALITY_MARK', 'SABER_PRODUCT_COC', 'IECEE_RECOGNITION'],
+      },
+    ],
+  },
+}
+
+export interface ModuleOption {
+  value: string
+  title: string
+  description: string
+}
+
+// TODO: replace with a real lookup once the backend exposes the module
+// catalog. Unlike the standards catalog above, this list is fixed — it
+// doesn't change based on which schemes were chosen earlier.
+export const MODULE_OPTIONS: ModuleOption[] = [
+  {
+    value: 'APPLICATIONS',
+    title: 'Applications',
+    description: 'Capture, validate, and route certification requests with a complete audit trail',
+  },
+  {
+    value: 'AUDIT_PLANNING',
+    title: 'Audit Planning',
+    description: 'Plan, assign, and track audits with real-time visibility and control',
+  },
+  {
+    value: 'CERTIFICATES',
+    title: 'Certificates',
+    description: 'Manage certificate lifecycles with issuance, renewal, suspension, and full control.',
+  },
+  {
+    value: 'NONCONFORMITIES',
+    title: 'Nonconformities',
+    description: 'Record findings, manage corrective actions, and verify effective resolution.',
+  },
+  {
+    value: 'REPORTS_ANALYTICS',
+    title: 'Reports & Analytics',
+    description: 'Drive smarter decisions with live dashboards and operational reporting tools.',
+  },
+  {
+    value: 'CERTIFICATION',
+    title: 'Certification',
+    description: 'Manage certification scopes and ongoing surveillance across conformity bodies.',
+  },
+  {
+    value: 'CLIENT_PORTAL',
+    title: 'Client Portal',
+    description: 'Give clients secure portals to apply, track, and download certificates.',
+  },
+  {
+    value: 'COMPETENCE',
+    title: 'Competence',
+    description: 'Manage auditor and assessor competence with qualifications, training, and witnessing.',
+  },
+]
+
+export const DEFAULT_SELECTED_MODULES = ['AUDIT_PLANNING', 'CERTIFICATES', 'REPORTS_ANALYTICS', 'COMPETENCE']

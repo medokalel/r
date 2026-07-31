@@ -106,6 +106,12 @@
         "owner": "Owner",
         "manager": "Manager",
         "authorizedRepresentative": "Authorized Representative"
+      },
+      "scopeModules": {
+        "schemeName": "Scheme Name",
+        "schemeOwners": "Scheme owners",
+        "noStandards": "No applicable standards defined yet for this scheme.",
+        "whichModule": "Which module are you looking for?"
       }
     },
     "progressLabel": "Registration progress",
