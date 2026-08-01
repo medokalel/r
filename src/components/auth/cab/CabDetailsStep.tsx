@@ -4,13 +4,11 @@ import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, MailIcon, PhoneIcon } from '@/components/icons'
 import { FormLabel, SelectField, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { MultiSelect } from '@/components/ui/MultiSelect'
-import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import {
   CAB_ROLE_OPTIONS,
   CAB_TYPE_OPTIONS,
   MOCK_ACCREDITATION_BODIES,
-  MOCK_CAB_NAMES,
 } from '@/lib/api/cabRegisterApi'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { isValidPhoneNumber } from '@/lib/validators'
@@ -53,15 +51,14 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
           onChange={(value) => onPatch({ cabType: value })}
           options={cabTypeOptions}
         />
-        <SearchableSelect
+        <TextField
           id="cab-name"
           label={t('register.cab.cabName')}
           required
+          type="text"
           value={form.cabName}
           placeholder={t('register.cab.cabNamePlaceholder')}
-          searchPlaceholder={t('register.cab.cabNameSearchPlaceholder')}
-          onChange={(value) => onPatch({ cabName: value })}
-          options={MOCK_CAB_NAMES}
+          onChange={(e) => onPatch({ cabName: e.target.value })}
         />
       </div>
 
