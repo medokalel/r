@@ -8,6 +8,7 @@ import {
   fieldLabelClassName,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { Checkbox } from '@/components/ui/Checkbox'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import { cn } from '@/lib/utils'
@@ -202,11 +203,10 @@ export function LegalDeclarationsStep() {
         </div>
 
         <label className="flex cursor-pointer items-start gap-2">
-          <input
-            type="checkbox"
+          <Checkbox
             checked={form.agreed}
-            onChange={(e) => update('agreed', e.target.checked)}
-            className="mt-1 size-5 accent-primary"
+            onChange={() => update('agreed', !form.agreed)}
+            className="mt-1"
           />
           <span className={fieldLabelClassName}>
             {t('accreditation.entityData.fields.legal.acknowledgement')}

@@ -1,3 +1,4 @@
+import { Checkbox } from '@/components/ui/Checkbox'
 import { fieldTextClassName } from '@/components/ui/fieldStyles'
 import { cn } from '@/lib/utils'
 
@@ -19,18 +20,25 @@ export function CheckboxGroup({ values, onChange, options, className }: Checkbox
 
   return (
     <div className={cn('flex flex-wrap items-center gap-x-10 gap-y-3', className)}>
-      {options.map((option) => (
-        <label key={option.value} className="flex cursor-pointer items-center gap-2">
-          <input
-            type={option.value === 'other' ? 'radio' : 'checkbox'}
-            name={option.value === 'other' ? 'otherSystem' : undefined}
-            checked={values.includes(option.value)}
-            onChange={() => toggle(option.value)}
-            className="size-5 accent-primary"
-          />
-          <span className={cn(fieldTextClassName, 'text-neutral-600')}>{option.label}</span>
-        </label>
-      ))}
+      {options.map((option) =>
+        option.value === 'other' ? (
+          <label key={option.value} className="flex cursor-pointer items-center gap-2">
+            <input
+              type="radio"
+              name="otherSystem"
+              checked={values.includes(option.value)}
+              onChange={() => toggle(option.value)}
+              className="size-5 accent-primary"
+            />
+            <span className={cn(fieldTextClassName, 'text-neutral-600')}>{option.label}</span>
+          </label>
+        ) : (
+          <label key={option.value} className="flex cursor-pointer items-center gap-2">
+            <Checkbox checked={values.includes(option.value)} onChange={() => toggle(option.value)} />
+            <span className={cn(fieldTextClassName, 'text-neutral-600')}>{option.label}</span>
+          </label>
+        )
+      )}
     </div>
   )
 }

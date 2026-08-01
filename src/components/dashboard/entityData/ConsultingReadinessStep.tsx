@@ -9,6 +9,7 @@ import {
   fieldTextClassName,
 } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { Checkbox } from '@/components/ui/Checkbox'
 import {
   DocumentUploadField,
   type UploadedDocumentFile,
@@ -233,8 +234,7 @@ export function ConsultingReadinessStep() {
                     form.otherSystemSelected ? 'cursor-not-allowed opacity-40' : 'cursor-pointer'
                   )}
                 >
-                  <input
-                    type="checkbox"
+                  <Checkbox
                     checked={form.currentSystems.includes(opt.value)}
                     disabled={form.otherSystemSelected}
                     onChange={() =>
@@ -245,23 +245,18 @@ export function ConsultingReadinessStep() {
                           : [...form.currentSystems, opt.value]
                       )
                     }
-                    className="size-5 accent-primary"
                   />
                   <span className={cn(fieldTextClassName, 'text-neutral-600')}>{opt.label}</span>
                 </label>
               ))}
               <label className="flex cursor-pointer items-center gap-2">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={form.otherSystemSelected}
                   onChange={() => {
-                    // "Other" is exclusive — picking it clears the ISO choices
                     if (!form.otherSystemSelected) update('currentSystems', [])
-                    // Clear the specification text if "Other" gets unchecked
                     else update('otherSpecification', '')
                     update('otherSystemSelected', !form.otherSystemSelected)
                   }}
-                  className="size-5 accent-primary"
                 />
                 <span className={cn(fieldTextClassName, 'text-neutral-600')}>
                   {t('accreditation.entityData.fields.readiness.other')}

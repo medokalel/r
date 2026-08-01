@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectField } from '@/components/ui'
+import { Checkbox } from '@/components/ui/Checkbox'
 import { FormLabel } from '@/components/ui/FormField'
 import { fieldTextClassName } from '@/components/ui/fieldStyles'
 import { CAB_TYPE_OPTIONS, SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/cabRegisterApi'
@@ -85,11 +86,10 @@ export function CabScopeModulesStep({ schemes, form, onPatch }: CabScopeModulesS
           <div className="max-h-[280px] space-y-4 overflow-y-auto px-4 py-4">
             {standardsList.map((standard) => (
               <label key={standard.value} className="flex cursor-pointer items-start gap-3">
-                <input
-                  type="checkbox"
+                <Checkbox
                   checked={selected.includes(standard.value)}
                   onChange={() => toggleStandard(standard.value)}
-                  className="mt-1 size-4 shrink-0 accent-primary"
+                  className="mt-1"
                 />
                 <span>
                   <span className={cn(fieldTextClassName, 'block font-medium text-neutral-900')}>

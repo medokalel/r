@@ -279,6 +279,18 @@
   animation: skeleton-shimmer 1.6s ease-in-out infinite;
 }
 
+/* Hides the scrollbar track/thumb while keeping the element scrollable —
+   use on any horizontally-scrolling nav/tab bar (e.g. CabStepNav) so it
+   scrolls on narrow screens without showing a visible scrollbar. */
+   
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* old Edge/IE */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
 @keyframes skeleton-shimmer {
   100% {
     transform: translateX(100%);

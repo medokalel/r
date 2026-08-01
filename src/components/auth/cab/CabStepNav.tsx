@@ -19,7 +19,7 @@ export function CabStepNav({ current, className }: CabStepNavProps) {
 
   return (
     <nav
-      className={cn('flex flex-nowrap items-center gap-4 overflow-x-auto', className)}
+      className={cn('flex flex-nowrap items-center gap-4 overflow-x-auto scrollbar-hide', className)}
       aria-label={t('register.progressLabel')}
     >
       {CAB_STEPS.map((step) => {

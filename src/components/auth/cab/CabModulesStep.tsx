@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { Checkbox } from '@/components/ui/Checkbox'
 import { MODULE_OPTIONS } from '@/lib/api/cabRegisterApi'
 import type { CabScopeModulesForm } from '@/lib/cabScopeModulesForm'
 
@@ -27,18 +28,13 @@ export function CabModulesStep({ form, onPatch }: CabModulesStepProps) {
           return (
             <label
               key={module.value}
-              className="flex cursor-pointer items-start justify-between gap-3 rounded-[var(--radius-sm)] border border-neutral-200 px-4 py-4"
+              className="flex cursor-pointer items-start justify-between gap-3 rounded-[16px] border border-neutral-100 bg-white px-5 py-5 shadow-[0_2px_10px_rgba(16,24,40,0.06)]"
             >
               <span>
                 <span className="block text-[15px] font-medium text-neutral-900">{module.title}</span>
                 <span className="mt-1 block text-[13px] text-neutral-500">{module.description}</span>
               </span>
-              <input
-                type="checkbox"
-                checked={checked}
-                onChange={() => toggleModule(module.value)}
-                className="mt-1 size-4 shrink-0 accent-primary"
-              />
+              <Checkbox checked={checked} onChange={() => toggleModule(module.value)} className="mt-1" />
             </label>
           )
         })}
