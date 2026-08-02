@@ -117,6 +117,14 @@
         "schemeOwners": "Scheme owners",
         "noStandards": "No applicable standards defined yet for this scheme.",
         "whichModule": "Which module are you looking for?"
+      },
+      "summary": {
+        "title": "Summary",
+        "selectedSchemes": "Selected Schemes",
+        "selectedModules": "Selected Modules",
+        "submittedTitle": "Registration Submitted Successfully!",
+        "submittedDescription": "Your CAB account has been created. You can now access the dashboard and start managing your conformity assessment activities.",
+        "goToDashboard": "Go to Dashboard"
       }
     },
     "progressLabel": "Registration progress",

@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { AppIcon, SuccessCheckIcon } from '@/components/icons'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
-import { CabComingSoonStep } from '@/components/auth/cab/CabComingSoonStep'
 import { CabStepNav } from '@/components/auth/cab/CabStepNav'
 import {
   CabDetailsStep,
@@ -15,6 +16,7 @@ import {
   CabAccountSetupStep,
   type CabAccountSetupForm,
 } from '@/components/auth/cab/CabAccountSetupStep'
+import { CabSummaryStep } from '@/components/auth/cab/CabSummaryStep'
 import {
   emptyCabDetailsForm,
   isCabDetailsComplete,
@@ -35,20 +37,17 @@ import { ApiError } from '@/lib/api/client'
 interface CabRegisterFlowProps {
   /** Lets the user back out to entity-type selection from CAB step 1. */
   onBackToEntityType: () => void
+  /** Lets the parent page hide chrome (e.g. the "Log in" link) on the final success screen. */
+  onSubmittedChange?: (submitted: boolean) => void
 }
-
-const STEP_TITLE_KEYS = [
-  'register.cab.steps.details',
-  'register.cab.steps.scopeModules',
-  'register.cab.steps.verification',
-  'register.cab.steps.accountSetup',
-] as const
 
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
-export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
+export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRegisterFlowProps) {
   const { t } = useTranslation()
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  const navigate = useNavigate()
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
+  const [submitted, setSubmitted] = useState(false)
   // Step 1 ("CAB Details") is split into two screens: the base details form,
   // then a continuation screen for accreditation scopes. The step nav stays
   // on "1" for both — this only tracks which screen within step 1 to show.
@@ -133,6 +132,15 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
     setStep((s) => (s - 1) as 1 | 2 | 3 | 4)
   }
 
+  const handleCreateAccount = () => {
+    // TODO: no CAB submission endpoint exists yet — once the backend adds
+    // one, this should submit detailsForm/scopeModulesForm/accountSetupForm
+    // together the same way the existing register() flow does, before
+    // showing this confirmation screen.
+    setSubmitted(true)
+    onSubmittedChange?.(true)
+  }
+
   const handleNext = () => {
     if (step === 1 && detailsSubStep === 1) {
       setDetailsSubStep(2)
@@ -159,10 +167,11 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
       setStep(4)
       return
     }
-    // TODO: no CAB submission endpoint exists yet — once the backend adds
-    // one, this should submit detailsForm/scopeModulesForm/accountSetupForm
-    // together the same way the existing register() flow does.
-    setStep((s) => Math.min(s + 1, 4) as 1 | 2 | 3 | 4)
+    if (step === 4) {
+      setStep(5)
+      return
+    }
+    handleCreateAccount()
   }
 
   const nextDisabled =
@@ -182,14 +191,37 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
               ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
               : step === 4
                 ? !isCabAccountSetupComplete(accountSetupForm)
-                : false
+                : step === 5
+                  ? false
+                  : false
 
   const nextLabel =
     step === 3 && codeSent && !emailVerified
       ? isVerifyingEmail
         ? t('register.verifyingEmail')
         : t('register.verifyEmail')
-      : t('common.next')
+      : step === 5
+        ? t('register.createAccount')
+        : t('common.next')
+
+  if (submitted) {
+    return (
+      <div className="flex min-h-[520px] w-full flex-col items-center justify-center text-center">
+        <AppIcon icon={SuccessCheckIcon} size={140} className="mb-6" />
+        <h1 className="text-h1 mb-3 text-[#26a65b]">{t('register.cab.summary.submittedTitle')}</h1>
+        <p className="text-body-2 mb-8 max-w-md text-neutral-500">
+          {t('register.cab.summary.submittedDescription')}
+        </p>
+        <button
+          type="button"
+          onClick={() => navigate('/login')}
+          className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
+        >
+          {t('register.cab.summary.goToDashboard')}
+        </button>
+      </div>
+    )
+  }
 
   return (
     <>
@@ -210,7 +242,7 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
         </button>
       </p>
 
-      <CabStepNav current={step} className="mb-6" />
+      {step <= 4 && <CabStepNav current={step} className="mb-6" />}
 
       {step === 1 && detailsSubStep === 1 && (
         <CabDetailsStep form={detailsForm} onPatch={patchDetails} />
@@ -242,7 +274,9 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
       {step === 4 && (
         <CabAccountSetupStep form={accountSetupForm} onPatch={patchAccountSetup} />
       )}
-      {step > 4 && <CabComingSoonStep titleKey={STEP_TITLE_KEYS[step - 1]} />}
+      {step === 5 && (
+        <CabSummaryStep detailsForm={detailsForm} scopeModulesForm={scopeModulesForm} />
+      )}
 
       {verificationError && step === 3 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>

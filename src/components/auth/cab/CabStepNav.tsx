@@ -10,7 +10,7 @@ const CAB_STEPS = [
 ] as const
 
 interface CabStepNavProps {
-  current: 1 | 2 | 3 | 4
+  current: 1 | 2 | 3 | 4 | 5
   className?: string
 }
 

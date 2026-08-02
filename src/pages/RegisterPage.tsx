@@ -127,6 +127,7 @@ export function RegisterPage() {
   const navigate = useNavigate()
   const [initialState] = useState(createInitialState)
   const [step, setStep] = useState(initialState.step)
+  const [cabSubmitted, setCabSubmitted] = useState(false)
   const [form, setForm] = useState<RegisterForm>(initialState.form)
   const [codeSent, setCodeSent] = useState(initialState.codeSent)
   const [showPassword, setShowPassword] = useState(false)
@@ -284,7 +285,10 @@ export function RegisterPage() {
       {step === 1 ? (
         <StepEntityType selected={form.entityType} onSelect={handleEntitySelect} />
       ) : form.entityType === 'CERTIFICATION_BODY' ? (
-        <CabRegisterFlow onBackToEntityType={() => setStep(1)} />
+        <CabRegisterFlow
+          onBackToEntityType={() => setStep(1)}
+          onSubmittedChange={setCabSubmitted}
+        />
       ) : (
         <>
           <h1 className="text-h1 text-neutral-900 mb-6">{t('register.title')}</h1>
@@ -379,15 +383,17 @@ export function RegisterPage() {
         </>
       )}
 
-      <p className="text-center text-body-2-medium text-neutral-500 mt-8">
-        {t('auth.hasAccount')}{' '}
-        <Link
-          to="/login"
-          className="text-body-2-semibold text-primary underline underline-offset-2"
-        >
-          {t('auth.signIn')}
-        </Link>
-      </p>
+      {!cabSubmitted && (
+        <p className="text-center text-body-2-medium text-neutral-500 mt-8">
+          {t('auth.hasAccount')}{' '}
+          <Link
+            to="/login"
+            className="text-body-2-semibold text-primary underline underline-offset-2"
+          >
+            {t('auth.signIn')}
+          </Link>
+        </p>
+      )}
     </AuthLayout>
   )
 }
