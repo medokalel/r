@@ -6,7 +6,6 @@ export interface CabAccreditationScopeDetail {
 }
 
 export interface CabDetailsForm {
-  cabType: string
   cabName: string
   accreditationBodies: string[]
   email: string
@@ -22,7 +21,6 @@ export interface CabDetailsForm {
 }
 
 export const emptyCabDetailsForm: CabDetailsForm = {
-  cabType: '',
   cabName: '',
   accreditationBodies: [],
   email: '',
@@ -37,13 +35,12 @@ export const emptyCabDetailsForm: CabDetailsForm = {
 
 export function isCabDetailsComplete(form: CabDetailsForm): boolean {
   return Boolean(
-    form.cabType &&
-      form.cabName &&
-      form.accreditationBodies.length > 0 &&
-      form.email.trim() &&
-      form.country &&
-      form.contactPerson.trim() &&
-      form.role
+    form.cabName &&
+    form.accreditationBodies.length > 0 &&
+    form.email.trim() &&
+    form.country &&
+    form.contactPerson.trim() &&
+    form.role
   )
 }
 

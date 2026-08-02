@@ -24,29 +24,36 @@ export const emptyCabScopeModulesForm: CabScopeModulesForm = {
  * block progress — only schemes with a real standards list need at least
  * one selection.
  */
+export function isCabSchemeStandardsComplete(
+  form: CabScopeModulesForm,
+  scheme: string,
+  catalogByScheme: Record<string, SchemeStandardsCatalog>
+): boolean {
+  const catalog = catalogByScheme[scheme]
+  if (!catalog) return true
+
+  if (catalog.kind === 'flat') {
+    if (catalog.standards.length === 0) return true
+    const selected = form.selectedStandardsByScheme[scheme] ?? catalog.defaultSelected
+    return selected.length > 0
+  }
+
+  if (catalog.owners.length === 0) return true
+  const ownerValue = form.selectedOwnerByScheme[scheme] ?? catalog.owners[0].value
+  const ownerCatalog = catalog.owners.find((owner) => owner.value === ownerValue) ?? catalog.owners[0]
+  const key = `${scheme}::${ownerValue}`
+  const selected = form.selectedStandardsByScheme[key] ?? ownerCatalog.defaultSelected
+  return selected.length > 0
+}
+
+/** All schemes at once — kept for the summary step; the register flow now validates one scheme screen at a time via isCabSchemeStandardsComplete. */
 export function isCabScopeModulesComplete(
   form: CabScopeModulesForm,
   schemes: string[],
   catalogByScheme: Record<string, SchemeStandardsCatalog>
 ): boolean {
   if (schemes.length === 0) return false
-  return schemes.every((scheme) => {
-    const catalog = catalogByScheme[scheme]
-    if (!catalog) return true
-
-    if (catalog.kind === 'flat') {
-      if (catalog.standards.length === 0) return true
-      const selected = form.selectedStandardsByScheme[scheme] ?? catalog.defaultSelected
-      return selected.length > 0
-    }
-
-    if (catalog.owners.length === 0) return true
-    const ownerValue = form.selectedOwnerByScheme[scheme] ?? catalog.owners[0].value
-    const ownerCatalog = catalog.owners.find((owner) => owner.value === ownerValue) ?? catalog.owners[0]
-    const key = `${scheme}::${ownerValue}`
-    const selected = form.selectedStandardsByScheme[key] ?? ownerCatalog.defaultSelected
-    return selected.length > 0
-  })
+  return schemes.every((scheme) => isCabSchemeStandardsComplete(form, scheme, catalogByScheme))
 }
 
 export function isCabModulesComplete(form: CabScopeModulesForm): boolean {

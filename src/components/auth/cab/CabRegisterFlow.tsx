@@ -24,7 +24,7 @@ import {
 } from '@/lib/cabDetailsForm'
 import {
   emptyCabScopeModulesForm,
-  isCabScopeModulesComplete,
+  isCabSchemeStandardsComplete,
   isCabModulesComplete,
   type CabScopeModulesForm,
 } from '@/lib/cabScopeModulesForm'
@@ -52,9 +52,11 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
   // then a continuation screen for accreditation scopes. The step nav stays
   // on "1" for both — this only tracks which screen within step 1 to show.
   const [detailsSubStep, setDetailsSubStep] = useState<1 | 2>(1)
-  // Step 2 ("Scope & Modules") is likewise split: scheme/standards first,
-  // then the fixed "which module" picker. The step nav stays on "2" for both.
-  const [scopeModulesSubStep, setScopeModulesSubStep] = useState<1 | 2>(1)
+  // Step 2 ("Scope & Modules") is one screen per scheme chosen in step 1,
+  // followed by the fixed "which module" picker. 0..schemes.length-1 shows
+  // that scheme's screen; schemes.length shows the modules picker. The step
+  // nav stays on "2" throughout.
+  const [schemeScreenIndex, setSchemeScreenIndex] = useState(0)
   const [detailsForm, setDetailsForm] = useState<CabDetailsForm>(emptyCabDetailsForm)
   const [scopeModulesForm, setScopeModulesForm] = useState<CabScopeModulesForm>(emptyCabScopeModulesForm)
   const [accountSetupForm, setAccountSetupForm] = useState<CabAccountSetupForm>(
@@ -121,8 +123,8 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       return
     }
     if (step === 2) {
-      if (scopeModulesSubStep === 2) {
-        setScopeModulesSubStep(1)
+      if (schemeScreenIndex > 0) {
+        setSchemeScreenIndex((i) => i - 1)
         return
       }
       setStep(1)
@@ -148,14 +150,18 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     }
     if (step === 1 && detailsSubStep === 2) {
       setStep(2)
-      setScopeModulesSubStep(1)
+      setSchemeScreenIndex(0)
       return
     }
-    if (step === 2 && scopeModulesSubStep === 1) {
-      setScopeModulesSubStep(2)
-      return
-    }
-    if (step === 2 && scopeModulesSubStep === 2) {
+    if (step === 2) {
+      const schemes = detailsForm.accreditationScopes
+      if (schemeScreenIndex < schemes.length) {
+        // Currently on a scheme's standards screen — advance to the next
+        // scheme's screen, or to the modules screen once schemes run out.
+        setSchemeScreenIndex((i) => i + 1)
+        return
+      }
+      // Currently on the modules screen (schemeScreenIndex === schemes.length).
       setStep(3)
       return
     }
@@ -179,15 +185,15 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       ? !isCabDetailsComplete(detailsForm)
       : step === 1 && detailsSubStep === 2
         ? !isCabAccreditationScopesComplete(detailsForm)
-        : step === 2 && scopeModulesSubStep === 1
-          ? !isCabScopeModulesComplete(
-              scopeModulesForm,
-              detailsForm.accreditationScopes,
-              SCOPE_STANDARDS_BY_TYPE
-            )
-          : step === 2 && scopeModulesSubStep === 2
-            ? !isCabModulesComplete(scopeModulesForm)
-            : step === 3
+        : step === 2
+          ? schemeScreenIndex < detailsForm.accreditationScopes.length
+            ? !isCabSchemeStandardsComplete(
+                scopeModulesForm,
+                detailsForm.accreditationScopes[schemeScreenIndex],
+                SCOPE_STANDARDS_BY_TYPE
+              )
+            : !isCabModulesComplete(scopeModulesForm)
+          : step === 3
               ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
               : step === 4
                 ? !isCabAccountSetupComplete(accountSetupForm)
@@ -250,16 +256,16 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       {step === 1 && detailsSubStep === 2 && (
         <CabAccreditationScopesStep form={detailsForm} onPatch={patchDetails} />
       )}
-      {step === 2 && scopeModulesSubStep === 1 && (
-        <CabScopeModulesStep
-          schemes={detailsForm.accreditationScopes}
-          form={scopeModulesForm}
-          onPatch={patchScopeModules}
-        />
-      )}
-      {step === 2 && scopeModulesSubStep === 2 && (
-        <CabModulesStep form={scopeModulesForm} onPatch={patchScopeModules} />
-      )}
+        {step === 2 && schemeScreenIndex < detailsForm.accreditationScopes.length && (
+          <CabScopeModulesStep
+            scheme={detailsForm.accreditationScopes[schemeScreenIndex]}
+            form={scopeModulesForm}
+            onPatch={patchScopeModules}
+          />
+        )}
+        {step === 2 && schemeScreenIndex >= detailsForm.accreditationScopes.length && (
+          <CabModulesStep form={scopeModulesForm} onPatch={patchScopeModules} />
+        )}
       {step === 3 && (
         <CabVerificationStep
           email={verificationEmail}

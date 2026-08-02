@@ -7,7 +7,6 @@ import { MultiSelect } from '@/components/ui/MultiSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import {
   CAB_ROLE_OPTIONS,
-  CAB_TYPE_OPTIONS,
   MOCK_ACCREDITATION_BODIES,
 } from '@/lib/api/cabRegisterApi'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
@@ -25,10 +24,6 @@ interface CabDetailsStepProps {
 export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
   const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const cabTypeOptions = useMemo(
-    () => CAB_TYPE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
-    [t]
-  )
   const cabRoleOptions = useMemo(
     () => CAB_ROLE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
     [t]
@@ -41,27 +36,16 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
 
   return (
     <div className="space-y-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <SelectField
-          id="cab-type"
-          label={t('register.cab.cabType')}
-          required
-          value={form.cabType}
-          placeholder={t('register.cab.cabTypePlaceholder')}
-          onChange={(value) => onPatch({ cabType: value })}
-          options={cabTypeOptions}
-        />
-        <TextField
-          id="cab-name"
-          label={t('register.cab.cabName')}
-          required
-          type="text"
-          value={form.cabName}
-          placeholder={t('register.cab.cabNamePlaceholder')}
-          onChange={(e) => onPatch({ cabName: e.target.value })}
-        />
-      </div>
-
+      <TextField
+        id="cab-name"
+        label={t('register.cab.cabName')}
+        required
+        type="text"
+        value={form.cabName}
+        placeholder={t('register.cab.cabNamePlaceholder')}
+        onChange={(e) => onPatch({ cabName: e.target.value })}
+      />
+      
       <div className="space-y-3">
         <FormLabel required>{t('register.cab.accreditationBodyName')}</FormLabel>
         <MultiSelect

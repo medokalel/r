@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -32,6 +33,12 @@ interface CabNavItem {
   href: string
 }
 
+const dashboardItem: CabNavItem = {
+  icon: DashboardIcon,
+  labelKey: 'cab.sidebar.dashboard',
+  href: '/cab/dashboard',
+}
+
 const workflowItems: CabNavItem[] = [
   { icon: UsersIcon, labelKey: 'cab.sidebar.clientRegistration', href: '/cab/clients/new' },
   { icon: FileTextIcon, labelKey: 'cab.sidebar.applicationDraft', href: '/cab/applications/draft' },
@@ -58,40 +65,11 @@ const manageItems: CabNavItem[] = [
   { icon: UserIcon, labelKey: 'cab.sidebar.freelancers', href: '/cab/freelancers' },
 ]
 
-function NavLink({ item, active }: { item: CabNavItem; active: boolean }) {
-  const { t } = useTranslation()
-  const navigate = useNavigate()
-
-  return (
-    <button
-      type="button"
-      onClick={() => navigate(item.href)}
-      className={cn(
-        'flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-start text-[14px] transition-colors',
-        active
-          ? 'bg-primary font-medium text-white'
-          : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
-      )}
-    >
-      <AppIcon icon={item.icon} size={20} className="shrink-0" />
-      <span className="truncate">{t(item.labelKey)}</span>
-    </button>
-  )
-}
-
-function GroupLabel({ labelKey }: { labelKey: string }) {
-  const { t } = useTranslation()
-  return (
-    <p className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-      {t(labelKey)}
-    </p>
-  )
-}
-
 export function CabSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
+  const [expanded, setExpanded] = useState(false)
 
   const handleLogout = () => {
     clearAuthSession()
@@ -100,46 +78,128 @@ export function CabSidebar() {
 
   const isActive = (href: string) => location.pathname === href
 
+  const renderItem = (item: CabNavItem) => {
+    const active = isActive(item.href)
+    return (
+      <button
+        key={item.href}
+        type="button"
+        title={t(item.labelKey)}
+        aria-label={t(item.labelKey)}
+        aria-current={active ? 'page' : undefined}
+        onClick={() => navigate(item.href)}
+        className={cn(
+          'flex items-center transition-colors',
+          expanded
+            ? cn(
+                'w-full gap-3 rounded-[var(--radius-md)] px-3 py-2 text-neutral-500',
+                'hover:bg-primary-subtle hover:text-primary',
+                active && 'bg-primary-subtle text-primary'
+              )
+            : cn(
+                active
+                  ? 'size-11 justify-center rounded-[14px] bg-[#f3f6fd] text-primary'
+                  : 'size-8 justify-center text-neutral-500 hover:text-primary'
+              )
+        )}
+      >
+        <AppIcon icon={item.icon} size={expanded ? 20 : 22} className="shrink-0" />
+        {expanded && <span className="truncate text-body-3-medium">{t(item.labelKey)}</span>}
+      </button>
+    )
+  }
+
+  const renderGroupLabel = (labelKey: string) =>
+    expanded ? (
+      <p
+        key={labelKey}
+        className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wide text-neutral-400"
+      >
+        {t(labelKey)}
+      </p>
+    ) : (
+      <div key={labelKey} className="my-2 h-px w-8 shrink-0 bg-neutral-100" aria-hidden />
+    )
+
   return (
-    <aside className="hidden w-[260px] shrink-0 flex-col overflow-y-auto border-e border-[#ececec] bg-white py-6 md:flex">
-      <div className="mb-6 flex flex-col items-center gap-1 px-4 text-center">
+    <aside
+      className={cn(
+        'relative hidden shrink-0 flex-col bg-white py-6 shadow-[0_5px_1px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out',
+        'md:flex md:w-[112px] md:items-center md:gap-6',
+        expanded
+          ? 'lg:w-[236px] lg:items-stretch lg:gap-6 lg:px-4'
+          : 'lg:w-[112px] lg:items-center lg:gap-6'
+      )}
+    >
+      {/* Collapse toggle — same control as the internal DashboardSidebar */}
+      <div className="hidden shrink-0 w-full justify-end px-2 lg:flex">
+        <button
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}
+          aria-expanded={expanded}
+          aria-label={t(expanded ? 'accreditation.sidebar.collapse' : 'accreditation.sidebar.expand')}
+          className={cn(
+            'flex size-7 items-center justify-center',
+            'rounded-[var(--radius-sm)] border border-neutral-200 bg-white text-neutral-600 shadow-sm',
+            'transition-colors hover:border-neutral-300 hover:text-primary'
+          )}
+        >
+          {expanded ? (
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none" style={{ transform: 'scaleX(-1)' }}>
+              <path d="M7.33447 12.667L11.3345 8.66699L7.33447 4.66699" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M11.3332 8.66699H0.666504" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M13.9946 16.667C15.728 11.4803 15.728 5.85366 13.9946 0.666992" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          ) : (
+            <svg width="16" height="18" viewBox="0 0 16 18" fill="none">
+              <path d="M7.33447 12.667L11.3345 8.66699L7.33447 4.66699" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M11.3332 8.66699H0.666504" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M13.9946 16.667C15.728 11.4803 15.728 5.85366 13.9946 0.666992" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          )}
+        </button>
+      </div>
+
+      {/* Logo */}
+      <div className={cn('shrink-0', expanded ? 'w-full px-4' : 'w-[116px] px-[6px]')}>
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
           width={114}
           height={93}
-          className="h-[93px] w-[114px] shrink-0 object-contain"
+          className="h-[93px] w-full shrink-0 object-contain"
         />
-        <span className="text-[11px] text-neutral-400">{t('cab.sidebar.tagline')}</span>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 px-3">
-        <NavLink
-          item={{ icon: DashboardIcon, labelKey: 'cab.sidebar.dashboard', href: '/cab/dashboard' }}
-          active={isActive('/cab/dashboard')}
-        />
+      <nav
+        className={cn(
+          'flex flex-1 flex-col gap-1 overflow-y-auto',
+          expanded ? 'w-full items-stretch px-1' : 'w-[70px] items-center'
+        )}
+        aria-label={t('cab.sidebar.dashboard')}
+      >
+        {renderItem(dashboardItem)}
 
-        <GroupLabel labelKey="cab.sidebar.workflow" />
-        {workflowItems.map((item) => (
-          <NavLink key={item.href} item={item} active={isActive(item.href)} />
-        ))}
+        {renderGroupLabel('cab.sidebar.workflow')}
+        {workflowItems.map(renderItem)}
 
-        <GroupLabel labelKey="cab.sidebar.manage" />
-        {manageItems.map((item) => (
-          <NavLink key={item.href} item={item} active={isActive(item.href)} />
-        ))}
-      </nav>
+        {renderGroupLabel('cab.sidebar.manage')}
+        {manageItems.map(renderItem)}
 
-      <div className="px-3 pt-4">
         <button
           type="button"
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-[var(--radius-sm)] px-3 py-2.5 text-start text-[14px] text-error-500 transition-colors hover:bg-error-50"
+          title={t('nav.logout')}
+          aria-label={t('nav.logout')}
+          className={cn(
+            'mt-4 flex items-center text-error-500 transition-colors hover:text-error-600',
+            expanded ? 'w-full gap-3 px-3 py-2' : 'size-11 justify-center'
+          )}
         >
-          <AppIcon icon={LogoutIcon} size={20} className="shrink-0" />
-          <span>{t('nav.logout')}</span>
+          <AppIcon icon={LogoutIcon} size={expanded ? 20 : 22} className="shrink-0" />
+          {expanded && <span className="truncate text-body-3-medium">{t('nav.logout')}</span>}
         </button>
-      </div>
+      </nav>
     </aside>
   )
 }

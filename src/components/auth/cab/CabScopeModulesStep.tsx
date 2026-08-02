@@ -1,51 +1,44 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SelectField } from '@/components/ui'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { FormLabel } from '@/components/ui/FormField'
-import { fieldTextClassName } from '@/components/ui/fieldStyles'
+import { fieldHeightClassName, fieldInputClassName, fieldTextClassName } from '@/components/ui/fieldStyles'
 import { CAB_TYPE_OPTIONS, SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/cabRegisterApi'
 import type { CabScopeModulesForm } from '@/lib/cabScopeModulesForm'
 import { cn } from '@/lib/utils'
 
 interface CabScopeModulesStepProps {
-  /** The accreditation scopes chosen back in step 1 (Continuation screen). */
-  schemes: string[]
+  /** The single accreditation scope this screen covers — CabRegisterFlow renders one of these per scheme chosen in step 1, one screen at a time. */
+  scheme: string
   form: CabScopeModulesForm
   onPatch: (f: Partial<CabScopeModulesForm>) => void
 }
 
 /**
- * First phase of Step 2 ("Scope & Modules"): pick a scheme, then (for
- * schemes like Product Certification) a scheme owner, then its applicable
- * standards.
+ * One screen per scheme chosen in step 1 ("CAB Type"): shows that scheme's
+ * name (read-only — no picker here, CabRegisterFlow steps through schemes
+ * one screen at a time), its owner picker if applicable, and its
+ * applicable standards.
  */
-export function CabScopeModulesStep({ schemes, form, onPatch }: CabScopeModulesStepProps) {
+export function CabScopeModulesStep({ scheme, form, onPatch }: CabScopeModulesStepProps) {
   const { t } = useTranslation()
-  const [selectedScheme, setSelectedScheme] = useState<string | null>(null)
-  // Fall back to the first scheme if none is picked yet, or if the user went
-  // back and changed their step-1 selections so the picked one no longer applies.
-  const activeScheme = selectedScheme && schemes.includes(selectedScheme) ? selectedScheme : schemes[0] ?? ''
 
-  const schemeOptions = useMemo(
-    () =>
-      schemes.map((scheme) => {
-        const option = CAB_TYPE_OPTIONS.find((o) => o.value === scheme)
-        return { value: scheme, label: option ? t(option.labelKey) : scheme }
-      }),
-    [schemes, t]
-  )
+  const schemeLabel = useMemo(() => {
+    const option = CAB_TYPE_OPTIONS.find((o) => o.value === scheme)
+    return option ? t(option.labelKey) : scheme
+  }, [scheme, t])
 
-  const catalog = SCOPE_STANDARDS_BY_TYPE[activeScheme]
+  const catalog = SCOPE_STANDARDS_BY_TYPE[scheme]
 
   const activeOwnerValue =
-    catalog?.kind === 'byOwner' ? form.selectedOwnerByScheme[activeScheme] ?? catalog.owners[0]?.value ?? '' : ''
+    catalog?.kind === 'byOwner' ? form.selectedOwnerByScheme[scheme] ?? catalog.owners[0]?.value ?? '' : ''
   const ownerCatalog =
     catalog?.kind === 'byOwner' ? catalog.owners.find((owner) => owner.value === activeOwnerValue) : undefined
   const ownerOptions =
     catalog?.kind === 'byOwner' ? catalog.owners.map((owner) => ({ value: owner.value, label: owner.label })) : []
 
-  const standardsKey = catalog?.kind === 'byOwner' ? `${activeScheme}::${activeOwnerValue}` : activeScheme
+  const standardsKey = catalog?.kind === 'byOwner' ? `${scheme}::${activeOwnerValue}` : scheme
   const sectionTitle = catalog?.kind === 'flat' ? catalog.sectionTitle : ownerCatalog?.sectionTitle
   const standardsList = catalog?.kind === 'flat' ? catalog.standards : ownerCatalog?.standards
   const defaultSelected = (catalog?.kind === 'flat' ? catalog.defaultSelected : ownerCatalog?.defaultSelected) ?? []
@@ -61,7 +54,15 @@ export function CabScopeModulesStep({ schemes, form, onPatch }: CabScopeModulesS
     <div className="w-full space-y-6">
       <div className="space-y-3">
         <FormLabel required>{t('register.cab.scopeModules.schemeName')}</FormLabel>
-        <SelectField value={activeScheme} onChange={setSelectedScheme} options={schemeOptions} />
+        <div
+          className={cn(
+            fieldInputClassName,
+            fieldHeightClassName,
+            'flex items-center text-neutral-700'
+          )}
+        >
+          {schemeLabel}
+        </div>
       </div>
 
       {catalog?.kind === 'byOwner' && (
@@ -70,7 +71,7 @@ export function CabScopeModulesStep({ schemes, form, onPatch }: CabScopeModulesS
           <SelectField
             value={activeOwnerValue}
             onChange={(value) =>
-              onPatch({ selectedOwnerByScheme: { ...form.selectedOwnerByScheme, [activeScheme]: value } })
+              onPatch({ selectedOwnerByScheme: { ...form.selectedOwnerByScheme, [scheme]: value } })
             }
             options={ownerOptions}
           />
