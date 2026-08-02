@@ -15,6 +15,7 @@ import {
   type ApplicationStatus,
 } from '@/lib/api/certificationApplicationApi'
 import { clearAuthSession } from '@/lib/authStorage'
+import { certificationRequestFormPath, ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 type RequestStatus = 'underConstruction' | 'underReview' | 'closedByDirector' | 'issued'
@@ -227,7 +228,7 @@ export function CertificationRequestsPage() {
         <div className="hidden md:flex md:items-center md:gap-3 md:px-5 md:py-5 lg:justify-end lg:gap-5">
           <button
             type="button"
-            onClick={() => navigate('/certification-request/new')}
+            onClick={() => navigate(ROUTES.certificationRequestNew)}
             className="flex h-12 flex-1 items-center justify-center gap-3 rounded-[8px] bg-[#1236a3] pl-4 pr-6 text-body-3-semibold leading-[1.6] text-white transition-colors hover:bg-[#1236a3] lg:flex-none"
           >
             <AddCircle size={24} color="white" variant="Linear" />
@@ -254,7 +255,7 @@ export function CertificationRequestsPage() {
           </button>
           <button
             type="button"
-            onClick={() => navigate('/certification-request/new')}
+            onClick={() => navigate(ROUTES.certificationRequestNew)}
             className="flex size-15 items-center justify-center rounded-full bg-[#1236a3] text-white shadow-[0_6px_20px_rgba(18,54,163,0.3)]"
             aria-label={t('certificationRequests.newRequest')}
           >
@@ -284,11 +285,10 @@ export function CertificationRequestsPage() {
                   key={request.id}
                   request={request}
                   onFollowUp={() =>
-                    navigate(`/certification-request/new?id=${request.id}&view=feedback`)
-
+                    navigate(certificationRequestFormPath(request.id, 'feedback'))
                   }
                   onOrderStatus={() =>
-                    navigate(`/certification-request/new?id=${request.id}&view=status`)
+                    navigate(certificationRequestFormPath(request.id, 'status'))
                   }
                 />
               ))}

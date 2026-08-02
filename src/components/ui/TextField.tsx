@@ -14,6 +14,8 @@ import { cn } from '@/lib/utils'
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /** Optional label rendered above the field via the shared FormLabel. */
   label?: string
+  /** Optional control rendered beside the label (e.g. an info tooltip). */
+  labelExtra?: React.ReactNode
   /** Leading icon rendered inside the field border. */
   icon?: AppIconComponent
   /** Validation message shown under the field; also flags the border red. */
@@ -30,7 +32,7 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
  * inputs normalize Arabic digits to Latin so stored values stay consistent.
  */
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { label, icon, error, trailing, required, className, id, type, inputMode, onChange, ...props },
+  { label, labelExtra, icon, error, trailing, required, className, id, type, inputMode, onChange, ...props },
   ref
 ) {
   const usesEnglishDigits =
@@ -110,9 +112,12 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function T
   return (
     <div className="space-y-2">
       {label && (
-        <FormLabel htmlFor={id} required={required}>
-          {label}
-        </FormLabel>
+        <div className="flex items-center gap-1.5">
+          <FormLabel htmlFor={id} required={required}>
+            {label}
+          </FormLabel>
+          {labelExtra}
+        </div>
       )}
       {field}
       {error && <p className="text-small-light text-error-500">{error}</p>}

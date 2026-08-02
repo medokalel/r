@@ -16,18 +16,19 @@ import {
 } from '@/components/icons'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { clearAuthSession } from '@/lib/authStorage'
+import { isDashboardNavActive, ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
-  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/dashboard' },
-  { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
-  { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: '/users' },
-  { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments' },
+  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
+  { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
+  { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
+  { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
-  { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals' },
-  { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices' },
-  { icon: SettingsIcon, labelKey: 'nav.settings', href: '/settings/company-profile' },
+  { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },
+  { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices', href: ROUTES.invoices },
+  { icon: SettingsIcon, labelKey: 'nav.settings', href: ROUTES.companyProfile },
 ]
 
 export function DashboardSidebar() {
@@ -100,7 +101,11 @@ export function DashboardSidebar() {
       >
         <div className={cn('flex flex-col', expanded ? 'gap-2' : 'items-center gap-10')}>
           {navItems.map(({ icon, labelKey, href }) => {
-            const isActive = href ? location.pathname === href : false
+            const isActive = href
+              ? href === ROUTES.dashboard
+                ? isDashboardNavActive(location.pathname)
+                : location.pathname === href
+              : false
             return (
               <button
                 key={labelKey}

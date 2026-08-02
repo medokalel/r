@@ -18,6 +18,7 @@ import {
   type DashboardStats,
   type DashboardTask,
 } from '@/lib/api/dashboardApi'
+import { certificationRequestFormPath, ROUTES } from '@/lib/routes'
 
 export function DashboardPage() {
   const navigate = useNavigate()
@@ -58,12 +59,12 @@ export function DashboardPage() {
             <DashboardTasksTable
               tasks={tasks}
               loading={loading}
-              onViewAll={() => navigate('/dashboard/tasks')}
+              onViewAll={() => navigate(ROUTES.dashboardTasks)}
               onProcedureClick={(task) => {
                 // Document-review tasks map to the application feedback view;
                 // other task types don't have a dedicated page yet.
                 if (task.taskType === 'documentReview') {
-                  navigate(`/certification-request/new?id=${task.id}&view=feedback`)
+                  navigate(certificationRequestFormPath(task.id, 'feedback'))
                 }
               }}
             />

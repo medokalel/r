@@ -29,7 +29,10 @@ function fetchIpLocation(): Promise<IpLocation | null> {
             }
           : null
       )
-      .catch(() => null)
+      .catch((error) => {
+        console.error('[useIpLocation] Failed to fetch IP location:', error)
+        return null
+      })
       .finally(() => clearTimeout(timeout))
   }
   return cached

@@ -51,8 +51,13 @@ export function useCompanyProfileState(): CompanyProfileState {
   const apiCountryCodeRef = useRef(false)
   const apiAddressRef = useRef(false)
 
+  // Marked true the moment the user explicitly sets the phone country code,
+  // so the IP-based default below never overwrites it.
+  const countryCodeTouchedRef = useRef(false)
+
   const update = useCallback(
     <K extends keyof ProfileFormValues>(key: K, value: ProfileFormValues[K]) => {
+      if (key === 'countryCode') countryCodeTouchedRef.current = true
       setForm((prev) => ({ ...prev, [key]: value }))
     },
     []
@@ -116,10 +121,13 @@ export function useCompanyProfileState(): CompanyProfileState {
   }, [])
 
   // Default phone country from IP only when the API didn't provide one
+  // AND the user hasn't already picked one manually
   useEffect(() => {
     if (loading || apiCountryCodeRef.current || !ipLocation?.countryCode) return
-    update('countryCode', ipLocation.countryCode as CountryCode)
-  }, [ipLocation, loading, update])
+    apiCountryCodeRef.current = true
+    if (countryCodeTouchedRef.current) return
+    setForm((prev) => ({ ...prev, countryCode: ipLocation.countryCode as CountryCode }))
+  }, [ipLocation, loading])
 
   // Default address country + city from IP, once, only when the API
   // didn't provide an address yet (mirrors the phone-country default above)

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { AddCircleIcon, AppIcon, EditIcon, SearchIcon, TrashIcon } from '@/components/icons'
 import { Toggle } from '@/components/ui/Toggle'
 import type { AppUser, AppUserStatus } from '@/lib/api/usersApi'
+import { matchesSearch } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
 
 interface UsersTableProps {
@@ -24,12 +25,13 @@ export function UsersTable({
 }: UsersTableProps) {
   const { t } = useTranslation()
   const [query, setQuery] = useState('')
+  const [appliedQuery, setAppliedQuery] = useState('')
 
   const filteredUsers = users.filter((user) =>
-    [user.name, user.email, user.phone].some((field) =>
-      field.toLowerCase().includes(query.trim().toLowerCase())
-    )
+    matchesSearch([user.name, user.email, user.phone, t(`users.roles.${user.role}`)], appliedQuery)
   )
+
+  const handleSearch = () => setAppliedQuery(query)
 
   return (
     <div className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
@@ -45,12 +47,14 @@ export function UsersTable({
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder={t('users.searchPlaceholder')}
               className="w-80 rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-2.5 ps-3 pe-10 text-[14px] outline-none focus:border-primary"
             />
           </div>
           <button
             type="button"
+            onClick={handleSearch}
             className="rounded-[var(--radius-sm)] bg-primary px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary/90"
           >
             {t('users.search')}

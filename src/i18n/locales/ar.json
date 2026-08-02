@@ -978,6 +978,12 @@
       "search": "بحث",
       "downloadPdf": "تحميل PDF",
       "exportExcel": "تصدير إلى Excel",
+      "filters": {
+        "status": "الحالة",
+        "taskType": "نوع المهمة",
+        "allStatuses": "جميع الحالات",
+        "allTypes": "جميع الأنواع"
+      },
       "next": "التالي",
       "previous": "السابق"
     },
@@ -1044,6 +1050,167 @@
       "password": "كلمة المرور",
       "createPassword": "إنشاء كلمة مرور",
       "add": "إضافة"
+    }
+  },
+  "wallet": {
+    "pageTitle": "المحفظة الرقمية",
+    "securityNotice": "يتم تشفير بياناتك المالية ولا يتم تخزينها مباشرة على خوادمنا.",
+    "balanceSection": {
+      "title": "إدارة الرصيد والمدفوعات",
+      "subtitle": "تابع رصيدك، اشحن محفظتك، وارفع فواتيرك الضريبية لجميع المعاملات.",
+      "addPaymentMethod": "إضافة طريقة دفع",
+      "availableCredit": "الرصيد المتاح",
+      "availableCreditHint": "متاح للاستخدام في عقود التدقيق والاعتماد.",
+      "toggleBalance": "إظهار/إخفاء الرصيد",
+      "rechargeBalance": "شحن الرصيد",
+      "requestRefund": "طلب استرداد",
+      "suspendedBalance": "الرصيد المعلق",
+      "suspendedBalanceHint": "أموال قيد المعالجة وتأكيد البنك.",
+      "financialDues": "المستحقات المالية",
+      "refundsUnderReview": "استردادات قيد المراجعة",
+      "linkedBankAccount": "الحساب البنكي المرتبط",
+      "bankName": "اسم البنك",
+      "accountHolder": "اسم صاحب الحساب",
+      "updateAccountInfo": "تحديث معلومات الحساب"
+    },
+    "transactions": {
+      "title": "سجل المعاملات المالية",
+      "subtitle": "جميع عمليات الشحن والدفع والاسترداد المرتبطة بحسابك.",
+      "downloadPdf": "تحميل PDF",
+      "exportExcel": "تصدير Excel",
+      "searchPlaceholder": "ابحث برقم المعاملة أو رقم العقد",
+      "allTypes": "جميع الأنواع",
+      "allDates": "جميع التواريخ",
+      "allCases": "جميع الحالات",
+      "statusSuccessful": "ناجحة",
+      "preview": "معاينة",
+      "printInvoice": "طباعة الفاتورة",
+      "columns": {
+        "index": "#",
+        "transactionNumber": "رقم المعاملة",
+        "date": "التاريخ",
+        "statement": "البيان/العقد المرتبط",
+        "paymentMethod": "طريقة الدفع",
+        "amount": "المبلغ",
+        "status": "الحالة",
+        "procedure": "الإجراء"
+      }
+    },
+    "paymentMethods": {
+      "visa": "فيزا",
+      "bankAccount": "حساب بنكي",
+      "mada": "بطاقة مدى",
+      "bankTransfer": "تحويل بنكي"
+    },
+    "toast": {
+      "successTitle": "تم الشحن بنجاح",
+      "successMessage": "تمت عملية الشحن بنجاح وتمت إضافة الرصيد إلى محفظتك.",
+      "errorTitle": "فشل الشحن",
+      "errorMessage": "عذراً، يرجى المحاولة مرة أخرى لاحقاً."
+    },
+    "rechargeModal": {
+      "title": "شحن الرصيد",
+      "subtitle": "أضف رصيداً جديداً لمتابعة معاملاتك.",
+      "amountLabel": "المبلغ المراد شحنه",
+      "choosePaymentMethod": "اختر طريقة الدفع",
+      "confirm": "تأكيد الشحن"
+    },
+    "addPaymentModal": {
+      "title": "إضافة طريقة دفع",
+      "subtitle": "أضف بطاقة مدى/فيزا جديدة أو حساباً بنكياً",
+      "paymentMethodName": "اسم طريقة الدفع",
+      "paymentMethodNamePlaceholder": "مثال: الحساب الرئيسي للشركة",
+      "bankPaymentNamePlaceholder": "مثال: حساب فرع جدة",
+      "cardHolderName": "اسم حامل البطاقة",
+      "cardHolderNamePlaceholder": "الاسم كما يظهر على البطاقة",
+      "cardNumber": "رقم البطاقة",
+      "cvv": "CVV",
+      "cvvHint": "رمز CVV هو الأرقام الثلاثة الموجودة على ظهر البطاقة",
+      "bankName": "اسم البنك",
+      "bankNamePlaceholder": "اختر البنك أو أدخل اسم البنك",
+      "bankBranch": "فرع البنك",
+      "accountHolderName": "اسم صاحب الحساب البنكي",
+      "accountHolderNamePlaceholder": "اسم صاحب الحساب كما يظهر في الحساب",
+      "iban": "رقم الآيبان",
+      "accountNumber": "رقم الحساب البنكي",
+      "swiftCode": "رمز SWIFT",
+      "add": "إضافة",
+      "bankOptions": {
+        "national": "البنك الأهلي السعودي",
+        "rajhi": "مصرف الراجحي",
+        "riyad": "بنك الرياض"
+      }
+    },
+    "refundModal": {
+      "title": "طلب استرداد",
+      "orderNumber": "رقم الطلب",
+      "date": "التاريخ",
+      "amount": "المبلغ المراد استرداده",
+      "reason": "سبب طلب الاسترداد",
+      "notes": "ملاحظات إضافية",
+      "notesPlaceholder": "اكتب هنا أي تفاصيل مالية لقسم المالية.",
+      "warning": "لا يمكن تعديل الطلب بعد الإرسال. يرجى التأكد من جميع البيانات البنكية قبل الإرسال.",
+      "authorization": "أقر بأنني أرغب في تحويل مبلغ الاسترداد إلى الحساب البنكي المرتبط وأنني مخول بتقديم هذا الطلب",
+      "submit": "إرسال طلب الاسترداد"
+    },
+    "updateAccountModal": {
+      "title": "تحديث الحساب",
+      "subtitle": "يرجى التأكد من صحة البيانات.",
+      "update": "تحديث"
+    }
+  },
+  "invoices": {
+    "pageTitle": "الفواتير",
+    "searchPlaceholder": "بحث...",
+    "downloadPdf": "تحميل PDF",
+    "exportExcel": "تصدير Excel",
+    "paymentMade": "تم الدفع",
+    "preview": "معاينة",
+    "printInvoice": "طباعة الفاتورة",
+    "filters": {
+      "currency": "العملة",
+      "status": "الحالة",
+      "allCurrencies": "جميع العملات",
+      "allStatuses": "جميع الحالات",
+      "pending": "قيد الانتظار",
+      "overdue": "متأخر"
+    },
+    "columns": {
+      "index": "#",
+      "commercialRegister": "رقم السجل التجاري",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "orderNumber": "رقم الطلب",
+      "orderStatus": "حالة الطلب",
+      "invoiceType": "نوع الفاتورة",
+      "paymentNumber": "رقم الدفع",
+      "paymentDate": "تاريخ الدفع",
+      "totalAmount": "المبلغ الإجمالي",
+      "currency": "العملة",
+      "invoiceStatus": "حالة الفاتورة",
+      "details": "تفاصيل الفاتورة"
+    }
+  },
+  "periodicVisits": {
+    "pageTitle": "الزيارات الدورية",
+    "searchPlaceholder": "ابحث برقم الشهادة أو المواصفة...",
+    "downloadPdf": "تحميل PDF",
+    "exportExcel": "تصدير Excel",
+    "procedurePeriodic": "دوري",
+    "procedurePeriodicExpanding": "دوري وتوسع",
+    "filters": {
+      "specification": "المواصفة",
+      "procedure": "الإجراء",
+      "allSpecifications": "جميع المواصفات",
+      "allProcedures": "جميع الإجراءات"
+    },
+    "columns": {
+      "index": "#",
+      "certificateNumber": "رقم الشهادة",
+      "specificationName": "اسم المواصفة",
+      "economicSector": "القطاع الاقتصادي",
+      "visitingDate": "تاريخ الزيارة",
+      "procedures": "الإجراءات"
     }
   },
   "cab": {

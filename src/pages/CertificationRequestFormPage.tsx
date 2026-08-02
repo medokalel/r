@@ -20,6 +20,7 @@ import { useApplicationState } from '@/components/dashboard/entityData/useApplic
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ErrorState } from '@/components/ui'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const STATUS_VIEWS: EntityDataViewTab[] = ['approved', 'underReview', 'rejected']
@@ -196,7 +197,7 @@ export function CertificationRequestFormPage() {
 
       // Feedback is a terminal view — Next returns to the requests list
       if (activeViewTab === 'feedback') {
-        navigate('/certification-requests')
+        navigate(ROUTES.certificationRequests)
         return
       }
 

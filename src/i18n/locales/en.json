@@ -979,6 +979,12 @@
       "search": "Search",
       "downloadPdf": "Download to PDF",
       "exportExcel": "Export to Excel",
+      "filters": {
+        "status": "Status",
+        "taskType": "Task type",
+        "allStatuses": "All statuses",
+        "allTypes": "All types"
+      },
       "next": "Next",
       "previous": "Previous"
     },
@@ -1045,6 +1051,167 @@
       "password": "Password",
       "createPassword": "Create a password",
       "add": "Add"
+    }
+  },
+  "wallet": {
+    "pageTitle": "Digital Wallet",
+    "securityNotice": "Your financial data is encrypted and is not stored directly on our servers.",
+    "balanceSection": {
+      "title": "Balance management and payments",
+      "subtitle": "Track your balance, top-up your wallet, and upload your tax invoices for all transactions.",
+      "addPaymentMethod": "Add a payment method",
+      "availableCredit": "Available Credit",
+      "availableCreditHint": "Available for use in audit and accreditation contracts.",
+      "toggleBalance": "Toggle balance visibility",
+      "rechargeBalance": "Recharge balance",
+      "requestRefund": "Request a refund",
+      "suspendedBalance": "Suspended balance",
+      "suspendedBalanceHint": "Funds in process and bank confirmation.",
+      "financialDues": "Financial dues",
+      "refundsUnderReview": "Refunds are under review",
+      "linkedBankAccount": "Linked bank account",
+      "bankName": "Bank name",
+      "accountHolder": "Name of the account holder",
+      "updateAccountInfo": "Update account information"
+    },
+    "transactions": {
+      "title": "History of financial transactions",
+      "subtitle": "All shipping, payment and refund operations associated with your account.",
+      "downloadPdf": "Download to PDF",
+      "exportExcel": "Export to Excel",
+      "searchPlaceholder": "Search by transaction number or contract number",
+      "allTypes": "All types",
+      "allDates": "All dates",
+      "allCases": "All cases",
+      "statusSuccessful": "Successful",
+      "preview": "Preview",
+      "printInvoice": "Print the invoice",
+      "columns": {
+        "index": "#",
+        "transactionNumber": "Transaction number",
+        "date": "Date",
+        "statement": "The associated statement/contract",
+        "paymentMethod": "Payment Method",
+        "amount": "Amount",
+        "status": "Status",
+        "procedure": "Procedure"
+      }
+    },
+    "paymentMethods": {
+      "visa": "Visa",
+      "bankAccount": "Bank account",
+      "mada": "Mada card",
+      "bankTransfer": "Bank Transfer"
+    },
+    "toast": {
+      "successTitle": "Shipped successfully",
+      "successMessage": "The shipment was completed successfully and the balance was added to your wallet.",
+      "errorTitle": "Charging was not successful",
+      "errorMessage": "Sorry, please try again later."
+    },
+    "rechargeModal": {
+      "title": "Recharge Balance",
+      "subtitle": "Add a new balance to track your transactions.",
+      "amountLabel": "The amount to be shipped",
+      "choosePaymentMethod": "Choose the payment method",
+      "confirm": "Confirm Recharge"
+    },
+    "addPaymentModal": {
+      "title": "Add a payment method",
+      "subtitle": "Add a new Mada/Visa card or bank account",
+      "paymentMethodName": "Name of payment method",
+      "paymentMethodNamePlaceholder": "Example: Primary company account",
+      "bankPaymentNamePlaceholder": "Example: Jeddah branch account",
+      "cardHolderName": "Card Holder Name",
+      "cardHolderNamePlaceholder": "The name as it appears on the card",
+      "cardNumber": "Card Number",
+      "cvv": "CVV",
+      "cvvHint": "The CVV is the three digits on the back of the card",
+      "bankName": "Bank name",
+      "bankNamePlaceholder": "Choose your bank or enter the bank name",
+      "bankBranch": "Bank branch",
+      "accountHolderName": "Name of the bank account holder",
+      "accountHolderNamePlaceholder": "The name of the bank account holder as it appears on the account",
+      "iban": "IBAN number",
+      "accountNumber": "Bank account number",
+      "swiftCode": "SWIFT CODE",
+      "add": "Add",
+      "bankOptions": {
+        "national": "National Bank of Saudi Arabia",
+        "rajhi": "Al Rajhi Bank",
+        "riyad": "Riyad Bank"
+      }
+    },
+    "refundModal": {
+      "title": "Request a refund",
+      "orderNumber": "Order number",
+      "date": "The date",
+      "amount": "The amount to be refunded",
+      "reason": "The reason for the refund request",
+      "notes": "Additional notes",
+      "notesPlaceholder": "Write here any financial details for the finance department.",
+      "warning": "The order cannot be modified after submission. Please make sure to check all bank details before submitting.",
+      "authorization": "I declare that I wish to transfer the refund amount to the associated bank account and that I am authorized to make this request",
+      "submit": "Send a refund request"
+    },
+    "updateAccountModal": {
+      "title": "Update account",
+      "subtitle": "Please make sure the data is correct.",
+      "update": "Update"
+    }
+  },
+  "invoices": {
+    "pageTitle": "Invoices",
+    "searchPlaceholder": "search...",
+    "downloadPdf": "Download to PDF",
+    "exportExcel": "Export to Excel",
+    "paymentMade": "Payment made",
+    "preview": "Preview",
+    "printInvoice": "Print the invoice",
+    "filters": {
+      "currency": "Currency",
+      "status": "Status",
+      "allCurrencies": "All currencies",
+      "allStatuses": "All statuses",
+      "pending": "Pending",
+      "overdue": "Overdue"
+    },
+    "columns": {
+      "index": "#",
+      "commercialRegister": "Commercial registration number",
+      "username": "Username",
+      "email": "E-mail",
+      "orderNumber": "Order Number",
+      "orderStatus": "Order Status",
+      "invoiceType": "Invoice type",
+      "paymentNumber": "Payment number",
+      "paymentDate": "Payment date",
+      "totalAmount": "Total Amount",
+      "currency": "Currency",
+      "invoiceStatus": "Invoice status",
+      "details": "Invoice details"
+    }
+  },
+  "periodicVisits": {
+    "pageTitle": "Periodic visits",
+    "searchPlaceholder": "Search by certificate or specification...",
+    "downloadPdf": "Download to PDF",
+    "exportExcel": "Export to Excel",
+    "procedurePeriodic": "periodic",
+    "procedurePeriodicExpanding": "Periodic and expanding",
+    "filters": {
+      "specification": "Specification",
+      "procedure": "Procedure",
+      "allSpecifications": "All specifications",
+      "allProcedures": "All procedures"
+    },
+    "columns": {
+      "index": "#",
+      "certificateNumber": "Certificate number",
+      "specificationName": "Specification name",
+      "economicSector": "Economic sector",
+      "visitingDate": "Visiting date",
+      "procedures": "Procedures"
     }
   },
   "cab": {
@@ -1130,5 +1297,4 @@
       }
     }
   }
-  
 }

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { login } from '@/lib/api/authApi'
 import { ApiError } from '@/lib/api/client'
 import { getAuthToken, saveAuthSession } from '@/lib/authStorage'
+import { AUTHENTICATED_HOME } from '@/lib/routes'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { TextField } from '@/components/ui'
@@ -25,7 +26,7 @@ export function LoginPage() {
 
   useEffect(() => {
     if (getAuthToken()) {
-      navigate('/dashboard', { replace: true })
+      navigate(AUTHENTICATED_HOME, { replace: true })
     }
   }, [navigate])
 
@@ -49,7 +50,7 @@ export function LoginPage() {
     try {
       const data = await login(form.email.trim(), form.password)
       saveAuthSession(data, rememberMe)
-      navigate('/dashboard', { replace: true })
+      navigate(AUTHENTICATED_HOME, { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
         setSubmitError(error.message)
