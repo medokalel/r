@@ -19,7 +19,7 @@ import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
 
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
-  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/certification-request' },
+  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/dashboard' },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: '/users' },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments' },

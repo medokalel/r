@@ -19,7 +19,7 @@ import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
 
 const primaryItems = [
-  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/certification-request' },
+  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: '/dashboard' },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: '/certification-requests' },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.clients' },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },

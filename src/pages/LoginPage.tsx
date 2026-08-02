@@ -25,7 +25,7 @@ export function LoginPage() {
 
   useEffect(() => {
     if (getAuthToken()) {
-      navigate('/certification-request', { replace: true })
+      navigate('/dashboard', { replace: true })
     }
   }, [navigate])
 
@@ -49,7 +49,7 @@ export function LoginPage() {
     try {
       const data = await login(form.email.trim(), form.password)
       saveAuthSession(data, rememberMe)
-      navigate('/certification-request', { replace: true })
+      navigate('/dashboard', { replace: true })
     } catch (error) {
       if (error instanceof ApiError) {
         setSubmitError(error.message)

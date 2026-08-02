@@ -16,7 +16,7 @@ import { getAuthToken } from '@/lib/authStorage'
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
 
 function HomeRedirect() {
-  return <Navigate to={getAuthToken() ? '/certification-request' : '/login'} replace />
+  return <Navigate to={getAuthToken() ? '/dashboard' : '/login'} replace />
 }
 
 export default function App() {
@@ -36,7 +36,7 @@ export default function App() {
               
             } />
             <Route
-              path="/certification-request"
+              path="/dashboard"
               element={
                 <RequireAuth>
                   <DashboardPage />
