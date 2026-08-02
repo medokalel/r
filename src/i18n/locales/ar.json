@@ -1045,5 +1045,41 @@
       "createPassword": "إنشاء كلمة مرور",
       "add": "إضافة"
     }
+  },
+  "cab": {
+    "sidebar": {
+      "tagline": "Small Conformity.. Real Impact",
+      "dashboard": "Dashboard",
+      "workflow": "Work Flow",
+      "manage": "Manage",
+      "clientRegistration": "Client Registration",
+      "applicationDraft": "Application Draft",
+      "applicationSubmission": "Application Submission",
+      "applicationReceipt": "Application Receipt",
+      "applicationReview": "Application Review",
+      "informationRequired": "Information Required",
+      "technicalFeasibility": "Technical Feasibility",
+      "quotationApproval": "Quotation Approval",
+      "quotationSent": "Quotation Sent",
+      "quotationAcceptance": "Quotation Acceptance",
+      "contractSigning": "Contract Signing",
+      "initialInvoice": "Initial Invoice",
+      "initialPayment": "Initial Payment",
+      "auditTeamProposal": "Audit Team Proposal",
+      "conflictDeclaration": "Conflict Declaration",
+      "assignmentAcceptance": "Assignment Acceptance",
+      "clients": "Clients",
+      "audits": "Audits",
+      "auditTeams": "Audit Teams",
+      "freelancers": "Freelancers"
+    },
+    "header": {
+      "timeAndDate": "Time and date",
+      "notifications": "Notifications"
+    },
+    "dashboard": {
+      "title": "CAB Dashboard",
+      "subtitle": "Overview of certification activities and workload"
+    }
   }
 }

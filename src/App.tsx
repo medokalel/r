@@ -13,6 +13,7 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { getAuthToken } from '@/lib/authStorage'
+import { CabDashboardPage } from '@/pages/CabDashboardPage'
 
 function HomeRedirect() {
   return <Navigate to={getAuthToken() ? '/certification-request' : '/login'} replace />
@@ -29,6 +30,11 @@ export default function App() {
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+            <Route path="/cab/dashboard" element={
+              
+                <CabDashboardPage />
+              
+            } />
             <Route
               path="/certification-request"
               element={

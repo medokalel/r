@@ -214,7 +214,7 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
         </p>
         <button
           type="button"
-          onClick={() => navigate('/login')}
+          onClick={() => navigate('/cab/dashboard')}
           className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
         >
           {t('register.cab.summary.goToDashboard')}
