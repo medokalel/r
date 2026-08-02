@@ -3,21 +3,42 @@ import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabStatCards } from '@/components/dashboard/cab/CabStatCards'
-import { getCabDashboardStats, type CabDashboardStats } from '@/lib/api/cabDashboardApi'
+import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
+import { CabAuditsOverviewChart } from '@/components/dashboard/cab/CabAuditsOverviewChart'
+import {
+  getApplicationsByStage,
+  getAuditsOverview,
+  getCabDashboardStats,
+  getCertificationDecisions,
+  type ApplicationsByStageEntry,
+  type AuditsOverviewEntry,
+  type CabDashboardStats,
+  type CertificationDecisionEntry,
+} from '@/lib/api/cabDashboardApi'
 
 export function CabDashboardPage() {
   const { t } = useTranslation()
   const [stats, setStats] = useState<CabDashboardStats | null>(null)
+  const [applicationsByStage, setApplicationsByStage] = useState<ApplicationsByStageEntry[]>([])
+  const [auditsOverview, setAuditsOverview] = useState<AuditsOverviewEntry[]>([])
+  const [certificationDecisions, setCertificationDecisions] = useState<CertificationDecisionEntry[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    getCabDashboardStats().then((data) => {
-      if (!cancelled) {
-        setStats(data)
-        setLoading(false)
-      }
+    Promise.all([
+      getCabDashboardStats(),
+      getApplicationsByStage(),
+      getAuditsOverview(),
+      getCertificationDecisions(),
+    ]).then(([statsData, stageData, auditsData, decisionsData]) => {
+      if (cancelled) return
+      setStats(statsData)
+      setApplicationsByStage(stageData)
+      setAuditsOverview(auditsData)
+      setCertificationDecisions(decisionsData)
+      setLoading(false)
     })
     return () => {
       cancelled = true
@@ -34,7 +55,27 @@ export function CabDashboardPage() {
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <CabStatCards stats={stats} loading={loading} />
-        {/* Charts and list widgets are added in the next steps */}
+
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+          <CabDonutCard
+            title={t('cab.dashboard.applicationsByStage.title')}
+            entries={applicationsByStage.map((e) => ({ key: e.stageKey, count: e.count, color: e.color }))}
+            labelPrefix="cab.dashboard.applicationsByStage.stages"
+            totalLabel={t('cab.dashboard.total')}
+          />
+
+          <CabAuditsOverviewChart entries={auditsOverview} />
+
+          <CabDonutCard
+            title={t('cab.dashboard.certificationDecisions.title')}
+            entries={certificationDecisions.map((e) => ({ key: e.decisionKey, count: e.count, color: e.color }))}
+            labelPrefix="cab.dashboard.certificationDecisions.decisions"
+            totalLabel={t('cab.dashboard.total')}
+            footerLink={{ label: t('cab.dashboard.certificationDecisions.viewDecisions'), onClick: () => undefined }}
+          />
+        </div>
+
+        {/* Work Queue, Recent Activity, and Quick Actions are added in the next step */}
       </div>
     </CabLayout>
   )

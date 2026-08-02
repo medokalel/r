@@ -1091,6 +1091,42 @@
         "outstandingPayments": "Outstanding Payments",
         "viewAll": "View all",
         "egp": "EGP"
+      },
+      "total": "Total",
+      "applicationsByStage": {
+        "title": "Applications by Stage",
+        "stages": {
+          "applicationReceipt": "Application Receipt",
+          "applicationReview": "Application Review",
+          "informationRequired": "Information Required",
+          "technicalFeasibility": "Technical Feasibility",
+          "quotation": "Quotation",
+          "contractSigning": "Contract Signing",
+          "decisionCertification": "Decision & Certification",
+          "auditReview": "Audit & Review"
+        }
+      },
+      "auditsOverview": {
+        "title": "Audits Overview",
+        "stage1": "Stage 1",
+        "stage2": "Stage 2",
+        "stages": {
+          "planned": "Planned",
+          "inProgress": "In-Progress",
+          "completed": "Completed",
+          "reportFinalization": "Report Finalization"
+        }
+      },
+      "certificationDecisions": {
+        "title": "Certification Decisions",
+        "viewDecisions": "View Decisions",
+        "decisions": {
+          "approved": "Approved",
+          "approvedWithConditions": "Approved with Conditions",
+          "nonconformity": "Nonconformity",
+          "withheld": "Withheld",
+          "withdrawn": "With Drawn"
+        }
       }
     }
   }

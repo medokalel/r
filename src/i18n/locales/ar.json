@@ -1090,6 +1090,42 @@
         "outstandingPayments": "مدفوعات مستحقة",
         "viewAll": "عرض الكل",
         "egp": "جنيه"
+      },
+      "total": "الإجمالي",
+      "applicationsByStage": {
+        "title": "الطلبات حسب المرحلة",
+        "stages": {
+          "applicationReceipt": "استلام الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "informationRequired": "معلومات مطلوبة",
+          "technicalFeasibility": "الجدوى الفنية",
+          "quotation": "عرض السعر",
+          "contractSigning": "توقيع العقد",
+          "decisionCertification": "القرار والاعتماد",
+          "auditReview": "التدقيق والمراجعة"
+        }
+      },
+      "auditsOverview": {
+        "title": "نظرة عامة على التدقيق",
+        "stage1": "المرحلة 1",
+        "stage2": "المرحلة 2",
+        "stages": {
+          "planned": "مخطط له",
+          "inProgress": "قيد التنفيذ",
+          "completed": "مكتمل",
+          "reportFinalization": "إنهاء التقرير"
+        }
+      },
+      "certificationDecisions": {
+        "title": "قرارات الاعتماد",
+        "viewDecisions": "عرض القرارات",
+        "decisions": {
+          "approved": "معتمد",
+          "approvedWithConditions": "معتمد بشروط",
+          "nonconformity": "عدم مطابقة",
+          "withheld": "محجوب",
+          "withdrawn": "مسحوب"
+        }
       }
     }
   }
