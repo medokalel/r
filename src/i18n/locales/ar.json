@@ -1048,38 +1048,49 @@
   },
   "cab": {
     "sidebar": {
-      "tagline": "Small Conformity.. Real Impact",
-      "dashboard": "Dashboard",
-      "workflow": "Work Flow",
-      "manage": "Manage",
-      "clientRegistration": "Client Registration",
-      "applicationDraft": "Application Draft",
-      "applicationSubmission": "Application Submission",
-      "applicationReceipt": "Application Receipt",
-      "applicationReview": "Application Review",
-      "informationRequired": "Information Required",
-      "technicalFeasibility": "Technical Feasibility",
-      "quotationApproval": "Quotation Approval",
-      "quotationSent": "Quotation Sent",
-      "quotationAcceptance": "Quotation Acceptance",
-      "contractSigning": "Contract Signing",
-      "initialInvoice": "Initial Invoice",
-      "initialPayment": "Initial Payment",
-      "auditTeamProposal": "Audit Team Proposal",
-      "conflictDeclaration": "Conflict Declaration",
-      "assignmentAcceptance": "Assignment Acceptance",
-      "clients": "Clients",
-      "audits": "Audits",
-      "auditTeams": "Audit Teams",
-      "freelancers": "Freelancers"
+      "tagline": "امتثال ذكي.. أثر حقيقي",
+      "dashboard": "لوحة التحكم",
+      "workflow": "سير العمل",
+      "manage": "الإدارة",
+      "clientRegistration": "تسجيل عميل",
+      "applicationDraft": "مسودة الطلب",
+      "applicationSubmission": "تقديم الطلب",
+      "applicationReceipt": "استلام الطلب",
+      "applicationReview": "مراجعة الطلب",
+      "informationRequired": "معلومات مطلوبة",
+      "technicalFeasibility": "الجدوى الفنية",
+      "quotationApproval": "اعتماد عرض السعر",
+      "quotationSent": "إرسال عرض السعر",
+      "quotationAcceptance": "قبول عرض السعر",
+      "contractSigning": "توقيع العقد",
+      "initialInvoice": "الفاتورة المبدئية",
+      "initialPayment": "الدفعة المبدئية",
+      "auditTeamProposal": "اقتراح فريق التدقيق",
+      "conflictDeclaration": "إقرار تضارب المصالح",
+      "assignmentAcceptance": "قبول التكليف",
+      "clients": "العملاء",
+      "audits": "عمليات التدقيق",
+      "auditTeams": "فرق التدقيق",
+      "freelancers": "المستقلون"
     },
     "header": {
-      "timeAndDate": "Time and date",
-      "notifications": "Notifications"
+      "timeAndDate": "الوقت والتاريخ",
+      "notifications": "الإشعارات"
     },
     "dashboard": {
-      "title": "CAB Dashboard",
-      "subtitle": "Overview of certification activities and workload"
+      "title": "لوحة تحكم جهة الاعتماد",
+      "subtitle": "نظرة عامة على أنشطة الاعتماد وحجم العمل",
+      "stats": {
+        "newApplications": "طلبات جديدة",
+        "pendingReviews": "مراجعات معلّقة",
+        "upcomingAudits": "عمليات تدقيق قادمة",
+        "technicalReviewsPending": "مراجعات فنية معلّقة",
+        "decisionsPending": "قرارات معلّقة",
+        "certificatesToIssue": "شهادات قيد الإصدار",
+        "outstandingPayments": "مدفوعات مستحقة",
+        "viewAll": "عرض الكل",
+        "egp": "جنيه"
+      }
     }
   }
 }

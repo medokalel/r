@@ -1080,7 +1080,18 @@
     },
     "dashboard": {
       "title": "CAB Dashboard",
-      "subtitle": "Overview of certification activities and workload"
+      "subtitle": "Overview of certification activities and workload",
+      "stats": {
+        "newApplications": "New Applications",
+        "pendingReviews": "Pending Reviews",
+        "upcomingAudits": "Upcoming Audits",
+        "technicalReviewsPending": "Technical Reviews Pending",
+        "decisionsPending": "Decisions Pending",
+        "certificatesToIssue": "Certificates to Issue",
+        "outstandingPayments": "Outstanding Payments",
+        "viewAll": "View all",
+        "egp": "EGP"
+      }
     }
   }
   
