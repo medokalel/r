@@ -103,7 +103,13 @@ export function CabSidebar() {
   return (
     <aside className="hidden w-[260px] shrink-0 flex-col overflow-y-auto border-e border-[#ececec] bg-white py-6 md:flex">
       <div className="mb-6 flex flex-col items-center gap-1 px-4 text-center">
-        <span className="text-[22px] font-bold tracking-wide text-primary">CASCO</span>
+        <img
+          src="/casco-logo.svg"
+          alt={t('common.appName')}
+          width={114}
+          height={93}
+          className="h-[93px] w-[114px] shrink-0 object-contain"
+        />
         <span className="text-[11px] text-neutral-400">{t('cab.sidebar.tagline')}</span>
       </div>
 
