@@ -211,7 +211,7 @@ export function payloadFromForm(
     allProductionLinesIncluded: boolFromYesNo(form.allProductionLinesIncluded),
     excludedReason: text(form.excludedReason),
     country: form.country ?? undefined,
-    // TODO: wire up once backend adds legalInfo.city — add `city: text(form.city),` here
+    city: text(form.city),
     email: text(form.email),
     representativeName: text(form.representativeName),
     jobTitle: text(form.jobTitle),
@@ -408,7 +408,7 @@ export function formValuesFromApplication(
   form.excludedReason = legal.excludedReason ?? ''
   form.email = legal.email ?? ''
   form.country = (legal.country as CountryCode | undefined) ?? null
-  // TODO: wire up once backend adds legalInfo.city — add `form.city = legal.city ?? ''` here
+  form.city = legal.city ?? ''
   form.representativeName = legal.representativeName ?? ''
   form.jobTitle = legal.jobTitle ?? ''
   form.organizationNature = NATURE_FROM_API[legal.organizationNature ?? ''] ?? ''
