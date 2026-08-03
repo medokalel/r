@@ -1293,6 +1293,43 @@
           "withheld": "محجوب",
           "withdrawn": "مسحوب"
         }
+      },
+      "viewAll": "عرض الكل",
+      "workQueue": {
+        "title": "قائمة المهام",
+        "goToWorkQueue": "الذهاب إلى قائمة المهام",
+        "priority": { "high": "عالية", "medium": "متوسطة", "low": "منخفضة" },
+        "items": {
+          "technicalReviewIso14001": "مراجعة فنية - ISO 14001",
+          "informationRequiredFollowUp": "متابعة معلومات مطلوبة",
+          "auditTeamProposalReview": "مراجعة اقتراح فريق التدقيق",
+          "contractReviewApproval": "مراجعة واعتماد العقد",
+          "stage1AuditReportReview": "مراجعة تقرير تدقيق المرحلة الأولى"
+        }
+      },
+      "recentActivity": {
+        "title": "آخر الأنشطة",
+        "minutesAgo": "منذ {{count}} دقيقة",
+        "hourAgo": "منذ ساعة",
+        "hoursAgo": "منذ {{count}} ساعات",
+        "byline": {
+          "by": "بواسطة {{value}}",
+          "for": "لـ {{value}}",
+          "plain": "{{value}}"
+        },
+        "items": {
+          "certificateIssued": "تم إصدار شهادة لـ {{entityName}}",
+          "auditCompleted": "اكتمل تدقيق المرحلة الثانية لـ {{entityName}}",
+          "infoRequested": "تم طلب معلومات من {{entityName}}",
+          "reviewAssigned": "تم تعيين مراجعة فنية لـ {{entityName}}",
+          "paymentReceived": "تم استلام دفعة من {{entityName}}"
+        }
+      },
+      "quickActions": {
+        "title": "إجراءات سريعة",
+        "newApplication": { "title": "طلب جديد", "description": "تسجيل عميل جديد" },
+        "assignReview": { "title": "تعيين مراجعة", "description": "تعيين لخبير فني" },
+        "issueCertificate": { "title": "إصدار شهادة", "description": "إنشاء وإصدار شهادة" }
       }
     }
   }

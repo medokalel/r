@@ -1294,6 +1294,43 @@
           "withheld": "Withheld",
           "withdrawn": "With Drawn"
         }
+      },
+      "viewAll": "View all",
+      "workQueue": {
+        "title": "Work Queue",
+        "goToWorkQueue": "Go to work queue",
+        "priority": { "high": "High", "medium": "Medium", "low": "Low" },
+        "items": {
+          "technicalReviewIso14001": "Technical Review - ISO 14001",
+          "informationRequiredFollowUp": "Information Required Follow-up",
+          "auditTeamProposalReview": "Audit Team Proposal Review",
+          "contractReviewApproval": "Contract Review & Approval",
+          "stage1AuditReportReview": "Stage 1 Audit Report Review"
+        }
+      },
+      "recentActivity": {
+        "title": "Recent Activity",
+        "minutesAgo": "{{count}}m ago",
+        "hourAgo": "1h ago",
+        "hoursAgo": "{{count}}h ago",
+        "byline": {
+          "by": "by {{value}}",
+          "for": "for {{value}}",
+          "plain": "{{value}}"
+        },
+        "items": {
+          "certificateIssued": "Certificate issued for {{entityName}}",
+          "auditCompleted": "Stage 2 audit completed for {{entityName}}",
+          "infoRequested": "Information requested from {{entityName}}",
+          "reviewAssigned": "Technical review assigned to {{entityName}}",
+          "paymentReceived": "Payment received from {{entityName}}"
+        }
+      },
+      "quickActions": {
+        "title": "Quick Actions",
+        "newApplication": { "title": "New Application", "description": "Register a new client" },
+        "assignReview": { "title": "Assign Review", "description": "Assign to technical expert" },
+        "issueCertificate": { "title": "Issue Certificate", "description": "Create & issue certificate" }
       }
     }
   }

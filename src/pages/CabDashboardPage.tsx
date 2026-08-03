@@ -1,27 +1,38 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabStatCards } from '@/components/dashboard/cab/CabStatCards'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
 import { CabAuditsOverviewChart } from '@/components/dashboard/cab/CabAuditsOverviewChart'
+import { CabWorkQueue } from '@/components/dashboard/cab/CabWorkQueue'
+import { CabRecentActivity } from '@/components/dashboard/cab/CabRecentActivity'
+import { CabQuickActions } from '@/components/dashboard/cab/CabQuickActions'
 import {
   getApplicationsByStage,
   getAuditsOverview,
   getCabDashboardStats,
+  getCabRecentActivity,
   getCertificationDecisions,
+  getWorkQueue,
   type ApplicationsByStageEntry,
   type AuditsOverviewEntry,
+  type CabActivityItem,
   type CabDashboardStats,
   type CertificationDecisionEntry,
+  type WorkQueueItem,
 } from '@/lib/api/cabDashboardApi'
 
 export function CabDashboardPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [stats, setStats] = useState<CabDashboardStats | null>(null)
   const [applicationsByStage, setApplicationsByStage] = useState<ApplicationsByStageEntry[]>([])
   const [auditsOverview, setAuditsOverview] = useState<AuditsOverviewEntry[]>([])
   const [certificationDecisions, setCertificationDecisions] = useState<CertificationDecisionEntry[]>([])
+  const [workQueue, setWorkQueue] = useState<WorkQueueItem[]>([])
+  const [activities, setActivities] = useState<CabActivityItem[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,12 +43,16 @@ export function CabDashboardPage() {
       getApplicationsByStage(),
       getAuditsOverview(),
       getCertificationDecisions(),
-    ]).then(([statsData, stageData, auditsData, decisionsData]) => {
+      getWorkQueue(),
+      getCabRecentActivity(),
+    ]).then(([statsData, stageData, auditsData, decisionsData, workQueueData, activityData]) => {
       if (cancelled) return
       setStats(statsData)
       setApplicationsByStage(stageData)
       setAuditsOverview(auditsData)
       setCertificationDecisions(decisionsData)
+      setWorkQueue(workQueueData)
+      setActivities(activityData)
       setLoading(false)
     })
     return () => {
@@ -75,7 +90,15 @@ export function CabDashboardPage() {
           />
         </div>
 
-        {/* Work Queue, Recent Activity, and Quick Actions are added in the next step */}
+        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+          <CabWorkQueue items={workQueue} onViewAll={() => undefined} />
+          <CabRecentActivity activities={activities} onViewAll={() => undefined} />
+          <CabQuickActions
+            onNewApplication={() => navigate('/cab/clients/new')}
+            onAssignReview={() => navigate('/cab/applications/review')}
+            onIssueCertificate={() => undefined}
+          />
+        </div>
       </div>
     </CabLayout>
   )

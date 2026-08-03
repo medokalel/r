@@ -36,6 +36,27 @@ export interface CertificationDecisionEntry {
   color: string
 }
 
+export type WorkQueuePriority = 'high' | 'medium' | 'low'
+
+export interface WorkQueueItem {
+  id: string
+  titleKey: string
+  clientName: string
+  priority: WorkQueuePriority
+  dueDate: string
+}
+
+export type CabActivityType = 'certificateIssued' | 'auditCompleted' | 'infoRequested' | 'reviewAssigned' | 'paymentReceived'
+
+export interface CabActivityItem {
+  id: string
+  type: CabActivityType
+  titleKey: string
+  entityName: string
+  actorName?: string
+  occurredAt: string
+}
+
 const MOCK_STATS: CabDashboardStats = {
   newApplications: 12,
   pendingReviews: 18,
@@ -72,6 +93,87 @@ const MOCK_CERTIFICATION_DECISIONS: CertificationDecisionEntry[] = [
   { decisionKey: 'withdrawn', count: 5, color: '#9ca3af' },
 ]
 
+const MOCK_WORK_QUEUE: WorkQueueItem[] = [
+  {
+    id: '1',
+    titleKey: 'cab.dashboard.workQueue.items.technicalReviewIso14001',
+    clientName: 'GreenLeaf Pvt. Ltd.',
+    priority: 'high',
+    dueDate: '2025-06-16',
+  },
+  {
+    id: '2',
+    titleKey: 'cab.dashboard.workQueue.items.informationRequiredFollowUp',
+    clientName: 'Acme Industries',
+    priority: 'high',
+    dueDate: '2025-06-16',
+  },
+  {
+    id: '3',
+    titleKey: 'cab.dashboard.workQueue.items.auditTeamProposalReview',
+    clientName: 'BuildWell Constructions',
+    priority: 'medium',
+    dueDate: '2025-06-17',
+  },
+  {
+    id: '4',
+    titleKey: 'cab.dashboard.workQueue.items.contractReviewApproval',
+    clientName: 'SwiftLogistics Ltd.',
+    priority: 'medium',
+    dueDate: '2025-06-18',
+  },
+  {
+    id: '5',
+    titleKey: 'cab.dashboard.workQueue.items.stage1AuditReportReview',
+    clientName: 'TechWave Solutions',
+    priority: 'high',
+    dueDate: '2025-06-18',
+  },
+]
+
+const MOCK_ACTIVITIES: CabActivityItem[] = [
+  {
+    id: '1',
+    type: 'certificateIssued',
+    titleKey: 'cab.dashboard.recentActivity.items.certificateIssued',
+    entityName: 'GreenLeaf Pvt. Ltd. (ISO 9001:2015)',
+    actorName: 'Rekha Sharma',
+    occurredAt: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '2',
+    type: 'auditCompleted',
+    titleKey: 'cab.dashboard.recentActivity.items.auditCompleted',
+    entityName: 'Acme Industries',
+    actorName: 'Rohit Mehta',
+    occurredAt: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '3',
+    type: 'infoRequested',
+    titleKey: 'cab.dashboard.recentActivity.items.infoRequested',
+    entityName: 'BuildWell Constructions',
+    actorName: 'Priya Nair',
+    occurredAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '4',
+    type: 'reviewAssigned',
+    titleKey: 'cab.dashboard.recentActivity.items.reviewAssigned',
+    entityName: 'Amit Soni',
+    actorName: 'Spark Technologies',
+    occurredAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    id: '5',
+    type: 'paymentReceived',
+    titleKey: 'cab.dashboard.recentActivity.items.paymentReceived',
+    entityName: 'TechWave Solutions',
+    actorName: 'INV-2025-117',
+    occurredAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+  },
+]
+
 function delay<T>(value: T, ms = 300): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
 }
@@ -95,4 +197,14 @@ export function getAuditsOverview(): Promise<AuditsOverviewEntry[]> {
 // TODO: replace with a real endpoint once the backend adds one.
 export function getCertificationDecisions(): Promise<CertificationDecisionEntry[]> {
   return delay(MOCK_CERTIFICATION_DECISIONS)
+}
+
+// TODO: replace with a real endpoint once the backend adds one.
+export function getWorkQueue(): Promise<WorkQueueItem[]> {
+  return delay(MOCK_WORK_QUEUE)
+}
+
+// TODO: replace with a real endpoint once the backend adds one.
+export function getCabRecentActivity(): Promise<CabActivityItem[]> {
+  return delay(MOCK_ACTIVITIES)
 }
