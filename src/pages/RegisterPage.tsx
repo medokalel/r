@@ -9,6 +9,7 @@ import { DEFAULT_COUNTRY_CODE, getCountryOptions, type CountryCode } from '@/lib
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { CabRegisterFlow } from '@/components/auth/cab/CabRegisterFlow'
+import { AbRegisterFlow } from '@/components/auth/ab/AbRegisterFlow'
 import {
   FormLabel,
   SelectField,
@@ -286,6 +287,11 @@ export function RegisterPage() {
         <StepEntityType selected={form.entityType} onSelect={handleEntitySelect} />
       ) : form.entityType === 'CERTIFICATION_BODY' ? (
         <CabRegisterFlow
+          onBackToEntityType={() => setStep(1)}
+          onSubmittedChange={setCabSubmitted}
+        />
+      ) : form.entityType === 'ACCREDITATION_BODY' ? (
+        <AbRegisterFlow
           onBackToEntityType={() => setStep(1)}
           onSubmittedChange={setCabSubmitted}
         />

@@ -127,6 +127,62 @@
         "goToDashboard": "الذهاب إلى لوحة التحكم"
       }
     },
+    "ab": {
+      "title": "إنشاء حساب AB جديد",
+      "comingSoon": "هذه الخطوة قريبًا.",
+      "steps": {
+        "details": "بيانات AB",
+        "scopeModules": "النطاق والوحدات",
+        "verification": "التحقق",
+        "accountSetup": "إعداد الحساب"
+      },
+      "cabType": "نوع AB",
+      "cabTypePlaceholder": "اختر نوع AB",
+      "cabName": "اسم AB",
+      "cabNamePlaceholder": "أدخل الاسم القانوني لـ AB",
+      "cabNameSearchPlaceholder": "بحث...",
+      "accreditationBodyName": "اسم جهة الاعتماد",
+      "accreditationBodyPlaceholder": "اختر جهة الاعتماد",
+      "accreditationBodyNamePlaceholder": "اختر جهات الاعتماد",
+      "officialEmail": "البريد الإلكتروني الرسمي",
+      "mobileNumber": "رقم الهاتف المحمول",
+      "cabCountry": "دولة AB",
+      "abCountryPlaceholder": "اختر الدولة",
+      "contactPerson": "الشخص المسؤول",
+      "contactPersonPlaceholder": "الاسم الكامل",
+      "role": "الدور",
+      "rolePlaceholder": "اختر الدور",
+      "adminName": "اسم المسؤول",
+      "adminNamePlaceholder": "الاسم الكامل",
+      "adminRole": "دور المسؤول",
+      "adminRolePlaceholder": "اختر الدور",
+      "adminEmail": "البريد الإلكتروني للمسؤول",
+      "abTypes": {
+        "product": "شهادة منتج",
+        "managementSystem": "شهادة نظام إدارة",
+        "personnel": "شهادة أفراد",
+        "inspectionBody": "هيئة تفتيش"
+      },
+      "roles": {
+        "owner": "مالك",
+        "manager": "مدير",
+        "authorizedRepresentative": "ممثل مفوض"
+      },
+      "scopeModules": {
+        "schemeName": "اسم المخطط",
+        "schemeOwners": "الجهات المالكة للمخطط",
+        "noStandards": "لا توجد معايير محددة لهذا النوع حتى الآن.",
+        "whichModule": "ما هي الوحدة التي تبحث عنها؟"
+      },
+      "summary": {
+        "title": "ملخص",
+        "selectedSchemes": "المخططات المختارة",
+        "selectedModules": "الوحدات المختارة",
+        "submittedTitle": "تم إرسال طلب التسجيل بنجاح!",
+        "submittedDescription": "تم إنشاء حساب AB الخاص بك. يمكنك الآن الوصول إلى لوحة التحكم والبدء في إدارة أنشطة الاعتماد.",
+        "goToDashboard": "الذهاب إلى لوحة التحكم"
+      }
+    },
     "progressLabel": "تقدم التسجيل",
     "steps": {
       "entityVerification": "بيانات الجهة والتحقق",

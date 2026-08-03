@@ -127,6 +127,62 @@
         "goToDashboard": "Go to Dashboard"
       }
     },
+    "ab": {
+      "title": "Create New AB Account",
+      "comingSoon": "This step is coming soon.",
+      "steps": {
+        "details": "AB Details",
+        "scopeModules": "Scope & Modules",
+        "verification": "Verification",
+        "accountSetup": "Account setup"
+      },
+      "abType": "AB Type",
+      "abTypePlaceholder": "Select AB type",
+      "abName": "AB Name",
+      "abNamePlaceholder": "Enter AB legal name",
+      "abNameSearchPlaceholder": "Search...",
+      "accreditationBodyName": "Accreditation Body Name",
+      "accreditationBodyNamePlaceholder": "Select accreditation bodies",
+      "accreditationBodyPlaceholder": "Select accreditation body",
+      "officialEmail": "Official Email",
+      "mobileNumber": "Mobile number",
+      "abCountry": "AB Country",
+      "abCountryPlaceholder": "Select country",
+      "contactPerson": "Contact Person",
+      "contactPersonPlaceholder": "Full name",
+      "role": "Role",
+      "rolePlaceholder": "Select role",
+      "adminName": "Admin Name",
+      "adminNamePlaceholder": "Full name",
+      "adminRole": "Admin Role",
+      "adminRolePlaceholder": "Select role",
+      "adminEmail": "Admin Email",
+      "abTypes": {
+        "product": "Product Certification",
+        "managementSystem": "Management System Certification",
+        "personnel": "Personnel Certification",
+        "inspectionBody": "Inspection Body"
+      },
+      "roles": {
+        "owner": "Owner",
+        "manager": "Manager",
+        "authorizedRepresentative": "Authorized Representative"
+      },
+      "scopeModules": {
+        "schemeName": "Scheme Name",
+        "schemeOwners": "Scheme owners",
+        "noStandards": "No applicable standards defined yet for this scheme.",
+        "whichModule": "Which module are you looking for?"
+      },
+      "summary": {
+        "title": "Summary",
+        "selectedSchemes": "Selected Schemes",
+        "selectedModules": "Selected Modules",
+        "submittedTitle": "Registration Submitted Successfully!",
+        "submittedDescription": "Your AB account has been created. You can now access the dashboard and start managing your accreditation activities.",
+        "goToDashboard": "Go to Dashboard"
+      }
+    },
     "progressLabel": "Registration progress",
     "steps": {
       "entityVerification": "Entity data and verification",
