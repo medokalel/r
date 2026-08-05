@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, ExcelFileIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, RiyalSymbolIcon, SearchIcon } from '@/components/icons'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -8,6 +8,7 @@ import {
   formatInvoiceAmount,
   formatInvoiceDate,
   type Invoice,
+  type InvoiceCurrency,
 } from '@/lib/api/invoicesApi'
 import {
   downloadExcelCsv,
@@ -34,6 +35,36 @@ interface InvoicesTableProps {
   onExportAll: () => Promise<Invoice[]>
 }
 
+const thClass =
+  'overflow-hidden px-1.5 py-2 text-center text-[9px] font-normal leading-[1.3] break-words text-white'
+const tdClass = 'overflow-hidden px-1 py-1.5 text-[9px] font-semibold leading-tight align-middle'
+const tdMutedClass = cn(tdClass, 'text-neutral-600')
+const tdTextClass = cn(tdClass, 'text-neutral-700')
+const previewBtnClass =
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[8px] border border-[#F59E0B] bg-[#FFF7ED] px-2 py-1 text-[9px] font-medium leading-none text-[#F59E0B] transition-colors hover:bg-[#FFEDD5]'
+const printBtnClass =
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[8px] border border-[#2563EB] bg-[#EFF6FF] px-2 py-1 text-[9px] font-medium leading-none text-[#2563EB] transition-colors hover:bg-[#DBEAFE]'
+const tdActionsClass = 'px-1 py-1.5 align-middle'
+
+function InvoiceCurrencyCell({ currency }: { currency: InvoiceCurrency }) {
+  if (currency === 'SAR') {
+    return (
+      <span className="inline-flex items-center justify-center">
+        <AppIcon icon={RiyalSymbolIcon} size={13} className="text-primary" />
+      </span>
+    )
+  }
+
+  const labels: Record<Exclude<InvoiceCurrency, 'SAR'>, string> = {
+    USD: '$',
+    EGP: 'EGP',
+    EUR: '€',
+    GBP: '£',
+  }
+
+  return <span className="font-semibold text-primary">{labels[currency]}</span>
+}
+
 export function InvoicesTable({
   invoices,
   loading,
@@ -52,6 +83,7 @@ export function InvoicesTable({
   const { t } = useTranslation()
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [exporting, setExporting] = useState(false)
+  const [filtersOpen, setFiltersOpen] = useState(false)
 
   const toggleAll = () => {
     if (selected.size === invoices.length) {
@@ -138,31 +170,67 @@ export function InvoicesTable({
   }
 
   return (
-    <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-5">
-        <div className="flex flex-1 flex-wrap items-center gap-3">
-          <div className="relative min-w-[240px] flex-1">
-            <AppIcon
-              icon={SearchIcon}
-              size={18}
-              className="pointer-events-none absolute inset-y-0 start-3 my-auto text-neutral-400"
-            />
+    <section className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+          <div className="relative min-w-[240px] flex-1 sm:max-w-[360px]">
+            <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
+              <AppIcon icon={SearchIcon} size={18} />
+            </span>
             <input
               type="text"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && onSearch()}
               placeholder={t('invoices.searchPlaceholder')}
-              className="w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-2.5 ps-10 pe-3 text-[14px] outline-none focus:border-primary"
+              className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
             />
           </div>
           <button
             type="button"
             onClick={onSearch}
-            className="rounded-[var(--radius-sm)] bg-primary px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover"
+            className="h-11 shrink-0 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover"
           >
             {t('common.search')}
           </button>
+          <button
+            type="button"
+            aria-label={t('common.filter')}
+            aria-expanded={filtersOpen}
+            onClick={() => setFiltersOpen((open) => !open)}
+            className={cn(
+              'flex size-11 shrink-0 items-center justify-center rounded-[8px] text-primary transition-colors',
+              filtersOpen ? 'bg-[#e8edfc]' : 'bg-[#f3f6fd] hover:bg-[#e8edfc]'
+            )}
+          >
+            <AppIcon icon={FilterFunnelIcon} size={20} />
+          </button>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={handleExportPdf}
+            disabled={exporting || loading}
+            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+          >
+            <AppIcon icon={PdfFileIcon} size={20} />
+            {t('invoices.downloadPdf')}
+          </button>
+          <button
+            type="button"
+            onClick={handleExportExcel}
+            disabled={exporting || loading}
+            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+          >
+            <AppIcon icon={ExcelFileIcon} size={20} />
+            {t('invoices.exportExcel')}
+          </button>
+        </div>
+      </div>
+
+      {filtersOpen && (
+        <div className="flex flex-wrap items-center gap-3 border-t border-[#ececec] pt-4">
           <TableFilterSelect
             label={t('invoices.filters.currency')}
             value={currencyFilter}
@@ -188,123 +256,120 @@ export function InvoicesTable({
             ]}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={handleExportPdf}
-            disabled={exporting || loading}
-            className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 disabled:opacity-50"
-          >
-            <AppIcon icon={PdfFileIcon} size={22} />
-            {t('invoices.downloadPdf')}
-          </button>
-          <button
-            type="button"
-            onClick={handleExportExcel}
-            disabled={exporting || loading}
-            className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 disabled:opacity-50"
-          >
-            <AppIcon icon={ExcelFileIcon} size={22} />
-            {t('invoices.exportExcel')}
-          </button>
-        </div>
-      </div>
+      )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[1400px] border-collapse text-center">
+      <div className="min-w-0">
+        <table className="w-full table-fixed border-collapse text-center">
+          <colgroup>
+            <col style={{ width: '3%' }} />
+            <col style={{ width: '2.5%' }} />
+            <col style={{ width: '6.5%' }} />
+            <col style={{ width: '5%' }} />
+            <col style={{ width: '11.5%' }} />
+            <col style={{ width: '7.5%' }} />
+            <col style={{ width: '7.5%' }} />
+            <col style={{ width: '7.5%' }} />
+            <col style={{ width: '7%' }} />
+            <col style={{ width: '5%' }} />
+            <col style={{ width: '6%' }} />
+            <col style={{ width: '4%' }} />
+            <col style={{ width: '6%' }} />
+            <col style={{ width: '14%' }} />
+          </colgroup>
           <thead>
             <tr className="bg-[#1236a3] text-white">
-              <th className="px-3 py-4">
+              <th className={thClass}>
                 <input
                   type="checkbox"
                   checked={invoices.length > 0 && selected.size === invoices.length}
                   onChange={toggleAll}
-                  className="size-4 accent-white"
+                  className="size-3 accent-white"
+                  aria-label="Select all"
                 />
               </th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.index')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.commercialRegister')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.username')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.email')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.orderNumber')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.orderStatus')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.invoiceType')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.paymentNumber')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.paymentDate')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.totalAmount')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.currency')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.invoiceStatus')}</th>
-              <th className="px-3 py-4 text-[13px] font-medium">{t('invoices.columns.details')}</th>
+              <th className={thClass}>{t('invoices.columns.index')}</th>
+              <th className={thClass}>{t('invoices.columns.commercialRegister')}</th>
+              <th className={thClass}>{t('invoices.columns.username')}</th>
+              <th className={cn(thClass, 'whitespace-nowrap')}>{t('invoices.columns.email')}</th>
+              <th className={cn(thClass, 'whitespace-nowrap')}>{t('invoices.columns.orderNumber')}</th>
+              <th className={thClass}>{t('invoices.columns.orderStatus')}</th>
+              <th className={thClass}>{t('invoices.columns.invoiceType')}</th>
+              <th className={thClass}>{t('invoices.columns.paymentNumber')}</th>
+              <th className={thClass}>{t('invoices.columns.paymentDate')}</th>
+              <th className={thClass}>{t('invoices.columns.totalAmount')}</th>
+              <th className={thClass}>{t('invoices.columns.currency')}</th>
+              <th className={thClass}>{t('invoices.columns.invoiceStatus')}</th>
+              <th className={thClass}>{t('invoices.columns.details')}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={14} className="px-4 py-8 text-neutral-500">
+                <td colSpan={14} className="px-4 py-8 text-[9px] font-semibold text-neutral-500">
                   {t('common.loading')}
                 </td>
               </tr>
             ) : invoices.length === 0 ? (
               <tr>
-                <td colSpan={14} className="px-4 py-8 text-neutral-500">
+                <td colSpan={14} className="px-4 py-8 text-[9px] font-semibold text-neutral-500">
                   —
                 </td>
               </tr>
             ) : (
               invoices.map((invoice, index) => (
                 <tr key={invoice.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
-                  <td className="px-3 py-4">
+                  <td className={tdClass}>
                     <input
                       type="checkbox"
                       checked={selected.has(invoice.id)}
                       onChange={() => toggleOne(invoice.id)}
-                      className="size-4 accent-primary"
+                      className="size-3 accent-[#1236A3]"
                     />
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700">
-                    {(page - 1) * 10 + index + 1}
-                  </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700" dir="ltr">
+                  <td className={tdTextClass}>{(page - 1) * 10 + index + 1}</td>
+                  <td className={cn(tdTextClass, 'break-words')} dir="ltr">
                     {invoice.commercialRegisterNumber}
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-900">{invoice.username}</td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700" dir="ltr">
+                  <td className={cn(tdClass, 'break-words text-neutral-900')}>
+                    {invoice.username}
+                  </td>
+                  <td className={cn(tdTextClass, 'break-all whitespace-normal')} dir="ltr">
                     {invoice.email}
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700" dir="ltr">
+                  <td className={cn(tdTextClass, 'break-all whitespace-normal')} dir="ltr">
                     {invoice.orderNumber}
                   </td>
-                  <td className="max-w-[180px] px-3 py-4 text-[12px] leading-[1.5] text-neutral-600">
-                    {invoice.orderStatus}
+                  <td className={tdMutedClass}>
+                    <span className="block text-pretty">{invoice.orderStatus}</span>
                   </td>
-                  <td className="max-w-[180px] px-3 py-4 text-[12px] leading-[1.5] text-neutral-600">
-                    {invoice.invoiceType}
+                  <td className={tdMutedClass}>
+                    <span className="block text-pretty">{invoice.invoiceType}</span>
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700" dir="ltr">
+                  <td className={cn(tdTextClass, 'break-all')} dir="ltr">
                     {invoice.paymentNumber}
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700" dir="ltr">
+                  <td className={tdTextClass} dir="ltr">
                     {formatInvoiceDate(invoice.paymentDate)}
                   </td>
-                  <td className="px-3 py-4 text-[13px] font-medium text-neutral-900" dir="ltr">
+                  <td className={cn(tdClass, 'text-neutral-900')} dir="ltr">
                     {formatInvoiceAmount(invoice.totalAmount)}
                   </td>
-                  <td className="px-3 py-4 text-[13px] text-neutral-700">
-                    {currencySymbol(invoice.currency)}
+                  <td className={tdClass}>
+                    <InvoiceCurrencyCell currency={invoice.currency} />
                   </td>
-                  <td className="px-3 py-4">
-                    <span className="text-[13px] font-medium text-[#2ecc70]">
+                  <td className={tdClass}>
+                    <span className="whitespace-nowrap text-[9px] font-semibold text-[#2ecc70]">
                       {t('invoices.paymentMade')}
                     </span>
                   </td>
-                  <td className="px-3 py-4">
-                    <div className="flex items-center justify-center gap-2">
+                  <td className={tdActionsClass}>
+                    <div className="flex items-center justify-center gap-1.5">
                       <button
                         type="button"
                         onClick={() =>
                           previewFieldsDocument(t('invoices.preview'), buildInvoiceFields(invoice))
                         }
-                        className="rounded-[var(--radius-sm)] border border-[#f39c12] px-2.5 py-1 text-[12px] font-medium text-[#f39c12]"
+                        className={previewBtnClass}
                       >
                         {t('invoices.preview')}
                       </button>
@@ -313,7 +378,7 @@ export function InvoicesTable({
                         onClick={() =>
                           printFieldsDocument(t('invoices.printInvoice'), buildInvoiceFields(invoice))
                         }
-                        className="text-[12px] font-medium text-primary hover:underline"
+                        className={printBtnClass}
                       >
                         {t('invoices.printInvoice')}
                       </button>
@@ -326,9 +391,9 @@ export function InvoicesTable({
         </table>
       </div>
 
-      <div className="mt-4 px-5">
+      {!loading && invoices.length > 0 && (
         <TablePagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
-      </div>
+      )}
     </section>
   )
 }

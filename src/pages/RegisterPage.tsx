@@ -10,6 +10,7 @@ import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governora
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { CabRegisterFlow } from '@/components/auth/cab/CabRegisterFlow'
 import { AbRegisterFlow } from '@/components/auth/ab/AbRegisterFlow'
+import { AuditeeRegisterFlow } from '@/components/auth/auditee/AuditeeRegisterFlow'
 import {
   FormLabel,
   SelectField,
@@ -292,6 +293,11 @@ export function RegisterPage() {
         />
       ) : form.entityType === 'ACCREDITATION_BODY' ? (
         <AbRegisterFlow
+          onBackToEntityType={() => setStep(1)}
+          onSubmittedChange={setCabSubmitted}
+        />
+      ) : form.entityType === 'CONSULTATION_BODY' ? (
+        <AuditeeRegisterFlow
           onBackToEntityType={() => setStep(1)}
           onSubmittedChange={setCabSubmitted}
         />

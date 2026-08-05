@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, ExcelFileIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -31,16 +31,34 @@ interface PeriodicVisitsTableProps {
   onExportAll: () => Promise<PeriodicVisit[]>
 }
 
+const thClass =
+  'overflow-hidden px-2 py-2.5 text-center text-[11px] font-normal leading-[1.3] break-words text-white'
+const tdClass = 'px-2 py-2.5 text-[11px] font-semibold leading-snug align-middle'
+const tdTextClass = cn(tdClass, 'text-neutral-700')
+const tdActionsClass = 'px-2 py-2.5 align-middle'
+const periodicBtnClass =
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[4px] border border-[#FFDAB9] bg-[#FFF0E0] px-3 py-1.5 text-[10px] font-medium leading-none text-[#B54D1D]'
+const expandingBtnClass =
+  'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[4px] border border-[#B6D0FF] bg-[#E6EFFF] px-3 py-1.5 text-[10px] font-medium leading-none text-[#0D55D2]'
+
 function SectorBadge({ code }: { code: string }) {
   const variant = sectorBadgeVariant(code)
   return (
     <span
       className={cn(
-        'inline-flex min-w-[28px] items-center justify-center rounded-full px-2 py-0.5 text-[11px] font-semibold',
+        'inline-flex size-5 items-center justify-center rounded-[4px] text-[9px] font-semibold leading-none',
         variant === 'red' ? 'bg-[#fde8e8] text-[#e74c3c]' : 'bg-[#eafaf1] text-[#2ecc70]'
       )}
     >
       {code}
+    </span>
+  )
+}
+
+function SpecificationTag({ name }: { name: string }) {
+  return (
+    <span className="inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#E8EDFC] px-3.5 py-2 font-sans text-sm font-medium leading-none text-[#1236A3]">
+      {name}
     </span>
   )
 }
@@ -61,7 +79,26 @@ export function PeriodicVisitsTable({
   onExportAll,
 }: PeriodicVisitsTableProps) {
   const { t } = useTranslation()
+  const [selected, setSelected] = useState<Set<string>>(new Set())
   const [exporting, setExporting] = useState(false)
+  const [filtersOpen, setFiltersOpen] = useState(false)
+
+  const toggleAll = () => {
+    if (selected.size === visits.length) {
+      setSelected(new Set())
+    } else {
+      setSelected(new Set(visits.map((visit) => visit.id)))
+    }
+  }
+
+  const toggleOne = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
 
   const exportColumns: TableColumn<PeriodicVisit>[] = useMemo(
     () => [
@@ -84,46 +121,94 @@ export function PeriodicVisitsTable({
     [t]
   )
 
-  const runExport = async (mode: 'pdf' | 'excel') => {
+  const getExportRows = async () => {
+    const selectedRows = visits.filter((visit) => selected.has(visit.id))
+    if (selectedRows.length > 0) return selectedRows
+    return onExportAll()
+  }
+
+  const handleExportPdf = async () => {
     setExporting(true)
     try {
-      const rows = await onExportAll()
-      if (mode === 'pdf') {
-        downloadPdfFromTable('periodic-visits.pdf', t('periodicVisits.pageTitle'), exportColumns, rows)
-      } else {
-        downloadExcelCsv('periodic-visits.csv', exportColumns, rows)
-      }
+      const rows = await getExportRows()
+      downloadPdfFromTable('periodic-visits.pdf', t('periodicVisits.pageTitle'), exportColumns, rows)
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleExportExcel = async () => {
+    setExporting(true)
+    try {
+      const rows = await getExportRows()
+      downloadExcelCsv('periodic-visits.csv', exportColumns, rows)
     } finally {
       setExporting(false)
     }
   }
 
   return (
-    <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-5">
-        <div className="flex flex-1 flex-wrap items-center gap-3">
-          <div className="relative min-w-[240px] flex-1">
-            <AppIcon
-              icon={SearchIcon}
-              size={18}
-              className="pointer-events-none absolute inset-y-0 start-3 my-auto text-neutral-400"
-            />
+    <section className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
+          <div className="relative min-w-[240px] flex-1 sm:max-w-[360px]">
+            <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
+              <AppIcon icon={SearchIcon} size={18} />
+            </span>
             <input
               type="text"
               value={search}
               onChange={(e) => onSearchChange(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && onSearch()}
               placeholder={t('periodicVisits.searchPlaceholder')}
-              className="w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-2.5 ps-10 pe-3 text-[14px] outline-none focus:border-primary"
+              className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
             />
           </div>
           <button
             type="button"
             onClick={onSearch}
-            className="rounded-[var(--radius-sm)] bg-primary px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover"
+            className="h-11 shrink-0 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover"
           >
             {t('common.search')}
           </button>
+          <button
+            type="button"
+            aria-label={t('common.filter')}
+            aria-expanded={filtersOpen}
+            onClick={() => setFiltersOpen((open) => !open)}
+            className={cn(
+              'flex size-11 shrink-0 items-center justify-center rounded-[8px] text-primary transition-colors',
+              filtersOpen ? 'bg-[#e8edfc]' : 'bg-[#f3f6fd] hover:bg-[#e8edfc]'
+            )}
+          >
+            <AppIcon icon={FilterFunnelIcon} size={20} />
+          </button>
+        </div>
+
+        <div className="flex shrink-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={handleExportPdf}
+            disabled={exporting || loading}
+            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+          >
+            <AppIcon icon={PdfFileIcon} size={20} />
+            {t('periodicVisits.downloadPdf')}
+          </button>
+          <button
+            type="button"
+            onClick={handleExportExcel}
+            disabled={exporting || loading}
+            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+          >
+            <AppIcon icon={ExcelFileIcon} size={20} />
+            {t('periodicVisits.exportExcel')}
+          </button>
+        </div>
+      </div>
+
+      {filtersOpen && (
+        <div className="flex flex-wrap items-center gap-3 border-t border-[#ececec] pt-4">
           <TableFilterSelect
             label={t('periodicVisits.filters.specification')}
             value={specificationFilter}
@@ -146,99 +231,102 @@ export function PeriodicVisitsTable({
             ]}
           />
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            type="button"
-            onClick={() => runExport('pdf')}
-            disabled={exporting || loading}
-            className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 disabled:opacity-50"
-          >
-            <AppIcon icon={PdfFileIcon} size={22} />
-            {t('periodicVisits.downloadPdf')}
-          </button>
-          <button
-            type="button"
-            onClick={() => runExport('excel')}
-            disabled={exporting || loading}
-            className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 disabled:opacity-50"
-          >
-            <AppIcon icon={ExcelFileIcon} size={22} />
-            {t('periodicVisits.exportExcel')}
-          </button>
-        </div>
-      </div>
+      )}
 
-      <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse text-center">
+      <div className="min-w-0">
+        <table className="w-full table-fixed border-collapse text-center">
+          <colgroup>
+            <col style={{ width: '4%' }} />
+            <col style={{ width: '4%' }} />
+            <col style={{ width: '16%' }} />
+            <col style={{ width: '16%' }} />
+            <col style={{ width: '21%' }} />
+            <col style={{ width: '14%' }} />
+            <col style={{ width: '25%' }} />
+          </colgroup>
           <thead>
             <tr className="bg-[#1236a3] text-white">
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.index')}</th>
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.certificateNumber')}</th>
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.specificationName')}</th>
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.economicSector')}</th>
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.visitingDate')}</th>
-              <th className="px-4 py-4 text-[14px] font-medium">{t('periodicVisits.columns.procedures')}</th>
+              <th className={thClass}>
+                <input
+                  type="checkbox"
+                  checked={visits.length > 0 && selected.size === visits.length}
+                  onChange={toggleAll}
+                  className="size-3 accent-white"
+                  aria-label="Select all"
+                />
+              </th>
+              <th className={thClass}>{t('periodicVisits.columns.index')}</th>
+              <th className={thClass}>{t('periodicVisits.columns.certificateNumber')}</th>
+              <th className={thClass}>{t('periodicVisits.columns.specificationName')}</th>
+              <th className={thClass}>{t('periodicVisits.columns.economicSector')}</th>
+              <th className={thClass}>{t('periodicVisits.columns.visitingDate')}</th>
+              <th className={thClass}>{t('periodicVisits.columns.procedures')}</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-neutral-500">
+                <td colSpan={7} className="px-4 py-8 text-[11px] font-semibold text-neutral-500">
                   {t('common.loading')}
                 </td>
               </tr>
             ) : visits.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-4 py-8 text-neutral-500">
+                <td colSpan={7} className="px-4 py-8 text-[11px] font-semibold text-neutral-500">
                   —
                 </td>
               </tr>
             ) : (
-              visits.map((visit, index) => (
-                <tr key={visit.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
-                  <td className="px-4 py-4 text-[14px] text-neutral-700">
-                    {(page - 1) * 10 + index + 1}
+              visits.map((visit, index) => {
+                const rowBgClass =
+                  ((page - 1) * 10 + index) % 2 === 1 ? 'bg-[#eef1f6]' : 'bg-white'
+
+                return (
+                <tr key={visit.id}>
+                  <td className={cn(tdClass, rowBgClass)}>
+                    <input
+                      type="checkbox"
+                      checked={selected.has(visit.id)}
+                      onChange={() => toggleOne(visit.id)}
+                      className="size-3 accent-[#1236A3]"
+                    />
                   </td>
-                  <td className="px-4 py-4 text-[14px] font-medium text-neutral-900" dir="ltr">
+                  <td className={cn(tdTextClass, rowBgClass)}>{(page - 1) * 10 + index + 1}</td>
+                  <td className={cn(tdClass, rowBgClass, 'text-neutral-900')} dir="ltr">
                     {visit.certificateNumber}
                   </td>
-                  <td className="px-4 py-4">
-                    <span className="inline-flex rounded-full bg-[#e8edfc] px-3 py-1 text-[13px] font-medium text-primary">
-                      {visit.specificationName}
-                    </span>
+                  <td className={cn(tdClass, rowBgClass)}>
+                    <SpecificationTag name={visit.specificationName} />
                   </td>
-                  <td className="px-4 py-4">
+                  <td className={cn(tdClass, rowBgClass)}>
                     <div className="flex flex-wrap items-center justify-center gap-1.5">
                       {visit.economicSectors.map((sector) => (
                         <SectorBadge key={sector} code={sector} />
                       ))}
                     </div>
                   </td>
-                  <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
+                  <td className={cn(tdTextClass, rowBgClass)} dir="ltr">
                     {formatVisitDate(visit.visitingDate)}
                   </td>
-                  <td className="px-4 py-4">
+                  <td className={cn(tdActionsClass, rowBgClass)}>
                     <div className="flex flex-wrap items-center justify-center gap-2">
-                      <span className="rounded-full bg-[#fef5e7] px-3 py-1 text-[12px] font-medium text-[#f39c12]">
-                        {t('periodicVisits.procedurePeriodic')}
+                      <span className={periodicBtnClass}>{t('periodicVisits.procedurePeriodic')}</span>
+                      <span className={expandingBtnClass}>
+                        {t('periodicVisits.procedurePeriodicExpanding')}
                       </span>
-                      {visit.procedure === 'PERIODIC_AND_EXPANDING' && (
-                        <span className="rounded-full bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary">
-                          {t('periodicVisits.procedurePeriodicExpanding')}
-                        </span>
-                      )}
                     </div>
                   </td>
                 </tr>
-              ))
+                )
+              })
             )}
           </tbody>
         </table>
       </div>
 
-      <div className="mt-4 px-5">
+      {!loading && visits.length > 0 && (
         <TablePagination page={page} totalPages={totalPages} onPageChange={onPageChange} />
-      </div>
+      )}
     </section>
   )
 }

@@ -183,6 +183,30 @@
         "goToDashboard": "الذهاب إلى لوحة التحكم"
       }
     },
+    "auditee": {
+      "title": "إنشاء حساب عميل تدقيق جديد",
+      "companyName": "اسم الشركة / عميل التدقيق",
+      "companyNamePlaceholder": "مثال: شركة الحقول الخضراء",
+      "country": "الدولة",
+      "countryPlaceholder": "اختر الدولة",
+      "city": "المدينة",
+      "cityPlaceholder": "مثال: القاهرة",
+      "contactPerson": "الشخص المختص",
+      "contactPersonPlaceholder": "مثال: محمد خالد",
+      "role": "الدور",
+      "email": "البريد الإلكتروني",
+      "mobileNumber": "رقم الجوال",
+      "steps": {
+        "details": "البيانات",
+        "verification": "التحقق",
+        "accountSetup": "إعداد الحساب"
+      },
+      "summary": {
+        "submittedTitle": "تم إرسال طلب التسجيل بنجاح!",
+        "submittedDescription": "تم إنشاء حسابك. يمكنك الآن تسجيل الدخول والبدء.",
+        "goToDashboard": "الذهاب إلى لوحة التحكم"
+      }
+    },
     "progressLabel": "تقدم التسجيل",
     "steps": {
       "entityVerification": "بيانات الجهة والتحقق",
@@ -1137,8 +1161,16 @@
       "searchPlaceholder": "ابحث برقم المعاملة أو رقم العقد",
       "allTypes": "جميع الأنواع",
       "allDates": "جميع التواريخ",
+      "dateFrom": "من",
+      "dateTo": "إلى",
+      "clearDates": "مسح التواريخ",
       "allCases": "جميع الحالات",
+      "allAmounts": "جميع المبالغ",
+      "amountMoreThan": "أكثر من",
+      "amountLessThan": "أقل من",
+      "amountPlaceholder": "المبلغ",
       "statusSuccessful": "ناجحة",
+      "statusUnsuccessful": "غير ناجحة",
       "preview": "معاينة",
       "printInvoice": "طباعة الفاتورة",
       "columns": {
@@ -1156,7 +1188,8 @@
       "visa": "فيزا",
       "bankAccount": "حساب بنكي",
       "mada": "بطاقة مدى",
-      "bankTransfer": "تحويل بنكي"
+      "bankTransfer": "تحويل بنكي",
+      "bankPaymentMethod": "طريقة الدفع البنكية"
     },
     "toast": {
       "successTitle": "تم الشحن بنجاح",
@@ -1169,6 +1202,10 @@
       "subtitle": "أضف رصيداً جديداً لمتابعة معاملاتك.",
       "amountLabel": "المبلغ المراد شحنه",
       "choosePaymentMethod": "اختر طريقة الدفع",
+      "selectVisa": "اختر بطاقة فيزا",
+      "selectBankAccount": "اختر حساباً بنكياً",
+      "noVisaCards": "لا توجد بطاقات فيزا متاحة",
+      "noBankAccounts": "لا توجد حسابات بنكية متاحة",
       "confirm": "تأكيد الشحن"
     },
     "addPaymentModal": {

@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, ExcelFileIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
+import { DatePicker, parseDisplayDate } from '@/components/ui/DatePicker'
 import {
   downloadExcelCsv,
   downloadPdfFromTable,
@@ -14,12 +15,37 @@ import {
   formatWalletAmount,
   type WalletPaymentMethod,
   type WalletTransaction,
+  type WalletTransactionStatus,
 } from '@/lib/api/walletMockData'
 import { cn } from '@/lib/utils'
 
 interface WalletTransactionsTableProps {
   transactions: WalletTransaction[]
 }
+
+type AmountFilterOperator = 'all' | 'gt' | 'lt'
+
+function startOfDay(date: Date) {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate())
+}
+
+function isWithinDateRange(txDate: string, from: Date | null, to: Date | null) {
+  if (!from && !to) return true
+
+  const parsed = parseDisplayDate(txDate)
+  if (!parsed) return false
+
+  const day = startOfDay(parsed)
+  const rangeFrom = from && to && from > to ? to : from
+  const rangeTo = from && to && from > to ? from : to
+
+  if (rangeFrom && day < startOfDay(rangeFrom)) return false
+  if (rangeTo && day > startOfDay(rangeTo)) return false
+  return true
+}
+
+const datePickerFilterClass =
+  'min-w-[150px] [&_button]:h-auto [&_button]:min-h-[42px] [&_button]:py-2.5 [&_button]:text-[14px]'
 
 function PaymentMethodBadge({ method }: { method: WalletPaymentMethod }) {
   const { t } = useTranslation()
@@ -34,7 +60,7 @@ function PaymentMethodBadge({ method }: { method: WalletPaymentMethod }) {
       ),
     },
     bank_transfer: {
-      label: t('wallet.paymentMethods.bankTransfer'),
+      label: t('wallet.paymentMethods.bankPaymentMethod'),
       icon: (
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-neutral-500">
           <path d="M3 10h18M5 10V19M9 10V19M15 10V19M19 10V19M2 19h20M12 3l9 5H3l9-5z" strokeLinecap="round" strokeLinejoin="round" />
@@ -62,8 +88,11 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
   const [query, setQuery] = useState('')
   const [appliedQuery, setAppliedQuery] = useState('')
   const [typeFilter, setTypeFilter] = useState('all')
-  const [dateFilter, setDateFilter] = useState('all')
+  const [dateFrom, setDateFrom] = useState<Date | null>(null)
+  const [dateTo, setDateTo] = useState<Date | null>(null)
   const [statusFilter, setStatusFilter] = useState('all')
+  const [amountOperator, setAmountOperator] = useState<AmountFilterOperator>('all')
+  const [amountValue, setAmountValue] = useState('')
 
   const filtered = useMemo(() => {
     return transactions.filter((tx) => {
@@ -72,19 +101,33 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
         appliedQuery
       )
       const matchesType = typeFilter === 'all' || tx.paymentMethod === typeFilter
-      const matchesDate = dateFilter === 'all' || tx.date.includes(dateFilter)
+      const matchesDate = isWithinDateRange(tx.date, dateFrom, dateTo)
       const matchesStatus = statusFilter === 'all' || tx.status === statusFilter
-      return matchesQuery && matchesType && matchesDate && matchesStatus
+
+      const parsedAmount = Number(amountValue)
+      const matchesAmount =
+        amountOperator === 'all' ||
+        !amountValue ||
+        Number.isNaN(parsedAmount) ||
+        (amountOperator === 'gt' ? tx.amount > parsedAmount : tx.amount < parsedAmount)
+
+      return matchesQuery && matchesType && matchesDate && matchesStatus && matchesAmount
     })
-  }, [transactions, appliedQuery, typeFilter, dateFilter, statusFilter])
+  }, [transactions, appliedQuery, typeFilter, dateFrom, dateTo, statusFilter, amountOperator, amountValue])
 
   const paymentMethodLabel = (method: WalletPaymentMethod) => {
     const map = {
       mada: t('wallet.paymentMethods.mada'),
-      bank_transfer: t('wallet.paymentMethods.bankTransfer'),
+      bank_transfer: t('wallet.paymentMethods.bankPaymentMethod'),
       visa: t('wallet.paymentMethods.visa'),
     }
     return map[method]
+  }
+
+  const statusLabel = (status: WalletTransactionStatus) => {
+    if (status === 'failed') return t('wallet.transactions.statusUnsuccessful')
+    if (status === 'successful') return t('wallet.transactions.statusSuccessful')
+    return status
   }
 
   const exportColumns: TableColumn<WalletTransaction>[] = [
@@ -97,7 +140,7 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
     },
     { header: t('wallet.transactions.columns.paymentMethod'), value: (row) => paymentMethodLabel(row.paymentMethod) },
     { header: t('wallet.transactions.columns.amount'), value: (row) => formatWalletAmount(row.amount) },
-    { header: t('wallet.transactions.columns.status'), value: () => t('wallet.transactions.statusSuccessful') },
+    { header: t('wallet.transactions.columns.status'), value: (row) => statusLabel(row.status) },
   ]
 
   const buildInvoiceFields = (tx: WalletTransaction) => [
@@ -106,12 +149,13 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
     { label: t('wallet.transactions.columns.statement'), value: tx.statementTitle },
     { label: t('wallet.transactions.columns.paymentMethod'), value: paymentMethodLabel(tx.paymentMethod) },
     { label: t('wallet.transactions.columns.amount'), value: formatWalletAmount(tx.amount) },
-    { label: t('wallet.transactions.columns.status'), value: t('wallet.transactions.statusSuccessful') },
+    { label: t('wallet.transactions.columns.status'), value: statusLabel(tx.status) },
   ]
 
   const handleSearch = () => setAppliedQuery(query)
 
-  const uniqueYears = [...new Set(transactions.map((tx) => tx.date.slice(-4)))]
+  const transactionFilterControlClass =
+    'rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-2.5 text-[14px] text-neutral-700 outline-none focus:border-primary'
 
   return (
     <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
@@ -181,19 +225,39 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
           options={[
             { value: 'all', label: t('wallet.transactions.allTypes') },
             { value: 'mada', label: t('wallet.paymentMethods.mada') },
-            { value: 'bank_transfer', label: t('wallet.paymentMethods.bankTransfer') },
+            { value: 'bank_transfer', label: t('wallet.paymentMethods.bankPaymentMethod') },
             { value: 'visa', label: t('wallet.paymentMethods.visa') },
           ]}
         />
-        <TableFilterSelect
-          label={t('wallet.transactions.allDates')}
-          value={dateFilter}
-          onChange={setDateFilter}
-          options={[
-            { value: 'all', label: t('wallet.transactions.allDates') },
-            ...uniqueYears.map((year) => ({ value: year, label: year })),
-          ]}
-        />
+        <div className="flex flex-wrap items-center gap-2">
+          <DatePicker
+            key={`from-${dateFrom?.toISOString() ?? 'empty'}`}
+            value={dateFrom ?? undefined}
+            onChange={setDateFrom}
+            placeholder={t('wallet.transactions.dateFrom')}
+            className={datePickerFilterClass}
+          />
+          <span className="text-[14px] text-neutral-400">—</span>
+          <DatePicker
+            key={`to-${dateTo?.toISOString() ?? 'empty'}`}
+            value={dateTo ?? undefined}
+            onChange={setDateTo}
+            placeholder={t('wallet.transactions.dateTo')}
+            className={datePickerFilterClass}
+          />
+          {(dateFrom || dateTo) && (
+            <button
+              type="button"
+              onClick={() => {
+                setDateFrom(null)
+                setDateTo(null)
+              }}
+              className="text-[13px] font-medium text-primary hover:underline"
+            >
+              {t('wallet.transactions.clearDates')}
+            </button>
+          )}
+        </div>
         <TableFilterSelect
           label={t('wallet.transactions.allCases')}
           value={statusFilter}
@@ -201,8 +265,36 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
           options={[
             { value: 'all', label: t('wallet.transactions.allCases') },
             { value: 'successful', label: t('wallet.transactions.statusSuccessful') },
+            { value: 'failed', label: t('wallet.transactions.statusUnsuccessful') },
           ]}
         />
+        <div className="flex items-center gap-2">
+          <TableFilterSelect
+            label={t('wallet.transactions.allAmounts')}
+            value={amountOperator}
+            onChange={(value) => setAmountOperator(value as AmountFilterOperator)}
+            options={[
+              { value: 'all', label: t('wallet.transactions.allAmounts') },
+              { value: 'gt', label: t('wallet.transactions.amountMoreThan') },
+              { value: 'lt', label: t('wallet.transactions.amountLessThan') },
+            ]}
+          />
+          <input
+            type="number"
+            min={0}
+            step="0.01"
+            value={amountValue}
+            onChange={(e) => setAmountValue(e.target.value)}
+            disabled={amountOperator === 'all'}
+            placeholder={t('wallet.transactions.amountPlaceholder')}
+            aria-label={t('wallet.transactions.amountPlaceholder')}
+            className={cn(
+              transactionFilterControlClass,
+              'w-[120px]',
+              amountOperator === 'all' && 'cursor-not-allowed bg-neutral-50 text-neutral-400'
+            )}
+          />
+        </div>
       </div>
 
       <div className="overflow-x-auto">
@@ -249,8 +341,13 @@ export function WalletTransactionsTable({ transactions }: WalletTransactionsTabl
                     {formatWalletAmount(tx.amount)}
                   </td>
                   <td className="px-4 py-4">
-                    <span className="text-[14px] font-medium text-[#2ecc70]">
-                      {t('wallet.transactions.statusSuccessful')}
+                    <span
+                      className={cn(
+                        'text-[14px] font-medium',
+                        tx.status === 'failed' ? 'text-[#e74c3c]' : 'text-[#2ecc70]'
+                      )}
+                    >
+                      {statusLabel(tx.status)}
                     </span>
                   </td>
                   <td className="px-4 py-4">

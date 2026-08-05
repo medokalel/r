@@ -21,9 +21,32 @@ export interface WalletBalance {
 }
 
 export interface LinkedBankAccount {
+  id: string
   bankName: string
   accountHolderName: string
 }
+
+export interface SavedVisaCard {
+  id: string
+  paymentMethodName: string
+  cardHolderName: string
+  cardNumberMasked: string
+}
+
+export const MOCK_SAVED_VISA_CARDS: SavedVisaCard[] = [
+  {
+    id: 'visa-1',
+    paymentMethodName: 'Primary company card',
+    cardHolderName: 'Industrial Production Company Limited',
+    cardNumberMasked: '8000-0000-6080-7519',
+  },
+  {
+    id: 'visa-2',
+    paymentMethodName: 'Operations Visa',
+    cardHolderName: 'Ahmed Al-Rashid',
+    cardNumberMasked: '4111-1111-1111-4242',
+  },
+]
 
 export const MOCK_WALLET_BALANCE: WalletBalance = {
   availableCredit: 12500,
@@ -32,10 +55,26 @@ export const MOCK_WALLET_BALANCE: WalletBalance = {
   refundsUnderReview: 1600,
 }
 
-export const MOCK_LINKED_ACCOUNT: LinkedBankAccount = {
-  bankName: 'National Bank of Saudi Arabia',
-  accountHolderName: 'Industrial Production Company Limited',
-}
+export const MOCK_LINKED_ACCOUNTS: LinkedBankAccount[] = [
+  {
+    id: '1',
+    bankName: 'National Bank of Saudi Arabia',
+    accountHolderName: 'Industrial Production Company Limited',
+  },
+  {
+    id: '2',
+    bankName: 'Al Rajhi Bank',
+    accountHolderName: 'Jeddah Branch Operations Account',
+  },
+  {
+    id: '3',
+    bankName: 'Riyad Bank',
+    accountHolderName: 'Accreditation Services Holding',
+  },
+]
+
+/** @deprecated Use MOCK_LINKED_ACCOUNTS */
+export const MOCK_LINKED_ACCOUNT: LinkedBankAccount = MOCK_LINKED_ACCOUNTS[0]
 
 export const MOCK_WALLET_TRANSACTIONS: WalletTransaction[] = [
   {

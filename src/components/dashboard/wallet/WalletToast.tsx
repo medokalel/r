@@ -16,7 +16,7 @@ export function WalletToast({ variant, onClose, onRetry }: WalletToastProps) {
   return (
     <div
       className={cn(
-        'mx-auto flex w-full max-w-[640px] items-start gap-3 rounded-[12px] border px-4 py-3 shadow-sm',
+        'flex w-full items-start gap-3 rounded-[12px] border px-4 py-3 shadow-sm',
         isSuccess ? 'border-[#b8e6cc] bg-[#eafaf1]' : 'border-[#f5c6cb] bg-[#fdecea]'
       )}
       role="status"
@@ -66,6 +66,17 @@ export function WalletToast({ variant, onClose, onRetry }: WalletToastProps) {
           <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" />
         </svg>
       </button>
+    </div>
+  )
+}
+
+/** Fixed overlay toast — floats above page content without shifting layout. */
+export function WalletToastOverlay({ variant, onClose, onRetry }: WalletToastProps) {
+  return (
+    <div className="pointer-events-none fixed inset-x-0 top-[76px] z-50 flex justify-center px-5">
+      <div className="pointer-events-auto w-full max-w-[640px]">
+        <WalletToast variant={variant} onClose={onClose} onRetry={onRetry} />
+      </div>
     </div>
   )
 }

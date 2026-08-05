@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextField } from '@/components/ui/TextField'
-import { fieldTextareaClassName } from '@/components/ui/fieldStyles'
-import { WalletModalActions, WalletModalShell } from '@/components/dashboard/wallet/WalletModalShell'
+import { DatePicker } from '@/components/ui/DatePicker'
+import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
+import { WalletModalBody, WalletModalShell } from '@/components/dashboard/wallet/WalletModalShell'
 import { cn } from '@/lib/utils'
 
 interface RequestRefundModalProps {
@@ -11,15 +12,36 @@ interface RequestRefundModalProps {
   onSubmit: () => void
 }
 
+const REFUND_MODAL_SIZE_CLASS =
+  'w-[min(920px,calc(100vw-32px))] max-h-[calc(100dvh-24px)]'
+
+const refundFieldClass = cn(
+  fieldHeightClassName,
+  'font-sans text-[14px] font-normal leading-[1.6] placeholder:text-[12px] placeholder:font-light placeholder:text-neutral-400'
+)
+const refundLabelClass =
+  'block font-sans text-[14px] font-normal leading-[1.6] text-neutral-900'
+
+const refundButtonBaseClass =
+  'flex h-10 w-[240px] items-center justify-center rounded-[6px] border-0 px-6 font-sans text-[13px] font-normal leading-[1.4] transition-colors'
+const refundCancelButtonClass = cn(
+  refundButtonBaseClass,
+  'bg-[#fceae882] text-[#e74c3c] hover:bg-[#fceae8]'
+)
+const refundSubmitButtonClass = cn(
+  refundButtonBaseClass,
+  'bg-[#1236A3] text-white hover:bg-[#0f2d88] disabled:cursor-not-allowed disabled:opacity-60'
+)
+
 export function RequestRefundModal({ open, onClose, onSubmit }: RequestRefundModalProps) {
   const { t } = useTranslation()
   const [loading, setLoading] = useState(false)
   const [authorized, setAuthorized] = useState(true)
   const [form, setForm] = useState({
     orderNumber: '578676498098',
-    date: '01/01/2026',
+    date: new Date(2026, 0, 1),
     amount: '4,000',
-    reason: 'Cancel grant application',
+    reason: '',
     notes: '',
   })
 
@@ -39,48 +61,37 @@ export function RequestRefundModal({ open, onClose, onSubmit }: RequestRefundMod
       open={open}
       onClose={onClose}
       title={t('wallet.refundModal.title')}
+      className={REFUND_MODAL_SIZE_CLASS}
+      headerClassName="px-8 pt-8 pb-3"
+      titleClassName="font-sans text-[20px] font-semibold leading-[1.6]"
+      closeClassName="size-10"
     >
-      <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-5">
-        <div className="flex flex-col gap-5">
+      <WalletModalBody className="flex flex-col gap-5 overflow-visible px-8 pb-8 pt-0 font-sans leading-[1.6] [&_.field-label]:text-[14px] [&_.field-label]:font-normal">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-4">
           <TextField
             id="refund-order-number"
             label={t('wallet.refundModal.orderNumber')}
             value={form.orderNumber}
             onChange={(e) => setForm((prev) => ({ ...prev, orderNumber: e.target.value }))}
+            className={refundFieldClass}
             dir="ltr"
           />
+
           <div className="space-y-2">
-            <label htmlFor="refund-date" className="block text-[15px] font-medium text-neutral-900">
-              {t('wallet.refundModal.date')}
-            </label>
-            <div className="relative">
-              <input
-                id="refund-date"
-                type="text"
-                value={form.date}
-                onChange={(e) => setForm((prev) => ({ ...prev, date: e.target.value }))}
-                className="w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-3 pe-10 ps-4 text-[14px] outline-none focus:border-primary"
-                dir="ltr"
-              />
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                className="pointer-events-none absolute inset-y-0 end-3 my-auto text-neutral-400"
-              >
-                <rect x="3" y="5" width="18" height="16" rx="2" />
-                <path d="M3 10h18M8 3v4M16 3v4" strokeLinecap="round" />
-              </svg>
-            </div>
+            <span className={refundLabelClass}>{t('wallet.refundModal.date')}</span>
+            <DatePicker
+              value={form.date}
+              onChange={(date) => setForm((prev) => ({ ...prev, date }))}
+              className="[&>button]:font-sans [&>button]:text-[14px] [&>button]:font-normal [&>button]:leading-[1.6]"
+            />
           </div>
+
           <TextField
             id="refund-amount"
             label={t('wallet.refundModal.amount')}
             value={form.amount}
             onChange={(e) => setForm((prev) => ({ ...prev, amount: e.target.value }))}
+            className={refundFieldClass}
             dir="ltr"
           />
           <TextField
@@ -88,11 +99,13 @@ export function RequestRefundModal({ open, onClose, onSubmit }: RequestRefundMod
             label={t('wallet.refundModal.reason')}
             value={form.reason}
             onChange={(e) => setForm((prev) => ({ ...prev, reason: e.target.value }))}
+            placeholder="Cancel grant application"
+            className={refundFieldClass}
           />
         </div>
 
         <div className="space-y-2">
-          <label htmlFor="refund-notes" className="block text-[15px] font-medium text-neutral-900">
+          <label htmlFor="refund-notes" className={refundLabelClass}>
             {t('wallet.refundModal.notes')}
           </label>
           <textarea
@@ -101,34 +114,47 @@ export function RequestRefundModal({ open, onClose, onSubmit }: RequestRefundMod
             value={form.notes}
             onChange={(e) => setForm((prev) => ({ ...prev, notes: e.target.value }))}
             placeholder={t('wallet.refundModal.notesPlaceholder')}
-            className={cn(fieldTextareaClassName, 'min-h-[96px] resize-none')}
+            className={cn(
+              fieldInputClassName,
+              'min-h-[96px] resize-none py-3 font-sans text-[14px] font-normal leading-[1.6] placeholder:text-[12px] placeholder:font-light placeholder:text-neutral-400'
+            )}
           />
         </div>
 
-        <p className="text-[13px] leading-[1.6] text-[#e74c3c]">
-          {t('wallet.refundModal.warning')}
-        </p>
+        <div className="space-y-4 rounded-[8px] border border-[#ececec] p-5">
+          <div className="rounded-[8px] bg-[#fceae882] px-4 py-3">
+            <p className="text-[13px] font-normal leading-[1.6] text-[#e74c3c]">
+              {t('wallet.refundModal.warning')}
+            </p>
+          </div>
 
-        <label className="flex cursor-pointer items-start gap-3">
-          <input
-            type="checkbox"
-            checked={authorized}
-            onChange={(e) => setAuthorized(e.target.checked)}
-            className="mt-1 size-5 shrink-0 accent-primary"
-          />
-          <span className="text-[14px] leading-[1.6] text-neutral-700">
-            {t('wallet.refundModal.authorization')}
-          </span>
-        </label>
+          <label className="flex cursor-pointer items-start gap-3">
+            <input
+              type="checkbox"
+              checked={authorized}
+              onChange={(e) => setAuthorized(e.target.checked)}
+              className="mt-0.5 size-5 shrink-0 accent-[#1236a3]"
+            />
+            <span className="text-[13px] font-normal leading-[1.6] text-neutral-700">
+              {t('wallet.refundModal.authorization')}
+            </span>
+          </label>
+        </div>
 
-        <WalletModalActions
-          onCancel={onClose}
-          onConfirm={handleSubmit}
-          confirmLabel={t('wallet.refundModal.submit')}
-          confirmDisabled={!authorized}
-          loading={loading}
-        />
-      </div>
+        <div className="flex items-center justify-end gap-3">
+          <button type="button" onClick={onClose} className={refundCancelButtonClass}>
+            {t('common.cancel')}
+          </button>
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={!authorized || loading}
+            className={refundSubmitButtonClass}
+          >
+            {loading ? t('common.loading') : t('wallet.refundModal.submit')}
+          </button>
+        </div>
+      </WalletModalBody>
     </WalletModalShell>
   )
 }

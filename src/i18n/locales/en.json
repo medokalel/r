@@ -183,6 +183,30 @@
         "goToDashboard": "Go to Dashboard"
       }
     },
+    "auditee": {
+      "title": "Create New Audit Client Account",
+      "companyName": "Company Name / Auditee Client",
+      "companyNamePlaceholder": "Example: Green Fields Co.",
+      "country": "Country",
+      "countryPlaceholder": "Select a country",
+      "city": "City",
+      "cityPlaceholder": "Example: Cairo",
+      "contactPerson": "Contact Person",
+      "contactPersonPlaceholder": "Example: Mohammed Khaled",
+      "role": "Role",
+      "email": "Email",
+      "mobileNumber": "Mobile Number",
+      "steps": {
+        "details": "Details",
+        "verification": "Verification",
+        "accountSetup": "Account Setup"
+      },
+      "summary": {
+        "submittedTitle": "Registration Submitted Successfully!",
+        "submittedDescription": "Your account has been created. You can now log in and get started.",
+        "goToDashboard": "Go to Dashboard"
+      }
+    },
     "progressLabel": "Registration progress",
     "steps": {
       "entityVerification": "Entity data and verification",
@@ -1138,8 +1162,16 @@
       "searchPlaceholder": "Search by transaction number or contract number",
       "allTypes": "All types",
       "allDates": "All dates",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "clearDates": "Clear dates",
       "allCases": "All cases",
+      "allAmounts": "All amounts",
+      "amountMoreThan": "More than",
+      "amountLessThan": "Less than",
+      "amountPlaceholder": "Amount",
       "statusSuccessful": "Successful",
+      "statusUnsuccessful": "Unsuccessful",
       "preview": "Preview",
       "printInvoice": "Print the invoice",
       "columns": {
@@ -1157,7 +1189,8 @@
       "visa": "Visa",
       "bankAccount": "Bank account",
       "mada": "Mada card",
-      "bankTransfer": "Bank Transfer"
+      "bankTransfer": "Bank Transfer",
+      "bankPaymentMethod": "Bank payment method"
     },
     "toast": {
       "successTitle": "Shipped successfully",
@@ -1170,6 +1203,10 @@
       "subtitle": "Add a new balance to track your transactions.",
       "amountLabel": "The amount to be shipped",
       "choosePaymentMethod": "Choose the payment method",
+      "selectVisa": "Select a Visa card",
+      "selectBankAccount": "Select a bank account",
+      "noVisaCards": "No Visa cards available",
+      "noBankAccounts": "No bank accounts available",
       "confirm": "Confirm Recharge"
     },
     "addPaymentModal": {

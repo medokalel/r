@@ -6,11 +6,12 @@ import { BalanceSection } from '@/components/dashboard/wallet/BalanceSection'
 import { RechargeBalanceModal } from '@/components/dashboard/wallet/RechargeBalanceModal'
 import { RequestRefundModal } from '@/components/dashboard/wallet/RequestRefundModal'
 import { UpdateAccountModal } from '@/components/dashboard/wallet/UpdateAccountModal'
-import { WalletToast, type WalletToastVariant } from '@/components/dashboard/wallet/WalletToast'
+import { WalletToastOverlay, type WalletToastVariant } from '@/components/dashboard/wallet/WalletToast'
 import { WalletTransactionsTable } from '@/components/dashboard/wallet/WalletTransactionsTable'
 import { AppLayout } from '@/components/layout/AppLayout'
 import {
-  MOCK_LINKED_ACCOUNT,
+  MOCK_LINKED_ACCOUNTS,
+  MOCK_SAVED_VISA_CARDS,
   MOCK_WALLET_BALANCE,
   MOCK_WALLET_TRANSACTIONS,
   type WalletBalance,
@@ -30,7 +31,7 @@ export function DigitalWalletPage() {
     return () => clearTimeout(timer)
   }, [toast])
 
-  const handleRecharge = (amount: number) => {
+  const handleRecharge = (amount: number, _paymentMethod?: 'visa' | 'bank', _savedMethodId?: string) => {
     if (amount <= 0) {
       setToast('error')
       return
@@ -46,21 +47,21 @@ export function DigitalWalletPage() {
     <AppLayout>
       <AccreditationHeader titleKey="wallet.pageTitle" />
 
-      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-        {toast && (
-          <WalletToast
-            variant={toast}
-            onClose={() => setToast(null)}
-            onRetry={() => {
-              setToast(null)
-              setActiveModal('recharge')
-            }}
-          />
-        )}
+      {toast && (
+        <WalletToastOverlay
+          variant={toast}
+          onClose={() => setToast(null)}
+          onRetry={() => {
+            setToast(null)
+            setActiveModal('recharge')
+          }}
+        />
+      )}
 
+      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
         <BalanceSection
           balance={balance}
-          linkedAccount={MOCK_LINKED_ACCOUNT}
+          linkedAccounts={MOCK_LINKED_ACCOUNTS}
           onRecharge={() => setActiveModal('recharge')}
           onRefund={() => setActiveModal('refund')}
           onAddPaymentMethod={() => setActiveModal('addPayment')}
@@ -72,13 +73,13 @@ export function DigitalWalletPage() {
         <div className="flex items-center justify-end gap-3 pb-2">
           <button
             type="button"
-            className="rounded-[var(--radius-sm)] border border-primary bg-white px-8 py-3 text-[16px] font-semibold text-primary transition-colors hover:bg-[#e8edfc]"
+            className="rounded-[8px] border border-[#1236a3] bg-white px-10 py-3 text-[16px] font-semibold text-[#1236a3] transition-colors hover:bg-[#e8edfc]"
           >
             {t('common.back')}
           </button>
           <button
             type="button"
-            className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-[16px] font-semibold text-white transition-colors hover:bg-primary-hover"
+            className="rounded-[8px] bg-[#1236a3] px-10 py-3 text-[16px] font-semibold text-white transition-colors hover:bg-[#0f2d88]"
           >
             {t('common.next')}
           </button>
@@ -89,6 +90,8 @@ export function DigitalWalletPage() {
         open={activeModal === 'recharge'}
         onClose={() => setActiveModal(null)}
         onConfirm={handleRecharge}
+        visaCards={MOCK_SAVED_VISA_CARDS}
+        bankAccounts={MOCK_LINKED_ACCOUNTS}
       />
       <AddPaymentMethodModal
         open={activeModal === 'addPayment'}

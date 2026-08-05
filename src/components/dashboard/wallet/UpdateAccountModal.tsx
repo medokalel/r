@@ -1,12 +1,26 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { SelectField } from '@/components/ui/Select'
 import { TextField } from '@/components/ui/TextField'
 import { CvvHintTooltip } from '@/components/dashboard/wallet/CvvHintTooltip'
 import {
+  PaymentMethodToggle,
   WalletModalActions,
+  WalletModalBody,
   WalletModalShell,
   WalletSecurityNotice,
 } from '@/components/dashboard/wallet/WalletModalShell'
+import {
+  BankFormRow,
+  PAYMENT_BANK_MODAL_CLASS,
+  PAYMENT_VISA_MODAL_CLASS,
+  paymentBankFormClass,
+  paymentContentClass,
+  paymentFieldClass,
+  paymentFieldsStackClass,
+} from '@/components/dashboard/wallet/walletPaymentFormShared'
+import { formatBankAccountNumber, formatCardNumber, formatCvv } from '@/components/dashboard/wallet/walletFormatters'
+import { cn } from '@/lib/utils'
 
 interface UpdateAccountModalProps {
   open: boolean
@@ -16,12 +30,24 @@ interface UpdateAccountModalProps {
 
 export function UpdateAccountModal({ open, onClose, onUpdate }: UpdateAccountModalProps) {
   const { t } = useTranslation()
+  const [method, setMethod] = useState<'visa' | 'bank'>('bank')
   const [loading, setLoading] = useState(false)
-  const [form, setForm] = useState({
+
+  const [visaForm, setVisaForm] = useState({
     paymentMethodName: '',
     cardHolderName: '',
-    cardNumber: '8000 0000 6080 1016 7519',
+    cardNumber: formatCardNumber('80000000608010167519'),
     cvv: '567',
+  })
+
+  const [bankForm, setBankForm] = useState({
+    bankName: '',
+    bankBranch: 'grandmother',
+    iban: '8000 0000 6080 1016 7519',
+    paymentMethodName: '',
+    accountHolderName: '',
+    accountNumber: formatBankAccountNumber('2345607968574635'),
+    swiftCode: 'XXXXsar36748',
   })
 
   const handleUpdate = async () => {
@@ -41,47 +67,195 @@ export function UpdateAccountModal({ open, onClose, onUpdate }: UpdateAccountMod
       onClose={onClose}
       title={t('wallet.updateAccountModal.title')}
       subtitle={t('wallet.updateAccountModal.subtitle')}
+      className={method === 'bank' ? PAYMENT_BANK_MODAL_CLASS : PAYMENT_VISA_MODAL_CLASS}
+      headerClassName={method === 'bank' ? 'px-8 pt-8 pb-4' : 'px-6 pt-8 pb-4'}
+      titleClassName="font-sans text-[18px] font-semibold leading-[1.6]"
+      subtitleClassName="text-[11px] leading-[1.35]"
+      closeClassName="size-9"
     >
-      <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-5">
-        <TextField
-          id="update-payment-name"
-          label={t('wallet.addPaymentModal.paymentMethodName')}
-          value={form.paymentMethodName}
-          onChange={(e) => setForm((prev) => ({ ...prev, paymentMethodName: e.target.value }))}
-          placeholder={t('wallet.addPaymentModal.paymentMethodNamePlaceholder')}
-        />
-        <TextField
-          id="update-card-holder"
-          label={t('wallet.addPaymentModal.cardHolderName')}
-          value={form.cardHolderName}
-          onChange={(e) => setForm((prev) => ({ ...prev, cardHolderName: e.target.value }))}
-          placeholder={t('wallet.addPaymentModal.cardHolderNamePlaceholder')}
-        />
-        <TextField
-          id="update-card-number"
-          label={t('wallet.addPaymentModal.cardNumber')}
-          value={form.cardNumber}
-          onChange={(e) => setForm((prev) => ({ ...prev, cardNumber: e.target.value }))}
-          dir="ltr"
-        />
-        <TextField
-          id="update-cvv"
-          label={t('wallet.addPaymentModal.cvv')}
-          labelExtra={<CvvHintTooltip />}
-          value={form.cvv}
-          onChange={(e) => setForm((prev) => ({ ...prev, cvv: e.target.value }))}
-          dir="ltr"
-        />
+      <WalletModalBody
+        className={cn(
+          'flex flex-col gap-6 pt-1 font-sans leading-[1.6] [&_.field-label]:text-[14px] [&_.field-label]:font-normal',
+          method === 'bank' ? 'px-8 pb-8' : 'px-6 pb-10'
+        )}
+      >
+        <div className={paymentContentClass}>
+          <PaymentMethodToggle value={method} onChange={setMethod} compact />
 
-        <WalletSecurityNotice />
+          {method === 'visa' ? (
+            <div className={paymentFieldsStackClass}>
+              <TextField
+                id="update-payment-name"
+                label={t('wallet.addPaymentModal.paymentMethodName')}
+                value={visaForm.paymentMethodName}
+                onChange={(e) => setVisaForm((prev) => ({ ...prev, paymentMethodName: e.target.value }))}
+                placeholder={t('wallet.addPaymentModal.paymentMethodNamePlaceholder')}
+                className={paymentFieldClass}
+              />
+              <TextField
+                id="update-card-holder"
+                label={t('wallet.addPaymentModal.cardHolderName')}
+                value={visaForm.cardHolderName}
+                onChange={(e) => setVisaForm((prev) => ({ ...prev, cardHolderName: e.target.value }))}
+                placeholder={t('wallet.addPaymentModal.cardHolderNamePlaceholder')}
+                className={paymentFieldClass}
+              />
+              <TextField
+                id="update-card-number"
+                label={t('wallet.addPaymentModal.cardNumber')}
+                value={visaForm.cardNumber}
+                onChange={(e) =>
+                  setVisaForm((prev) => ({ ...prev, cardNumber: formatCardNumber(e.target.value) }))
+                }
+                className={paymentFieldClass}
+                dir="ltr"
+                inputMode="numeric"
+                maxLength={19}
+              />
+              <TextField
+                id="update-cvv"
+                label={t('wallet.addPaymentModal.cvv')}
+                labelExtra={<CvvHintTooltip />}
+                value={visaForm.cvv}
+                onChange={(e) => setVisaForm((prev) => ({ ...prev, cvv: formatCvv(e.target.value) }))}
+                className={paymentFieldClass}
+                dir="ltr"
+                inputMode="numeric"
+                maxLength={3}
+              />
+            </div>
+          ) : (
+            <div className={paymentBankFormClass}>
+              <BankFormRow
+                left={{
+                  id: 'update-bank-name',
+                  label: t('wallet.addPaymentModal.bankName'),
+                  field: (
+                    <SelectField
+                      id="update-bank-name"
+                      value={bankForm.bankName}
+                      onChange={(value) => setBankForm((prev) => ({ ...prev, bankName: value }))}
+                      placeholder={t('wallet.addPaymentModal.bankNamePlaceholder')}
+                      className={paymentFieldClass}
+                      options={[
+                        t('wallet.addPaymentModal.bankOptions.national'),
+                        t('wallet.addPaymentModal.bankOptions.rajhi'),
+                        t('wallet.addPaymentModal.bankOptions.riyad'),
+                      ]}
+                    />
+                  ),
+                }}
+                right={{
+                  id: 'update-bank-payment-name',
+                  label: t('wallet.addPaymentModal.paymentMethodName'),
+                  field: (
+                    <TextField
+                      id="update-bank-payment-name"
+                      value={bankForm.paymentMethodName}
+                      onChange={(e) =>
+                        setBankForm((prev) => ({ ...prev, paymentMethodName: e.target.value }))
+                      }
+                      placeholder={t('wallet.addPaymentModal.bankPaymentNamePlaceholder')}
+                      className={paymentFieldClass}
+                    />
+                  ),
+                }}
+              />
+              <BankFormRow
+                left={{
+                  id: 'update-bank-branch',
+                  label: t('wallet.addPaymentModal.bankBranch'),
+                  field: (
+                    <SelectField
+                      id="update-bank-branch"
+                      value={bankForm.bankBranch}
+                      onChange={(value) => setBankForm((prev) => ({ ...prev, bankBranch: value }))}
+                      className={paymentFieldClass}
+                      options={['grandmother', 'Jeddah', 'Riyadh']}
+                    />
+                  ),
+                }}
+                right={{
+                  id: 'update-bank-account-holder',
+                  label: t('wallet.addPaymentModal.accountHolderName'),
+                  field: (
+                    <TextField
+                      id="update-bank-account-holder"
+                      value={bankForm.accountHolderName}
+                      onChange={(e) =>
+                        setBankForm((prev) => ({ ...prev, accountHolderName: e.target.value }))
+                      }
+                      placeholder={t('wallet.addPaymentModal.accountHolderNamePlaceholder')}
+                      className={paymentFieldClass}
+                    />
+                  ),
+                }}
+              />
+              <BankFormRow
+                left={{
+                  id: 'update-bank-iban',
+                  label: t('wallet.addPaymentModal.iban'),
+                  field: (
+                    <TextField
+                      id="update-bank-iban"
+                      value={bankForm.iban}
+                      onChange={(e) => setBankForm((prev) => ({ ...prev, iban: e.target.value }))}
+                      className={paymentFieldClass}
+                      dir="ltr"
+                    />
+                  ),
+                }}
+                right={{
+                  id: 'update-bank-account-number',
+                  label: t('wallet.addPaymentModal.accountNumber'),
+                  field: (
+                    <TextField
+                      id="update-bank-account-number"
+                      value={bankForm.accountNumber}
+                      onChange={(e) =>
+                        setBankForm((prev) => ({
+                          ...prev,
+                          accountNumber: formatBankAccountNumber(e.target.value),
+                        }))
+                      }
+                      className={paymentFieldClass}
+                      dir="ltr"
+                      inputMode="numeric"
+                      maxLength={19}
+                    />
+                  ),
+                }}
+              />
+              <BankFormRow
+                left={{
+                  id: 'update-bank-swift',
+                  label: t('wallet.addPaymentModal.swiftCode'),
+                  field: (
+                    <TextField
+                      id="update-bank-swift"
+                      value={bankForm.swiftCode}
+                      onChange={(e) => setBankForm((prev) => ({ ...prev, swiftCode: e.target.value }))}
+                      className={paymentFieldClass}
+                      dir="ltr"
+                    />
+                  ),
+                }}
+              />
+            </div>
+          )}
 
-        <WalletModalActions
-          onCancel={onClose}
-          onConfirm={handleUpdate}
-          confirmLabel={t('wallet.updateAccountModal.update')}
-          loading={loading}
-        />
-      </div>
+          <WalletSecurityNotice compact />
+
+          <WalletModalActions
+            onCancel={onClose}
+            onConfirm={handleUpdate}
+            confirmLabel={t('wallet.updateAccountModal.update')}
+            loading={loading}
+            alignEnd={method === 'bank'}
+            buttonClassName="h-10 font-normal text-[12px]"
+          />
+        </div>
+      </WalletModalBody>
     </WalletModalShell>
   )
 }
