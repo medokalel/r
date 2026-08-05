@@ -1,9 +1,10 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, PhoneIcon } from '@/components/icons'
 import { FormLabel, SelectField, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
+import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
@@ -19,6 +20,39 @@ interface AuditeeDetailsStepProps {
 export function AuditeeDetailsStep({ form, onPatch }: AuditeeDetailsStepProps) {
   const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
+  const [governorates, setGovernorates] = useState<GovernorateOption[]>([])
+  const [governoratesLoading, setGovernoratesLoading] = useState(false)
+
+  useEffect(() => {
+    if (!form.country) {
+      setGovernorates([])
+      return
+    }
+
+    let cancelled = false
+    setGovernoratesLoading(true)
+
+    fetchGovernorateOptions(form.country)
+      .then((options) => {
+        if (!cancelled) setGovernorates(options)
+      })
+      .finally(() => {
+        if (!cancelled) setGovernoratesLoading(false)
+      })
+
+    return () => {
+      cancelled = true
+    }
+  }, [form.country])
+
+  const governoratePlaceholder = !form.country
+    ? t('register.selectCountryFirst')
+    : governoratesLoading
+      ? t('register.loadingGovernorates')
+      : governorates.length === 0
+        ? t('register.noGovernoratesAvailable')
+        : t('register.governoratePlaceholder')
+
   const mobileError =
     form.mobile.trim().length > 0 && !isValidPhoneNumber(form.mobile, form.mobileCountryCode)
       ? t('validation.invalidMobile')
@@ -42,22 +76,26 @@ export function AuditeeDetailsStep({ form, onPatch }: AuditeeDetailsStepProps) {
           label={t('register.auditee.country')}
           required
           value={form.country}
-          placeholder={t('register.auditee.countryPlaceholder')}
-          onChange={(value) => onPatch({ country: value as CountryCode })}
+          placeholder={t('register.countryPlaceholder')}
+          onChange={(value) => onPatch({ country: value as CountryCode, city: '' })}
           options={countries.map((country) => ({
             value: country.code,
             label: `${country.flag} ${country.name}`,
           }))}
         />
 
-        <TextField
+        <SelectField
           id="auditee-city"
-          label={t('register.auditee.city')}
+          label={t('register.governorate')}
           required
-          type="text"
           value={form.city}
-          placeholder={t('register.auditee.cityPlaceholder')}
-          onChange={(e) => onPatch({ city: e.target.value })}
+          placeholder={governoratePlaceholder}
+          onChange={(value) => onPatch({ city: value })}
+          disabled={!form.country || governoratesLoading || governorates.length === 0}
+          options={governorates.map((governorate) => ({
+            value: governorate.id,
+            label: governorate.name,
+          }))}
         />
       </div>
 
