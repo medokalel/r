@@ -1437,8 +1437,7 @@
     "clientRegistration": {
       "title": "تسجيل عميل",
       "subtitle": "سجّل بيانات العميل بدقة. جميع الحقول المعلّمة بـ * إلزامية.",
-      "saveAndContinue": "حفظ ومتابعة",
-      "saveDraftAndContinue": "حفظ كمسودة ومتابعة",
+      "saveDraftAndContinue": "حفظ ومتابعة",
       "sections": {
         "clientInformation": "بيانات العميل",
         "registeredAddress": "العنوان المسجل",
@@ -1504,9 +1503,7 @@
     "applicationDraft": {
       "title": "مسودة الطلب",
       "subtitle": "أنشئ واحفظ مسودة الطلب. يمكنك التعديل والإرسال لاحقًا.",
-      "preview": "معاينة",
-      "saveAndContinue": "حفظ ومتابعة",
-      "saveDraftAndContinue": "حفظ المسودة ومتابعة",
+      "saveDraftAndContinue": "حفظ ومتابعة",
       "viewClientDetails": "عرض بيانات العميل",
       "registeredClient": "عميل مسجل",
       "clientId": "معرف العميل",

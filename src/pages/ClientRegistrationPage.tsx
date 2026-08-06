@@ -5,7 +5,6 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ClientRegistrationForm } from '@/components/dashboard/cab/ClientRegistrationForm'
 import { ClientWorkflowProgress } from '@/components/dashboard/cab/ClientWorkflowProgress'
-import { Button } from '@/components/ui/Button'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
   emptyClientRegistrationForm,
@@ -22,6 +21,12 @@ export function ClientRegistrationPage() {
 
   const complete = isClientRegistrationComplete(form)
 
+  // TODO: wire to a real "save client draft" endpoint once the backend
+  // exposes one — for now this is a no-op stub, matching the other
+  // not-yet-backed CAB workflow actions. Unlike "Save & Continue", saving a
+  // draft doesn't require the form to be complete.
+  const handleSaveDraft = () => {}
+
   // TODO: wire to a real "create client" endpoint once the backend exposes
   // one — for now this just returns to the dashboard, matching the other
   // not-yet-backed CAB workflow steps (see CabComingSoonStep).
@@ -35,24 +40,9 @@ export function ClientRegistrationPage() {
       <CabHeader title={t('cab.clientRegistration.title')} notificationCount={3} />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div className="space-y-1">
-            <h2 className="text-h3-semi text-neutral-900">{t('cab.clientRegistration.title')}</h2>
-            <p className="text-body-2 text-neutral-500">{t('cab.clientRegistration.subtitle')}</p>
-          </div>
-          <div className="flex gap-3">
-            <Button variant="tertiary" className="min-w-[140px] rounded-[var(--radius-sm)] bg-[#F3F6FD]">
-              {t('common.saveDraft')}
-            </Button>
-            <Button
-              variant="primary"
-              className="min-w-[140px] rounded-[var(--radius-sm)]"
-              disabled={!complete}
-              onClick={handleSaveDraftAndContinue}
-            >
-              {t('cab.clientRegistration.saveAndContinue')}
-            </Button>
-          </div>
+        <div className="space-y-1">
+          <h2 className="text-h3-semi text-neutral-900">{t('cab.clientRegistration.title')}</h2>
+          <p className="text-body-2 text-neutral-500">{t('cab.clientRegistration.subtitle')}</p>
         </div>
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
@@ -70,6 +60,8 @@ export function ClientRegistrationPage() {
 
       <DashboardFooter
         onBack={() => navigate('/cab/dashboard')}
+        backDisabled={false}
+        onSaveDraft={handleSaveDraft}
         onNext={handleSaveDraftAndContinue}
         nextDisabled={!complete}
         nextLabel={t('cab.clientRegistration.saveDraftAndContinue')}
