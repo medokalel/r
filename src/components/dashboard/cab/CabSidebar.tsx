@@ -104,7 +104,9 @@ export function CabSidebar() {
         )}
       >
         <AppIcon icon={item.icon} size={expanded ? 20 : 22} className="shrink-0" />
-        {expanded && <span className="truncate text-body-3-medium">{t(item.labelKey)}</span>}
+        {expanded && <span className="whitespace-nowrap text-body-3-medium">
+          {t(item.labelKey)}
+        </span>}
       </button>
     )
   }
@@ -127,7 +129,7 @@ export function CabSidebar() {
         'relative hidden shrink-0 flex-col bg-white py-6 shadow-[0_5px_1px_rgba(0,0,0,0.13)] transition-[width] duration-300 ease-in-out',
         'md:flex md:w-[112px] md:items-center md:gap-6',
         expanded
-          ? 'lg:w-[236px] lg:items-stretch lg:gap-6 lg:px-4'
+          ? 'lg:w-[266px] lg:items-stretch lg:gap-6 lg:px-4'
           : 'lg:w-[112px] lg:items-center lg:gap-6'
       )}
     >
@@ -197,7 +199,7 @@ export function CabSidebar() {
           )}
         >
           <AppIcon icon={LogoutIcon} size={expanded ? 20 : 22} className="shrink-0" />
-          {expanded && <span className="truncate text-body-3-medium">{t('nav.logout')}</span>}
+          {expanded && <span className="whitespace-nowrap text-body-3-medium">{t('nav.logout')}</span>}
         </button>
       </nav>
     </aside>
