@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
-import { SelectField, TextField } from '@/components/ui'
-import { AB_ROLE_OPTIONS } from '@/lib/api/abRegisterApi'
+import { TextField } from '@/components/ui'
 import { isValidPassword, passwordsMatch } from '@/lib/authValidation'
 import { cn } from '@/lib/utils'
 import { type AbAccountSetupForm } from '@/lib/abAccountSetupForm'
@@ -17,16 +16,10 @@ interface AbAccountSetupStepProps {
   onPatch: (f: Partial<AbAccountSetupForm>) => void
 }
 
-/** Step 4 ("Account setup"): admin name/role/email + password + privacy consent. */
 export function AbAccountSetupStep({ form, onPatch }: AbAccountSetupStepProps) {
   const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-
-  const adminRoleOptions = useMemo(
-    () => AB_ROLE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
-    [t]
-  )
 
   const passwordError =
     form.password.length > 0 && !isValidPassword(form.password)
@@ -39,26 +32,6 @@ export function AbAccountSetupStep({ form, onPatch }: AbAccountSetupStepProps) {
 
   return (
     <div className="space-y-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <TextField
-          id="admin-name"
-          label={t('register.ab.adminName')}
-          required
-          placeholder={t('register.ab.adminNamePlaceholder')}
-          value={form.adminName}
-          onChange={(e) => onPatch({ adminName: e.target.value })}
-        />
-        <SelectField
-          id="admin-role"
-          label={t('register.ab.adminRole')}
-          required
-          value={form.adminRole}
-          placeholder={t('register.ab.adminRolePlaceholder')}
-          onChange={(value) => onPatch({ adminRole: value })}
-          options={adminRoleOptions}
-        />
-      </div>
-
       <TextField
         id="admin-email"
         label={t('register.ab.adminEmail')}

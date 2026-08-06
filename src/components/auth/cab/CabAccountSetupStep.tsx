@@ -1,11 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
-import { SelectField, TextField } from '@/components/ui'
-import { CAB_ROLE_OPTIONS } from '@/lib/api/cabRegisterApi'
+import { TextField } from '@/components/ui'
 import { isValidPassword, passwordsMatch } from '@/lib/authValidation'
 import { cn } from '@/lib/utils'
 import { type CabAccountSetupForm } from '@/lib/cabAccountSetupForm'
@@ -17,16 +16,10 @@ interface CabAccountSetupStepProps {
   onPatch: (f: Partial<CabAccountSetupForm>) => void
 }
 
-/** Step 4 ("Account setup"): admin name/role/email + password + privacy consent. */
 export function CabAccountSetupStep({ form, onPatch }: CabAccountSetupStepProps) {
   const { t } = useTranslation()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
-
-  const adminRoleOptions = useMemo(
-    () => CAB_ROLE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
-    [t]
-  )
 
   const passwordError =
     form.password.length > 0 && !isValidPassword(form.password)
@@ -39,26 +32,6 @@ export function CabAccountSetupStep({ form, onPatch }: CabAccountSetupStepProps)
 
   return (
     <div className="space-y-6 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <TextField
-          id="admin-name"
-          label={t('register.cab.adminName')}
-          required
-          placeholder={t('register.cab.adminNamePlaceholder')}
-          value={form.adminName}
-          onChange={(e) => onPatch({ adminName: e.target.value })}
-        />
-        <SelectField
-          id="admin-role"
-          label={t('register.cab.adminRole')}
-          required
-          value={form.adminRole}
-          placeholder={t('register.cab.adminRolePlaceholder')}
-          onChange={(value) => onPatch({ adminRole: value })}
-          options={adminRoleOptions}
-        />
-      </div>
-
       <TextField
         id="admin-email"
         label={t('register.cab.adminEmail')}

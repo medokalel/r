@@ -5,10 +5,7 @@ import { AppIcon, MailIcon, PhoneIcon } from '@/components/icons'
 import { FormLabel, SelectField, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
-import {
-  AB_ROLE_OPTIONS,
-  MOCK_ACCREDITATION_BODIES,
-} from '@/lib/api/abRegisterApi'
+import { MOCK_ACCREDITATION_BODIES } from '@/lib/api/abRegisterApi'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
@@ -24,10 +21,6 @@ interface AbDetailsStepProps {
 export function AbDetailsStep({ form, onPatch }: AbDetailsStepProps) {
   const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const abRoleOptions = useMemo(
-    () => AB_ROLE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
-    [t]
-  )
   const mobileError =
     form.mobile.trim().length > 0 &&
     !isValidPhoneNumber(form.mobile, form.mobileCountryCode)
@@ -126,14 +119,11 @@ export function AbDetailsStep({ form, onPatch }: AbDetailsStepProps) {
           value={form.contactPerson}
           onChange={(e) => onPatch({ contactPerson: e.target.value })}
         />
-        <SelectField
+        <TextField
           id="ab-role"
           label={t('register.ab.role')}
-          required
-          value={form.role}
-          placeholder={t('register.ab.rolePlaceholder')}
-          onChange={(value) => onPatch({ role: value })}
-          options={abRoleOptions}
+          disabled
+          value={t('register.ab.roles.owner')}
         />
       </div>
     </div>

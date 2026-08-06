@@ -1,8 +1,6 @@
 import { isValidPassword, passwordsMatch } from '@/lib/authValidation'
 
 export interface AbAccountSetupForm {
-  adminName: string
-  adminRole: string
   adminEmail: string
   password: string
   confirmPassword: string
@@ -10,8 +8,6 @@ export interface AbAccountSetupForm {
 }
 
 export const emptyAbAccountSetupForm: AbAccountSetupForm = {
-  adminName: '',
-  adminRole: '',
   adminEmail: '',
   password: '',
   confirmPassword: '',
@@ -20,9 +16,7 @@ export const emptyAbAccountSetupForm: AbAccountSetupForm = {
 
 export function isAbAccountSetupComplete(form: AbAccountSetupForm): boolean {
   return Boolean(
-    form.adminName.trim() &&
-      form.adminRole &&
-      form.adminEmail.trim() &&
+    form.adminEmail.trim() &&
       isValidPassword(form.password) &&
       passwordsMatch(form.password, form.confirmPassword) &&
       form.agreePrivacy

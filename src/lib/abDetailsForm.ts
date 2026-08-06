@@ -20,6 +20,7 @@ export interface AbDetailsForm {
   accreditationDetails: Record<string, AbAccreditationScopeDetail>
 }
 
+// بعد
 export const emptyAbDetailsForm: AbDetailsForm = {
   abName: '',
   accreditationBodies: [],
@@ -28,7 +29,7 @@ export const emptyAbDetailsForm: AbDetailsForm = {
   mobile: '',
   country: '' as CountryCode,
   contactPerson: '',
-  role: '',
+  role: 'OWNER',
   accreditationScopes: [],
   accreditationDetails: {},
 }

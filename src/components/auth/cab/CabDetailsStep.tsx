@@ -5,10 +5,7 @@ import { AppIcon, MailIcon, PhoneIcon } from '@/components/icons'
 import { FormLabel, SelectField, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
-import {
-  CAB_ROLE_OPTIONS,
-  MOCK_ACCREDITATION_BODIES,
-} from '@/lib/api/cabRegisterApi'
+import { MOCK_ACCREDITATION_BODIES } from '@/lib/api/cabRegisterApi'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
@@ -24,10 +21,6 @@ interface CabDetailsStepProps {
 export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
   const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const cabRoleOptions = useMemo(
-    () => CAB_ROLE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
-    [t]
-  )
   const mobileError =
     form.mobile.trim().length > 0 &&
     !isValidPhoneNumber(form.mobile, form.mobileCountryCode)
@@ -126,14 +119,11 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
           value={form.contactPerson}
           onChange={(e) => onPatch({ contactPerson: e.target.value })}
         />
-        <SelectField
+        <TextField
           id="cab-role"
           label={t('register.cab.role')}
-          required
-          value={form.role}
-          placeholder={t('register.cab.rolePlaceholder')}
-          onChange={(value) => onPatch({ role: value })}
-          options={cabRoleOptions}
+          disabled
+          value={t('register.cab.roles.owner')}
         />
       </div>
     </div>
