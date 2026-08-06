@@ -1501,6 +1501,60 @@
           "surveillanceProgramme": { "title": "Surveillance Programme", "description": "Annual surveillance audits" }
         }
       }
+    },
+    "applicationDraft": {
+      "title": "Application Draft",
+      "subtitle": "Create and save the application draft. You can edit and submit later.",
+      "preview": "Preview",
+      "saveAndContinue": "Save & Continue",
+      "saveDraftAndContinue": "Save Draft & Continue",
+      "viewClientDetails": "View Client Details",
+      "registeredClient": "Registered Client",
+      "clientId": "Client ID",
+      "steps": {
+        "clientInformation": "Client Information",
+        "standardsAndScope": "Standards & Scope",
+        "sitesAndFacilities": "Sites & Facilities",
+        "documents": "Documents",
+        "reviewAndConfirm": "Review & Confirm"
+      },
+      "sections": {
+        "clientInformation": "Client Information",
+        "applicationDetails": "Application Details",
+        "scope": "Scope of Certification (Brief)",
+        "billingContact": "Billing Contact (if different)"
+      },
+      "fields": {
+        "tradingName": "Trading / Brand Name",
+        "organizationType": "Organization Type",
+        "country": "Country",
+        "registrationNumber": "Registration / License No.",
+        "applicationType": "Application Type",
+        "applicationTypePlaceholder": "Select application type",
+        "primaryStandard": "Primary Standard / Regulation",
+        "primaryStandardPlaceholder": "Select primary standard",
+        "applicationDate": "Application Date",
+        "certificationBody": "Certification Body",
+        "certificationBodyPlaceholder": "e.g. ICASCO International",
+        "additionalStandards": "Additional Standards (Optional)",
+        "additionalStandardsPlaceholder": "Select additional standards",
+        "requestedAuditDate": "Requested Audit Date",
+        "applicableScheme": "Applicable Scheme / Program",
+        "applicableSchemePlaceholder": "Select scheme / program",
+        "accreditationBody": "Accreditation Body",
+        "accreditationBodyPlaceholder": "Select accreditation body",
+        "auditLanguage": "Audit Language",
+        "auditLanguagePlaceholder": "Select language",
+        "scopeDescription": "Provide a clear description of the scope for which certification",
+        "scopeDescriptionPlaceholder": "e.g. Design, development, manufacturing and supply of...",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter full name",
+        "email": "Email",
+        "emailPlaceholder": "Enter email",
+        "mobileNumber": "Mobile Number",
+        "address": "Address",
+        "addressPlaceholder": "Enter billing address"
+      }
     }
   }
 }

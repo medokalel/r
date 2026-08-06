@@ -1500,6 +1500,60 @@
           "surveillanceProgramme": { "title": "برنامج المتابعة", "description": "زيارات المتابعة السنوية" }
         }
       }
+    },
+    "applicationDraft": {
+      "title": "مسودة الطلب",
+      "subtitle": "أنشئ واحفظ مسودة الطلب. يمكنك التعديل والإرسال لاحقًا.",
+      "preview": "معاينة",
+      "saveAndContinue": "حفظ ومتابعة",
+      "saveDraftAndContinue": "حفظ المسودة ومتابعة",
+      "viewClientDetails": "عرض بيانات العميل",
+      "registeredClient": "عميل مسجل",
+      "clientId": "معرف العميل",
+      "steps": {
+        "clientInformation": "بيانات العميل",
+        "standardsAndScope": "المعايير والنطاق",
+        "sitesAndFacilities": "المواقع والمنشآت",
+        "documents": "المستندات",
+        "reviewAndConfirm": "المراجعة والتأكيد"
+      },
+      "sections": {
+        "clientInformation": "بيانات العميل",
+        "applicationDetails": "تفاصيل الطلب",
+        "scope": "نطاق الشهادة (مختصر)",
+        "billingContact": "جهة اتصال الفواتير (إن وجدت)"
+      },
+      "fields": {
+        "tradingName": "الاسم التجاري",
+        "organizationType": "نوع المنشأة",
+        "country": "الدولة",
+        "registrationNumber": "رقم السجل / الترخيص",
+        "applicationType": "نوع الطلب",
+        "applicationTypePlaceholder": "اختر نوع الطلب",
+        "primaryStandard": "المعيار / اللائحة الأساسية",
+        "primaryStandardPlaceholder": "اختر المعيار الأساسي",
+        "applicationDate": "تاريخ الطلب",
+        "certificationBody": "جهة إصدار الشهادة",
+        "certificationBodyPlaceholder": "مثال: ICASCO International",
+        "additionalStandards": "معايير إضافية (اختياري)",
+        "additionalStandardsPlaceholder": "اختر معايير إضافية",
+        "requestedAuditDate": "تاريخ التدقيق المطلوب",
+        "applicableScheme": "المخطط / البرنامج المعمول به",
+        "applicableSchemePlaceholder": "اختر المخطط / البرنامج",
+        "accreditationBody": "جهة الاعتماد",
+        "accreditationBodyPlaceholder": "اختر جهة الاعتماد",
+        "auditLanguage": "لغة التدقيق",
+        "auditLanguagePlaceholder": "اختر اللغة",
+        "scopeDescription": "قدّم وصفًا واضحًا لنطاق الشهادة المطلوبة",
+        "scopeDescriptionPlaceholder": "مثال: تصميم وتطوير وتصنيع وتوريد...",
+        "fullName": "الاسم الكامل",
+        "fullNamePlaceholder": "أدخل الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "emailPlaceholder": "أدخل البريد الإلكتروني",
+        "mobileNumber": "رقم الهاتف المحمول",
+        "address": "العنوان",
+        "addressPlaceholder": "أدخل عنوان الفواتير"
+      }
     }
   }
 }

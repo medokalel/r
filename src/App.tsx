@@ -36,6 +36,8 @@ import { CabDashboardPage } from '@/pages/CabDashboardPage'
 
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 
+import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
+
 import { getAuthToken } from '@/lib/authStorage'
 
 import { AUTHENTICATED_HOME, LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
@@ -75,6 +77,8 @@ export default function App() {
             <Route path="/cab/dashboard" element={<CabDashboardPage />} />
 
             <Route path="/cab/clients/new" element={<ClientRegistrationPage />} />
+
+            <Route path="/cab/applications/draft" element={<ApplicationDraftPage />} />
 
             <Route
               path={ROUTES.dashboard}
