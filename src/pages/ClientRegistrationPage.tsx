@@ -56,12 +56,14 @@ export function ClientRegistrationPage() {
         </div>
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-          <ClientRegistrationForm
-            form={form}
-            onPatch={patch}
-            attachedFile={attachedFile}
-            onAttachFile={setAttachedFile}
-          />
+          <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+            <ClientRegistrationForm
+              form={form}
+              onPatch={patch}
+              attachedFile={attachedFile}
+              onAttachFile={setAttachedFile}
+            />
+          </div>
           <ClientWorkflowProgress />
         </div>
       </div>

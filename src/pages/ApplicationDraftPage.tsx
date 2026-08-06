@@ -62,7 +62,9 @@ export function ApplicationDraftPage() {
         <ApplicationStepper current={1} />
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-          <ApplicationDraftForm form={form} onPatch={patch} />
+          <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+            <ApplicationDraftForm form={form} onPatch={patch} />
+          </div>
           <ClientWorkflowProgress />
         </div>
       </div>
