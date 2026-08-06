@@ -547,6 +547,12 @@
           "activitiesToAudit": "الأنشطة المراد تدقيقها",
           "chooseActivities": "اختر الأنشطة",
           "productsServices": "المنتجات / الخدمات",
+          "branchEmployeesPlaceholder": "مثال: 25",
+          "auditScopeEmployeesPlaceholder": "مثال: 20",
+          "shiftCountPlaceholder": "مثال: 2",
+          "openingHoursPlaceholder": "مثال: 8",
+          "weeklyVacationPlaceholder": "اختر يوم",
+          "branchAddressPlaceholder": "مثال: المنطقة الصناعية، مبنى 4",
           "technicalCommunication": "وسائل الاتصال التقنية"
         },
         "consulting": {
@@ -681,6 +687,9 @@
           "certificateFieldArPlaceholder": "مثال: الصناعات الكيميائية",
           "certificateFieldEn": "المجال كما سيظهر على شهادة الاعتماد بالإنجليزية",
           "submissionWarning": "لا يمكن تعديل الطلب بعد الإرسال. يرجى التأكد من مراجعة جميع البيانات والمرفقات قبل الإرسال النهائي.",
+          "certificateNameEnPlaceholder": "مثال: شركة ستاندرد أرابيا للخدمات التجارية",
+          "certificateAddressArPlaceholder": "مثال: طريق الملك فهد، الرياض",
+          "certificateAddressEnPlaceholder": "مثال: طريق الملك فهد، الرياض",
           "acknowledgement": "أقر بأنني قد قرأت وفهمت ووافقت على جميع ما ورد أعلاه وأؤكد مراجعة جميع البيانات وأرغب في إرسال الطلب"
         }
       }
@@ -1423,6 +1432,73 @@
         "newApplication": { "title": "طلب جديد", "description": "تسجيل عميل جديد" },
         "assignReview": { "title": "تعيين مراجعة", "description": "تعيين لخبير فني" },
         "issueCertificate": { "title": "إصدار شهادة", "description": "إنشاء وإصدار شهادة" }
+      }
+    },
+    "clientRegistration": {
+      "title": "تسجيل عميل",
+      "subtitle": "سجّل بيانات العميل بدقة. جميع الحقول المعلّمة بـ * إلزامية.",
+      "saveAndContinue": "حفظ ومتابعة",
+      "saveDraftAndContinue": "حفظ كمسودة ومتابعة",
+      "sections": {
+        "clientInformation": "بيانات العميل",
+        "registeredAddress": "العنوان المسجل",
+        "primaryContact": "جهة الاتصال الأساسية",
+        "additionalInformation": "معلومات إضافية"
+      },
+      "fields": {
+        "legalEntityName": "الاسم القانوني للمنشأة",
+        "legalEntityNamePlaceholder": "مثال: جرين ليف ش.م.م.",
+        "tradingName": "الاسم التجاري",
+        "tradingNamePlaceholder": "مثال: جرين ليف",
+        "organizationType": "نوع المنشأة",
+        "registrationNumber": "رقم السجل / الترخيص",
+        "registrationNumberPlaceholder": "مثال: U14290UP2013PTC057042",
+        "incorporationDate": "تاريخ التأسيس",
+        "country": "الدولة",
+        "state": "المحافظة / الإقليم",
+        "statePlaceholder": "اختر المحافظة / الإقليم",
+        "city": "المدينة",
+        "cityPlaceholder": "مثال: بدر",
+        "addressLine1": "العنوان - السطر الأول",
+        "addressLine1Placeholder": "مثال: قطعة 45، القطاع 62",
+        "addressLine2": "العنوان - السطر الثاني",
+        "addressLine2Placeholder": "شقة، وحدة، إلخ",
+        "landmark": "علامة مميزة",
+        "landmarkPlaceholder": "أقرب علامة مميزة",
+        "postalCode": "الرمز البريدي",
+        "postalCodePlaceholder": "مثال: 201301",
+        "fullName": "الاسم الكامل",
+        "fullNamePlaceholder": "مثال: آلاء طارق",
+        "designation": "المسمى الوظيفي",
+        "designationPlaceholder": "مثال: مدير جودة",
+        "email": "البريد الإلكتروني",
+        "phoneNumber": "رقم الهاتف",
+        "mobileNumber": "رقم الجوال",
+        "industry": "الصناعة / القطاع",
+        "employeeCount": "عدد الموظفين",
+        "annualTurnover": "الإيراد السنوي (جنيه مصري)",
+        "website": "الموقع الإلكتروني",
+        "activitiesDescription": "وصف موجز لأنشطة المنشأة",
+        "activitiesDescriptionPlaceholder": "اذكر الأنشطة الرئيسية للمنشأة",
+        "attachDocument": "إرفاق مستند داعم (اختياري)"
+      },
+      "workflow": {
+        "title": "تقدم سير العمل",
+        "inProgress": "قيد التنفيذ",
+        "pending": "قيد الانتظار",
+        "viewFull": "عرض سير العمل كاملاً",
+        "steps": {
+          "application": { "title": "الطلب", "description": "تقديم الطلب من قبل العميل" },
+          "applicationReview": { "title": "مراجعة الطلب", "description": "اكتمال البيانات والأهلية والجدوى" },
+          "quotation": { "title": "عرض السعر", "description": "إعداد وإرسال عرض السعر" },
+          "contracting": { "title": "التعاقد", "description": "الاتفاقية والتوقيع" },
+          "financial": { "title": "الأمور المالية", "description": "الفوترة والدفع" },
+          "auditPlanning": { "title": "التخطيط للتدقيق", "description": "الأنشطة السابقة للتدقيق وتشكيل الفريق" },
+          "auditExecution": { "title": "تنفيذ التدقيق", "description": "تنفيذ التدقيق (المرحلة 1 و2)" },
+          "auditReporting": { "title": "إعداد تقرير التدقيق", "description": "التقرير والنتائج وخطة التصحيح" },
+          "certificationDecision": { "title": "قرار المنح", "description": "مراجعة واتخاذ قرار المنح" },
+          "surveillanceProgramme": { "title": "برنامج المتابعة", "description": "زيارات المتابعة السنوية" }
+        }
       }
     }
   }

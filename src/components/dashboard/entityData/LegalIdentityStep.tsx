@@ -258,6 +258,7 @@ const { fieldProps } = useFieldValidation(form, {
                 value={form.city}
                 options={cityOptions}
                 onChange={(value) => update('city', value)}
+                placeholder={t('accreditation.form.cityPlaceholder')}
               />
             ) : (
               <TextField

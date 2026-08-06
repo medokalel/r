@@ -547,7 +547,13 @@
           "activitiesToAudit": "Activities to be audited",
           "chooseActivities": "Choose activities",
           "productsServices": "Products/services",
-          "technicalCommunication": "Technical means of communication"
+          "technicalCommunication": "Technical means of communication",
+          "branchEmployeesPlaceholder": "example: 25",
+          "auditScopeEmployeesPlaceholder": "example: 20",
+          "shiftCountPlaceholder": "example: 2",
+          "openingHoursPlaceholder": "example: 8",
+          "weeklyVacationPlaceholder": "Select a day",
+          "branchAddressPlaceholder": "Example: Industrial Zone, Building 4"
         },
         "consulting": {
           "title": "Consultation and qualification data",
@@ -681,6 +687,9 @@
           "certificateFieldArPlaceholder": "Example: chemical industries",
           "certificateFieldEn": "The field as it will appear on the accreditation certificate in English",
           "submissionWarning": "The order cannot be modified after submission. Please be sure to review all data and attachments before final submission.",
+          "certificateNameEnPlaceholder": "Example: Standard Arabia Company for Commercial Services",
+          "certificateAddressArPlaceholder": "Example: King Fahd Road, Riyadh",
+          "certificateAddressEnPlaceholder": "Example: King Fahd Road, Riyadh",
           "acknowledgement": "I acknowledge that I have read, understood and agree to all of the above and confirm that I have reviewed all the data and wish to submit the application"
         }
       }
@@ -1424,6 +1433,73 @@
         "newApplication": { "title": "New Application", "description": "Register a new client" },
         "assignReview": { "title": "Assign Review", "description": "Assign to technical expert" },
         "issueCertificate": { "title": "Issue Certificate", "description": "Create & issue certificate" }
+      }
+    },
+    "clientRegistration": {
+      "title": "Client Registration",
+      "subtitle": "Register client information accurately. All fields marked with * are required.",
+      "saveAndContinue": "Save & Continue",
+      "saveDraftAndContinue": "Save Draft & Continue",
+      "sections": {
+        "clientInformation": "Client Information",
+        "registeredAddress": "Registered Address",
+        "primaryContact": "Primary Contact Person",
+        "additionalInformation": "Additional Information"
+      },
+      "fields": {
+        "legalEntityName": "Legal Entity Name",
+        "legalEntityNamePlaceholder": "e.g. GreenLeaf PVT. LTD.",
+        "tradingName": "Trading / Brand Name",
+        "tradingNamePlaceholder": "e.g. GreenLeaf",
+        "organizationType": "Organization Type",
+        "registrationNumber": "Registration / License No.",
+        "registrationNumberPlaceholder": "e.g. U14290UP2013PTC057042",
+        "incorporationDate": "Date of Incorporation",
+        "country": "Country",
+        "state": "State / Province",
+        "statePlaceholder": "Select state / province",
+        "city": "City",
+        "cityPlaceholder": "e.g. Badr",
+        "addressLine1": "Address Line 1",
+        "addressLine1Placeholder": "e.g. Plot No. 45, Sector 62",
+        "addressLine2": "Address Line 2",
+        "addressLine2Placeholder": "Apartment, suite, etc.",
+        "landmark": "Landmark",
+        "landmarkPlaceholder": "Nearby landmark",
+        "postalCode": "Postal Code",
+        "postalCodePlaceholder": "e.g. 201301",
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "e.g. Alaa Tarek",
+        "designation": "Designation",
+        "designationPlaceholder": "e.g. Quality Manager",
+        "email": "Email",
+        "phoneNumber": "Phone Number",
+        "mobileNumber": "Mobile Number",
+        "industry": "Industry / Sector",
+        "employeeCount": "Number of Employees",
+        "annualTurnover": "Annual Turnover (EGP)",
+        "website": "Website",
+        "activitiesDescription": "Brief Description of Organization's Activities",
+        "activitiesDescriptionPlaceholder": "Describe the organization's main activities",
+        "attachDocument": "Attach Supporting Document (Optional)"
+      },
+      "workflow": {
+        "title": "Workflow Progress",
+        "inProgress": "In Progress",
+        "pending": "Pending",
+        "viewFull": "View Full Workflow",
+        "steps": {
+          "application": { "title": "Application", "description": "Submission of application by client" },
+          "applicationReview": { "title": "Application Review", "description": "Completeness, eligibility & feasibility" },
+          "quotation": { "title": "Quotation", "description": "Prepare & send quotation" },
+          "contracting": { "title": "Contracting", "description": "Agreement & signature" },
+          "financial": { "title": "Financial", "description": "Invoicing & payment" },
+          "auditPlanning": { "title": "Audit Planning", "description": "Pre-audit activities & team" },
+          "auditExecution": { "title": "Audit Execution", "description": "Conduct audit (Stage 1 & 2)" },
+          "auditReporting": { "title": "Audit Reporting", "description": "Report, findings & CAPA" },
+          "certificationDecision": { "title": "Certification Decision", "description": "Review & certification decision" },
+          "surveillanceProgramme": { "title": "Surveillance Programme", "description": "Annual surveillance audits" }
+        }
       }
     }
   }

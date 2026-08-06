@@ -85,6 +85,7 @@ function BranchForm({
             min={0}
             value={branch.employees}
             onChange={(e) => onChange(branch.localId, { employees: e.target.value })}
+            placeholder={t('accreditation.entityData.fields.scope.branchEmployeesPlaceholder')}
           />
         </FormField>
 
@@ -98,6 +99,7 @@ function BranchForm({
             min={0}
             value={branch.employeesInScope}
             onChange={(e) => onChange(branch.localId, { employeesInScope: e.target.value })}
+            placeholder={t('accreditation.entityData.fields.scope.auditScopeEmployeesPlaceholder')}
           />
         </FormField>
       </div>
@@ -113,6 +115,7 @@ function BranchForm({
             min={0}
             value={branch.shifts}
             onChange={(e) => onChange(branch.localId, { shifts: e.target.value })}
+            placeholder={t('accreditation.entityData.fields.scope.shiftCountPlaceholder')}
           />
         </FormField>
 
@@ -122,6 +125,7 @@ function BranchForm({
             min={0}
             value={branch.workingHours}
             onChange={(e) => onChange(branch.localId, { workingHours: e.target.value })}
+            placeholder={t('accreditation.entityData.fields.scope.openingHoursPlaceholder')}
           />
         </FormField>
       </div>
@@ -132,6 +136,7 @@ function BranchForm({
             value={branch.weeklyHoliday}
             onChange={(value) => onChange(branch.localId, { weeklyHoliday: value })}
             options={weeklyHolidayOptions}
+            placeholder={t('accreditation.entityData.fields.scope.weeklyVacationPlaceholder')}
           />
         </FormField>
 
@@ -205,6 +210,7 @@ function BranchForm({
             type="text"
             value={branch.address}
             onChange={(e) => onChange(branch.localId, { address: e.target.value })}
+            placeholder={t('accreditation.entityData.fields.scope.branchAddressPlaceholder')}
           />
         </FormField>
 
