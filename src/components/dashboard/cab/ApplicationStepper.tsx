@@ -14,37 +14,56 @@ interface ApplicationStepperProps {
   className?: string
 }
 
-/** Horizontal 5-step progress header for the Application Draft wizard. Visual only for now — only step 1 is built. */
+/**
+ * Horizontal step header for the Application Draft wizard.
+ * Same visual system as ProcessStepper (dashboard/ProcessStepper.tsx) —
+ * border-bottom container, full-width per-step progress bar, completed
+ * steps stay highlighted like the active one — but with step numbers in
+ * the circles instead of per-step icons.
+ */
 export function ApplicationStepper({ current, className }: ApplicationStepperProps) {
   const { t } = useTranslation()
 
   return (
-    <div className={cn('flex items-start rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5', className)}>
+    <div className={cn('flex shrink-0 gap-2 border-b-2 border-[#ececec] bg-white p-5', className)}>
       {STEPS.map((step, index) => {
         const number = index + 1
         const isActive = number === current
-        const isLast = index === STEPS.length - 1
+        const isCompleted = number < current
+        const isHighlighted = isActive || isCompleted
 
         return (
-          <div key={step} className={cn('flex flex-col', isLast ? 'shrink-0' : 'flex-1')}>
-            <div className="flex items-center">
-              <span
-                className={cn(
-                  'flex size-9 shrink-0 items-center justify-center rounded-full text-[14px] font-semibold',
-                  isActive ? 'bg-primary-subtle text-primary' : 'bg-[#f0f0f0] text-neutral-500'
-                )}
-              >
-                {number}
-              </span>
-              {!isLast && <span className={cn('mx-2 h-px flex-1', isActive ? 'bg-primary' : 'bg-[#ececec]')} aria-hidden />}
+          <button
+            key={step}
+            type="button"
+            aria-current={isActive ? 'step' : undefined}
+            className="flex min-w-0 flex-1 cursor-pointer flex-col gap-4 text-start"
+          >
+            <div
+              className={cn(
+                'flex size-10 shrink-0 items-center justify-center rounded-full text-[14px] font-semibold',
+                isHighlighted ? 'bg-[#e8edfc] text-primary' : 'bg-[#ececec] text-neutral-600'
+              )}
+            >
+              {number}
             </div>
-            <div className="mt-3">
-              <p className={cn('text-[15px] font-semibold', isActive ? 'text-neutral-900' : 'text-neutral-500')}>
-                {t(`cab.applicationDraft.steps.${step}`)}
-              </p>
-              <span className={cn('mt-2 block h-[3px] w-10 rounded-full', isActive ? 'bg-primary' : 'bg-transparent')} aria-hidden />
-            </div>
-          </div>
+
+            <div
+              className={cn(
+                'h-1 w-full rounded-[var(--radius-sm)]',
+                isHighlighted ? 'bg-primary' : 'bg-[#ececec]'
+              )}
+            />
+
+            <p
+              className={cn(
+                'truncate text-[16px] font-semibold leading-[1.6]',
+                isActive ? 'text-primary' : 'text-[#7c7c7c]'
+              )}
+            >
+              {t(`cab.applicationDraft.steps.${step}`)}
+            </p>
+          </button>
         )
       })}
     </div>
