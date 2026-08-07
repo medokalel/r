@@ -1550,6 +1550,33 @@
         "mobileNumber": "رقم الهاتف المحمول",
         "address": "العنوان",
         "addressPlaceholder": "أدخل عنوان الفواتير"
+      },
+      "standardsScope": {
+        "title": "المعايير والنطاق",
+        "subtitle": "اختر معايير الشهادة وحدّد نطاق الشهادة.",
+        "addStandard": "إضافة معيار",
+        "empty": "لم تتم إضافة أي معايير بعد. اضغط \"إضافة معيار\" للبدء.",
+        "columns": {
+          "standardSchema": "المعيار / المخطط",
+          "ihfCode": "كود IHF",
+          "certificationType": "نوع الشهادة",
+          "accreditationBody": "جهة الاعتماد",
+          "actions": "الإجراءات"
+        },
+        "standardSchema": "المعيار / المخطط",
+        "standardSchemaPlaceholder": "اختر معيار أو مخطط",
+        "ihfCode": "كود IHF",
+        "ihfCodePlaceholder": "اختر كود IHF",
+        "certificationType": "نوع الشهادة",
+        "certificationTypeAuto": "يتم تعبئته تلقائيًا من المعيار",
+        "accreditationBody": "جهة الاعتماد",
+        "accreditationBodyPlaceholder": "اختر جهة الاعتماد",
+        "scopeSectionTitle": "نطاق كل معيار (طلب التقديم)",
+        "scopeSectionSubtitle": "قدّم نطاق كل معيار مختار.",
+        "scopePlaceholder": "صف نطاق هذا المعيار...",
+        "characters": "حرف",
+        "needHelp": "تحتاج مساعدة في اختيار كود IHF؟",
+        "searchIhfCode": "البحث عن كود IHF"
       }
     }
   }

@@ -5,21 +5,32 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ApplicationStepper } from '@/components/dashboard/cab/ApplicationStepper'
 import { ApplicationDraftForm } from '@/components/dashboard/cab/ApplicationDraftForm'
+import { StandardsScopeStep } from '@/components/dashboard/cab/StandardsScopeStep'
 import { ClientWorkflowProgress } from '@/components/dashboard/cab/ClientWorkflowProgress'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
   emptyApplicationDraftForm,
   isApplicationDraftComplete,
 } from '@/lib/applicationDraftForm'
+import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [form, setForm] = useState(emptyApplicationDraftForm)
+  const [standardsScopeForm, setStandardsScopeForm] = useState(emptyStandardsScopeForm)
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
+  const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
+    setStandardsScopeForm((prev) => ({ ...prev, ...f }))
 
-  const complete = isApplicationDraftComplete(form)
+  const complete =
+    step === 1
+      ? isApplicationDraftComplete(form)
+      : step === 2
+        ? isStandardsScopeComplete(standardsScopeForm)
+        : true
 
   // TODO: wire to a real "save application draft" endpoint once the backend
   // exposes one — for now this is a no-op stub, matching the other
@@ -27,19 +38,31 @@ export function ApplicationDraftPage() {
   // draft doesn't require the form to be complete.
   const handleSaveDraft = () => {}
 
+  const handleBack = () => {
+    if (step === 1) {
+      navigate('/cab/dashboard')
+      return
+    }
+    setStep((s) => (s - 1) as typeof step)
+  }
+
   // TODO: wire to a real "save application draft" endpoint once the backend
-  // exposes one, and build steps 2-5 (Standards & Scope, Sites & Facilities,
-  // Documents, Review & Confirm) — for now this just returns to the
-  // dashboard, matching the other not-yet-backed CAB workflow steps.
-  const handleSaveDraftAndContinue = () => {
+  // exposes one, and build steps 3-5 (Sites & Facilities, Documents,
+  // Review & Confirm) — for now this just returns to the dashboard once
+  // step 2 is done, matching the other not-yet-backed CAB workflow steps.
+  const handleNext = () => {
     if (!complete) return
+    if (step < 2) {
+      setStep((s) => (s + 1) as typeof step)
+      return
+    }
     navigate('/cab/dashboard')
   }
 
     return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-      <ApplicationStepper current={1} />
+      <ApplicationStepper current={step} />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="space-y-1">
@@ -49,17 +72,20 @@ export function ApplicationDraftPage() {
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
           <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-            <ApplicationDraftForm form={form} onPatch={patch} />
+            {step === 1 && <ApplicationDraftForm form={form} onPatch={patch} />}
+            {step === 2 && (
+              <StandardsScopeStep form={standardsScopeForm} onPatch={patchStandardsScope} />
+            )}
           </div>
           <ClientWorkflowProgress />
         </div>
       </div>
 
       <DashboardFooter
-        onBack={() => navigate('/cab/dashboard')}
+        onBack={handleBack}
         backDisabled={false}
         onSaveDraft={handleSaveDraft}
-        onNext={handleSaveDraftAndContinue}
+        onNext={handleNext}
         nextDisabled={!complete}
         nextLabel={t('cab.applicationDraft.saveDraftAndContinue')}
       />

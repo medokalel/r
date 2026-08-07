@@ -1551,6 +1551,33 @@
         "mobileNumber": "Mobile Number",
         "address": "Address",
         "addressPlaceholder": "Enter billing address"
+      },
+      "standardsScope": {
+        "title": "Standards & Scope",
+        "subtitle": "Select the certification standards and define the scope of certification.",
+        "addStandard": "Add Standard",
+        "empty": "No standards added yet. Click \"Add Standard\" to get started.",
+        "columns": {
+          "standardSchema": "Standard / Schema",
+          "ihfCode": "IHF Code",
+          "certificationType": "Certification Type",
+          "accreditationBody": "Accreditation Body",
+          "actions": "Actions"
+        },
+        "standardSchema": "Standard / Schema",
+        "standardSchemaPlaceholder": "Select a standard or schema",
+        "ihfCode": "IHF Code",
+        "ihfCodePlaceholder": "Select IHF code",
+        "certificationType": "Certification Type",
+        "certificationTypeAuto": "Auto-filled from standard",
+        "accreditationBody": "Accreditation Body",
+        "accreditationBodyPlaceholder": "Select accreditation body",
+        "scopeSectionTitle": "Scope of Each Standard (Application Request)",
+        "scopeSectionSubtitle": "Provide the scope for each selected standard.",
+        "scopePlaceholder": "Describe the scope for this standard...",
+        "characters": "characters",
+        "needHelp": "Need help selecting IHF Code?",
+        "searchIhfCode": "Search IHF Code"
       }
     }
   }

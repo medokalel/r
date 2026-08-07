@@ -63,3 +63,38 @@ const MOCK_CLIENT: DraftClientSummary = {
 export function getDraftClientSummary(): Promise<DraftClientSummary> {
   return new Promise((resolve) => setTimeout(() => resolve(MOCK_CLIENT), 300))
 }
+
+export interface StandardSchemaOption {
+  value: string
+  name: string
+  /** e.g. "Quality Management System" — auto-filled once a standard is picked. */
+  certificationType: string
+}
+
+// TODO: replace with a real lookup once the backend exposes the standards/schemas catalog
+export const STANDARD_SCHEMA_OPTIONS: StandardSchemaOption[] = [
+  { value: 'ISO_9001_2015', name: 'ISO 9001:2015', certificationType: 'Quality Management System' },
+  { value: 'ISO_14001_2015', name: 'ISO 14001:2015', certificationType: 'Environmental Management System' },
+  {
+    value: 'ISO_45001_2018',
+    name: 'ISO 45001:2018',
+    certificationType: 'Occupational Health & Safety Management System',
+  },
+  { value: 'ISO_27001_2022', name: 'ISO 27001:2022', certificationType: 'Information Security Management System' },
+  { value: 'ISO_22000_2018', name: 'ISO 22000:2018', certificationType: 'Food Safety Management System' },
+]
+
+export interface IhfCodeOption {
+  value: string
+  /** e.g. "Engineering", "Other Services", "Construction" */
+  category: string
+}
+
+// TODO: replace with a real lookup once the backend exposes the IHF (IAF/EA) code catalog
+export const IHF_CODE_OPTIONS: IhfCodeOption[] = [
+  { value: 'GP 34', category: 'Engineering' },
+  { value: 'GP 19', category: 'Other Services' },
+  { value: 'GP 24', category: 'Construction' },
+  { value: 'GP 28', category: 'Health & Social Work' },
+  { value: 'GP 33', category: 'Manufacturing' },
+]
