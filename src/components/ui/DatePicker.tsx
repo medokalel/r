@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useTranslation } from 'react-i18next'
 import { CalendarIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
@@ -75,23 +76,42 @@ export function DatePicker({ value, onChange, placeholder, className, disabled }
   const today = new Date()
   const [open, setOpen] = useState(false)
   const [openUp, setOpenUp] = useState(false)
+  const [triggerRect, setTriggerRect] = useState<DOMRect | null>(null)
   const [viewYear, setViewYear] = useState((value ?? today).getFullYear())
   const [viewMonth, setViewMonth] = useState((value ?? today).getMonth())
   const [internalSelected, setInternalSelected] = useState<Date | null>(value ?? null)
   const ref = useRef<HTMLDivElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
 
   // Controlled when a value prop is provided, otherwise fall back to internal state
   const selected = value ?? internalSelected
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
+      const target = e.target as Node
+      const insideTrigger = ref.current?.contains(target)
+      const insidePopover = popoverRef.current?.contains(target)
+      if (!insideTrigger && !insidePopover) {
         setOpen(false)
       }
     }
     document.addEventListener('mousedown', onClickOutside)
     return () => document.removeEventListener('mousedown', onClickOutside)
   }, [])
+
+  useEffect(() => {
+    if (!open) return
+    function reposition() {
+      const rect = ref.current?.getBoundingClientRect()
+      if (rect) setTriggerRect(rect)
+    }
+    window.addEventListener('scroll', reposition, true)
+    window.addEventListener('resize', reposition)
+    return () => {
+      window.removeEventListener('scroll', reposition, true)
+      window.removeEventListener('resize', reposition)
+    }
+  }, [open])
 
   function prevMonth() {
     if (viewMonth === 0) { setViewYear(y => y - 1); setViewMonth(11) }
@@ -122,6 +142,7 @@ export function DatePicker({ value, onChange, placeholder, className, disabled }
     if (rect) {
       const spaceBelow = window.innerHeight - rect.bottom
       setOpenUp(spaceBelow < POPOVER_HEIGHT && rect.top > spaceBelow)
+      setTriggerRect(rect)
     }
     setOpen(true)
   }
@@ -154,13 +175,17 @@ export function DatePicker({ value, onChange, placeholder, className, disabled }
         <CalendarIcon className="size-5 shrink-0 text-primary" />
       </button>
 
-      {/* Popover — flips above the trigger when there is not enough space below */}
-      {open && (
+      {open && triggerRect && createPortal(
         <div
-          className={cn(
-            'absolute z-50 w-[340px] rounded-[var(--radius-md)] border border-neutral-100 bg-white p-5 shadow-[0_8px_32px_rgba(0,0,0,0.12)]',
-            openUp ? 'bottom-full mb-2' : 'top-full mt-2'
-          )}
+          ref={popoverRef}
+          style={{
+            position: 'fixed',
+            left: triggerRect.left,
+            ...(openUp
+              ? { bottom: window.innerHeight - triggerRect.top + 8 }
+              : { top: triggerRect.bottom + 8 }),
+          }}
+          className="z-50 w-[340px] rounded-[var(--radius-md)] border border-neutral-100 bg-white p-5 shadow-[0_8px_32px_rgba(0,0,0,0.12)]"
         >
           {/* Header */}
           <div className="mb-4 flex items-center justify-between">
@@ -231,7 +256,8 @@ export function DatePicker({ value, onChange, placeholder, className, disabled }
               <span key={`trail-${d}`} className="flex size-10 items-center justify-center text-[13px] text-neutral-300">{d}</span>
             ))}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
