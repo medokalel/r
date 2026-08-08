@@ -8,7 +8,7 @@ import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, MailIcon, PhoneIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
-import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
+import { isValidEmailFormat, isValidPhoneNumber, isValidWebsite } from '@/lib/validators'
 import type { CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import {
@@ -68,6 +68,7 @@ export function ClientRegistrationForm({
       !isValidPhoneNumber(value, form.phoneCountryCode) ? t('validation.invalidMobile') : undefined,
     mobileNumber: (value) =>
       value && !isValidPhoneNumber(value, form.mobileCountryCode) ? t('validation.invalidMobile') : undefined,
+    website: (value) => (!isValidWebsite(value) ? t('validation.invalidWebsite') : undefined),
   })
 
   return (
@@ -335,6 +336,7 @@ export function ClientRegistrationForm({
                 value={form.website}
                 onChange={(e) => onPatch({ website: e.target.value })}
                 placeholder="www.website.com"
+                {...fieldProps('website')}
               />
             </FormField>
           </div>

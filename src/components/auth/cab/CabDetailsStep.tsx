@@ -7,7 +7,7 @@ import { MultiSelect } from '@/components/ui/MultiSelect'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { MOCK_ACCREDITATION_BODIES } from '@/lib/api/cabRegisterApi'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
-import { isValidPhoneNumber } from '@/lib/validators'
+import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
 import { type CabDetailsForm } from '@/lib/cabDetailsForm'
 
@@ -25,6 +25,10 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
     form.mobile.trim().length > 0 &&
     !isValidPhoneNumber(form.mobile, form.mobileCountryCode)
       ? t('validation.invalidMobile')
+      : undefined
+  const emailError =
+    form.email.trim().length > 0 && !isValidEmailFormat(form.email)
+      ? t('validation.invalidEmail')
       : undefined
 
   return (
@@ -59,6 +63,7 @@ export function CabDetailsStep({ form, onPatch }: CabDetailsStepProps) {
         placeholder="ex: info@foods.com"
         value={form.email}
         onChange={(e) => onPatch({ email: toEnglishDigits(e.target.value) })}
+        error={emailError}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

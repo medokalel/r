@@ -269,7 +269,7 @@
     "verifyingEmail": "Verifying..."
   },
   "accreditation": {
-    "title": "Certification request",
+    "title": "Certification Request",
     "messages": {
       "draftSaved": "Draft saved successfully.",
       "submitted": "Your request has been submitted successfully. Order number: {{orderNumber}}",

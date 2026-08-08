@@ -6,6 +6,7 @@ import { CheckIcon } from '@radix-ui/react-icons'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
 import { TextField } from '@/components/ui'
 import { isValidPassword, passwordsMatch } from '@/lib/authValidation'
+import { isValidEmailFormat } from '@/lib/validators'
 import { cn } from '@/lib/utils'
 import { type CabAccountSetupForm } from '@/lib/cabAccountSetupForm'
 
@@ -21,6 +22,10 @@ export function CabAccountSetupStep({ form, onPatch }: CabAccountSetupStepProps)
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
 
+  const emailError =
+    form.adminEmail.trim().length > 0 && !isValidEmailFormat(form.adminEmail)
+      ? t('validation.invalidEmail')
+      : undefined
   const passwordError =
     form.password.length > 0 && !isValidPassword(form.password)
       ? t('validation.passwordTooShort')
@@ -42,6 +47,7 @@ export function CabAccountSetupStep({ form, onPatch }: CabAccountSetupStepProps)
         placeholder="ex: info@foods.com"
         value={form.adminEmail}
         onChange={(e) => onPatch({ adminEmail: e.target.value })}
+        error={emailError}
       />
 
       <TextField

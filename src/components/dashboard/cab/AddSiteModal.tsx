@@ -7,6 +7,8 @@ import { MultiSelect } from '@/components/ui/MultiSelect'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { MailIcon, PhoneIcon } from '@/components/icons'
 import type { CountryCode } from '@/lib/countries'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
+import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
 import { SITE_TYPE_OPTIONS, SITE_ACTIVITY_OPTIONS } from '@/lib/api/applicationDraftApi'
 import type { Site } from '@/lib/sitesFacilitiesForm'
 
@@ -35,6 +37,12 @@ export function AddSiteModal({ open, onOpenChange, onAdd }: AddSiteModalProps) {
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
 
+  const { fieldProps } = useFieldValidation(form, {
+  contactEmail: (value) => (!isValidEmailFormat(value) ? t('validation.invalidEmail') : undefined),
+  contactPhone: (value) =>
+    !isValidPhoneNumber(value, contactCountryCode) ? t('validation.invalidMobile') : undefined,
+})
+
   const canAdd = Boolean(
     form.name.trim() &&
       form.siteType &&
@@ -43,7 +51,9 @@ export function AddSiteModal({ open, onOpenChange, onAdd }: AddSiteModalProps) {
       form.activities.length > 0 &&
       form.contactName.trim() &&
       form.contactPhone.trim() &&
-      form.contactEmail.trim()
+      isValidPhoneNumber(form.contactPhone, contactCountryCode) &&
+      form.contactEmail.trim() &&
+      isValidEmailFormat(form.contactEmail)
   )
 
   const reset = () => {
@@ -170,6 +180,7 @@ export function AddSiteModal({ open, onOpenChange, onAdd }: AddSiteModalProps) {
                   icon={MailIcon}
                   value={form.contactEmail}
                   onChange={(e) => patch({ contactEmail: e.target.value })}
+                  {...fieldProps('contactEmail')}
                 />
               </FormField>
             </div>
@@ -188,6 +199,7 @@ export function AddSiteModal({ open, onOpenChange, onAdd }: AddSiteModalProps) {
                     value={form.contactPhone}
                     onChange={(e) => patch({ contactPhone: e.target.value })}
                     placeholder="1XXXXXXXXX"
+                    {...fieldProps('contactPhone')}
                   />
                 </div>
               </PhoneInputRow>
