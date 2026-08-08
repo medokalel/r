@@ -1577,6 +1577,48 @@
         "characters": "حرف",
         "needHelp": "تحتاج مساعدة في اختيار كود IHF؟",
         "searchIhfCode": "البحث عن كود IHF"
+      },
+      "sitesFacilities": {
+        "title": "المواقع والمرافق",
+        "subtitle": "أضف جميع المواقع والأنشطة الرئيسية المشمولة في نطاق المنح.",
+        "addNewSite": "إضافة موقع جديد",
+        "empty": "لا توجد مواقع مضافة حتى الآن.",
+        "stats": {
+          "totalSites": "إجمالي المواقع",
+          "totalEmployees": "إجمالي الموظفين",
+          "countries": "الدول",
+          "activitiesScope": "الأنشطة / النطاق"
+        },
+        "columns": {
+          "siteNameLocation": "اسم الموقع / الموقع الجغرافي",
+          "address": "العنوان",
+          "siteActivitiesScope": "أنشطة الموقع / النطاق",
+          "employees": "الموظفون",
+          "primaryContact": "جهة الاتصال الأساسية",
+          "actions": "الإجراءات"
+        },
+        "showing": "عرض {{from}} إلى {{to}} من {{total}} مواقع",
+        "activitiesCovered": {
+          "title": "الأنشطة المشمولة (ملخص)",
+          "subtitle": "قائمة بالأنشطة الرئيسية المشمولة في نطاق المنح عبر جميع المواقع."
+        },
+        "modal": {
+          "siteName": "اسم الموقع",
+          "siteNamePlaceholder": "مثال: المقر الرئيسي لجرين ليف",
+          "siteType": "نوع الموقع",
+          "siteTypePlaceholder": "اختر نوع الموقع",
+          "address": "العنوان",
+          "addressPlaceholder": "مثال: شارع 1، المنطقة الصناعية، المعادي - 11728، القاهرة",
+          "country": "الدولة",
+          "employees": "الموظفون",
+          "employeesPlaceholder": "مثال: 140",
+          "activitiesScope": "أنشطة الموقع / النطاق",
+          "activitiesScopePlaceholder": "اختر الأنشطة",
+          "contactName": "اسم جهة الاتصال",
+          "contactNamePlaceholder": "مثال: آلاء طارق",
+          "contactPhone": "هاتف جهة الاتصال",
+          "contactEmail": "بريد جهة الاتصال"
+        }
       }
     }
   }

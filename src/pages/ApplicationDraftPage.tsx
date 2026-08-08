@@ -6,6 +6,7 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ApplicationStepper } from '@/components/dashboard/cab/ApplicationStepper'
 import { ApplicationDraftForm } from '@/components/dashboard/cab/ApplicationDraftForm'
 import { StandardsScopeStep } from '@/components/dashboard/cab/StandardsScopeStep'
+import { SitesFacilitiesStep } from '@/components/dashboard/cab/SitesFacilitiesStep'
 import { ClientWorkflowProgress } from '@/components/dashboard/cab/ClientWorkflowProgress'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
@@ -13,6 +14,7 @@ import {
   isApplicationDraftComplete,
 } from '@/lib/applicationDraftForm'
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
+import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
@@ -20,17 +22,22 @@ export function ApplicationDraftPage() {
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [form, setForm] = useState(emptyApplicationDraftForm)
   const [standardsScopeForm, setStandardsScopeForm] = useState(emptyStandardsScopeForm)
+  const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(emptySitesFacilitiesForm)
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
   const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
     setStandardsScopeForm((prev) => ({ ...prev, ...f }))
+  const patchSitesFacilities = (f: Partial<typeof sitesFacilitiesForm>) =>
+    setSitesFacilitiesForm((prev) => ({ ...prev, ...f }))
 
   const complete =
     step === 1
       ? isApplicationDraftComplete(form)
       : step === 2
         ? isStandardsScopeComplete(standardsScopeForm)
-        : true
+        : step === 3
+          ? isSitesFacilitiesComplete(sitesFacilitiesForm)
+          : true
 
   // TODO: wire to a real "save application draft" endpoint once the backend
   // exposes one — for now this is a no-op stub, matching the other
@@ -47,12 +54,12 @@ export function ApplicationDraftPage() {
   }
 
   // TODO: wire to a real "save application draft" endpoint once the backend
-  // exposes one, and build steps 3-5 (Sites & Facilities, Documents,
-  // Review & Confirm) — for now this just returns to the dashboard once
-  // step 2 is done, matching the other not-yet-backed CAB workflow steps.
+  // exposes one, and build steps 4-5 (Documents, Review & Confirm) — for now
+  // this just returns to the dashboard once step 3 is done, matching the
+  // other not-yet-backed CAB workflow steps.
   const handleNext = () => {
     if (!complete) return
-    if (step < 2) {
+    if (step < 3) {
       setStep((s) => (s + 1) as typeof step)
       return
     }
@@ -75,6 +82,9 @@ export function ApplicationDraftPage() {
             {step === 1 && <ApplicationDraftForm form={form} onPatch={patch} />}
             {step === 2 && (
               <StandardsScopeStep form={standardsScopeForm} onPatch={patchStandardsScope} />
+            )}
+            {step === 3 && (
+              <SitesFacilitiesStep form={sitesFacilitiesForm} onPatch={patchSitesFacilities} />
             )}
           </div>
           <ClientWorkflowProgress />

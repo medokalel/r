@@ -98,3 +98,27 @@ export const IHF_CODE_OPTIONS: IhfCodeOption[] = [
   { value: 'GP 28', category: 'Health & Social Work' },
   { value: 'GP 33', category: 'Manufacturing' },
 ]
+
+// TODO: replace with a real lookup once the backend defines site types
+export const SITE_TYPE_OPTIONS: string[] = [
+  'Head Office',
+  'Manufacturing Site',
+  'Warehouse',
+  'Branch Office',
+  'Laboratory',
+]
+
+// TODO: replace with a real lookup once the backend defines the activity catalog
+export const SITE_ACTIVITY_OPTIONS: string[] = [
+  'Management',
+  'Sales & Marketing',
+  'Design & Development',
+  'Packing',
+  'Manufacturing',
+  'Assembly',
+  'Quality Control',
+  'Machining',
+  'Welding',
+  'Human Resources',
+  'Testing',
+]

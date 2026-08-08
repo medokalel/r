@@ -1578,6 +1578,48 @@
         "characters": "characters",
         "needHelp": "Need help selecting IHF Code?",
         "searchIhfCode": "Search IHF Code"
+      },
+      "sitesFacilities": {
+        "title": "Sites & Facilities",
+        "subtitle": "Add all sites, locations and key activities included in the certification scope.",
+        "addNewSite": "Add New Site",
+        "empty": "No sites added yet.",
+        "stats": {
+          "totalSites": "Total Sites",
+          "totalEmployees": "Total Employees",
+          "countries": "Countries",
+          "activitiesScope": "Activities / Scope"
+        },
+        "columns": {
+          "siteNameLocation": "Site Name / Location",
+          "address": "Address",
+          "siteActivitiesScope": "Site Activities / Scope",
+          "employees": "Employees",
+          "primaryContact": "Primary Contact",
+          "actions": "Actions"
+        },
+        "showing": "Showing {{from}} to {{to}} of {{total}} sites",
+        "activitiesCovered": {
+          "title": "Activities Covered (Summary)",
+          "subtitle": "List of major activities included in the certification scope across all sites."
+        },
+        "modal": {
+          "siteName": "Site Name",
+          "siteNamePlaceholder": "e.g. GreenLeaf Head Office",
+          "siteType": "Site Type",
+          "siteTypePlaceholder": "Select site type",
+          "address": "Address",
+          "addressPlaceholder": "e.g. St. 1, Industrial Area, Maadi - 11728, Cairo",
+          "country": "Country",
+          "employees": "Employees",
+          "employeesPlaceholder": "e.g. 140",
+          "activitiesScope": "Site Activities / Scope",
+          "activitiesScopePlaceholder": "Select activities",
+          "contactName": "Contact Name",
+          "contactNamePlaceholder": "e.g. Alaa Tarek",
+          "contactPhone": "Contact Phone",
+          "contactEmail": "Contact Email"
+        }
       }
     }
   }
