@@ -50,9 +50,6 @@ export function StandardsScopeStep({ form, onPatch }: StandardsScopeStepProps) {
           </Button>
         }
       >
-        <p className="mb-4 text-[14px] text-neutral-500">
-          {t('cab.applicationDraft.standardsScope.subtitle')}
-        </p>
         {form.standards.length === 0 ? (
           <p className="py-8 text-center text-[14px] text-neutral-500">
             {t('cab.applicationDraft.standardsScope.empty')}
@@ -127,9 +124,6 @@ export function StandardsScopeStep({ form, onPatch }: StandardsScopeStepProps) {
           title={t('cab.applicationDraft.standardsScope.scopeSectionTitle')}
           accordion
         >
-          <p className="mb-4 text-[14px] text-neutral-500">
-            {t('cab.applicationDraft.standardsScope.scopeSectionSubtitle')}
-          </p>
           <div className="space-y-4">
             {form.standards.map((s) => (
               <SectionHeading
