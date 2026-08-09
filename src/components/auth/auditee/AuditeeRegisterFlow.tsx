@@ -19,7 +19,8 @@ import {
   isAuditeeAccountSetupComplete,
 } from '@/lib/auditeeAccountSetupForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail } from '@/lib/api/authApi'
+import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
+import { fetchGovernorateOptions } from '@/lib/governorates'
 import { ApiError } from '@/lib/api/client'
 
 interface AuditeeRegisterFlowProps {
@@ -36,6 +37,8 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2 | 3>(1)
   const [submitted, setSubmitted] = useState(false)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
+  const [createAccountError, setCreateAccountError] = useState<string | null>(null)
   const [detailsForm, setDetailsForm] = useState<AuditeeDetailsForm>(emptyAuditeeDetailsForm)
   const [accountSetupForm, setAccountSetupForm] = useState<AuditeeAccountSetupForm>(
     emptyAuditeeAccountSetupForm
@@ -98,13 +101,43 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     setStep((s) => (s - 1) as 1 | 2)
   }
 
-  const handleCreateAccount = () => {
-    // TODO: no Auditee submission endpoint exists yet — once the backend
-    // adds one, this should submit detailsForm/accountSetupForm together
-    // the same way the existing register() flow does, before showing this
-    // confirmation screen.
-    setSubmitted(true)
-    onSubmittedChange?.(true)
+  const handleCreateAccount = async () => {
+    if (isCreatingAccount) return
+    setIsCreatingAccount(true)
+    setCreateAccountError(null)
+    try {
+      // The backend's /auth/register endpoint (shared by all entity types)
+      // still requires administrationName/facilityOwnerManager/activity/
+      // legalCapacity, which the lean Auditee form doesn't collect. Until
+      // the backend makes those optional for CONSULTATION_BODY, we send
+      // reasonable stand-in values derived from what we do collect:
+      //   - administrationName / legalCapacity / activity → the company name
+      //     (there's no better source for these yet)
+      //   - facilityOwnerManager → the contact person, since they're the
+      //     same "person in charge" concept
+      const governorates = await fetchGovernorateOptions(detailsForm.country)
+      const cityName = governorates.find((g) => g.id === detailsForm.city)?.name ?? detailsForm.city
+
+      await register({
+        entityType: 'CONSULTATION_BODY',
+        email: detailsForm.email,
+        organizationName: detailsForm.companyName,
+        administrationName: detailsForm.companyName,
+        facilityOwnerManager: detailsForm.contactPerson,
+        activity: detailsForm.companyName,
+        legalCapacity: detailsForm.companyName,
+        city: cityName,
+        phone: formatPhoneNumber(detailsForm.mobileCountryCode, detailsForm.mobile),
+        password: accountSetupForm.password,
+        confirmPassword: accountSetupForm.confirmPassword,
+      })
+      setSubmitted(true)
+      onSubmittedChange?.(true)
+    } catch (error) {
+      setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
+    } finally {
+      setIsCreatingAccount(false)
+    }
   }
 
   const handleNext = () => {
@@ -122,7 +155,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
       setStep(3)
       return
     }
-    handleCreateAccount()
+    void handleCreateAccount()
   }
 
   const nextDisabled =
@@ -130,7 +163,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
       ? !isAuditeeDetailsComplete(detailsForm)
       : step === 2
         ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
-        : !isAuditeeAccountSetupComplete(accountSetupForm)
+        : !isAuditeeAccountSetupComplete(accountSetupForm) || isCreatingAccount
 
   const nextLabel =
     step === 2 && codeSent && !emailVerified
@@ -138,7 +171,9 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
         ? t('register.verifyingEmail')
         : t('register.verifyEmail')
       : step === 3
-        ? t('register.createAccount')
+        ? isCreatingAccount
+          ? t('register.creatingAccount')
+          : t('register.createAccount')
         : t('common.next')
 
   if (submitted) {
@@ -199,6 +234,9 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
 
       {verificationError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
+      )}
+      {createAccountError && step === 3 && (
+        <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
       )}
 
       <AuthStepActions

@@ -6,13 +6,15 @@ import { cn } from '@/lib/utils'
 interface AuthLayoutProps {
   children: React.ReactNode
   contentClassName?: string
+  /** Mirrors which side the branding panel sits on (relative to the form), independent of language direction. */
+  reverse?: boolean
 }
 
-export function AuthLayout({ children, contentClassName }: AuthLayoutProps) {
+export function AuthLayout({ children, contentClassName, reverse }: AuthLayoutProps) {
   const { dir } = useDirection()
 
   return (
-    <div dir={dir} className="min-h-screen flex">
+    <div dir={dir} className={cn('min-h-screen flex', reverse && 'flex-row-reverse')}>
       {/* Left: branding background with full-width white form container */}
       <div className="relative flex min-h-screen w-full lg:w-[48%] overflow-hidden">
         <BrandingPanelBackground />

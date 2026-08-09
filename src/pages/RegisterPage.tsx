@@ -281,7 +281,7 @@ export function RegisterPage() {
   }
 
   return (
-    <AuthLayout>
+    <AuthLayout reverse>
       <LanguageToggle variant="icon" className="mb-10" />
 
       {step === 1 ? (
