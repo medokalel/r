@@ -55,7 +55,7 @@ export function MultiSelect({
           className={cn(
             'relative flex w-full items-center rounded-[var(--radius-sm)] border border-neutral-200 bg-white ps-3 text-start',
             'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-blue-500 focus-visible:border-blue-500',
-            stacked ? 'min-h-12 flex-col gap-2 py-2.5 pe-8' : 'h-12 gap-3 py-2 pe-3',
+            stacked ? 'min-h-12 flex-col gap-2 py-2.5 pe-8' : 'min-h-12 gap-3 py-2 pe-3',
             className
           )}
         >
