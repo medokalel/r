@@ -31,7 +31,9 @@ import {
 import { emptyCabAccountSetupForm, isCabAccountSetupComplete } from '@/lib/cabAccountSetupForm'
 import { SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/cabRegisterApi'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail } from '@/lib/api/authApi'
+import { sendVerificationCode, verifyEmail, register, login, formatPhoneNumber } from '@/lib/api/authApi'
+import { getCountryOptions } from '@/lib/countries'
+import { saveAuthSession } from '@/lib/authStorage'
 import { ApiError } from '@/lib/api/client'
 
 interface CabRegisterFlowProps {
@@ -44,10 +46,12 @@ interface CabRegisterFlowProps {
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
 export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRegisterFlowProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [submitted, setSubmitted] = useState(false)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
+  const [createAccountError, setCreateAccountError] = useState<string | null>(null)
   // Step 1 ("CAB Details") is split into two screens: the base details form,
   // then a continuation screen for accreditation scopes. The step nav stays
   // on "1" for both — this only tracks which screen within step 1 to show.
@@ -134,13 +138,58 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     setStep((s) => (s - 1) as 1 | 2 | 3 | 4)
   }
 
-  const handleCreateAccount = () => {
-    // TODO: no CAB submission endpoint exists yet — once the backend adds
-    // one, this should submit detailsForm/scopeModulesForm/accountSetupForm
-    // together the same way the existing register() flow does, before
-    // showing this confirmation screen.
-    setSubmitted(true)
-    onSubmittedChange?.(true)
+  const handleCreateAccount = async () => {
+    if (isCreatingAccount) return
+    setIsCreatingAccount(true)
+    setCreateAccountError(null)
+    try {
+      // Same backend limitation as the Auditee flow: /auth/register still
+      // requires administrationName/facilityOwnerManager/activity/
+      // legalCapacity/city, which the CAB Details form doesn't collect.
+      // Until the backend makes those optional for CERTIFICATION_BODY (or
+      // adds a dedicated CAB submission endpoint that also accepts the
+      // accreditation-scopes/scope-modules data), we send reasonable
+      // stand-in values derived from what we do collect:
+      //   - administrationName / legalCapacity / activity → the CAB name
+      //     (there's no better source for these yet)
+      //   - facilityOwnerManager → the contact person, since they're the
+      //     same "person in charge" concept
+      //   - city → the CAB's country display name (the form only collects
+      //     country, not a separate city)
+      // Note: accreditationBodies/accreditationScopes/scopeModulesForm have
+      // no home in this schema at all and are not sent — see the gap
+      // analysis we did before starting this.
+      const countryName =
+        getCountryOptions(i18n.language).find((c) => c.code === detailsForm.country)?.name ??
+        detailsForm.country
+
+      await register({
+        entityType: 'CERTIFICATION_BODY',
+        email: detailsForm.email,
+        organizationName: detailsForm.cabName,
+        administrationName: detailsForm.cabName,
+        facilityOwnerManager: detailsForm.contactPerson,
+        activity: detailsForm.cabName,
+        legalCapacity: detailsForm.cabName,
+        city: countryName,
+        phone: formatPhoneNumber(detailsForm.mobileCountryCode, detailsForm.mobile),
+        password: accountSetupForm.password,
+        confirmPassword: accountSetupForm.confirmPassword,
+      })
+
+      // Registration only creates the account — it doesn't return a token.
+      // Log the new account in right away so it lands on the CAB dashboard
+      // (layer 2) with a real session instead of an unauthenticated one.
+      const session = await login(detailsForm.email, accountSetupForm.password)
+      saveAuthSession(session, true)
+
+      setSubmitted(true)
+      onSubmittedChange?.(true)
+    } catch (error) {
+      setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
+    } finally {
+      setIsCreatingAccount(false)
+    }
   }
 
   const handleNext = () => {
@@ -177,7 +226,8 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       setStep(5)
       return
     }
-    handleCreateAccount()
+    if (isCreatingAccount) return
+    void handleCreateAccount()
   }
 
   const nextDisabled =
@@ -198,7 +248,7 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
               : step === 4
                 ? !isCabAccountSetupComplete(accountSetupForm)
                 : step === 5
-                  ? false
+                  ? isCreatingAccount
                   : false
 
   const nextLabel =
@@ -207,7 +257,9 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
         ? t('register.verifyingEmail')
         : t('register.verifyEmail')
       : step === 5
-        ? t('register.createAccount')
+        ? isCreatingAccount
+          ? t('register.creatingAccount')
+          : t('register.createAccount')
         : t('common.next')
 
   if (submitted) {
@@ -286,6 +338,9 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
 
       {verificationError && step === 3 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
+      )}
+      {createAccountError && step === 5 && (
+        <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
       )}
 
       <AuthStepActions

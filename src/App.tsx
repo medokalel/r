@@ -74,11 +74,32 @@ export default function App() {
 
             <Route path={ROUTES.privacyPolicy} element={<PrivacyPolicyPage />} />
 
-            <Route path="/cab/dashboard" element={<CabDashboardPage />} />
+            <Route
+              path="/cab/dashboard"
+              element={
+                <RequireAuth>
+                  <CabDashboardPage />
+                </RequireAuth>
+              }
+            />
 
-            <Route path="/cab/clients/new" element={<ClientRegistrationPage />} />
+            <Route
+              path="/cab/clients/new"
+              element={
+                <RequireAuth>
+                  <ClientRegistrationPage />
+                </RequireAuth>
+              }
+            />
 
-            <Route path="/cab/applications/draft" element={<ApplicationDraftPage />} />
+            <Route
+              path="/cab/applications/draft"
+              element={
+                <RequireAuth>
+                  <ApplicationDraftPage />
+                </RequireAuth>
+              }
+            />
 
             <Route
               path={ROUTES.dashboard}
