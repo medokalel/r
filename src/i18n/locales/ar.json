@@ -1372,7 +1372,8 @@
           "contractSigning": "توقيع العقد",
           "decisionCertification": "القرار والاعتماد",
           "auditReview": "التدقيق والمراجعة"
-        }
+        },
+        "viewFullPipeline": "عرض كل المسار"
       },
       "auditsOverview": {
         "title": "نظرة عامة على التدقيق",
@@ -1383,7 +1384,8 @@
           "inProgress": "قيد التنفيذ",
           "completed": "مكتمل",
           "reportFinalization": "إنهاء التقرير"
-        }
+        },
+        "viewAuditCalendar": "عرض تقويم التدقيق"
       },
       "certificationDecisions": {
         "title": "قرارات الاعتماد",

@@ -4,9 +4,10 @@ import type { AuditsOverviewEntry } from '@/lib/api/cabDashboardApi'
 
 interface CabAuditsOverviewChartProps {
   entries: AuditsOverviewEntry[]
+  footerLink?: { label: string; onClick: () => void }
 }
 
-export function CabAuditsOverviewChart({ entries }: CabAuditsOverviewChartProps) {
+export function CabAuditsOverviewChart({ entries, footerLink }: CabAuditsOverviewChartProps) {
   const { t } = useTranslation()
 
   const data = entries.map((entry) => ({
@@ -46,6 +47,16 @@ export function CabAuditsOverviewChart({ entries }: CabAuditsOverviewChartProps)
           </BarChart>
         </ResponsiveContainer>
       </div>
+
+      {footerLink && (
+        <button
+          type="button"
+          onClick={footerLink.onClick}
+          className="mt-4 self-end text-[13px] text-neutral-400 transition-colors hover:text-primary"
+        >
+          {footerLink.label} →
+        </button>
+      )}
     </div>
   )
 }

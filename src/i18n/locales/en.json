@@ -1373,7 +1373,8 @@
           "contractSigning": "Contract Signing",
           "decisionCertification": "Decision & Certification",
           "auditReview": "Audit & Review"
-        }
+        },
+        "viewFullPipeline": "View full pipeline"
       },
       "auditsOverview": {
         "title": "Audits Overview",
@@ -1384,7 +1385,8 @@
           "inProgress": "In-Progress",
           "completed": "Completed",
           "reportFinalization": "Report Finalization"
-        }
+        },
+        "viewAuditCalendar": "View Audit Calendar"
       },
       "certificationDecisions": {
         "title": "Certification Decisions",

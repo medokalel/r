@@ -77,9 +77,15 @@ export function CabDashboardPage() {
             entries={applicationsByStage.map((e) => ({ key: e.stageKey, count: e.count, color: e.color }))}
             labelPrefix="cab.dashboard.applicationsByStage.stages"
             totalLabel={t('cab.dashboard.total')}
+            // TODO: no full-pipeline view exists yet — wire this once it's built.
+            footerLink={{ label: t('cab.dashboard.applicationsByStage.viewFullPipeline'), onClick: () => undefined }}
           />
 
-          <CabAuditsOverviewChart entries={auditsOverview} />
+          <CabAuditsOverviewChart
+            entries={auditsOverview}
+            // TODO: no audit calendar view exists yet — wire this once it's built.
+            footerLink={{ label: t('cab.dashboard.auditsOverview.viewAuditCalendar'), onClick: () => undefined }}
+          />
 
           <CabDonutCard
             title={t('cab.dashboard.certificationDecisions.title')}
