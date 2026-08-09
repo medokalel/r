@@ -31,7 +31,9 @@ import {
 import { emptyAbAccountSetupForm, isAbAccountSetupComplete } from '@/lib/abAccountSetupForm'
 import { SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/abRegisterApi'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail } from '@/lib/api/authApi'
+import { sendVerificationCode, verifyEmail, register, login, formatPhoneNumber } from '@/lib/api/authApi'
+import { getCountryOptions } from '@/lib/countries'
+import { saveAuthSession } from '@/lib/authStorage'
 import { ApiError } from '@/lib/api/client'
 
 interface AbRegisterFlowProps {
@@ -44,10 +46,12 @@ interface AbRegisterFlowProps {
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
 export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegisterFlowProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
   const [submitted, setSubmitted] = useState(false)
+  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
+  const [createAccountError, setCreateAccountError] = useState<string | null>(null)
   // Step 1 ("AB Details") is split into two screens: the base details form,
   // then a continuation screen for accreditation scopes. The step nav stays
   // on "1" for both — this only tracks which screen within step 1 to show.
@@ -134,13 +138,53 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
     setStep((s) => (s - 1) as 1 | 2 | 3 | 4)
   }
 
-  const handleCreateAccount = () => {
-    // TODO: no AB submission endpoint exists yet — once the backend adds
-    // one, this should submit detailsForm/scopeModulesForm/accountSetupForm
-    // together the same way the existing register() flow does, before
-    // showing this confirmation screen.
-    setSubmitted(true)
-    onSubmittedChange?.(true)
+  const handleCreateAccount = async () => {
+    if (isCreatingAccount) return
+    setIsCreatingAccount(true)
+    setCreateAccountError(null)
+    try {
+      // Same backend limitation as the CAB flow: /auth/register still
+      // requires administrationName/facilityOwnerManager/activity/
+      // legalCapacity/city, which the AB Details form doesn't collect.
+      // Until the backend makes those optional for ACCREDITATION_BODY (or
+      // adds a dedicated AB submission endpoint that also accepts the
+      // accreditation-scopes/scope-modules data), we send reasonable
+      // stand-in values derived from what we do collect — see
+      // CabRegisterFlow's handleCreateAccount for the same mapping.
+      const countryName =
+        getCountryOptions(i18n.language).find((c) => c.code === detailsForm.country)?.name ??
+        detailsForm.country
+
+      await register({
+        entityType: 'ACCREDITATION_BODY',
+        // The account/login email is whichever address got OTP-verified in
+        // step 3 — NOT detailsForm.email ("Official Email" from step 1,
+        // which is just organization contact info, unrelated to login).
+        email: verificationEmail,
+        organizationName: detailsForm.abName,
+        administrationName: detailsForm.abName,
+        facilityOwnerManager: detailsForm.contactPerson,
+        activity: detailsForm.abName,
+        legalCapacity: detailsForm.abName,
+        city: countryName,
+        phone: formatPhoneNumber(detailsForm.mobileCountryCode, detailsForm.mobile),
+        password: accountSetupForm.password,
+        confirmPassword: accountSetupForm.confirmPassword,
+      })
+
+      // Registration only creates the account — it doesn't return a token.
+      // Log the new account in right away. Unlike CAB (which has its own
+      // dashboard), AB accounts land on the regular dashboard for now.
+      const session = await login(verificationEmail, accountSetupForm.password)
+      saveAuthSession(session, true)
+
+      setSubmitted(true)
+      onSubmittedChange?.(true)
+    } catch (error) {
+      setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
+    } finally {
+      setIsCreatingAccount(false)
+    }
   }
 
   const handleNext = () => {
@@ -177,7 +221,8 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
       setStep(5)
       return
     }
-    handleCreateAccount()
+    if (isCreatingAccount) return
+    void handleCreateAccount()
   }
 
   const nextDisabled =
@@ -198,17 +243,19 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
               : step === 4
                 ? !isAbAccountSetupComplete(accountSetupForm)
                 : step === 5
-                  ? false
+                  ? isCreatingAccount
                   : false
 
-  const nextLabel =
-    step === 3 && codeSent && !emailVerified
-      ? isVerifyingEmail
-        ? t('register.verifyingEmail')
-        : t('register.verifyEmail')
-      : step === 5
-        ? t('register.createAccount')
-        : t('common.next')
+                const nextLabel =
+                  step === 3 && codeSent && !emailVerified
+                    ? isVerifyingEmail
+                      ? t('register.verifyingEmail')
+                      : t('register.verifyEmail')
+                    : step === 5
+                      ? isCreatingAccount
+                        ? t('register.creatingAccount')
+                        : t('register.createAccount')
+                      : t('common.next')
 
   if (submitted) {
     return (
@@ -286,6 +333,9 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
 
       {verificationError && step === 3 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
+      )}
+      {createAccountError && step === 5 && (
+        <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
       )}
 
       <AuthStepActions
