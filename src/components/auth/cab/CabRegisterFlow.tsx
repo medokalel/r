@@ -165,7 +165,7 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
 
       await register({
         entityType: 'CERTIFICATION_BODY',
-        email: detailsForm.email,
+        email: verificationEmail,
         organizationName: detailsForm.cabName,
         administrationName: detailsForm.cabName,
         facilityOwnerManager: detailsForm.contactPerson,
@@ -180,7 +180,7 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       // Registration only creates the account — it doesn't return a token.
       // Log the new account in right away so it lands on the CAB dashboard
       // (layer 2) with a real session instead of an unauthenticated one.
-      const session = await login(detailsForm.email, accountSetupForm.password)
+      const session = await login(verificationEmail, accountSetupForm.password)
       saveAuthSession(session, true)
 
       setSubmitted(true)

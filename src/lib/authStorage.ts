@@ -1,5 +1,5 @@
 import type { LoginResponseData } from '@/lib/api/authApi'
-
+import { AUTHENTICATED_HOME } from '@/lib/routes'
 const TOKEN_KEY = 'icasco_auth_token'
 const SESSION_KEY = 'icasco_auth_session'
 
@@ -23,6 +23,11 @@ export function getAuthSession(): LoginResponseData | null {
   } catch {
     return null
   }
+}
+
+/** CAB (Certification Body) accounts land on the CAB dashboard; everyone else gets the generic one. */
+export function getPostLoginRedirect(session: LoginResponseData): string {
+  return session.organization?.type === 'CERTIFICATION_BODY' ? '/cab/dashboard' : AUTHENTICATED_HOME
 }
 
 export function clearAuthSession(): void {

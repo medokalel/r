@@ -38,16 +38,14 @@ import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 
-import { getAuthToken } from '@/lib/authStorage'
+import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
 
-import { AUTHENTICATED_HOME, LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
-
-
+import { LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
 
 function HomeRedirect() {
-
-  return <Navigate to={getAuthToken() ? AUTHENTICATED_HOME : ROUTES.login} replace />
-
+  const session = getAuthSession()
+  const target = getAuthToken() && session ? getPostLoginRedirect(session) : ROUTES.login
+  return <Navigate to={target} replace />
 }
 
 
