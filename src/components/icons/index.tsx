@@ -4,12 +4,15 @@ import { defaultIconProps } from './constants'
 import {
   AddCircle,
   ArrowDown2,
+  ArrowRight2,
   BoxSearch,
   Buildings,
   Call,
   Category,
   Check,
   ClipboardText,
+  Clock,
+  Message,
   CloseCircle,
   Document,
   DocumentText,
@@ -554,4 +557,7 @@ export {
   LocationAdd as LocationAddIcon,
   AddCircle as AddCircleIcon,
   More as MoreIcon,
+  Message as CommentIcon,
+  Clock as HistoryIcon,
+  ArrowRight2 as ArrowRightIcon,
 }

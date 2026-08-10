@@ -1,45 +1,26 @@
 import { Suspense } from 'react'
-
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-
 import { RequireAuth } from '@/components/auth/RequireAuth'
-
 import { DirectionProvider } from '@/context/DirectionContext'
-
 import { CertificationRequestFormPage } from '@/pages/CertificationRequestFormPage'
-
 import { CertificationRequestsPage } from '@/pages/CertificationRequestsPage'
-
 import { CompanyProfilePage } from '@/pages/CompanyProfilePage'
-
 import { DashboardPage } from '@/pages/DashboardPage'
-
 import { DashboardTasksPage } from '@/pages/DashboardTasksPage'
-
 import { UsersPage } from '@/pages/UsersPage'
-
 import { DigitalWalletPage } from '@/pages/DigitalWalletPage'
-
 import { InvoicesPage } from '@/pages/InvoicesPage'
-
 import { PeriodicVisitsPage } from '@/pages/PeriodicVisitsPage'
-
 import { LoginPage } from '@/pages/LoginPage'
-
 import { RegisterPage } from '@/pages/RegisterPage'
-
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
-
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
-
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
-
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
-
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
-
+import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
+import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
-
 import { LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
 
 function HomeRedirect() {
@@ -48,30 +29,17 @@ function HomeRedirect() {
   return <Navigate to={target} replace />
 }
 
-
-
 export default function App() {
-
   return (
-
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
-
       <DirectionProvider>
-
         <BrowserRouter>
-
           <Routes>
-
             <Route path="/" element={<HomeRedirect />} />
-
             <Route path={ROUTES.login} element={<LoginPage />} />
-
             <Route path={ROUTES.register} element={<RegisterPage />} />
-
             <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
-
             <Route path={ROUTES.privacyPolicy} element={<PrivacyPolicyPage />} />
-
             <Route
               path="/cab/dashboard"
               element={
@@ -80,7 +48,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path="/cab/clients/new"
               element={
@@ -89,7 +56,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path="/cab/applications/draft"
               element={
@@ -98,7 +64,38 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
+            <Route
+              path="/cab/applications/receipt"
+              element={
+                <RequireAuth>
+                  <CabApplicationReceiptPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/:applicationId/receipt"
+              element={
+                <RequireAuth>
+                  <CabApplicationReceiptPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/review"
+              element={
+                <RequireAuth>
+                  <CabApplicationReviewPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/:applicationId/review"
+              element={
+                <RequireAuth>
+                  <CabApplicationReviewPage />
+                </RequireAuth>
+              }
+            />
             <Route
               path={ROUTES.dashboard}
               element={
@@ -107,9 +104,7 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route path={LEGACY_DASHBOARD_PATH} element={<Navigate to={ROUTES.dashboard} replace />} />
-
             <Route
               path={ROUTES.certificationRequestNew}
               element={
@@ -118,9 +113,7 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
-
               path={ROUTES.certificationRequests}
               element={
                 <RequireAuth>
@@ -128,7 +121,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.dashboardTasks}
               element={
@@ -137,7 +129,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.companyProfile}
               element={
@@ -146,7 +137,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.users}
               element={
@@ -155,7 +145,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.wallet}
               element={
@@ -164,7 +153,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.periodicVisits}
               element={
@@ -173,7 +161,6 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route
               path={ROUTES.invoices}
               element={
@@ -182,19 +169,10 @@ export default function App() {
                 </RequireAuth>
               }
             />
-
             <Route path="*" element={<HomeRedirect />} />
-
           </Routes>
-
         </BrowserRouter>
-
       </DirectionProvider>
-
     </Suspense>
-
   )
-
 }
-
-

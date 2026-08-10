@@ -1623,6 +1623,277 @@
           "contactEmail": "Contact Email"
         }
       }
+    },
+    "applications": {
+      "receipt": {
+        "title": "4. Application Receipt",
+        "subtitle": "The application has been received successfully and is under preliminary processing.",
+        "help": "Help",
+        "chat": "Chat support",
+        "status": {
+          "received": "Received"
+        },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "current": "Application Receipt"
+        },
+        "summary": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "receivedBy": "Received By",
+          "receivedOn": "Received On"
+        },
+        "successTitle": "Application received successfully.",
+        "successDescription": "Your application has been logged in our system and a confirmation email has been sent to the client.",
+        "sections": {
+          "applicationDetails": "Application Details",
+          "clientSummary": "Client Summary",
+          "scopeOfCertification": "Scope of Certification",
+          "nextSteps": "Next Steps",
+          "workflowProgress": "Workflow Progress",
+          "documentsSummary": "Documents Summary"
+        },
+        "fields": {
+          "applicationType": "Application Type",
+          "primaryStandard": "Primary Standard / Scheme",
+          "requestedCertificationDate": "Requested Certification Date",
+          "certificationBody": "Certification Body",
+          "accreditationBody": "Accreditation Body",
+          "numberOfSites": "Number of Sites",
+          "auditLanguage": "Audit Language",
+          "applicationDate": "Application Date",
+          "applicationReceivedDate": "Application Received Date",
+          "referenceNo": "Reference No."
+        },
+        "client": {
+          "registeredClient": "Registered Client",
+          "clientId": "Client ID",
+          "organizationType": "Organization Type",
+          "country": "Country",
+          "legalEntityName": "Legal Entity Name",
+          "registrationLicenseNo": "Registration / License No.",
+          "industry": "Industry"
+        },
+        "nextStepsDescription": "The application will now be reviewed for completeness, eligibility and feasibility. You will be notified for any further information required.",
+        "nextStepsList": {
+          "applicationReview": "Application Review",
+          "informationRequired": "Information Required",
+          "technicalFeasibility": "Technical Feasibility",
+          "proceedToQuotation": "Proceed to Quotation"
+        },
+        "workflow": {
+          "completed": "Completed",
+          "inProgress": "In Progress",
+          "pending": "Pending"
+        },
+        "workflowSteps": {
+          "application": "Application",
+          "applicationReview": "Application Review",
+          "quotation": "Quotation",
+          "applicationReceipt": "Application Receipt",
+          "quotationApproval": "Quotation Approval",
+          "payment": "Payment",
+          "invoicing": "Invoicing",
+          "contracting": "Contracting",
+          "auditPlanning": "Audit Planning",
+          "auditExecution": "Audit Execution",
+          "reporting": "Reporting",
+          "surveillance": "Surveillance"
+        },
+        "workflowStepDescriptions": {
+          "application": "Submission of application by client",
+          "applicationReview": "Completeness, eligibility & feasibility",
+          "quotation": "Prepare & send quotation",
+          "applicationReceipt": "Application received & logged",
+          "quotationApproval": "Review & approve quotation",
+          "payment": "Payment of fees",
+          "invoicing": "Generate & send invoice",
+          "contracting": "Agreement & signature",
+          "auditPlanning": "Plan audit activities & team",
+          "auditExecution": "Conduct audit (Stage 1 & 2)",
+          "reporting": "Report, findings & CAPA",
+          "surveillance": "Surveillance & recertification"
+        },
+        "documents": {
+          "total": "Total Documents",
+          "uploaded": "Uploaded",
+          "pending": "Pending",
+          "rejected": "Rejected"
+        },
+        "actions": {
+          "downloadReceipt": "Download Receipt",
+          "printReceipt": "Print Receipt",
+          "moreActions": "More Actions",
+          "viewFullScope": "View Full Scope",
+          "viewFullWorkflow": "View Full Workflow",
+          "viewAllDocuments": "View All Documents"
+        },
+        "emailConfirmation": "A confirmation email with receipt details has been sent to {{email1}} and {{email2}}.",
+        "footer": {
+          "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfUse": "Terms of Use"
+        }
+      },
+      "review": {
+        "title": "5. Application Review",
+        "subtitle": "Review the application for completeness, accuracy, eligibility and compliance with certification requirements.",
+        "help": "Help",
+        "chat": "Chat support",
+        "status": { "inProgress": "In Progress" },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "current": "Application Review"
+        },
+        "summary": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "primaryStandard": "Primary Standard",
+          "receivedOn": "Received On",
+          "assignedReviewer": "Assigned Reviewer"
+        },
+        "actions": {
+          "downloadApplication": "Download Application",
+          "moreActions": "More Actions",
+          "sendForTechnicalFeasibility": "Send for Technical Feasibility",
+          "addComment": "Add Comment",
+          "addInternalComment": "Add Internal Comment",
+          "viewAll": "View All",
+          "viewAllComments": "View All Comments",
+          "viewAllInternalComments": "View All Internal Comments",
+          "viewFullHistory": "View Full History",
+          "viewFullWorkflow": "View Full Workflow",
+          "editScope": "Edit Scope"
+        },
+        "tabs": {
+          "reviewChecklist": "Review Checklist",
+          "applicationDetails": "Application Details",
+          "documents": "Documents",
+          "reviewComments": "Review Comments",
+          "internalComments": "Internal Comments",
+          "history": "History"
+        },
+        "checklist": {
+          "title": "Review Checklist",
+          "columns": {
+            "number": "#",
+            "area": "Review Area",
+            "description": "Description",
+            "status": "Status",
+            "comments": "Reviewer Comments",
+            "action": "Action"
+          },
+          "status": {
+            "complete": "Complete",
+            "partiallyComplete": "Partially Complete",
+            "incomplete": "Incomplete",
+            "notApplicable": "Not Applicable"
+          },
+          "areas": {
+            "completeness": "Completeness",
+            "eligibility": "Eligibility",
+            "scopeApplicability": "Scope & Applicability",
+            "managementSystemInfo": "Management System Info",
+            "legalRegulatory": "Legal & Regulatory",
+            "requiredDocuments": "Required Documents",
+            "feesPaymentTerms": "Fees & Payment Terms"
+          }
+        },
+        "overallReview": {
+          "title": "Overall Review Result",
+          "decisionLabel": "Review Decision"
+        },
+        "reviewerComments": {
+          "title": "Reviewer Comments"
+        },
+        "documentsOverview": {
+          "title": "Documents Overview",
+          "total": "Total Documents",
+          "valid": "Valid",
+          "expired": "Expired",
+          "pending": "Pending"
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "technicalFeasibility": "Technical Feasibility",
+          "informationRequired": "Information Required",
+          "quotation": "Quotation",
+          "managementReview": "Management Review"
+        },
+        "notesTitle": "Notes",
+        "applicationDetailsSection": {
+          "title": "Application Details",
+          "scopeOfCertification": "Scope of Certification",
+          "fields": {
+            "applicationType": "Application Type",
+            "applicationDate": "Application Date",
+            "primaryStandard": "Primary Standard / Scheme",
+            "requestedCertificationDate": "Requested Certification Date",
+            "additionalStandards": "Additional Standards",
+            "numberOfSites": "Number of Sites",
+            "applicableScheme": "Applicable Scheme / Program (if any)",
+            "auditLanguage": "Audit Language",
+            "certificationBody": "Certification Body",
+            "referenceNo": "Reference No."
+          }
+        },
+        "documentsSection": {
+          "title": "Documents",
+          "columns": { "name": "Document Name", "fileName": "File Name", "status": "Status" },
+          "total": "Total Documents",
+          "valid": "Valid",
+          "expired": "Expired"
+        },
+        "historySection": {
+          "title": "History",
+          "columns": { "dateTime": "Date & Time", "by": "By", "action": "Action", "details": "Details" }
+        },
+        "workflowSteps": {
+          "application": "Application",
+          "applicationReview": "Application Review",
+          "quotation": "Quotation",
+          "payment": "Payment",
+          "invoicing": "Invoicing",
+          "contracting": "Contracting",
+          "auditPlanning": "Audit Planning",
+          "auditExecution": "Audit Execution",
+          "reporting": "Reporting",
+          "surveillance": "Surveillance"
+        },
+        "workflowStepDescriptions": {
+          "application": "Submission of application by client",
+          "applicationReview": "Completeness, eligibility & feasibility",
+          "quotation": "Prepare & send quotation",
+          "payment": "Payment of fees",
+          "invoicing": "Generate & send invoice",
+          "contracting": "Agreement & signature",
+          "auditPlanning": "Plan audit activities & team",
+          "auditExecution": "Conduct audit (Stage 1 & 2)",
+          "reporting": "Report, findings & CAPA",
+          "surveillance": "Surveillance & recertification"
+        },
+        "workflow": {
+          "completed": "Completed",
+          "inProgress": "In Progress",
+          "pending": "Pending"
+        },
+        "reviewActions": {
+          "title": "Review Actions",
+          "requestInformation": "Request Information",
+          "approveCompleteness": "Approve Completeness",
+          "holdReview": "Hold Review",
+          "rejectApplication": "Reject Application"
+        },
+        "footer": {
+          "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfUse": "Terms of Use"
+        }
+      }
     }
   }
 }

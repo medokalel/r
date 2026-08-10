@@ -81,14 +81,14 @@ export function AccreditationHeader({
   const dateLabel = `${day} ${month} ${year}`
 
   return (
-    <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-4 border-b-2 border-[#ececec] bg-white px-5 py-4">
-      <div className="flex flex-wrap items-center gap-x-6 gap-y-4">
+    <header className="flex min-w-0 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b-2 border-[#ececec] bg-white px-3 py-3 sm:gap-x-6 sm:gap-y-4 sm:px-5 sm:py-4">
+      <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
-          className="h-20 w-auto md:hidden"
+          className="h-14 w-auto sm:h-20 md:hidden"
         />
-        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap md:block">
+        <h1 className="hidden min-w-0 truncate text-h3-semi text-primary md:block">
           {t(titleKey)}
         </h1>
 

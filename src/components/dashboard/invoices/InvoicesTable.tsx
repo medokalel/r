@@ -44,7 +44,7 @@ const previewBtnClass =
   'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[8px] border border-[#F59E0B] bg-[#FFF7ED] px-2 py-1 text-[9px] font-medium leading-none text-[#F59E0B] transition-colors hover:bg-[#FFEDD5]'
 const printBtnClass =
   'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[8px] border border-[#2563EB] bg-[#EFF6FF] px-2 py-1 text-[9px] font-medium leading-none text-[#2563EB] transition-colors hover:bg-[#DBEAFE]'
-const tdActionsClass = 'px-1 py-1.5 align-middle'
+const tdActionsClass = 'overflow-hidden px-1 py-1.5 align-middle'
 
 function InvoiceCurrencyCell({ currency }: { currency: InvoiceCurrency }) {
   if (currency === 'SAR') {
@@ -170,10 +170,10 @@ export function InvoicesTable({
   }
 
   return (
-    <section className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
+    <section className="flex min-w-0 flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-3 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-          <div className="relative min-w-[240px] flex-1 sm:max-w-[360px]">
+          <div className="relative min-w-0 w-full flex-1 sm:min-w-[240px] sm:max-w-[360px]">
             <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
               <AppIcon icon={SearchIcon} size={18} />
             </span>
@@ -258,8 +258,8 @@ export function InvoicesTable({
         </div>
       )}
 
-      <div className="min-w-0">
-        <table className="w-full table-fixed border-collapse text-center">
+      <div className="min-w-0 overflow-x-auto">
+        <table className="w-full min-w-[1100px] table-fixed border-collapse text-center">
           <colgroup>
             <col style={{ width: '3%' }} />
             <col style={{ width: '2.5%' }} />

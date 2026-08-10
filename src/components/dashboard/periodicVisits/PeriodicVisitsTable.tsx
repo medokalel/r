@@ -33,9 +33,9 @@ interface PeriodicVisitsTableProps {
 
 const thClass =
   'overflow-hidden px-2 py-2.5 text-center text-[11px] font-normal leading-[1.3] break-words text-white'
-const tdClass = 'px-2 py-2.5 text-[11px] font-semibold leading-snug align-middle'
+const tdClass = 'overflow-hidden px-2 py-2.5 text-[11px] font-semibold leading-snug align-middle'
 const tdTextClass = cn(tdClass, 'text-neutral-700')
-const tdActionsClass = 'px-2 py-2.5 align-middle'
+const tdActionsClass = 'overflow-hidden px-2 py-2.5 align-middle'
 const periodicBtnClass =
   'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[4px] border border-[#FFDAB9] bg-[#FFF0E0] px-3 py-1.5 text-[10px] font-medium leading-none text-[#B54D1D]'
 const expandingBtnClass =
@@ -46,7 +46,7 @@ function SectorBadge({ code }: { code: string }) {
   return (
     <span
       className={cn(
-        'inline-flex size-5 items-center justify-center rounded-[4px] text-[9px] font-semibold leading-none',
+        'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-[4px] text-[9px] font-semibold leading-none tabular-nums',
         variant === 'red' ? 'bg-[#fde8e8] text-[#e74c3c]' : 'bg-[#eafaf1] text-[#2ecc70]'
       )}
     >
@@ -57,7 +57,7 @@ function SectorBadge({ code }: { code: string }) {
 
 function SpecificationTag({ name }: { name: string }) {
   return (
-    <span className="inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#E8EDFC] px-3.5 py-2 font-sans text-sm font-medium leading-none text-[#1236A3]">
+    <span className="inline-flex min-w-[88px] max-w-full items-center justify-center whitespace-nowrap rounded-[4px] bg-[#E8EDFC] px-3.5 py-2 font-sans text-sm font-medium leading-none text-[#1236A3] sm:w-[108px]">
       {name}
     </span>
   )
@@ -148,10 +148,10 @@ export function PeriodicVisitsTable({
   }
 
   return (
-    <section className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
+    <section className="flex min-w-0 flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-3 sm:p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-          <div className="relative min-w-[240px] flex-1 sm:max-w-[360px]">
+          <div className="relative min-w-0 w-full flex-1 sm:min-w-[240px] sm:max-w-[360px]">
             <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
               <AppIcon icon={SearchIcon} size={18} />
             </span>
@@ -233,8 +233,8 @@ export function PeriodicVisitsTable({
         </div>
       )}
 
-      <div className="min-w-0">
-        <table className="w-full table-fixed border-collapse text-center">
+      <div className="min-w-0 overflow-x-auto">
+        <table className="w-full min-w-[900px] table-fixed border-collapse text-center">
           <colgroup>
             <col style={{ width: '4%' }} />
             <col style={{ width: '4%' }} />

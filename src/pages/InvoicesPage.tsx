@@ -71,7 +71,7 @@ export function InvoicesPage() {
   return (
     <AppLayout>
       <AccreditationHeader titleKey="invoices.pageTitle" />
-      <div className="flex flex-col gap-5 overflow-auto p-5">
+      <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
         <InvoicesTable
           invoices={invoices}
           loading={loading}

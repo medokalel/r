@@ -1622,6 +1622,277 @@
           "contactEmail": "بريد جهة الاتصال"
         }
       }
+    },
+    "applications": {
+      "receipt": {
+        "title": "4. استلام الطلب",
+        "subtitle": "تم استلام الطلب بنجاح وهو قيد المعالجة الأولية.",
+        "help": "مساعدة",
+        "chat": "دعم المحادثة",
+        "status": {
+          "received": "تم الاستلام"
+        },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "current": "استلام الطلب"
+        },
+        "summary": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة الاعتماد",
+          "receivedBy": "استلم بواسطة",
+          "receivedOn": "تاريخ الاستلام"
+        },
+        "successTitle": "تم استلام الطلب بنجاح.",
+        "successDescription": "تم تسجيل الطلب في نظامنا وإرسال بريد تأكيد إلى العميل.",
+        "sections": {
+          "applicationDetails": "تفاصيل الطلب",
+          "clientSummary": "ملخص العميل",
+          "scopeOfCertification": "نطاق الاعتماد",
+          "nextSteps": "الخطوات التالية",
+          "workflowProgress": "تقدم سير العمل",
+          "documentsSummary": "ملخص المستندات"
+        },
+        "fields": {
+          "applicationType": "نوع الطلب",
+          "primaryStandard": "المعيار / المخطط الأساسي",
+          "requestedCertificationDate": "تاريخ الاعتماد المطلوب",
+          "certificationBody": "جهة الاعتماد",
+          "accreditationBody": "جهة التقييس",
+          "numberOfSites": "عدد المواقع",
+          "auditLanguage": "لغة التدقيق",
+          "applicationDate": "تاريخ الطلب",
+          "applicationReceivedDate": "تاريخ استلام الطلب",
+          "referenceNo": "رقم المرجع"
+        },
+        "client": {
+          "registeredClient": "عميل مسجل",
+          "clientId": "معرف العميل",
+          "organizationType": "نوع المنظمة",
+          "country": "الدولة",
+          "legalEntityName": "الاسم القانوني",
+          "registrationLicenseNo": "رقم التسجيل / الترخيص",
+          "industry": "القطاع"
+        },
+        "nextStepsDescription": "سيتم الآن مراجعة الطلب من حيث الاكتمال والأهلية والجدوى. سيتم إشعارك بأي معلومات إضافية مطلوبة.",
+        "nextStepsList": {
+          "applicationReview": "مراجعة الطلب",
+          "informationRequired": "معلومات مطلوبة",
+          "technicalFeasibility": "الجدوى الفنية",
+          "proceedToQuotation": "المتابعة إلى عرض السعر"
+        },
+        "workflow": {
+          "completed": "مكتمل",
+          "inProgress": "قيد التنفيذ",
+          "pending": "معلق"
+        },
+        "workflowSteps": {
+          "application": "الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "quotation": "عرض السعر",
+          "applicationReceipt": "استلام الطلب",
+          "quotationApproval": "اعتماد عرض السعر",
+          "payment": "الدفع",
+          "invoicing": "الفوترة",
+          "contracting": "التعاقد",
+          "auditPlanning": "تخطيط التدقيق",
+          "auditExecution": "تنفيذ التدقيق",
+          "reporting": "التقارير",
+          "surveillance": "المراقبة"
+        },
+        "workflowStepDescriptions": {
+          "application": "تقديم الطلب من قبل العميل",
+          "applicationReview": "الاكتمال والأهلية والجدوى",
+          "quotation": "إعداد وإرسال عرض السعر",
+          "applicationReceipt": "تم استلام الطلب وتسجيله",
+          "quotationApproval": "مراجعة واعتماد عرض السعر",
+          "payment": "دفع الرسوم",
+          "invoicing": "إنشاء وإرسال الفاتورة",
+          "contracting": "الاتفاق والتوقيع",
+          "auditPlanning": "تخطيط أنشطة التدقيق والفريق",
+          "auditExecution": "إجراء التدقيق (المرحلة 1 و 2)",
+          "reporting": "التقرير والملاحظات والإجراءات التصحيحية",
+          "surveillance": "المراقبة وإعادة الاعتماد"
+        },
+        "documents": {
+          "total": "إجمالي المستندات",
+          "uploaded": "تم الرفع",
+          "pending": "معلق",
+          "rejected": "مرفوض"
+        },
+        "actions": {
+          "downloadReceipt": "تحميل الإيصال",
+          "printReceipt": "طباعة الإيصال",
+          "moreActions": "المزيد من الإجراءات",
+          "viewFullScope": "عرض النطاق الكامل",
+          "viewFullWorkflow": "عرض سير العمل الكامل",
+          "viewAllDocuments": "عرض جميع المستندات"
+        },
+        "emailConfirmation": "تم إرسال بريد تأكيد يتضمن تفاصيل الإيصال إلى {{email1}} و {{email2}}.",
+        "footer": {
+          "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
+          "privacyPolicy": "سياسة الخصوصية",
+          "termsOfUse": "شروط الاستخدام"
+        }
+      },
+      "review": {
+        "title": "5. مراجعة الطلب",
+        "subtitle": "مراجعة الطلب من حيث الاكتمال والدقة والأهلية والامتثال لمتطلبات الاعتماد.",
+        "help": "مساعدة",
+        "chat": "دعم الدردشة",
+        "status": { "inProgress": "قيد التنفيذ" },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "current": "مراجعة الطلب"
+        },
+        "summary": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة الاعتماد",
+          "primaryStandard": "المعيار الأساسي",
+          "receivedOn": "تاريخ الاستلام",
+          "assignedReviewer": "المراجع المعيّن"
+        },
+        "actions": {
+          "downloadApplication": "تنزيل الطلب",
+          "moreActions": "المزيد من الإجراءات",
+          "sendForTechnicalFeasibility": "إرسال للجدوى الفنية",
+          "addComment": "إضافة تعليق",
+          "addInternalComment": "إضافة تعليق داخلي",
+          "viewAll": "عرض الكل",
+          "viewAllComments": "عرض جميع التعليقات",
+          "viewAllInternalComments": "عرض جميع التعليقات الداخلية",
+          "viewFullHistory": "عرض السجل الكامل",
+          "viewFullWorkflow": "عرض سير العمل الكامل",
+          "editScope": "تعديل النطاق"
+        },
+        "tabs": {
+          "reviewChecklist": "قائمة المراجعة",
+          "applicationDetails": "تفاصيل الطلب",
+          "documents": "المستندات",
+          "reviewComments": "تعليقات المراجعة",
+          "internalComments": "تعليقات داخلية",
+          "history": "السجل"
+        },
+        "checklist": {
+          "title": "قائمة المراجعة",
+          "columns": {
+            "number": "#",
+            "area": "مجال المراجعة",
+            "description": "الوصف",
+            "status": "الحالة",
+            "comments": "تعليقات المراجع",
+            "action": "إجراء"
+          },
+          "status": {
+            "complete": "مكتمل",
+            "partiallyComplete": "مكتمل جزئياً",
+            "incomplete": "غير مكتمل",
+            "notApplicable": "غير منطبق"
+          },
+          "areas": {
+            "completeness": "الاكتمال",
+            "eligibility": "الأهلية",
+            "scopeApplicability": "النطاق والانطباق",
+            "managementSystemInfo": "معلومات نظام الإدارة",
+            "legalRegulatory": "القانوني والتنظيمي",
+            "requiredDocuments": "المستندات المطلوبة",
+            "feesPaymentTerms": "الرسوم وشروط الدفع"
+          }
+        },
+        "overallReview": {
+          "title": "نتيجة المراجعة الإجمالية",
+          "decisionLabel": "قرار المراجعة"
+        },
+        "reviewerComments": {
+          "title": "تعليقات المراجع"
+        },
+        "documentsOverview": {
+          "title": "نظرة عامة على المستندات",
+          "total": "إجمالي المستندات",
+          "valid": "سارٍ",
+          "expired": "منتهي",
+          "pending": "قيد الانتظار"
+        },
+        "nextSteps": {
+          "title": "الخطوات التالية",
+          "technicalFeasibility": "الجدوى الفنية",
+          "informationRequired": "معلومات مطلوبة",
+          "quotation": "عرض السعر",
+          "managementReview": "مراجعة الإدارة"
+        },
+        "notesTitle": "ملاحظات",
+        "applicationDetailsSection": {
+          "title": "تفاصيل الطلب",
+          "scopeOfCertification": "نطاق الاعتماد",
+          "fields": {
+            "applicationType": "نوع الطلب",
+            "applicationDate": "تاريخ الطلب",
+            "primaryStandard": "المعيار الأساسي / المخطط",
+            "requestedCertificationDate": "تاريخ الاعتماد المطلوب",
+            "additionalStandards": "معايير إضافية",
+            "numberOfSites": "عدد المواقع",
+            "applicableScheme": "المخطط / البرنامج المطبق (إن وجد)",
+            "auditLanguage": "لغة التدقيق",
+            "certificationBody": "جهة الاعتماد",
+            "referenceNo": "رقم المرجع"
+          }
+        },
+        "documentsSection": {
+          "title": "المستندات",
+          "columns": { "name": "اسم المستند", "fileName": "اسم الملف", "status": "الحالة" },
+          "total": "إجمالي المستندات",
+          "valid": "سارٍ",
+          "expired": "منتهي"
+        },
+        "historySection": {
+          "title": "السجل",
+          "columns": { "dateTime": "التاريخ والوقت", "by": "بواسطة", "action": "الإجراء", "details": "التفاصيل" }
+        },
+        "workflowSteps": {
+          "application": "الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "quotation": "عرض السعر",
+          "payment": "الدفع",
+          "invoicing": "إصدار الفاتورة",
+          "contracting": "التعاقد",
+          "auditPlanning": "تخطيط التدقيق",
+          "auditExecution": "تنفيذ التدقيق",
+          "reporting": "التقارير",
+          "surveillance": "المراقبة"
+        },
+        "workflowStepDescriptions": {
+          "application": "تقديم الطلب من قبل العميل",
+          "applicationReview": "الاكتمال والأهلية والجدوى",
+          "quotation": "إعداد وإرسال عرض السعر",
+          "payment": "دفع الرسوم",
+          "invoicing": "إصدار وإرسال الفاتورة",
+          "contracting": "الاتفاقية والتوقيع",
+          "auditPlanning": "تخطيط أنشطة وفريق التدقيق",
+          "auditExecution": "تنفيذ التدقيق (المرحلة 1 و 2)",
+          "reporting": "التقرير والنتائج وإجراءات التصحيح",
+          "surveillance": "المراقبة وإعادة الاعتماد"
+        },
+        "workflow": {
+          "completed": "مكتمل",
+          "inProgress": "قيد التنفيذ",
+          "pending": "قيد الانتظار"
+        },
+        "reviewActions": {
+          "title": "إجراءات المراجعة",
+          "requestInformation": "طلب معلومات",
+          "approveCompleteness": "الموافقة على الاكتمال",
+          "holdReview": "تعليق المراجعة",
+          "rejectApplication": "رفض الطلب"
+        },
+        "footer": {
+          "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
+          "privacyPolicy": "سياسة الخصوصية",
+          "termsOfUse": "شروط الاستخدام"
+        }
+      }
     }
   }
 }

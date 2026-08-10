@@ -62,7 +62,7 @@ export function PeriodicVisitsPage() {
   return (
     <AppLayout>
       <AccreditationHeader titleKey="periodicVisits.pageTitle" />
-      <div className="flex flex-col gap-5 overflow-auto p-5">
+      <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
         <PeriodicVisitsTable
           visits={visits}
           loading={loading}
