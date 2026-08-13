@@ -85,7 +85,7 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
         <HeaderDivider className="hidden min-[400px]:block" />
 
         <div className="hidden min-[400px]:block">
-          <LanguageToggle variant="icon" />
+          <LanguageToggle variant="icon" showChevron={false} />
         </div>
 
         <HeaderDivider className="hidden min-[400px]:block" />

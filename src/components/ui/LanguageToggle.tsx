@@ -11,6 +11,8 @@ const languages = [
 
 interface LanguageToggleProps {
   variant?: 'default' | 'icon'
+  /** Hides the dropdown chevron in "icon" variant. Defaults to true (existing behavior everywhere). */
+  showChevron?: boolean
   className?: string
 }
 
@@ -28,7 +30,7 @@ function CheckMark() {
   )
 }
 
-export function LanguageToggle({ variant = 'default', className }: LanguageToggleProps) {
+export function LanguageToggle({ variant = 'default', showChevron = true, className }: LanguageToggleProps) {
   const { lang, setLanguage } = useDirection()
   const { t } = useTranslation()
 
@@ -47,7 +49,7 @@ export function LanguageToggle({ variant = 'default', className }: LanguageToggl
             )}
             aria-label={t('common.language')}
           >
-            <AppIcon icon={ChevronDownIcon} size={14} />
+            {showChevron && <AppIcon icon={ChevronDownIcon} size={14} />}
             <AppIcon icon={GlobeIcon} size={30} />
           </button>
         ) : (
