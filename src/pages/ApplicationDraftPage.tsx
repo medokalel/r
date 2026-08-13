@@ -87,7 +87,7 @@ export function ApplicationDraftPage() {
               <SitesFacilitiesStep form={sitesFacilitiesForm} onPatch={patchSitesFacilities} />
             )}
           </div>
-          <ClientWorkflowProgress />
+          <ClientWorkflowProgress activeStep="application" />
         </div>
       </div>
 

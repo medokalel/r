@@ -54,7 +54,7 @@ export function ClientRegistrationPage() {
               onAttachFile={setAttachedFile}
             />
           </div>
-          <ClientWorkflowProgress />
+          <ClientWorkflowProgress activeStep="application" />
         </div>
       </div>
 

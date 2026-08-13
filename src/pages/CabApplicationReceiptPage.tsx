@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { CabWorkflowProgress } from '@/components/dashboard/cab/CabWorkflowProgress'
 import {
   AppIcon,
   DownloadIcon,
@@ -21,6 +22,7 @@ import {
 import { useCabSidebar } from '@/context/CabSidebarContext'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { useFitScale } from '@/lib/useFitScale'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -226,114 +228,6 @@ function ReceiptSummaryCard({ receipt }: { receipt: CabApplicationReceipt }) {
   )
 }
 
-export function WorkflowTimelineItem({
-  index,
-  label,
-  description,
-  status,
-  isLast,
-}: {
-  index: number
-  label: string
-  description: string
-  status: WorkflowStepStatus
-  isLast?: boolean
-}) {
-  const { t } = useTranslation()
-
-  const statusLabel =
-    status === 'completed'
-      ? t('cab.applications.receipt.workflow.completed')
-      : status === 'inProgress'
-        ? t('cab.applications.receipt.workflow.inProgress')
-        : t('cab.applications.receipt.workflow.pending')
-
-  const isActive = status === 'inProgress'
-  const isFirst = index === 1
-  const lineColor =
-    status === 'completed' ? 'bg-[#86efac]' : isActive ? 'bg-[#c5d4f0]' : 'bg-[#e5e7eb]'
-
-  return (
-    <div
-      className={cn(
-        'relative flex items-center gap-2',
-        isActive
-          ? 'rounded-[10px] bg-[#e8edfc] px-2 py-2'
-          : 'px-1.5 py-1.5'
-      )}
-    >
-      <div className="relative flex w-5 shrink-0 justify-center self-stretch">
-        {!isFirst && (
-          <span className={cn('absolute left-1/2 top-0 h-1/2 w-px -translate-x-1/2', lineColor)} aria-hidden />
-        )}
-        {!isLast && (
-          <span
-            className={cn('absolute left-1/2 top-1/2 -bottom-16 w-px -translate-x-1/2', lineColor)}
-            aria-hidden
-          />
-        )}
-        <span
-          className={cn(
-            'relative z-10 my-auto flex size-5 shrink-0 items-center justify-center rounded-full border text-[10px] font-bold',
-            status === 'completed' && 'border-[#22c55e] bg-white text-[#16a34a]',
-            isActive && 'border-[#1236a3] bg-[#1236a3] text-white',
-            status === 'pending' && 'border-[#d1d5db] bg-white text-[#9ca3af]'
-          )}
-        >
-          {index}
-        </span>
-      </div>
-
-      <div className="flex min-w-0 flex-1 flex-col justify-center gap-0.5">
-        <div className="flex items-center justify-between gap-2">
-          <p
-            className={cn(
-              'min-w-0 truncate whitespace-nowrap text-[13px] font-bold leading-tight',
-              isActive ? 'text-[#1236a3]' : 'text-[#464646]'
-            )}
-          >
-            {label}
-          </p>
-          <div className="flex shrink-0 items-center gap-1">
-            <span
-              className={cn(
-                'inline-flex items-center rounded-full px-2 py-0.5 text-[9px] font-bold',
-                status === 'completed' && 'bg-[#eafaf1] text-[#16a34a]',
-                isActive && 'bg-white text-[#1236a3] shadow-sm',
-                status === 'pending' && 'bg-[#f3f4f6] text-[#9ca3af]'
-              )}
-            >
-              {statusLabel}
-            </span>
-            {status === 'completed' ? (
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden className="shrink-0">
-                <circle cx="7" cy="7" r="7" fill="#22C55E" />
-                <path
-                  d="M4 7.2L6 9.2L10 5"
-                  stroke="white"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            ) : null}
-          </div>
-        </div>
-        {description ? (
-          <p
-            className={cn(
-              'whitespace-nowrap text-[10px] font-medium leading-tight text-black',
-              isActive && 'text-[#111827]'
-            )}
-          >
-            {description}
-          </p>
-        ) : null}
-      </div>
-    </div>
-  )
-}
-
 function NextStepIcon({ stepKey, active }: { stepKey: string; active: boolean }) {
   const stroke = active ? 'white' : '#9ca3af'
   const common = {
@@ -441,6 +335,7 @@ function NextStepItem({
 
 export function CabApplicationReceiptPage() {
   const { t } = useTranslation()
+  const scale = useFitScale()
   const [receipt, setReceipt] = useState<CabApplicationReceipt | null>(null)
   const [loading, setLoading] = useState(true)
 
@@ -518,8 +413,8 @@ export function CabApplicationReceiptPage() {
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
-          <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
-            <div className="flex min-w-0 flex-col gap-4 sm:gap-5">
+          <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
             <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-3">
@@ -734,7 +629,9 @@ export function CabApplicationReceiptPage() {
                   <AppIcon icon={ExternalLinkArrowIcon} size={13} className="text-[#1236a3]" />
                 </button>
               </section>
+            </div>
 
+            <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
               <div className="flex min-w-0 flex-col gap-3">
                 <section className="min-w-0 overflow-hidden rounded-[16px] border border-[#e8edfc] bg-[#f7f9fc] p-4 sm:p-5">
                   <div className="mb-5 flex items-start gap-2.5">
@@ -763,7 +660,7 @@ export function CabApplicationReceiptPage() {
                   </div>
                 </section>
 
-                <div className="flex min-w-0 w-full items-center gap-2 overflow-hidden rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-2.5 py-2 sm:px-3">
+                <div className="flex min-w-0 items-center gap-2 overflow-hidden rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-2.5 py-2 sm:px-3">
                   <AppIcon icon={MailIcon} size={14} className="shrink-0 text-[#1236a3]" />
                   <p
                     className="min-w-0 truncate whitespace-nowrap text-[9px] font-bold leading-none tracking-tight text-[#111827]"
@@ -784,13 +681,12 @@ export function CabApplicationReceiptPage() {
             </div>
             </div>
 
-            {/* height:0 + min-h-full locks sidebar height to the main column (ends with Documents Summary) */}
-            <aside className="hidden min-h-0 overflow-hidden xl:flex xl:h-0 xl:min-h-full xl:flex-col">
-              <ReceiptSidebarPanels receipt={receipt} cardClassName={cardClassName} />
+            <aside className="hidden min-h-0 xl:flex xl:h-full xl:flex-col">
+              <ReceiptSidebarPanels receipt={receipt} />
             </aside>
 
             <div className="xl:hidden">
-              <ReceiptSidebarPanels receipt={receipt} cardClassName={cardClassName} />
+              <ReceiptSidebarPanels receipt={receipt} />
             </div>
           </div>
           </div>
@@ -850,40 +746,21 @@ function PrintIcon() {
   )
 }
 
-function ReceiptSidebarPanels({
-  receipt,
-  cardClassName,
-}: {
-  receipt: CabApplicationReceipt
-  cardClassName: string
-}) {
+function ReceiptSidebarPanels({ receipt }: { receipt: CabApplicationReceipt }) {
   const { t } = useTranslation()
 
   return (
-    <section className={cn(cardClassName, 'flex h-full min-h-0 flex-col overflow-hidden p-3 shadow-sm')}>
-      <h2 className="mb-1.5 shrink-0 text-[14px] font-bold text-[#464646]">
-        {t('cab.applications.receipt.sections.workflowProgress')}
-      </h2>
-      <div className="flex min-h-0 flex-1 flex-col justify-start gap-12 overflow-hidden">
-        {receipt.workflowSteps.map((step, index) => (
-          <WorkflowTimelineItem
-            key={step.key}
-            index={index + 1}
-            label={t(`cab.applications.receipt.workflowSteps.${step.key}`)}
-            description={t(`cab.applications.receipt.workflowStepDescriptions.${step.key}`)}
-            status={step.status}
-            isLast={index === receipt.workflowSteps.length - 1}
-          />
-        ))}
-      </div>
-      <button
-        type="button"
-        className="mt-auto inline-flex h-8 w-full shrink-0 items-center justify-center gap-1.5 rounded-[8px] border border-[#ececec] bg-white text-[11px] font-semibold text-[#1236a3] transition-colors hover:bg-[#f9fafb]"
-      >
-        {t('cab.applications.receipt.actions.viewFullWorkflow')}
-        <AppIcon icon={FileTextIcon} size={12} className="text-[#1236a3]" />
-      </button>
-    </section>
+    <CabWorkflowProgress
+      steps={receipt.workflowSteps.map((step) => ({
+        key: step.key,
+        status: step.status,
+        label: t(`cab.applications.receipt.workflowSteps.${step.key}`),
+        description: t(`cab.applications.receipt.workflowStepDescriptions.${step.key}`),
+      }))}
+      title={t('cab.applications.receipt.sections.workflowProgress')}
+      viewFullLabel={t('cab.applications.receipt.actions.viewFullWorkflow')}
+      fillHeight
+    />
   )
 }
 

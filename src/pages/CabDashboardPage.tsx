@@ -6,6 +6,7 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabStatCards } from '@/components/dashboard/cab/CabStatCards'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
 import { CabAuditsOverviewChart } from '@/components/dashboard/cab/CabAuditsOverviewChart'
+import { AuditCalendarModal } from '@/components/dashboard/cab/AuditCalendarModal'
 import { CabWorkQueue } from '@/components/dashboard/cab/CabWorkQueue'
 import { CabRecentActivity } from '@/components/dashboard/cab/CabRecentActivity'
 import { CabQuickActions } from '@/components/dashboard/cab/CabQuickActions'
@@ -34,6 +35,7 @@ export function CabDashboardPage() {
   const [workQueue, setWorkQueue] = useState<WorkQueueItem[]>([])
   const [activities, setActivities] = useState<CabActivityItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [isAuditCalendarOpen, setIsAuditCalendarOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -83,8 +85,10 @@ export function CabDashboardPage() {
 
           <CabAuditsOverviewChart
             entries={auditsOverview}
-            // TODO: no audit calendar view exists yet — wire this once it's built.
-            footerLink={{ label: t('cab.dashboard.auditsOverview.viewAuditCalendar'), onClick: () => undefined }}
+            footerLink={{
+              label: t('cab.dashboard.auditsOverview.viewAuditCalendar'),
+              onClick: () => setIsAuditCalendarOpen(true),
+            }}
           />
 
           <CabDonutCard
@@ -106,6 +110,7 @@ export function CabDashboardPage() {
           />
         </div>
       </div>
+      <AuditCalendarModal open={isAuditCalendarOpen} onOpenChange={setIsAuditCalendarOpen} />
     </CabLayout>
   )
 }

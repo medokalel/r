@@ -17,7 +17,8 @@
     "savedMinutesAgo": "Saved {{count}} min ago",
     "search": "Search",
     "language": "Language",
-    "filter": "Filter"
+    "filter": "Filter",
+    "actions": "Actions"
   },
   "nav": {
     "home": "Home",
@@ -1435,6 +1436,42 @@
         "newApplication": { "title": "New Application", "description": "Register a new client" },
         "assignReview": { "title": "Assign Review", "description": "Assign to technical expert" },
         "issueCertificate": { "title": "Issue Certificate", "description": "Create & issue certificate" }
+      },
+      "auditCalendar": {
+        "title": "Audit Calendar",
+        "subtitle": "View planned and scheduled audits",
+        "filters": {
+          "dateRange": "Date Range",
+          "dateRangeValue": "May 15 - Jun 14, 2025",
+          "auditType": "Audit Type",
+          "allTypes": "All Types",
+          "standard": "Standard",
+          "all": "All",
+          "auditStatus": "Audit Status",
+          "allStatus": "All Status",
+          "auditorTeam": "Auditor / Team",
+          "reset": "Reset"
+        },
+        "previousMonth": "Previous month",
+        "nextMonth": "Next month",
+        "chooseDate": "Choose Date",
+        "statusLegendTitle": "Audit Status",
+        "status": {
+          "label": "Status",
+          "planned": "Planned",
+          "inProgress": "In Progress",
+          "completed": "Completed",
+          "reportFinalization": "Report Finalization",
+          "cancelled": "Cancelled",
+          "postponed": "Postponed"
+        },
+        "auditsCount": "{{count}} Audits",
+        "noAudits": "No audits scheduled on this date.",
+        "auditTeam": "Audit Team",
+        "time": "Time",
+        "timezoneNote": "All times are shown in your local time zone (Egypt / Cairo). Click on any audit to view audit plan, team, and details.",
+        "exportCalendar": "Export Calendar",
+        "viewFullCalendar": "View Full Calendar"
       }
     },
     "clientRegistration": {

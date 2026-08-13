@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import {
+  buildCabWorkflowSteps,
+  CabWorkflowProgress,
+} from '@/components/dashboard/cab/CabWorkflowProgress'
+import {
   AppIcon,
   ArrowRightIcon,
   CalendarIcon,
@@ -25,9 +29,9 @@ import {
   type CommentTag,
   type DocumentStatus,
 } from '@/lib/api/cabApplicationReviewApi'
-import { WorkflowTimelineItem } from '@/pages/CabApplicationReceiptPage'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { useFitScale } from '@/lib/useFitScale'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -348,7 +352,7 @@ function ReviewerCommentsPreviewCard({ review }: { review: CabApplicationReview 
               {last.role}
             </span>
           </div>
-          <p className="mt-1 text-[12px] text-[#000000]">{last.text}</p>
+          <p className="mt-1 text-[11px] font-bold text-[#000000]">{last.text}</p>
         </div>
       </div>
     </section>
@@ -374,12 +378,12 @@ function DocumentsOverviewCard({ review }: { review: CabApplicationReview }) {
       </div>
       <div className="flex flex-col gap-2">
         {review.documents.map((doc) => (
-          <div key={doc.fileName} className="flex min-w-0 items-center justify-between gap-2 text-[11px]">
-            <span className="min-w-0 flex-1 truncate text-[#000000]">
+          <div key={doc.fileName} className="flex min-w-0 items-start justify-between gap-2 text-[11px]">
+            <span className="min-w-0 flex-1 text-[#000000]">
               <AppIcon icon={FileTextIcon} size={13} className="me-1 inline text-[#000000]" />
               {doc.name}
             </span>
-            <span className="shrink-0 text-[#000000]">{doc.size}</span>
+            <span className="shrink-0 whitespace-nowrap text-[#000000]">{doc.size}</span>
             <DocStatusBadge status={doc.status} label={t(`cab.applications.review.documentsOverview.${doc.status}`)} />
           </div>
         ))}
@@ -467,28 +471,33 @@ function ApplicationDetailsCard({ review }: { review: CabApplicationReview }) {
         <h2 className="mb-4 text-[15px] font-bold text-[#000000]">
           {t('cab.applications.review.applicationDetailsSection.title')}
         </h2>
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicationType')} value={d.applicationType} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicationDate')} value={d.applicationDate} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.primaryStandard')} value={d.primaryStandard} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.requestedCertificationDate')} value={d.requestedCertificationDate} />
-          <DetailField
-            label={t('cab.applications.review.applicationDetailsSection.fields.additionalStandards')}
-            value={
-              <div className="flex flex-wrap gap-1.5">
-                {d.additionalStandards.map((standard) => (
-                  <span key={standard} className="rounded-[4px] bg-[#eef1f6] px-2 py-1 text-[11px] font-semibold text-[#000000]">
-                    {standard}
-                  </span>
-                ))}
-              </div>
-            }
-          />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.numberOfSites')} value={d.numberOfSites} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicableScheme')} value={d.applicableScheme} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.auditLanguage')} value={d.auditLanguage} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.certificationBody')} value={d.certificationBody} />
-          <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.referenceNo')} value={d.referenceNo} />
+        <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] sm:gap-0">
+          <div className="flex min-w-0 flex-col gap-5 sm:pe-6">
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicationType')} value={d.applicationType} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.primaryStandard')} value={d.primaryStandard} />
+            <DetailField
+              label={t('cab.applications.review.applicationDetailsSection.fields.additionalStandards')}
+              value={
+                <div className="flex flex-wrap gap-1.5">
+                  {d.additionalStandards.map((standard) => (
+                    <span key={standard} className="rounded-[4px] bg-[#eef1f6] px-2 py-1 text-[11px] font-semibold text-[#000000]">
+                      {standard}
+                    </span>
+                  ))}
+                </div>
+              }
+            />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicableScheme')} value={d.applicableScheme} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.certificationBody')} value={d.certificationBody} />
+          </div>
+          <div className="hidden bg-[#ececec] sm:block" aria-hidden />
+          <div className="flex min-w-0 flex-col gap-5 sm:ps-6">
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.applicationDate')} value={d.applicationDate} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.requestedCertificationDate')} value={d.requestedCertificationDate} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.numberOfSites')} value={d.numberOfSites} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.auditLanguage')} value={d.auditLanguage} />
+            <DetailField label={t('cab.applications.review.applicationDetailsSection.fields.referenceNo')} value={d.referenceNo} />
+          </div>
         </div>
       </div>
 
@@ -528,7 +537,7 @@ function DocumentsListCard({ review }: { review: CabApplicationReview }) {
       </div>
       <div className="mb-1 flex min-w-0 items-center gap-2 text-[10px] font-semibold uppercase text-[#8a96a8]">
         <span className="w-5 shrink-0" aria-hidden />
-        <span className="min-w-0 flex-1">{t('cab.applications.review.documentsSection.columns.name')}</span>
+        <span className="min-w-0 flex-[1.3]">{t('cab.applications.review.documentsSection.columns.name')}</span>
         <span className="min-w-0 flex-1">
           {t('cab.applications.review.documentsSection.columns.fileName')}
         </span>
@@ -547,10 +556,8 @@ function DocumentsListCard({ review }: { review: CabApplicationReview }) {
               size={20}
               className={cn('shrink-0', doc.fileName.endsWith('.pdf') ? 'text-[#e74c3c]' : 'text-[#8a96a8]')}
             />
-            <span className="min-w-0 flex-1 break-words font-bold text-[#000000]">{doc.name}</span>
-            <span className="min-w-0 flex-1 break-words text-[#8a96a8]">
-              {doc.fileName}
-            </span>
+            <span className="min-w-0 flex-[1.3] break-words font-bold text-[#000000]">{doc.name}</span>
+            <span className="min-w-0 flex-1 break-words text-[#8a96a8]">{doc.fileName}</span>
             <span className="w-16 shrink-0 text-end">
               <DocStatusBadge status={doc.status} label={t(`cab.applications.review.documentsOverview.${doc.status}`)} />
             </span>
@@ -603,8 +610,12 @@ function ReviewCommentsCard({ review }: { review: CabApplicationReview }) {
             </div>
             <p
               className={cn(
-                'mt-2 whitespace-pre-line text-[12px] leading-snug text-[#000000]',
-                comment.tag === 'minor' && 'rounded-[8px] bg-[#fffbea] p-2.5'
+                'mt-2 whitespace-pre-line leading-snug text-[#000000]',
+                comment.tag === 'minor'
+                  ? 'rounded-[8px] bg-[#fffbea] p-2.5 text-[12px]'
+                  : comment.text === 'Initial review completed. Awaiting information from client.'
+                    ? 'text-[11px] font-bold'
+                    : 'text-[12px]'
               )}
             >
               {comment.text}
@@ -685,16 +696,18 @@ function HistoryTable({ review }: { review: CabApplicationReview }) {
                   {entry.date} {entry.time}
                 </td>
                 <td className="py-2.5">{entry.by}</td>
-                <td className="py-2.5 font-semibold">{entry.action}</td>
+                <td className="py-2.5 font-semibold text-[#1236a3]">{entry.action}</td>
                 <td className="py-2.5 text-[#000000]">{entry.details}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <button type="button" className="mt-3 text-[12px] font-semibold text-[#1236a3] hover:underline">
-        {t('cab.applications.review.actions.viewFullHistory')}
-      </button>
+      <div className="mt-3 border-t border-[#ececec] pt-3 text-center">
+        <button type="button" className="text-[12px] font-semibold text-[#1236a3] hover:underline">
+          {t('cab.applications.review.actions.viewFullHistory')}
+        </button>
+      </div>
     </section>
   )
 }
@@ -703,41 +716,22 @@ function HistoryTable({ review }: { review: CabApplicationReview }) {
 /* Right sidebar                                                              */
 /* -------------------------------------------------------------------------- */
 
-function WorkflowProgressCard({ review }: { review: CabApplicationReview }) {
+function WorkflowProgressCard() {
   const { t } = useTranslation()
 
   return (
-    <section className={cn(cardClassName, 'flex min-w-0 flex-col p-3')}>
-      <h2 className="mb-1.5 shrink-0 text-[14px] font-bold text-[#000000]">
-        {t('cab.applications.receipt.sections.workflowProgress')}
-      </h2>
-      <div className="flex flex-col justify-start gap-16.5 pt-2">
-        {review.workflowSteps.map((step, index) => (
-          <WorkflowTimelineItem
-            key={step.key}
-            index={index + 1}
-            label={t(`cab.applications.review.workflowSteps.${step.key}`)}
-            description={t(`cab.applications.review.workflowStepDescriptions.${step.key}`)}
-            status={step.status}
-            isLast={index === review.workflowSteps.length - 1}
-          />
-        ))}
-      </div>
-      <button
-        type="button"
-        className="mt-auto inline-flex h-9 w-full shrink-0 items-center justify-center gap-1.5 rounded-[8px] border border-[#ececec] bg-white text-[11px] font-semibold text-[#1236a3] hover:bg-[#f9fafb]"
-      >
-        {t('cab.applications.review.actions.viewFullWorkflow')}
-        <AppIcon icon={FileTextIcon} size={12} className="text-[#1236a3]" />
-      </button>
-    </section>
+    <CabWorkflowProgress
+      steps={buildCabWorkflowSteps(t, 'applicationReview')}
+      title={t('cab.applications.receipt.sections.workflowProgress')}
+      viewFullLabel={t('cab.applications.receipt.actions.viewFullWorkflow')}
+    />
   )
 }
 
-function ReviewActionsCard() {
+function ReviewActionsCard({ className }: { className?: string }) {
   const { t } = useTranslation()
   return (
-    <section className={cn(cardClassName, 'flex min-w-0 flex-col gap-2 p-4')}>
+    <section className={cn(cardClassName, 'flex min-w-0 flex-col gap-2 p-4', className)}>
       <h2 className="mb-1 text-[14px] font-bold text-[#000000]">{t('cab.applications.review.reviewActions.title')}</h2>
       <button
         type="button"
@@ -788,6 +782,7 @@ const TAB_LABEL_KEYS: Record<TabKey, string> = {
 
 export function CabApplicationReviewPage() {
   const { t } = useTranslation()
+  const scale = useFitScale()
   const [review, setReview] = useState<CabApplicationReview | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('checklist')
@@ -861,24 +856,24 @@ export function CabApplicationReviewPage() {
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
-          <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6" style={{ zoom: 0.78 }}>
-          <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_360px]">
-            <div className="flex min-w-0 flex-col gap-4 sm:gap-5">
+          <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
+          <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+            <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
             <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-[22px] font-bold text-[#000000] sm:text-[26px]">
+                  <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
                     {t('cab.applications.review.title')}
                   </h1>
                   <StatusBadge label={t('cab.applications.review.status.inProgress')} variant="inProgress" />
                 </div>
                 <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.review.subtitle')}</p>
               </div>
-              <div className="flex shrink-0 flex-wrap items-center gap-2">
+              <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000]"
+                  className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
                 >
                   <AppIcon icon={DownloadIcon} size={16} />
                   {t('cab.applications.review.actions.downloadApplication')}
@@ -886,11 +881,11 @@ export function CabApplicationReviewPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="h-9 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000]"
+                  className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
                 >
                   {t('cab.applications.review.actions.moreActions')} ▾
                 </Button>
-                <Button className="h-9 gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold">
+                <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto">
                   {t('cab.applications.review.actions.sendForTechnicalFeasibility')}
                   <AppIcon icon={ArrowRightIcon} size={14} />
                 </Button>
@@ -962,7 +957,7 @@ export function CabApplicationReviewPage() {
             {activeTab === 'checklist' && (
               <>
                 <ChecklistTable review={review} />
-                <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                   <OverallReviewCard review={review} />
                   <ReviewerCommentsPreviewCard review={review} />
                   <DocumentsOverviewCard review={review} />
@@ -977,12 +972,11 @@ export function CabApplicationReviewPage() {
             {activeTab === 'details' && (
               <>
                 <ApplicationDetailsCard review={review} />
-                <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-3">
+                <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-[1.6fr_1fr_1fr]">
                   <DocumentsListCard review={review} />
                   <ReviewCommentsCard review={review} />
                   <InternalCommentsCard review={review} />
                 </div>
-                <HistoryTable review={review} />
               </>
             )}
 
@@ -992,16 +986,23 @@ export function CabApplicationReviewPage() {
             {activeTab === 'history' && <HistoryTable review={review} />}
             </div>
 
-            <aside className="hidden flex-col gap-4 xl:flex">
-              <WorkflowProgressCard review={review} />
-              {activeTab === 'details' && <ReviewActionsCard />}
+            <aside className="hidden flex-col xl:flex">
+              <WorkflowProgressCard />
             </aside>
 
             <div className="flex flex-col gap-4 xl:hidden">
-              <WorkflowProgressCard review={review} />
-              {activeTab === 'details' && <ReviewActionsCard />}
+              <WorkflowProgressCard />
             </div>
           </div>
+
+          {activeTab === 'details' && (
+            <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
+              <div style={{ zoom: scale }}>
+                <HistoryTable review={review} />
+              </div>
+              <ReviewActionsCard />
+            </div>
+          )}
           </div>
 
           <footer className="mt-auto flex flex-wrap items-center justify-between gap-3 border-t border-[#ececec] bg-white px-3 py-3 sm:px-6">

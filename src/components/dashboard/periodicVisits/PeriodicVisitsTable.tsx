@@ -149,9 +149,9 @@ export function PeriodicVisitsTable({
 
   return (
     <section className="flex min-w-0 flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-3 sm:p-5">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-          <div className="relative min-w-0 w-full flex-1 sm:min-w-[240px] sm:max-w-[360px]">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+        <div className="flex min-w-0 w-full flex-col gap-3 sm:flex-1 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="relative min-w-0 w-full sm:min-w-[240px] sm:max-w-[360px] sm:flex-1">
             <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
               <AppIcon icon={SearchIcon} size={18} />
             </span>
@@ -164,33 +164,35 @@ export function PeriodicVisitsTable({
               className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
             />
           </div>
-          <button
-            type="button"
-            onClick={onSearch}
-            className="h-11 shrink-0 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover"
-          >
-            {t('common.search')}
-          </button>
-          <button
-            type="button"
-            aria-label={t('common.filter')}
-            aria-expanded={filtersOpen}
-            onClick={() => setFiltersOpen((open) => !open)}
-            className={cn(
-              'flex size-11 shrink-0 items-center justify-center rounded-[8px] text-primary transition-colors',
-              filtersOpen ? 'bg-[#e8edfc]' : 'bg-[#f3f6fd] hover:bg-[#e8edfc]'
-            )}
-          >
-            <AppIcon icon={FilterFunnelIcon} size={20} />
-          </button>
+          <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={onSearch}
+              className="h-11 flex-1 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white transition-colors hover:bg-primary-hover sm:flex-none"
+            >
+              {t('common.search')}
+            </button>
+            <button
+              type="button"
+              aria-label={t('common.filter')}
+              aria-expanded={filtersOpen}
+              onClick={() => setFiltersOpen((open) => !open)}
+              className={cn(
+                'flex size-11 shrink-0 items-center justify-center rounded-[8px] text-primary transition-colors',
+                filtersOpen ? 'bg-[#e8edfc]' : 'bg-[#f3f6fd] hover:bg-[#e8edfc]'
+              )}
+            >
+              <AppIcon icon={FilterFunnelIcon} size={20} />
+            </button>
+          </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-3">
+        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
           <button
             type="button"
             onClick={handleExportPdf}
             disabled={exporting || loading}
-            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
           >
             <AppIcon icon={PdfFileIcon} size={20} />
             {t('periodicVisits.downloadPdf')}
@@ -199,7 +201,7 @@ export function PeriodicVisitsTable({
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50"
+            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
           >
             <AppIcon icon={ExcelFileIcon} size={20} />
             {t('periodicVisits.exportExcel')}

@@ -17,7 +17,8 @@
     "savedMinutesAgo": "تم الحفظ منذ {{count}} دقيقة",
     "search": "بحث",
     "language": "اللغة",
-    "filter": "تصفية"
+    "filter": "تصفية",
+    "actions": "الإجراءات"
   },
   "nav": {
     "home": "الرئيسية",
@@ -1434,6 +1435,42 @@
         "newApplication": { "title": "طلب جديد", "description": "تسجيل عميل جديد" },
         "assignReview": { "title": "تعيين مراجعة", "description": "تعيين لخبير فني" },
         "issueCertificate": { "title": "إصدار شهادة", "description": "إنشاء وإصدار شهادة" }
+      },
+      "auditCalendar": {
+        "title": "تقويم التدقيق",
+        "subtitle": "عرض التدقيقات المخططة والمجدولة",
+        "filters": {
+          "dateRange": "النطاق الزمني",
+          "dateRangeValue": "15 مايو - 14 يونيو 2025",
+          "auditType": "نوع التدقيق",
+          "allTypes": "كل الأنواع",
+          "standard": "المعيار",
+          "all": "الكل",
+          "auditStatus": "حالة التدقيق",
+          "allStatus": "كل الحالات",
+          "auditorTeam": "المدقق / الفريق",
+          "reset": "إعادة تعيين"
+        },
+        "previousMonth": "الشهر السابق",
+        "nextMonth": "الشهر التالي",
+        "chooseDate": "اختيار التاريخ",
+        "statusLegendTitle": "حالة التدقيق",
+        "status": {
+          "label": "الحالة",
+          "planned": "مخطط",
+          "inProgress": "قيد التنفيذ",
+          "completed": "مكتمل",
+          "reportFinalization": "إنهاء التقرير",
+          "cancelled": "ملغي",
+          "postponed": "مؤجل"
+        },
+        "auditsCount": "{{count}} تدقيقات",
+        "noAudits": "لا توجد تدقيقات مجدولة في هذا التاريخ.",
+        "auditTeam": "فريق التدقيق",
+        "time": "الوقت",
+        "timezoneNote": "كل الأوقات معروضة بتوقيتك المحلي (مصر / القاهرة). اضغط على أي تدقيق لعرض خطة التدقيق والفريق والتفاصيل.",
+        "exportCalendar": "تصدير التقويم",
+        "viewFullCalendar": "عرض التقويم كامل"
       }
     },
     "clientRegistration": {
