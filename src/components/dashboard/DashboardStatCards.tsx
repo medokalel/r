@@ -62,16 +62,16 @@ export function DashboardStatCards({ stats, loading }: DashboardStatCardsProps) 
         <div
           key={key}
           className={cn(
-            'flex flex-col gap-6 rounded-[16px] p-5',
+            'flex min-h-[120px] flex-col justify-between gap-3 rounded-[16px] p-4 sm:justify-start sm:gap-6 sm:p-5',
             bgColor
           )}
         >
-          <AppIcon icon={Icon} size={38} className={iconColor} />
+          <AppIcon icon={Icon} size={38} className={cn('size-8 sm:size-[38px]', iconColor)} />
           <div className="flex flex-col gap-1">
-            <p className="text-[32px] font-semibold leading-[1.3] text-neutral-900">
+            <p className="text-[clamp(1.4rem,4vw,2rem)] font-semibold leading-[1.3] text-neutral-900">
               {loading || !stats ? '—' : stats[key].toLocaleString()}
             </p>
-            <p className="text-[16px] font-medium text-neutral-700">{t(labelKey)}</p>
+            <p className="text-[clamp(0.785rem,1.5vw,1rem)] font-medium text-neutral-700">{t(labelKey)}</p>
           </div>
         </div>
       ))}
