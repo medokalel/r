@@ -7,7 +7,7 @@ function SkeletonBlock({ className }: { className?: string }) {
 /** Shimmer placeholder for the four stat cards at the top of the dashboard. */
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4" aria-hidden>
+    <div className="grid grid-cols-2 gap-5 xl:grid-cols-4" aria-hidden>
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
@@ -59,7 +59,7 @@ export function DashboardTasksTableSkeleton() {
 export function DashboardActivitiesSkeleton() {
   return (
     <div
-      className="flex w-full max-w-[400px] flex-col rounded-[16px] border border-[#ececec] bg-white"
+      className="flex w-full flex-col rounded-[16px] border border-[#ececec] bg-white lg:max-w-[400px]"
       aria-hidden
     >
       <div className="mb-4 flex items-center gap-2 rounded-t-[16px] bg-[#f3f6fd] p-[25px]">
