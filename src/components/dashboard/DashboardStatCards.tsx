@@ -57,7 +57,7 @@ export function DashboardStatCards({ stats, loading }: DashboardStatCardsProps) 
   const { t } = useTranslation()
 
   return (
-    <div className="grid grid-cols-2 gap-5 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
       {statCards.map(({ key, labelKey, bgColor, iconColor, icon: Icon }) => (
         <div
           key={key}

@@ -49,7 +49,7 @@ export function DashboardPage() {
     <AppLayout>
       <AccreditationHeader titleKey="nav.dashboard" />
 
-      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+      <div className="flex flex-1 flex-col gap-5 overflow-auto p-[16px]">
         {loading ? <DashboardStatsSkeleton /> : <DashboardStatCards stats={stats} loading={loading} />}
 
         <div className="flex flex-col gap-5 lg:flex-row">

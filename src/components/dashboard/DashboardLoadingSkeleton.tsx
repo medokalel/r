@@ -7,7 +7,7 @@ function SkeletonBlock({ className }: { className?: string }) {
 /** Shimmer placeholder for the four stat cards at the top of the dashboard. */
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-5 xl:grid-cols-4" aria-hidden>
+    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-hidden>
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
