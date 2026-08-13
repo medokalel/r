@@ -31,15 +31,15 @@ export function DashboardTasksTable({
 
   return (
     <div className="flex flex-1 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-      <div className="mb-5 mt-1 mx-5 flex items-center justify-between">
-        <h2 className="text-[24px] font-semibold text-neutral-900">
+      <div className="mb-5 mt-1 mx-5 flex items-center justify-between gap-4">
+        <h2 className="text-[18px] font-semibold text-neutral-900 md:text-[24px]">
           {t('dashboard.tasks.title')}
         </h2>
         {onViewAll && (
           <button
             type="button"
             onClick={onViewAll}
-            className="text-[16px] font-medium text-primary hover:underline"
+            className="shrink-0 text-[14px] font-medium text-primary hover:underline md:text-[16px]"
           >
             {t('dashboard.tasks.viewAll')}
           </button>
@@ -98,7 +98,7 @@ export function DashboardTasksTable({
                   <td className="px-4 py-4">
                     <span
                       className={cn(
-                        'inline-flex w-[126px] items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                        'inline-flex w-[126px] items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
                         statusStyles[task.status]
                       )}
                     >
@@ -122,7 +122,7 @@ export function DashboardTasksTable({
       </div>
 
       {/* Mobile: cards */}
-      <div className="mx-5 rounded-[12px] bg-[#f9fafc] p-3 md:hidden">
+      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
         {loading ? (
           <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
         ) : tasks.length === 0 ? (
@@ -142,7 +142,7 @@ export function DashboardTasksTable({
                   </span>
                   <span
                     className={cn(
-                      'inline-flex items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                      'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
                       statusStyles[task.status]
                     )}
                   >
