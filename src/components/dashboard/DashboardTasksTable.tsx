@@ -122,42 +122,44 @@ export function DashboardTasksTable({
       </div>
 
       {/* Mobile: cards */}
-      <div className="flex flex-col gap-3 px-5 md:hidden">
+      <div className="mx-5 rounded-[12px] bg-[#f9fafc] p-3 md:hidden">
         {loading ? (
           <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
         ) : tasks.length === 0 ? (
           <p className="py-6 text-center text-neutral-500">—</p>
         ) : (
-          tasks.map((task) => (
-            <div key={task.id} className="rounded-[12px] border border-[#ececec] p-4">
-              <p className="text-[15px] font-medium text-neutral-900">{task.applicantName}</p>
-              <p className="text-[13px] text-neutral-500">
-                {t('dashboard.tasks.companyCode')} {task.companyCode}
-              </p>
+          <div className="flex flex-col gap-3">
+            {tasks.map((task) => (
+              <div key={task.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                <p className="text-[15px] font-medium text-neutral-900">{task.applicantName}</p>
+                <p className="text-[13px] text-neutral-500">
+                  {t('dashboard.tasks.companyCode')} {task.companyCode}
+                </p>
 
-              <div className="mt-3 flex items-center justify-between">
-                <span className="text-[14px] text-neutral-700">
-                  {t(`dashboard.tasks.type.${task.taskType}`)}
-                </span>
-                <span
-                  className={cn(
-                    'inline-flex items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
-                    statusStyles[task.status]
-                  )}
+                <div className="mt-3 flex items-center justify-between">
+                  <span className="text-[14px] text-neutral-700">
+                    {t(`dashboard.tasks.type.${task.taskType}`)}
+                  </span>
+                  <span
+                    className={cn(
+                      'inline-flex items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                      statusStyles[task.status]
+                    )}
+                  >
+                    {t(`dashboard.tasks.status.${task.status}`)}
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => onProcedureClick?.(task)}
+                  className="mt-3 text-[14px] font-medium text-primary hover:underline"
                 >
-                  {t(`dashboard.tasks.status.${task.status}`)}
-                </span>
+                  {t(procedureLabelKeys[task.taskType])} →
+                </button>
               </div>
-
-              <button
-                type="button"
-                onClick={() => onProcedureClick?.(task)}
-                className="mt-3 text-[14px] font-medium text-primary hover:underline"
-              >
-                {t(procedureLabelKeys[task.taskType])} →
-              </button>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>
