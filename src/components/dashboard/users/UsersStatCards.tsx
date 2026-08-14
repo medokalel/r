@@ -45,20 +45,23 @@ export function UsersStatCards({ stats, loading }: UsersStatCardsProps) {
   const { t } = useTranslation()
 
   return (
-    <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
+    <div className="grid grid-cols-2 gap-3 sm:gap-5 sm:grid-cols-3">
       {statCards.map(({ key, labelKey, bgColor, iconColor, icon: Icon }) => (
         <div
           key={key}
-          className={cn('flex flex-col justify-between gap-6 rounded-[16px] p-5', bgColor)}
+          className={cn(
+            'flex min-h-[110px] flex-col justify-between gap-3 rounded-[16px] p-4 sm:min-h-0 sm:gap-6 sm:p-5',
+            bgColor
+          )}
         >
           <div className="flex justify-start">
-            <AppIcon icon={Icon} size={28} className={iconColor} />
+            <AppIcon icon={Icon} size={28} className={cn('size-6 sm:size-[28px]', iconColor)} />
           </div>
           <div className="flex flex-col gap-1">
-            <p className="text-[32px] font-semibold leading-[1.3] text-neutral-900">
+            <p className="text-[clamp(1.4rem,4vw,2rem)] font-semibold leading-[1.3] text-neutral-900">
               {loading || !stats ? '—' : stats[key].toLocaleString()}
             </p>
-            <p className="text-[16px] font-medium text-neutral-700">{t(labelKey)}</p>
+            <p className="text-[clamp(0.785rem,1.5vw,1rem)] font-medium text-neutral-700">{t(labelKey)}</p>
           </div>
         </div>
       ))}

@@ -44,8 +44,8 @@ export function UsersTable({
   return (
     <div className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-5">
-        <div className="flex items-center gap-2">
-          <div className="relative">
+        <div className="flex flex-1 items-center gap-2 sm:flex-none">
+          <div className="relative flex-1 sm:flex-none">
             <AppIcon
               icon={SearchIcon}
               size={18}
@@ -57,15 +57,17 @@ export function UsersTable({
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               placeholder={t('users.searchPlaceholder')}
-              className="w-80 rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-2.5 ps-3 pe-10 text-[14px] outline-none focus:border-primary"
+              className="w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white py-2.5 ps-3 pe-10 text-[14px] outline-none focus:border-primary sm:w-80"
             />
           </div>
           <button
             type="button"
             onClick={handleSearch}
-            className="rounded-[var(--radius-sm)] bg-primary px-5 py-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary/90"
+            aria-label={t('users.search')}
+            className="flex shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-primary p-2.5 text-[14px] font-medium text-white transition-colors hover:bg-primary/90 sm:px-5"
           >
-            {t('users.search')}
+            <AppIcon icon={SearchIcon} size={18} className="sm:hidden" />
+            <span className="hidden sm:inline">{t('users.search')}</span>
           </button>
         </div>
         <button
@@ -78,7 +80,8 @@ export function UsersTable({
         </button>
       </div>
 
-      <div className="overflow-x-auto">
+      {/* Desktop: table */}
+      <div className="hidden overflow-x-auto md:block">
         <table className="w-full min-w-[720px] border-collapse text-center">
           <thead className="border-b border-[#ececec]">
             <tr className="bg-[#1236a3] text-white">
@@ -172,6 +175,60 @@ export function UsersTable({
             )}
           </tbody>
         </table>
+      </div>
+      {/* Mobile: cards */}
+      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
+        {loading ? (
+          <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
+        ) : filteredUsers.length === 0 ? (
+          <p className="py-6 text-center text-neutral-500">—</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {filteredUsers.map((user) => (
+              <div key={user.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="text-[15px] font-semibold text-neutral-900">{user.fullName || '—'}</p>
+                    <p className="text-[13px] text-neutral-500">{user.role || '—'}</p>
+                  </div>
+                  <Toggle
+                    checked={user.status === 'ACTIVE'}
+                    label={t(`users.status.${user.status.toLowerCase()}`)}
+                    onChange={(checked) => onStatusChange?.(user, checked ? 'ACTIVE' : 'INACTIVE')}
+                  />
+                </div>
+
+                <p className="mt-3 text-[14px] text-neutral-700">{user.email}</p>
+                <p className="text-[14px] text-neutral-700" dir="ltr">
+                  {user.phoneCountryCode && user.phoneNumber
+                    ? `${user.phoneCountryCode} ${user.phoneNumber}`
+                    : '—'}
+                </p>
+
+                <div className="mt-3 flex items-center gap-3">
+                  {user.id !== currentUserId && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteUser?.(user)}
+                      aria-label={t('users.table.delete')}
+                      className="text-error-500 transition-colors hover:text-error-700"
+                    >
+                      <AppIcon icon={TrashIcon} size={18} />
+                    </button>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => onEditUser?.(user)}
+                    aria-label={t('users.table.edit')}
+                    className="text-neutral-500 transition-colors hover:text-primary"
+                  >
+                    <AppIcon icon={EditIcon} size={18} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
