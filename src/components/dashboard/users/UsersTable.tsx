@@ -28,7 +28,10 @@ export function UsersTable({
   const [appliedQuery, setAppliedQuery] = useState('')
 
   const filteredUsers = users.filter((user) =>
-    matchesSearch([user.name, user.email, user.phone, t(`users.roles.${user.role}`)], appliedQuery)
+    matchesSearch(
+      [user.fullName, user.email, user.phoneNumber ?? '', user.role],
+      appliedQuery
+    )
   )
 
   const handleSearch = () => setAppliedQuery(query)
@@ -115,22 +118,22 @@ export function UsersTable({
                 <tr key={user.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
                   <td className="px-4 py-4 text-[15px] text-neutral-700">{index + 1}</td>
                   <td className="px-4 py-4 text-[15px] font-medium text-neutral-900">
-                    {user.name}
+                    {user.fullName || '—'}
                   </td>
-                  <td className="px-4 py-4 text-[15px] text-neutral-700">
-                    {t(`users.roles.${user.role}`)}
-                  </td>
+                  <td className="px-4 py-4 text-[15px] text-neutral-700">{user.role || '—'}</td>
                   <td className="px-4 py-4 text-[15px] text-neutral-700">{user.email}</td>
                   <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
-                    {user.phone}
+                    {user.phoneCountryCode && user.phoneNumber
+                      ? `${user.phoneCountryCode} ${user.phoneNumber}`
+                      : '—'}
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex justify-center">
                       <Toggle
-                        checked={user.status === 'active'}
-                        label={t(`users.status.${user.status}`)}
+                        checked={user.status === 'ACTIVE'}
+                        label={t(`users.status.${user.status.toLowerCase()}`)}
                         onChange={(checked) =>
-                          onStatusChange?.(user, checked ? 'active' : 'inactive')
+                          onStatusChange?.(user, checked ? 'ACTIVE' : 'INACTIVE')
                         }
                       />
                     </div>

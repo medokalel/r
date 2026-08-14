@@ -1,60 +1,64 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Dialog from '@radix-ui/react-dialog'
-import { getCountryCallingCode } from 'libphonenumber-js'
+import { getCountries, getCountryCallingCode } from 'libphonenumber-js'
 import { PhoneInputRow, type CountryCode } from '@/components/auth/CountryCodeSelect'
-import { AppIcon, EditIcon, LockIcon, MailIcon, PhoneIcon } from '@/components/icons'
+import { AppIcon, EditIcon, PhoneIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui/TextField'
 import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
-import { createUser, type CreateUserInput } from '@/lib/api/usersApi'
+import { updateUser, type AppUser } from '@/lib/api/usersApi'
 import { cn } from '@/lib/utils'
 
-const EMPTY_FORM = {
-  name: '',
-  role: '',
-  countryCode: 'EG' as CountryCode,
-  phone: '',
-  email: '',
-  password: '',
+/** Best-effort reverse lookup: "+20" → "EG". Falls back to EG if no match. */
+function countryCodeFromDialCode(dialCode: string | null): CountryCode {
+  const digits = dialCode?.replace(/\D/g, '')
+  if (!digits) return 'EG'
+  const match = getCountries().find((code) => getCountryCallingCode(code) === digits)
+  return (match as CountryCode) ?? 'EG'
 }
 
-function generatePassword(length = 10): string {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789!@#$%'
-  let result = ''
-  for (let i = 0; i < length; i++) {
-    result += chars[Math.floor(Math.random() * chars.length)]
+function formToState(user: AppUser) {
+  return {
+    name: user.fullName ?? '',
+    role: user.role ?? '',
+    countryCode: countryCodeFromDialCode(user.phoneCountryCode),
+    phone: user.phoneNumber ?? '',
   }
-  return result
 }
 
-function isFormComplete(form: typeof EMPTY_FORM): boolean {
-  return Boolean(
-    form.name.trim() && form.role.trim() && form.phone.trim() && form.email.trim() && form.password
-  )
+function isFormComplete(form: ReturnType<typeof formToState>): boolean {
+  return Boolean(form.name.trim() && form.role.trim() && form.phone.trim())
 }
 
-function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+function EditUserForm({
+  user,
+  onClose,
+  onSaved,
+}: {
+  user: AppUser
+  onClose: () => void
+  onSaved: () => void
+}) {
   const { t } = useTranslation()
-  const [form, setForm] = useState(EMPTY_FORM)
+  const [form, setForm] = useState(() => formToState(user))
   const [saving, setSaving] = useState(false)
 
-  const set = <K extends keyof typeof EMPTY_FORM>(key: K, value: (typeof EMPTY_FORM)[K]) =>
-    setForm((prev) => ({ ...prev, [key]: value }))
+  const set = <K extends keyof ReturnType<typeof formToState>>(
+    key: K,
+    value: ReturnType<typeof formToState>[K]
+  ) => setForm((prev) => ({ ...prev, [key]: value }))
 
   const onSubmit = async () => {
     setSaving(true)
     try {
-      const input: CreateUserInput = {
+      await updateUser(user.id, {
         fullName: form.name,
         role: form.role,
         phoneCountryCode: `+${getCountryCallingCode(form.countryCode)}`,
         phoneNumber: form.phone.replace(/\D/g, ''),
-        email: form.email,
-        password: form.password,
-      }
-      await createUser(input)
-      onCreated()
+      })
+      onSaved()
       onClose()
     } finally {
       setSaving(false)
@@ -66,7 +70,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
       {/* Fixed header: title at start, circular close at end */}
       <div className="flex shrink-0 items-center justify-between px-6 pt-5">
         <Dialog.Title className="text-[24px] font-semibold leading-[1.6] text-neutral-900">
-          {t('users.addUserModal.title')}
+          {t('users.editUserModal.title')}
         </Dialog.Title>
         <Dialog.Close asChild>
           <button
@@ -84,7 +88,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
       {/* Scrollable body */}
       <div className="flex flex-1 flex-col gap-5 overflow-y-auto px-6 py-5">
         <TextField
-          id="add-user-name"
+          id="edit-user-name"
           label={t('users.addUserModal.username')}
           icon={EditIcon}
           value={form.name}
@@ -92,19 +96,14 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
           placeholder={t('users.addUserModal.usernamePlaceholder')}
         />
 
-        <div className="space-y-2">
-          <label htmlFor="add-user-role" className="block text-[15px] font-medium text-neutral-900">
-            {t('users.addUserModal.role')}
-          </label>
-          <TextField
-            id="add-user-role"
-            label={t('users.addUserModal.role')}
-            icon={EditIcon}
-            value={form.role}
-            onChange={(e) => set('role', e.target.value)}
-            placeholder={t('users.addUserModal.rolePlaceholder')}
-          />
-        </div>
+        <TextField
+          id="edit-user-role"
+          label={t('users.addUserModal.role')}
+          icon={EditIcon}
+          value={form.role}
+          onChange={(e) => set('role', e.target.value)}
+          placeholder={t('users.addUserModal.rolePlaceholder')}
+        />
 
         <div className="space-y-2">
           <label className="block text-[15px] font-medium text-neutral-900">
@@ -122,7 +121,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
                 <AppIcon icon={PhoneIcon} size={20} />
               </span>
               <input
-                id="add-user-phone"
+                id="edit-user-phone"
                 type="tel"
                 lang="en"
                 dir="ltr"
@@ -135,35 +134,16 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
           </PhoneInputRow>
         </div>
 
+        {/* Email is read-only here — UpdateOrganizationUserRequest doesn't
+            accept it, so it can't be changed from this form. */}
         <TextField
-          id="add-user-email"
+          id="edit-user-email"
           type="email"
           label={t('users.addUserModal.email')}
-          icon={MailIcon}
-          value={form.email}
-          onChange={(e) => set('email', e.target.value)}
-          placeholder="ex: info@foods.com"
+          value={user.email}
+          onChange={() => undefined}
+          disabled
         />
-
-        <TextField
-          id="add-user-password"
-          type="text"
-          label={t('users.addUserModal.password')}
-          icon={LockIcon}
-          value={form.password}
-          onChange={(e) => set('password', e.target.value)}
-          placeholder={t('users.addUserModal.password')}
-        />
-
-        <Button
-          type="button"
-          variant="secondary"
-          size="lg"
-          className="w-fit"
-          onClick={() => set('password', generatePassword())}
-        >
-          {t('users.addUserModal.createPassword')}
-        </Button>
 
         {/* Footer actions */}
         <div className="flex items-center gap-3">
@@ -182,7 +162,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
             onClick={onSubmit}
             disabled={saving || !isFormComplete(form)}
           >
-            {saving ? t('common.loading') : t('users.addUserModal.add')}
+            {saving ? t('common.loading') : t('users.editUserModal.save')}
           </Button>
         </div>
       </div>
@@ -190,23 +170,23 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
   )
 }
 
-interface AddUserModalProps {
-  open: boolean
+interface EditUserModalProps {
+  user: AppUser | null
   onClose: () => void
-  onCreated: () => void
+  onSaved: () => void
 }
 
-/** "Add user" dialog opened from the Users table header button. */
-export function AddUserModal({ open, onClose, onCreated }: AddUserModalProps) {
+/** "Edit user" dialog opened from the Users table row actions. */
+export function EditUserModal({ user, onClose, onSaved }: EditUserModalProps) {
   return (
-    <Dialog.Root open={open} onOpenChange={(next) => !next && onClose()}>
+    <Dialog.Root open={user !== null} onOpenChange={(next) => !next && onClose()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/50" />
         <Dialog.Content
           aria-describedby={undefined}
           className="fixed start-1/2 top-1/2 z-50 flex max-h-[90vh] w-[min(560px,calc(100vw-40px))] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-[16px] bg-white shadow-xl focus:outline-none rtl:translate-x-1/2"
         >
-          {open && <AddUserForm key={open ? 'open' : 'closed'} onClose={onClose} onCreated={onCreated} />}
+          {user && <EditUserForm key={user.id} user={user} onClose={onClose} onSaved={onSaved} />}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

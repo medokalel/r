@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AddUserModal } from '@/components/dashboard/users/AddUserModal'
+import { EditUserModal } from '@/components/dashboard/users/EditUserModal'
 import { UsersStatCards } from '@/components/dashboard/users/UsersStatCards'
 import { UsersTable } from '@/components/dashboard/users/UsersTable'
 import {
@@ -23,6 +24,7 @@ export function UsersPage() {
   const [users, setUsers] = useState<AppUser[]>([])
   const [loading, setLoading] = useState(true)
   const [showAddUser, setShowAddUser] = useState(false)
+  const [editingUser, setEditingUser] = useState<AppUser | null>(null)
 
   const load = () => {
     setLoading(true)
@@ -65,9 +67,7 @@ export function UsersPage() {
             onStatusChange={handleStatusChange}
             onDeleteUser={handleDeleteUser}
             onAddUser={() => setShowAddUser(true)}
-            // TODO: wire up an edit-user form once the backend exposes
-            // an update endpoint — see usersApi.ts
-            onEditUser={() => undefined}
+            onEditUser={(user) => setEditingUser(user)}
           />
         )}
       </div>
@@ -76,6 +76,12 @@ export function UsersPage() {
         open={showAddUser}
         onClose={() => setShowAddUser(false)}
         onCreated={load}
+      />
+
+      <EditUserModal
+        user={editingUser}
+        onClose={() => setEditingUser(null)}
+        onSaved={load}
       />
     </AppLayout>
   )

@@ -1124,7 +1124,8 @@
     },
     "status": {
       "active": "Active",
-      "inactive": "Inactive"
+      "inactive": "Inactive",
+      "invited": "Invited"
     },
     "roles": {
       "auditor": "Auditor",
@@ -1141,6 +1142,10 @@
       "password": "Password",
       "createPassword": "Create a password",
       "add": "Add"
+    },
+    "editUserModal": {
+      "title": "Edit user",
+      "save": "Save"
     }
   },
   "wallet": {

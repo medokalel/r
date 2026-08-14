@@ -1,23 +1,32 @@
 /**
- * User-management data layer.
+ * User-management data layer — wired to the real backend.
  *
- * The iCasco Platform API doc does not (yet) expose user-management
- * endpoints (list / create / update status / delete), so everything below
- * is mocked — same approach as dashboardApi.ts. Once the backend ships real
- * endpoints, only the bodies of these functions need to change to call
- * `authorizedClient`; the page itself needs no edits.
+ * Endpoints (see /organizations/users tag):
+ *   GET    /organizations/users            → listUsers
+ *   POST   /organizations/users            → createUser
+ *   PUT    /organizations/users/{id}       → updateUser
+ *   DELETE /organizations/users/{id}       → deleteUser
+ *   PATCH  /organizations/users/{id}/status → setUserStatus
+ *
+ * organizationId is resolved server-side from the JWT, so it's never sent
+ * from here. Only organization OWNERs can create/update/delete/toggle
+ * status — the backend returns 403 otherwise.
  */
 
-export type AppUserRole = 'auditor' | 'reviewer'
-export type AppUserStatus = 'active' | 'inactive'
+import { authorizedRequest } from '@/lib/api/authorizedClient'
+
+export type AppUserStatus = 'ACTIVE' | 'INVITED' | 'INACTIVE'
 
 export interface AppUser {
   id: string
-  name: string
-  role: AppUserRole
+  fullName: string | null
+  /** Free-text business role — not linked to the system authorization model. */
+  role: string | null
+  phoneCountryCode: string | null
+  phoneNumber: string | null
   email: string
-  phone: string
   status: AppUserStatus
+  createdAt: string
 }
 
 export interface UsersStats {
@@ -26,85 +35,60 @@ export interface UsersStats {
   total: number
 }
 
-const MOCK_USERS: AppUser[] = [
-  {
-    id: '1',
-    name: 'احمد خالد',
-    role: 'auditor',
-    email: 'ahmed675@gmail.com',
-    phone: '+20 100 123 4567',
-    status: 'inactive',
-  },
-  {
-    id: '2',
-    name: 'مروان احمد',
-    role: 'reviewer',
-    email: 'marwan679@gmail.com',
-    phone: '+20 111 234 5678',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'احمد خالد',
-    role: 'auditor',
-    email: 'ahmed675@gmail.com',
-    phone: '+20 100 123 4567',
-    status: 'inactive',
-  },
-]
-
-function delay<T>(value: T, ms = 300): Promise<T> {
-  return new Promise((resolve) => setTimeout(() => resolve(value), ms))
-}
-
 function statsFromUsers(users: AppUser[]): UsersStats {
-  const active = users.filter((user) => user.status === 'active').length
-  return { inactive: users.length - active, active, total: users.length }
+  const active = users.filter((user) => user.status === 'ACTIVE').length
+  const inactive = users.filter((user) => user.status === 'INACTIVE').length
+  return { inactive, active, total: users.length }
 }
 
-// TODO: replace with `authorizedRequest<AppUser[]>('/users')` once the
-// backend exposes this endpoint (see userApi.ts for the pattern).
 export function listUsers(): Promise<AppUser[]> {
-  return delay(MOCK_USERS)
+  return authorizedRequest('/organizations/users')
 }
 
-export function getUsersStats(): Promise<UsersStats> {
-  return delay(MOCK_USERS).then(statsFromUsers)
+export async function getUsersStats(): Promise<UsersStats> {
+  const users = await listUsers()
+  return statsFromUsers(users)
 }
 
-// TODO: replace with `authorizedRequest('/users', { method: 'PATCH', body: { status } })`
-export function setUserStatus(id: string, status: AppUserStatus): Promise<void> {
-  const user = MOCK_USERS.find((u) => u.id === id)
-  if (user) user.status = status
-  return delay(undefined)
+export function setUserStatus(id: string, status: AppUserStatus): Promise<AppUser> {
+  return authorizedRequest(`/organizations/users/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  })
 }
 
-// TODO: replace with `authorizedRequest('/users/{id}', { method: 'DELETE' })`
 export function deleteUser(id: string): Promise<void> {
-  const index = MOCK_USERS.findIndex((u) => u.id === id)
-  if (index !== -1) MOCK_USERS.splice(index, 1)
-  return delay(undefined)
+  return authorizedRequest(`/organizations/users/${id}`, { method: 'DELETE' })
 }
 
 export interface CreateUserInput {
-  name: string
-  role: AppUserRole
-  phone: string
+  fullName: string
+  role: string
+  phoneCountryCode: string
+  phoneNumber: string
   email: string
   password: string
 }
 
-// TODO: replace with `authorizedRequest('/users', { method: 'POST', body: input })`
-// once the backend exposes this endpoint.
 export function createUser(input: CreateUserInput): Promise<AppUser> {
-  const user: AppUser = {
-    id: crypto.randomUUID(),
-    name: input.name,
-    role: input.role,
-    email: input.email,
-    phone: input.phone,
-    status: 'active',
-  }
-  MOCK_USERS.unshift(user)
-  return delay(user)
+  return authorizedRequest('/organizations/users', {
+    method: 'POST',
+    body: JSON.stringify(input),
+  })
+}
+
+export interface UpdateUserInput {
+  fullName?: string
+  role?: string
+  phoneCountryCode?: string
+  phoneNumber?: string
+}
+
+// Not wired into the Users page UI yet (no edit form built) — ready for
+// when that's built.
+export function updateUser(id: string, input: UpdateUserInput): Promise<AppUser> {
+  return authorizedRequest(`/organizations/users/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(input),
+  })
 }

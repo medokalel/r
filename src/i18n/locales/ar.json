@@ -1123,7 +1123,8 @@
     },
     "status": {
       "active": "نشط",
-      "inactive": "غير نشط"
+      "inactive": "غير نشط",
+      "invited": "تمت الدعوة"
     },
     "roles": {
       "auditor": "مدقق",
@@ -1140,6 +1141,10 @@
       "password": "كلمة المرور",
       "createPassword": "إنشاء كلمة مرور",
       "add": "إضافة"
+    },
+    "editUserModal": {
+      "title": "تعديل مستخدم",
+      "save": "حفظ"
     }
   },
   "wallet": {
