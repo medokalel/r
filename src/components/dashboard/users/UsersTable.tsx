@@ -193,37 +193,41 @@ export function UsersTable({
                   </div>
                   <Toggle
                     checked={user.status === 'ACTIVE'}
-                    label={t(`users.status.${user.status.toLowerCase()}`)}
+                    size="sm"
+                    aria-label={t(`users.status.${user.status.toLowerCase()}`)}
                     onChange={(checked) => onStatusChange?.(user, checked ? 'ACTIVE' : 'INACTIVE')}
                   />
                 </div>
 
-                <p className="mt-3 text-[14px] text-neutral-700">{user.email}</p>
-                <p className="text-[14px] text-neutral-700" dir="ltr">
-                  {user.phoneCountryCode && user.phoneNumber
-                    ? `${user.phoneCountryCode} ${user.phoneNumber}`
-                    : '—'}
-                </p>
-
-                <div className="mt-3 flex items-center gap-3">
-                  {user.id !== currentUserId && (
+                <div className="mt-3 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="truncate text-[14px] text-neutral-700">{user.email}</p>
+                    <p className="text-[14px] text-neutral-700" dir="ltr">
+                      {user.phoneCountryCode && user.phoneNumber
+                        ? `${user.phoneCountryCode} ${user.phoneNumber}`
+                        : '—'}
+                    </p>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-3">
+                    {user.id !== currentUserId && (
+                      <button
+                        type="button"
+                        onClick={() => onDeleteUser?.(user)}
+                        aria-label={t('users.table.delete')}
+                        className="text-error-500 transition-colors hover:text-error-700"
+                      >
+                        <AppIcon icon={TrashIcon} size={18} />
+                      </button>
+                    )}
                     <button
                       type="button"
-                      onClick={() => onDeleteUser?.(user)}
-                      aria-label={t('users.table.delete')}
-                      className="text-error-500 transition-colors hover:text-error-700"
+                      onClick={() => onEditUser?.(user)}
+                      aria-label={t('users.table.edit')}
+                      className="text-neutral-500 transition-colors hover:text-primary"
                     >
-                      <AppIcon icon={TrashIcon} size={18} />
+                      <AppIcon icon={EditIcon} size={18} />
                     </button>
-                  )}
-                  <button
-                    type="button"
-                    onClick={() => onEditUser?.(user)}
-                    aria-label={t('users.table.edit')}
-                    className="text-neutral-500 transition-colors hover:text-primary"
-                  >
-                    <AppIcon icon={EditIcon} size={18} />
-                  </button>
+                  </div>
                 </div>
               </div>
             ))}
