@@ -115,7 +115,7 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
         <button
           type="button"
           onClick={onViewAll}
-          className="mb-4 flex h-14 m-auto w-90 items-center justify-center rounded-[8px] bg-[#f3f6fd] text-[18px] font-medium  transition-colors hover:bg-[#e8edfc]"
+          className="mb-4 flex h-14 w-[calc(100%-45px)] items-center justify-center self-center rounded-[8px] bg-[#f3f6fd] text-[16px] font-semibold transition-colors hover:bg-[#e8edfc]"
         >
           {t('dashboard.activities.viewAll')}
         </button>

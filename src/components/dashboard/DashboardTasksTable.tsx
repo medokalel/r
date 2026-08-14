@@ -122,7 +122,7 @@ export function DashboardTasksTable({
       </div>
 
       {/* Mobile: cards */}
-      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
+      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-2 md:hidden">
         {loading ? (
           <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
         ) : tasks.length === 0 ? (
