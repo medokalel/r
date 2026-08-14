@@ -18,6 +18,7 @@ import {
   UsersStatsSkeleton,
   UsersTableSkeleton,
 } from '@/components/dashboard/users/UsersLoadingSkeleton'
+import { getAuthSession } from '@/lib/authStorage'
 
 export function UsersPage() {
   const [stats, setStats] = useState<UsersStats | null>(null)
@@ -25,6 +26,10 @@ export function UsersPage() {
   const [loading, setLoading] = useState(true)
   const [showAddUser, setShowAddUser] = useState(false)
   const [editingUser, setEditingUser] = useState<AppUser | null>(null)
+  // The Users list's "id" is the UserOrganization (membership) id, so we
+  // compare against the logged-in session's membershipId — not user.id —
+  // to know which row is "me or is onwer".
+  const currentUserId = getAuthSession()?.organization?.membershipId ?? null
 
   const load = () => {
     setLoading(true)
@@ -64,6 +69,7 @@ export function UsersPage() {
             <UsersTable
             users={users}
             loading={loading}
+            currentUserId={currentUserId}
             onStatusChange={handleStatusChange}
             onDeleteUser={handleDeleteUser}
             onAddUser={() => setShowAddUser(true)}

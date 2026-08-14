@@ -9,6 +9,10 @@ import { cn } from '@/lib/utils'
 interface UsersTableProps {
   users: AppUser[]
   loading: boolean
+  /** UserOrganization id of the currently logged-in account — hides the
+   * Delete action on that row so an owner can't accidentally delete
+   * themself (and take their organization's data down with them). */
+  currentUserId?: string | null
   onAddUser?: () => void
   onEditUser?: (user: AppUser) => void
   onDeleteUser?: (user: AppUser) => void
@@ -18,6 +22,7 @@ interface UsersTableProps {
 export function UsersTable({
   users,
   loading,
+  currentUserId,
   onAddUser,
   onEditUser,
   onDeleteUser,
@@ -140,14 +145,18 @@ export function UsersTable({
                   </td>
                   <td className="px-4 py-4">
                     <div className="flex items-center justify-center gap-3">
-                      <button
-                        type="button"
-                        onClick={() => onDeleteUser?.(user)}
-                        aria-label={t('users.table.delete')}
-                        className="text-error-500 transition-colors hover:text-error-700"
-                      >
-                        <AppIcon icon={TrashIcon} size={18} />
-                      </button>
+                      {user.id === currentUserId ? (
+                        <span className="size-[18px]" aria-hidden />
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => onDeleteUser?.(user)}
+                          aria-label={t('users.table.delete')}
+                          className="text-error-500 transition-colors hover:text-error-700"
+                        >
+                          <AppIcon icon={TrashIcon} size={18} />
+                        </button>
+                      )}
                       <button
                         type="button"
                         onClick={() => onEditUser?.(user)}

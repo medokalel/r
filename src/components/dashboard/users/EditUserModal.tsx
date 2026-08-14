@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui/TextField'
 import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
 import { updateUser, type AppUser } from '@/lib/api/usersApi'
+import { isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
 
 /** Best-effort reverse lookup: "+20" → "EG". Falls back to EG if no match. */
@@ -28,7 +29,12 @@ function formToState(user: AppUser) {
 }
 
 function isFormComplete(form: ReturnType<typeof formToState>): boolean {
-  return Boolean(form.name.trim() && form.role.trim() && form.phone.trim())
+  return Boolean(
+    form.name.trim() &&
+      form.role.trim() &&
+      form.phone.trim() &&
+      isValidPhoneNumber(form.phone, form.countryCode)
+  )
 }
 
 function EditUserForm({
@@ -48,6 +54,11 @@ function EditUserForm({
     key: K,
     value: ReturnType<typeof formToState>[K]
   ) => setForm((prev) => ({ ...prev, [key]: value }))
+
+  const phoneError =
+    form.phone.trim() && !isValidPhoneNumber(form.phone, form.countryCode)
+      ? t('validation.invalidMobile')
+      : undefined
 
   const onSubmit = async () => {
     setSaving(true)
@@ -128,10 +139,16 @@ function EditUserForm({
                 placeholder="ex: 567XXXXXXXX"
                 value={form.phone}
                 onChange={(e) => set('phone', e.target.value)}
-                className={cn(fieldInputClassName, fieldHeightClassName, 'ps-12')}
+                className={cn(
+                  fieldInputClassName,
+                  fieldHeightClassName,
+                  'ps-12',
+                  phoneError && 'border-error-400 focus-within:ring-error-400'
+                )}
               />
             </div>
           </PhoneInputRow>
+          {phoneError && <p className="text-small-light text-error-500">{phoneError}</p>}
         </div>
 
         {/* Email is read-only here — UpdateOrganizationUserRequest doesn't

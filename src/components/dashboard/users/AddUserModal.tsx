@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui/TextField'
 import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
 import { createUser, type CreateUserInput } from '@/lib/api/usersApi'
+import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
 import { cn } from '@/lib/utils'
 
 const EMPTY_FORM = {
@@ -30,7 +31,13 @@ function generatePassword(length = 10): string {
 
 function isFormComplete(form: typeof EMPTY_FORM): boolean {
   return Boolean(
-    form.name.trim() && form.role.trim() && form.phone.trim() && form.email.trim() && form.password
+    form.name.trim() &&
+      form.role.trim() &&
+      form.phone.trim() &&
+      isValidPhoneNumber(form.phone, form.countryCode) &&
+      form.email.trim() &&
+      isValidEmailFormat(form.email) &&
+      form.password
   )
 }
 
@@ -41,6 +48,14 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
 
   const set = <K extends keyof typeof EMPTY_FORM>(key: K, value: (typeof EMPTY_FORM)[K]) =>
     setForm((prev) => ({ ...prev, [key]: value }))
+
+  const phoneError =
+    form.phone.trim() && !isValidPhoneNumber(form.phone, form.countryCode)
+      ? t('validation.invalidMobile')
+      : undefined
+
+  const emailError =
+    form.email.trim() && !isValidEmailFormat(form.email) ? t('validation.invalidEmail') : undefined
 
   const onSubmit = async () => {
     setSaving(true)
@@ -93,9 +108,6 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
         />
 
         <div className="space-y-2">
-          <label htmlFor="add-user-role" className="block text-[15px] font-medium text-neutral-900">
-            {t('users.addUserModal.role')}
-          </label>
           <TextField
             id="add-user-role"
             label={t('users.addUserModal.role')}
@@ -129,10 +141,16 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
                 placeholder="ex: 567XXXXXXXX"
                 value={form.phone}
                 onChange={(e) => set('phone', e.target.value)}
-                className={cn(fieldInputClassName, fieldHeightClassName, 'ps-12')}
+                className={cn(
+                  fieldInputClassName,
+                  fieldHeightClassName,
+                  'ps-12',
+                  phoneError && 'border-error-400 focus-within:ring-error-400'
+                )}
               />
             </div>
           </PhoneInputRow>
+          {phoneError && <p className="text-small-light text-error-500">{phoneError}</p>}
         </div>
 
         <TextField
@@ -143,6 +161,7 @@ function AddUserForm({ onClose, onCreated }: { onClose: () => void; onCreated: (
           value={form.email}
           onChange={(e) => set('email', e.target.value)}
           placeholder="ex: info@foods.com"
+          error={emailError}
         />
 
         <TextField
