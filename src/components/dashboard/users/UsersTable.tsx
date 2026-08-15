@@ -63,7 +63,7 @@ export function UsersTable({
             type="button"
             onClick={handleSearch}
             aria-label={t('users.search')}
-            className="absolute end-1 flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-primary text-white transition-colors hover:bg-primary/90"
+            className="absolute end-0 flex size-13 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-primary text-white transition-colors hover:bg-primary/90"
           >
             <AppIcon icon={SearchIcon} size={18} />
           </button>
