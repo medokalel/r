@@ -19,7 +19,6 @@ import {
   fieldInputTextClassName,
 } from '@/components/ui'
 import { EntityTypeOption, type EntityType } from '@/components/auth/EntityTypeOption'
-import { ENTITY_TYPE_OPTIONS } from '@/lib/entityTypes'
 import { FileUploadField } from '@/components/auth/FileUploadField'
 import { OtpInput } from '@/components/auth/OtpInput'
 import { RegisterStepNav } from '@/components/auth/RegisterStepNav'
@@ -304,26 +303,6 @@ export function RegisterPage() {
       ) : (
         <>
           <h1 className="text-h1 text-neutral-900 mb-6">{t('register.title')}</h1>
-
-          {form.entityType && (
-            <p className="text-body-2 text-neutral-500 -mt-4 mb-6">
-              {t('register.selectedEntityLabel')}{' '}
-              <span className="text-body-2-semibold text-neutral-900">
-                {t(
-                  ENTITY_TYPE_OPTIONS.find((option) => option.type === form.entityType)
-                    ?.labelKey ?? ''
-                )}
-              </span>{' '}
-              ·{' '}
-              <button
-                type="button"
-                onClick={() => setStep(1)}
-                className="text-body-2-semibold text-primary underline underline-offset-2"
-              >
-                {t('common.change')}
-              </button>
-            </p>
-          )}
 
           <RegisterStepNav current={(step - 1) as 1 | 2 | 3} className="mb-6" />
 

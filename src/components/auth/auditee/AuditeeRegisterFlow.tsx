@@ -199,21 +199,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     <>
       <h1 className="text-h1 text-neutral-900 mb-6">{t('register.auditee.title')}</h1>
 
-      <p className="text-body-2 text-neutral-500 -mt-4 mb-6">
-        {t('register.selectedEntityLabel')}{' '}
-        <span className="text-body-2-semibold text-neutral-900">
-          {t('register.auditClients')}
-        </span>{' '}
-        ·{' '}
-        <button
-          type="button"
-          onClick={onBackToEntityType}
-          className="text-body-2-semibold text-primary underline underline-offset-2"
-        >
-          {t('common.change')}
-        </button>
-      </p>
-
       <AuditeeStepNav current={step} className="mb-6" />
 
       {step === 1 && <AuditeeDetailsStep form={detailsForm} onPatch={patchDetails} />}

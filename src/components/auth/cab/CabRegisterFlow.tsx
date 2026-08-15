@@ -285,21 +285,6 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     <>
       <h1 className="text-h1 text-neutral-900 mb-6">{t('register.cab.title')}</h1>
 
-      <p className="text-body-2 text-neutral-500 -mt-4 mb-6">
-        {t('register.selectedEntityLabel')}{' '}
-        <span className="text-body-2-semibold text-neutral-900">
-          {t('register.certificationBodies')}
-        </span>{' '}
-        ·{' '}
-        <button
-          type="button"
-          onClick={onBackToEntityType}
-          className="text-body-2-semibold text-primary underline underline-offset-2"
-        >
-          {t('common.change')}
-        </button>
-      </p>
-
       {step <= 4 && <CabStepNav current={step} className="mb-6" />}
 
       {step === 1 && detailsSubStep === 1 && (
