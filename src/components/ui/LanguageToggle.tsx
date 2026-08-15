@@ -1,7 +1,21 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useDirection } from '@/context/DirectionContext'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, ChevronDownIcon, GlobeIcon } from '@/components/icons'
+import { AppIcon, GlobeIcon } from '@/components/icons'
+
+function LanguageChevronIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+      <path
+        d="M6 9l6 6 6-6"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
 import { cn } from '@/lib/utils'
 
 const languages = [
@@ -22,7 +36,7 @@ function CheckMark() {
       <path
         d="M4.5 10.5L8 14L15.5 6"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="3"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -49,7 +63,7 @@ export function LanguageToggle({ variant = 'default', showChevron = true, classN
             )}
             aria-label={t('common.language')}
           >
-            {showChevron && <AppIcon icon={ChevronDownIcon} size={14} />}
+            {showChevron && <LanguageChevronIcon size={18} />}
             <AppIcon icon={GlobeIcon} size={30} />
           </button>
         ) : (
@@ -67,7 +81,7 @@ export function LanguageToggle({ variant = 'default', showChevron = true, classN
               {lang === 'ar' ? '🇸🇦' : '🇬🇧'}
             </span>
             <span>{lang === 'ar' ? 'العربية' : 'English'}</span>
-            <AppIcon icon={ChevronDownIcon} size={14} />
+            <LanguageChevronIcon size={18} />
           </button>
         )}
       </DropdownMenu.Trigger>
