@@ -33,11 +33,14 @@ export function AuthLayout({ children, contentClassName, reverse }: AuthLayoutPr
                 <div className="mb-8 flex flex-col items-center gap-2 text-center lg:hidden">
                   <img src="/casco-logo.svg" alt="CASCO" className="h-auto w-40 object-contain" />
                   <p
-                    className="text-[15px] font-medium leading-[1.6] text-primary [font-family:var(--font-arabic)]"
+                    className="text-[15px] font-bold leading-[1.6] text-primary [font-family:var(--font-arabic)]"
                     dir="rtl"
                     lang="ar"
                   >
                     امتثال ذكي...أثر حقيقي
+                  </p>
+                  <p className="text-[15px] font-bold uppercase leading-[1.1] tracking-[0.1em] text-primary">
+                    SMALL CONFORMITY.. REAL IMPACT
                   </p>
                 </div>
 
