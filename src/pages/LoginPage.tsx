@@ -101,25 +101,34 @@ export function LoginPage() {
           }
         />
 
-        <div className="flex items-center gap-2.5">
-          <Checkbox.Root
-            id="remember"
-            checked={rememberMe}
-            onCheckedChange={(v) => setRememberMe(Boolean(v))}
-            className={cn(
-              'h-4 w-4 rounded-[var(--radius-xs)] border border-neutral-200 bg-white',
-              'data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500',
-              'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
-              'transition-colors flex items-center justify-center shrink-0'
-            )}
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <Checkbox.Root
+              id="remember"
+              checked={rememberMe}
+              onCheckedChange={(v) => setRememberMe(Boolean(v))}
+              className={cn(
+                'h-4 w-4 rounded-[var(--radius-xs)] border border-neutral-200 bg-white',
+                'data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500',
+                'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
+                'transition-colors flex items-center justify-center shrink-0'
+              )}
+            >
+              <Checkbox.Indicator>
+                <CheckIcon className="text-white w-3 h-3" />
+              </Checkbox.Indicator>
+            </Checkbox.Root>
+            <label htmlFor="remember" className="text-body-3 text-neutral-500 cursor-pointer select-none">
+              {t('auth.rememberMe')}
+            </label>
+          </div>
+
+          <Link
+            to="/forgot-password"
+            className="text-body-2-semibold text-primary underline underline-offset-2"
           >
-            <Checkbox.Indicator>
-              <CheckIcon className="text-white w-3 h-3" />
-            </Checkbox.Indicator>
-          </Checkbox.Root>
-          <label htmlFor="remember" className="text-body-3 text-neutral-500 cursor-pointer select-none">
-            {t('auth.rememberMe')}
-          </label>
+            {t('auth.forgotPassword')}
+          </Link>
         </div>
 
         {submitError && (
@@ -135,15 +144,6 @@ export function LoginPage() {
           {isSubmitting ? t('auth.signingIn') : t('auth.signIn')}
         </Button>
       </form>
-
-      <div className="text-center mt-6">
-        <Link
-          to="/forgot-password"
-          className="text-body-2 text-neutral-500 hover:text-neutral-700 transition-colors"
-        >
-          {t('auth.forgotPassword')}
-        </Link>
-      </div>
 
       <p className="text-center text-body-2 text-neutral-500 mt-4">
         {t('auth.noAccount')}{' '}
