@@ -22,7 +22,7 @@ import { cn } from '@/lib/utils'
 const primaryItems = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
-  { icon: UsersIcon, labelKey: 'accreditation.sidebar.clients' },
+  { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
 ]
 
@@ -48,7 +48,7 @@ export function MobileBottomNav() {
   return (
     <>
       <nav
-        className="fixed inset-x-0 bottom-0 z-30 flex h-[64px] items-center justify-around border-t border-neutral-100 bg-white pb-[env(safe-area-inset-bottom)] max-[922px]:flex min-[923px]:hidden"
+        className="fixed inset-x-0 bottom-0 z-30 flex h-[64px] items-center justify-around border-t border-neutral-100 bg-white pb-[env(safe-area-inset-bottom)] md:hidden"
         aria-label={t('nav.dashboard')}
       >
         {primaryItems.map(({ icon, labelKey, href }) => {
@@ -85,7 +85,7 @@ export function MobileBottomNav() {
       </nav>
 
       {moreOpen && (
-        <div className="fixed inset-0 z-40 min-[923px]:hidden">
+        <div className="fixed inset-0 z-40 md:hidden">
           <div
             className="absolute inset-0 bg-black/40"
             onClick={() => setMoreOpen(false)}

@@ -12,7 +12,7 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div dir={dir} className="flex min-h-screen bg-[#f9fafc]">
       <DashboardSidebar />
-      <div className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden pb-16 max-[922px]:pb-16 min-[923px]:pb-0">
+      <div className="flex min-h-screen min-w-0 flex-1 flex-col overflow-x-hidden pb-16 md:pb-0">
         {children}
       </div>
       <MobileBottomNav />
