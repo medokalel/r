@@ -2,10 +2,8 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
-import {
-  buildCabWorkflowSteps,
-  CabWorkflowProgress,
-} from '@/components/dashboard/cab/CabWorkflowProgress'
+import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
+import { WorkflowProgressCard as SharedWorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import {
   AppIcon,
   ArrowRightIcon,
@@ -720,10 +718,15 @@ function WorkflowProgressCard() {
   const { t } = useTranslation()
 
   return (
-    <CabWorkflowProgress
+    <SharedWorkflowProgressCard
       steps={buildCabWorkflowSteps(t, 'applicationReview')}
       title={t('cab.applications.receipt.sections.workflowProgress')}
       viewFullLabel={t('cab.applications.receipt.actions.viewFullWorkflow')}
+      statusLabels={{
+        completed: t('cab.applications.receipt.workflow.completed'),
+        inProgress: t('cab.applications.receipt.workflow.inProgress'),
+        pending: t('cab.applications.receipt.workflow.pending'),
+      }}
     />
   )
 }

@@ -15,7 +15,7 @@ export function AuthLayout({ children, contentClassName, reverse }: AuthLayoutPr
 
   return (
     <div dir={dir} className={cn('min-h-screen flex', reverse && 'flex-row-reverse')}>
-      {/* Left: branding background with full-width white form container.
+      {/* Left: branding background with full width white form container.
           On mobile there's no room for a separate branding panel, so this
           collapses to a plain white page (no dark backdrop, no padded/
           shadowed card) and the branding shows inline at the top instead. */}

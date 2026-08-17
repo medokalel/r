@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
-import { CabWorkflowProgress } from '@/components/dashboard/cab/CabWorkflowProgress'
+import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import {
   AppIcon,
   DownloadIcon,
@@ -750,7 +750,7 @@ function ReceiptSidebarPanels({ receipt }: { receipt: CabApplicationReceipt }) {
   const { t } = useTranslation()
 
   return (
-    <CabWorkflowProgress
+    <WorkflowProgressCard
       steps={receipt.workflowSteps.map((step) => ({
         key: step.key,
         status: step.status,
@@ -759,7 +759,11 @@ function ReceiptSidebarPanels({ receipt }: { receipt: CabApplicationReceipt }) {
       }))}
       title={t('cab.applications.receipt.sections.workflowProgress')}
       viewFullLabel={t('cab.applications.receipt.actions.viewFullWorkflow')}
-      fillHeight
+      statusLabels={{
+        completed: t('cab.applications.receipt.workflow.completed'),
+        inProgress: t('cab.applications.receipt.workflow.inProgress'),
+        pending: t('cab.applications.receipt.workflow.pending'),
+      }}
     />
   )
 }

@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ClientRegistrationForm } from '@/components/dashboard/cab/ClientRegistrationForm'
-import { ClientWorkflowProgress } from '@/components/dashboard/cab/ClientWorkflowProgress'
+import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
+import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
   emptyClientRegistrationForm,
@@ -54,7 +55,16 @@ export function ClientRegistrationPage() {
               onAttachFile={setAttachedFile}
             />
           </div>
-          <ClientWorkflowProgress activeStep="application" />
+          <WorkflowProgressCard
+            steps={buildClientWorkflowSteps(t, 'application')}
+            title={t('cab.clientRegistration.workflow.title')}
+            viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
+            statusLabels={{
+              completed: t('cab.applications.receipt.workflow.completed'),
+              inProgress: t('cab.clientRegistration.workflow.inProgress'),
+              pending: t('cab.clientRegistration.workflow.pending'),
+            }}
+          />
         </div>
       </div>
 
