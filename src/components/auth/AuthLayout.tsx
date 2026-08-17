@@ -26,7 +26,7 @@ export function AuthLayout({ children, contentClassName, reverse }: AuthLayoutPr
 
         <div className="relative z-10 flex flex-1 flex-col lg:p-4 xl:p-6">
           <div className="flex flex-1 flex-col overflow-hidden bg-white lg:rounded-[var(--radius-md)] lg:shadow-2xl">
-            <div className="flex flex-1 items-center justify-center px-5 py-10 lg:py-12">
+            <div className="flex flex-1 items-center justify-center px-6 py-12 lg:px-5 lg:py-12">
               <div className={cn('w-full max-w-[620px]', contentClassName)}>
                 {/* Mobile-only branding — on lg+ this lives in the separate
                     right-side panel (CascoBranding) instead. */}

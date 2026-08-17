@@ -67,9 +67,9 @@ export function LoginPage() {
       <LanguageToggle variant="icon" className="mb-8" />
 
       <h1 className="text-h1 text-neutral-900 mb-2">{t('auth.loginTitle')}</h1>
-      <p className="text-body-1 text-neutral-500 mb-10">{t('auth.loginSubtitle')}</p>
+      <p className="text-body-1 text-neutral-500 mb-6 sm:mb-10">{t('auth.loginSubtitle')}</p>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
         <TextField
           id="email"
           label={t('auth.email')}
@@ -101,21 +101,21 @@ export function LoginPage() {
           }
         />
 
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
           <div className="flex items-center gap-2.5">
             <Checkbox.Root
               id="remember"
               checked={rememberMe}
               onCheckedChange={(v) => setRememberMe(Boolean(v))}
               className={cn(
-                'h-4 w-4 rounded-[var(--radius-xs)] border border-neutral-200 bg-white',
+                'h-5 w-5 rounded-[var(--radius-xs)] border border-neutral-200 bg-white',
                 'data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500',
                 'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1',
                 'transition-colors flex items-center justify-center shrink-0'
               )}
             >
               <Checkbox.Indicator>
-                <CheckIcon className="text-white w-3 h-3" />
+                <CheckIcon className="text-white w-3.5 h-3.5" />
               </Checkbox.Indicator>
             </Checkbox.Root>
             <label htmlFor="remember" className="text-body-3 text-neutral-500 cursor-pointer select-none">
