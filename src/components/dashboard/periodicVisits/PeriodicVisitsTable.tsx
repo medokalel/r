@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, MoreIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -187,12 +188,13 @@ export function PeriodicVisitsTable({
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+        <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+          {/* Desktop / tablet: the two export buttons, as before */}
           <button
             type="button"
             onClick={handleExportPdf}
             disabled={exporting || loading}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:flex"
           >
             <AppIcon icon={PdfFileIcon} size={20} />
             {t('periodicVisits.downloadPdf')}
@@ -201,11 +203,47 @@ export function PeriodicVisitsTable({
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:flex"
           >
             <AppIcon icon={ExcelFileIcon} size={20} />
             {t('periodicVisits.exportExcel')}
           </button>
+
+          {/* Mobile: a single "⋮" button that opens a dropdown with the export options */}
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                type="button"
+                disabled={exporting || loading}
+                aria-label={t('periodicVisits.downloadOptions')}
+                className="flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:hidden"
+              >
+                <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                align="end"
+                sideOffset={4}
+                className="z-50 min-w-[180px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
+              >
+                <DropdownMenu.Item
+                  onSelect={handleExportPdf}
+                  className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                >
+                  <AppIcon icon={PdfFileIcon} size={18} />
+                  {t('periodicVisits.downloadPdf')}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={handleExportExcel}
+                  className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                >
+                  <AppIcon icon={ExcelFileIcon} size={18} />
+                  {t('periodicVisits.exportExcel')}
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
       </div>
 

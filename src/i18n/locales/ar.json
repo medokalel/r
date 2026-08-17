@@ -1305,6 +1305,7 @@
     "searchPlaceholder": "ابحث برقم الشهادة أو المواصفة...",
     "downloadPdf": "تحميل PDF",
     "exportExcel": "تصدير Excel",
+    "downloadOptions": "خيارات التحميل",
     "procedurePeriodic": "دوري",
     "procedurePeriodicExpanding": "دوري وتوسع",
     "filters": {

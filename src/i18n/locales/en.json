@@ -1306,6 +1306,7 @@
     "searchPlaceholder": "Search by certificate or specification...",
     "downloadPdf": "Download to PDF",
     "exportExcel": "Export to Excel",
+    "downloadOptions": "Download options",
     "procedurePeriodic": "periodic",
     "procedurePeriodicExpanding": "Periodic and expanding",
     "filters": {
