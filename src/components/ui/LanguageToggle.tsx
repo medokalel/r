@@ -3,9 +3,9 @@ import { useDirection } from '@/context/DirectionContext'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, GlobeIcon } from '@/components/icons'
 
-function LanguageChevronIcon({ size = 14 }: { size?: number }) {
+function LanguageChevronIcon({ size = 14, className }: { size?: number; className?: string }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" className={className}>
       <path
         d="M6 9l6 6 6-6"
         stroke="currentColor"
@@ -55,7 +55,7 @@ export function LanguageToggle({ variant = 'default', showChevron = true, classN
           <button
             type="button"
             className={cn(
-              'inline-flex shrink-0 items-center gap-1',
+              'inline-flex shrink-0 items-center gap-0.5 sm:gap-1',
               'text-neutral-500 hover:text-neutral-700 transition-colors',
               'rounded-[var(--radius-sm)] hover:bg-neutral-50',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2',
@@ -63,8 +63,10 @@ export function LanguageToggle({ variant = 'default', showChevron = true, classN
             )}
             aria-label={t('common.language')}
           >
-            {showChevron && <LanguageChevronIcon size={18} />}
-            <AppIcon icon={GlobeIcon} size={30} />
+            {showChevron && (
+              <LanguageChevronIcon size={18} className="size-[16px] sm:size-[18px]" />
+            )}
+            <AppIcon icon={GlobeIcon} size={30} className="size-[26px] sm:size-[30px]" />
           </button>
         ) : (
           <button
@@ -95,6 +97,7 @@ export function LanguageToggle({ variant = 'default', showChevron = true, classN
           )}
           sideOffset={8}
           align="end"
+          collisionPadding={18}
         >
           {languages.map(({ code, label, flag }) => {
             const active = lang === code
