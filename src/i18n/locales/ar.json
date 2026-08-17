@@ -18,7 +18,8 @@
     "search": "بحث",
     "language": "اللغة",
     "filter": "تصفية",
-    "actions": "الإجراءات"
+    "actions": "الإجراءات",
+    "selectAll": "تحديد الكل"
   },
   "nav": {
     "home": "الرئيسية",

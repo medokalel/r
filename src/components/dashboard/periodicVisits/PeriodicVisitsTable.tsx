@@ -235,7 +235,8 @@ export function PeriodicVisitsTable({
         </div>
       )}
 
-      <div className="min-w-0 overflow-x-auto">
+      {/* Desktop: table */}
+      <div className="hidden min-w-0 overflow-x-auto md:block">
         <table className="w-full min-w-[900px] table-fixed border-collapse text-center">
           <colgroup>
             <col style={{ width: '4%' }} />
@@ -324,6 +325,69 @@ export function PeriodicVisitsTable({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile: cards */}
+      <div className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
+        {loading ? (
+          <p className="py-6 text-center text-[13px] font-semibold text-neutral-500">
+            {t('common.loading')}
+          </p>
+        ) : visits.length === 0 ? (
+          <p className="py-6 text-center text-[13px] font-semibold text-neutral-500">—</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <label className="flex items-center gap-2 px-1 text-[12px] font-medium text-neutral-600">
+              <input
+                type="checkbox"
+                checked={visits.length > 0 && selected.size === visits.length}
+                onChange={toggleAll}
+                className="size-3.5 accent-[#1236A3]"
+              />
+              {t('common.selectAll')}
+            </label>
+
+            {visits.map((visit, index) => (
+              <div key={visit.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(visit.id)}
+                      onChange={() => toggleOne(visit.id)}
+                      className="size-3.5 accent-[#1236A3]"
+                    />
+                    <span className="text-[12px] text-neutral-500">
+                      #{(page - 1) * 10 + index + 1}
+                    </span>
+                  </label>
+                  <SpecificationTag name={visit.specificationName} />
+                </div>
+
+                <p className="mt-3 text-[14px] font-semibold text-neutral-900" dir="ltr">
+                  {visit.certificateNumber}
+                </p>
+
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  {visit.economicSectors.map((sector) => (
+                    <SectorBadge key={sector} code={sector} />
+                  ))}
+                </div>
+
+                <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
+                  {formatVisitDate(visit.visitingDate)}
+                </p>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className={periodicBtnClass}>{t('periodicVisits.procedurePeriodic')}</span>
+                  <span className={expandingBtnClass}>
+                    {t('periodicVisits.procedurePeriodicExpanding')}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {!loading && visits.length > 0 && (

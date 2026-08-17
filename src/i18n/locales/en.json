@@ -18,7 +18,8 @@
     "search": "Search",
     "language": "Language",
     "filter": "Filter",
-    "actions": "Actions"
+    "actions": "Actions",
+    "selectAll": "Select all"
   },
   "nav": {
     "home": "Home",
