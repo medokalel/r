@@ -194,7 +194,7 @@ export function PeriodicVisitsTable({
             type="button"
             onClick={handleExportPdf}
             disabled={exporting || loading}
-            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:flex"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:flex"
           >
             <AppIcon icon={PdfFileIcon} size={20} />
             {t('periodicVisits.downloadPdf')}
@@ -203,7 +203,7 @@ export function PeriodicVisitsTable({
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:flex"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:flex"
           >
             <AppIcon icon={ExcelFileIcon} size={20} />
             {t('periodicVisits.exportExcel')}
@@ -216,7 +216,7 @@ export function PeriodicVisitsTable({
                 type="button"
                 disabled={exporting || loading}
                 aria-label={t('periodicVisits.downloadOptions')}
-                className="flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:hidden"
+                className="flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:hidden"
               >
                 <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
               </button>
