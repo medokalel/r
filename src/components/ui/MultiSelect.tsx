@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { CloseCircle } from 'iconsax-reactjs'
 import { SelectDropdownIcon } from '@/components/ui/SelectDropdownIcon'
@@ -26,6 +27,11 @@ interface MultiSelectProps {
    * the CAB Type accreditation-scopes picker.
    */
   layout?: 'wrapped' | 'stacked'
+  /** Adds a filter input above the option list, for long option lists. */
+  searchable?: boolean
+  searchPlaceholder?: string
+  /** Shows selected values without opening the dropdown or allowing edits. */
+  readOnly?: boolean
 }
 
 /**
@@ -39,13 +45,71 @@ export function MultiSelect({
   placeholder,
   className,
   layout = 'wrapped',
+  searchable = false,
+  searchPlaceholder,
+  readOnly = false,
 }: MultiSelectProps) {
   const { dir } = useDirection()
-  const items = options.map(normalizeOption)
-  const labelFor = (value: string) => items.find((option) => option.value === value)?.label ?? value
+  const [query, setQuery] = useState('')
+  const allItems = options.map(normalizeOption)
+  const items = searchable
+    ? allItems.filter((item) => item.label.toLowerCase().includes(query.trim().toLowerCase()))
+    : allItems
+  const labelFor = (value: string) => allItems.find((option) => option.value === value)?.label ?? value
   const toggleTag = (value: string) =>
     onChange(tags.includes(value) ? tags.filter((tag) => tag !== value) : [...tags, value])
   const stacked = layout === 'stacked'
+
+  if (readOnly) {
+    return (
+      <div
+        className={cn(
+          'relative flex w-full items-center rounded-[var(--radius-sm)] border border-neutral-200 bg-neutral-50 ps-3 text-start',
+          stacked ? 'min-h-12 flex-col gap-2 py-2.5 pe-3' : 'min-h-12 gap-3 py-2 pe-3',
+          className
+        )}
+      >
+        {stacked ? (
+          tags.length === 0 ? (
+            placeholder && (
+              <span className="text-[16px] font-light leading-[1.6] text-neutral-500">{placeholder}</span>
+            )
+          ) : (
+            tags.map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  'flex w-full items-center rounded-[var(--radius-sm)] bg-primary-subtle px-3 py-2.5',
+                  fieldTextClassName,
+                  'text-neutral-700'
+                )}
+              >
+                <WesternDigits>{labelFor(tag)}</WesternDigits>
+              </span>
+            ))
+          )
+        ) : (
+          <div className="flex flex-1 flex-wrap gap-3">
+            {tags.length === 0 && placeholder && (
+              <span className="text-[16px] font-light leading-[1.6] text-neutral-500">{placeholder}</span>
+            )}
+            {tags.map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  'inline-flex items-center rounded-[var(--radius-sm)] bg-[#f3f6fd] px-2.5 py-1.5',
+                  fieldTextClassName,
+                  'text-neutral-600'
+                )}
+              >
+                <WesternDigits>{labelFor(tag)}</WesternDigits>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <DropdownMenu.Root dir={dir}>
@@ -157,10 +221,26 @@ export function MultiSelect({
 
       <DropdownMenu.Portal>
         <DropdownMenu.Content
-          className="z-50 max-h-60 min-w-[var(--radix-dropdown-menu-trigger-width)] overflow-y-auto rounded-[var(--radius-sm)] border border-neutral-200 bg-white p-1 shadow-lg"
+          className="z-50 max-h-72 min-w-[var(--radix-dropdown-menu-trigger-width)] overflow-hidden rounded-[var(--radius-sm)] border border-neutral-200 bg-white shadow-lg"
           sideOffset={4}
           align="start"
         >
+          {searchable && (
+            <div className="border-b border-neutral-100 p-2">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.stopPropagation()}
+                placeholder={searchPlaceholder}
+                className={cn(
+                  fieldTextClassName,
+                  'w-full rounded-[var(--radius-xs)] border border-neutral-200 px-3 py-2 font-light outline-none focus:border-blue-500'
+                )}
+              />
+            </div>
+          )}
+          <div className="max-h-60 overflow-y-auto p-1">
           {items.map((option) => {
             const selected = tags.includes(option.value)
 
@@ -191,6 +271,10 @@ export function MultiSelect({
               </DropdownMenu.Item>
             )
           })}
+          {searchable && items.length === 0 && (
+            <p className="px-3 py-2 text-body-3 text-neutral-500">No matches</p>
+          )}
+          </div>
         </DropdownMenu.Content>
       </DropdownMenu.Portal>
     </DropdownMenu.Root>

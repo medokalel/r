@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, RiyalSymbolIcon, SearchIcon } from '@/components/icons'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, MoreIcon, PdfFileIcon, RiyalSymbolIcon, SearchIcon } from '@/components/icons'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -209,12 +210,13 @@ export function InvoicesTable({
           </div>
         </div>
 
-        <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
+        <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+          {/* Desktop / tablet: the two export buttons, as before */}
           <button
             type="button"
             onClick={handleExportPdf}
             disabled={exporting || loading}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:flex"
           >
             <AppIcon icon={PdfFileIcon} size={20} />
             {t('invoices.downloadPdf')}
@@ -223,11 +225,47 @@ export function InvoicesTable({
             type="button"
             onClick={handleExportExcel}
             disabled={exporting || loading}
-            className="flex h-10 w-full items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 sm:w-auto"
+            className="hidden h-10 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-800 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:flex"
           >
             <AppIcon icon={ExcelFileIcon} size={20} />
             {t('invoices.exportExcel')}
           </button>
+
+          {/* Mobile: a single "⋮" button that opens a dropdown with the export options */}
+          <DropdownMenu.Root>
+            <DropdownMenu.Trigger asChild>
+              <button
+                type="button"
+                disabled={exporting || loading}
+                aria-label={t('invoices.downloadOptions')}
+                className="flex size-10 shrink-0 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:hidden"
+              >
+                <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
+              </button>
+            </DropdownMenu.Trigger>
+            <DropdownMenu.Portal>
+              <DropdownMenu.Content
+                align="end"
+                sideOffset={4}
+                className="z-50 min-w-[180px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
+              >
+                <DropdownMenu.Item
+                  onSelect={handleExportPdf}
+                  className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                >
+                  <AppIcon icon={PdfFileIcon} size={18} />
+                  {t('invoices.downloadPdf')}
+                </DropdownMenu.Item>
+                <DropdownMenu.Item
+                  onSelect={handleExportExcel}
+                  className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                >
+                  <AppIcon icon={ExcelFileIcon} size={18} />
+                  {t('invoices.exportExcel')}
+                </DropdownMenu.Item>
+              </DropdownMenu.Content>
+            </DropdownMenu.Portal>
+          </DropdownMenu.Root>
         </div>
       </div>
 
@@ -260,7 +298,8 @@ export function InvoicesTable({
         </div>
       )}
 
-      <div className="min-w-0 overflow-x-auto">
+      {/* Desktop: table */}
+      <div className="hidden min-w-0 overflow-x-auto md:block">
         <table className="w-full min-w-[1100px] table-fixed border-collapse text-center">
           <colgroup>
             <col style={{ width: '3%' }} />
@@ -391,6 +430,91 @@ export function InvoicesTable({
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile: cards */}
+      <div className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
+        {loading ? (
+          <p className="py-6 text-center text-[13px] font-semibold text-neutral-500">
+            {t('common.loading')}
+          </p>
+        ) : invoices.length === 0 ? (
+          <p className="py-6 text-center text-[13px] font-semibold text-neutral-500">—</p>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <label className="flex items-center gap-2 px-1 text-[12px] font-medium text-neutral-600">
+              <input
+                type="checkbox"
+                checked={invoices.length > 0 && selected.size === invoices.length}
+                onChange={toggleAll}
+                className="size-3.5 accent-[#1236A3]"
+              />
+              {t('common.selectAll')}
+            </label>
+
+            {invoices.map((invoice, index) => (
+              <div key={invoice.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selected.has(invoice.id)}
+                      onChange={() => toggleOne(invoice.id)}
+                      className="size-3.5 accent-[#1236A3]"
+                    />
+                    <span className="text-[12px] text-neutral-500">
+                      #{(page - 1) * 10 + index + 1}
+                    </span>
+                  </label>
+                  <span className="whitespace-nowrap text-[12px] font-semibold text-[#2ecc70]">
+                    {t('invoices.paymentMade')}
+                  </span>
+                </div>
+
+                <p className="mt-3 text-[14px] font-semibold text-neutral-900">{invoice.username}</p>
+                <p className="text-[12px] text-neutral-500" dir="ltr">
+                  {invoice.commercialRegisterNumber}
+                </p>
+
+                <div className="mt-2 space-y-1 text-[12px] text-neutral-600">
+                  <p className="break-all" dir="ltr">
+                    {invoice.email}
+                  </p>
+                  <p dir="ltr">
+                    {t('invoices.columns.orderNumber')}: {invoice.orderNumber}
+                  </p>
+                  <p dir="ltr">{formatInvoiceDate(invoice.paymentDate)}</p>
+                </div>
+
+                <div className="mt-2 flex items-center gap-1.5 text-[14px] font-semibold text-neutral-900">
+                  <span dir="ltr">{formatInvoiceAmount(invoice.totalAmount)}</span>
+                  <InvoiceCurrencyCell currency={invoice.currency} />
+                </div>
+
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      previewFieldsDocument(t('invoices.preview'), buildInvoiceFields(invoice))
+                    }
+                    className={previewBtnClass}
+                  >
+                    {t('invoices.preview')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      printFieldsDocument(t('invoices.printInvoice'), buildInvoiceFields(invoice))
+                    }
+                    className={printBtnClass}
+                  >
+                    {t('invoices.printInvoice')}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {!loading && invoices.length > 0 && (

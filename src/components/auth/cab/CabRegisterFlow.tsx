@@ -4,37 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { AppIcon, SuccessCheckIcon } from '@/components/icons'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { CabStepNav } from '@/components/auth/cab/CabStepNav'
-import {
-  CabDetailsStep,
-  type CabDetailsForm,
-} from '@/components/auth/cab/CabDetailsStep'
-import { CabAccreditationScopesStep } from '@/components/auth/cab/CabAccreditationScopesStep'
-import { CabScopeModulesStep } from '@/components/auth/cab/CabScopeModulesStep'
-import { CabModulesStep } from '@/components/auth/cab/CabModulesStep'
+import { CabAccountBasicsStep } from '@/components/auth/cab/CabAccountBasicsStep'
 import { CabVerificationStep } from '@/components/auth/cab/CabVerificationStep'
-import {
-  CabAccountSetupStep,
-  type CabAccountSetupForm,
-} from '@/components/auth/cab/CabAccountSetupStep'
-import { CabSummaryStep } from '@/components/auth/cab/CabSummaryStep'
-import {
-  emptyCabDetailsForm,
-  isCabDetailsComplete,
-  isCabAccreditationScopesComplete,
-} from '@/lib/cabDetailsForm'
-import {
-  emptyCabScopeModulesForm,
-  isCabSchemeStandardsComplete,
-  isCabModulesComplete,
-  type CabScopeModulesForm,
-} from '@/lib/cabScopeModulesForm'
-import { emptyCabAccountSetupForm, isCabAccountSetupComplete } from '@/lib/cabAccountSetupForm'
-import { SCOPE_STANDARDS_BY_TYPE } from '@/lib/api/cabRegisterApi'
+import { emptyCabAccountBasicsForm, isCabAccountBasicsComplete, type CabAccountBasicsForm } from '@/lib/cabAccountBasicsForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail, register, login, formatPhoneNumber } from '@/lib/api/authApi'
-import { getCountryOptions } from '@/lib/countries'
-import { saveAuthSession } from '@/lib/authStorage'
+import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
+import { ROUTES } from '@/lib/routes'
 import { ApiError } from '@/lib/api/client'
+import { getCountryOptions } from '@/lib/countries'
 
 interface CabRegisterFlowProps {
   /** Lets the user back out to entity-type selection from CAB step 1. */
@@ -48,26 +25,13 @@ const emptyOtp = () => Array.from({ length: 6 }, () => '')
 export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRegisterFlowProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
-  const [submitted, setSubmitted] = useState(false)
+  const [step, setStep] = useState<1 | 2>(1)
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const [createAccountError, setCreateAccountError] = useState<string | null>(null)
-  // Step 1 ("CAB Details") is split into two screens: the base details form,
-  // then a continuation screen for accreditation scopes. The step nav stays
-  // on "1" for both — this only tracks which screen within step 1 to show.
-  const [detailsSubStep, setDetailsSubStep] = useState<1 | 2>(1)
-  // Step 2 ("Scope & Modules") is one screen per scheme chosen in step 1,
-  // followed by the fixed "which module" picker. 0..schemes.length-1 shows
-  // that scheme's screen; schemes.length shows the modules picker. The step
-  // nav stays on "2" throughout.
-  const [schemeScreenIndex, setSchemeScreenIndex] = useState(0)
-  const [detailsForm, setDetailsForm] = useState<CabDetailsForm>(emptyCabDetailsForm)
-  const [scopeModulesForm, setScopeModulesForm] = useState<CabScopeModulesForm>(emptyCabScopeModulesForm)
-  const [accountSetupForm, setAccountSetupForm] = useState<CabAccountSetupForm>(
-    emptyCabAccountSetupForm
-  )
+  const [basicsForm, setBasicsForm] = useState<CabAccountBasicsForm>(emptyCabAccountBasicsForm)
+  const [submitted, setSubmitted] = useState(false)
 
-  // Step 3 ("verification") — same email + OTP pattern as RegisterPage.
+  // Step 2 ("verification") — same email + OTP pattern as RegisterPage.
   const [verificationEmail, setVerificationEmail] = useState('')
   const [otp, setOtp] = useState<string[]>(emptyOtp())
   const [codeSent, setCodeSent] = useState(false)
@@ -76,12 +40,8 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
   const [emailVerified, setEmailVerified] = useState(false)
   const [verificationError, setVerificationError] = useState<string | null>(null)
 
-  const patchDetails = (f: Partial<CabDetailsForm>) =>
-    setDetailsForm((prev) => ({ ...prev, ...f }))
-  const patchScopeModules = (f: Partial<CabScopeModulesForm>) =>
-    setScopeModulesForm((prev) => ({ ...prev, ...f }))
-  const patchAccountSetup = (f: Partial<CabAccountSetupForm>) =>
-    setAccountSetupForm((prev) => ({ ...prev, ...f }))
+  const patchBasics = (f: Partial<CabAccountBasicsForm>) =>
+    setBasicsForm((prev) => ({ ...prev, ...f }))
 
   const emailValid = isValidRequiredEmail(verificationEmail)
   const otpComplete = otp.every((digit) => digit.length === 1)
@@ -109,7 +69,6 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     try {
       await verifyEmail(verificationEmail.trim(), otp.join(''))
       setEmailVerified(true)
-      setStep(4)
     } catch (error) {
       setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
     } finally {
@@ -119,23 +78,10 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
 
   const handleBack = () => {
     if (step === 1) {
-      if (detailsSubStep === 2) {
-        setDetailsSubStep(1)
-        return
-      }
       onBackToEntityType()
       return
     }
-    if (step === 2) {
-      if (schemeScreenIndex > 0) {
-        setSchemeScreenIndex((i) => i - 1)
-        return
-      }
-      setStep(1)
-      setDetailsSubStep(2)
-      return
-    }
-    setStep((s) => (s - 1) as 1 | 2 | 3 | 4)
+    setStep(1)
   }
 
   const handleCreateAccount = async () => {
@@ -143,45 +89,30 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     setIsCreatingAccount(true)
     setCreateAccountError(null)
     try {
-      // Same backend limitation as the Auditee flow: /auth/register still
-      // requires administrationName/facilityOwnerManager/activity/
-      // legalCapacity/city, which the CAB Details form doesn't collect.
-      // Until the backend makes those optional for CERTIFICATION_BODY (or
-      // adds a dedicated CAB submission endpoint that also accepts the
-      // accreditation-scopes/scope-modules data), we send reasonable
-      // stand-in values derived from what we do collect:
-      //   - administrationName / legalCapacity / activity → the CAB name
-      //     (there's no better source for these yet)
-      //   - facilityOwnerManager → the contact person, since they're the
-      //     same "person in charge" concept
-      //   - city → the CAB's country display name (the form only collects
-      //     country, not a separate city)
-      // Note: accreditationBodies/accreditationScopes/scopeModulesForm have
-      // no home in this schema at all and are not sent — see the gap
-      // analysis we did before starting this.
+      // Same backend limitation as before: /auth/register still requires
+      // organizationName/administrationName/facilityOwnerManager/activity/
+      // legalCapacity/city, none of which this trimmed sign-up collects
+      // anymore (organization name, location etc. are now collected in the
+      // post-login onboarding wizard instead). Stand in with the registrant's
+      // own name/country until the backend adds a dedicated CAB submission
+      // path that doesn't need these upfront.
       const countryName =
-        getCountryOptions(i18n.language).find((c) => c.code === detailsForm.country)?.name ??
-        detailsForm.country
+        getCountryOptions(i18n.language).find((c) => c.code === basicsForm.country)?.name ??
+        basicsForm.country
 
       await register({
         entityType: 'CERTIFICATION_BODY',
         email: verificationEmail,
-        organizationName: detailsForm.cabName,
-        administrationName: detailsForm.cabName,
-        facilityOwnerManager: detailsForm.contactPerson,
-        activity: detailsForm.cabName,
-        legalCapacity: detailsForm.cabName,
+        organizationName: basicsForm.name,
+        administrationName: basicsForm.name,
+        facilityOwnerManager: basicsForm.name,
+        activity: basicsForm.name,
+        legalCapacity: basicsForm.name,
         city: countryName,
-        phone: formatPhoneNumber(detailsForm.mobileCountryCode, detailsForm.mobile),
-        password: accountSetupForm.password,
-        confirmPassword: accountSetupForm.confirmPassword,
+        phone: formatPhoneNumber(basicsForm.mobileCountryCode, basicsForm.mobile),
+        password: basicsForm.password,
+        confirmPassword: basicsForm.confirmPassword,
       })
-
-      // Registration only creates the account — it doesn't return a token.
-      // Log the new account in right away so it lands on the CAB dashboard
-      // (layer 2) with a real session instead of an unauthenticated one.
-      const session = await login(verificationEmail, accountSetupForm.password)
-      saveAuthSession(session, true)
 
       setSubmitted(true)
       onSubmittedChange?.(true)
@@ -193,37 +124,13 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
   }
 
   const handleNext = () => {
-    if (step === 1 && detailsSubStep === 1) {
-      setDetailsSubStep(2)
-      return
-    }
-    if (step === 1 && detailsSubStep === 2) {
+    if (step === 1) {
+      setVerificationEmail(basicsForm.email)
       setStep(2)
-      setSchemeScreenIndex(0)
       return
     }
-    if (step === 2) {
-      const schemes = detailsForm.accreditationScopes
-      if (schemeScreenIndex < schemes.length) {
-        // Currently on a scheme's standards screen — advance to the next
-        // scheme's screen, or to the modules screen once schemes run out.
-        setSchemeScreenIndex((i) => i + 1)
-        return
-      }
-      // Currently on the modules screen (schemeScreenIndex === schemes.length).
-      setStep(3)
-      return
-    }
-    if (step === 3) {
-      if (!emailVerified) {
-        void handleVerifyAndContinue()
-        return
-      }
-      setStep(4)
-      return
-    }
-    if (step === 4) {
-      setStep(5)
+    if (!emailVerified) {
+      void handleVerifyAndContinue()
       return
     }
     if (isCreatingAccount) return
@@ -231,32 +138,16 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
   }
 
   const nextDisabled =
-    step === 1 && detailsSubStep === 1
-      ? !isCabDetailsComplete(detailsForm)
-      : step === 1 && detailsSubStep === 2
-        ? !isCabAccreditationScopesComplete(detailsForm)
-        : step === 2
-          ? schemeScreenIndex < detailsForm.accreditationScopes.length
-            ? !isCabSchemeStandardsComplete(
-                scopeModulesForm,
-                detailsForm.accreditationScopes[schemeScreenIndex],
-                SCOPE_STANDARDS_BY_TYPE
-              )
-            : !isCabModulesComplete(scopeModulesForm)
-          : step === 3
-              ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
-              : step === 4
-                ? !isCabAccountSetupComplete(accountSetupForm)
-                : step === 5
-                  ? isCreatingAccount
-                  : false
+    step === 1
+      ? !isCabAccountBasicsComplete(basicsForm)
+      : !emailValid || !codeSent || !otpComplete || isVerifyingEmail || isCreatingAccount
 
   const nextLabel =
-    step === 3 && codeSent && !emailVerified
+    step === 2 && codeSent && !emailVerified
       ? isVerifyingEmail
         ? t('register.verifyingEmail')
         : t('register.verifyEmail')
-      : step === 5
+      : step === 2 && emailVerified
         ? isCreatingAccount
           ? t('register.creatingAccount')
           : t('register.createAccount')
@@ -272,10 +163,10 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
         </p>
         <button
           type="button"
-          onClick={() => navigate('/cab/dashboard')}
+          onClick={() => navigate(ROUTES.login)}
           className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
         >
-          {t('register.cab.summary.goToDashboard')}
+          {t('register.cab.summary.goToLogin')}
         </button>
       </div>
     )
@@ -285,25 +176,25 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
     <>
       <h1 className="text-h1 text-neutral-900 mb-6">{t('register.cab.title')}</h1>
 
-      {step <= 4 && <CabStepNav current={step} className="mb-6" />}
+      <p className="text-body-2 text-neutral-500 -mt-4 mb-6">
+        {t('register.selectedEntityLabel')}{' '}
+        <span className="text-body-2-semibold text-neutral-900">
+          {t('register.certificationBodies')}
+        </span>{' '}
+        ·{' '}
+        <button
+          type="button"
+          onClick={onBackToEntityType}
+          className="text-body-2-semibold text-primary underline underline-offset-2"
+        >
+          {t('common.change')}
+        </button>
+      </p>
 
-      {step === 1 && detailsSubStep === 1 && (
-        <CabDetailsStep form={detailsForm} onPatch={patchDetails} />
-      )}
-      {step === 1 && detailsSubStep === 2 && (
-        <CabAccreditationScopesStep form={detailsForm} onPatch={patchDetails} />
-      )}
-        {step === 2 && schemeScreenIndex < detailsForm.accreditationScopes.length && (
-          <CabScopeModulesStep
-            scheme={detailsForm.accreditationScopes[schemeScreenIndex]}
-            form={scopeModulesForm}
-            onPatch={patchScopeModules}
-          />
-        )}
-        {step === 2 && schemeScreenIndex >= detailsForm.accreditationScopes.length && (
-          <CabModulesStep form={scopeModulesForm} onPatch={patchScopeModules} />
-        )}
-      {step === 3 && (
+      <CabStepNav current={step} className="mb-6" />
+
+      {step === 1 && <CabAccountBasicsStep form={basicsForm} onPatch={patchBasics} />}
+      {step === 2 && (
         <CabVerificationStep
           email={verificationEmail}
           otp={otp}
@@ -314,17 +205,11 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
           onSendCode={() => void handleSendCode()}
         />
       )}
-      {step === 4 && (
-        <CabAccountSetupStep form={accountSetupForm} onPatch={patchAccountSetup} />
-      )}
-      {step === 5 && (
-        <CabSummaryStep detailsForm={detailsForm} scopeModulesForm={scopeModulesForm} />
-      )}
 
-      {verificationError && step === 3 && (
+      {verificationError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
       )}
-      {createAccountError && step === 5 && (
+      {createAccountError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
       )}
 

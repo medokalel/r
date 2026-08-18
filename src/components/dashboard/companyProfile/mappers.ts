@@ -1,9 +1,11 @@
-import { getCountries, getCountryCallingCode } from 'libphonenumber-js'
+import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js'
 import type { CountryCode } from '@/components/auth/CountryCodeSelect'
 import type { GeocodeResult, LatLng } from '@/components/maps/LocationPicker'
+import { getAuthSession } from '@/lib/authStorage'
 import type {
   NationalAddressInput,
   OrganizationProfileData,
+  OriginalRegistrationData,
   OrgBranch,
   OrgBranchInput,
   SaveProfileRequest,
@@ -108,6 +110,40 @@ export function addressFieldsFromGeocode(result: GeocodeResult): GeocodedAddress
 
 export { formatFileSize } from '@/lib/files'
 
+function getRegisteredUserProfileDefaults(original?: OriginalRegistrationData | null): {
+  authorizedPersonName: string
+  email: string
+  countryCode: CountryCode
+  phoneNumber: string
+} {
+  const session = getAuthSession()
+  const registeredName =
+    session?.organization?.name?.trim() ||
+    original?.legalCapacity?.trim() ||
+    original?.activity?.trim() ||
+    ''
+
+  let countryCode: CountryCode = 'SA'
+  let phoneNumber = ''
+  const registeredPhone = session?.user.phone
+  if (registeredPhone) {
+    const parsed = parsePhoneNumberFromString(registeredPhone)
+    if (parsed?.country) {
+      countryCode = parsed.country as CountryCode
+      phoneNumber = parsed.nationalNumber
+    } else {
+      phoneNumber = registeredPhone.replace(/\D/g, '')
+    }
+  }
+
+  return {
+    authorizedPersonName: registeredName,
+    email: session?.user.email ?? '',
+    countryCode,
+    phoneNumber,
+  }
+}
+
 export function nationalAddressFormFrom(
   nationalAddress?: NationalAddressInput | null
 ): NationalAddressFormValues {
@@ -147,6 +183,7 @@ export function formValuesFromProfile(data: OrganizationProfileData): ProfileFor
   const profile = data.profile ?? {}
   const address = data.address ?? {}
   const original = data.originalRegistrationData ?? {}
+  const registered = getRegisteredUserProfileDefaults(original)
 
   const location =
     address.latitude != null && address.longitude != null
@@ -161,10 +198,10 @@ export function formValuesFromProfile(data: OrganizationProfileData): ProfileFor
     tradeName: profile.tradeName ?? '',
     commercialRegisterNumber: profile.commercialRegisterNumber ?? '',
     unifiedNumber: profile.unifiedNumber ?? '',
-    authorizedPersonName: profile.authorizedPersonName ?? '',
-    email: profile.email ?? '',
-    countryCode: countryFromDialCode(profile.phoneCountryCode) ?? 'SA',
-    phoneNumber: profile.phoneNumber ?? '',
+    authorizedPersonName: profile.authorizedPersonName ?? registered.authorizedPersonName,
+    email: profile.email ?? registered.email,
+    countryCode: countryFromDialCode(profile.phoneCountryCode) ?? registered.countryCode,
+    phoneNumber: profile.phoneNumber ?? registered.phoneNumber,
     organizationStatus: profile.organizationStatus ?? '',
     employeeCount: profile.employeeCount != null ? String(profile.employeeCount) : '',
     registrationDate: parseIsoDate(profile.registrationDate),
@@ -189,16 +226,20 @@ export function payloadFromForm(
   form: ProfileFormValues,
   { forSubmit = false }: { forSubmit?: boolean } = {}
 ): SaveProfileRequest {
+  const registered = getRegisteredUserProfileDefaults()
+  const phoneNumber = form.phoneNumber || registered.phoneNumber
+  const countryCode = form.countryCode || registered.countryCode
+
   return {
     profile: {
       organizationName: form.organizationName || undefined,
       tradeName: form.tradeName || undefined,
       commercialRegisterNumber: form.commercialRegisterNumber || undefined,
       // unifiedNumber is a read-only, backend-issued value — never sent back
-      authorizedPersonName: form.authorizedPersonName || undefined,
-      email: form.email || undefined,
-      phoneCountryCode: form.phoneNumber ? dialCodeFor(form.countryCode) : undefined,
-      phoneNumber: form.phoneNumber || undefined,
+      authorizedPersonName: form.authorizedPersonName || registered.authorizedPersonName || undefined,
+      email: form.email || registered.email || undefined,
+      phoneCountryCode: phoneNumber ? dialCodeFor(countryCode) : undefined,
+      phoneNumber: phoneNumber || undefined,
       organizationStatus: form.organizationStatus || undefined,
       registrationDate: form.registrationDate ? toIsoDate(form.registrationDate) : undefined,
       employeeCount: form.employeeCount !== '' ? Number(form.employeeCount) : undefined,

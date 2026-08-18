@@ -1,6 +1,11 @@
 import { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { RequireAuth } from '@/components/auth/RequireAuth'
+import { RequireCabOnboarded } from '@/components/auth/RequireCabOnboarded'
+import { RequireAbDashboard } from '@/components/auth/RequireAbDashboard'
+import { RequireAbOnboarded } from '@/components/auth/RequireAbOnboarded'
+import { RedirectAbFromGenericDashboard } from '@/components/auth/RedirectAbFromGenericDashboard'
+import { RequireAuditeeOnboarded } from '@/components/auth/RequireAuditeeOnboarded'
 import { DirectionProvider } from '@/context/DirectionContext'
 import { CertificationRequestFormPage } from '@/pages/CertificationRequestFormPage'
 import { CertificationRequestsPage } from '@/pages/CertificationRequestsPage'
@@ -16,6 +21,11 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
+import { AbDashboardPage } from '@/pages/AbDashboardPage'
+import { OnboardingPage } from '@/pages/OnboardingPage'
+import { CabOnboardingPage } from '@/pages/CabOnboardingPage'
+import { AbOnboardingPage } from '@/pages/AbOnboardingPage'
+import { AuditeeOnboardingPage } from '@/pages/AuditeeOnboardingPage'
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
@@ -41,10 +51,54 @@ export default function App() {
             <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
             <Route path={ROUTES.privacyPolicy} element={<PrivacyPolicyPage />} />
             <Route
-              path="/cab/dashboard"
+              path={ROUTES.cabDashboard}
               element={
                 <RequireAuth>
-                  <CabDashboardPage />
+                  <RequireCabOnboarded>
+                    <CabDashboardPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.abDashboard}
+              element={
+                <RequireAuth>
+                  <RequireAbDashboard>
+                    <AbDashboardPage />
+                  </RequireAbDashboard>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.onboarding}
+              element={
+                <RequireAuth>
+                  <OnboardingPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabOnboarding}
+              element={
+                <RequireAuth>
+                  <CabOnboardingPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.abOnboarding}
+              element={
+                <RequireAuth>
+                  <AbOnboardingPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.auditeeOnboarding}
+              element={
+                <RequireAuth>
+                  <AuditeeOnboardingPage />
                 </RequireAuth>
               }
             />
@@ -100,7 +154,13 @@ export default function App() {
               path={ROUTES.dashboard}
               element={
                 <RequireAuth>
-                  <DashboardPage />
+                  <RequireAbOnboarded>
+                    <RedirectAbFromGenericDashboard>
+                      <RequireAuditeeOnboarded>
+                        <DashboardPage />
+                      </RequireAuditeeOnboarded>
+                    </RedirectAbFromGenericDashboard>
+                  </RequireAbOnboarded>
                 </RequireAuth>
               }
             />

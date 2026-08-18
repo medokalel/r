@@ -13,6 +13,12 @@ export const ROUTES = {
   wallet: '/wallet',
   periodicVisits: '/periodic-visits',
   invoices: '/invoices',
+  cabDashboard: '/cab/dashboard',
+  abDashboard: '/ab/dashboard',
+  cabOnboarding: '/cab/onboarding',
+  abOnboarding: '/ab/onboarding',
+  auditeeOnboarding: '/auditee/onboarding',
+  onboarding: '/onboarding',
 } as const
 
 /** Post-login landing page for authenticated users. */

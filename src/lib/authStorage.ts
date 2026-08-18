@@ -1,5 +1,6 @@
-import type { LoginResponseData } from '@/lib/api/authApi'
-import { AUTHENTICATED_HOME } from '@/lib/routes'
+import type { LoginResponseData, OrganizationType } from '@/lib/api/authApi'
+import { isOnboardingComplete } from '@/lib/onboardingStatus'
+import { AUTHENTICATED_HOME, ROUTES } from '@/lib/routes'
 const TOKEN_KEY = 'icasco_auth_token'
 const SESSION_KEY = 'icasco_auth_session'
 
@@ -25,9 +26,21 @@ export function getAuthSession(): LoginResponseData | null {
   }
 }
 
-/** CAB (Certification Body) accounts land on the CAB dashboard; everyone else gets the generic one. */
+/** After login, unfinished onboarding goes to the shared wizard. CAB users
+ *  land on the CAB dashboard once onboarded; everyone else uses the generic
+ *  dashboard. */
 export function getPostLoginRedirect(session: LoginResponseData): string {
-  return session.organization?.type === 'CERTIFICATION_BODY' ? '/cab/dashboard' : AUTHENTICATED_HOME
+  const org = session.organization
+  if (org && !isOnboardingComplete(org.id)) {
+    return ROUTES.onboarding
+  }
+  if (org?.type === 'CERTIFICATION_BODY') {
+    return ROUTES.cabDashboard
+  }
+  if (org?.type === 'ACCREDITATION_BODY') {
+    return ROUTES.abDashboard
+  }
+  return AUTHENTICATED_HOME
 }
 
 export function clearAuthSession(): void {
@@ -35,4 +48,21 @@ export function clearAuthSession(): void {
   localStorage.removeItem(SESSION_KEY)
   sessionStorage.removeItem(TOKEN_KEY)
   sessionStorage.removeItem(SESSION_KEY)
+}
+
+export function patchAuthOrganizationType(type: OrganizationType): void {
+  const session = getAuthSession()
+  if (!session?.organization) return
+
+  const nextSession: LoginResponseData = {
+    ...session,
+    organization: { ...session.organization, type },
+  }
+
+  if (localStorage.getItem(SESSION_KEY)) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+    return
+  }
+
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
 }

@@ -9,6 +9,7 @@ import {
 } from '@/lib/api/organizationProfileApi'
 import { LOGO_ACCEPT, LOGO_MAX_BYTES, SECTOR_OPTIONS } from './constants'
 import { useProfileForm } from './ProfileFormContext'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 
 export function ProfileHeaderCard() {
   const { t } = useTranslation()
@@ -71,7 +72,7 @@ export function ProfileHeaderCard() {
             {form.logoUrl ? (
               <>
                 <img
-                  src={form.logoUrl}
+                  src={resolvePublicAssetUrl(form.logoUrl)}
                   alt={t('companyProfile.profileHeader.companyLogoLabel')}
                   className="h-[96px] max-w-[220px] object-contain"
                 />

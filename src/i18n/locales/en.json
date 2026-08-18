@@ -73,10 +73,22 @@
     "title": "Create a new account",
     "chooseEntityType": "Please select the entity type",
     "selectedEntityLabel": "Registering as:",
+    "account": {
+      "subtitle": "Create your account first. You will choose your role and organization details after you sign in.",
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "Full name",
+      "email": "Email",
+      "mobileNumber": "Mobile number",
+      "country": "Country",
+      "submittedTitle": "Account created successfully!",
+      "submittedDescription": "Your account is ready. Sign in to continue setup and choose your role.",
+      "goToLogin": "Go to Login"
+    },
     "cab": {
       "title": "Create New CAB Account",
       "comingSoon": "This step is coming soon.",
       "steps": {
+        "basics": "Account details",
         "details": "CAB Details",
         "scopeModules": "Scope & Modules",
         "verification": "Verification",
@@ -125,14 +137,16 @@
         "selectedSchemes": "Selected Schemes",
         "selectedModules": "Selected Modules",
         "submittedTitle": "Registration Submitted Successfully!",
-        "submittedDescription": "Your CAB account has been created. You can now access the dashboard and start managing your conformity assessment activities.",
-        "goToDashboard": "Go to Dashboard"
+        "submittedDescription": "Your CAB account has been created. Please log in to continue setting up your CAB.",
+        "goToDashboard": "Go to Dashboard",
+        "goToLogin": "Go to Login"
       }
     },
     "ab": {
       "title": "Create New AB Account",
       "comingSoon": "This step is coming soon.",
       "steps": {
+        "basics": "Account details",
         "details": "AB Details",
         "scopeModules": "Scope & Modules",
         "verification": "Verification",
@@ -181,8 +195,9 @@
         "selectedSchemes": "Selected Schemes",
         "selectedModules": "Selected Modules",
         "submittedTitle": "Registration Submitted Successfully!",
-        "submittedDescription": "Your AB account has been created. You can now access the dashboard and start managing your accreditation activities.",
-        "goToDashboard": "Go to Dashboard"
+        "submittedDescription": "Your AB account has been created. Please log in to continue setting up your accreditation body.",
+        "goToDashboard": "Go to Dashboard",
+        "goToLogin": "Go to Login"
       }
     },
     "auditee": {
@@ -196,9 +211,13 @@
       "contactPerson": "Contact Person",
       "contactPersonPlaceholder": "Example: Mohammed Khaled",
       "role": "Role",
+      "roles": {
+        "admin": "Admin"
+      },
       "email": "Email",
       "mobileNumber": "Mobile Number",
       "steps": {
+        "basics": "Account details",
         "details": "Details",
         "verification": "Verification",
         "accountSetup": "Account Setup"
@@ -206,7 +225,8 @@
       "summary": {
         "submittedTitle": "Registration Submitted Successfully!",
         "submittedDescription": "Your account has been created. You can now log in and get started.",
-        "goToDashboard": "Go to Dashboard"
+        "goToDashboard": "Go to Dashboard",
+        "goToLogin": "Go to Login"
       }
     },
     "progressLabel": "Registration progress",
@@ -267,8 +287,11 @@
     "createAccount": "Create Account",
     "creatingAccount": "Creating account...",
     "sendingCode": "Sending...",
+    "sendingCodeToEmail": "We are sending a verification code to your email.",
+    "resendCode": "Resend code",
     "verifyEmail": "Verify email",
-    "verifyingEmail": "Verifying..."
+    "verifyingEmail": "Verifying...",
+    "emailAlreadyRegistered": "This email is already registered. Please sign in instead."
   },
   "accreditation": {
     "title": "Certification Request",
@@ -1324,7 +1347,503 @@
       "procedures": "Procedures"
     }
   },
+  "onboarding": {
+    "entityType": {
+      "hint": "Let's start with the basics.",
+      "title": "What type of organization are you?",
+      "subtitle": "Choose the option that best describes your organization. This shapes the rest of your setup."
+    },
+    "modules": {
+      "title": "Which module are you looking for?",
+      "options": {
+        "applications": {
+          "title": "Applications",
+          "description": "Capture, validate, and route certification requests with a complete audit trail."
+        },
+        "auditPlanning": {
+          "title": "Audit Planning",
+          "description": "Plan, assign, and track audits with real-time visibility and control."
+        },
+        "certificates": {
+          "title": "Certificates",
+          "description": "Manage certificate lifecycles with issuance, renewal, suspension, and full control."
+        },
+        "nonconformities": {
+          "title": "Nonconformities",
+          "description": "Record findings, manage corrective actions, and verify effective resolution."
+        },
+        "reportsAnalytics": {
+          "title": "Reports & Analytics",
+          "description": "Drive smarter decisions with live dashboards and operational reporting tools."
+        },
+        "certification": {
+          "title": "Certification",
+          "description": "Manage certification scopes and ongoing surveillance across conformity bodies."
+        },
+        "clientPortal": {
+          "title": "Client Portal",
+          "description": "Give clients secure portals to apply, track, and download certificates."
+        },
+        "competence": {
+          "title": "Competence",
+          "description": "Manage auditor and assessor competence with qualifications, training, and witnessing."
+        }
+      }
+    },
+    "shared": {
+      "intro": {
+        "title": "Let's finish setting up your workspace",
+        "description": "Choose your role, organization type, and the details connected to it.",
+        "estimatedTimeLabel": "Estimated",
+        "estimatedTimeValue": "10 Minutes",
+        "estimatedTimeDescription": "answers shape your configuration",
+        "howItWorksLabel": "How it Works",
+        "howItWorksValue": "Role, organization type, details, location and branding — then you're ready.",
+        "cta": "Get Started"
+      },
+      "success": {
+        "title": "Your workspace is ready!",
+        "description": "{{name}} is all set up and ready to go.",
+        "back": "Back",
+        "cta": "Go to Dashboard"
+      },
+      "summary": {
+        "title": "Summary",
+        "accreditationBodyName": "Accreditation Body Name",
+        "organizationName": "Organization Name",
+        "contactPerson": "Contact Person",
+        "selectedSchemes": "Selected Schemes",
+        "selectedModules": "Selected Modules",
+        "emptyValue": "—"
+      }
+    },
+    "orgType": {
+      "hint": "Let's start with the basics.",
+      "title": "What type of organization are you?",
+      "subtitle": "Choose your organization type, then select the areas that apply.",
+      "areasLabel": "Select applicable areas",
+      "areasPlaceholder": "Select one or more areas",
+      "areasSinglePlaceholder": "Select an area",
+      "areasSearchPlaceholder": "Search areas...",
+      "orgNameLabels": {
+        "default": {
+          "label": "Organization Name",
+          "placeholder": "Enter organization name"
+        },
+        "accreditationBody": {
+          "label": "Accreditation Body Name",
+          "placeholder": "Enter accreditation body name"
+        },
+        "conformityAssessmentBody": {
+          "label": "CAB Name",
+          "placeholder": "Enter CAB legal name"
+        },
+        "schemeOwner": {
+          "label": "Scheme Owners Name",
+          "placeholder": "Enter scheme owner name"
+        },
+        "internalAudits": {
+          "label": "Internal Audits Name",
+          "placeholder": "Enter organization name"
+        },
+        "supplierAudits": {
+          "label": "Supplier Audits Name",
+          "placeholder": "Enter organization name"
+        }
+      },
+      "options": {
+        "accreditationBody": {
+          "title": "Accreditation Body",
+          "description": "Accredits conformity assessment bodies across multiple disciplines."
+        },
+        "conformityAssessmentBody": {
+          "title": "Conformity Assessment Body",
+          "description": "Provides certification, inspection, testing, or related assessment services."
+        },
+        "schemeOwner": {
+          "title": "Scheme Owners",
+          "description": "Owns and governs certification or conformity assessment schemes."
+        },
+        "internalAudits": {
+          "title": "Internal Audits",
+          "description": "Conducts internal audits within your organization."
+        },
+        "supplierAudits": {
+          "title": "Supplier Audits",
+          "description": "Audits suppliers for qualification, performance, and compliance."
+        }
+      },
+      "subOptions": {
+        "msCertificationBodies": "Management System Certification Bodies",
+        "productProcessServiceCertificationBodies": "Product, Process and Service Certification Bodies",
+        "personnelCertificationBodies": "Personnel Certification Bodies",
+        "inspectionBodies": "Inspection Bodies",
+        "testingLaboratories": "Testing Laboratories",
+        "calibrationLaboratories": "Calibration Laboratories",
+        "medicalLaboratories": "Medical Laboratories",
+        "validationVerificationBodies": "Validation and Verification Bodies",
+        "proficiencyTestingProviders": "Proficiency Testing Providers",
+        "referenceMaterialProducers": "Reference Material Producers",
+        "biobanks": "Biobanks",
+        "msCertificationBody": "Management System Certification Body",
+        "productProcessServiceCertificationBody": "Product, Process and Service Certification Body",
+        "personnelCertificationBody": "Personnel Certification Body",
+        "inspectionBody": "Inspection Body",
+        "testingLaboratory": "Testing Laboratory",
+        "calibrationLaboratory": "Calibration Laboratory",
+        "medicalLaboratory": "Medical Laboratory",
+        "validationVerificationBody": "Validation and Verification Body",
+        "proficiencyTestingProvider": "Proficiency Testing Provider",
+        "referenceMaterialProducer": "Reference Material Producer",
+        "regulatorySchemeOwner": "Regulatory Scheme Owner",
+        "governmentSchemeOwner": "Government Scheme Owner",
+        "industryAssociationSchemeOwner": "Industry or Association Scheme Owner",
+        "privateCertificationSchemeOwner": "Private Certification Scheme Owner",
+        "sustainabilityEsgSchemeOwner": "Sustainability or ESG Scheme Owner",
+        "trainingPersonnelSchemeOwner": "Training and Personnel Scheme Owner",
+        "otherSchemeOwner": "Other Scheme Owner",
+        "msInternalAudit": "Management System Internal Audit",
+        "processAudit": "Process Audit",
+        "productAudit": "Product Audit",
+        "complianceAudit": "Compliance Audit",
+        "supplierQualificationAudit": "Supplier Qualification Audit",
+        "supplierPerformanceAudit": "Supplier Performance Audit",
+        "supplierComplianceAudit": "Supplier Compliance Audit",
+        "productOrProcessAudit": "Product or Process Audit",
+        "socialComplianceAudit": "Social Compliance Audit",
+        "sustainabilityEsgAudit": "Sustainability/ESG Audit",
+        "foodSafetySupplierAudit": "Food Safety Supplier Audit"
+      }
+    }
+  },
+  "ab": {
+    "onboarding": {
+      "intro": {
+        "title": "Let's set up your AB",
+        "description": "A few quick steps and your accreditation body will be ready to work with clients.",
+        "estimatedTimeLabel": "Estimated",
+        "estimatedTimeValue": "10 Minutes",
+        "estimatedTimeDescription": "answers shape your configuration",
+        "howItWorksLabel": "How it Works",
+        "howItWorksValue": "Accreditation scope, details, location and branding — then you're ready.",
+        "cta": "Get Started"
+      },
+      "steps": {
+        "orgType": "Organization type",
+        "orgDetails": "Organization details",
+        "location": "Location",
+        "branding": "Branding"
+      },
+      "orgType": {
+        "hint": "Let's start with the basics.",
+        "title": "What is your accreditation scope?",
+        "subtitle": "Choose your organization type, then select the areas that apply.",
+        "areasLabel": "Select applicable areas",
+        "areasPlaceholder": "Select one or more areas",
+        "options": {
+          "accreditationBody": {
+            "title": "Accreditation Body",
+            "description": "Accredits conformity assessment bodies across multiple disciplines."
+          },
+          "conformityAssessmentBody": {
+            "title": "Conformity Assessment Body",
+            "description": "Provides certification, inspection, testing, or related assessment services."
+          },
+          "schemeOwner": {
+            "title": "Scheme Owners",
+            "description": "Owns and governs certification or conformity assessment schemes."
+          },
+          "internalAudits": {
+            "title": "Internal Audits",
+            "description": "Conducts internal audits within your organization."
+          },
+          "supplierAudits": {
+            "title": "Supplier Audits",
+            "description": "Audits suppliers for qualification, performance, and compliance."
+          }
+        },
+        "subOptions": {
+          "msCertificationBodies": "Management System Certification Bodies",
+          "productProcessServiceCertificationBodies": "Product, Process and Service Certification Bodies",
+          "personnelCertificationBodies": "Personnel Certification Bodies",
+          "inspectionBodies": "Inspection Bodies",
+          "testingLaboratories": "Testing Laboratories",
+          "calibrationLaboratories": "Calibration Laboratories",
+          "medicalLaboratories": "Medical Laboratories",
+          "validationVerificationBodies": "Validation and Verification Bodies",
+          "proficiencyTestingProviders": "Proficiency Testing Providers",
+          "referenceMaterialProducers": "Reference Material Producers",
+          "biobanks": "Biobanks",
+          "msCertificationBody": "Management System Certification Body",
+          "productProcessServiceCertificationBody": "Product, Process and Service Certification Body",
+          "personnelCertificationBody": "Personnel Certification Body",
+          "inspectionBody": "Inspection Body",
+          "testingLaboratory": "Testing Laboratory",
+          "calibrationLaboratory": "Calibration Laboratory",
+          "medicalLaboratory": "Medical Laboratory",
+          "validationVerificationBody": "Validation and Verification Body",
+          "proficiencyTestingProvider": "Proficiency Testing Provider",
+          "referenceMaterialProducer": "Reference Material Producer",
+          "regulatorySchemeOwner": "Regulatory Scheme Owner",
+          "governmentSchemeOwner": "Government Scheme Owner",
+          "industryAssociationSchemeOwner": "Industry or Association Scheme Owner",
+          "privateCertificationSchemeOwner": "Private Certification Scheme Owner",
+          "sustainabilityEsgSchemeOwner": "Sustainability or ESG Scheme Owner",
+          "trainingPersonnelSchemeOwner": "Training and Personnel Scheme Owner",
+          "otherSchemeOwner": "Other Scheme Owner",
+          "msInternalAudit": "Management System Internal Audit",
+          "processAudit": "Process Audit",
+          "productAudit": "Product Audit",
+          "complianceAudit": "Compliance Audit",
+          "supplierQualificationAudit": "Supplier Qualification Audit",
+          "supplierPerformanceAudit": "Supplier Performance Audit",
+          "supplierComplianceAudit": "Supplier Compliance Audit",
+          "productOrProcessAudit": "Product or Process Audit",
+          "socialComplianceAudit": "Social Compliance Audit",
+          "sustainabilityEsgAudit": "Sustainability/ESG Audit",
+          "foodSafetySupplierAudit": "Food Safety Supplier Audit"
+        }
+      },
+      "orgDetails": {
+        "hint": "Got it, you accredit {{orgType}}.",
+        "title": "Tell us about your organization",
+        "subtitle": "This information will appear on certificates and official documents",
+        "legalEntityName": "Legal Entity Name",
+        "legalEntityNamePlaceholder": "Enter the registered legal name",
+        "tradingName": "Trading / Brand Name",
+        "tradingNamePlaceholder": "How clients know you (optional)",
+        "orgType": "Organization Type",
+        "accreditationBodyName": "Accreditation Body Name",
+        "accreditationBodyNamePlaceholder": "Select accreditation bodies",
+        "accreditationBodyNameSearchPlaceholder": "Search...",
+        "abType": "AB Type",
+        "abTypePlaceholder": "Selected from applicable areas",
+        "registrationNumber": "Registration / License Number",
+        "registrationNumberPlaceholder": "Enter your registration number",
+        "website": "Website",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "Nice to meet you, {{name}}.",
+        "title": "Where is your organization located?",
+        "subtitle": "This helps us connect you with the right clients",
+        "country": "Country",
+        "city": "City",
+        "address": "Main Office Address",
+        "addressPlaceholder": "Street, building, area",
+        "timeZone": "Time Zone",
+        "timeZonePlaceholder": "Select a country first",
+        "autoDetected": "Auto-detected",
+        "languages": "Operating Languages",
+        "languagesPlaceholder": "Select languages"
+      },
+      "branding": {
+        "hint": "Almost there — let's make it yours.",
+        "title": "How should your AB look to clients?",
+        "subtitle": "Customize how your portal, emails and certificates look",
+        "visualIdentity": "Visual Identity",
+        "logo": "Logo",
+        "logoHint": "PNG, JPG or SVG, max 10MB",
+        "logoUploaded": "Uploaded",
+        "portalConfiguration": "Portal Configuration",
+        "lightTheme": "Light",
+        "darkTheme": "Dark",
+        "includeLogoInEmails": "Include logo in email headers",
+        "displayLogoOnCertificates": "Display logo on certificates",
+        "colorPalette": "Choose Color Palette",
+        "customColor": "Custom Color",
+        "colorPicker": "Choose a custom color",
+        "hexColor": "Hex color value"
+      },
+      "success": {
+        "title": "Your AB is ready!",
+        "description": "{{name}} is all set up and ready to start managing accreditation work.",
+        "back": "Back",
+        "cta": "Go to Dashboard"
+      }
+    },
+    "dashboard": {
+      "title": "AB Dashboard",
+      "comingSoonTitle": "Coming soon",
+      "comingSoonDescription": "Your accreditation body dashboard is under development. You'll manage accreditation work here once it launches."
+    }
+  },
+  "auditee": {
+    "onboarding": {
+      "intro": {
+        "title": "Let's set up your account",
+        "description": "A few quick steps and your company profile will be ready to work with certification bodies.",
+        "estimatedTimeLabel": "Estimated",
+        "estimatedTimeValue": "5 Minutes",
+        "estimatedTimeDescription": "answers shape your configuration",
+        "howItWorksLabel": "How it Works",
+        "howItWorksValue": "Organization type, company details, location and branding — then you're ready.",
+        "cta": "Get Started"
+      },
+      "steps": {
+        "orgType": "Organization type",
+        "orgDetails": "Organization details",
+        "location": "Location",
+        "branding": "Branding"
+      },
+      "orgDetails": {
+        "hint": "Got it, you're a {{orgType}}.",
+        "title": "Tell us about your company",
+        "subtitle": "This information will appear on your certification applications",
+        "legalEntityName": "Company Legal Name",
+        "legalEntityNamePlaceholder": "Enter the registered legal name",
+        "tradingName": "Trading / Brand Name",
+        "tradingNamePlaceholder": "How others know your company (optional)",
+        "orgType": "Organization Type",
+        "registrationNumber": "Registration / License Number",
+        "registrationNumberPlaceholder": "Enter your registration number",
+        "website": "Website",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "Nice to meet you, {{name}}.",
+        "title": "Where is your company located?",
+        "subtitle": "This helps us connect you with the right certification bodies",
+        "country": "Country",
+        "city": "City",
+        "address": "Main Office Address",
+        "addressPlaceholder": "Street, building, area",
+        "timeZone": "Time Zone",
+        "timeZonePlaceholder": "Select a country first",
+        "autoDetected": "Auto-detected",
+        "languages": "Operating Languages",
+        "languagesPlaceholder": "Select languages"
+      },
+      "branding": {
+        "hint": "Almost there — let's make it yours.",
+        "title": "How should your company look on the portal?",
+        "subtitle": "Customize how your portal, emails and certificates look",
+        "visualIdentity": "Visual Identity",
+        "logo": "Logo",
+        "logoHint": "PNG, JPG or SVG, max 10MB",
+        "logoUploaded": "Uploaded",
+        "portalConfiguration": "Portal Configuration",
+        "lightTheme": "Light",
+        "darkTheme": "Dark",
+        "includeLogoInEmails": "Include logo in email headers",
+        "displayLogoOnCertificates": "Display logo on certificates",
+        "colorPalette": "Choose Color Palette",
+        "customColor": "Custom Color",
+        "colorPicker": "Choose a custom color",
+        "hexColor": "Hex color value"
+      },
+      "success": {
+        "title": "Your account is ready!",
+        "description": "{{name}} is all set up and ready to start working with certification bodies.",
+        "back": "Back",
+        "cta": "Go to Dashboard"
+      }
+    }
+  },
   "cab": {
+    "onboarding": {
+      "intro": {
+        "title": "Let's set up your CAB",
+        "description": "Configure your organization, accreditation structure, services, and workspace. Each choice you make will shape what comes next.",
+        "estimatedTimeLabel": "Estimated",
+        "estimatedTimeValue": "15 Minutes",
+        "estimatedTimeDescription": "answers shape your configuration",
+        "howItWorksLabel": "How it Works",
+        "howItWorksValue": "Your CAB configuration will build dynamically as you answer each question. We pre-configure compliant standards, workflows, and roles based on your jurisdiction.",
+        "cta": "Get Started"
+      },
+      "steps": {
+        "orgType": "Organization type",
+        "orgDetails": "Organization details",
+        "location": "Location",
+        "accreditationBody": "Accreditation body",
+        "branding": "Branding"
+      },
+      "orgType": {
+        "hint": "Welcome to your CAB setup. Let's start with the basics.",
+        "title": "What type of organization are you?",
+        "subtitle": "This determines your accreditation structure, available schemes, and the questions we'll ask next.",
+        "options": {
+          "certificationBody": {
+            "title": "Certification Body",
+            "description": "Issues management system, product, or personnel certifications against international standards."
+          },
+          "inspectionBody": {
+            "title": "Inspection Body",
+            "description": "Performs inspections of processes, installations, or services to verify strict compliance."
+          },
+          "testingLaboratory": {
+            "title": "Testing Laboratory",
+            "description": "Conducts comprehensive testing of products, materials, or environment samples."
+          },
+          "calibrationLaboratory": {
+            "title": "Calibration Laboratory",
+            "description": "Provides certified calibration services for high-precision measuring instruments."
+          }
+        }
+      },
+      "orgDetails": {
+        "hint": "Got it, you're a {{orgType}}.",
+        "title": "Tell us about your organization",
+        "subtitle": "We'll use this to set up your identity across certificates, portals, and official documents.",
+        "legalEntityName": "CAB Name",
+        "legalEntityNamePlaceholder": "Enter CAB legal name",
+        "tradingName": "Trading / Brand Name",
+        "tradingNamePlaceholder": "How clients know you (optional)",
+        "orgType": "Organization Type",
+        "cabType": "CAB Type",
+        "cabTypePlaceholder": "Selected from applicable areas",
+        "registrationNumber": "Registration / License Number",
+        "registrationNumberPlaceholder": "Enter your registration number",
+        "website": "Website",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "Great! {{name}} is registered.",
+        "title": "Where is your organization located?",
+        "subtitle": "Your country determines which accreditation bodies and regional settings are available to you.",
+        "country": "Country",
+        "city": "City",
+        "address": "Main Office Address",
+        "addressPlaceholder": "Street, building, area",
+        "timeZone": "Time Zone",
+        "timeZonePlaceholder": "Select a country first",
+        "autoDetected": "Auto-detected",
+        "languages": "Operating Languages",
+        "languagesPlaceholder": "Select languages"
+      },
+      "accreditationBody": {
+        "hint": "Perfect, your CAB is based in {{country}}.",
+        "title": "Which accreditation body do you work with?",
+        "subtitle": "Based on your location in {{country}}, these are the relevant accreditation bodies.",
+        "otherLabel": "Accreditation body name",
+        "otherPlaceholder": "Enter the accreditation body you work with"
+      },
+      "branding": {
+        "hint": "Got it, you work with {{accreditationBody}}.",
+        "title": "How should your CAB look to clients?",
+        "subtitle": "Configure your visual identity for the client portal, email communications, and certificates.",
+        "visualIdentity": "Visual Identity",
+        "logo": "Logo",
+        "logoHint": "PNG, JPG or SVG, max 10MB",
+        "logoUploaded": "Uploaded",
+        "portalConfiguration": "Portal Configuration",
+        "lightTheme": "Light",
+        "darkTheme": "Dark",
+        "includeLogoInEmails": "Include logo in email headers",
+        "displayLogoOnCertificates": "Display logo on certificates",
+        "colorPalette": "Choose Color Palette",
+        "customColor": "Custom Color",
+        "colorPicker": "Choose a custom color",
+        "hexColor": "Hex color value"
+      },
+      "success": {
+        "title": "Your CAB is ready!",
+        "description": "{{name}} has been fully configured.",
+        "back": "Back",
+        "cta": "Go to Dashboard"
+      }
+    },
     "sidebar": {
       "tagline": "Small Conformity.. Real Impact",
       "dashboard": "Dashboard",

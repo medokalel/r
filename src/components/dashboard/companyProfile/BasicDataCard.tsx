@@ -87,10 +87,10 @@ export function BasicDataCard() {
             <div className="relative flex items-center">
               <TextField
                 type="text"
+                readOnly
                 placeholder={t('companyProfile.basicDataCard.authorizedPersonPlaceholder')}
-                className="ps-10"
+                className="cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] ps-10 text-neutral-400"
                 value={form.authorizedPersonName}
-                onChange={(e) => update('authorizedPersonName', e.target.value)}
               />
               <span className="pointer-events-none absolute start-3 text-primary">
                 <AppIcon icon={UserIcon} size={18} />
@@ -102,10 +102,10 @@ export function BasicDataCard() {
               <TextField
                 type="email"
                 dir="ltr"
+                readOnly
                 placeholder={t('companyProfile.basicDataCard.emailPlaceholder')}
-                className="pl-10"
+                className="cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] pl-10 text-neutral-400"
                 value={form.email}
-                onChange={(e) => update('email', e.target.value)}
               />
               <span className="pointer-events-none absolute left-3 text-primary">
                 <AppIcon icon={MailIcon} size={18} />
@@ -119,17 +119,18 @@ export function BasicDataCard() {
             <PhoneInputRow
               rowClassName="items-center gap-2"
               value={form.countryCode}
-              onChange={(code) => update('countryCode', code)}
+              onChange={() => undefined}
+              disabled
               aria-label={t('companyProfile.basicDataCard.phoneLabel')}
-              className="h-12 rounded-[var(--radius-sm)] border border-neutral-200"
+              className="h-12 cursor-not-allowed rounded-[var(--radius-sm)] border border-[#f2f2f2] bg-[#f9fafc] opacity-100"
             >
               <TextField
                 type="tel"
                 dir="ltr"
+                readOnly
                 placeholder={t('companyProfile.basicDataCard.phonePlaceholder')}
-                className="flex-1"
+                className="flex-1 cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] text-neutral-400"
                 value={form.phoneNumber}
-                onChange={(e) => update('phoneNumber', e.target.value)}
               />
             </PhoneInputRow>
           </FormField>

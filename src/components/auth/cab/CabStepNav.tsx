@@ -3,14 +3,12 @@ import { englishDigitsLtrClassName } from '@/lib/englishDigits'
 import { cn } from '@/lib/utils'
 
 const CAB_STEPS = [
-  { key: 'register.cab.steps.details', number: 1 },
-  { key: 'register.cab.steps.scopeModules', number: 2 },
-  { key: 'register.cab.steps.verification', number: 3 },
-  { key: 'register.cab.steps.accountSetup', number: 4 },
+  { key: 'register.cab.steps.basics', number: 1 },
+  { key: 'register.cab.steps.verification', number: 2 },
 ] as const
 
 interface CabStepNavProps {
-  current: 1 | 2 | 3 | 4 | 5
+  current: 1 | 2
   className?: string
 }
 

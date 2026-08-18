@@ -73,10 +73,22 @@
     "title": "إنشاء حساب جديد",
     "chooseEntityType": "يرجى اختيار نوع الجهة",
     "selectedEntityLabel": "بتسجل كـ:",
+    "account": {
+      "subtitle": "أنشئ حسابك أولاً. ستختار دورك وتفاصيل منظمتك بعد تسجيل الدخول.",
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "الاسم الكامل",
+      "email": "البريد الإلكتروني",
+      "mobileNumber": "رقم الجوال",
+      "country": "الدولة",
+      "submittedTitle": "تم إنشاء الحساب بنجاح!",
+      "submittedDescription": "حسابك جاهز. سجّل الدخول لمتابعة الإعداد واختيار دورك.",
+      "goToLogin": "الذهاب لتسجيل الدخول"
+    },
     "cab": {
       "title": "إنشاء حساب CAB جديد",
       "comingSoon": "هذه الخطوة قريبًا.",
       "steps": {
+        "basics": "بيانات الحساب",
         "details": "بيانات CAB",
         "scopeModules": "النطاق والوحدات",
         "verification": "التحقق",
@@ -125,14 +137,16 @@
         "selectedSchemes": "المخططات المختارة",
         "selectedModules": "الوحدات المختارة",
         "submittedTitle": "تم إرسال طلب التسجيل بنجاح!",
-        "submittedDescription": "تم إنشاء حساب CAB الخاص بك. يمكنك الآن الوصول إلى لوحة التحكم والبدء في إدارة أنشطة تقييم المطابقة.",
-        "goToDashboard": "الذهاب إلى لوحة التحكم"
+        "submittedDescription": "تم إنشاء حساب CAB الخاص بك. يرجى تسجيل الدخول لمتابعة إعداد حسابك.",
+        "goToDashboard": "الذهاب إلى لوحة التحكم",
+        "goToLogin": "الذهاب لتسجيل الدخول"
       }
     },
     "ab": {
       "title": "إنشاء حساب AB جديد",
       "comingSoon": "هذه الخطوة قريبًا.",
       "steps": {
+        "basics": "بيانات الحساب",
         "details": "بيانات AB",
         "scopeModules": "النطاق والوحدات",
         "verification": "التحقق",
@@ -140,15 +154,15 @@
       },
       "cabType": "نوع AB",
       "cabTypePlaceholder": "اختر نوع AB",
-      "cabName": "اسم AB",
-      "cabNamePlaceholder": "أدخل الاسم القانوني لـ AB",
-      "cabNameSearchPlaceholder": "بحث...",
+      "abName": "اسم AB",
+      "abNamePlaceholder": "أدخل الاسم القانوني لـ AB",
+      "abNameSearchPlaceholder": "بحث...",
       "accreditationBodyName": "اسم جهة الاعتماد",
       "accreditationBodyPlaceholder": "اختر جهة الاعتماد",
       "accreditationBodyNamePlaceholder": "اختر جهات الاعتماد",
       "officialEmail": "البريد الإلكتروني الرسمي",
       "mobileNumber": "رقم الهاتف المحمول",
-      "cabCountry": "دولة AB",
+      "abCountry": "دولة AB",
       "abCountryPlaceholder": "اختر الدولة",
       "contactPerson": "الشخص المسؤول",
       "contactPersonPlaceholder": "الاسم الكامل",
@@ -181,8 +195,9 @@
         "selectedSchemes": "المخططات المختارة",
         "selectedModules": "الوحدات المختارة",
         "submittedTitle": "تم إرسال طلب التسجيل بنجاح!",
-        "submittedDescription": "تم إنشاء حساب AB الخاص بك. يمكنك الآن الوصول إلى لوحة التحكم والبدء في إدارة أنشطة الاعتماد.",
-        "goToDashboard": "الذهاب إلى لوحة التحكم"
+        "submittedDescription": "تم إنشاء حساب AB الخاص بك. يرجى تسجيل الدخول لمتابعة إعداد جهة الاعتماد الخاصة بك.",
+        "goToDashboard": "الذهاب إلى لوحة التحكم",
+        "goToLogin": "الذهاب لتسجيل الدخول"
       }
     },
     "auditee": {
@@ -196,9 +211,13 @@
       "contactPerson": "الشخص المختص",
       "contactPersonPlaceholder": "مثال: محمد خالد",
       "role": "الدور",
+      "roles": {
+        "admin": "مسؤول"
+      },
       "email": "البريد الإلكتروني",
       "mobileNumber": "رقم الجوال",
       "steps": {
+        "basics": "بيانات الحساب",
         "details": "البيانات",
         "verification": "التحقق",
         "accountSetup": "إعداد الحساب"
@@ -206,7 +225,8 @@
       "summary": {
         "submittedTitle": "تم إرسال طلب التسجيل بنجاح!",
         "submittedDescription": "تم إنشاء حسابك. يمكنك الآن تسجيل الدخول والبدء.",
-        "goToDashboard": "الذهاب إلى لوحة التحكم"
+        "goToDashboard": "الذهاب إلى لوحة التحكم",
+        "goToLogin": "الذهاب لتسجيل الدخول"
       }
     },
     "progressLabel": "تقدم التسجيل",
@@ -267,8 +287,11 @@
     "createAccount": "إنشاء الحساب",
     "creatingAccount": "جاري إنشاء الحساب...",
     "sendingCode": "جاري الإرسال...",
+    "sendingCodeToEmail": "جاري إرسال رمز التحقق إلى بريدك الإلكتروني.",
+    "resendCode": "إعادة إرسال الرمز",
     "verifyEmail": "تحقق من البريد",
-    "verifyingEmail": "جاري التحقق..."
+    "verifyingEmail": "جاري التحقق...",
+    "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول بدلاً من ذلك."
   },
   "accreditation": {
     "title": "طلب منح",
@@ -1323,7 +1346,503 @@
       "procedures": "الإجراءات"
     }
   },
+  "onboarding": {
+    "entityType": {
+      "hint": "لنبدأ بالأساسيات.",
+      "title": "ما نوع منظمتك؟",
+      "subtitle": "اختر الخيار الذي يصف منظمتك بشكل أفضل. سيحدد ذلك بقية الإعداد."
+    },
+    "modules": {
+      "title": "ما الوحدة التي تبحث عنها؟",
+      "options": {
+        "applications": {
+          "title": "الطلبات",
+          "description": "استقبل وتحقق من طلبات التصديق ووجّهها مع سجل تدقيق كامل."
+        },
+        "auditPlanning": {
+          "title": "تخطيط التدقيق",
+          "description": "خطط للتدقيقات وعيّنها وتتبعها برؤية وتحكم في الوقت الفعلي."
+        },
+        "certificates": {
+          "title": "الشهادات",
+          "description": "أدر دورة حياة الشهادات من الإصدار والتجديد والتعليق والتحكم الكامل."
+        },
+        "nonconformities": {
+          "title": "عدم المطابقة",
+          "description": "سجّل النتائج وأدر الإجراءات التصحيحية وتحقق من الحل الفعّال."
+        },
+        "reportsAnalytics": {
+          "title": "التقارير والتحليلات",
+          "description": "اتخذ قرارات أذكى عبر لوحات معلومات مباشرة وأدوات تقارير تشغيلية."
+        },
+        "certification": {
+          "title": "التصديق",
+          "description": "أدر نطاقات التصديق والمراقبة المستمرة عبر جهات المطابقة."
+        },
+        "clientPortal": {
+          "title": "بوابة العملاء",
+          "description": "وفّر للعملاء بوابات آمنة للتقديم والمتابعة وتنزيل الشهادات."
+        },
+        "competence": {
+          "title": "الكفاءة",
+          "description": "أدر كفاءة المدققين والمقيّمين بالمؤهلات والتدريب والشهادة."
+        }
+      }
+    },
+    "shared": {
+      "intro": {
+        "title": "لنكمل إعداد مساحة عملك",
+        "description": "اختر دورك ونوع منظمتك والتفاصيل المرتبطة به.",
+        "estimatedTimeLabel": "الوقت المتوقع",
+        "estimatedTimeValue": "10 دقائق",
+        "estimatedTimeDescription": "ستحدد إجاباتك إعدادات مؤسستك",
+        "howItWorksLabel": "كيف تسير العملية",
+        "howItWorksValue": "الدور، نوع المنظمة، التفاصيل، الموقع ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
+        "cta": "ابدأ الآن"
+      },
+      "success": {
+        "title": "مساحة عملك جاهزة!",
+        "description": "{{name}} جاهزة للانطلاق.",
+        "back": "رجوع",
+        "cta": "الذهاب إلى لوحة التحكم"
+      },
+      "summary": {
+        "title": "الملخص",
+        "accreditationBodyName": "اسم هيئة الاعتماد",
+        "organizationName": "اسم المنظمة",
+        "contactPerson": "جهة الاتصال",
+        "selectedSchemes": "المخططات المختارة",
+        "selectedModules": "الوحدات المختارة",
+        "emptyValue": "—"
+      }
+    },
+    "orgType": {
+      "hint": "لنبدأ بالأساسيات.",
+      "title": "ما نوع منظمتك؟",
+      "subtitle": "اختر نوع منظمتك، ثم حدد المجالات المناسبة.",
+      "areasLabel": "اختر مجالات الاعتماد",
+      "areasPlaceholder": "اختر مجالاً واحداً أو أكثر",
+      "areasSinglePlaceholder": "اختر مجالاً",
+      "areasSearchPlaceholder": "ابحث في المجالات...",
+      "orgNameLabels": {
+        "default": {
+          "label": "اسم المنظمة",
+          "placeholder": "أدخل اسم المنظمة"
+        },
+        "accreditationBody": {
+          "label": "اسم هيئة الاعتماد",
+          "placeholder": "أدخل اسم هيئة الاعتماد"
+        },
+        "conformityAssessmentBody": {
+          "label": "اسم CAB",
+          "placeholder": "أدخل الاسم القانوني لـ CAB"
+        },
+        "schemeOwner": {
+          "label": "اسم مالكي المخططات",
+          "placeholder": "أدخل اسم مالك المخطط"
+        },
+        "internalAudits": {
+          "label": "اسم التدقيق الداخلي",
+          "placeholder": "أدخل اسم المنظمة"
+        },
+        "supplierAudits": {
+          "label": "اسم تدقيق الموردين",
+          "placeholder": "أدخل اسم المنظمة"
+        }
+      },
+      "options": {
+        "accreditationBody": {
+          "title": "جهة اعتماد",
+          "description": "تعتمد جهات تقييم المطابقة في تخصصات متعددة."
+        },
+        "conformityAssessmentBody": {
+          "title": "جهة تقييم مطابقة",
+          "description": "تقدم خدمات التصديق أو الفحص أو الاختبار أو تقييمات ذات صلة."
+        },
+        "schemeOwner": {
+          "title": "مالكو المخططات",
+          "description": "يمتلك ويدير مخططات التصديق أو تقييم المطابقة."
+        },
+        "internalAudits": {
+          "title": "التدقيق الداخلي",
+          "description": "يجري عمليات تدقيق داخلية داخل المنظمة."
+        },
+        "supplierAudits": {
+          "title": "تدقيق الموردين",
+          "description": "يدقق الموردين من حيث التأهيل والأداء والامتثال."
+        }
+      },
+      "subOptions": {
+        "msCertificationBodies": "جهات تصديق أنظمة الإدارة",
+        "productProcessServiceCertificationBodies": "جهات تصديق المنتجات والعمليات والخدمات",
+        "personnelCertificationBodies": "جهات تصديق الأفراد",
+        "inspectionBodies": "جهات الفحص",
+        "testingLaboratories": "مختبرات الاختبار",
+        "calibrationLaboratories": "مختبرات المعايرة",
+        "medicalLaboratories": "المختبرات الطبية",
+        "validationVerificationBodies": "جهات التحقق والتصديق",
+        "proficiencyTestingProviders": "مقدمو اختبارات الكفاءة",
+        "referenceMaterialProducers": "منتجو مواد مرجعية",
+        "biobanks": "بنوك حيوية",
+        "msCertificationBody": "جهة تصديق أنظمة الإدارة",
+        "productProcessServiceCertificationBody": "جهة تصديق المنتجات والعمليات والخدمات",
+        "personnelCertificationBody": "جهة تصديق الأفراد",
+        "inspectionBody": "جهة فحص",
+        "testingLaboratory": "مختبر اختبار",
+        "calibrationLaboratory": "مختبر معايرة",
+        "medicalLaboratory": "مختبر طبي",
+        "validationVerificationBody": "جهة تحقق وتصديق",
+        "proficiencyTestingProvider": "مقدم اختبار كفاءة",
+        "referenceMaterialProducer": "منتج مواد مرجعية",
+        "regulatorySchemeOwner": "مالك مخطط تنظيمي",
+        "governmentSchemeOwner": "مالك مخطط حكومي",
+        "industryAssociationSchemeOwner": "مالك مخطط صناعي أو جمعيات",
+        "privateCertificationSchemeOwner": "مالك مخطط تصديق خاص",
+        "sustainabilityEsgSchemeOwner": "مالك مخطط الاستدامة أو ESG",
+        "trainingPersonnelSchemeOwner": "مالك مخطط التدريب والأفراد",
+        "otherSchemeOwner": "مالك مخطط آخر",
+        "msInternalAudit": "تدقيق داخلي لنظام الإدارة",
+        "processAudit": "تدقيق العمليات",
+        "productAudit": "تدقيق المنتج",
+        "complianceAudit": "تدقيق الامتثال",
+        "supplierQualificationAudit": "تدقيق تأهيل المورد",
+        "supplierPerformanceAudit": "تدقيق أداء المورد",
+        "supplierComplianceAudit": "تدقيق امتثال المورد",
+        "productOrProcessAudit": "تدقيق المنتج أو العملية",
+        "socialComplianceAudit": "تدقيق الامتثال الاجتماعي",
+        "sustainabilityEsgAudit": "تدقيق الاستدامة/ESG",
+        "foodSafetySupplierAudit": "تدقيق سلامة الغذاء للمورد"
+      }
+    }
+  },
+  "ab": {
+    "onboarding": {
+      "intro": {
+        "title": "لنقم بإعداد جهة الاعتماد الخاصة بك",
+        "description": "بضع خطوات سريعة وستكون جهة الاعتماد جاهزة للعمل مع العملاء.",
+        "estimatedTimeLabel": "الوقت المتوقع",
+        "estimatedTimeValue": "10 دقائق",
+        "estimatedTimeDescription": "ستحدد إجاباتك إعدادات مؤسستك",
+        "howItWorksLabel": "كيف تسير العملية",
+        "howItWorksValue": "نطاق الاعتماد، التفاصيل، الموقع ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
+        "cta": "ابدأ الآن"
+      },
+      "steps": {
+        "orgType": "نوع المنظمة",
+        "orgDetails": "تفاصيل المنظمة",
+        "location": "الموقع",
+        "branding": "الهوية البصرية"
+      },
+      "orgType": {
+        "hint": "لنبدأ بالأساسيات.",
+        "title": "ما هو نطاق الاعتماد الخاص بك؟",
+        "subtitle": "اختر نوع منظمتك، ثم حدد المجالات المناسبة.",
+        "areasLabel": "اختر مجالات الاعتماد",
+        "areasPlaceholder": "اختر مجالًا واحدًا أو أكثر",
+        "options": {
+          "accreditationBody": {
+            "title": "جهة اعتماد",
+            "description": "تعتمد جهات تقييم المطابقة في تخصصات متعددة."
+          },
+          "conformityAssessmentBody": {
+            "title": "جهة تقييم مطابقة",
+            "description": "تقدم خدمات التصديق أو الفحص أو الاختبار أو تقييمات ذات صلة."
+          },
+          "schemeOwner": {
+            "title": "مالكو المخططات",
+            "description": "يمتلك ويدير مخططات التصديق أو تقييم المطابقة."
+          },
+          "internalAudits": {
+            "title": "التدقيق الداخلي",
+            "description": "يجري عمليات تدقيق داخلية داخل المنظمة."
+          },
+          "supplierAudits": {
+            "title": "تدقيق الموردين",
+            "description": "يدقق الموردين من حيث التأهيل والأداء والامتثال."
+          }
+        },
+        "subOptions": {
+          "msCertificationBodies": "جهات تصديق أنظمة الإدارة",
+          "productProcessServiceCertificationBodies": "جهات تصديق المنتجات والعمليات والخدمات",
+          "personnelCertificationBodies": "جهات تصديق الأفراد",
+          "inspectionBodies": "جهات الفحص",
+          "testingLaboratories": "مختبرات الاختبار",
+          "calibrationLaboratories": "مختبرات المعايرة",
+          "medicalLaboratories": "المختبرات الطبية",
+          "validationVerificationBodies": "جهات التحقق والتصديق",
+          "proficiencyTestingProviders": "مقدمو اختبارات الكفاءة",
+          "referenceMaterialProducers": "منتجو مواد مرجعية",
+          "biobanks": "بنوك حيوية",
+          "msCertificationBody": "جهة تصديق أنظمة الإدارة",
+          "productProcessServiceCertificationBody": "جهة تصديق المنتجات والعمليات والخدمات",
+          "personnelCertificationBody": "جهة تصديق الأفراد",
+          "inspectionBody": "جهة فحص",
+          "testingLaboratory": "مختبر اختبار",
+          "calibrationLaboratory": "مختبر معايرة",
+          "medicalLaboratory": "مختبر طبي",
+          "validationVerificationBody": "جهة تحقق وتصديق",
+          "proficiencyTestingProvider": "مقدم اختبار كفاءة",
+          "referenceMaterialProducer": "منتج مواد مرجعية",
+          "regulatorySchemeOwner": "مالك مخطط تنظيمي",
+          "governmentSchemeOwner": "مالك مخطط حكومي",
+          "industryAssociationSchemeOwner": "مالك مخطط صناعي أو جمعيات",
+          "privateCertificationSchemeOwner": "مالك مخطط تصديق خاص",
+          "sustainabilityEsgSchemeOwner": "مالك مخطط الاستدامة أو ESG",
+          "trainingPersonnelSchemeOwner": "مالك مخطط التدريب والأفراد",
+          "otherSchemeOwner": "مالك مخطط آخر",
+          "msInternalAudit": "تدقيق داخلي لنظام الإدارة",
+          "processAudit": "تدقيق العمليات",
+          "productAudit": "تدقيق المنتج",
+          "complianceAudit": "تدقيق الامتثال",
+          "supplierQualificationAudit": "تدقيق تأهيل المورد",
+          "supplierPerformanceAudit": "تدقيق أداء المورد",
+          "supplierComplianceAudit": "تدقيق امتثال المورد",
+          "productOrProcessAudit": "تدقيق المنتج أو العملية",
+          "socialComplianceAudit": "تدقيق الامتثال الاجتماعي",
+          "sustainabilityEsgAudit": "تدقيق الاستدامة/ESG",
+          "foodSafetySupplierAudit": "تدقيق سلامة الغذاء للمورد"
+        }
+      },
+      "orgDetails": {
+        "hint": "تمام، أنت تعتمد {{orgType}}.",
+        "title": "أخبرنا عن منظمتك",
+        "subtitle": "ستظهر هذه المعلومات في الشهادات والمستندات الرسمية",
+        "legalEntityName": "الاسم القانوني للمنظمة",
+        "legalEntityNamePlaceholder": "أدخل الاسم القانوني المسجل",
+        "tradingName": "الاسم التجاري",
+        "tradingNamePlaceholder": "كيف يعرفك العملاء (اختياري)",
+        "orgType": "نوع المنظمة",
+        "accreditationBodyName": "اسم جهة الاعتماد",
+        "accreditationBodyNamePlaceholder": "اختر جهات الاعتماد",
+        "accreditationBodyNameSearchPlaceholder": "بحث...",
+        "abType": "نوع AB",
+        "abTypePlaceholder": "محدد من المجالات المناسبة",
+        "registrationNumber": "رقم التسجيل / الترخيص",
+        "registrationNumberPlaceholder": "أدخل رقم التسجيل",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "تشرفنا، {{name}}.",
+        "title": "أين يقع مقر منظمتك؟",
+        "subtitle": "هذا يساعدنا في ربطك بالعملاء المناسبين",
+        "country": "الدولة",
+        "city": "المدينة",
+        "address": "عنوان المكتب الرئيسي",
+        "addressPlaceholder": "الشارع، المبنى، المنطقة",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "autoDetected": "تم الكشف تلقائيًا",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات"
+      },
+      "branding": {
+        "hint": "أوشكنا على الانتهاء — لنجعلها مميزة لك.",
+        "title": "كيف تريد أن تظهر جهتك للعملاء؟",
+        "subtitle": "خصص شكل بوابتك ورسائل البريد والشهادات",
+        "visualIdentity": "الهوية البصرية",
+        "logo": "الشعار",
+        "logoHint": "PNG أو JPG أو SVG، بحد أقصى 10 ميجابايت",
+        "logoUploaded": "تم الرفع",
+        "portalConfiguration": "إعدادات البوابة",
+        "lightTheme": "فاتح",
+        "darkTheme": "داكن",
+        "includeLogoInEmails": "تضمين الشعار في رسائل البريد الإلكتروني",
+        "displayLogoOnCertificates": "عرض الشعار على الشهادات",
+        "colorPalette": "اختر لوحة الألوان",
+        "customColor": "لون مخصص",
+        "colorPicker": "اختر لونًا مخصصًا",
+        "hexColor": "قيمة اللون السداسية"
+      },
+      "success": {
+        "title": "جهتك جاهزة الآن!",
+        "description": "تم إعداد {{name}} بالكامل وأصبحت جاهزة لإدارة أعمال الاعتماد.",
+        "back": "رجوع",
+        "cta": "الذهاب إلى لوحة التحكم"
+      }
+    },
+    "dashboard": {
+      "title": "لوحة تحكم AB",
+      "comingSoonTitle": "قريبًا",
+      "comingSoonDescription": "لوحة تحكم جهة الاعتماد قيد التطوير. ستتمكن من إدارة أعمال الاعتماد من هنا بعد الإطلاق."
+    }
+  },
+  "auditee": {
+    "onboarding": {
+      "intro": {
+        "title": "لنقم بإعداد حسابك",
+        "description": "بضع خطوات سريعة وسيكون ملف شركتك جاهزًا للعمل مع جهات التصديق.",
+        "estimatedTimeLabel": "الوقت المتوقع",
+        "estimatedTimeValue": "5 دقائق",
+        "estimatedTimeDescription": "ستحدد إجاباتك إعدادات مؤسستك",
+        "howItWorksLabel": "كيف تسير العملية",
+        "howItWorksValue": "نوع المنظمة، تفاصيل الشركة، الموقع ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
+        "cta": "ابدأ الآن"
+      },
+      "steps": {
+        "orgType": "نوع المنظمة",
+        "orgDetails": "تفاصيل المنظمة",
+        "location": "الموقع",
+        "branding": "الهوية البصرية"
+      },
+      "orgDetails": {
+        "hint": "تمام، أنت {{orgType}}.",
+        "title": "أخبرنا عن شركتك",
+        "subtitle": "ستظهر هذه المعلومات في طلبات التصديق الخاصة بك",
+        "legalEntityName": "الاسم القانوني للشركة",
+        "legalEntityNamePlaceholder": "أدخل الاسم القانوني المسجل",
+        "tradingName": "الاسم التجاري",
+        "tradingNamePlaceholder": "كيف يعرف الآخرون شركتك (اختياري)",
+        "orgType": "نوع المنظمة",
+        "registrationNumber": "رقم التسجيل / الترخيص",
+        "registrationNumberPlaceholder": "أدخل رقم التسجيل",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "تشرفنا، {{name}}.",
+        "title": "أين يقع مقر شركتك؟",
+        "subtitle": "هذا يساعدنا في ربطك بجهات التصديق المناسبة",
+        "country": "الدولة",
+        "city": "المدينة",
+        "address": "عنوان المكتب الرئيسي",
+        "addressPlaceholder": "الشارع، المبنى، المنطقة",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "autoDetected": "تم الكشف تلقائيًا",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات"
+      },
+      "branding": {
+        "hint": "أوشكنا على الانتهاء — لنجعلها مميزة لك.",
+        "title": "كيف تريد أن تظهر شركتك على البوابة؟",
+        "subtitle": "خصص شكل بوابتك ورسائل البريد والشهادات",
+        "visualIdentity": "الهوية البصرية",
+        "logo": "الشعار",
+        "logoHint": "PNG أو JPG أو SVG، بحد أقصى 10 ميجابايت",
+        "logoUploaded": "تم الرفع",
+        "portalConfiguration": "إعدادات البوابة",
+        "lightTheme": "فاتح",
+        "darkTheme": "داكن",
+        "includeLogoInEmails": "تضمين الشعار في رسائل البريد الإلكتروني",
+        "displayLogoOnCertificates": "عرض الشعار على الشهادات",
+        "colorPalette": "اختر لوحة الألوان",
+        "customColor": "لون مخصص",
+        "colorPicker": "اختر لونًا مخصصًا",
+        "hexColor": "قيمة اللون السداسية"
+      },
+      "success": {
+        "title": "حسابك جاهز الآن!",
+        "description": "تم إعداد {{name}} بالكامل وأصبحت جاهزة للعمل مع جهات التصديق.",
+        "back": "رجوع",
+        "cta": "الذهاب إلى لوحة التحكم"
+      }
+    }
+  },
   "cab": {
+    "onboarding": {
+      "intro": {
+        "title": "لنقم بإعداد جهة التقييم والمطابقة الخاصة بك",
+        "description": "بضع خطوات سريعة وستكون جهتك جاهزة للعمل مع العملاء.",
+        "estimatedTimeLabel": "الوقت المتوقع",
+        "estimatedTimeValue": "15 دقيقة",
+        "estimatedTimeDescription": "ستحدد إجاباتك إعدادات مؤسستك",
+        "howItWorksLabel": "كيف تسير العملية",
+        "howItWorksValue": "نوع المنظمة، التفاصيل، الموقع، جهة الاعتماد ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
+        "cta": "ابدأ الآن"
+      },
+      "steps": {
+        "orgType": "نوع المنظمة",
+        "orgDetails": "تفاصيل المنظمة",
+        "location": "الموقع",
+        "accreditationBody": "جهة الاعتماد",
+        "branding": "الهوية البصرية"
+      },
+      "orgType": {
+        "hint": "لنبدأ بالأساسيات.",
+        "title": "ما نوع منظمتك؟",
+        "subtitle": "اختر الخيار الذي يصف منظمتك بشكل أفضل",
+        "options": {
+          "certificationBody": {
+            "title": "جهة تصديق",
+            "description": "تصدر شهادات للمنتجات أو الخدمات أو أنظمة الإدارة وفق معيار معين."
+          },
+          "inspectionBody": {
+            "title": "جهة فحص",
+            "description": "تقوم بعمليات الفحص وتصدر تقارير أو شهادات الفحص."
+          },
+          "testingLaboratory": {
+            "title": "مختبر اختبار",
+            "description": "يقوم بالاختبارات لتحديد الخصائص أو الأداء."
+          },
+          "calibrationLaboratory": {
+            "title": "مختبر معايرة",
+            "description": "يقوم بمعايرة أدوات ومعدات القياس لضمان الدقة."
+          }
+        }
+      },
+      "orgDetails": {
+        "hint": "تمام، أنت {{orgType}}.",
+        "title": "أخبرنا عن منظمتك",
+        "subtitle": "ستظهر هذه المعلومات في الشهادات والمستندات الرسمية",
+        "legalEntityName": "اسم CAB",
+        "legalEntityNamePlaceholder": "أدخل الاسم القانوني لـ CAB",
+        "tradingName": "الاسم التجاري",
+        "tradingNamePlaceholder": "كيف يعرفك العملاء (اختياري)",
+        "orgType": "نوع المنظمة",
+        "cabType": "نوع CAB",
+        "cabTypePlaceholder": "محدد من المجالات المناسبة",
+        "registrationNumber": "رقم التسجيل / الترخيص",
+        "registrationNumberPlaceholder": "أدخل رقم التسجيل",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com"
+      },
+      "location": {
+        "hint": "تشرفنا، {{name}}.",
+        "title": "أين يقع مقر منظمتك؟",
+        "subtitle": "هذا يساعدنا في ربطك بجهات الاعتماد المناسبة",
+        "country": "الدولة",
+        "city": "المدينة",
+        "address": "عنوان المكتب الرئيسي",
+        "addressPlaceholder": "الشارع، المبنى، المنطقة",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "autoDetected": "تم الكشف تلقائيًا",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات"
+      },
+      "accreditationBody": {
+        "hint": "ممتاز، جهتك مقرها {{country}}.",
+        "title": "مع أي جهة اعتماد تتعامل؟",
+        "subtitle": "هذه هي جهات الاعتماد المتاحة في {{country}}",
+        "otherLabel": "اسم جهة الاعتماد",
+        "otherPlaceholder": "أدخل جهة الاعتماد التي تتعامل معها"
+      },
+      "branding": {
+        "hint": "أوشكنا على الانتهاء — لنجعلها مميزة لك.",
+        "title": "كيف تريد أن تظهر جهتك للعملاء؟",
+        "subtitle": "خصص شكل بوابتك ورسائل البريد والشهادات",
+        "visualIdentity": "الهوية البصرية",
+        "logo": "الشعار",
+        "logoHint": "PNG أو JPG أو SVG، بحد أقصى 10 ميجابايت",
+        "logoUploaded": "تم الرفع",
+        "portalConfiguration": "إعدادات البوابة",
+        "lightTheme": "فاتح",
+        "darkTheme": "داكن",
+        "includeLogoInEmails": "تضمين الشعار في رسائل البريد الإلكتروني",
+        "displayLogoOnCertificates": "عرض الشعار على الشهادات",
+        "colorPalette": "اختر لوحة الألوان",
+        "customColor": "لون مخصص",
+        "colorPicker": "اختر لونًا مخصصًا",
+        "hexColor": "قيمة اللون السداسية"
+      },
+      "success": {
+        "title": "جهتك جاهزة الآن!",
+        "description": "تم إعداد {{name}} بالكامل وأصبحت جاهزة لإدارة أعمال التصديق.",
+        "back": "رجوع",
+        "cta": "الذهاب إلى لوحة التحكم"
+      }
+    },
     "sidebar": {
       "tagline": "امتثال ذكي.. أثر حقيقي",
       "dashboard": "لوحة التحكم",

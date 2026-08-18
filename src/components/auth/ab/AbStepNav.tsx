@@ -3,14 +3,12 @@ import { englishDigitsLtrClassName } from '@/lib/englishDigits'
 import { cn } from '@/lib/utils'
 
 const AB_STEPS = [
-  { key: 'register.ab.steps.details', number: 1 },
-  { key: 'register.ab.steps.scopeModules', number: 2 },
-  { key: 'register.ab.steps.verification', number: 3 },
-  { key: 'register.ab.steps.accountSetup', number: 4 },
+  { key: 'register.ab.steps.basics', number: 1 },
+  { key: 'register.ab.steps.verification', number: 2 },
 ] as const
 
 interface AbStepNavProps {
-  current: 1 | 2 | 3 | 4 | 5
+  current: 1 | 2
   className?: string
 }
 

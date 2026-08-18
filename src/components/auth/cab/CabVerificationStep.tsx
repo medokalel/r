@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FormLabel, fieldInputTextClassName } from '@/components/ui'
+import { FormLabel, TextField, fieldInputTextClassName } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { OtpInput } from '@/components/auth/OtpInput'
 import { AppIcon, MailIcon } from '@/components/icons'
@@ -15,9 +15,10 @@ interface CabVerificationStepProps {
   onEmailChange: (email: string) => void
   onOtpChange: (otp: string[]) => void
   onSendCode: () => void
+  /** When false, OTP is sent automatically and the inline verify button is hidden. */
+  showSendButton?: boolean
 }
 
-/** Step 3 ("verification"): same email + inline "verify" + OTP pattern as RegisterPage's StepVerification. */
 export function CabVerificationStep({
   email,
   otp,
@@ -26,10 +27,48 @@ export function CabVerificationStep({
   onEmailChange,
   onOtpChange,
   onSendCode,
+  showSendButton = true,
 }: CabVerificationStepProps) {
   const { t } = useTranslation()
   const emailValid = isValidRequiredEmail(email)
   const emailError = email.trim().length > 0 && !emailValid ? t('validation.invalidEmail') : undefined
+
+  if (!showSendButton) {
+    return (
+      <div className="w-full space-y-6">
+        <TextField
+          id="cab-verification-email"
+          label={t('auth.email')}
+          icon={MailIcon}
+          required
+          type="email"
+          lang="en"
+          value={email}
+          readOnly
+        />
+
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <p className="text-body-1-medium text-neutral-900">{t('register.emailVerification')}</p>
+            <p className="text-body-2 text-neutral-500">
+              {isSendingCode ? t('register.sendingCodeToEmail') : t('register.codeSentPrompt')}
+            </p>
+          </div>
+          <OtpInput value={otp} onChange={onOtpChange} disabled={!codeSent || isSendingCode} />
+          {codeSent && (
+            <button
+              type="button"
+              onClick={onSendCode}
+              disabled={isSendingCode}
+              className="text-body-2-semibold text-primary underline underline-offset-2 disabled:opacity-50"
+            >
+              {isSendingCode ? t('register.sendingCode') : t('register.resendCode')}
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full space-y-6">

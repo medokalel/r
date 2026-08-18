@@ -8,9 +8,10 @@ interface OtpInputProps {
   value: string[]
   onChange: (digits: string[]) => void
   className?: string
+  disabled?: boolean
 }
 
-export function OtpInput({ value, onChange, className }: OtpInputProps) {
+export function OtpInput({ value, onChange, className, disabled }: OtpInputProps) {
   const inputsRef = useRef<(HTMLInputElement | null)[]>([])
 
   const updateDigit = (index: number, digit: string) => {
@@ -59,9 +60,11 @@ export function OtpInput({ value, onChange, className }: OtpInputProps) {
             }
             onKeyDown={(e) => handleKeyDown(i, e)}
             onPaste={handlePaste}
+            disabled={disabled}
             className={cn(
               'h-12 w-[91px] rounded-[var(--radius-sm)] border border-blue-200 text-center text-body-2-medium',
               'focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary',
+              'disabled:cursor-not-allowed disabled:opacity-50',
               filled
                 ? 'bg-primary-subtle text-primary'
                 : 'bg-white text-neutral-500'

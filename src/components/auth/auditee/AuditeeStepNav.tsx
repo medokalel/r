@@ -3,7 +3,7 @@ import { englishDigitsLtrClassName } from '@/lib/englishDigits'
 import { cn } from '@/lib/utils'
 
 const AUDITEE_STEPS = [
-  { key: 'register.auditee.steps.details', number: 1 },
+  { key: 'register.auditee.steps.basics', number: 1 },
   { key: 'register.auditee.steps.verification', number: 2 },
   { key: 'register.auditee.steps.accountSetup', number: 3 },
 ] as const

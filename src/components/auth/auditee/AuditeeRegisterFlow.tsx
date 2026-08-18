@@ -5,23 +5,21 @@ import { AppIcon, SuccessCheckIcon } from '@/components/icons'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { AuditeeStepNav } from '@/components/auth/auditee/AuditeeStepNav'
 import {
-  AuditeeDetailsStep,
-  type AuditeeDetailsForm,
-} from '@/components/auth/auditee/AuditeeDetailsStep'
+  AuditeeAccountBasicsStep,
+  AuditeeAccountSetupStep,
+} from '@/components/auth/auditee/AuditeeAccountBasicsStep'
 import { AuditeeVerificationStep } from '@/components/auth/auditee/AuditeeVerificationStep'
 import {
-  AuditeeAccountSetupStep,
-  type AuditeeAccountSetupForm,
-} from '@/components/auth/auditee/AuditeeAccountSetupStep'
-import { emptyAuditeeDetailsForm, isAuditeeDetailsComplete } from '@/lib/auditeeDetailsForm'
-import {
-  emptyAuditeeAccountSetupForm,
+  emptyAuditeeAccountBasicsForm,
+  isAuditeeAccountBasicsComplete,
   isAuditeeAccountSetupComplete,
-} from '@/lib/auditeeAccountSetupForm'
+  type AuditeeAccountBasicsForm,
+} from '@/lib/auditeeAccountBasicsForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
 import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
-import { fetchGovernorateOptions } from '@/lib/governorates'
+import { ROUTES } from '@/lib/routes'
 import { ApiError } from '@/lib/api/client'
+import { getCountryOptions } from '@/lib/countries'
 
 interface AuditeeRegisterFlowProps {
   /** Lets the user back out to entity-type selection from step 1. */
@@ -33,19 +31,15 @@ interface AuditeeRegisterFlowProps {
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
 export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: AuditeeRegisterFlowProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2 | 3>(1)
-  const [submitted, setSubmitted] = useState(false)
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const [createAccountError, setCreateAccountError] = useState<string | null>(null)
-  const [detailsForm, setDetailsForm] = useState<AuditeeDetailsForm>(emptyAuditeeDetailsForm)
-  const [accountSetupForm, setAccountSetupForm] = useState<AuditeeAccountSetupForm>(
-    emptyAuditeeAccountSetupForm
-  )
+  const [basicsForm, setBasicsForm] = useState<AuditeeAccountBasicsForm>(emptyAuditeeAccountBasicsForm)
+  const [submitted, setSubmitted] = useState(false)
 
   // Step 2 ("verification") — same email + OTP pattern as the AB/CAB flows.
-  // Pre-filled from Details' email since we don't ask for it twice.
   const [verificationEmail, setVerificationEmail] = useState('')
   const [otp, setOtp] = useState<string[]>(emptyOtp())
   const [codeSent, setCodeSent] = useState(false)
@@ -54,10 +48,8 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
   const [emailVerified, setEmailVerified] = useState(false)
   const [verificationError, setVerificationError] = useState<string | null>(null)
 
-  const patchDetails = (f: Partial<AuditeeDetailsForm>) =>
-    setDetailsForm((prev) => ({ ...prev, ...f }))
-  const patchAccountSetup = (f: Partial<AuditeeAccountSetupForm>) =>
-    setAccountSetupForm((prev) => ({ ...prev, ...f }))
+  const patchBasics = (f: Partial<AuditeeAccountBasicsForm>) =>
+    setBasicsForm((prev) => ({ ...prev, ...f }))
 
   const emailValid = isValidRequiredEmail(verificationEmail)
   const otpComplete = otp.every((digit) => digit.length === 1)
@@ -85,7 +77,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     try {
       await verifyEmail(verificationEmail.trim(), otp.join(''))
       setEmailVerified(true)
-      setStep(3)
     } catch (error) {
       setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
     } finally {
@@ -98,7 +89,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
       onBackToEntityType()
       return
     }
-    setStep((s) => (s - 1) as 1 | 2)
+    setStep((step - 1) as 1 | 2)
   }
 
   const handleCreateAccount = async () => {
@@ -106,31 +97,31 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     setIsCreatingAccount(true)
     setCreateAccountError(null)
     try {
-      // The backend's /auth/register endpoint (shared by all entity types)
-      // still requires administrationName/facilityOwnerManager/activity/
-      // legalCapacity, which the lean Auditee form doesn't collect. Until
-      // the backend makes those optional for CONSULTATION_BODY, we send
-      // reasonable stand-in values derived from what we do collect:
-      //   - administrationName / legalCapacity / activity → the company name
-      //     (there's no better source for these yet)
-      //   - facilityOwnerManager → the contact person, since they're the
-      //     same "person in charge" concept
-      const governorates = await fetchGovernorateOptions(detailsForm.country)
-      const cityName = governorates.find((g) => g.id === detailsForm.city)?.name ?? detailsForm.city
+      // Same backend limitation as the CAB/AB flows: /auth/register still
+      // requires organizationName/administrationName/facilityOwnerManager/
+      // activity/legalCapacity/city, none of which this trimmed sign-up
+      // collects anymore (company name, location etc. are now collected in
+      // the post-login onboarding wizard instead). Stand in with the
+      // registrant's own name/country until the backend adds a dedicated
+      // Auditee submission path that doesn't need these upfront.
+      const countryName =
+        getCountryOptions(i18n.language).find((c) => c.code === basicsForm.country)?.name ??
+        basicsForm.country
 
       await register({
         entityType: 'CONSULTATION_BODY',
-        email: detailsForm.email,
-        organizationName: detailsForm.companyName,
-        administrationName: detailsForm.companyName,
-        facilityOwnerManager: detailsForm.contactPerson,
-        activity: detailsForm.companyName,
-        legalCapacity: detailsForm.companyName,
-        city: cityName,
-        phone: formatPhoneNumber(detailsForm.mobileCountryCode, detailsForm.mobile),
-        password: accountSetupForm.password,
-        confirmPassword: accountSetupForm.confirmPassword,
+        email: verificationEmail,
+        organizationName: basicsForm.companyName,
+        administrationName: basicsForm.name,
+        facilityOwnerManager: basicsForm.name,
+        activity: basicsForm.companyName,
+        legalCapacity: 'Audit Client',
+        city: basicsForm.city || countryName,
+        phone: formatPhoneNumber(basicsForm.mobileCountryCode, basicsForm.mobile),
+        password: basicsForm.password,
+        confirmPassword: basicsForm.confirmPassword,
       })
+
       setSubmitted(true)
       onSubmittedChange?.(true)
     } catch (error) {
@@ -142,39 +133,39 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
 
   const handleNext = () => {
     if (step === 1) {
-      // Carry the email from Details into Verification so it isn't re-typed.
-      setVerificationEmail(detailsForm.email)
+      setVerificationEmail(basicsForm.email)
       setStep(2)
       return
     }
+    if (step === 2 && !emailVerified) {
+      void handleVerifyAndContinue()
+      return
+    }
     if (step === 2) {
-      if (!emailVerified) {
-        void handleVerifyAndContinue()
-        return
-      }
       setStep(3)
       return
     }
+    if (isCreatingAccount || !isAuditeeAccountSetupComplete(basicsForm)) return
     void handleCreateAccount()
   }
 
   const nextDisabled =
     step === 1
-      ? !isAuditeeDetailsComplete(detailsForm)
+      ? !isAuditeeAccountBasicsComplete(basicsForm)
       : step === 2
         ? !emailValid || !codeSent || !otpComplete || isVerifyingEmail
-        : !isAuditeeAccountSetupComplete(accountSetupForm) || isCreatingAccount
+        : !isAuditeeAccountSetupComplete(basicsForm) || isCreatingAccount
 
   const nextLabel =
-    step === 2 && codeSent && !emailVerified
+    step === 3
+      ? isCreatingAccount
+        ? t('register.creatingAccount')
+        : t('register.createAccount')
+      : step === 2 && codeSent && !emailVerified
       ? isVerifyingEmail
         ? t('register.verifyingEmail')
         : t('register.verifyEmail')
-      : step === 3
-        ? isCreatingAccount
-          ? t('register.creatingAccount')
-          : t('register.createAccount')
-        : t('common.next')
+      : t('common.next')
 
   if (submitted) {
     return (
@@ -186,10 +177,10 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
         </p>
         <button
           type="button"
-          onClick={() => navigate('/login')}
+          onClick={() => navigate(ROUTES.login)}
           className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
         >
-          {t('register.auditee.summary.goToDashboard')}
+          {t('register.auditee.summary.goToLogin')}
         </button>
       </div>
     )
@@ -201,7 +192,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
 
       <AuditeeStepNav current={step} className="mb-6" />
 
-      {step === 1 && <AuditeeDetailsStep form={detailsForm} onPatch={patchDetails} />}
+      {step === 1 && <AuditeeAccountBasicsStep form={basicsForm} onPatch={patchBasics} />}
       {step === 2 && (
         <AuditeeVerificationStep
           email={verificationEmail}
@@ -213,9 +204,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
           onSendCode={() => void handleSendCode()}
         />
       )}
-      {step === 3 && (
-        <AuditeeAccountSetupStep form={accountSetupForm} onPatch={patchAccountSetup} />
-      )}
+      {step === 3 && <AuditeeAccountSetupStep form={basicsForm} onPatch={patchBasics} />}
 
       {verificationError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
