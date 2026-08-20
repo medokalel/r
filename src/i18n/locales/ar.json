@@ -2184,6 +2184,24 @@
           "contactNamePlaceholder": "مثال: آلاء طارق",
           "contactPhone": "هاتف جهة الاتصال",
           "contactEmail": "بريد جهة الاتصال"
+        },
+        "addSitePage": {
+          "sections": {
+            "siteLocationDetails": "بيانات الموقع والعنوان",
+            "managementSystemScope": "نظام الإدارة والنطاق"
+          },
+          "managementSystemType": "نوع نظام الإدارة",
+          "managementSystemTypeOptions": {
+            "integrated": "نظام إدارة متكامل",
+            "single": "نظام إدارة واحد",
+            "separate": "نظام إدارة منفصل (لكل معيار)"
+          },
+          "applicableStandards": "المعايير المطبقة",
+          "applicableStandardsPlaceholder": "اختر المعايير",
+          "siteScopeActivities": "نطاق / أنشطة الموقع",
+          "siteScopeActivitiesPlaceholder": "صف نطاق / أنشطة الموقع",
+          "roleInMultiSite": "الدور في تعدد المواقع",
+          "roleInMultiSitePlaceholder": "اختر الدور"
         }
       }
     },

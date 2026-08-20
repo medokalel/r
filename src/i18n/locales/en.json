@@ -2185,6 +2185,24 @@
           "contactNamePlaceholder": "e.g. Alaa Tarek",
           "contactPhone": "Contact Phone",
           "contactEmail": "Contact Email"
+        },
+        "addSitePage": {
+          "sections": {
+            "siteLocationDetails": "Site & Location Details",
+            "managementSystemScope": "Management System & Scope"
+          },
+          "managementSystemType": "Management System Type",
+          "managementSystemTypeOptions": {
+            "integrated": "Integrated Management System",
+            "single": "Single Management System",
+            "separate": "Separate Management System (per Standard)"
+          },
+          "applicableStandards": "Applicable Standards",
+          "applicableStandardsPlaceholder": "Select standards",
+          "siteScopeActivities": "Site Scope / Activities",
+          "siteScopeActivitiesPlaceholder": "Describe the scope / activities of the site",
+          "roleInMultiSite": "Role in Multi-site",
+          "roleInMultiSitePlaceholder": "Select role"
         }
       }
     },

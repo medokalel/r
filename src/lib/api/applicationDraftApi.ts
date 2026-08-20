@@ -122,3 +122,10 @@ export const SITE_ACTIVITY_OPTIONS: string[] = [
   'Human Resources',
   'Testing',
 ]
+
+// TODO: replace with a real lookup once the backend defines multi-site sampling roles
+export const SITE_MULTI_SITE_ROLE_OPTIONS: string[] = [
+  'Central Office',
+  'Site',
+  'Temporary Site',
+]
