@@ -2188,7 +2188,11 @@
         "addSitePage": {
           "sections": {
             "siteLocationDetails": "بيانات الموقع والعنوان",
-            "managementSystemScope": "نظام الإدارة والنطاق"
+            "managementSystemScope": "نظام الإدارة والنطاق",
+            "travelAccess": "التنقل والوصول",
+            "samplingSurveillance": "أخذ العينات والمراقبة",
+            "contactPerson": "الشخص المسؤول",
+            "siteIndicators": "مؤشرات الموقع"
           },
           "managementSystemType": "نوع نظام الإدارة",
           "managementSystemTypeOptions": {
@@ -2201,7 +2205,34 @@
           "siteScopeActivities": "نطاق / أنشطة الموقع",
           "siteScopeActivitiesPlaceholder": "صف نطاق / أنشطة الموقع",
           "roleInMultiSite": "الدور في تعدد المواقع",
-          "roleInMultiSitePlaceholder": "اختر الدور"
+          "roleInMultiSitePlaceholder": "اختر الدور",
+          "selectOption": "اختر خيار",
+          "travelRequirements": "متطلبات التنقل",
+          "permitAccess": "التصريح / الوصول",
+          "permitAccessPlaceholder": "اختر خيار",
+          "estimatedTravelTime": "الوقت التقديري للتنقل",
+          "estimatedTravelTimePlaceholder": "اختر خيار",
+          "transportationNotes": "ملاحظات التنقل",
+          "transportationNotesPlaceholder": "أدخل أي ملاحظة عن التنقل أو الوصول",
+          "includeInSampling": "تضمين في أخذ العينات (هذه الدورة)",
+          "expectedSamples": "العدد المتوقع للعينات (عشوائي)",
+          "expectedSamplesPlaceholder": "أدخل عدد العينات",
+          "typeOfAudit": "نوع التدقيق",
+          "surveillanceCycle": "دورة المراقبة",
+          "surveillanceCyclePlaceholder": "اختر الدورة",
+          "otherSitesCovered": "مواقع أخرى مشمولة",
+          "otherSitesCoveredPlaceholder": "اختر مواقع أخرى (إن وجدت)",
+          "primaryContactName": "اسم الشخص المسؤول الأساسي",
+          "designation": "المسمى الوظيفي",
+          "designationPlaceholder": "أدخل المسمى الوظيفي",
+          "phoneNumber": "رقم الهاتف",
+          "siteIndicators": {
+            "airplaneRequired": "يتطلب طائرة",
+            "trainRequired": "يتطلب قطار",
+            "airplaneTrainRequired": "يتطلب طائرة وقطار",
+            "permitAccessRequired": "يتطلب تصريح / وصول",
+            "includedInSampling": "مشمول في أخذ العينات"
+          }
         }
       }
     },

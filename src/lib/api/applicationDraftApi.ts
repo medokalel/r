@@ -129,3 +129,32 @@ export const SITE_MULTI_SITE_ROLE_OPTIONS: string[] = [
   'Site',
   'Temporary Site',
 ]
+
+// Fixed set — mirrors the "Site Indicators" legend, so keep the two lists in sync.
+export const TRAVEL_REQUIREMENT_OPTIONS: string[] = [
+  'Airplane Required',
+  'Train Required',
+  'Airplane & Train Required',
+]
+
+// TODO: replace with a real lookup once the backend defines permit/access types
+export const PERMIT_ACCESS_OPTIONS: string[] = [
+  'Not Required',
+  'Visitor Permit',
+  'Security Clearance',
+  'Escort Required',
+]
+
+// TODO: replace with a real lookup once the backend defines travel time bands
+export const ESTIMATED_TRAVEL_TIME_OPTIONS: string[] = [
+  'Less than 1 hour',
+  '1 - 3 hours',
+  '3 - 6 hours',
+  'More than 6 hours',
+]
+
+// TODO: replace with a real lookup once the backend defines audit types
+export const TYPE_OF_AUDIT_OPTIONS: string[] = ['Stage 1', 'Stage 2', 'Surveillance', 'Recertification']
+
+// TODO: replace with a real lookup once the backend defines surveillance cycles
+export const SURVEILLANCE_CYCLE_OPTIONS: string[] = ['Annual', 'Semi-Annual', 'Biennial']

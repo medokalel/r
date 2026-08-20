@@ -2189,7 +2189,11 @@
         "addSitePage": {
           "sections": {
             "siteLocationDetails": "Site & Location Details",
-            "managementSystemScope": "Management System & Scope"
+            "managementSystemScope": "Management System & Scope",
+            "travelAccess": "Travel & Access",
+            "samplingSurveillance": "Sampling & Surveillance",
+            "contactPerson": "Contact Person",
+            "siteIndicators": "Site Indicators"
           },
           "managementSystemType": "Management System Type",
           "managementSystemTypeOptions": {
@@ -2202,7 +2206,34 @@
           "siteScopeActivities": "Site Scope / Activities",
           "siteScopeActivitiesPlaceholder": "Describe the scope / activities of the site",
           "roleInMultiSite": "Role in Multi-site",
-          "roleInMultiSitePlaceholder": "Select role"
+          "roleInMultiSitePlaceholder": "Select role",
+          "selectOption": "Select option",
+          "travelRequirements": "Travel Requirements",
+          "permitAccess": "Permit / Access",
+          "permitAccessPlaceholder": "Select option",
+          "estimatedTravelTime": "Estimated Travel Time",
+          "estimatedTravelTimePlaceholder": "Select option",
+          "transportationNotes": "Transportation Notes",
+          "transportationNotesPlaceholder": "Enter any travel or access note",
+          "includeInSampling": "Include in Sampling (This Cycle)",
+          "expectedSamples": "Expected No. of Samples (Random)",
+          "expectedSamplesPlaceholder": "Enter number of samples",
+          "typeOfAudit": "Type of Audit",
+          "surveillanceCycle": "Surveillance Cycle",
+          "surveillanceCyclePlaceholder": "Select cycle",
+          "otherSitesCovered": "Other Sites to be Covered",
+          "otherSitesCoveredPlaceholder": "Select other sites (if any)",
+          "primaryContactName": "Primary Contact Name",
+          "designation": "Designation",
+          "designationPlaceholder": "Enter designation",
+          "phoneNumber": "Phone Number",
+          "siteIndicators": {
+            "airplaneRequired": "Airplane Required",
+            "trainRequired": "Train Required",
+            "airplaneTrainRequired": "Airplane & Train Required",
+            "permitAccessRequired": "Permit / Access Required",
+            "includedInSampling": "Included in Sampling"
+          }
         }
       }
     },
