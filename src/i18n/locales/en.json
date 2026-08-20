@@ -2148,6 +2148,7 @@
         "title": "Sites & Facilities",
         "subtitle": "Add all sites, locations and key activities included in the certification scope.",
         "addNewSite": "Add New Site",
+        "addNewSiteSubtitle": "Add site, location and key information to be included in the certification scope.",
         "empty": "No sites added yet.",
         "stats": {
           "totalSites": "Total Sites",

@@ -12,6 +12,10 @@ const STEPS = [
 interface ApplicationStepperProps {
   current: 1 | 2 | 3 | 4 | 5
   className?: string
+  // TODO(DEV ONLY): remove onStepClick once the Application Draft flow is
+  // finished — this is a dev-convenience shortcut to jump between steps
+  // without filling each one in order, not meant for production.
+  onStepClick?: (step: 1 | 2 | 3 | 4 | 5) => void
 }
 
 /**
@@ -21,7 +25,7 @@ interface ApplicationStepperProps {
  * steps stay highlighted like the active one — but with step numbers in
  * the circles instead of per-step icons.
  */
-export function ApplicationStepper({ current, className }: ApplicationStepperProps) {
+export function ApplicationStepper({ current, className, onStepClick }: ApplicationStepperProps) {
   const { t } = useTranslation()
 
   return (
@@ -37,6 +41,7 @@ export function ApplicationStepper({ current, className }: ApplicationStepperPro
             key={step}
             type="button"
             aria-current={isActive ? 'step' : undefined}
+            onClick={() => onStepClick?.(number as 1 | 2 | 3 | 4 | 5)}
             className="flex min-w-0 flex-1 cursor-pointer flex-col gap-4 text-start"
           >
             <div

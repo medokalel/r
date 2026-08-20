@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { TablePagination } from '@/components/dashboard/TablePagination'
-import { AddSiteModal } from '@/components/dashboard/cab/AddSiteModal'
 import {
   AppIcon,
   AddCircleIcon,
@@ -14,7 +14,7 @@ import {
   UsersIcon,
 } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import type { Site, SitesFacilitiesForm } from '@/lib/sitesFacilitiesForm'
+import type { SitesFacilitiesForm } from '@/lib/sitesFacilitiesForm'
 import { cn } from '@/lib/utils'
 
 interface SitesFacilitiesStepProps {
@@ -26,10 +26,9 @@ const PAGE_SIZE = 3
 
 export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps) {
   const { t } = useTranslation()
-  const [isAddOpen, setIsAddOpen] = useState(false)
+  const navigate = useNavigate()
   const [page, setPage] = useState(1)
 
-  const addSite = (site: Site) => onPatch({ sites: [...form.sites, site] })
   const removeSite = (id: string) => onPatch({ sites: form.sites.filter((s) => s.id !== id) })
 
   const totalEmployees = useMemo(
@@ -91,7 +90,7 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
             type="button"
             variant="secondary"
             className="h-9 gap-2 rounded-[var(--radius-sm)] px-4"
-            onClick={() => setIsAddOpen(true)}
+            onClick={() => navigate('/cab/applications/draft/sites/new')}
           >
             <AppIcon icon={AddCircleIcon} size={18} />
             {t('cab.applicationDraft.sitesFacilities.addNewSite')}
@@ -240,8 +239,6 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
           </div>
         </SectionHeading>
       )}
-
-      <AddSiteModal open={isAddOpen} onOpenChange={setIsAddOpen} onAdd={addSite} />
     </div>
   )
 }

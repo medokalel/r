@@ -70,7 +70,9 @@ export function ApplicationDraftPage() {
     return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-      <ApplicationStepper current={step} />
+      {/* TODO(DEV ONLY): onStepClick lets you jump between steps directly
+      while building — remove this prop once the flow is finished. */}
+      <ApplicationStepper current={step} onStepClick={setStep} />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="space-y-1">
