@@ -7,15 +7,16 @@ import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 // TODO: replace with the real in-progress application id once this page is
 // wired to an actual application (mirrors the placeholder pattern the other
 // cab/applications/* pages used before their APIs were connected).
-const APPLICATION_ID = 'APP-2025-0188'
 
-function Chevron() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip">
-      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
+// const APPLICATION_ID = 'APP-2025-0188'
+
+// function Chevron() {
+//   return (
+//     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip">
+//       <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+//     </svg>
+//   )
+// }
 export function AddSitePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -69,9 +70,8 @@ export function AddSitePage() {
           </p>
         </div>
 
-        {/* Field sections (Site & Location Details, Management System &
-            Scope, Travel & Access, Sampling & Surveillance, Contact Person,
-            Site Indicators) are added in the next step. */}
+        
+
       </div>
 
       <DashboardFooter
