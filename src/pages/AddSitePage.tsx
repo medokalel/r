@@ -25,6 +25,8 @@ import {
   SURVEILLANCE_CYCLE_OPTIONS,
 } from '@/lib/api/applicationDraftApi'
 import type { CountryCode } from '@/lib/countries'
+import type { Site } from '@/lib/sitesFacilitiesForm'
+import { savePendingNewSite } from '@/lib/applicationDraftSession'
 
 // TODO: replace with the real in-progress application id once this page is
 // wired to an actual application (mirrors the placeholder pattern the other
@@ -189,6 +191,41 @@ export function AddSitePage() {
       isValidEmailFormat(contactPerson.email)
   )
 
+    // Builds the shape the Sites & Facilities table already reads, plus
+  // everything else this page collects tucked into `additionalDetails` —
+  // the table itself isn't touched (see SiteAdditionalDetails in
+  // sitesFacilitiesForm.ts for what's parked there for now).
+  const buildSite = (): Site => ({
+    id: crypto.randomUUID(),
+    name: siteLocation.name.trim(),
+    siteType: siteLocation.role,
+    address: siteLocation.address.trim(),
+    country: siteLocation.country ?? '',
+    activities: managementScope.scopeActivities.trim() ? [managementScope.scopeActivities.trim()] : [],
+    employees: 0,
+    contact: {
+      name: contactPerson.name.trim(),
+      phone: contactPerson.phone.trim(),
+      email: contactPerson.email.trim(),
+    },
+    additionalDetails: {
+      roleInMultiSite: siteLocation.role,
+      managementSystemType: managementScope.type,
+      applicableStandards: managementScope.standards,
+      scopeActivities: managementScope.scopeActivities.trim(),
+      travelRequirements: travelAccess.requirements,
+      permitAccess: travelAccess.permitAccess,
+      estimatedTravelTime: travelAccess.estimatedTravelTime,
+      transportationNotes: travelAccess.notes.trim(),
+      includeInSampling: samplingSurveillance.includeInSampling,
+      expectedSamples: samplingSurveillance.expectedSamples.trim(),
+      typeOfAudit: samplingSurveillance.typeOfAudit,
+      surveillanceCycle: samplingSurveillance.surveillanceCycle,
+      otherSitesCovered: samplingSurveillance.otherSitesCovered,
+      designation: contactPerson.designation.trim(),
+    },
+  })
+
   const handleBack = () => {
     navigate('/cab/applications/draft')
   }
@@ -197,11 +234,12 @@ export function AddSitePage() {
   // matching the not-yet-backed stub used on ApplicationDraftPage.
   const handleSaveDraft = () => {}
 
-  // TODO: persist the combined form state into the Sites & Facilities step's
-  // site list once that step can receive data from this page (e.g. via
-  // router state), then return to the Sites & Facilities step.
+  // Hands the built site to ApplicationDraftPage via sessionStorage (see
+  // applicationDraftSession.ts) — it's picked up there and appended to the
+  // Sites & Facilities list, then this page returns to that step.
   const handleNext = () => {
     if (!canSave) return
+    savePendingNewSite(buildSite())
     navigate('/cab/applications/draft')
   }
 

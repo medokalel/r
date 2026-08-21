@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -18,15 +18,51 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
+import {
+  clearApplicationDraftSnapshot,
+  clearPendingNewSite,
+  loadApplicationDraftSnapshot,
+  peekPendingNewSite,
+  saveApplicationDraftSnapshot,
+} from '@/lib/applicationDraftSession'
 
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
-  const [form, setForm] = useState(emptyApplicationDraftForm)
-  const [standardsScopeForm, setStandardsScopeForm] = useState(emptyStandardsScopeForm)
-  const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(emptySitesFacilitiesForm)
-  const [documentsForm, setDocumentsForm] = useState(emptyDocumentsForm)
+
+  // Resume from sessionStorage if returning from AddSitePage (lazy
+  // initializer, not a module constant, so it re-reads on every mount).
+  // pendingSiteOnLoad peeks (doesn't delete) since StrictMode calls this
+  // twice in dev — deleting here would lose the site on the 2nd call.
+  const [{ restoredSnapshot, pendingSiteOnLoad }] = useState(() => ({
+    restoredSnapshot: loadApplicationDraftSnapshot(),
+    pendingSiteOnLoad: peekPendingNewSite(),
+  }))
+
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(
+    pendingSiteOnLoad ? 3 : restoredSnapshot?.step ?? 1
+  )
+  const [form, setForm] = useState(restoredSnapshot?.form ?? emptyApplicationDraftForm)
+  const [standardsScopeForm, setStandardsScopeForm] = useState(
+    restoredSnapshot?.standardsScopeForm ?? emptyStandardsScopeForm
+  )
+  const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(() => {
+    const base = restoredSnapshot?.sitesFacilitiesForm ?? emptySitesFacilitiesForm
+    return pendingSiteOnLoad ? { ...base, sites: [...base.sites, pendingSiteOnLoad] } : base
+  })
+  const [documentsForm, setDocumentsForm] = useState(
+    restoredSnapshot?.documentsForm ?? emptyDocumentsForm
+  )
+
+  // Persist on every change so AddSitePage's round trip doesn't lose the draft.
+  useEffect(() => {
+    saveApplicationDraftSnapshot({ step, form, standardsScopeForm, sitesFacilitiesForm, documentsForm })
+  }, [step, form, standardsScopeForm, sitesFacilitiesForm, documentsForm])
+
+  // Site was already folded in above; just clear the flag now it's consumed.
+  useEffect(() => {
+    if (pendingSiteOnLoad) clearPendingNewSite()
+  }, [pendingSiteOnLoad])
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
   const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
@@ -71,6 +107,7 @@ export function ApplicationDraftPage() {
       setStep((s) => (s + 1) as typeof step)
       return
     }
+    clearApplicationDraftSnapshot()
     navigate('/cab/dashboard')
   }
 

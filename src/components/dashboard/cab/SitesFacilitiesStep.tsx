@@ -24,6 +24,15 @@ interface SitesFacilitiesStepProps {
 
 const PAGE_SIZE = 3
 
+const SITE_TYPE_BADGE_COLORS: Record<string, string> = {
+  'Head Office': 'bg-[#e8edfc] text-primary',
+  'Manufacturing Site': 'bg-[#dcfce7] text-[#16a34a]',
+  Warehouse: 'bg-[#ede9fe] text-[#6d28d9]',
+  'Branch Office': 'bg-[#d7f4f0] text-[#0f9488]',
+  Laboratory: 'bg-[#fef3c7] text-[#d97706]',
+}
+const DEFAULT_SITE_TYPE_BADGE_COLOR = 'bg-[#f3f4f6] text-neutral-600'
+
 export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -123,61 +132,66 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
           </p>
         ) : (
           <>
-            <div className="overflow-x-auto rounded-[var(--radius-sm)] border border-[#ececec]">
-              <table className="w-full min-w-[900px] border-collapse text-start">
-                <thead>
-                  <tr className="bg-[#f9fafc] text-[13px] text-neutral-500">
-                    <th className="w-12 px-4 py-3 text-start font-medium">#</th>
-                    <th className="px-4 py-3 text-start font-medium">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[900px] border-collapse text-center">
+                <thead className="border-b border-[#ececec]">
+                  <tr className="rounded-[10px] bg-[#1236a3] text-white">
+                    <th className="w-12 p-[18px] text-center text-[14px] font-medium">#</th>
+                    <th className="p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.siteNameLocation')}
                     </th>
-                    <th className="px-4 py-3 text-start font-medium">
+                    <th className="p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.address')}
                     </th>
-                    <th className="px-4 py-3 text-start font-medium">
+                    <th className="p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.siteActivitiesScope')}
                     </th>
-                    <th className="px-4 py-3 text-start font-medium">
+                    <th className="p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.employees')}
                     </th>
-                    <th className="px-4 py-3 text-start font-medium">
+                    <th className="p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.primaryContact')}
                     </th>
-                    <th className="w-20 px-4 py-3 text-start font-medium">
+                    <th className="w-20 p-[18px] text-center text-[14px] font-medium">
                       {t('cab.applicationDraft.sitesFacilities.columns.actions')}
                     </th>
                   </tr>
                 </thead>
                 <tbody>
                   {pageSites.map((site, index) => (
-                    <tr key={site.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]', 'border-t border-[#ececec]')}>
-                      <td className="px-4 py-4 align-top text-[14px] text-neutral-500">
+                    <tr key={site.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
+                      <td className="px-4 py-4 text-[14px] text-neutral-500">
                         {pageStart + index + 1}
                       </td>
-                      <td className="px-4 py-4 align-top">
-                        <p className="text-[14px] font-semibold text-neutral-900">{site.name}</p>
-                        <span className="mt-1 inline-block rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium text-primary">
+                      <td className="px-4 py-4">
+                        <p className="text-[15px] font-medium text-neutral-900">{site.name}</p>
+                        <span
+                          className={cn(
+                            'mt-0.5 inline-block rounded-[6px] px-2 py-0.5 text-[12px] font-medium',
+                            SITE_TYPE_BADGE_COLORS[site.siteType] ?? DEFAULT_SITE_TYPE_BADGE_COLOR
+                          )}
+                        >
                           {site.siteType}
                         </span>
                       </td>
-                      <td className="px-4 py-4 align-top text-[14px] text-neutral-700">{site.address}</td>
-                      <td className="px-4 py-4 align-top">
+                      <td className="px-4 py-4 text-[14px] text-neutral-700">{site.address}</td>
+                      <td className="px-4 py-4">
                         <ul className="space-y-0.5">
                           {site.activities.map((activity) => (
                             <li key={activity} className="text-[13px] text-neutral-700">
-                              • {activity}
+                              {activity}
                             </li>
                           ))}
                         </ul>
                       </td>
-                      <td className="px-4 py-4 align-top text-[14px] text-neutral-700">{site.employees}</td>
-                      <td className="px-4 py-4 align-top text-[13px] text-neutral-700">
+                      <td className="px-4 py-4 text-[14px] text-neutral-700">{site.employees}</td>
+                      <td className="px-4 py-4 text-[13px] text-neutral-700">
                         <p className="font-medium text-neutral-900">{site.contact.name}</p>
                         <p>{site.contact.phone}</p>
                         <p className="text-primary">{site.contact.email}</p>
                       </td>
-                      <td className="px-4 py-4 align-top">
-                        <div className="flex items-center gap-3">
+                      <td className="px-4 py-4">
+                        <div className="flex items-center justify-center gap-2">
                           <button
                             type="button"
                             className="text-neutral-400 hover:text-primary"
