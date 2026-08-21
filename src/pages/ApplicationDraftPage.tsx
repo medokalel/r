@@ -7,6 +7,7 @@ import { ApplicationStepper } from '@/components/dashboard/cab/ApplicationSteppe
 import { ApplicationDraftForm } from '@/components/dashboard/cab/ApplicationDraftForm'
 import { StandardsScopeStep } from '@/components/dashboard/cab/StandardsScopeStep'
 import { SitesFacilitiesStep } from '@/components/dashboard/cab/SitesFacilitiesStep'
+import { DocumentsStep } from '@/components/dashboard/cab/DocumentsStep'
 import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
@@ -16,6 +17,7 @@ import {
 } from '@/lib/applicationDraftForm'
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
+import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
 
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
@@ -24,12 +26,15 @@ export function ApplicationDraftPage() {
   const [form, setForm] = useState(emptyApplicationDraftForm)
   const [standardsScopeForm, setStandardsScopeForm] = useState(emptyStandardsScopeForm)
   const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(emptySitesFacilitiesForm)
+  const [documentsForm, setDocumentsForm] = useState(emptyDocumentsForm)
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
   const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
     setStandardsScopeForm((prev) => ({ ...prev, ...f }))
   const patchSitesFacilities = (f: Partial<typeof sitesFacilitiesForm>) =>
     setSitesFacilitiesForm((prev) => ({ ...prev, ...f }))
+  const patchDocuments = (f: Partial<typeof documentsForm>) =>
+    setDocumentsForm((prev) => ({ ...prev, ...f }))
 
   const complete =
     step === 1
@@ -38,7 +43,9 @@ export function ApplicationDraftPage() {
         ? isStandardsScopeComplete(standardsScopeForm)
         : step === 3
           ? isSitesFacilitiesComplete(sitesFacilitiesForm)
-          : true
+          : step === 4
+            ? isDocumentsComplete(documentsForm)
+            : true
 
   // TODO: wire to a real "save application draft" endpoint once the backend
   // exposes one — for now this is a no-op stub, matching the other
@@ -55,12 +62,12 @@ export function ApplicationDraftPage() {
   }
 
   // TODO: wire to a real "save application draft" endpoint once the backend
-  // exposes one, and build steps 4-5 (Documents, Review & Confirm) — for now
-  // this just returns to the dashboard once step 3 is done, matching the
-  // other not-yet-backed CAB workflow steps.
+  // exposes one, and build step 5 (Review & Confirm) — for now this just
+  // returns to the dashboard once step 4 is done, matching the other
+  // not-yet-backed CAB workflow steps.
   const handleNext = () => {
     if (!complete) return
-    if (step < 3) {
+    if (step < 4) {
       setStep((s) => (s + 1) as typeof step)
       return
     }
@@ -89,6 +96,7 @@ export function ApplicationDraftPage() {
             {step === 3 && (
               <SitesFacilitiesStep form={sitesFacilitiesForm} onPatch={patchSitesFacilities} />
             )}
+            {step === 4 && <DocumentsStep form={documentsForm} onPatch={patchDocuments} />}
           </div>
           <WorkflowProgressCard
             steps={buildClientWorkflowSteps(t, 'application')}

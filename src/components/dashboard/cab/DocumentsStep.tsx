@@ -1,0 +1,351 @@
+import { useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
+import { AppIcon, DownloadIcon, EyeIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
+import { Button } from '@/components/ui/Button'
+import {
+  documentCompletionCounts,
+  DOCUMENT_CATEGORIES,
+  type DocumentCategory,
+  type DocumentRecord,
+  type DocumentsForm,
+  type DocumentUploadStatus,
+} from '@/lib/documentsForm'
+import { cn } from '@/lib/utils'
+
+interface DocumentsStepProps {
+  form: DocumentsForm
+  onPatch: (f: Partial<DocumentsForm>) => void
+}
+
+type FilterKey = 'all' | 'mandatory' | 'optional' | 'uploaded' | 'pending'
+
+const statusBadgeStyles: Record<DocumentUploadStatus, string> = {
+  uploaded: 'bg-[#dcfce7] text-[#16a34a]',
+  pending: 'bg-[#fef3c6] text-[#a58401]',
+  notUploaded: 'bg-[#f3f4f6] text-[#4b5563]',
+}
+
+const donutColors: Record<DocumentUploadStatus, string> = {
+  uploaded: '#16a34a',
+  pending: '#f59e0b',
+  notUploaded: '#d1d5db',
+}
+
+export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
+  const { t, i18n } = useTranslation()
+  const [filter, setFilter] = useState<FilterKey>('all')
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const pendingUploadId = useRef<string | null>(null)
+
+  const counts = documentCompletionCounts(form)
+
+  const filterOptions: { key: FilterKey; count: number }[] = [
+    { key: 'all', count: form.documents.length },
+    { key: 'mandatory', count: form.documents.filter((d) => d.requirement === 'mandatory').length },
+    { key: 'optional', count: form.documents.filter((d) => d.requirement === 'optional').length },
+    { key: 'uploaded', count: counts.uploaded },
+    { key: 'pending', count: counts.pending },
+  ]
+
+  const visibleDocuments = useMemo(() => {
+    return form.documents.filter((doc) => {
+      if (filter === 'all') return true
+      if (filter === 'mandatory' || filter === 'optional') return doc.requirement === filter
+      return doc.status === filter
+    })
+  }, [form.documents, filter])
+
+  const groupedDocuments = useMemo(() => {
+    return DOCUMENT_CATEGORIES.map((category) => ({
+      category,
+      documents: visibleDocuments.filter((doc) => doc.category === category),
+    })).filter((group) => group.documents.length > 0)
+  }, [visibleDocuments])
+
+  const updateDocument = (id: string, patch: Partial<DocumentRecord>) => {
+    onPatch({
+      documents: form.documents.map((doc) => (doc.id === id ? { ...doc, ...patch } : doc)),
+    })
+  }
+
+  const openFilePicker = (id: string) => {
+    pendingUploadId.current = id
+    fileInputRef.current?.click()
+  }
+
+  const onFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    const id = pendingUploadId.current
+    if (file && id) {
+      updateDocument(id, {
+        status: 'uploaded',
+        fileName: file.name,
+        fileUrl: URL.createObjectURL(file),
+        uploadedDate: new Date().toLocaleDateString(i18n.language),
+      })
+    }
+    event.target.value = ''
+    pendingUploadId.current = null
+  }
+
+  const resetDocument = (id: string) =>
+    updateDocument(id, { status: 'notUploaded', fileName: undefined, fileUrl: undefined, uploadedDate: undefined })
+
+  const docLabel = (key: string) => t(`cab.applicationDraft.documents.items.${key}.title`)
+  const docNote = (key: string) => t(`cab.applicationDraft.documents.items.${key}.note`)
+
+  return (
+    <div className="space-y-5">
+      <SectionHeading
+        title={t('cab.applicationDraft.documents.title')}
+        accordion
+        headerActions={
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-9 gap-2 rounded-[var(--radius-sm)] px-4"
+            onClick={() => {
+              const nextPending = form.documents.find((doc) => doc.status !== 'uploaded')
+              if (nextPending) openFilePicker(nextPending.id)
+            }}
+          >
+            <AppIcon icon={UploadOutlineIcon} size={18} />
+            {t('cab.applicationDraft.documents.uploadDocument')}
+          </Button>
+        }
+      >
+        <p className="mb-4 text-[14px] text-neutral-500">
+          {t('cab.applicationDraft.documents.subtitle')}
+        </p>
+
+        <input ref={fileInputRef} type="file" className="hidden" onChange={onFileSelected} />
+
+        <div className="mb-4 flex flex-wrap gap-2">
+          {filterOptions.map((option) => (
+            <button
+              key={option.key}
+              type="button"
+              onClick={() => setFilter(option.key)}
+              className={cn(
+                'inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[13px] font-medium transition-colors',
+                filter === option.key
+                  ? 'border-primary bg-[#e8edfc] text-primary'
+                  : 'border-[#ececec] bg-white text-neutral-600 hover:bg-neutral-50'
+              )}
+            >
+              {t(`cab.applicationDraft.documents.filters.${option.key}`)}
+              <span
+                className={cn(
+                  'flex size-5 items-center justify-center rounded-full text-[11px] font-semibold',
+                  filter === option.key ? 'bg-primary text-white' : 'bg-[#f3f4f6] text-neutral-500'
+                )}
+              >
+                {option.count}
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="overflow-x-auto rounded-[var(--radius-sm)] border border-[#ececec]">
+          <table className="w-full min-w-[900px] border-collapse text-start">
+            <thead>
+              <tr className="bg-[#f9fafc] text-[13px] text-neutral-500">
+                <th className="w-12 px-4 py-3 text-start font-medium">#</th>
+                <th className="px-4 py-3 text-start font-medium">
+                  {t('cab.applicationDraft.documents.columns.documentName')}
+                </th>
+                <th className="px-4 py-3 text-start font-medium">
+                  {t('cab.applicationDraft.documents.columns.type')}
+                </th>
+                <th className="px-4 py-3 text-start font-medium">
+                  {t('cab.applicationDraft.documents.columns.status')}
+                </th>
+                <th className="px-4 py-3 text-start font-medium">
+                  {t('cab.applicationDraft.documents.columns.fileUploadedOn')}
+                </th>
+                <th className="w-20 px-4 py-3 text-start font-medium">
+                  {t('cab.applicationDraft.documents.columns.actions')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {groupedDocuments.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-8 text-center text-[14px] text-neutral-500">
+                    {t('cab.applicationDraft.documents.empty')}
+                  </td>
+                </tr>
+              ) : (
+                groupedDocuments.map((group) => (
+                  <CategoryGroup
+                    key={group.category}
+                    category={group.category}
+                    documents={group.documents}
+                    docLabel={docLabel}
+                    docNote={docNote}
+                    onView={(doc) => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
+                    onUpload={openFilePicker}
+                    onRemove={resetDocument}
+                  />
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="mt-4 text-[13px] text-neutral-500">
+          {t('cab.applicationDraft.documents.showing', { count: visibleDocuments.length, total: form.documents.length })}
+        </p>
+      </SectionHeading>
+
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+        <div className="flex-1">
+          <CabDonutCard
+            title={t('cab.applicationDraft.documents.completion.title')}
+            labelPrefix="cab.applicationDraft.documents.completion.legend"
+            totalLabel={t('cab.applicationDraft.documents.completion.totalLabel')}
+            entries={[
+              { key: 'uploaded', count: counts.uploaded, color: donutColors.uploaded },
+              { key: 'pending', count: counts.pending, color: donutColors.pending },
+              { key: 'notUploaded', count: counts.notUploaded, color: donutColors.notUploaded },
+            ]}
+          />
+          <p className="mt-2 text-center text-[13px] text-neutral-500">
+            {t('cab.applicationDraft.documents.completion.mandatorySummary', {
+              uploaded: counts.mandatoryUploaded,
+              total: counts.mandatoryTotal,
+            })}
+          </p>
+        </div>
+
+        <div className="flex-1 rounded-[16px] border border-[#ececec] bg-white p-5">
+          <h3 className="mb-3 text-[16px] font-semibold text-neutral-900">
+            {t('cab.applicationDraft.documents.guidelines.title')}
+          </h3>
+          <div className="rounded-[var(--radius-sm)] bg-[rgba(254,249,231,0.6)] p-3">
+            <ul className="list-disc space-y-1 ps-5 text-[13px] text-[#917508]">
+              <li>{t('cab.applicationDraft.documents.guidelines.item1')}</li>
+              <li>{t('cab.applicationDraft.documents.guidelines.item2')}</li>
+              <li>{t('cab.applicationDraft.documents.guidelines.item3')}</li>
+              <li>{t('cab.applicationDraft.documents.guidelines.item4')}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function CategoryGroup({
+  category,
+  documents,
+  docLabel,
+  docNote,
+  onView,
+  onUpload,
+  onRemove,
+}: {
+  category: DocumentCategory
+  documents: DocumentRecord[]
+  docLabel: (key: string) => string
+  docNote: (key: string) => string
+  onView: (doc: DocumentRecord) => void
+  onUpload: (id: string) => void
+  onRemove: (id: string) => void
+}) {
+  const { t } = useTranslation()
+
+  return (
+    <>
+      <tr className="border-t border-[#ececec] bg-[#f3f6fd]">
+        <td colSpan={6} className="px-4 py-2 text-[13px] font-semibold text-primary">
+          {t(`cab.applicationDraft.documents.categories.${category}`)}
+        </td>
+      </tr>
+      {documents.map((doc, index) => (
+        <tr key={doc.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]', 'border-t border-[#ececec]')}>
+          <td className="px-4 py-4 align-top text-[14px] text-neutral-500">{index + 1}</td>
+          <td className="px-4 py-4 align-top">
+            <p className="text-[14px] font-semibold text-neutral-900">{docLabel(doc.nameKey)}</p>
+            <p className="mt-0.5 text-[13px] text-neutral-500">{docNote(doc.nameKey)}</p>
+          </td>
+          <td className="px-4 py-4 align-top">
+            <span
+              className={cn(
+                'inline-block rounded-[6px] px-2 py-0.5 text-[12px] font-medium',
+                doc.requirement === 'mandatory' ? 'bg-[#e8edfc] text-primary' : 'bg-[#f3f4f6] text-neutral-600'
+              )}
+            >
+              {t(`cab.applicationDraft.documents.requirement.${doc.requirement}`)}
+            </span>
+          </td>
+          <td className="px-4 py-4 align-top">
+            <span
+              className={cn(
+                'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                statusBadgeStyles[doc.status]
+              )}
+            >
+              {t(`cab.applicationDraft.documents.status.${doc.status}`)}
+            </span>
+          </td>
+          <td className="px-4 py-4 align-top text-[13px] text-neutral-700">
+            {doc.fileName ? (
+              <>
+                <p className="font-medium text-neutral-900">{doc.fileName}</p>
+                <p className="text-neutral-500">{doc.uploadedDate}</p>
+              </>
+            ) : (
+              <span className="text-neutral-400">—</span>
+            )}
+          </td>
+          <td className="px-4 py-4 align-top">
+            <div className="flex items-center gap-2">
+              {doc.status === 'uploaded' ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => onView(doc)}
+                    className="flex size-9 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white text-neutral-500 hover:bg-neutral-50 hover:text-primary"
+                    aria-label={t('common.view')}
+                  >
+                    <AppIcon icon={EyeIcon} size={18} />
+                  </button>
+                  <a
+                    href={doc.fileUrl}
+                    download={doc.fileName}
+                    target="_blank"
+                    rel="noopener"
+                    className="flex size-9 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white text-neutral-500 hover:bg-neutral-50 hover:text-primary"
+                    aria-label={t('common.download')}
+                  >
+                    <AppIcon icon={DownloadIcon} size={18} />
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => onRemove(doc.id)}
+                    className="flex size-9 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white text-error-400 hover:bg-neutral-50 hover:text-error-600"
+                    aria-label={t('common.delete')}
+                  >
+                    <AppIcon icon={TrashIcon} size={18} />
+                  </button>
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onUpload(doc.id)}
+                  className="flex size-9 items-center justify-center rounded-[var(--radius-sm)] border border-[#ececec] bg-white text-neutral-500 hover:bg-neutral-50 hover:text-primary"
+                  aria-label={t('cab.applicationDraft.documents.uploadDocument')}
+                >
+                  <AppIcon icon={UploadOutlineIcon} size={18} />
+                </button>
+              )}
+            </div>
+          </td>
+        </tr>
+      ))}
+    </>
+  )
+}

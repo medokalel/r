@@ -7,6 +7,8 @@
     "confirm": "تأكيد",
     "delete": "حذف",
     "edit": "تعديل",
+    "view": "عرض",
+    "download": "تحميل",
     "change": "تغيير",
     "close": "إغلاق",
     "back": "السابق",
@@ -2233,6 +2235,108 @@
             "permitAccessRequired": "يتطلب تصريح / وصول",
             "includedInSampling": "مشمول في أخذ العينات"
           }
+        }
+      },
+      "documents": {
+        "title": "المستندات",
+        "subtitle": "قم برفع جميع المستندات المطلوبة للمراجعة. المستندات المعلّم عليها بـ * إلزامية.",
+        "uploadDocument": "رفع مستند",
+        "empty": "لا توجد مستندات مطابقة لهذا الفلتر.",
+        "showing": "عرض {{count}} من {{total}} مستند",
+        "filters": {
+          "all": "كل المستندات",
+          "mandatory": "إلزامي",
+          "optional": "اختياري",
+          "uploaded": "تم الرفع",
+          "pending": "قيد الانتظار"
+        },
+        "columns": {
+          "documentName": "اسم المستند",
+          "type": "النوع",
+          "status": "الحالة",
+          "fileUploadedOn": "الملف / تاريخ الرفع",
+          "actions": "الإجراءات"
+        },
+        "requirement": {
+          "mandatory": "إلزامي",
+          "optional": "اختياري"
+        },
+        "status": {
+          "uploaded": "تم الرفع",
+          "pending": "قيد الانتظار",
+          "notUploaded": "لم يتم الرفع"
+        },
+        "categories": {
+          "legalOrganizational": "أ. المستندات القانونية والتنظيمية",
+          "managementSystem": "ب. مستندات نظام الإدارة",
+          "complianceOther": "ج. مستندات الامتثال والمستندات الأخرى"
+        },
+        "items": {
+          "incorporationCertificate": {
+            "title": "شهادة التأسيس / السجل التجاري",
+            "note": "شهادة التسجيل القانوني للمنظمة."
+          },
+          "memorandumOfAssociation": {
+            "title": "عقد التأسيس والنظام الأساسي",
+            "note": "المستندات التأسيسية للمنظمة."
+          },
+          "organizationChart": {
+            "title": "الهيكل التنظيمي",
+            "note": "الهيكل التنظيمي الحالي موضحًا خطوط الإدارة والتبعية."
+          },
+          "keyManagementList": {
+            "title": "قائمة المديرين / الإدارة العليا",
+            "note": "قائمة بأسماء المديرين وأعضاء الإدارة العليا."
+          },
+          "managementSystemManual": {
+            "title": "دليل نظام الإدارة",
+            "note": "دليل نظام الإدارة الحالي."
+          },
+          "documentedProcedures": {
+            "title": "الإجراءات الموثقة",
+            "note": "قائمة الإجراءات الموثقة مع إصداراتها."
+          },
+          "scopeDocument": {
+            "title": "مستند النطاق",
+            "note": "نطاق مستند التصديق."
+          },
+          "internalAuditReports": {
+            "title": "إجراء وتقارير التدقيق الداخلي",
+            "note": "إجراء التدقيق الداخلي وآخر تقارير التدقيق."
+          },
+          "managementReviewReports": {
+            "title": "إجراء وتقارير مراجعة الإدارة",
+            "note": "إجراء مراجعة الإدارة وآخر تقرير مراجعة."
+          },
+          "legalRegulatoryRequirements": {
+            "title": "المتطلبات القانونية والتنظيمية المعمول بها",
+            "note": "قائمة المتطلبات القانونية والتنظيمية المعمول بها."
+          },
+          "previousCertificate": {
+            "title": "الشهادة السابقة (إن وجدت)",
+            "note": "نسخة من الشهادة (الشهادات) السابقة."
+          },
+          "otherSupportingDocuments": {
+            "title": "مستندات داعمة أخرى",
+            "note": "أي مستندات داعمة أخرى ذات صلة."
+          }
+        },
+        "completion": {
+          "title": "اكتمال المستندات",
+          "totalLabel": "المستندات",
+          "mandatorySummary": "تم رفع {{uploaded}} من {{total}} مستند إلزامي",
+          "legend": {
+            "uploaded": "تم الرفع",
+            "pending": "قيد الانتظار",
+            "notUploaded": "لم يتم الرفع"
+          }
+        },
+        "guidelines": {
+          "title": "إرشادات المستندات",
+          "item1": "يجب رفع جميع المستندات الإلزامية قبل التقديم.",
+          "item2": "يجب أن تكون المستندات واضحة وسارية ومحدّثة.",
+          "item3": "الحد الأقصى لحجم الملف: 25 ميجابايت لكل مستند.",
+          "item4": "الصيغ المقبولة: PDF, JPG, PNG."
         }
       }
     },

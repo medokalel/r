@@ -7,6 +7,8 @@
     "confirm": "Confirm",
     "delete": "Delete",
     "edit": "Edit",
+    "view": "View",
+    "download": "Download",
     "change": "Change",
     "close": "Close",
     "back": "Back",
@@ -2234,6 +2236,108 @@
             "permitAccessRequired": "Permit / Access Required",
             "includedInSampling": "Included in Sampling"
           }
+        }
+      },
+      "documents": {
+        "title": "Documents",
+        "subtitle": "Upload all required documents for review. Documents marked with * are mandatory.",
+        "uploadDocument": "Upload Document",
+        "empty": "No documents match this filter.",
+        "showing": "Showing {{count}} of {{total}} documents",
+        "filters": {
+          "all": "All Documents",
+          "mandatory": "Required",
+          "optional": "Optional",
+          "uploaded": "Uploaded",
+          "pending": "Pending"
+        },
+        "columns": {
+          "documentName": "Document Name",
+          "type": "Type",
+          "status": "Status",
+          "fileUploadedOn": "File / Uploaded On",
+          "actions": "Actions"
+        },
+        "requirement": {
+          "mandatory": "Mandatory",
+          "optional": "Optional"
+        },
+        "status": {
+          "uploaded": "Uploaded",
+          "pending": "Pending",
+          "notUploaded": "Not Uploaded"
+        },
+        "categories": {
+          "legalOrganizational": "A. Legal & Organizational Documents",
+          "managementSystem": "B. Management System Documents",
+          "complianceOther": "C. Compliance & Other Documents"
+        },
+        "items": {
+          "incorporationCertificate": {
+            "title": "Certificate of Incorporation / Business Registration",
+            "note": "Legal registration certificate of the organization."
+          },
+          "memorandumOfAssociation": {
+            "title": "Memorandum & Articles of Association",
+            "note": "Constitution documents of the organization."
+          },
+          "organizationChart": {
+            "title": "Organization Chart",
+            "note": "Current organization chart showing structure and reporting lines."
+          },
+          "keyManagementList": {
+            "title": "List of Directors / Key Management",
+            "note": "List of directors and key management personnel."
+          },
+          "managementSystemManual": {
+            "title": "Management System Manual",
+            "note": "Current management system manual."
+          },
+          "documentedProcedures": {
+            "title": "Documented Procedures",
+            "note": "List of documented procedures with versions."
+          },
+          "scopeDocument": {
+            "title": "Scope Document",
+            "note": "Scope of certification document."
+          },
+          "internalAuditReports": {
+            "title": "Internal Audit Procedure & Reports",
+            "note": "Internal audit procedure & last audit reports."
+          },
+          "managementReviewReports": {
+            "title": "Management Review Procedure & Reports",
+            "note": "Management review procedure & last review report."
+          },
+          "legalRegulatoryRequirements": {
+            "title": "Applicable Legal & Regulatory Requirements",
+            "note": "List of applicable legal and regulatory requirements."
+          },
+          "previousCertificate": {
+            "title": "Previous Certificate (if any)",
+            "note": "Copy of previous certificate(s)."
+          },
+          "otherSupportingDocuments": {
+            "title": "Other Supporting Documents",
+            "note": "Any other relevant supporting documents."
+          }
+        },
+        "completion": {
+          "title": "Document Completion",
+          "totalLabel": "Documents",
+          "mandatorySummary": "{{uploaded}} / {{total}} mandatory documents uploaded",
+          "legend": {
+            "uploaded": "Uploaded",
+            "pending": "Pending",
+            "notUploaded": "Not Uploaded"
+          }
+        },
+        "guidelines": {
+          "title": "Document Guidelines",
+          "item1": "All mandatory documents must be uploaded before submission.",
+          "item2": "Documents should be clear, valid and up to date.",
+          "item3": "Maximum file size: 25 MB per document.",
+          "item4": "Accepted formats: PDF, JPG, PNG."
         }
       }
     },
