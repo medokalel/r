@@ -530,6 +530,7 @@ export function AddSitePage() {
         onSaveDraft={handleSaveDraft}
         onNext={handleNext}
         nextDisabled={!canSave}
+        nextLabel={t('common.save')}
       />
     </CabLayout>
   )

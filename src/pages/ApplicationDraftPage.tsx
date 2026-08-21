@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -18,15 +18,60 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
+import {
+  clearApplicationDraftSnapshot,
+  clearPendingNewSite,
+  loadApplicationDraftSnapshot,
+  peekPendingNewSite,
+  saveApplicationDraftSnapshot,
+} from '@/lib/applicationDraftSession'
 
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(1)
-  const [form, setForm] = useState(emptyApplicationDraftForm)
-  const [standardsScopeForm, setStandardsScopeForm] = useState(emptyStandardsScopeForm)
-  const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(emptySitesFacilitiesForm)
-  const [documentsForm, setDocumentsForm] = useState(emptyDocumentsForm)
+
+  // Resume from the sessionStorage snapshot if we're returning from
+  // AddSitePage (see applicationDraftSession.ts) — otherwise start fresh.
+  // This must be a useState lazy initializer (not a module-level constant):
+  // this is a client-side route, so the module is only ever imported once —
+  // a module-level read would freeze at whatever sessionStorage held on that
+  // first import and never see later saves. A lazy initializer re-runs each
+  // time a fresh instance of this component mounts, which is what happens on
+  // every return trip from AddSitePage.
+  const [{ restoredSnapshot, pendingSiteOnLoad }] = useState(() => ({
+    restoredSnapshot: loadApplicationDraftSnapshot(),
+    pendingSiteOnLoad: peekPendingNewSite(),
+  }))
+
+  const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(
+    pendingSiteOnLoad ? 3 : restoredSnapshot?.step ?? 1
+  )
+  const [form, setForm] = useState(restoredSnapshot?.form ?? emptyApplicationDraftForm)
+  const [standardsScopeForm, setStandardsScopeForm] = useState(
+    restoredSnapshot?.standardsScopeForm ?? emptyStandardsScopeForm
+  )
+  const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(() => {
+    const base = restoredSnapshot?.sitesFacilitiesForm ?? emptySitesFacilitiesForm
+    return pendingSiteOnLoad ? { ...base, sites: [...base.sites, pendingSiteOnLoad] } : base
+  })
+  const [documentsForm, setDocumentsForm] = useState(
+    restoredSnapshot?.documentsForm ?? emptyDocumentsForm
+  )
+
+  // Keep the snapshot current so it's ready the moment the user leaves for
+  // AddSitePage — see the module doc in applicationDraftSession.ts.
+  useEffect(() => {
+    saveApplicationDraftSnapshot({ step, form, standardsScopeForm, sitesFacilitiesForm, documentsForm })
+  }, [step, form, standardsScopeForm, sitesFacilitiesForm, documentsForm])
+
+    // The pending site (if any) was already folded into sitesFacilitiesForm's
+  // initial state above from the peek — this just removes it from storage
+  // now that it's been consumed, so it isn't re-applied on a future mount.
+  // Safe to run more than once (StrictMode's double effect invocation in
+  // dev): removing an already-removed key is a no-op.
+  useEffect(() => {
+    if (pendingSiteOnLoad) clearPendingNewSite()
+  }, [pendingSiteOnLoad])
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
   const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
@@ -71,6 +116,7 @@ export function ApplicationDraftPage() {
       setStep((s) => (s + 1) as typeof step)
       return
     }
+    clearApplicationDraftSnapshot()
     navigate('/cab/dashboard')
   }
 

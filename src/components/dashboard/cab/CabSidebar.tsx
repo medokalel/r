@@ -39,9 +39,20 @@ const dashboardItem: CabNavItem = {
   href: '/cab/dashboard',
 }
 
-/** True when `pathname` points at `href`, including its `/:id/<lastSegment>` variant. */
+/** True when `pathname` points at `href`, including its `/:id/<lastSegment>`
+ *  variant, and — for the Application Draft step specifically — any of its
+ *  nested sub-pages (e.g. the full-page "Add New Site", under
+ *  /cab/applications/draft/...). */
 function matchesWorkflowHref(pathname: string, href: string) {
   if (pathname === href) return true
+  if (href === '/cab/applications/draft' && pathname.startsWith('/cab/applications/draft/')) {
+    return true
+  }
+  // Only applications-workflow hrefs (draft/submission/receipt/review/...) get
+  // the "/:id/<lastSegment>" fallback below — otherwise a generic last segment
+  // like "new" (shared with e.g. Client Registration's /cab/clients/new) would
+  // false-match any /cab/applications/... path ending the same way.
+  if (!href.startsWith('/cab/applications/')) return false
   const lastSegment = href.split('/').pop()
   return pathname.startsWith('/cab/applications/') && pathname.endsWith(`/${lastSegment}`)
 }
