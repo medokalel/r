@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import type { ReactNode } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
 
 interface DonutEntry {
@@ -13,9 +14,11 @@ interface CabDonutCardProps {
   labelPrefix: string
   totalLabel: string
   footerLink?: { label: string; onClick: () => void }
+  /** Optional extra content rendered inside the same card, below the chart/legend. */
+  footer?: ReactNode
 }
 
-export function CabDonutCard({ title, entries, labelPrefix, totalLabel, footerLink }: CabDonutCardProps) {
+export function CabDonutCard({ title, entries, labelPrefix, totalLabel, footerLink, footer }: CabDonutCardProps) {
   const { t } = useTranslation()
   const total = entries.reduce((sum, entry) => sum + entry.count, 0)
 
@@ -60,6 +63,8 @@ export function CabDonutCard({ title, entries, labelPrefix, totalLabel, footerLi
           ))}
         </ul>
       </div>
+
+      {footer}
 
       {footerLink && (
         <button

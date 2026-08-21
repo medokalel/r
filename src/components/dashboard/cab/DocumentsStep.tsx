@@ -2,7 +2,7 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
-import { AppIcon, DownloadIcon, EyeIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
+import { AppIcon, DownloadIcon, EyeIcon, HeadsetIcon, SuccessCircleIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import {
   documentCompletionCounts,
@@ -22,7 +22,7 @@ interface DocumentsStepProps {
 type FilterKey = 'all' | 'mandatory' | 'optional' | 'uploaded' | 'pending'
 
 const statusBadgeStyles: Record<DocumentUploadStatus, string> = {
-  uploaded: 'bg-[#dcfce7] text-[#16a34a]',
+  uploaded: 'bg-[#eafaf1] text-[#16a34a]',
   pending: 'bg-[#fef3c6] text-[#a58401]',
   notUploaded: 'bg-[#f3f4f6] text-[#4b5563]',
 }
@@ -64,6 +64,18 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
     })).filter((group) => group.documents.length > 0)
   }, [visibleDocuments])
 
+  // Running row-count offset per category group, so the white/blue zebra
+  // stripe continues across category boundaries instead of restarting at
+  // white after every group header.
+  const groupRowOffsets = useMemo(() => {
+    let running = 0
+    return groupedDocuments.map((group) => {
+      const offset = running
+      running += group.documents.length
+      return offset
+    })
+  }, [groupedDocuments])
+
   const updateDocument = (id: string, patch: Partial<DocumentRecord>) => {
     onPatch({
       documents: form.documents.map((doc) => (doc.id === id ? { ...doc, ...patch } : doc)),
@@ -97,7 +109,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
   const docNote = (key: string) => t(`cab.applicationDraft.documents.items.${key}.note`)
 
   return (
-    <div className="space-y-5">
+    <>
       <SectionHeading
         title={t('cab.applicationDraft.documents.title')}
         accordion
@@ -148,24 +160,24 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
           ))}
         </div>
 
-        <div className="overflow-x-auto rounded-[var(--radius-sm)] border border-[#ececec]">
-          <table className="w-full min-w-[900px] border-collapse text-start">
-            <thead>
-              <tr className="bg-[#f9fafc] text-[13px] text-neutral-500">
-                <th className="w-12 px-4 py-3 text-start font-medium">#</th>
-                <th className="px-4 py-3 text-start font-medium">
+        <div className="hidden overflow-x-auto md:block">
+          <table className="w-full min-w-[900px] border-collapse text-center">
+            <thead className="border-b border-[#ececec]">
+              <tr className="rounded-[10px] bg-[#1236a3] text-white">
+                <th className="w-12 p-[18px] text-center text-[14px] font-medium">#</th>
+                <th className="p-[18px] text-center text-[14px] font-medium">
                   {t('cab.applicationDraft.documents.columns.documentName')}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="p-[18px] text-center text-[14px] font-medium">
                   {t('cab.applicationDraft.documents.columns.type')}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="p-[18px] text-center text-[14px] font-medium">
                   {t('cab.applicationDraft.documents.columns.status')}
                 </th>
-                <th className="px-4 py-3 text-start font-medium">
+                <th className="p-[18px] text-center text-[14px] font-medium">
                   {t('cab.applicationDraft.documents.columns.fileUploadedOn')}
                 </th>
-                <th className="w-20 px-4 py-3 text-start font-medium">
+                <th className="p-[18px] text-center text-[14px] font-medium">
                   {t('cab.applicationDraft.documents.columns.actions')}
                 </th>
               </tr>
@@ -173,16 +185,17 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
             <tbody>
               {groupedDocuments.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-4 py-8 text-center text-[14px] text-neutral-500">
+                  <td colSpan={6} className="px-4 py-6 text-center text-neutral-500">
                     {t('cab.applicationDraft.documents.empty')}
                   </td>
                 </tr>
               ) : (
-                groupedDocuments.map((group) => (
+                groupedDocuments.map((group, groupIndex) => (
                   <CategoryGroup
                     key={group.category}
                     category={group.category}
                     documents={group.documents}
+                    startIndex={groupRowOffsets[groupIndex]}
                     docLabel={docLabel}
                     docNote={docNote}
                     onView={(doc) => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
@@ -195,52 +208,173 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
           </table>
         </div>
 
+        {/* Mobile: cards, matching DashboardTasksTable's small-screen layout */}
+        <div className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-2 md:hidden">
+          {groupedDocuments.length === 0 ? (
+            <p className="py-6 text-center text-neutral-500">{t('cab.applicationDraft.documents.empty')}</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {groupedDocuments.map((group) => (
+                <div key={group.category}>
+                  <p className="px-2 py-1 text-[13px] font-semibold text-primary">
+                    {t(`cab.applicationDraft.documents.categories.${group.category}`)}
+                  </p>
+                  <div className="flex flex-col gap-3">
+                    {group.documents.map((doc) => (
+                      <div key={doc.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                        <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc.nameKey)}</p>
+                        <p className="text-[13px] text-neutral-500">{docNote(doc.nameKey)}</p>
+
+                        <div className="mt-3 flex items-center justify-between">
+                          <span
+                            className={cn(
+                              'inline-block rounded-[6px] px-2 py-0.5 text-[12px] font-medium',
+                              doc.requirement === 'mandatory'
+                                ? 'bg-[#e8edfc] text-primary'
+                                : 'bg-[#f3f4f6] text-neutral-600'
+                            )}
+                          >
+                            {t(`cab.applicationDraft.documents.requirement.${doc.requirement}`)}
+                          </span>
+                          <span
+                            className={cn(
+                              'inline-flex items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                              statusBadgeStyles[doc.status]
+                            )}
+                          >
+                            {t(`cab.applicationDraft.documents.status.${doc.status}`)}
+                          </span>
+                        </div>
+
+                        {doc.fileName && (
+                          <p className="mt-2 text-[13px] text-neutral-500">
+                            {doc.fileName} · {doc.uploadedDate}
+                          </p>
+                        )}
+
+                        <div className="mt-3 flex items-center gap-2">
+                          {doc.status === 'uploaded' ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
+                                className="text-[14px] font-medium text-primary hover:underline"
+                              >
+                                {t('common.view')}
+                              </button>
+                              <a
+                                href={doc.fileUrl}
+                                download={doc.fileName}
+                                target="_blank"
+                                rel="noopener"
+                                className="text-[14px] font-medium text-primary hover:underline"
+                              >
+                                {t('common.download')}
+                              </a>
+                              <button
+                                type="button"
+                                onClick={() => resetDocument(doc.id)}
+                                className="text-[14px] font-medium text-error-500 hover:underline"
+                              >
+                                {t('common.delete')}
+                              </button>
+                            </>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => openFilePicker(doc.id)}
+                              className="text-[14px] font-medium text-primary hover:underline"
+                            >
+                              {t('cab.applicationDraft.documents.uploadDocument')}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
         <p className="mt-4 text-[13px] text-neutral-500">
           {t('cab.applicationDraft.documents.showing', { count: visibleDocuments.length, total: form.documents.length })}
         </p>
       </SectionHeading>
+    </>
+  )
+}
 
-      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-        <div className="flex-1">
-          <CabDonutCard
-            title={t('cab.applicationDraft.documents.completion.title')}
-            labelPrefix="cab.applicationDraft.documents.completion.legend"
-            totalLabel={t('cab.applicationDraft.documents.completion.totalLabel')}
-            entries={[
-              { key: 'uploaded', count: counts.uploaded, color: donutColors.uploaded },
-              { key: 'pending', count: counts.pending, color: donutColors.pending },
-              { key: 'notUploaded', count: counts.notUploaded, color: donutColors.notUploaded },
-            ]}
-          />
-          <p className="mt-2 text-center text-[13px] text-neutral-500">
-            {t('cab.applicationDraft.documents.completion.mandatorySummary', {
-              uploaded: counts.mandatoryUploaded,
-              total: counts.mandatoryTotal,
-            })}
-          </p>
-        </div>
+/**
+ * Replaces `WorkflowProgressCard` in the page's sidebar slot while on the
+ * Documents step — same card width/style, stacked completion + guidelines +
+ * support sections instead of the workflow timeline.
+ */
+export function DocumentsSidebar({ form }: { form: DocumentsForm }) {
+  const { t } = useTranslation()
+  const counts = documentCompletionCounts(form)
 
-        <div className="flex-1 rounded-[16px] border border-[#ececec] bg-white p-5">
-          <h3 className="mb-3 text-[16px] font-semibold text-neutral-900">
-            {t('cab.applicationDraft.documents.guidelines.title')}
-          </h3>
-          <div className="rounded-[var(--radius-sm)] bg-[rgba(254,249,231,0.6)] p-3">
-            <ul className="list-disc space-y-1 ps-5 text-[13px] text-[#917508]">
-              <li>{t('cab.applicationDraft.documents.guidelines.item1')}</li>
-              <li>{t('cab.applicationDraft.documents.guidelines.item2')}</li>
-              <li>{t('cab.applicationDraft.documents.guidelines.item3')}</li>
-              <li>{t('cab.applicationDraft.documents.guidelines.item4')}</li>
-            </ul>
+  return (
+    <aside className="flex w-full shrink-0 flex-col gap-5 lg:w-[340px]">
+      <CabDonutCard
+        title={t('cab.applicationDraft.documents.completion.title')}
+        labelPrefix="cab.applicationDraft.documents.completion.legend"
+        totalLabel={t('cab.applicationDraft.documents.completion.totalLabel')}
+        entries={[
+          { key: 'uploaded', count: counts.uploaded, color: donutColors.uploaded },
+          { key: 'pending', count: counts.pending, color: donutColors.pending },
+          { key: 'notUploaded', count: counts.notUploaded, color: donutColors.notUploaded },
+        ]}
+        footer={
+          <div className="mt-4 border-t border-[#ececec] pt-4">
+            <p className="text-[20px] font-semibold text-primary">
+              {counts.mandatoryUploaded} / {counts.mandatoryTotal}
+            </p>
+            <p className="text-[13px] text-neutral-500">
+              {t('cab.applicationDraft.documents.completion.mandatorySummary', {
+                uploaded: counts.mandatoryUploaded,
+                total: counts.mandatoryTotal,
+              })}
+            </p>
           </div>
-        </div>
+        }
+      />
+
+      <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+        <h3 className="mb-3 text-[16px] font-semibold text-neutral-900">
+          {t('cab.applicationDraft.documents.guidelines.title')}
+        </h3>
+        <ul className="space-y-2.5 text-[13px] text-neutral-600">
+          {['item1', 'item2', 'item3', 'item4'].map((item) => (
+            <li key={item} className="flex items-start gap-2">
+              <AppIcon icon={SuccessCircleIcon} size={16} className="mt-0.5 shrink-0 text-[#16a34a]" />
+              <span>{t(`cab.applicationDraft.documents.guidelines.${item}`)}</span>
+            </li>
+          ))}
+        </ul>
       </div>
-    </div>
+
+      <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+        <h3 className="mb-2 text-[16px] font-semibold text-neutral-900">
+          {t('cab.applicationDraft.documents.needHelp.title')}
+        </h3>
+        <p className="mb-4 text-[13px] text-neutral-500">
+          {t('cab.applicationDraft.documents.needHelp.description')}
+        </p>
+        <Button type="button" variant="secondary" className="w-full gap-2 rounded-[var(--radius-sm)]">
+          <AppIcon icon={HeadsetIcon} size={18} />
+          {t('cab.applicationDraft.documents.needHelp.contactSupport')}
+        </Button>
+      </div>
+    </aside>
   )
 }
 
 function CategoryGroup({
   category,
   documents,
+  startIndex,
   docLabel,
   docNote,
   onView,
@@ -249,6 +383,7 @@ function CategoryGroup({
 }: {
   category: DocumentCategory
   documents: DocumentRecord[]
+  startIndex: number
   docLabel: (key: string) => string
   docNote: (key: string) => string
   onView: (doc: DocumentRecord) => void
@@ -260,18 +395,18 @@ function CategoryGroup({
   return (
     <>
       <tr className="border-t border-[#ececec] bg-[#f3f6fd]">
-        <td colSpan={6} className="px-4 py-2 text-[13px] font-semibold text-primary">
+        <td colSpan={6} className="px-4 py-2 text-center text-[13px] font-semibold text-primary">
           {t(`cab.applicationDraft.documents.categories.${category}`)}
         </td>
       </tr>
       {documents.map((doc, index) => (
-        <tr key={doc.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]', 'border-t border-[#ececec]')}>
-          <td className="px-4 py-4 align-top text-[14px] text-neutral-500">{index + 1}</td>
-          <td className="px-4 py-4 align-top">
-            <p className="text-[14px] font-semibold text-neutral-900">{docLabel(doc.nameKey)}</p>
+        <tr key={doc.id} className={cn((startIndex + index) % 2 === 1 && 'bg-[#ffffff]')}>
+          <td className="px-4 py-4 text-[14px] text-neutral-500">{startIndex + index + 1}</td>
+          <td className="px-4 py-4">
+            <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc.nameKey)}</p>
             <p className="mt-0.5 text-[13px] text-neutral-500">{docNote(doc.nameKey)}</p>
           </td>
-          <td className="px-4 py-4 align-top">
+          <td className="px-4 py-4">
             <span
               className={cn(
                 'inline-block rounded-[6px] px-2 py-0.5 text-[12px] font-medium',
@@ -281,17 +416,17 @@ function CategoryGroup({
               {t(`cab.applicationDraft.documents.requirement.${doc.requirement}`)}
             </span>
           </td>
-          <td className="px-4 py-4 align-top">
+          <td className="px-4 py-4">
             <span
               className={cn(
-                'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                'inline-flex w-[126px] items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
                 statusBadgeStyles[doc.status]
               )}
             >
               {t(`cab.applicationDraft.documents.status.${doc.status}`)}
             </span>
           </td>
-          <td className="px-4 py-4 align-top text-[13px] text-neutral-700">
+          <td className="px-4 py-4 text-[13px] text-neutral-700">
             {doc.fileName ? (
               <>
                 <p className="font-medium text-neutral-900">{doc.fileName}</p>
@@ -301,8 +436,8 @@ function CategoryGroup({
               <span className="text-neutral-400">—</span>
             )}
           </td>
-          <td className="px-4 py-4 align-top">
-            <div className="flex items-center gap-2">
+          <td className="px-4 py-4">
+            <div className="flex items-center justify-center gap-2">
               {doc.status === 'uploaded' ? (
                 <>
                   <button

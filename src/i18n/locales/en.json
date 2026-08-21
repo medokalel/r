@@ -2338,6 +2338,11 @@
           "item2": "Documents should be clear, valid and up to date.",
           "item3": "Maximum file size: 25 MB per document.",
           "item4": "Accepted formats: PDF, JPG, PNG."
+        },
+        "needHelp": {
+          "title": "Need Help?",
+          "description": "If you have any questions about required documents, please contact your account manager.",
+          "contactSupport": "Contact Support"
         }
       }
     },
