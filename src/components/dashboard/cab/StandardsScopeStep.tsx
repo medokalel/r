@@ -42,10 +42,10 @@ export function StandardsScopeStep({ form, onPatch }: StandardsScopeStepProps) {
           <Button
             type="button"
             variant="secondary"
-            className="h-9 gap-2 rounded-[var(--radius-sm)] px-4"
+            className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
             onClick={() => setIsAddOpen(true)}
           >
-            <AppIcon icon={AddCircleIcon} size={18} />
+            <AppIcon icon={AddCircleIcon} size={24} />
             {t('cab.applicationDraft.standardsScope.addStandard')}
           </Button>
         }
@@ -99,7 +99,7 @@ export function StandardsScopeStep({ form, onPatch }: StandardsScopeStepProps) {
                           className="text-neutral-400 hover:text-primary"
                           aria-label={t('common.edit')}
                         >
-                          <AppIcon icon={EditIcon} size={18} />
+                          <AppIcon icon={EditIcon} size={24} />
                         </button>
                         <button
                           type="button"
@@ -156,8 +156,8 @@ export function StandardsScopeStep({ form, onPatch }: StandardsScopeStepProps) {
         <button type="button" className="text-[14px] font-semibold text-primary underline underline-offset-2">
           {t('cab.applicationDraft.standardsScope.needHelp')}
         </button>
-        <Button type="button" variant="secondary" className="h-10 gap-2 rounded-[var(--radius-sm)] px-4">
-          <AppIcon icon={SearchIcon} size={18} />
+        <Button type="button" variant="secondary" className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4">
+          <AppIcon icon={SearchIcon} size={24} />
           {t('cab.applicationDraft.standardsScope.searchIhfCode')}
         </Button>
       </div>

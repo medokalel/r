@@ -98,10 +98,10 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
           <Button
             type="button"
             variant="secondary"
-            className="h-9 gap-2 rounded-[var(--radius-sm)] px-4"
+            className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
             onClick={() => navigate('/cab/applications/draft/sites/new')}
           >
-            <AppIcon icon={AddCircleIcon} size={18} />
+            <AppIcon icon={AddCircleIcon} size={24} />
             {t('cab.applicationDraft.sitesFacilities.addNewSite')}
           </Button>
         }
@@ -159,7 +159,7 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
                 </thead>
                 <tbody>
                   {pageSites.map((site, index) => (
-                    <tr key={site.id} className={cn(index % 2 === 1 && 'bg-[#f9fafc]')}>
+                    <tr key={site.id} className={index % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-[#ffffff]'}>
                       <td className="px-4 py-4 text-[14px] text-neutral-500">
                         {pageStart + index + 1}
                       </td>

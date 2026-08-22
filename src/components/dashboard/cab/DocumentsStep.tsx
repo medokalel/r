@@ -117,13 +117,13 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
           <Button
             type="button"
             variant="secondary"
-            className="h-9 gap-2 rounded-[var(--radius-sm)] px-4"
+            className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
             onClick={() => {
               const nextPending = form.documents.find((doc) => doc.status !== 'uploaded')
               if (nextPending) openFilePicker(nextPending.id)
             }}
           >
-            <AppIcon icon={UploadOutlineIcon} size={18} />
+            <AppIcon icon={UploadOutlineIcon} size={24} />
             {t('cab.applicationDraft.documents.uploadDocument')}
           </Button>
         }
@@ -400,7 +400,7 @@ function CategoryGroup({
         </td>
       </tr>
       {documents.map((doc, index) => (
-        <tr key={doc.id} className={cn((startIndex + index) % 2 === 1 && 'bg-[#ffffff]')}>
+        <tr key={doc.id} className={cn((startIndex + index) % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-[#ffffff]')}>
           <td className="px-4 py-4 text-[14px] text-neutral-500">{startIndex + index + 1}</td>
           <td className="px-4 py-4">
             <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc.nameKey)}</p>
