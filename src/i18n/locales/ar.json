@@ -2259,7 +2259,8 @@
         },
         "requirement": {
           "mandatory": "إلزامي",
-          "optional": "اختياري"
+          "optional": "اختياري",
+          "notApplicable": "غير قابل للتطبيق"
         },
         "status": {
           "uploaded": "تم الرفع",
@@ -2342,6 +2343,33 @@
           "title": "تحتاج مساعدة؟",
           "description": "لو عندك أي أسئلة عن المستندات المطلوبة، تواصل مع مدير حسابك.",
           "contactSupport": "تواصل مع الدعم"
+        },
+        "uploadModal": {
+          "title": "رفع مستند",
+          "subtitle": "ارفع مستند لدعم طلبك.",
+          "documentCategory": "فئة المستند",
+          "documentCategoryPlaceholder": "اختر الفئة",
+          "documentType": "نوع المستند",
+          "documentTypePlaceholder": "اختر نوع المستند",
+          "documentName": "اسم المستند",
+          "documentNamePlaceholder": "أدخل اسم المستند",
+          "documentNameHint": "أدخل اسمًا واضحًا ومحددًا للمستند.",
+          "requirement": "المتطلب",
+          "applicableTo": "ينطبق على",
+          "applicableToPlaceholder": "اختر نطاق الانطباق",
+          "applicableToHint": "اختر المواقع أو الجهات اللي ينطبق عليها هذا المستند.",
+          "applicableToOptions": {
+            "entireOrganization": "المنظمة بالكامل (كل المواقع)",
+            "headOfficeOnly": "المقر الرئيسي فقط",
+            "singleSite": "موقع واحد",
+            "multipleSites": "مواقع متعددة (محددة)"
+          },
+          "description": "الوصف (اختياري)",
+          "descriptionPlaceholder": "وصف مختصر للمستند.",
+          "uploadFile": "رفع الملف (PDF فقط)",
+          "dropzoneTitle": "اسحب وأفلت الملف هنا أو",
+          "dropzoneBrowse": "اضغط للاستعراض",
+          "dropzoneMaxSize": "الحد الأقصى لحجم الملف: 25 ميجابايت"
         }
       }
     },

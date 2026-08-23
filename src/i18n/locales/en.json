@@ -2260,8 +2260,10 @@
         },
         "requirement": {
           "mandatory": "Mandatory",
-          "optional": "Optional"
+          "optional": "Optional",
+          "notApplicable": "Not Applicable"
         },
+        "notApplicable": "Not Applicable",
         "status": {
           "uploaded": "Uploaded",
           "pending": "Pending",
@@ -2343,6 +2345,33 @@
           "title": "Need Help?",
           "description": "If you have any questions about required documents, please contact your account manager.",
           "contactSupport": "Contact Support"
+        },
+        "uploadModal": {
+          "title": "Upload Document",
+          "subtitle": "Upload a document to support your application.",
+          "documentCategory": "Document Category",
+          "documentCategoryPlaceholder": "Select category",
+          "documentType": "Document Type",
+          "documentTypePlaceholder": "Select document type",
+          "documentName": "Document Name",
+          "documentNamePlaceholder": "Enter document name",
+          "documentNameHint": "Enter a clear and specific name for the document.",
+          "requirement": "Requirement",
+          "applicableTo": "Applicable To",
+          "applicableToPlaceholder": "Select applicable to",
+          "applicableToHint": "Select to which sites or functions this document applies.",
+          "applicableToOptions": {
+            "entireOrganization": "Entire Organization (All Sites)",
+            "headOfficeOnly": "Head Office Only",
+            "singleSite": "Single Site",
+            "multipleSites": "Multiple Sites (Selected)"
+          },
+          "description": "Description (Optional)",
+          "descriptionPlaceholder": "Briefly describe the document.",
+          "uploadFile": "Upload File (PDF only)",
+          "dropzoneTitle": "Drag and drop your file here or",
+          "dropzoneBrowse": "click to browse",
+          "dropzoneMaxSize": "Maximum file size: 25 MB"
         }
       }
     },

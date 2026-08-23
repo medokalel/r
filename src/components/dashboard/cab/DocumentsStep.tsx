@@ -1,7 +1,8 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
+import { UploadDocumentModal } from '@/components/dashboard/cab/UploadDocumentModal'
 import { AppIcon, DownloadIcon, EyeIcon, HeadsetIcon, SuccessCircleIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import {
@@ -34,10 +35,10 @@ const donutColors: Record<DocumentUploadStatus, string> = {
 }
 
 export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [filter, setFilter] = useState<FilterKey>('all')
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const pendingUploadId = useRef<string | null>(null)
+  const [uploadModalOpen, setUploadModalOpen] = useState(false)
+  const [presetDocumentId, setPresetDocumentId] = useState<string | undefined>(undefined)
 
   const counts = documentCompletionCounts(form)
 
@@ -82,31 +83,56 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
     })
   }
 
-  const openFilePicker = (id: string) => {
-    pendingUploadId.current = id
-    fileInputRef.current?.click()
+  const openUploadModal = (documentId?: string) => {
+    setPresetDocumentId(documentId)
+    setUploadModalOpen(true)
   }
 
-  const onFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    const id = pendingUploadId.current
-    if (file && id) {
-      updateDocument(id, {
+  const handleUpload: React.ComponentProps<typeof UploadDocumentModal>['onUpload'] = (payload) => {
+    const uploadedDate = new Date().toLocaleDateString()
+    const fileUrl = URL.createObjectURL(payload.file)
+
+    if (payload.documentId) {
+      updateDocument(payload.documentId, {
         status: 'uploaded',
-        fileName: file.name,
-        fileUrl: URL.createObjectURL(file),
-        uploadedDate: new Date().toLocaleDateString(i18n.language),
+        requirement: payload.requirement,
+        applicableTo: payload.applicableTo,
+        description: payload.description || undefined,
+        fileName: payload.file.name,
+        fileUrl,
+        uploadedDate,
       })
+      return
     }
-    event.target.value = ''
-    pendingUploadId.current = null
+
+    // Ad-hoc document that didn't match an existing checklist item.
+    onPatch({
+      documents: [
+        ...form.documents,
+        {
+          id: crypto.randomUUID(),
+          category: payload.category,
+          nameKey: 'otherSupportingDocuments',
+          customName: payload.customName,
+          requirement: payload.requirement,
+          status: 'uploaded',
+          applicableTo: payload.applicableTo,
+          description: payload.description || undefined,
+          fileName: payload.file.name,
+          fileUrl,
+          uploadedDate,
+        },
+      ],
+    })
   }
 
   const resetDocument = (id: string) =>
     updateDocument(id, { status: 'notUploaded', fileName: undefined, fileUrl: undefined, uploadedDate: undefined })
 
-  const docLabel = (key: string) => t(`cab.applicationDraft.documents.items.${key}.title`)
-  const docNote = (key: string) => t(`cab.applicationDraft.documents.items.${key}.note`)
+  const docLabel = (doc: DocumentRecord) =>
+    doc.customName || t(`cab.applicationDraft.documents.items.${doc.nameKey}.title`)
+  const docNote = (doc: DocumentRecord) =>
+    doc.description || t(`cab.applicationDraft.documents.items.${doc.nameKey}.note`)
 
   return (
     <>
@@ -118,10 +144,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
             type="button"
             variant="secondary"
             className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
-            onClick={() => {
-              const nextPending = form.documents.find((doc) => doc.status !== 'uploaded')
-              if (nextPending) openFilePicker(nextPending.id)
-            }}
+            onClick={() => openUploadModal()}
           >
             <AppIcon icon={UploadOutlineIcon} size={24} />
             {t('cab.applicationDraft.documents.uploadDocument')}
@@ -131,8 +154,6 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
         <p className="mb-4 text-[14px] text-neutral-500">
           {t('cab.applicationDraft.documents.subtitle')}
         </p>
-
-        <input ref={fileInputRef} type="file" className="hidden" onChange={onFileSelected} />
 
         <div className="mb-4 flex flex-wrap gap-2">
           {filterOptions.map((option) => (
@@ -199,7 +220,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
                     docLabel={docLabel}
                     docNote={docNote}
                     onView={(doc) => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
-                    onUpload={openFilePicker}
+                    onUpload={openUploadModal}
                     onRemove={resetDocument}
                   />
                 ))
@@ -222,8 +243,8 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
                   <div className="flex flex-col gap-3">
                     {group.documents.map((doc) => (
                       <div key={doc.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
-                        <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc.nameKey)}</p>
-                        <p className="text-[13px] text-neutral-500">{docNote(doc.nameKey)}</p>
+                        <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc)}</p>
+                        <p className="text-[13px] text-neutral-500">{docNote(doc)}</p>
 
                         <div className="mt-3 flex items-center justify-between">
                           <span
@@ -282,7 +303,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
                           ) : (
                             <button
                               type="button"
-                              onClick={() => openFilePicker(doc.id)}
+                              onClick={() => openUploadModal(doc.id)}
                               className="text-[14px] font-medium text-primary hover:underline"
                             >
                               {t('cab.applicationDraft.documents.uploadDocument')}
@@ -302,6 +323,14 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
           {t('cab.applicationDraft.documents.showing', { count: visibleDocuments.length, total: form.documents.length })}
         </p>
       </SectionHeading>
+
+      <UploadDocumentModal
+        open={uploadModalOpen}
+        onOpenChange={setUploadModalOpen}
+        documents={form.documents}
+        presetDocumentId={presetDocumentId}
+        onUpload={handleUpload}
+      />
     </>
   )
 }
@@ -384,8 +413,8 @@ function CategoryGroup({
   category: DocumentCategory
   documents: DocumentRecord[]
   startIndex: number
-  docLabel: (key: string) => string
-  docNote: (key: string) => string
+  docLabel: (doc: DocumentRecord) => string
+  docNote: (doc: DocumentRecord) => string
   onView: (doc: DocumentRecord) => void
   onUpload: (id: string) => void
   onRemove: (id: string) => void
@@ -403,8 +432,8 @@ function CategoryGroup({
         <tr key={doc.id} className={cn((startIndex + index) % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-[#ffffff]')}>
           <td className="px-4 py-4 text-[14px] text-neutral-500">{startIndex + index + 1}</td>
           <td className="px-4 py-4">
-            <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc.nameKey)}</p>
-            <p className="mt-0.5 text-[13px] text-neutral-500">{docNote(doc.nameKey)}</p>
+            <p className="text-[15px] font-medium text-neutral-900">{docLabel(doc)}</p>
+            <p className="mt-0.5 text-[13px] text-neutral-500">{docNote(doc)}</p>
           </td>
           <td className="px-4 py-4">
             <span

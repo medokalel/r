@@ -1,8 +1,11 @@
 export type DocumentCategory = 'legalOrganizational' | 'managementSystem' | 'complianceOther'
 
-export type DocumentRequirement = 'mandatory' | 'optional'
+export type DocumentRequirement = 'mandatory' | 'optional' | 'notApplicable'
 
 export type DocumentUploadStatus = 'uploaded' | 'pending' | 'notUploaded'
+
+/** Which sites/functions a document applies to — set from the Upload Document modal. */
+export type DocumentApplicableTo = 'entireOrganization' | 'headOfficeOnly' | 'singleSite' | 'multipleSites'
 
 export interface DocumentRecord {
   id: string
@@ -14,6 +17,11 @@ export interface DocumentRecord {
   fileName?: string
   fileUrl?: string
   uploadedDate?: string
+  applicableTo?: DocumentApplicableTo
+  /** Free-text note captured from the Upload Document modal; falls back to the item's default note. */
+  description?: string
+  /** Set for ad-hoc documents added via the modal that don't match a checklist item. */
+  customName?: string
 }
 
 export interface DocumentsForm {
@@ -24,6 +32,13 @@ export const DOCUMENT_CATEGORIES: DocumentCategory[] = [
   'legalOrganizational',
   'managementSystem',
   'complianceOther',
+]
+
+export const APPLICABLE_TO_OPTIONS: DocumentApplicableTo[] = [
+  'entireOrganization',
+  'headOfficeOnly',
+  'singleSite',
+  'multipleSites',
 ]
 
 /** Draft seed list — mirrors the standard document checklist required to submit a certification application. */

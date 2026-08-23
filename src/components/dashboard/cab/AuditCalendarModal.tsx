@@ -1,18 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as Dialog from '@radix-ui/react-dialog'
-import { ArrowLeft2, ArrowRight2 } from 'iconsax-reactjs'
 import { AppIcon, CalendarIcon, DownloadIcon, FileTextIcon, MoreIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui'
+import { CalendarGrid } from '@/components/ui/CalendarGrid'
 import {
   getAuditCalendarEntries,
   type AuditCalendarEntry,
   type AuditCalendarStatus,
 } from '@/lib/api/auditCalendarApi'
 import { cn } from '@/lib/utils'
-
-const DAYS = ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su']
 
 const STATUS_DOT: Record<AuditCalendarStatus, string> = {
   planned: 'bg-[#3b82f6]',
@@ -23,6 +21,15 @@ const STATUS_DOT: Record<AuditCalendarStatus, string> = {
   postponed: 'bg-[#737373]',
 }
 
+const STATUS_BORDER: Record<AuditCalendarStatus, string> = {
+  planned: 'border-s-[#3b82f6]',
+  inProgress: 'border-s-[#16a34a]',
+  completed: 'border-s-[#9333ea]',
+  reportFinalization: 'border-s-[#f59e0b]',
+  cancelled: 'border-s-[#dc2626]',
+  postponed: 'border-s-[#737373]',
+}
+
 const STATUS_BADGE: Record<AuditCalendarStatus, string> = {
   planned: 'bg-[#dbeafe] text-[#2563eb]',
   inProgress: 'bg-[#dcfce7] text-[#16a34a]',
@@ -30,16 +37,6 @@ const STATUS_BADGE: Record<AuditCalendarStatus, string> = {
   reportFinalization: 'bg-[#fef3c6] text-[#a58401]',
   cancelled: 'bg-[#fee2e2] text-[#dc2626]',
   postponed: 'bg-[#f0f0f0] text-neutral-500',
-}
-
-function getDaysInMonth(year: number, month: number) {
-  return new Date(year, month + 1, 0).getDate()
-}
-
-/** Monday-based weekday index (0=Mo … 6=Su) */
-function weekdayOf(year: number, month: number, day: number) {
-  const d = new Date(year, month, day).getDay()
-  return d === 0 ? 6 : d - 1
 }
 
 function toIsoDate(year: number, month: number, day: number) {
@@ -73,12 +70,6 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
   const datesWithAudits = useMemo(() => new Set(entries.map((e) => e.date)), [entries])
   const entriesForSelectedDate = entries.filter((e) => e.date === selectedDate)
 
-  const daysInMonth = getDaysInMonth(viewYear, viewMonth)
-  const leadingBlanks = weekdayOf(viewYear, viewMonth, 1)
-  const monthLabel = new Date(viewYear, viewMonth, 1).toLocaleDateString(i18n.language, {
-    month: 'long',
-    year: 'numeric',
-  })
   const selectedDateLabel = new Date(selectedDate).toLocaleDateString(i18n.language, {
     weekday: 'long',
     month: 'long',
@@ -107,8 +98,8 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
     'planned',
     'inProgress',
     'completed',
-    'reportFinalization',
     'cancelled',
+    'reportFinalization',
     'postponed',
   ]
 
@@ -133,7 +124,7 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
               <button
                 type="button"
                 aria-label={t('common.close')}
-                className="flex size-9 shrink-0 items-center justify-center rounded-full border border-neutral-200 text-neutral-900 hover:border-neutral-400"
+                className="flex size-9 shrink-0 items-center justify-center rounded-full border-2 border-neutral-900 text-neutral-900 hover:bg-neutral-50"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M18 6L6 18M6 6l12 12" />
@@ -192,60 +183,22 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
               {/* Mini calendar */}
               <div className="w-full shrink-0 lg:w-[340px]">
                 <div className="rounded-[var(--radius-md)] border border-neutral-200 p-4">
-                  <div className="mb-3 flex items-center justify-between">
-                    <button
-                      type="button"
-                      onClick={goToPrevMonth}
-                      aria-label={t('cab.dashboard.auditCalendar.previousMonth')}
-                      className="flex size-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-50"
-                    >
-                      <ArrowLeft2 size={18} />
-                    </button>
-                    <p className="text-[15px] font-semibold text-neutral-900">{monthLabel}</p>
-                    <button
-                      type="button"
-                      onClick={goToNextMonth}
-                      aria-label={t('cab.dashboard.auditCalendar.nextMonth')}
-                      className="flex size-8 items-center justify-center rounded-full text-neutral-500 hover:bg-neutral-50"
-                    >
-                      <ArrowRight2 size={18} />
-                    </button>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-y-1 text-center">
-                    {DAYS.map((d) => (
-                      <span key={d} className="pb-1 text-[12px] font-medium text-neutral-400">
-                        {d}
-                      </span>
-                    ))}
-                    {Array.from({ length: leadingBlanks }).map((_, i) => (
-                      <span key={`blank-${i}`} />
-                    ))}
-                    {Array.from({ length: daysInMonth }).map((_, i) => {
-                      const day = i + 1
-                      const iso = toIsoDate(viewYear, viewMonth, day)
-                      const isSelected = iso === selectedDate
-                      const hasAudits = datesWithAudits.has(iso)
-                      return (
-                        <button
-                          key={day}
-                          type="button"
-                          onClick={() => setSelectedDate(iso)}
-                          className={cn(
-                            'relative mx-auto flex size-9 items-center justify-center rounded-full text-[14px]',
-                            isSelected
-                              ? 'border border-primary font-semibold text-primary'
-                              : 'text-neutral-700 hover:bg-neutral-50'
-                          )}
-                        >
-                          {day}
-                          {hasAudits && (
-                            <span className="absolute bottom-1 size-1 rounded-full bg-primary" aria-hidden />
-                          )}
-                        </button>
-                      )
-                    })}
-                  </div>
+                  <CalendarGrid
+                    viewYear={viewYear}
+                    viewMonth={viewMonth}
+                    onPrevMonth={goToPrevMonth}
+                    onNextMonth={goToNextMonth}
+                    onDayClick={(date) => setSelectedDate(toIsoDate(date.getFullYear(), date.getMonth(), date.getDate()))}
+                    isDaySelected={(date) =>
+                      toIsoDate(date.getFullYear(), date.getMonth(), date.getDate()) === selectedDate
+                    }
+                    renderDayIndicator={(date) =>
+                      datesWithAudits.has(toIsoDate(date.getFullYear(), date.getMonth(), date.getDate())) ? (
+                        <span className="absolute bottom-1 size-1 rounded-full bg-primary" aria-hidden />
+                      ) : null
+                    }
+                    size="sm"
+                  />
 
                   <div className="mt-4 flex gap-3">
                     <Dialog.Close asChild>
@@ -294,10 +247,8 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
                       <div
                         key={entry.id}
                         className={cn(
-                          'flex items-start gap-3 rounded-[var(--radius-sm)] border border-neutral-100 bg-white p-3',
-                          entry.status === 'inProgress' || entry.status === 'completed'
-                            ? 'border-s-4 border-s-[#16a34a]'
-                            : 'border-s-4 border-s-[#f59e0b]'
+                          'flex items-start gap-3 rounded-[var(--radius-sm)] border border-neutral-100 bg-white p-3 border-s-4',
+                          STATUS_BORDER[entry.status]
                         )}
                       >
                         <span
@@ -311,7 +262,7 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
 
                         <div className="min-w-0 flex-1">
                           <p className="text-[14px] font-semibold text-neutral-900">{entry.clientName}</p>
-                          <span className="mt-1 inline-flex items-center rounded-[6px] border border-neutral-200 px-2 py-0.5 text-[12px] font-medium text-neutral-700">
+                          <span className="mt-1 inline-flex items-center rounded-[6px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[12px] font-medium text-primary">
                             {entry.standard}
                           </span>
                           <p className="mt-1 text-[12px] text-neutral-500">{entry.auditType}</p>
@@ -321,7 +272,7 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
                           <span className="text-[11px] text-neutral-400">
                             {t('cab.dashboard.auditCalendar.auditTeam')}
                           </span>
-                          <span className="text-[13px] font-medium text-neutral-700">
+                          <span className="inline-flex items-center rounded-[6px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[12px] font-medium text-primary">
                             {entry.auditTeam[0]}
                             {entry.auditTeam.length > 1 && ` +${entry.auditTeam.length - 1}`}
                           </span>
