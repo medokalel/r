@@ -29,6 +29,7 @@ import { AuditeeOnboardingPage } from '@/pages/AuditeeOnboardingPage'
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 import { AddSitePage } from '@/pages/AddSitePage'
+import { ApplyMultiSiteRulePage } from '@/pages/ApplyMultiSiteRulePage'
 import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
 import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
@@ -119,11 +120,19 @@ export default function App() {
                 </RequireAuth>
               }
             />
-            <Route
+                        <Route
               path="/cab/applications/draft/sites/new"
               element={
                 <RequireAuth>
                   <AddSitePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/draft/sites/multi-site-rule"
+              element={
+                <RequireAuth>
+                  <ApplyMultiSiteRulePage />
                 </RequireAuth>
               }
             />
