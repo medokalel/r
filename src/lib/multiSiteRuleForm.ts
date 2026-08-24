@@ -2,10 +2,29 @@ import type { Site } from '@/lib/sitesFacilitiesForm'
 
 export type MultiSiteStructureType = 'SINGLE_SITE' | 'INTEGRATED_MULTI_SITE' | 'SEPARATE_MULTI_SITE'
 
-export const MULTI_SITE_STRUCTURE_OPTIONS: { value: MultiSiteStructureType; label: string }[] = [
-  { value: 'SINGLE_SITE', label: 'Single site' },
-  { value: 'INTEGRATED_MULTI_SITE', label: 'Integrated Multi-site' },
-  { value: 'SEPARATE_MULTI_SITE', label: 'Separate Multi-site' },
+export const MULTI_SITE_STRUCTURE_OPTIONS: {
+  value: MultiSiteStructureType
+  labelKey: string
+  descriptionKey: string
+}[] = [
+  {
+    value: 'SINGLE_SITE',
+    labelKey: 'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptions.SINGLE_SITE',
+    descriptionKey:
+      'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptionDescriptions.SINGLE_SITE',
+  },
+  {
+    value: 'INTEGRATED_MULTI_SITE',
+    labelKey: 'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptions.INTEGRATED_MULTI_SITE',
+    descriptionKey:
+      'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptionDescriptions.INTEGRATED_MULTI_SITE',
+  },
+  {
+    value: 'SEPARATE_MULTI_SITE',
+    labelKey: 'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptions.SEPARATE_MULTI_SITE',
+    descriptionKey:
+      'cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptionDescriptions.SEPARATE_MULTI_SITE',
+  },
 ]
 
 // Central functions a head office can run on behalf of every site — these
@@ -13,11 +32,10 @@ export const MULTI_SITE_STRUCTURE_OPTIONS: { value: MultiSiteStructureType; labe
 // office instead of re-checking at each satellite.
 export const CENTRAL_FUNCTION_OPTIONS = [
   'Top Management',
+  'Policy & Strategy',
   'Internal Audit',
   'Management Review',
-  'Document Control',
-  'Corrective Action Process',
-  'Purchasing / Supplier Control',
+  'Finance & HR',
 ]
 
 export const APPLICABLE_RULE_OPTIONS = [{ value: 'IAF_MD1_2023', label: 'IAF MD 1:2023 (Multi-site Organizations)' }]
@@ -29,14 +47,20 @@ export interface MultiSiteConsiderations {
   sameScopeDevelopment: boolean
   /** Head office's central functions count once instead of being re-checked per site. */
   includeHeadOfficeFunctions: boolean
-  /** Add mandays for sites that need flights/permits to reach. */
-  calculateTravelPermitCosts: boolean
+  /** Lets the √n sampling rule apply between similar satellite sites; off audits every satellite. */
+  allowSamplingBetweenSites: boolean
+  /** Add mandays for sites that need flights/trains to reach. */
+  considerTravelAccess: boolean
+  /** Add mandays for sites that require a visitor permit / security clearance. */
+  includePermitAccess: boolean
 }
 
 export const emptyMultiSiteConsiderations: MultiSiteConsiderations = {
   sameScopeDevelopment: true,
   includeHeadOfficeFunctions: true,
-  calculateTravelPermitCosts: true,
+  allowSamplingBetweenSites: true,
+  considerTravelAccess: true,
+  includePermitAccess: true,
 }
 
 export interface MultiSiteRuleForm {
@@ -46,31 +70,24 @@ export interface MultiSiteRuleForm {
   applicableRule: string
   mandaysModel: string
   considerations: MultiSiteConsiderations
+  /** Site ids the user has manually excluded from this cycle's calculation via the "Included in Calculation" toggle. */
+  excludedSiteIds: string[]
 }
 
-export const emptyMultiSiteRuleForm: MultiSiteRuleForm = {
-  structureType: 'INTEGRATED_MULTI_SITE',
-  headOfficeSiteId: '',
-  centralFunctions: [],
-  applicableRule: 'IAF_MD1_2023',
-  mandaysModel: 'SAMPLING',
-  considerations: emptyMultiSiteConsiderations,
+export function emptyMultiSiteRuleForm(sites: Site[]): MultiSiteRuleForm {
+  return {
+    structureType: 'INTEGRATED_MULTI_SITE',
+    headOfficeSiteId: sites[0]?.id ?? '',
+    centralFunctions: [],
+    applicableRule: 'IAF_MD1_2023',
+    mandaysModel: 'SAMPLING',
+    considerations: emptyMultiSiteConsiderations,
+    excludedSiteIds: [],
+  }
 }
 
 export function isMultiSiteRuleFormComplete(form: MultiSiteRuleForm): boolean {
   return Boolean(form.headOfficeSiteId && form.applicableRule && form.mandaysModel)
-}
-
-/** Result of applying the rule — stored on SitesFacilitiesForm once the user
- *  saves, so the Sites & Facilities table can render the summary cards
- *  without recomputing on every render. */
-export interface MultiSiteRuleResult {
-  form: MultiSiteRuleForm
-  sampledSatelliteSiteIds: string[]
-  totalBaseMandays: number
-  samplingAdjustment: number
-  travelPermitAdjustment: number
-  totalEstimatedMandays: number
 }
 
 /** Simplified banding loosely modeled on the mandays-by-headcount tables
@@ -99,6 +116,40 @@ function sampleSize(satelliteCount: number): number {
   return Math.max(1, Math.ceil(Math.sqrt(satelliteCount)))
 }
 
+function hasPermitRequirement(site: Site): boolean {
+  const permit = site.additionalDetails?.permitAccess
+  return Boolean(permit) && permit !== 'Not Required'
+}
+
+/** One row of the "Sites Covered" table, with everything already resolved
+ *  for display so the page component doesn't recompute it per render. */
+export interface MultiSiteRuleSiteRow {
+  site: Site
+  isHeadOffice: boolean
+  role: string
+  travelRequirements: string[]
+  permitRequired: boolean
+  sampledThisCycle: boolean
+  /** Weight this site carries in the mandays total — 1.0 for a fully audited site, less for a desk/sampling-only site. */
+  samplingFactor: number
+  /** Whether the user has this row switched on for calculation (defaults to sampledThisCycle, overridable). */
+  included: boolean
+}
+
+/** Result of applying the rule — stored on SitesFacilitiesForm once the user
+ *  saves, so the Sites & Facilities table can render the summary cards
+ *  without recomputing on every render. */
+export interface MultiSiteRuleResult {
+  form: MultiSiteRuleForm
+  rows: MultiSiteRuleSiteRow[]
+  sampledSatelliteSiteIds: string[]
+  totalBaseMandays: number
+  samplingAdjustment: number
+  travelAdjustment: number
+  permitAdjustment: number
+  totalEstimatedMandays: number
+}
+
 export function calculateMandays(sites: Site[], form: MultiSiteRuleForm): MultiSiteRuleResult {
   const headOffice = sites.find((s) => s.id === form.headOfficeSiteId)
   const satellites = sites.filter((s) => s.id !== form.headOfficeSiteId)
@@ -109,51 +160,75 @@ export function calculateMandays(sites: Site[], form: MultiSiteRuleForm): MultiS
   // flagged for sampling (additionalDetails.includeInSampling) take
   // priority; if fewer than the required sample size are flagged, fill the
   // rest in list order so the sample size requirement is still met.
-  let sampledSatelliteSiteIds: string[] = []
-  let samplingAdjustment = 0
-  if (form.considerations.sameScopeDevelopment && satellites.length > 0) {
+  let sampledSatelliteSiteIds: string[]
+  if (form.considerations.allowSamplingBetweenSites && satellites.length > 0) {
     const requiredSampleSize = Math.min(satellites.length, sampleSize(satellites.length))
     const flagged = satellites.filter((s) => s.additionalDetails?.includeInSampling)
     const rest = satellites.filter((s) => !s.additionalDetails?.includeInSampling)
-    const sampled = [...flagged, ...rest].slice(0, requiredSampleSize)
-    sampledSatelliteSiteIds = sampled.map((s) => s.id)
-
-    // Sites not sampled this cycle still get a lighter desk/document review
-    // rather than a full visit, credited back at half their base mandays.
-    const unsampled = satellites.filter((s) => !sampledSatelliteSiteIds.includes(s.id))
-    samplingAdjustment = -(unsampled.reduce((sum, s) => sum + baseMandaysForSite(s), 0) * 0.5)
+    sampledSatelliteSiteIds = [...flagged, ...rest].slice(0, requiredSampleSize).map((s) => s.id)
   } else {
     sampledSatelliteSiteIds = satellites.map((s) => s.id)
   }
 
-  // Head office central functions already covered once at the head office
-  // don't need re-checking at every sampled satellite.
-  if (form.considerations.includeHeadOfficeFunctions && headOffice && form.centralFunctions.length > 0) {
-    samplingAdjustment -= 0.5 * sampledSatelliteSiteIds.length
+  const isExcluded = (id: string) => form.excludedSiteIds.includes(id)
+
+  const rows: MultiSiteRuleSiteRow[] = sites.map((site) => {
+    const isHeadOffice = site.id === form.headOfficeSiteId
+    const sampledThisCycle = isHeadOffice || sampledSatelliteSiteIds.includes(site.id)
+    return {
+      site,
+      isHeadOffice,
+      role: isHeadOffice
+        ? 'cab.applicationDraft.sitesFacilities.multiSiteRule.role.centralFunction'
+        : 'cab.applicationDraft.sitesFacilities.multiSiteRule.role.coreSite',
+      travelRequirements: site.additionalDetails?.travelRequirements ?? [],
+      permitRequired: hasPermitRequirement(site),
+      sampledThisCycle,
+      samplingFactor: sampledThisCycle ? 1 : 0.3,
+      included: !isExcluded(site.id) && sampledThisCycle,
+    }
+  })
+
+  // Sites not sampled this cycle still get a lighter desk/document review
+  // rather than a full visit, credited back at half their base mandays.
+  let samplingAdjustment = 0
+  if (form.considerations.sameScopeDevelopment) {
+    const skipped = rows.filter((row) => !row.included)
+    samplingAdjustment = -(skipped.reduce((sum, row) => sum + baseMandaysForSite(row.site), 0) * 0.5)
   }
 
-  let travelPermitAdjustment = 0
-  if (form.considerations.calculateTravelPermitCosts) {
-    const visitedSites = headOffice ? [headOffice, ...sites.filter((s) => sampledSatelliteSiteIds.includes(s.id))] : sites
-    for (const site of visitedSites) {
-      const details = site.additionalDetails
-      if (!details) continue
-      if (details.travelRequirements.length > 0) travelPermitAdjustment += 0.5
-      if (details.permitAccess) travelPermitAdjustment += 0.5
-    }
+  // Head office central functions already covered once at the head office
+  // don't need re-checking at every included satellite.
+  if (form.considerations.includeHeadOfficeFunctions && headOffice && form.centralFunctions.length > 0) {
+    const includedSatellites = rows.filter((row) => !row.isHeadOffice && row.included).length
+    samplingAdjustment -= 0.5 * includedSatellites
+  }
+
+  const visitedRows = rows.filter((row) => row.included)
+
+  let travelAdjustment = 0
+  if (form.considerations.considerTravelAccess) {
+    travelAdjustment = visitedRows.filter((row) => row.travelRequirements.length > 0).length * 0.5
+  }
+
+  let permitAdjustment = 0
+  if (form.considerations.includePermitAccess) {
+    permitAdjustment = visitedRows.filter((row) => row.permitRequired).length * 0.5
   }
 
   const totalEstimatedMandays = Math.max(
     0,
-    totalBaseMandays + samplingAdjustment + travelPermitAdjustment
+    totalBaseMandays + samplingAdjustment + travelAdjustment + permitAdjustment
   )
 
   return {
     form,
+    rows,
     sampledSatelliteSiteIds,
     totalBaseMandays,
     samplingAdjustment,
-    travelPermitAdjustment,
+    travelAdjustment,
+    permitAdjustment,
     totalEstimatedMandays,
   }
 }

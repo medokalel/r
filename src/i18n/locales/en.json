@@ -2149,8 +2149,95 @@
       "sitesFacilities": {
         "title": "Sites & Facilities",
         "subtitle": "Add all sites, locations and key activities included in the certification scope.",
+        "applyMultiSiteRule": "Apply Multi-site Rule",
         "addNewSite": "Add New Site",
         "addNewSiteSubtitle": "Add site, location and key information to be included in the certification scope.",
+        "multiSiteRule": {
+          "title": "Apply Multi-site Rule",
+          "subtitle": "Select the applicable multi-site structure and rules to calculate accurate mandays based on IAF MD 1:2023.",
+          "noSitesMessage": "Add at least 3 sites in Sites & Facilities before applying a multi-site rule.",
+          "sections": {
+            "structure": "1. Multi-site Structure",
+            "headOffice": "2. Head Office",
+            "ruleModel": "3. Rule & Mandays Model",
+            "considerations": "4. Considerations",
+            "sitesCovered": "5. Sites Covered",
+            "calculationSummary": "6. Mandays Calculation Summary"
+          },
+          "structureOptions": {
+            "SINGLE_SITE": "Single Site (No Multi-site)",
+            "INTEGRATED_MULTI_SITE": "Multi-site (Integrated Management System)",
+            "SEPARATE_MULTI_SITE": "Multi-site (Separate Management System per Site)"
+          },
+          "structureOptionDescriptions": {
+            "SINGLE_SITE": "The organization has only one operational site.",
+            "INTEGRATED_MULTI_SITE": "Multiple sites under a single integrated management system.",
+            "SEPARATE_MULTI_SITE": "Each site has its own management system."
+          },
+          "headOfficeSite": "Head Office Site",
+          "headOfficeSitePlaceholder": "Select head office site",
+          "noSitesYet": "Add sites first",
+          "editHeadOffice": "Edit Head Office",
+          "centralFunctionsApplicable": "Central functions applicable to all sites:",
+          "centralFunctions": "Central Functions",
+          "applicableRule": "Applicable Rule",
+          "mandaysModel": "Mandays Calculation Model",
+          "ruleModelHint": "Mandays will be calculated based on the selected rule, site structure, and sampling factors.",
+          "considerationOptions": {
+            "sameScopeDevelopment": "Use same scope across all sites",
+            "includeHeadOfficeFunctions": "Include central functions in calculation",
+            "allowSamplingBetweenSites": "Allow sampling between similar sites",
+            "considerTravelAccess": "Consider travel & access requirements",
+            "includePermitAccess": "Include permit / access requirements"
+          },
+          "role": {
+            "centralFunction": "Central Function",
+            "coreSite": "Core Site"
+          },
+          "columns": {
+            "siteNameLocation": "Site Name / Location",
+            "roleMultiSite": "Role & Multi-site",
+            "travelAccess": "Travel & Access",
+            "permitRequired": "Permit Required",
+            "sampledThisCycle": "To be Sampled in This Cycle",
+            "samplingFactor": "Sampling Factor",
+            "includedInCalculation": "Included in Calculation"
+          },
+          "yes": "Yes",
+          "no": "No",
+          "showing": "Showing {{from}} to {{to}} of {{total}} sites",
+          "calculationSummary": {
+            "totalBase": "Total Base Mandays (All Sites)",
+            "samplingAdjustment": "Sampling Adjustment",
+            "travelAdjustment": "Travel & Access Adjustment",
+            "permitAdjustment": "Permit Adjustment",
+            "total": "Total Estimated Mandays",
+            "totalHint": "This is an indicative calculation. Final mandays may vary after review and approval.",
+            "mandaysUnit": "Mandays"
+          },
+          "ruleSummary": {
+            "title": "Rule Summary (IAF MD 1:2023)",
+            "point1": "Integrated MS: Central functions audited at Head Office + sampling of sites.",
+            "point2": "Sampling based on similarity, risk, performance, and previous results.",
+            "point3": "Minimum of 25% of sites (or 1 site) must be sampled in each cycle.",
+            "point4": "Head Office always included in the audit.",
+            "point5": "Travel, access and permits are factored into mandays."
+          },
+          "travelAccessLegend": {
+            "title": "Travel & Access Legend",
+            "airplane": "Airplane Required",
+            "train": "Train Required",
+            "both": "Airplane & Train Required",
+            "road": "Road / Local Transport"
+          },
+          "permitLegend": {
+            "title": "Permit Legend",
+            "yes": "Permit / Access Required",
+            "no": "Permit Not Required",
+            "partial": "Permit / Access Partially Required"
+          },
+          "applyRule": "Apply Rule"
+        },
         "empty": "No sites added yet.",
         "stats": {
           "totalSites": "Total Sites",

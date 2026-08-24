@@ -2148,8 +2148,95 @@
       "sitesFacilities": {
         "title": "المواقع والمرافق",
         "subtitle": "أضف جميع المواقع والأنشطة الرئيسية المشمولة في نطاق المنح.",
+        "applyMultiSiteRule": "تطبيق قاعدة المواقع المتعددة",
         "addNewSite": "إضافة موقع جديد",
         "addNewSiteSubtitle": "أضف الموقع والعنوان والمعلومات الأساسية المطلوب تضمينها في نطاق المنح.",
+        "multiSiteRule": {
+          "title": "تطبيق قاعدة المواقع المتعددة",
+          "subtitle": "اختر هيكل المواقع المتعددة والقواعد المطبقة لحساب أيام التدقيق بدقة بناءً على IAF MD 1:2023.",
+          "noSitesMessage": "أضف 3 مواقع على الأقل في المواقع والمرافق قبل تطبيق قاعدة المواقع المتعددة.",
+          "sections": {
+            "structure": "1. هيكل المواقع المتعددة",
+            "headOffice": "2. المقر الرئيسي",
+            "ruleModel": "3. القاعدة ونموذج أيام التدقيق",
+            "considerations": "4. الاعتبارات",
+            "sitesCovered": "5. المواقع المشمولة",
+            "calculationSummary": "6. ملخص حساب أيام التدقيق"
+          },
+          "structureOptions": {
+            "SINGLE_SITE": "موقع واحد (بدون مواقع متعددة)",
+            "INTEGRATED_MULTI_SITE": "مواقع متعددة (نظام إدارة متكامل)",
+            "SEPARATE_MULTI_SITE": "مواقع متعددة (نظام إدارة منفصل لكل موقع)"
+          },
+          "structureOptionDescriptions": {
+            "SINGLE_SITE": "الجهة لديها موقع تشغيلي واحد فقط.",
+            "INTEGRATED_MULTI_SITE": "عدة مواقع تحت نظام إدارة متكامل واحد.",
+            "SEPARATE_MULTI_SITE": "كل موقع له نظام إدارة خاص به."
+          },
+          "headOfficeSite": "موقع المقر الرئيسي",
+          "headOfficeSitePlaceholder": "اختر موقع المقر الرئيسي",
+          "noSitesYet": "أضف مواقع أولاً",
+          "editHeadOffice": "تعديل المقر الرئيسي",
+          "centralFunctionsApplicable": "الوظائف المركزية المطبقة على جميع المواقع:",
+          "centralFunctions": "الوظائف المركزية",
+          "applicableRule": "القاعدة المطبقة",
+          "mandaysModel": "نموذج حساب أيام التدقيق",
+          "ruleModelHint": "سيتم حساب أيام التدقيق بناءً على القاعدة المختارة وهيكل المواقع وعوامل العينة.",
+          "considerationOptions": {
+            "sameScopeDevelopment": "استخدام نفس النطاق لجميع المواقع",
+            "includeHeadOfficeFunctions": "تضمين الوظائف المركزية في الحساب",
+            "allowSamplingBetweenSites": "السماح بأخذ عينات بين المواقع المتشابهة",
+            "considerTravelAccess": "مراعاة متطلبات السفر والوصول",
+            "includePermitAccess": "تضمين متطلبات التصاريح / الدخول"
+          },
+          "role": {
+            "centralFunction": "وظيفة مركزية",
+            "coreSite": "موقع أساسي"
+          },
+          "columns": {
+            "siteNameLocation": "اسم الموقع / الموقع الجغرافي",
+            "roleMultiSite": "الدور والمواقع المتعددة",
+            "travelAccess": "السفر والوصول",
+            "permitRequired": "التصريح مطلوب",
+            "sampledThisCycle": "سيتم أخذ عينة في هذه الدورة",
+            "samplingFactor": "معامل العينة",
+            "includedInCalculation": "مشمول في الحساب"
+          },
+          "yes": "نعم",
+          "no": "لا",
+          "showing": "عرض {{from}} إلى {{to}} من {{total}} مواقع",
+          "calculationSummary": {
+            "totalBase": "إجمالي أيام التدقيق الأساسية (كل المواقع)",
+            "samplingAdjustment": "تعديل العينة",
+            "travelAdjustment": "تعديل السفر والوصول",
+            "permitAdjustment": "تعديل التصاريح",
+            "total": "إجمالي أيام التدقيق المقدرة",
+            "totalHint": "هذا حساب تقديري. قد تختلف الأيام النهائية بعد المراجعة والموافقة.",
+            "mandaysUnit": "يوم تدقيق"
+          },
+          "ruleSummary": {
+            "title": "ملخص القاعدة (IAF MD 1:2023)",
+            "point1": "النظام المتكامل: يتم تدقيق الوظائف المركزية في المقر الرئيسي + أخذ عينة من المواقع.",
+            "point2": "أخذ العينات يعتمد على التشابه والمخاطر والأداء والنتائج السابقة.",
+            "point3": "يجب أخذ عينة 25% على الأقل من المواقع (أو موقع واحد) في كل دورة.",
+            "point4": "المقر الرئيسي مشمول دائمًا في التدقيق.",
+            "point5": "يتم احتساب السفر والوصول والتصاريح ضمن أيام التدقيق."
+          },
+          "travelAccessLegend": {
+            "title": "دليل السفر والوصول",
+            "airplane": "يتطلب طيران",
+            "train": "يتطلب قطار",
+            "both": "يتطلب طيران وقطار",
+            "road": "طريق / نقل محلي"
+          },
+          "permitLegend": {
+            "title": "دليل التصاريح",
+            "yes": "تصريح / دخول مطلوب",
+            "no": "لا يوجد تصريح مطلوب",
+            "partial": "تصريح / دخول مطلوب جزئيًا"
+          },
+          "applyRule": "تطبيق القاعدة"
+        },
         "empty": "لا توجد مواقع مضافة حتى الآن.",
         "stats": {
           "totalSites": "إجمالي المواقع",

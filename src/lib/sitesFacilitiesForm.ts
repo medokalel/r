@@ -1,3 +1,5 @@
+import type { MultiSiteRuleResult } from '@/lib/multiSiteRuleForm'
+
 export interface SiteContact {
   name: string
   phone: string
@@ -40,6 +42,8 @@ export interface Site {
 
 export interface SitesFacilitiesForm {
   sites: Site[]
+  /** Set once the user applies a rule via ApplyMultiSiteRulePage; drives the summary cards on this step. */
+  multiSiteRule?: MultiSiteRuleResult
 }
 
 export const emptySitesFacilitiesForm: SitesFacilitiesForm = {

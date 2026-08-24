@@ -20,9 +20,13 @@ import { cn } from '@/lib/utils'
 interface SitesFacilitiesStepProps {
   form: SitesFacilitiesForm
   onPatch: (f: Partial<SitesFacilitiesForm>) => void
+  /** Wired up once the multi-site rule logic is defined; button stays visible either way. */
+  onApplyMultiSiteRule?: () => void
 }
 
 const PAGE_SIZE = 3
+/** Multi-site certification (IAF MD1) only applies once there's a head office plus satellites. */
+const MULTI_SITE_MIN_SITES = 3
 
 const SITE_TYPE_BADGE_COLORS: Record<string, string> = {
   'Head Office': 'bg-[#e8edfc] text-primary',
@@ -33,7 +37,7 @@ const SITE_TYPE_BADGE_COLORS: Record<string, string> = {
 }
 const DEFAULT_SITE_TYPE_BADGE_COLOR = 'bg-[#f3f4f6] text-neutral-600'
 
-export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps) {
+export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: SitesFacilitiesStepProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
@@ -94,16 +98,28 @@ export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps)
       <SectionHeading
         title={t('cab.applicationDraft.sitesFacilities.title')}
         accordion
-        headerActions={
-          <Button
-            type="button"
-            variant="secondary"
-            className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
-            onClick={() => navigate('/cab/applications/draft/sites/new')}
-          >
-            <AppIcon icon={AddCircleIcon} size={24} />
-            {t('cab.applicationDraft.sitesFacilities.addNewSite')}
-          </Button>
+                headerActions={
+          <div className="flex items-center gap-3">
+            {form.sites.length >= MULTI_SITE_MIN_SITES && (
+              <Button
+                type="button"
+                variant="secondary"
+                className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
+                onClick={onApplyMultiSiteRule}
+              >
+                {t('cab.applicationDraft.sitesFacilities.applyMultiSiteRule')}
+              </Button>
+            )}
+            <Button
+              type="button"
+              variant="secondary"
+              className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
+              onClick={() => navigate('/cab/applications/draft/sites/new')}
+            >
+              <AppIcon icon={AddCircleIcon} size={24} />
+              {t('cab.applicationDraft.sitesFacilities.addNewSite')}
+            </Button>
+          </div>
         }
       >
         <p className="mb-4 text-[14px] text-neutral-500">
