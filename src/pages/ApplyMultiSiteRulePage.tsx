@@ -1,7 +1,7 @@
 import { useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Airplane, Ticket, RouteSquare } from "iconsax-reactjs";
+import { AirplaneIcon, TrainIcon, RoadIcon } from "@/components/icons";
 import { CabLayout } from "@/components/layout/CabLayout";
 import { CabHeader } from "@/components/dashboard/cab/CabHeader";
 import { ApplicationStepper } from "@/components/dashboard/cab/ApplicationStepper";
@@ -30,10 +30,10 @@ import {
 
 const PAGE_SIZE = 3;
 
-const TRAVEL_ICON_BY_OPTION: Record<string, typeof Airplane> = {
-  "Airplane Required": Airplane,
-  "Train Required": Ticket,
-  "Airplane & Train Required": Airplane,
+const TRAVEL_ICON_BY_OPTION: Record<string, typeof AirplaneIcon> = {
+  "Airplane Required": AirplaneIcon,
+  "Train Required": TrainIcon,
+  "Airplane & Train Required": RoadIcon,
 };
 
 function InfoDot() {
@@ -472,16 +472,15 @@ export function ApplyMultiSiteRulePage() {
                             <td className="px-3 py-3">
                               <div className="flex items-center justify-center gap-1.5 text-neutral-500">
                                 {row.travelRequirements.length === 0 ? (
-                                  <RouteSquare size={18} variant="Bold" />
+                                  <RoadIcon size={18} />
                                 ) : (
                                   row.travelRequirements.map((req) => {
                                     const Icon =
-                                      TRAVEL_ICON_BY_OPTION[req] ?? RouteSquare;
+                                      TRAVEL_ICON_BY_OPTION[req] ?? RoadIcon;
                                     return (
                                       <Icon
                                         key={req}
                                         size={18}
-                                        variant="Bold"
                                       />
                                     );
                                   })
@@ -676,46 +675,26 @@ export function ApplyMultiSiteRulePage() {
             >
               <div className="space-y-3 text-[13px] text-neutral-700">
                 <div className="flex items-center gap-2">
-                  <Airplane
-                    size={18}
-                    variant="Bold"
-                    className="text-neutral-500"
-                  />
+                  <AirplaneIcon size={18} className="text-neutral-500" />
                   {t(
                     "cab.applicationDraft.sitesFacilities.multiSiteRule.travelAccessLegend.airplane",
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Ticket
-                    size={18}
-                    variant="Bold"
-                    className="text-neutral-500"
-                  />
+                  <TrainIcon size={18} className="text-neutral-500" />
                   {t(
                     "cab.applicationDraft.sitesFacilities.multiSiteRule.travelAccessLegend.train",
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <Airplane
-                    size={18}
-                    variant="Bold"
-                    className="text-neutral-500"
-                  />
-                  <Ticket
-                    size={18}
-                    variant="Bold"
-                    className="-ms-1 text-neutral-500"
-                  />
+                  <AirplaneIcon size={18} className="text-neutral-500" />
+                  <TrainIcon size={18} className="-ms-1 text-neutral-500" />
                   {t(
                     "cab.applicationDraft.sitesFacilities.multiSiteRule.travelAccessLegend.both",
                   )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <RouteSquare
-                    size={18}
-                    variant="Bold"
-                    className="text-neutral-500"
-                  />
+                  <RoadIcon size={18} className="text-neutral-500" />
                   {t(
                     "cab.applicationDraft.sitesFacilities.multiSiteRule.travelAccessLegend.road",
                   )}

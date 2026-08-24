@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Airplane, Profile2User, RouteSquare, TickCircle, Ticket } from 'iconsax-reactjs'
+import { TickCircle } from 'iconsax-reactjs'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
@@ -12,7 +12,7 @@ import { RadioGroup } from '@/components/ui/RadioGroup'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { Toggle } from '@/components/ui/Toggle'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
-import { MailIcon, PhoneIcon } from '@/components/icons'
+import { MailIcon, PhoneIcon, AirplaneIcon, TrainIcon, RoadIcon, InfoIcon } from '@/components/icons'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
 import {
@@ -109,15 +109,13 @@ const emptyContactPerson: ContactPerson = {
 // this page can read the in-progress Sites & Facilities list.
 const OTHER_SITES_OPTIONS: string[] = []
 
-// Fixed order — lines up 1:1 with TRAVEL_REQUIREMENT_OPTIONS and is reused
-// for the "Site Indicators" legend below, so keep the two in sync.
-const TRAVEL_REQUIREMENT_ICONS = [Airplane, Ticket, RouteSquare]
+const TRAVEL_REQUIREMENT_ICONS = [AirplaneIcon, TrainIcon, RoadIcon]
 
 const SITE_INDICATOR_ITEMS = [
-  { key: 'airplaneRequired', icon: Airplane },
-  { key: 'trainRequired', icon: Ticket },
-  { key: 'airplaneTrainRequired', icon: RouteSquare },
-  { key: 'permitAccessRequired', icon: Profile2User },
+  { key: 'airplaneRequired', icon: AirplaneIcon },
+  { key: 'trainRequired', icon: TrainIcon },
+  { key: 'airplaneTrainRequired', icon: RoadIcon },
+  { key: 'permitAccessRequired', icon: InfoIcon },
   { key: 'includedInSampling', icon: TickCircle },
 ] as const
 
