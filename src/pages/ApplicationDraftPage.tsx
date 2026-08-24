@@ -21,10 +21,8 @@ import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
 import {
   clearApplicationDraftSnapshot,
   clearPendingNewSite,
-  clearPendingMultiSiteRule,
   loadApplicationDraftSnapshot,
   peekPendingNewSite,
-  peekPendingMultiSiteRule,
   saveApplicationDraftSnapshot,
 } from '@/lib/applicationDraftSession'
 
@@ -36,14 +34,13 @@ export function ApplicationDraftPage() {
   // initializer, not a module constant, so it re-reads on every mount).
   // pendingSiteOnLoad peeks (doesn't delete) since StrictMode calls this
   // twice in dev — deleting here would lose the site on the 2nd call.
-    const [{ restoredSnapshot, pendingSiteOnLoad, pendingMultiSiteRuleOnLoad }] = useState(() => ({
+  const [{ restoredSnapshot, pendingSiteOnLoad }] = useState(() => ({
     restoredSnapshot: loadApplicationDraftSnapshot(),
     pendingSiteOnLoad: peekPendingNewSite(),
-    pendingMultiSiteRuleOnLoad: peekPendingMultiSiteRule(),
   }))
 
   const [step, setStep] = useState<1 | 2 | 3 | 4 | 5>(
-    pendingSiteOnLoad || pendingMultiSiteRuleOnLoad ? 3 : restoredSnapshot?.step ?? 1
+    pendingSiteOnLoad ? 3 : restoredSnapshot?.step ?? 1
   )
   const [form, setForm] = useState(restoredSnapshot?.form ?? emptyApplicationDraftForm)
   const [standardsScopeForm, setStandardsScopeForm] = useState(
@@ -51,8 +48,7 @@ export function ApplicationDraftPage() {
   )
   const [sitesFacilitiesForm, setSitesFacilitiesForm] = useState(() => {
     const base = restoredSnapshot?.sitesFacilitiesForm ?? emptySitesFacilitiesForm
-    const withSite = pendingSiteOnLoad ? { ...base, sites: [...base.sites, pendingSiteOnLoad] } : base
-    return pendingMultiSiteRuleOnLoad ? { ...withSite, multiSiteRule: pendingMultiSiteRuleOnLoad } : withSite
+    return pendingSiteOnLoad ? { ...base, sites: [...base.sites, pendingSiteOnLoad] } : base
   })
   const [documentsForm, setDocumentsForm] = useState(
     restoredSnapshot?.documentsForm ?? emptyDocumentsForm
@@ -67,11 +63,6 @@ export function ApplicationDraftPage() {
   useEffect(() => {
     if (pendingSiteOnLoad) clearPendingNewSite()
   }, [pendingSiteOnLoad])
-
-  // Same idea for a pending multi-site rule result.
-  useEffect(() => {
-    if (pendingMultiSiteRuleOnLoad) clearPendingMultiSiteRule()
-  }, [pendingMultiSiteRuleOnLoad])
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
   const patchStandardsScope = (f: Partial<typeof standardsScopeForm>) =>
@@ -140,11 +131,7 @@ export function ApplicationDraftPage() {
               <StandardsScopeStep form={standardsScopeForm} onPatch={patchStandardsScope} />
             )}
             {step === 3 && (
-              <SitesFacilitiesStep
-                form={sitesFacilitiesForm}
-                onPatch={patchSitesFacilities}
-                onApplyMultiSiteRule={() => navigate('/cab/applications/draft/sites/multi-site-rule')}
-              />
+              <SitesFacilitiesStep form={sitesFacilitiesForm} onPatch={patchSitesFacilities} />
             )}
             {step === 4 && <DocumentsStep form={documentsForm} onPatch={patchDocuments} />}
           </div>

@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { Airplane, Ticket, RouteSquare } from 'iconsax-reactjs'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -11,7 +10,6 @@ import {
   DashboardGridIcon,
   EditIcon,
   GlobeIcon,
-  ReportIcon,
   TrashIcon,
   UsersIcon,
 } from '@/components/icons'
@@ -22,13 +20,9 @@ import { cn } from '@/lib/utils'
 interface SitesFacilitiesStepProps {
   form: SitesFacilitiesForm
   onPatch: (f: Partial<SitesFacilitiesForm>) => void
-  /** Wired up once the multi-site rule logic is defined; button stays visible either way. */
-  onApplyMultiSiteRule?: () => void
 }
 
 const PAGE_SIZE = 3
-/** Multi-site certification (IAF MD1) only applies once there's a head office plus satellites. */
-const MULTI_SITE_MIN_SITES = 3
 
 const SITE_TYPE_BADGE_COLORS: Record<string, string> = {
   'Head Office': 'bg-[#e8edfc] text-primary',
@@ -39,7 +33,7 @@ const SITE_TYPE_BADGE_COLORS: Record<string, string> = {
 }
 const DEFAULT_SITE_TYPE_BADGE_COLOR = 'bg-[#f3f4f6] text-neutral-600'
 
-export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: SitesFacilitiesStepProps) {
+export function SitesFacilitiesStep({ form, onPatch }: SitesFacilitiesStepProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const [page, setPage] = useState(1)
@@ -58,28 +52,6 @@ export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: Sit
     () => Array.from(new Set(form.sites.flatMap((s) => s.activities))),
     [form.sites]
   )
-
-  const multiSiteRule = form.multiSiteRule
-  const headOfficeSite = multiSiteRule
-    ? form.sites.find((s) => s.id === multiSiteRule.form.headOfficeSiteId)
-    : undefined
-  const satelliteSites = multiSiteRule ? form.sites.filter((s) => s.id !== headOfficeSite?.id) : []
-  const sitesCoveredCount = multiSiteRule
-    ? (headOfficeSite ? 1 : 0) + multiSiteRule.sampledSatelliteSiteIds.length
-    : 0
-  const travelCounts = useMemo(() => {
-    const counts = { airplane: 0, train: 0, both: 0, permit: 0 }
-    for (const site of form.sites) {
-      const req = site.additionalDetails?.travelRequirements ?? []
-      const hasAirplane = req.some((r) => /airplane/i.test(r))
-      const hasTrain = req.some((r) => /train/i.test(r))
-      if (hasAirplane && hasTrain) counts.both += 1
-      else if (hasAirplane) counts.airplane += 1
-      else if (hasTrain) counts.train += 1
-      if (site.additionalDetails?.permitAccess) counts.permit += 1
-    }
-    return counts
-  }, [form.sites])
 
   const statCards = [
     {
@@ -123,182 +95,36 @@ export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: Sit
         title={t('cab.applicationDraft.sitesFacilities.title')}
         accordion
         headerActions={
-          <div className="flex items-center gap-3">
-            {form.sites.length >= MULTI_SITE_MIN_SITES && (
-              <Button
-                type="button"
-                variant="secondary"
-                className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
-                onClick={onApplyMultiSiteRule}
-              >
-                {t('cab.applicationDraft.sitesFacilities.applyMultiSiteRule')}
-              </Button>
-            )}
-            <Button
-              type="button"
-              variant="secondary"
-              className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
-              onClick={() => navigate('/cab/applications/draft/sites/new')}
-            >
-              <AppIcon icon={AddCircleIcon} size={24} />
-              {t('cab.applicationDraft.sitesFacilities.addNewSite')}
-            </Button>
-          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
+            onClick={() => navigate('/cab/applications/draft/sites/new')}
+          >
+            <AppIcon icon={AddCircleIcon} size={24} />
+            {t('cab.applicationDraft.sitesFacilities.addNewSite')}
+          </Button>
         }
       >
         <p className="mb-4 text-[14px] text-neutral-500">
           {t('cab.applicationDraft.sitesFacilities.subtitle')}
         </p>
 
-        {multiSiteRule ? (
-          <div className="mb-5 grid grid-cols-1 gap-4 lg:grid-cols-5">
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-4">
-              <div className="mb-3 flex items-center justify-between">
-                <h4 className="text-[14px] font-semibold text-primary">
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.structure.title')}
-                </h4>
-                <span className="rounded-full bg-[#dcfce7] px-2 py-0.5 text-[12px] font-medium text-[#16a34a]">
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.structure.appliedBadge')}
+        <div className="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          {statCards.map(({ key, value, icon, bgColor, iconColor }) => (
+            <div key={key} className="flex flex-col gap-3 rounded-[16px] border border-[#ececec] bg-white p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[28px] font-bold leading-none text-neutral-900">{value}</span>
+                <span className={cn('flex size-10 items-center justify-center rounded-[10px]', bgColor)}>
+                  <AppIcon icon={icon} size={20} className={iconColor} />
                 </span>
               </div>
-              <p className="mb-3 text-[15px] font-semibold text-neutral-900">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.structure.sitesCount', {
-                  count: form.sites.length,
-                })}
-              </p>
-              <p className="text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.sections.structure')}
-              </p>
-              <p className="mb-2 text-[13px] font-medium text-neutral-800">
-                {t(
-                  `cab.applicationDraft.sitesFacilities.multiSiteRule.structureOptions.${multiSiteRule.form.structureType}`
-                )}
-              </p>
-              <p className="text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.structure.centralFunction')}
-              </p>
-              <span className="inline-block rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium text-primary">
-                {headOfficeSite?.name ?? '—'}
-              </span>
-            </div>
-
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-4">
-              <h4 className="mb-3 text-[14px] font-semibold text-primary">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.rule.title')}
-              </h4>
-              <p className="text-[15px] font-semibold text-neutral-900">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.applicableRuleValue')}
-              </p>
-              <p className="mb-2 text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.rule.subtitle')}
-              </p>
-              <p className="text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.mandaysModel')}
-              </p>
-              <p className="mb-3 text-[13px] font-medium text-neutral-800">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.mandaysModelValue')}
-              </p>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="w-full gap-2"
-                onClick={onApplyMultiSiteRule}
-              >
-                <AppIcon icon={ReportIcon} size={16} />
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.rule.viewSummary')}
-              </Button>
-            </div>
-
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-4">
-              <h4 className="mb-3 text-[14px] font-semibold text-primary">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.travel.title')}
-              </h4>
-              <div className="space-y-2 text-[13px]">
-                <div className="flex items-center gap-2 text-neutral-700">
-                  <Airplane size={16} variant="Linear" className="text-neutral-500" />
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.travel.airplane', {
-                    count: travelCounts.airplane,
-                  })}
-                </div>
-                <div className="flex items-center gap-2 text-neutral-700">
-                  <Ticket size={16} variant="Linear" className="text-neutral-500" />
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.travel.train', {
-                    count: travelCounts.train,
-                  })}
-                </div>
-                <div className="flex items-center gap-2 text-neutral-700">
-                  <RouteSquare size={16} variant="Linear" className="text-neutral-500" />
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.travel.both', {
-                    count: travelCounts.both,
-                  })}
-                </div>
-                <div className="border-t border-[#ececec] pt-2 text-neutral-700">
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.travel.permit', {
-                    count: travelCounts.permit,
-                  })}
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-4">
-              <h4 className="mb-3 text-[14px] font-semibold text-primary">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.sampling.title')}
-              </h4>
-              <div className="mb-3 flex items-center gap-2">
-                <AppIcon icon={GlobeIcon} size={18} className="text-primary" />
-                <span className="text-[13px] font-medium text-neutral-800">
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.sampling.randomSites', {
-                    sampled: multiSiteRule.sampledSatelliteSiteIds.length,
-                    total: satelliteSites.length,
-                  })}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <AppIcon icon={UsersIcon} size={18} className="text-neutral-500" />
-                <span className="text-[13px] font-medium text-neutral-800">
-                  {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.sampling.sitesCovered', {
-                    count: sitesCoveredCount,
-                  })}
-                </span>
-              </div>
-            </div>
-
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-4">
-              <h4 className="mb-3 text-[14px] font-semibold text-primary">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.surveillance.title')}
-              </h4>
-              <p className="text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.surveillance.type')}
-              </p>
-              <p className="mb-2 text-[13px] font-medium text-neutral-800">
-                {headOfficeSite?.additionalDetails?.typeOfAudit || '—'}
-              </p>
-              <p className="text-[12px] text-neutral-500">
-                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.summaryCards.surveillance.cycle')}
-              </p>
-              <p className="text-[13px] font-medium text-neutral-800">
-                {headOfficeSite?.additionalDetails?.surveillanceCycle || '—'}
+              <p className="text-[14px] font-medium text-neutral-700">
+                {t(`cab.applicationDraft.sitesFacilities.stats.${key}`)}
               </p>
             </div>
-          </div>
-        ) : (
-          <div className="mb-5 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {statCards.map(({ key, value, icon, bgColor, iconColor }) => (
-              <div key={key} className="flex flex-col gap-3 rounded-[16px] border border-[#ececec] bg-white p-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[28px] font-bold leading-none text-neutral-900">{value}</span>
-                  <span className={cn('flex size-10 items-center justify-center rounded-[10px]', bgColor)}>
-                    <AppIcon icon={icon} size={20} className={iconColor} />
-                  </span>
-                </div>
-                <p className="text-[14px] font-medium text-neutral-700">
-                  {t(`cab.applicationDraft.sitesFacilities.stats.${key}`)}
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+          ))}
+        </div>
 
         {form.sites.length === 0 ? (
           <p className="py-8 text-center text-[14px] text-neutral-500">

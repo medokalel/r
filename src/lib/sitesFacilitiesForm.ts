@@ -1,10 +1,9 @@
-import type { MultiSiteRuleResult } from '@/lib/multiSiteRuleForm'
-
 export interface SiteContact {
   name: string
   phone: string
   email: string
 }
+
 // Everything AddSitePage collects beyond the fields the Sites & Facilities
 // table already shows (name/siteType/address/country/activities/employees/
 // contact). Parked here as-is until we're told what to surface with it —
@@ -41,9 +40,6 @@ export interface Site {
 
 export interface SitesFacilitiesForm {
   sites: Site[]
-  /** Set once the user completes the Apply Multi-site Rule page; drives the
-   *  summary cards above the sites table. Absent until then. */
-  multiSiteRule?: MultiSiteRuleResult
 }
 
 export const emptySitesFacilitiesForm: SitesFacilitiesForm = {
