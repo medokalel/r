@@ -150,6 +150,20 @@ export interface MultiSiteRuleResult {
   totalEstimatedMandays: number
 }
 
+/** Per-row mandays for the Sites & Sampling Summary preview — the row's own
+ *  share of the total (sampled/desk base mandays plus any travel or permit
+ *  adjustment counted for it). Excluded rows show 0. Doesn't include the
+ *  same-scope-development or head-office-functions adjustments, which apply
+ *  to the total rather than a specific site — result.totalEstimatedMandays
+ *  remains the authoritative total. */
+export function rowMandays(row: MultiSiteRuleSiteRow, form: MultiSiteRuleForm): number {
+  if (!row.included) return 0
+  let mandays = baseMandaysForSite(row.site) * row.samplingFactor
+  if (form.considerations.considerTravelAccess && row.travelRequirements.length > 0) mandays += 0.5
+  if (form.considerations.includePermitAccess && row.permitRequired) mandays += 0.5
+  return mandays
+}
+
 export function calculateMandays(sites: Site[], form: MultiSiteRuleForm): MultiSiteRuleResult {
   const headOffice = sites.find((s) => s.id === form.headOfficeSiteId)
   const satellites = sites.filter((s) => s.id !== form.headOfficeSiteId)

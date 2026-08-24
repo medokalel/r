@@ -2239,7 +2239,92 @@
             "no": "لا يوجد تصريح مطلوب",
             "partial": "تصريح / دخول مطلوب جزئيًا"
           },
-          "applyRule": "تطبيق القاعدة"
+          "applyRule": "تطبيق القاعدة",
+          "preview": {
+            "title": "معاينة - تطبيق قاعدة المواقع المتعددة",
+            "subtitle": "هذه معاينة لحساب أيام التدقيق بناءً على IAF MD 1:2023 باستخدام القاعدة والمدخلات المختارة.",
+            "downloadPdf": "تحميل PDF",
+            "stats": {
+              "structure": "هيكل المواقع المتعددة",
+              "rule": "القاعدة المطبقة",
+              "ruleHint": "(مواقع متعددة)",
+              "model": "نموذج أيام التدقيق",
+              "totalSites": "إجمالي المواقع",
+              "totalSitesHint": "({{headOffice}} مقر رئيسي + {{others}} مواقع أخرى)",
+              "sitesSampled": "المواقع المشمولة بالعينة في هذه الدورة",
+              "sitesSampledHint": "({{percent}}% من المواقع)",
+              "totalMandays": "إجمالي أيام التدقيق المقدرة",
+              "mandaysUnit": "يوم تدقيق"
+            },
+            "sitesSummary": {
+              "title": "ملخص المواقع والعينات",
+              "legend": {
+                "airplane": "طيران",
+                "train": "قطار",
+                "both": "طيران وقطار",
+                "included": "مشمول",
+                "notIncluded": "غير مشمول"
+              },
+              "columns": {
+                "siteNameLocation": "اسم الموقع / الموقع الجغرافي",
+                "roleMultiSite": "الدور والمواقع المتعددة",
+                "travelAccess": "السفر والوصول",
+                "permitRequired": "التصريح مطلوب",
+                "includedInSampling": "مشمول في العينة",
+                "samplingFactor": "معامل العينة",
+                "mandays": "أيام التدقيق (شخص/يوم)"
+              },
+              "includedThisCycle": "نعم (هذه الدورة)",
+              "notIncludedThisCycle": "لا (ليست هذه الدورة)",
+              "centralFunctionsApplicable": "الوظائف المركزية المطبقة: {{functions}}",
+              "scope": "النطاق: {{activities}}"
+            },
+            "calculationDetails": {
+              "title": "تفاصيل حساب أيام التدقيق",
+              "columns": {
+                "description": "الوصف",
+                "mandays": "أيام التدقيق"
+              },
+              "baseMandays": "أيام التدقيق الأساسية (كل المواقع)",
+              "samplingAdjustment": "تعديل العينة",
+              "travelAdjustment": "تعديل السفر والوصول",
+              "permitAdjustment": "تعديل التصاريح والوصول",
+              "totalEstimatedMandays": "إجمالي أيام التدقيق المقدرة",
+              "siteStatus": {
+                "headOfficeIncluded": "{{name}} (مشمول)",
+                "siteIncludedSampled": "{{name}} (مشمول - تم أخذ عينة منه)",
+                "siteNotIncluded": "{{name}} (غير مشمول - لم تُؤخذ عينة)"
+              },
+              "total": "الإجمالي"
+            },
+            "samplingMethodApplied": {
+              "title": "طريقة أخذ العينات المطبقة",
+              "description": "يجب أخذ عينة 25% على الأقل من المواقع (أو موقع واحد) في كل دورة مراقبة. تم أخذ عينة من {{sampled}} من أصل {{total}} مواقع ({{percent}}%) في هذه الدورة."
+            },
+            "note": {
+              "title": "ملاحظة",
+              "description": "المواقع التي لم تُؤخذ منها عينة في هذه الدورة سيتم تغطيتها في دورات المراقبة القادمة. يتم احتساب السفر والتصاريح ومعاملات العينة ضمن حساب أيام التدقيق وفقًا لـ IAF MD 1:2023."
+            },
+            "travelAccessSummary": {
+              "title": "ملخص السفر والوصول",
+              "impact": "التأثير: +{{value}} يوم تدقيق",
+              "siteCount": "{{count}} موقع"
+            },
+            "permitAccessSummary": {
+              "title": "ملخص التصاريح / الدخول",
+              "permitRequired": "تصريح مطلوب",
+              "permitNotRequired": "لا يوجد تصريح مطلوب",
+              "siteCount": "{{count}} موقع"
+            },
+            "samplingCoverage": {
+              "title": "العينة والتغطية",
+              "randomSites": "مواقع عشوائية",
+              "randomSitesHint": "تم اختيارها بأخذ العينة",
+              "randomSitesValue": "{{sampled}} من أصل {{total}} مواقع",
+              "cycleCoverage": "تغطية الدورة",
+              "cycleCoverageHint": "هذه الدورة"
+            }
+          }
         },
         "empty": "لا توجد مواقع مضافة حتى الآن.",
         "stats": {

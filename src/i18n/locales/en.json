@@ -2240,7 +2240,92 @@
             "no": "Permit Not Required",
             "partial": "Permit / Access Partially Required"
           },
-          "applyRule": "Apply Rule"
+          "applyRule": "Apply Rule",
+          "preview": {
+            "title": "Preview - Multi-site Rule Application",
+            "subtitle": "This is a preview of the mandays calculation based on IAF MD 1:2023 using the selected rule and inputs.",
+            "downloadPdf": "Download to PDF",
+            "stats": {
+              "structure": "Multi-site Structure",
+              "rule": "Applicable Rule",
+              "ruleHint": "(Multi-site Organizations)",
+              "model": "Mandays Model",
+              "totalSites": "Total Sites",
+              "totalSitesHint": "({{headOffice}} Head Office + {{others}} Other Sites)",
+              "sitesSampled": "Sites Sampled This Cycle",
+              "sitesSampledHint": "({{percent}}% of sites)",
+              "totalMandays": "Total Estimated Mandays",
+              "mandaysUnit": "Mandays"
+            },
+            "sitesSummary": {
+              "title": "Sites & Sampling Summary",
+              "legend": {
+                "airplane": "Airplane",
+                "train": "Train",
+                "both": "Air & Train",
+                "included": "Included",
+                "notIncluded": "Not Included"
+              },
+              "columns": {
+                "siteNameLocation": "Site Name / Location",
+                "roleMultiSite": "Role & Multi-site",
+                "travelAccess": "Travel & Access",
+                "permitRequired": "Permit Required",
+                "includedInSampling": "Included in Sampling",
+                "samplingFactor": "Sampling Factor",
+                "mandays": "Mandays (Person Days)"
+              },
+              "includedThisCycle": "Yes (This Cycle)",
+              "notIncludedThisCycle": "No (Not This Cycle)",
+              "centralFunctionsApplicable": "Central functions applicable: {{functions}}",
+              "scope": "Scope: {{activities}}"
+            },
+            "calculationDetails": {
+              "title": "Mandays Calculation Details",
+              "columns": {
+                "description": "Description",
+                "mandays": "Mandays"
+              },
+              "baseMandays": "Base Mandays (All Sites)",
+              "samplingAdjustment": "Sampling Adjustment",
+              "travelAdjustment": "Travel & Access Adjustment",
+              "permitAdjustment": "Permit & Access Adjustment",
+              "totalEstimatedMandays": "Total Estimated Mandays",
+              "siteStatus": {
+                "headOfficeIncluded": "{{name}} (Included)",
+                "siteIncludedSampled": "{{name}} (Included - Sampled)",
+                "siteNotIncluded": "{{name}} (Not Included - Not Sampled)"
+              },
+              "total": "Total"
+            },
+            "samplingMethodApplied": {
+              "title": "Sampling Method Applied",
+              "description": "Minimum 25% of sites (or 1 site) must be sampled in each surveillance cycle. {{sampled}} of {{total}} sites ({{percent}}%) are sampled in this cycle."
+            },
+            "note": {
+              "title": "Note",
+              "description": "Sites not sampled in this cycle will be covered in future surveillance cycles. Travel, permits and sampling factors are considered in mandays calculation as per IAF MD 1:2023."
+            },
+            "travelAccessSummary": {
+              "title": "Travel & Access Summary",
+              "impact": "Impact: +{{value}} MD",
+              "siteCount": "{{count}} Site(s)"
+            },
+            "permitAccessSummary": {
+              "title": "Permit / Access Summary",
+              "permitRequired": "Permit Required",
+              "permitNotRequired": "Permit Not Required",
+              "siteCount": "{{count}} Site(s)"
+            },
+            "samplingCoverage": {
+              "title": "Sampling & Coverage",
+              "randomSites": "Random Sites",
+              "randomSitesHint": "Selected by sampling",
+              "randomSitesValue": "{{sampled}} of {{total}} sites",
+              "cycleCoverage": "Cycle Coverage",
+              "cycleCoverageHint": "This cycle"
+            }
+          }
         },
         "empty": "No sites added yet.",
         "stats": {

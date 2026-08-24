@@ -14,6 +14,7 @@ import {
   UsersIcon,
 } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
+import { MultiSiteRulePreview } from '@/components/dashboard/cab/MultiSiteRulePreview'
 import type { SitesFacilitiesForm } from '@/lib/sitesFacilitiesForm'
 import { cn } from '@/lib/utils'
 
@@ -244,6 +245,8 @@ export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: Sit
           </>
         )}
       </SectionHeading>
+
+      {form.multiSiteRule && <MultiSiteRulePreview multiSiteRule={form.multiSiteRule} />}
 
       {allActivities.length > 0 && (
         <SectionHeading
