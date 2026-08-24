@@ -1394,13 +1394,13 @@
     },
     "shared": {
       "intro": {
-        "title": "Let's finish setting up your workspace",
-        "description": "Choose your role, organization type, and the details connected to it.",
+        "title": "Let's set up your account",
+        "description": "A few quick steps and your company profile will be ready to work with certification bodies.",
         "estimatedTimeLabel": "Estimated",
         "estimatedTimeValue": "10 Minutes",
         "estimatedTimeDescription": "answers shape your configuration",
         "howItWorksLabel": "How it Works",
-        "howItWorksValue": "Role, organization type, details, location and branding — then you're ready.",
+        "howItWorksValue": "Organization type, details, location and branding — then you're ready.",
         "cta": "Get Started"
       },
       "success": {
@@ -1417,6 +1417,9 @@
         "selectedSchemes": "Selected Schemes",
         "selectedModules": "Selected Modules",
         "emptyValue": "—"
+      },
+      "errors": {
+        "loginRequired": "Your session expired. Please log in again, then return to onboarding to finish."
       }
     },
     "orgType": {
@@ -1858,6 +1861,7 @@
       "applicationReview": "Application Review",
       "informationRequired": "Information Required",
       "technicalFeasibility": "Technical Feasibility",
+      "quotation": "Quotation",
       "quotationApproval": "Quotation Approval",
       "quotationSent": "Quotation Sent",
       "quotationAcceptance": "Quotation Acceptance",
@@ -2726,6 +2730,368 @@
           "holdReview": "Hold Review",
           "rejectApplication": "Reject Application"
         },
+        "footer": {
+          "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfUse": "Terms of Use"
+        }
+      },
+      "informationRequired": {
+        "title": "6. Information Required",
+        "subtitle": "Track and manage information requests sent to the client during application review.",
+        "help": "Help",
+        "status": { "inProgress": "In Progress", "pending": "Pending" },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "current": "Information Required"
+        },
+        "summary": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "primaryStandard": "Primary Standard",
+          "requestedOn": "Requested On",
+          "requestedBy": "Requested By"
+        },
+        "actions": {
+          "downloadRequest": "Download Request",
+          "moreActions": "More Actions",
+          "sendReminder": "Send Reminder to Client",
+          "addInternalComment": "Add Internal Comment"
+        },
+        "alert": {
+          "title": "Information / Clarification Required",
+          "description": "The following information has been requested from the client. Due date for all items: {{date}}."
+        },
+        "requests": {
+          "title": "Requested Information ({{count}})",
+          "columns": {
+            "number": "#",
+            "description": "Information / Clarification Required",
+            "reference": "Reference (Clause)",
+            "requestedBy": "Requested By",
+            "requestedOn": "Requested On",
+            "dueDate": "Due Date",
+            "priority": "Priority",
+            "status": "Status"
+          }
+        },
+        "priority": {
+          "high": "High",
+          "medium": "Medium",
+          "low": "Low"
+        },
+        "priorityLegend": {
+          "title": "Priority:"
+        },
+        "responses": {
+          "title": "Responses from Client",
+          "awaiting": "Awaiting response from client. Once the required information is received, it will be reviewed and processed.",
+          "empty": "No responses submitted yet.",
+          "columns": {
+            "number": "#",
+            "informationItem": "Information Item",
+            "responseAttachment": "Response / Attachment",
+            "submittedOn": "Submitted On",
+            "submittedBy": "Submitted By",
+            "status": "Status"
+          }
+        },
+        "internalComments": {
+          "title": "Internal Comments"
+        },
+        "keyActions": {
+          "title": "Key Actions",
+          "sendReminder": "Send Reminder to Client",
+          "extendDueDate": "Extend Due Date",
+          "addInternalComment": "Add Internal Comment",
+          "escalate": "Escalate to Technical Manager"
+        },
+        "workflowSteps": {
+          "application": "Application",
+          "applicationReview": "Application Review",
+          "informationRequired": "Information Required",
+          "technicalFeasibility": "Technical Feasibility",
+          "quotation": "Quotation",
+          "quotationApproval": "Quotation Approval",
+          "payment": "Payment",
+          "invoicing": "Invoicing",
+          "contracting": "Contracting",
+          "auditPlanning": "Audit Planning"
+        },
+        "workflowStepDescriptions": {
+          "application": "Submission of application by client",
+          "applicationReview": "Completeness, eligibility & feasibility",
+          "informationRequired": "Additional information from client",
+          "technicalFeasibility": "Technical feasibility assessment",
+          "quotation": "Prepare & send quotation",
+          "quotationApproval": "Review & approve quotation",
+          "payment": "Payment of fees",
+          "invoicing": "Generate & send invoice",
+          "contracting": "Agreement & signature",
+          "auditPlanning": "Plan audit activities & team"
+        },
+        "tabPlaceholder": "This tab content is available on the Application Review page.",
+        "footer": {
+          "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfUse": "Terms of Use"
+        }
+      },
+      "technicalFeasibility": {
+        "title": "7. Technical Feasibility",
+        "subtitle": "Assess technical feasibility based on scope, standards, team availability, and resource allocation.",
+        "help": "Help",
+        "status": { "inProgress": "In Progress" },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "current": "Technical Feasibility"
+        },
+        "summary": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "standardScheme": "Standard / Scheme",
+          "sites": "Sites",
+          "requestedOn": "Requested On",
+          "requestedBy": "Requested By"
+        },
+        "actions": {
+          "downloadAssessment": "Download Assessment",
+          "moreActions": "More Actions",
+          "proceedToQuotation": "Proceed to Quotation",
+          "addInternalComment": "Add Internal Comment"
+        },
+        "assessment": {
+          "title": "Technical Feasibility Assessment",
+          "columns": {
+            "area": "Assessment Area",
+            "assessment": "Assessment",
+            "status": "Status",
+            "comments": "Comments"
+          },
+          "areas": {
+            "scopeComplexity": "Scope & Technical Complexity",
+            "applicableStandards": "Applicable Standards",
+            "auditTeamAvailability": "Audit Team Availability",
+            "technicalExpertise": "Technical Expertise",
+            "siteAccessibility": "Site Accessibility",
+            "resourceAvailability": "Resource Availability",
+            "timelineScheduling": "Timeline & Scheduling",
+            "regulatoryRequirements": "Regulatory Requirements"
+          },
+          "status": {
+            "feasible": "Feasible",
+            "partiallyFeasible": "Partially Feasible",
+            "notFeasible": "Not Feasible",
+            "notApplicable": "Not Applicable"
+          },
+          "legend": { "title": "Status:" }
+        },
+        "comments": { "title": "Comments & Justification" },
+        "auditTeam": {
+          "title": "Assigned Audit Team (Proposed)",
+          "edit": "Edit Team",
+          "experience": "Experience: {{value}}",
+          "roles": {
+            "leadAuditor": "Lead Auditor",
+            "auditor": "Auditor"
+          }
+        },
+        "resources": {
+          "title": "Available Resources",
+          "available": "Available",
+          "items": {
+            "technicalExpertsOnCall": "Technical Experts (On Call)",
+            "sectorSpecialists": "Sector Specialists",
+            "documentReviewers": "Document Reviewers",
+            "supportStaff": "Support Staff",
+            "travelResources": "Travel Resources"
+          }
+        },
+        "recommendation": {
+          "title": "Recommendation",
+          "text": "The application is technically feasible. Click below to proceed to the quotation phase."
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "steps": {
+            "quotation": "Quotation",
+            "quotationApproval": "Quotation Approval",
+            "quotationSent": "Quotation Sent"
+          }
+        },
+        "reviewSummary": {
+          "title": "Review Summary",
+          "feasibleCount": "{{count}} of {{total}} areas marked Feasible"
+        },
+        "keyInformation": {
+          "title": "Key Information",
+          "requestedOn": "Requested On",
+          "requestedBy": "Requested By",
+          "dueDate": "Due Date for Assessment"
+        },
+        "quickActions": {
+          "title": "Quick Actions",
+          "addInternalComment": "Add Internal Comment",
+          "sendReminder": "Send Reminder to Client",
+          "escalate": "Escalate to Technical Manager",
+          "extendDueDate": "Extend Assessment Due Date"
+        },
+        "workflowSteps": {
+          "application": "Application",
+          "applicationReview": "Application Review",
+          "informationRequired": "Information Required",
+          "technicalFeasibility": "Technical Feasibility",
+          "quotation": "Quotation",
+          "quotationApproval": "Quotation Approval",
+          "payment": "Payment",
+          "invoicing": "Invoicing",
+          "contracting": "Contracting",
+          "auditPlanning": "Audit Planning"
+        },
+        "workflowStepDescriptions": {
+          "application": "Submission of application by client",
+          "applicationReview": "Completeness, eligibility & feasibility",
+          "informationRequired": "Additional information from client",
+          "technicalFeasibility": "Technical feasibility assessment",
+          "quotation": "Prepare & send quotation",
+          "quotationApproval": "Review & approve quotation",
+          "payment": "Payment of fees",
+          "invoicing": "Generate & send invoice",
+          "contracting": "Agreement & signature",
+          "auditPlanning": "Plan audit activities & team"
+        },
+        "tabPlaceholder": "This tab content is available on the Application Review page.",
+        "footer": {
+          "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
+          "privacyPolicy": "Privacy Policy",
+          "termsOfUse": "Terms of Use"
+        }
+      },
+      "quotation": {
+        "title": "8. Quotation",
+        "subtitle": "Prepare and send quotation based on the audit scope, standards, sites and audit duration.",
+        "help": "Help",
+        "status": { "inProgress": "In Progress" },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "current": "Quotation"
+        },
+        "summary": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "standardScheme": "Standard / Scheme",
+          "sites": "Sites",
+          "requestedOn": "Requested On",
+          "assignedTo": "Assigned To"
+        },
+        "actions": {
+          "downloadQuotation": "Download Quotation",
+          "moreActions": "More Actions",
+          "sendToClient": "Send Quotation to Client",
+          "addInternalComment": "Add Internal Comment"
+        },
+        "alert": {
+          "description": "Based on the approved technical feasibility, please review the quotation details below before sending to the client."
+        },
+        "stats": {
+          "totalAmount": "Total Amount",
+          "proposedAuditDates": "Proposed Audit Dates",
+          "auditTeam": "Audit Team",
+          "sites": "Sites",
+          "validity": "Quotation Validity"
+        },
+        "breakdown": {
+          "title": "Quotation Breakdown",
+          "columns": {
+            "number": "#",
+            "description": "Description",
+            "basis": "Basis",
+            "quantity": "Quantity / Days",
+            "unitRate": "Unit Rate (USD)",
+            "amount": "Amount (USD)"
+          },
+          "subTotal": "Sub Total",
+          "discount": "Discount",
+          "total": "Total (Excluding Taxes)"
+        },
+        "included": { "title": "Included in the Quotation" },
+        "excluded": { "title": "Excluded from the Quotation" },
+        "paymentTerms": {
+          "title": "Payment Terms",
+          "terms": "Payment Terms",
+          "method": "Payment Method",
+          "currency": "Currency",
+          "notes": "Notes"
+        },
+        "internalComments": { "title": "Internal Comments" },
+        "documents": {
+          "title": "Documents ({{count}})",
+          "viewAll": "View All",
+          "status": { "valid": "Valid", "draft": "Draft", "expired": "Expired" },
+          "stats": {
+            "total": "Total Documents: {{count}} |",
+            "valid": "Valid: {{count}} |",
+            "draft": "Draft: {{count}} |",
+            "expired": "Expired: {{count}}"
+          }
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "steps": {
+            "technicalFeasibility": "Technical Feasibility",
+            "quotation": "Quotation",
+            "quotationApproval": "Quotation Approval",
+            "quotationSent": "Quotation Sent"
+          }
+        },
+        "reviewDecision": {
+          "title": "Review Decision (After Approval)",
+          "options": {
+            "approveSend": "Approve & Send to Client",
+            "revise": "Revise Quotation",
+            "cancel": "Cancel Quotation"
+          }
+        },
+        "notes": "Once the quotation is approved internally, it can be sent to the client. All changes after sending require a revised quotation.",
+        "quickActions": {
+          "title": "Quick Actions",
+          "download": "Download Quotation",
+          "preview": "Preview Quotation",
+          "addInternalComment": "Add Internal Comment",
+          "requestApproval": "Request Approval",
+          "sendToClient": "Send Quotation to Client"
+        },
+        "workflowSteps": {
+          "application": "Application",
+          "applicationReview": "Application Review",
+          "informationRequired": "Information Required",
+          "technicalFeasibility": "Technical Feasibility",
+          "quotation": "Quotation",
+          "quotationApproval": "Quotation Approval",
+          "payment": "Payment",
+          "invoicing": "Invoicing",
+          "contracting": "Contracting",
+          "auditPlanning": "Audit Planning"
+        },
+        "workflowStepDescriptions": {
+          "application": "Submission of application by client",
+          "applicationReview": "Completeness, eligibility & feasibility",
+          "informationRequired": "Additional information from client",
+          "technicalFeasibility": "Technical feasibility assessment",
+          "quotation": "Prepare & send quotation",
+          "quotationApproval": "Review & approve quotation",
+          "payment": "Payment of fees",
+          "invoicing": "Generate & send invoice",
+          "contracting": "Agreement & signature",
+          "auditPlanning": "Plan audit activities & team"
+        },
+        "tabPlaceholder": "This tab content is available on the Application Review page.",
         "footer": {
           "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
           "privacyPolicy": "Privacy Policy",

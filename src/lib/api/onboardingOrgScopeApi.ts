@@ -7,7 +7,6 @@ export type OrgScopeCategory =
 
 export interface OrgScopeCategoryOption {
   value: OrgScopeCategory
-  icon: string
   titleKey: string
   descriptionKey: string
 }
@@ -20,31 +19,26 @@ export interface OrgScopeSubOption {
 export const ORG_SCOPE_CATEGORY_OPTIONS: OrgScopeCategoryOption[] = [
   {
     value: 'ACCREDITATION_BODY',
-    icon: '🏛️',
     titleKey: 'onboarding.orgType.options.accreditationBody.title',
     descriptionKey: 'onboarding.orgType.options.accreditationBody.description',
   },
   {
     value: 'CONFORMITY_ASSESSMENT_BODY',
-    icon: '✅',
     titleKey: 'onboarding.orgType.options.conformityAssessmentBody.title',
     descriptionKey: 'onboarding.orgType.options.conformityAssessmentBody.description',
   },
   {
     value: 'SCHEME_OWNER',
-    icon: '📋',
     titleKey: 'onboarding.orgType.options.schemeOwner.title',
     descriptionKey: 'onboarding.orgType.options.schemeOwner.description',
   },
   {
     value: 'INTERNAL_AUDITS',
-    icon: '🔎',
     titleKey: 'onboarding.orgType.options.internalAudits.title',
     descriptionKey: 'onboarding.orgType.options.internalAudits.description',
   },
   {
     value: 'SUPPLIER_AUDITS',
-    icon: '🏭',
     titleKey: 'onboarding.orgType.options.supplierAudits.title',
     descriptionKey: 'onboarding.orgType.options.supplierAudits.description',
   },

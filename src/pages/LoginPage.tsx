@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { login } from '@/lib/api/authApi'
 import { ApiError } from '@/lib/api/client'
 import { getAuthSession, getAuthToken, saveAuthSession, getPostLoginRedirect } from '@/lib/authStorage'
+import { clearPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { TextField } from '@/components/ui'
@@ -49,6 +50,7 @@ export function LoginPage() {
 
     try {
       const data = await login(form.email.trim(), form.password)
+      clearPendingRegistration()
       saveAuthSession(data, rememberMe)
       navigate(getPostLoginRedirect(data), { replace: true })
     } catch (error) {

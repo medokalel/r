@@ -7,6 +7,7 @@ import {
   getOrgScopeSubOptions,
   type OrgScopeCategory,
 } from '@/lib/api/onboardingOrgScopeApi'
+import { ORG_SCOPE_CATEGORY_ICONS } from '@/components/auth/OrgScopeCategoryIcon'
 import type { OrgScopeFormFields } from '@/lib/onboardingOrgScopeForm'
 
 interface OrgScopeTypeStepProps {
@@ -41,7 +42,7 @@ export function OrgScopeTypeStep({ form, onPatch }: OrgScopeTypeStepProps) {
         {ORG_SCOPE_CATEGORY_OPTIONS.map((option) => (
           <CabOptionCard
             key={option.value}
-            icon={option.icon}
+            icon={ORG_SCOPE_CATEGORY_ICONS[option.value]}
             title={t(option.titleKey)}
             description={t(option.descriptionKey)}
             selected={form.scopeCategory === option.value}

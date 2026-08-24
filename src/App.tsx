@@ -1,6 +1,7 @@
 import { Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { RequireAuth } from '@/components/auth/RequireAuth'
+import { RequireAuthOrPendingRegistration } from '@/components/auth/RequireAuthOrPendingRegistration'
 import { RequireCabOnboarded } from '@/components/auth/RequireCabOnboarded'
 import { RequireAbDashboard } from '@/components/auth/RequireAbDashboard'
 import { RequireAbOnboarded } from '@/components/auth/RequireAbOnboarded'
@@ -32,6 +33,9 @@ import { AddSitePage } from '@/pages/AddSitePage'
 import { ApplyMultiSiteRulePage } from '@/pages/ApplyMultiSiteRulePage'
 import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
 import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
+import { CabApplicationInformationRequiredPage } from '@/pages/CabApplicationInformationRequiredPage'
+import { CabApplicationTechnicalFeasibilityPage } from '@/pages/CabApplicationTechnicalFeasibilityPage'
+import { CabApplicationQuotationPage } from '@/pages/CabApplicationQuotationPage'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
 import { LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
 
@@ -75,9 +79,9 @@ export default function App() {
             <Route
               path={ROUTES.onboarding}
               element={
-                <RequireAuth>
+                <RequireAuthOrPendingRegistration>
                   <OnboardingPage />
-                </RequireAuth>
+                </RequireAuthOrPendingRegistration>
               }
             />
             <Route
@@ -165,6 +169,54 @@ export default function App() {
               element={
                 <RequireAuth>
                   <CabApplicationReviewPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/information-required"
+              element={
+                <RequireAuth>
+                  <CabApplicationInformationRequiredPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/:applicationId/information-required"
+              element={
+                <RequireAuth>
+                  <CabApplicationInformationRequiredPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/technical-feasibility"
+              element={
+                <RequireAuth>
+                  <CabApplicationTechnicalFeasibilityPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/:applicationId/technical-feasibility"
+              element={
+                <RequireAuth>
+                  <CabApplicationTechnicalFeasibilityPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/quotation"
+              element={
+                <RequireAuth>
+                  <CabApplicationQuotationPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/:applicationId/quotation"
+              element={
+                <RequireAuth>
+                  <CabApplicationQuotationPage />
                 </RequireAuth>
               }
             />

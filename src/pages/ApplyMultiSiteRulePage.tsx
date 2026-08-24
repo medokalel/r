@@ -135,8 +135,7 @@ export function ApplyMultiSiteRulePage() {
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
       <ApplicationStepper current={3} />
 
-            <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        {/* Title + structure/head office/rule/considerations share one white container. */}
+      <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
           <SectionTitle
             title={t('cab.applicationDraft.sitesFacilities.multiSiteRule.title')}

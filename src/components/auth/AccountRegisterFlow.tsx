@@ -1,7 +1,6 @@
 import { useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, SuccessCheckIcon } from '@/components/icons'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { AccountBasicsStep } from '@/components/auth/AccountBasicsStep'
 import { CabVerificationStep } from '@/components/auth/cab/CabVerificationStep'
@@ -11,11 +10,11 @@ import {
   type AccountRegisterForm,
 } from '@/lib/accountRegisterForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
+import { sendVerificationCode, verifyEmail, formatPhoneNumber } from '@/lib/api/authApi'
 import { getRegistrationAuthError } from '@/lib/authErrors'
 import { ROUTES } from '@/lib/routes'
-import { ApiError } from '@/lib/api/client'
 import { getCountryOptions } from '@/lib/countries'
+import { savePendingRegistration } from '@/lib/pendingRegistrationStorage'
 
 interface AccountRegisterFlowProps {
   onSubmittedChange?: (submitted: boolean) => void
@@ -27,10 +26,8 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2>(1)
-  const [isCreatingAccount, setIsCreatingAccount] = useState(false)
-  const [createAccountError, setCreateAccountError] = useState<string | null>(null)
+  const [isContinuing, setIsContinuing] = useState(false)
   const [form, setForm] = useState<AccountRegisterForm>(emptyAccountRegisterForm)
-  const [submitted, setSubmitted] = useState(false)
   const [verificationEmail, setVerificationEmail] = useState('')
   const [otp, setOtp] = useState<string[]>(emptyOtp())
   const [codeSent, setCodeSent] = useState(false)
@@ -90,37 +87,26 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
     }
   }
 
-  const handleCreateAccount = async () => {
-    if (isCreatingAccount) return
-    setIsCreatingAccount(true)
-    setCreateAccountError(null)
-    try {
-      const countryName =
-        getCountryOptions(i18n.language).find((country) => country.code === form.country)?.name ??
-        form.country
-      const registrantName = form.fullName.trim()
+  const handleContinueToOnboarding = () => {
+    if (isContinuing) return
+    setIsContinuing(true)
 
-      await register({
-        entityType: 'CONSULTATION_BODY',
-        email: verificationEmail,
-        organizationName: registrantName,
-        administrationName: registrantName,
-        facilityOwnerManager: registrantName,
-        activity: registrantName,
-        legalCapacity: registrantName,
-        city: countryName,
-        phone: formatPhoneNumber(form.mobileCountryCode, form.mobile),
-        password: form.password,
-        confirmPassword: form.confirmPassword,
-      })
+    const countryName =
+      getCountryOptions(i18n.language).find((country) => country.code === form.country)?.name ??
+      form.country
 
-      setSubmitted(true)
-      onSubmittedChange?.(true)
-    } catch (error) {
-      setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
-    } finally {
-      setIsCreatingAccount(false)
-    }
+    savePendingRegistration({
+      email: verificationEmail.trim(),
+      password: form.password,
+      confirmPassword: form.confirmPassword,
+      phone: formatPhoneNumber(form.mobileCountryCode, form.mobile),
+      fullName: form.fullName.trim(),
+      country: form.country,
+      countryName,
+    })
+
+    onSubmittedChange?.(true)
+    navigate(ROUTES.onboarding)
   }
 
   const handleBackToBasics = () => {
@@ -146,14 +132,14 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
       void handleVerifyAndContinue()
       return
     }
-    if (isCreatingAccount) return
-    void handleCreateAccount()
+    if (isContinuing) return
+    handleContinueToOnboarding()
   }
 
   const nextDisabled =
     step === 1
       ? !isAccountRegisterComplete(form) || isSendingCode
-      : !emailValid || !codeSent || !otpComplete || isSendingCode || isVerifyingEmail || isCreatingAccount
+      : !emailValid || !codeSent || !otpComplete || isSendingCode || isVerifyingEmail || isContinuing
 
   const nextLabel =
     step === 1 && isSendingCode
@@ -162,28 +148,7 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
         ? isVerifyingEmail
           ? t('register.verifyingEmail')
           : t('register.verifyEmail')
-        : step === 2 && emailVerified
-          ? isCreatingAccount
-            ? t('register.creatingAccount')
-            : t('register.createAccount')
-          : t('common.next')
-
-  if (submitted) {
-    return (
-      <div className="flex min-h-[520px] w-full flex-col items-center justify-center text-center">
-        <AppIcon icon={SuccessCheckIcon} size={140} className="mb-6" />
-        <h1 className="text-h1 mb-3 text-[#26a65b]">{t('register.account.submittedTitle')}</h1>
-        <p className="text-body-2 mb-8 max-w-md text-neutral-500">{t('register.account.submittedDescription')}</p>
-        <button
-          type="button"
-          onClick={() => navigate(ROUTES.login)}
-          className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
-        >
-          {t('register.account.goToLogin')}
-        </button>
-      </div>
-    )
-  }
+        : t('common.next')
 
   return (
     <>
@@ -216,10 +181,6 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
           )}
         </div>
       )}
-      {createAccountError && step === 2 && (
-        <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
-      )}
-
       <AuthStepActions
         className="mt-8"
         onBack={step === 1 ? undefined : handleBackToBasics}

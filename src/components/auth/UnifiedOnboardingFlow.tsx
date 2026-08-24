@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
@@ -16,12 +16,13 @@ import { AuditeeOrgDetailsStep } from '@/components/auth/auditee/AuditeeOrgDetai
 import { AuditeeLocationStep } from '@/components/auth/auditee/AuditeeLocationStep'
 import { AuditeeBrandingStep } from '@/components/auth/auditee/AuditeeBrandingStep'
 import { OnboardingSummaryStep } from '@/components/auth/OnboardingSummaryStep'
-import { saveAbOnboardingProfile } from '@/lib/api/abOnboardingApi'
-import { saveCabOnboardingProfile } from '@/lib/api/cabOnboardingApi'
-import { saveAuditeeOnboardingProfile } from '@/lib/api/auditeeOnboardingApi'
+import { saveOrganizationProfile } from '@/lib/api/organizationProfileApi'
+import { ApiError } from '@/lib/api/client'
+import { completePendingRegistration } from '@/lib/completePendingRegistration'
+import { clearPendingRegistration, hasPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import type { OrgScopeCategory } from '@/lib/api/onboardingOrgScopeApi'
 import type { OrganizationType } from '@/lib/api/authApi'
-import { getAuthSession, patchAuthOrganizationType } from '@/lib/authStorage'
+import { getAuthSession, getAuthToken, patchAuthOrganizationType } from '@/lib/authStorage'
 import { loadOnboardingDraft, saveOnboardingDraft } from '@/lib/onboardingDraftStorage'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
 import { markOnboardingComplete } from '@/lib/onboardingStatus'
@@ -88,12 +89,20 @@ function createInitialForm(): UnifiedOnboardingForm {
 export function UnifiedOnboardingFlow() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(0)
   const [form, setForm] = useState<UnifiedOnboardingForm>(createInitialForm)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  /** True when the user was already logged in before this onboarding session started. */
+  const hadAuthAtStartRef = useRef(Boolean(getAuthToken()))
 
   const organizationId = getAuthSession()?.organization?.id
+
+  useEffect(() => {
+    if (getAuthToken()) {
+      clearPendingRegistration()
+    }
+  }, [])
 
   useEffect(() => {
     if (!organizationId) return
@@ -121,65 +130,80 @@ export function UnifiedOnboardingFlow() {
     }
   }
 
+  const finishOnboarding = (entityType: EntityType | '') => {
+    const orgId = getAuthSession()?.organization?.id
+    if (orgId) markOnboardingComplete(orgId)
+    setStep(getSuccessStep(entityType))
+  }
+
   const handleFinish = async () => {
     if (isSaving || !form.entityType || !form.scopeCategory) return
+
+    if (!getAuthToken()) {
+      setSaveError(t('onboarding.shared.errors.loginRequired'))
+      return
+    }
+
     setIsSaving(true)
     setSaveError(null)
 
-    const profile = {
-      organizationType: form.entityType,
-      scopeCategory: form.scopeCategory,
-      scopeAreas: form.scopeAreas,
-      modules: form.modules,
-      legalEntityName: form.legalEntityName,
-      tradingName: form.tradingName,
-      registrationNumber: form.registrationNumber,
-      website: form.website,
-      country: form.country,
-      city: form.city,
-      address: form.address,
-      languages: form.languages,
-      theme: form.theme,
-      logoUrl: form.logoUrl,
-      includeLogoInEmails: form.includeLogoInEmails,
-      displayLogoOnCertificates: form.displayLogoOnCertificates,
-      colorPaletteIndex: form.colorPaletteIndex,
-      customColor: form.customColor,
-    }
-
     try {
-      if (form.entityType === 'CERTIFICATION_BODY') {
-        await saveCabOnboardingProfile({
-          ...profile,
-          cabType: form.cabType.length > 0 ? form.cabType : form.scopeAreas,
-          accreditationBody: form.accreditationBody,
-          accreditationBodyOther: form.accreditationBodyOther,
-        })
-      } else if (form.entityType === 'ACCREDITATION_BODY') {
-        await saveAbOnboardingProfile({
-          ...profile,
-          abType: form.abType.length > 0 ? form.abType : form.scopeAreas,
-          accreditationBodyNames: form.accreditationBodyNames,
-        })
-      } else {
-        await saveAuditeeOnboardingProfile(profile)
+      // Persist only fields shared with the legacy registration flow.
+      // All newer onboarding-only fields remain in the local draft.
+      await saveOrganizationProfile({
+        profile: {
+          organizationName: form.legalEntityName,
+        },
+        address: {
+          country: form.country,
+          city: form.city,
+          street: form.address,
+        },
+      })
+
+      finishOnboarding(form.entityType)
+    } catch (error) {
+      // Existing accounts (logged in before onboarding) should not be blocked
+      // if profile save fails — they can update details later in company profile.
+      if (hadAuthAtStartRef.current && getAuthToken()) {
+        finishOnboarding(form.entityType)
+        return
       }
 
-      if (organizationId) markOnboardingComplete(organizationId)
-      setStep(getSuccessStep(form.entityType))
-    } catch {
-      setSaveError(t('errors.generic'))
+      if (error instanceof ApiError && error.status === 401) {
+        setSaveError(t('onboarding.shared.errors.loginRequired'))
+        return
+      }
+
+      setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
     } finally {
       setIsSaving(false)
     }
   }
 
-  const handleNext = () => {
+  const handleNext = async () => {
     const summaryStep = getSummaryStep(form.entityType)
     if (step === summaryStep) {
       void handleFinish()
       return
     }
+
+    if (step === 1 && hasPendingRegistration() && !getAuthToken()) {
+      if (isSaving || !isOrgTypeStepComplete(form) || !form.scopeCategory) return
+      setIsSaving(true)
+      setSaveError(null)
+      try {
+        const entityType = mapOrgScopeToBackendType(form.scopeCategory)
+        await completePendingRegistration(entityType)
+        setStep(2)
+      } catch {
+        setSaveError(t('errors.generic'))
+      } finally {
+        setIsSaving(false)
+      }
+      return
+    }
+
     setStep((current) => current + 1)
   }
 
@@ -193,7 +217,7 @@ export function UnifiedOnboardingFlow() {
 
   const nextDisabled =
     step === 1
-      ? !isOrgTypeStepComplete(form)
+      ? !isOrgTypeStepComplete(form) || isSaving
       : step === 2
         ? !isOrgDetailsStepComplete(form)
         : step === 3
@@ -255,12 +279,23 @@ export function UnifiedOnboardingFlow() {
   return (
     <OnboardingFlowShell
       step={step}
-      introStep={-1}
+      introStep={0}
       successStep={successStep}
       firstFormStep={1}
       lastFormStep={summaryStep}
       wideSteps={[1, 3]}
       brandingStep={brandingStep}
+      intro={{
+        title: t('onboarding.shared.intro.title'),
+        description: t('onboarding.shared.intro.description'),
+        estimatedTimeLabel: t('onboarding.shared.intro.estimatedTimeLabel'),
+        estimatedTimeValue: t('onboarding.shared.intro.estimatedTimeValue'),
+        estimatedTimeDescription: t('onboarding.shared.intro.estimatedTimeDescription'),
+        howItWorksLabel: t('onboarding.shared.intro.howItWorksLabel'),
+        howItWorksValue: t('onboarding.shared.intro.howItWorksValue'),
+        cta: t('onboarding.shared.intro.cta'),
+      }}
+      onIntroStart={() => setStep(1)}
       success={{
         title: t('onboarding.shared.success.title'),
         description: t('onboarding.shared.success.description', { name: orgDisplayName }),
@@ -277,14 +312,24 @@ export function UnifiedOnboardingFlow() {
               : ROUTES.dashboard
         )
       }
-      error={saveError && step === summaryStep ? <p className="text-small-light text-error-500 mt-4">{saveError}</p> : null}
+      error={
+        saveError && (step === 1 || step === summaryStep) ? (
+          <p className="text-small-light text-error-500 mt-4">{saveError}</p>
+        ) : null
+      }
       actions={
         step >= 1 && step <= summaryStep ? (
           <AuthStepActions
             className="ms-auto mt-6 w-full sm:max-w-[328px]"
             onBack={handleBack}
             onNext={handleNext}
-            nextLabel={step === summaryStep && isSaving ? t('common.saving') : t('common.next')}
+            nextLabel={
+              step === 1 && isSaving
+                ? t('register.creatingAccount')
+                : step === summaryStep && isSaving
+                  ? t('common.saving')
+                  : t('common.next')
+            }
             nextDisabled={nextDisabled}
             showBack={step > 1}
           />

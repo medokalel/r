@@ -5,9 +5,13 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import {
   AppIcon,
+  BuildingsIcon,
+  CertificateBadgeIcon,
+  DocumentTextOutlineIcon,
   DownloadIcon,
   ExternalLinkArrowIcon,
   FileTextIcon,
+  GlobeIcon,
   MailIcon,
   NotificationIcon,
 } from '@/components/icons'
@@ -17,7 +21,6 @@ import { UserAvatar } from '@/components/ui/UserAvatar'
 import {
   getCabApplicationReceipt,
   type CabApplicationReceipt,
-  type WorkflowStepStatus,
 } from '@/lib/api/cabApplicationReceiptApi'
 import { useCabSidebar } from '@/context/CabSidebarContext'
 import { ROUTES } from '@/lib/routes'
@@ -71,33 +74,30 @@ function ClientSummaryStackField({ label, value }: { label: string; value: React
   )
 }
 
-function ClientLeafIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path
-        d="M12 4.5C9.2 4.5 7 7.4 7 10.5C7 14.8 12 19.5 12 19.5C12 19.5 17 14.8 17 10.5C17 7.4 14.8 4.5 12 4.5Z"
-        fill="white"
-      />
-      <path
-        d="M12 8.5V16.5"
-        stroke="#1a6b45"
-        strokeWidth="1.25"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
-
 function DetailField({
   label,
   value,
+  icon,
   variant = 'default',
 }: {
   label: string
   value: React.ReactNode
+  icon?: React.ReactNode
   variant?: 'default' | 'applicationDetails'
 }) {
   const isApplicationDetails = variant === 'applicationDetails'
+
+  if (isApplicationDetails && icon) {
+    return (
+      <div className="flex min-w-0 items-start gap-2.5">
+        <span className="mt-0.5 shrink-0 text-[#1236a3]">{icon}</span>
+        <div className="min-w-0">
+          <span className="text-[12px] font-bold text-[#8a96a8]">{label}</span>
+          <div className="mt-1.5 text-[13px] font-bold leading-snug text-[#464646]">{value}</div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className={cn('flex flex-col', isApplicationDetails ? 'gap-1.5' : 'gap-1')}>
@@ -133,7 +133,7 @@ function SummaryMetaItem({
 }) {
   return (
     <div className="flex min-w-0 items-start gap-2.5">
-      <span className={cn('mt-0.5 shrink-0 text-[#64748b]', iconClassName)}>{icon}</span>
+      <span className={cn('mt-0.5 shrink-0 text-[#1236a3]', iconClassName)}>{icon}</span>
       <div className="min-w-0">
         <p className="text-[11px] font-bold leading-none text-[#6b7280]">{label}</p>
         <div className="mt-1 break-words text-[13px] font-semibold leading-snug text-[#464646]">{value}</div>
@@ -156,7 +156,7 @@ function PrimaryStandardsTags({ standards }: { standards: string[] }) {
         <span
           key={standard}
           className={cn(
-            'inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#eef1f6] font-semibold text-[#464646]',
+            'inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#F3F6FD] font-semibold text-[#1236a3]',
             expanded ? 'px-2 py-1 text-[11px]' : 'shrink-0 px-1.5 py-1 text-[10px]'
           )}
         >
@@ -225,111 +225,6 @@ function ReceiptSummaryCard({ receipt }: { receipt: CabApplicationReceipt }) {
         />
       </div>
     </section>
-  )
-}
-
-function NextStepIcon({ stepKey, active }: { stepKey: string; active: boolean }) {
-  const stroke = active ? 'white' : '#9ca3af'
-  const common = {
-    stroke,
-    strokeWidth: 1.6,
-    strokeLinecap: 'round' as const,
-    strokeLinejoin: 'round' as const,
-    fill: 'none',
-  }
-
-  if (stepKey === 'informationRequired') {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-        <circle cx="12" cy="12" r="9" {...common} />
-        <path d="M12 11V16M12 8H12.01" {...common} />
-      </svg>
-    )
-  }
-
-  if (stepKey === 'technicalFeasibility') {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-        <path d="M14 2H7C5.9 2 5 2.9 5 4V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V7L14 2Z" {...common} />
-        <path d="M14 2V7H19M9 13H15M9 17H13" {...common} />
-      </svg>
-    )
-  }
-
-  if (stepKey === 'proceedToQuotation') {
-    return (
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-        <path d="M14 2H7C5.9 2 5 2.9 5 4V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V7L14 2Z" {...common} />
-        <path d="M14 2V7H19M9 14L11 16L15 12" {...common} />
-      </svg>
-    )
-  }
-
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden>
-      <path d="M14 2H7C5.9 2 5 2.9 5 4V20C5 21.1 5.9 22 7 22H17C18.1 22 19 21.1 19 20V7L14 2Z" {...common} />
-      <path d="M14 2V7H19M9 12H15M9 16H13" {...common} />
-    </svg>
-  )
-}
-
-function NextStepItem({
-  stepKey,
-  label,
-  status,
-  isLast,
-}: {
-  stepKey: string
-  label: string
-  status: WorkflowStepStatus
-  isLast: boolean
-}) {
-  const { t } = useTranslation()
-  const active = status === 'inProgress'
-  const statusLabel = active
-    ? t('cab.applications.receipt.workflow.inProgress')
-    : t('cab.applications.receipt.workflow.pending')
-
-  return (
-    <div className="relative flex min-w-0 flex-1 flex-col items-center">
-      {!isLast && (
-        <span
-          className="absolute start-1/2 top-6 z-0 hidden h-px w-full bg-[#dbe3ef] sm:block"
-          aria-hidden
-        />
-      )}
-      <div
-        className={cn(
-          'relative z-10 flex size-12 items-center justify-center rounded-full border-2 bg-white',
-          active ? 'border-[#b6d0ff]' : 'border-[#e5e7eb]'
-        )}
-      >
-        <span
-          className={cn(
-            'flex size-9 items-center justify-center rounded-full',
-            active ? 'bg-[#1236a3]' : 'bg-white'
-          )}
-        >
-          <NextStepIcon stepKey={stepKey} active={active} />
-        </span>
-      </div>
-      <p
-        className={cn(
-          'mt-3 px-1 text-center text-[12px] font-bold leading-snug sm:text-[13px]',
-          active ? 'text-[#1236a3]' : 'text-[#464646]'
-        )}
-      >
-        {label}
-      </p>
-      <span
-        className={cn(
-          'mt-1.5 text-center text-[11px] font-medium',
-          active ? 'text-[#1236a3]' : 'text-[#9ca3af]'
-        )}
-      >
-        {statusLabel}
-      </span>
-    </div>
   )
 }
 
@@ -479,23 +374,33 @@ export function CabApplicationReceiptPage() {
                 <div className="flex min-w-0 max-w-full flex-col gap-5 overflow-hidden lg:pr-4 xl:pr-8">
                   <DetailField
                     variant="applicationDetails"
+                    icon={<ClipboardOutlineIcon />}
                     label={t('cab.applications.receipt.fields.applicationType')}
                     value={receipt.applicationType}
                   />
-                  <div className="flex min-w-0 max-w-full flex-col gap-1.5">
-                    <span className="text-[12px] font-bold text-[#8a96a8]">
-                      {t('cab.applications.receipt.fields.primaryStandard')}
+                  <div className="flex min-w-0 max-w-full items-start gap-2.5">
+                    <span className="mt-0.5 shrink-0 text-[#1236a3]">
+                      <AppIcon icon={DocumentTextOutlineIcon} size={18} />
                     </span>
-                    <PrimaryStandardsTags standards={receipt.primaryStandards} />
+                    <div className="flex min-w-0 max-w-full flex-col gap-1.5">
+                      <span className="text-[12px] font-bold text-[#8a96a8]">
+                        {t('cab.applications.receipt.fields.primaryStandard')}
+                      </span>
+                      <div className="mt-1.5">
+                        <PrimaryStandardsTags standards={receipt.primaryStandards} />
+                      </div>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                     <DetailField
                       variant="applicationDetails"
+                      icon={<CalendarOutlineIcon />}
                       label={t('cab.applications.receipt.fields.requestedCertificationDate')}
                       value={receipt.requestedCertificationDate}
                     />
                     <DetailField
                       variant="applicationDetails"
+                      icon={<AppIcon icon={BuildingsIcon} size={18} />}
                       label={t('cab.applications.receipt.fields.numberOfSites')}
                       value={receipt.numberOfSites}
                     />
@@ -507,16 +412,19 @@ export function CabApplicationReceiptPage() {
                 <div className="flex min-w-0 flex-col gap-5 lg:px-4 xl:px-8">
                   <DetailField
                     variant="applicationDetails"
+                    icon={<GearOutlineIcon />}
                     label={t('cab.applications.receipt.fields.certificationBody')}
                     value={receipt.certificationBody}
                   />
                   <DetailField
                     variant="applicationDetails"
+                    icon={<AppIcon icon={CertificateBadgeIcon} size={18} />}
                     label={t('cab.applications.receipt.fields.accreditationBody')}
                     value={receipt.accreditationBody}
                   />
                   <DetailField
                     variant="applicationDetails"
+                    icon={<AppIcon icon={GlobeIcon} size={18} />}
                     label={t('cab.applications.receipt.fields.auditLanguage')}
                     value={receipt.auditLanguage}
                   />
@@ -527,16 +435,19 @@ export function CabApplicationReceiptPage() {
                 <div className="flex min-w-0 flex-col gap-5 lg:pl-4 xl:pl-8">
                   <DetailField
                     variant="applicationDetails"
+                    icon={<CalendarOutlineIcon />}
                     label={t('cab.applications.receipt.fields.applicationDate')}
                     value={receipt.applicationDate}
                   />
                   <DetailField
                     variant="applicationDetails"
+                    icon={<CalendarOutlineIcon />}
                     label={t('cab.applications.receipt.fields.applicationReceivedDate')}
                     value={receipt.applicationReceivedDate}
                   />
                   <DetailField
                     variant="applicationDetails"
+                    icon={<AppIcon icon={FileTextIcon} size={18} />}
                     label={t('cab.applications.receipt.fields.referenceNo')}
                     value={receipt.referenceNo}
                   />
@@ -552,21 +463,15 @@ export function CabApplicationReceiptPage() {
 
                 <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] md:gap-0">
                   <div className="min-w-0 md:pe-5">
-                    <div className="flex items-start gap-2.5">
-                      <div className="flex size-10 shrink-0 items-center justify-center rounded-[7px] bg-[#1a6b45]">
-                        <ClientLeafIcon />
+                    <div className="flex items-center gap-4">
+                      <div className="flex size-14 shrink-0 items-center justify-center rounded-[8px] border border-neutral-200 bg-white">
+                        <AppIcon icon={BuildingsIcon} size={26} className="text-[#1236a3]" />
                       </div>
-                      <div className="min-w-0">
-                        <p className="text-[15px] font-bold leading-tight text-[#464646]">
-                          {receipt.client.name}
-                        </p>
-                        <div className="mt-1">
-                          <StatusBadge
-                            label={t('cab.applications.receipt.client.registeredClient')}
-                            variant="received"
-                            className="rounded-[6px] font-medium text-[#26a65b]"
-                          />
-                        </div>
+                      <div className="min-w-0 space-y-1">
+                        <p className="text-[17px] font-semibold text-neutral-900">{receipt.client.name}</p>
+                        <span className="inline-flex items-center rounded-[6px] bg-[#f4fcf7] px-2 py-0.5 text-[12px] font-medium text-[#26a65b]">
+                          {t('cab.applications.receipt.client.registeredClient')}
+                        </span>
                       </div>
                     </div>
                     <div className="mt-4 flex flex-col gap-2.5">
@@ -623,52 +528,19 @@ export function CabApplicationReceiptPage() {
                 </p>
                 <button
                   type="button"
-                  className="mt-5 inline-flex items-center gap-1.5 self-start rounded-[6px] border border-[#d0d5dd] bg-white px-3.5 py-2 text-[13px] font-medium text-[#1236a3] transition-colors hover:bg-[#f9fafb]"
+                  className="mt-5 inline-flex items-center gap-1.5 self-start rounded-[6px] border border-[#d0d5dd] bg-white px-3 py-1.5 text-[12px] font-medium text-[#1236a3] transition-colors hover:bg-[#f9fafb]"
                 >
                   {t('cab.applications.receipt.actions.viewFullScope')}
-                  <AppIcon icon={ExternalLinkArrowIcon} size={13} className="text-[#1236a3]" />
+                  <AppIcon icon={ExternalLinkArrowIcon} size={12} className="text-[#1236a3]" />
                 </button>
               </section>
             </div>
 
             <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
               <div className="flex min-w-0 flex-col gap-3">
-                <section className="min-w-0 overflow-hidden rounded-[16px] border border-[#e8edfc] bg-[#f7f9fc] p-4 sm:p-5">
-                  <div className="mb-5 flex items-start gap-2.5">
-                    <span className="mt-0.5 flex size-6 shrink-0 items-center justify-center rounded-full bg-[#1236a3] text-[12px] font-bold text-white">
-                      !
-                    </span>
-                    <div className="min-w-0">
-                      <h2 className="text-[15px] font-bold text-[#1236a3] sm:text-[16px]">
-                        {t('cab.applications.receipt.sections.nextSteps')}
-                      </h2>
-                      <p className="mt-1 text-[12px] leading-relaxed text-[#6b7280] sm:text-[13px]">
-                        {t('cab.applications.receipt.nextStepsDescription')}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex min-w-0 flex-col gap-6 sm:flex-row sm:items-start sm:gap-0">
-                    {receipt.nextSteps.map((step, index) => (
-                      <NextStepItem
-                        key={step.key}
-                        stepKey={step.key}
-                        label={t(`cab.applications.receipt.nextStepsList.${step.key}`)}
-                        status={step.status}
-                        isLast={index === receipt.nextSteps.length - 1}
-                      />
-                    ))}
-                  </div>
-                </section>
-
-                <div className="flex min-w-0 items-center gap-2 overflow-hidden rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-2.5 py-2 sm:px-3">
-                  <AppIcon icon={MailIcon} size={14} className="shrink-0 text-[#1236a3]" />
-                  <p
-                    className="min-w-0 truncate whitespace-nowrap text-[9px] font-bold leading-none tracking-tight text-[#111827]"
-                    title={t('cab.applications.receipt.emailConfirmation', {
-                      email1: receipt.confirmationEmails[0],
-                      email2: receipt.confirmationEmails[1],
-                    })}
-                  >
+                <div className="flex min-w-0 items-start gap-3 rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-4 py-3">
+                  <AppIcon icon={MailIcon} size={18} className="mt-0.5 shrink-0 text-[#1236a3]" />
+                  <p className="min-w-0 text-[12px] font-medium leading-snug text-[#1236a3] sm:text-[13px]">
                     {t('cab.applications.receipt.emailConfirmation', {
                       email1: receipt.confirmationEmails[0],
                       email2: receipt.confirmationEmails[1],

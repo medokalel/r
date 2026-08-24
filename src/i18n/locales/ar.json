@@ -1393,13 +1393,13 @@
     },
     "shared": {
       "intro": {
-        "title": "لنكمل إعداد مساحة عملك",
-        "description": "اختر دورك ونوع منظمتك والتفاصيل المرتبطة به.",
+        "title": "لنقم بإعداد حسابك",
+        "description": "بضع خطوات سريعة وسيكون ملف شركتك جاهزًا للعمل مع جهات التصديق.",
         "estimatedTimeLabel": "الوقت المتوقع",
         "estimatedTimeValue": "10 دقائق",
         "estimatedTimeDescription": "ستحدد إجاباتك إعدادات مؤسستك",
         "howItWorksLabel": "كيف تسير العملية",
-        "howItWorksValue": "الدور، نوع المنظمة، التفاصيل، الموقع ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
+        "howItWorksValue": "نوع المنظمة، التفاصيل، الموقع ثم الهوية البصرية — وبعدها ستكون جاهزًا.",
         "cta": "ابدأ الآن"
       },
       "success": {
@@ -1416,6 +1416,9 @@
         "selectedSchemes": "المخططات المختارة",
         "selectedModules": "الوحدات المختارة",
         "emptyValue": "—"
+      },
+      "errors": {
+        "loginRequired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى ثم العودة لإكمال الإعداد."
       }
     },
     "orgType": {
@@ -1857,6 +1860,7 @@
       "applicationReview": "مراجعة الطلب",
       "informationRequired": "معلومات مطلوبة",
       "technicalFeasibility": "الجدوى الفنية",
+      "quotation": "عرض السعر",
       "quotationApproval": "اعتماد عرض السعر",
       "quotationSent": "إرسال عرض السعر",
       "quotationAcceptance": "قبول عرض السعر",
@@ -2724,6 +2728,368 @@
           "holdReview": "تعليق المراجعة",
           "rejectApplication": "رفض الطلب"
         },
+        "footer": {
+          "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
+          "privacyPolicy": "سياسة الخصوصية",
+          "termsOfUse": "شروط الاستخدام"
+        }
+      },
+      "informationRequired": {
+        "title": "6. المعلومات المطلوبة",
+        "subtitle": "تتبع وإدارة طلبات المعلومات المرسلة إلى العميل أثناء مراجعة الطلب.",
+        "help": "مساعدة",
+        "status": { "inProgress": "قيد التنفيذ", "pending": "قيد الانتظار" },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "current": "المعلومات المطلوبة"
+        },
+        "summary": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة الاعتماد",
+          "primaryStandard": "المعيار الأساسي",
+          "requestedOn": "تاريخ الطلب",
+          "requestedBy": "طلب بواسطة"
+        },
+        "actions": {
+          "downloadRequest": "تنزيل الطلب",
+          "moreActions": "المزيد من الإجراءات",
+          "sendReminder": "إرسال تذكير للعميل",
+          "addInternalComment": "إضافة تعليق داخلي"
+        },
+        "alert": {
+          "title": "معلومات / توضيحات مطلوبة",
+          "description": "تم طلب المعلومات التالية من العميل. تاريخ الاستحقاق لجميع البنود: {{date}}."
+        },
+        "requests": {
+          "title": "المعلومات المطلوبة ({{count}})",
+          "columns": {
+            "number": "#",
+            "description": "المعلومات / التوضيحات المطلوبة",
+            "reference": "المرجع (البند)",
+            "requestedBy": "طلب بواسطة",
+            "requestedOn": "تاريخ الطلب",
+            "dueDate": "تاريخ الاستحقاق",
+            "priority": "الأولوية",
+            "status": "الحالة"
+          }
+        },
+        "priority": {
+          "high": "عالية",
+          "medium": "متوسطة",
+          "low": "منخفضة"
+        },
+        "priorityLegend": {
+          "title": "الأولوية:"
+        },
+        "responses": {
+          "title": "ردود العميل",
+          "awaiting": "في انتظار رد العميل. بمجرد استلام المعلومات المطلوبة، سيتم مراجعتها ومعالجتها.",
+          "empty": "لم يتم تقديم أي ردود بعد.",
+          "columns": {
+            "number": "#",
+            "informationItem": "بند المعلومات",
+            "responseAttachment": "الرد / المرفق",
+            "submittedOn": "تاريخ التقديم",
+            "submittedBy": "قدّم بواسطة",
+            "status": "الحالة"
+          }
+        },
+        "internalComments": {
+          "title": "التعليقات الداخلية"
+        },
+        "keyActions": {
+          "title": "الإجراءات الرئيسية",
+          "sendReminder": "إرسال تذكير للعميل",
+          "extendDueDate": "تمديد تاريخ الاستحقاق",
+          "addInternalComment": "إضافة تعليق داخلي",
+          "escalate": "تصعيد إلى المدير الفني"
+        },
+        "workflowSteps": {
+          "application": "الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "informationRequired": "المعلومات المطلوبة",
+          "technicalFeasibility": "الجدوى الفنية",
+          "quotation": "عرض السعر",
+          "quotationApproval": "الموافقة على عرض السعر",
+          "payment": "الدفع",
+          "invoicing": "الفوترة",
+          "contracting": "التعاقد",
+          "auditPlanning": "تخطيط التدقيق"
+        },
+        "workflowStepDescriptions": {
+          "application": "تقديم الطلب من قبل العميل",
+          "applicationReview": "الاكتمال والأهلية والجدوى",
+          "informationRequired": "معلومات إضافية من العميل",
+          "technicalFeasibility": "تقييم الجدوى الفنية",
+          "quotation": "إعداد وإرسال عرض السعر",
+          "quotationApproval": "مراجعة والموافقة على عرض السعر",
+          "payment": "دفع الرسوم",
+          "invoicing": "إنشاء وإرسال الفاتورة",
+          "contracting": "الاتفاق والتوقيع",
+          "auditPlanning": "تخطيط أنشطة التدقيق والفريق"
+        },
+        "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب.",
+        "footer": {
+          "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
+          "privacyPolicy": "سياسة الخصوصية",
+          "termsOfUse": "شروط الاستخدام"
+        }
+      },
+      "technicalFeasibility": {
+        "title": "7. الجدوى الفنية",
+        "subtitle": "تقييم الجدوى الفنية بناءً على النطاق والمعايير وتوفر الفريق وتخصيص الموارد.",
+        "help": "مساعدة",
+        "status": { "inProgress": "قيد التنفيذ" },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "current": "الجدوى الفنية"
+        },
+        "summary": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة الاعتماد",
+          "standardScheme": "المعيار / المخطط",
+          "sites": "المواقع",
+          "requestedOn": "تاريخ الطلب",
+          "requestedBy": "مقدم الطلب"
+        },
+        "actions": {
+          "downloadAssessment": "تنزيل التقييم",
+          "moreActions": "المزيد من الإجراءات",
+          "proceedToQuotation": "المتابعة إلى عرض السعر",
+          "addInternalComment": "إضافة تعليق داخلي"
+        },
+        "assessment": {
+          "title": "تقييم الجدوى الفنية",
+          "columns": {
+            "area": "مجال التقييم",
+            "assessment": "التقييم",
+            "status": "الحالة",
+            "comments": "التعليقات"
+          },
+          "areas": {
+            "scopeComplexity": "النطاق والتعقيد الفني",
+            "applicableStandards": "المعايير المعمول بها",
+            "auditTeamAvailability": "توفر فريق التدقيق",
+            "technicalExpertise": "الخبرة الفنية",
+            "siteAccessibility": "إمكانية الوصول للموقع",
+            "resourceAvailability": "توفر الموارد",
+            "timelineScheduling": "الجدول الزمني والتخطيط",
+            "regulatoryRequirements": "المتطلبات التنظيمية"
+          },
+          "status": {
+            "feasible": "مجدٍ",
+            "partiallyFeasible": "مجدٍ جزئياً",
+            "notFeasible": "غير مجدٍ",
+            "notApplicable": "غير قابل للتطبيق"
+          },
+          "legend": { "title": "الحالة:" }
+        },
+        "comments": { "title": "التعليقات والتبرير" },
+        "auditTeam": {
+          "title": "فريق التدقيق المعين (مقترح)",
+          "edit": "تعديل الفريق",
+          "experience": "الخبرة: {{value}}",
+          "roles": {
+            "leadAuditor": "مدقق رئيسي",
+            "auditor": "مدقق"
+          }
+        },
+        "resources": {
+          "title": "الموارد المتاحة",
+          "available": "متاح",
+          "items": {
+            "technicalExpertsOnCall": "الخبراء الفنيون (عند الطلب)",
+            "sectorSpecialists": "متخصصو القطاع",
+            "documentReviewers": "مراجعو المستندات",
+            "supportStaff": "فريق الدعم",
+            "travelResources": "موارد السفر"
+          }
+        },
+        "recommendation": {
+          "title": "التوصية",
+          "text": "الطلب مجدٍ فنياً. انقر أدناه للمتابعة إلى مرحلة عرض السعر."
+        },
+        "nextSteps": {
+          "title": "الخطوات التالية",
+          "steps": {
+            "quotation": "عرض السعر",
+            "quotationApproval": "اعتماد عرض السعر",
+            "quotationSent": "إرسال عرض السعر"
+          }
+        },
+        "reviewSummary": {
+          "title": "ملخص المراجعة",
+          "feasibleCount": "{{count}} من {{total}} مجالات مُعلّمة كمجدٍ"
+        },
+        "keyInformation": {
+          "title": "معلومات رئيسية",
+          "requestedOn": "تاريخ الطلب",
+          "requestedBy": "مقدم الطلب",
+          "dueDate": "تاريخ استحقاق التقييم"
+        },
+        "quickActions": {
+          "title": "إجراءات سريعة",
+          "addInternalComment": "إضافة تعليق داخلي",
+          "sendReminder": "إرسال تذكير للعميل",
+          "escalate": "تصعيد إلى المدير الفني",
+          "extendDueDate": "تمديد تاريخ استحقاق التقييم"
+        },
+        "workflowSteps": {
+          "application": "الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "informationRequired": "المعلومات المطلوبة",
+          "technicalFeasibility": "الجدوى الفنية",
+          "quotation": "عرض السعر",
+          "quotationApproval": "اعتماد عرض السعر",
+          "payment": "الدفع",
+          "invoicing": "الفوترة",
+          "contracting": "التعاقد",
+          "auditPlanning": "تخطيط التدقيق"
+        },
+        "workflowStepDescriptions": {
+          "application": "تقديم الطلب من قبل العميل",
+          "applicationReview": "الاكتمال والأهلية والجدوى",
+          "informationRequired": "معلومات إضافية من العميل",
+          "technicalFeasibility": "تقييم الجدوى الفنية",
+          "quotation": "إعداد وإرسال عرض السعر",
+          "quotationApproval": "مراجعة والموافقة على عرض السعر",
+          "payment": "دفع الرسوم",
+          "invoicing": "إنشاء وإرسال الفاتورة",
+          "contracting": "الاتفاق والتوقيع",
+          "auditPlanning": "تخطيط أنشطة التدقيق والفريق"
+        },
+        "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب.",
+        "footer": {
+          "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
+          "privacyPolicy": "سياسة الخصوصية",
+          "termsOfUse": "شروط الاستخدام"
+        }
+      },
+      "quotation": {
+        "title": "8. عرض السعر",
+        "subtitle": "إعداد وإرسال عرض السعر بناءً على نطاق التدقيق والمعايير والمواقع ومدة التدقيق.",
+        "help": "مساعدة",
+        "status": { "inProgress": "قيد التنفيذ" },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "current": "عرض السعر"
+        },
+        "summary": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة الاعتماد",
+          "standardScheme": "المعيار / المخطط",
+          "sites": "المواقع",
+          "requestedOn": "تاريخ الطلب",
+          "assignedTo": "مُسند إلى"
+        },
+        "actions": {
+          "downloadQuotation": "تنزيل عرض السعر",
+          "moreActions": "المزيد من الإجراءات",
+          "sendToClient": "إرسال عرض السعر للعميل",
+          "addInternalComment": "إضافة تعليق داخلي"
+        },
+        "alert": {
+          "description": "بناءً على الجدوى الفنية المعتمدة، يرجى مراجعة تفاصيل عرض السعر أدناه قبل إرساله إلى العميل."
+        },
+        "stats": {
+          "totalAmount": "المبلغ الإجمالي",
+          "proposedAuditDates": "تواريخ التدقيق المقترحة",
+          "auditTeam": "فريق التدقيق",
+          "sites": "المواقع",
+          "validity": "صلاحية عرض السعر"
+        },
+        "breakdown": {
+          "title": "تفصيل عرض السعر",
+          "columns": {
+            "number": "#",
+            "description": "الوصف",
+            "basis": "الأساس",
+            "quantity": "الكمية / الأيام",
+            "unitRate": "سعر الوحدة (USD)",
+            "amount": "المبلغ (USD)"
+          },
+          "subTotal": "المجموع الفرعي",
+          "discount": "الخصم",
+          "total": "الإجمالي (باستثناء الضرائب)"
+        },
+        "included": { "title": "مشمول في عرض السعر" },
+        "excluded": { "title": "غير مشمول في عرض السعر" },
+        "paymentTerms": {
+          "title": "شروط الدفع",
+          "terms": "شروط الدفع",
+          "method": "طريقة الدفع",
+          "currency": "العملة",
+          "notes": "ملاحظات"
+        },
+        "internalComments": { "title": "التعليقات الداخلية" },
+        "documents": {
+          "title": "المستندات ({{count}})",
+          "viewAll": "عرض الكل",
+          "status": { "valid": "صالح", "draft": "مسودة", "expired": "منتهي" },
+          "stats": {
+            "total": "إجمالي المستندات: {{count}} |",
+            "valid": "صالح: {{count}} |",
+            "draft": "مسودة: {{count}} |",
+            "expired": "منتهي: {{count}}"
+          }
+        },
+        "nextSteps": {
+          "title": "الخطوات التالية",
+          "steps": {
+            "technicalFeasibility": "الجدوى الفنية",
+            "quotation": "عرض السعر",
+            "quotationApproval": "اعتماد عرض السعر",
+            "quotationSent": "إرسال عرض السعر"
+          }
+        },
+        "reviewDecision": {
+          "title": "قرار المراجعة (بعد الاعتماد)",
+          "options": {
+            "approveSend": "الموافقة والإرسال للعميل",
+            "revise": "مراجعة عرض السعر",
+            "cancel": "إلغاء عرض السعر"
+          }
+        },
+        "notes": "بمجرد اعتماد عرض السعر داخلياً، يمكن إرساله إلى العميل. أي تغييرات بعد الإرسال تتطلب عرض سعر معدّل.",
+        "quickActions": {
+          "title": "إجراءات سريعة",
+          "download": "تنزيل عرض السعر",
+          "preview": "معاينة عرض السعر",
+          "addInternalComment": "إضافة تعليق داخلي",
+          "requestApproval": "طلب الاعتماد",
+          "sendToClient": "إرسال عرض السعر للعميل"
+        },
+        "workflowSteps": {
+          "application": "الطلب",
+          "applicationReview": "مراجعة الطلب",
+          "informationRequired": "المعلومات المطلوبة",
+          "technicalFeasibility": "الجدوى الفنية",
+          "quotation": "عرض السعر",
+          "quotationApproval": "اعتماد عرض السعر",
+          "payment": "الدفع",
+          "invoicing": "الفوترة",
+          "contracting": "التعاقد",
+          "auditPlanning": "تخطيط التدقيق"
+        },
+        "workflowStepDescriptions": {
+          "application": "تقديم الطلب من قبل العميل",
+          "applicationReview": "الاكتمال والأهلية والجدوى",
+          "informationRequired": "معلومات إضافية من العميل",
+          "technicalFeasibility": "تقييم الجدوى الفنية",
+          "quotation": "إعداد وإرسال عرض السعر",
+          "quotationApproval": "مراجعة والموافقة على عرض السعر",
+          "payment": "دفع الرسوم",
+          "invoicing": "إنشاء وإرسال الفاتورة",
+          "contracting": "الاتفاق والتوقيع",
+          "auditPlanning": "تخطيط أنشطة التدقيق والفريق"
+        },
+        "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب.",
         "footer": {
           "copyright": "© 2025 جهة اعتماد CASCO. جميع الحقوق محفوظة.",
           "privacyPolicy": "سياسة الخصوصية",

@@ -65,6 +65,7 @@ const workflowItems: CabNavItem[] = [
   { icon: FileReviewIcon, labelKey: 'cab.sidebar.applicationReview', href: '/cab/applications/review' },
   { icon: CorrectiveActionIcon, labelKey: 'cab.sidebar.informationRequired', href: '/cab/applications/information-required' },
   { icon: SettingsIcon, labelKey: 'cab.sidebar.technicalFeasibility', href: '/cab/applications/technical-feasibility' },
+  { icon: WalletIcon, labelKey: 'cab.sidebar.quotation', href: '/cab/applications/quotation' },
   { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.quotationApproval', href: '/cab/quotations/approval' },
   { icon: MailIcon, labelKey: 'cab.sidebar.quotationSent', href: '/cab/quotations/sent' },
   { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.quotationAcceptance', href: '/cab/quotations/acceptance' },

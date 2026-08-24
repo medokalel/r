@@ -1,6 +1,7 @@
 import { type ReactNode, useEffect, useRef, useState } from 'react'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { OnboardingStepTransition } from '@/components/auth/OnboardingStepTransition'
+import { AppIcon, HistoryIcon, TaskSquareIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 
 export interface OnboardingIntroContent {
@@ -90,9 +91,9 @@ export function OnboardingFlowShell({
             <p className="mb-6 text-body-2 text-neutral-500">{intro.description}</p>
 
             <div className="mb-4 flex min-h-[66px] items-center gap-3 rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 py-3">
-              <span className="text-xl" aria-hidden>
-                ⌛
-              </span>
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-primary-subtle">
+                <AppIcon icon={HistoryIcon} size={20} className="text-primary" />
+              </div>
               <div>
                 <p className="text-body-2-semibold text-neutral-900">
                   {intro.estimatedTimeValue} {intro.estimatedTimeLabel}
@@ -104,7 +105,12 @@ export function OnboardingFlowShell({
             </div>
 
             <div className="mb-6 min-h-[92px] rounded-[var(--radius-sm)] border border-neutral-200 bg-white p-4">
-              <p className="mb-2 text-body-2-semibold text-neutral-900">{intro.howItWorksLabel}</p>
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)] bg-primary-subtle">
+                  <AppIcon icon={TaskSquareIcon} size={18} className="text-primary" />
+                </div>
+                <p className="text-body-2-semibold text-neutral-900">{intro.howItWorksLabel}</p>
+              </div>
               <p className="text-body-3 text-neutral-500">{intro.howItWorksValue}</p>
             </div>
 

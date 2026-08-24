@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Airplane, Profile2User, RouteSquare, TickCircle, Ticket } from 'iconsax-reactjs'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -27,11 +27,6 @@ import {
 import type { CountryCode } from '@/lib/countries'
 import type { Site } from '@/lib/sitesFacilitiesForm'
 import { savePendingNewSite } from '@/lib/applicationDraftSession'
-
-// TODO: replace with the real in-progress application id once this page is
-// wired to an actual application (mirrors the placeholder pattern the other
-// cab/applications/* pages used before their APIs were connected).
-const APPLICATION_ID = 'APP-2025-0188'
 
 // TODO: fold into the shared "add site" form model (alongside Management
 // System & Scope, Travel & Access, Sampling & Surveillance and Contact
@@ -113,14 +108,6 @@ const emptyContactPerson: ContactPerson = {
 // TODO: populate with the other sites already added in this application once
 // this page can read the in-progress Sites & Facilities list.
 const OTHER_SITES_OPTIONS: string[] = []
-
-function Chevron() {
-  return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip">
-      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
 
 // Fixed order — lines up 1:1 with TRAVEL_REQUIREMENT_OPTIONS and is reused
 // for the "Site Indicators" legend below, so keep the two in sync.
@@ -246,27 +233,6 @@ export function AddSitePage() {
   return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-
-      {/* <div className="flex shrink-0 items-center border-b border-[#ececec] bg-white px-5 py-3">
-        <nav
-          className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]"
-          aria-label="breadcrumb"
-        >
-          <Link to="/cab/dashboard" className="font-light text-[#989898] hover:text-primary">
-            {t('cab.applications.receipt.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#989898]">
-            {t('cab.applications.receipt.breadcrumb.applications')}
-          </span>
-          <Chevron />
-          <span className="font-light text-[#989898]">{APPLICATION_ID}</span>
-          <Chevron />
-          <Link to="/cab/applications/draft" className="font-bold text-[#464646] hover:text-primary">
-            {t('cab.applicationDraft.title')}
-          </Link>
-        </nav>
-      </div> */}
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="space-y-1">

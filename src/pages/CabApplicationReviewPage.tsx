@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
@@ -27,7 +27,7 @@ import {
   type CommentTag,
   type DocumentStatus,
 } from '@/lib/api/cabApplicationReviewApi'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabApplicationInformationRequiredPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
 
@@ -113,7 +113,7 @@ function DetailField({ label, value }: { label: string; value: React.ReactNode }
 function SummaryField({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
   return (
     <div className="flex min-w-0 items-start gap-2">
-      <span className="mt-0.5 shrink-0 text-[#000000]">{icon}</span>
+      <span className="mt-0.5 shrink-0 text-[#1236a3]">{icon}</span>
       <div className="min-w-0">
         <p className="text-[11px] font-semibold text-[#000000]">{label}</p>
         <div className="text-[13px] font-bold leading-snug text-[#000000]">{value}</div>
@@ -201,35 +201,43 @@ function ChecklistTable({ review }: { review: CabApplicationReview }) {
         {t('cab.applications.review.checklist.title')}
       </h2>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[720px] border-collapse text-start">
+        <table className="w-full min-w-[720px] table-fixed border-collapse text-start [&_td:not(:last-child)]:border-r [&_td:not(:last-child)]:border-[#ececec] [&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-white/20">
+          <colgroup>
+            <col className="w-[5%]" />
+            <col className="w-[14%]" />
+            <col className="w-[26%]" />
+            <col className="w-[14%]" />
+            <col className="w-[33%]" />
+            <col className="w-[8%]" />
+          </colgroup>
           <thead>
-            <tr className="border-b border-[#ececec] bg-[#F4F7FC] text-[11px] font-bold text-[#000000]">
-              <th className="w-10 py-2 ps-2 text-start">{t('cab.applications.review.checklist.columns.number')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.checklist.columns.area')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.checklist.columns.description')}</th>
-              <th className="w-36 py-2 text-start">{t('cab.applications.review.checklist.columns.status')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.checklist.columns.comments')}</th>
-              <th className="w-16 py-2 text-start">{t('cab.applications.review.checklist.columns.action')}</th>
+            <tr className="bg-[#1236a3] text-[11px] font-bold text-white">
+              <th className="px-3 py-3.5 text-center">{t('cab.applications.review.checklist.columns.number')}</th>
+              <th className="px-4 py-3.5 text-start">{t('cab.applications.review.checklist.columns.area')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.checklist.columns.description')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.checklist.columns.status')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.checklist.columns.comments')}</th>
+              <th className="px-2 py-3.5 text-center">{t('cab.applications.review.checklist.columns.action')}</th>
             </tr>
           </thead>
           <tbody>
             {review.checklist.map((row) => (
               <tr key={row.id} className="border-b border-[#f4f4f4] align-top text-[12px] text-[#000000]">
-                <td className="py-3 font-semibold">{row.id}</td>
-                <td className="py-3 font-bold">{row.area}</td>
-                <td className="max-w-[220px] py-3 text-[#000000]">{row.description}</td>
-                <td className="py-3">
+                <td className="px-3 py-3 text-center font-semibold">{row.id}</td>
+                <td className="px-4 py-3 font-bold">{row.area}</td>
+                <td className="px-4 py-3 break-words text-[#000000]">{row.description}</td>
+                <td className="px-4 py-3">
                   <ChecklistStatusPill
                     status={row.status}
                     label={t(`cab.applications.review.checklist.status.${row.status}`)}
                   />
                 </td>
-                <td className="max-w-[240px] py-3 text-[#000000]">{row.comment}</td>
-                <td className="py-3">
+                <td className="px-4 py-3 break-words text-[#000000]">{row.comment}</td>
+                <td className="px-2 py-3 text-center">
                   {row.status !== 'notApplicable' ? (
                     <button
                       type="button"
-                      className="flex size-7 items-center justify-center rounded-[6px] border border-[#ececec] text-[#1236a3] hover:bg-[#f9fafb]"
+                      className="mx-auto flex size-7 items-center justify-center rounded-[6px] border border-[#ececec] text-[#1236a3] hover:bg-[#f9fafb]"
                       aria-label={t('cab.applications.review.actions.addComment')}
                     >
                       <AppIcon icon={CommentIcon} size={14} />
@@ -404,52 +412,25 @@ function DocumentsOverviewCard({ review }: { review: CabApplicationReview }) {
   )
 }
 
-function NextStepsCard({ review }: { review: CabApplicationReview }) {
-  const { t } = useTranslation()
-
+function NoteInfoIcon({ className }: { className?: string }) {
   return (
-    <section className={cn(cardClassName, 'min-w-0 p-4 sm:p-5')}>
-      <h2 className="mb-5 text-[14px] font-bold text-[#000000]">{t('cab.applications.review.nextSteps.title')}</h2>
-      <div className="flex min-w-0 flex-col gap-6 sm:flex-row sm:items-start">
-        {review.nextSteps.map((step, index) => {
-          const active = step.status === 'inProgress'
-          return (
-            <div key={step.key} className="relative flex min-w-0 flex-1 flex-col items-center">
-              {index !== 0 && (
-                <span className="absolute end-1/2 top-5 -z-0 hidden h-px w-full bg-[#dbe3ef] sm:block" aria-hidden />
-              )}
-              <span
-                className={cn(
-                  'relative z-10 flex size-10 items-center justify-center rounded-full border-2 text-[13px] font-bold',
-                  active ? 'border-[#1236a3] bg-[#1236a3] text-white' : 'border-[#e5e7eb] bg-white text-[#000000]'
-                )}
-              >
-                {index + 1}
-              </span>
-              <p className={cn('mt-2 text-center text-[12px] font-bold', active ? 'text-[#1236a3]' : 'text-[#000000]')}>
-                {t(`cab.applications.review.nextSteps.${step.key}`)}
-              </p>
-              <span className={cn('mt-1 text-[11px] font-medium', active ? 'text-[#1236a3]' : 'text-[#000000]')}>
-                {t(`cab.applications.review.workflow.${active ? 'inProgress' : 'pending'}`)}
-              </span>
-            </div>
-          )
-        })}
-      </div>
-    </section>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className={cn('shrink-0', className)} aria-hidden>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M12 7.5v6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <circle cx="12" cy="16.5" r="1" fill="currentColor" />
+    </svg>
   )
 }
 
 function NotesBanner({ review }: { review: CabApplicationReview }) {
   const { t } = useTranslation()
+
   return (
-    <section className="flex min-w-0 items-start gap-2.5 rounded-[12px] border border-[#ececec] bg-[#F7F8FD] p-4 sm:p-5">
-      <span className="mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full bg-[#1236a3] text-[11px] font-bold text-white">
-        i
-      </span>
+    <section className="flex min-w-0 items-center gap-2 rounded-[8px] border border-[#b6d0ff] bg-[#F3F6FD] px-3 py-2.5">
+      <NoteInfoIcon className="shrink-0 text-[#1236a3]" />
       <div className="min-w-0">
-        <p className="text-[15px] font-bold text-[#000000]">{t('cab.applications.review.notesTitle')}</p>
-        <p className="mt-3 text-[14px] font-bold leading-[1.9] text-[#000000]">{review.notes}</p>
+        <p className="text-[13px] font-bold text-[#1236a3]">{t('cab.applications.review.notesTitle')}</p>
+        <p className="mt-1 text-[12px] font-medium leading-snug text-[#1236a3]">{review.notes}</p>
       </div>
     </section>
   )
@@ -478,7 +459,7 @@ function ApplicationDetailsCard({ review }: { review: CabApplicationReview }) {
               value={
                 <div className="flex flex-wrap gap-1.5">
                   {d.additionalStandards.map((standard) => (
-                    <span key={standard} className="rounded-[4px] bg-[#eef1f6] px-2 py-1 text-[11px] font-semibold text-[#000000]">
+                    <span key={standard} className="inline-flex items-center justify-center whitespace-nowrap rounded-[4px] bg-[#F3F6FD] px-2 py-1 text-[11px] font-semibold text-[#1236a3]">
                       {standard}
                     </span>
                   ))}
@@ -678,24 +659,24 @@ function HistoryTable({ review }: { review: CabApplicationReview }) {
     <section className={cn(cardClassName, 'min-w-0 p-4 sm:p-5')}>
       <h2 className="mb-3 text-[14px] font-bold text-[#000000]">{t('cab.applications.review.historySection.title')}</h2>
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[560px] border-collapse text-start">
+        <table className="w-full min-w-[560px] border-collapse text-center [&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-white/20">
           <thead>
-            <tr className="border-b border-[#ececec] text-[11px] font-bold text-[#000000]">
-              <th className="py-2 text-start">{t('cab.applications.review.historySection.columns.dateTime')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.historySection.columns.by')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.historySection.columns.action')}</th>
-              <th className="py-2 text-start">{t('cab.applications.review.historySection.columns.details')}</th>
+            <tr className="bg-[#1236a3] text-[11px] font-bold text-white">
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.historySection.columns.dateTime')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.historySection.columns.by')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.historySection.columns.action')}</th>
+              <th className="px-4 py-3.5 text-center">{t('cab.applications.review.historySection.columns.details')}</th>
             </tr>
           </thead>
           <tbody>
             {review.history.map((entry, index) => (
               <tr key={index} className="border-b border-[#f4f4f4] text-[12px] text-[#000000]">
-                <td className="whitespace-nowrap py-2.5">
+                <td className="whitespace-nowrap px-4 py-2.5 text-center">
                   {entry.date} {entry.time}
                 </td>
-                <td className="py-2.5">{entry.by}</td>
-                <td className="py-2.5 font-semibold text-[#1236a3]">{entry.action}</td>
-                <td className="py-2.5 text-[#000000]">{entry.details}</td>
+                <td className="px-4 py-2.5 text-center">{entry.by}</td>
+                <td className="px-4 py-2.5 text-center font-semibold text-[#1236a3]">{entry.action}</td>
+                <td className="px-4 py-2.5 text-center text-[#000000]">{entry.details}</td>
               </tr>
             ))}
           </tbody>
@@ -731,13 +712,15 @@ function WorkflowProgressCard() {
   )
 }
 
-function ReviewActionsCard({ className }: { className?: string }) {
+function ReviewActionsCard({ className, applicationId }: { className?: string; applicationId: string }) {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   return (
     <section className={cn(cardClassName, 'flex min-w-0 flex-col gap-2 p-4', className)}>
       <h2 className="mb-1 text-[14px] font-bold text-[#000000]">{t('cab.applications.review.reviewActions.title')}</h2>
       <button
         type="button"
+        onClick={() => navigate(cabApplicationInformationRequiredPath(applicationId))}
         className="flex h-9 w-full items-center gap-2 rounded-[8px] border border-[#b6d0ff] bg-[#e8edfc] px-3 text-[12px] font-semibold text-[#1236a3] hover:opacity-90"
       >
         <AppIcon icon={FileTextIcon} size={14} />
@@ -965,10 +948,7 @@ export function CabApplicationReviewPage() {
                   <ReviewerCommentsPreviewCard review={review} />
                   <DocumentsOverviewCard review={review} />
                 </div>
-                <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,0.99fr)_minmax(0,1fr)]">
-                  <NextStepsCard review={review} />
-                  <NotesBanner review={review} />
-                </div>
+                <NotesBanner review={review} />
               </>
             )}
 
@@ -1003,7 +983,7 @@ export function CabApplicationReviewPage() {
               <div style={{ zoom: scale }}>
                 <HistoryTable review={review} />
               </div>
-              <ReviewActionsCard />
+              <ReviewActionsCard applicationId={review.applicationId} />
             </div>
           )}
           </div>

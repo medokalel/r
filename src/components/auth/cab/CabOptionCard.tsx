@@ -1,7 +1,8 @@
 import { cn } from '@/lib/utils'
+import { AppIcon, type AppIconComponent } from '@/components/icons'
 
 interface CabOptionCardProps {
-  icon?: string
+  icon?: AppIconComponent
   title: string
   description?: string
   selected: boolean
@@ -37,7 +38,11 @@ export function CabOptionCard({
         className
       )}
     >
-      {icon && !compact && <span className="mb-3 text-[20px] leading-none">{icon}</span>}
+      {icon && !compact && (
+        <div className="mb-3 flex size-10 items-center justify-center rounded-[var(--radius-sm)] bg-primary-subtle">
+          <AppIcon icon={icon} size={20} className="text-primary" />
+        </div>
+      )}
       <p
         className={cn(
           compact

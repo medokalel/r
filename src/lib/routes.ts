@@ -19,7 +19,28 @@ export const ROUTES = {
   abOnboarding: '/ab/onboarding',
   auditeeOnboarding: '/auditee/onboarding',
   onboarding: '/onboarding',
+  cabApplicationInformationRequired: '/cab/applications/information-required',
+  cabApplicationTechnicalFeasibility: '/cab/applications/technical-feasibility',
+  cabApplicationQuotation: '/cab/applications/quotation',
 } as const
+
+export function cabApplicationInformationRequiredPath(applicationId?: string): string {
+  return applicationId
+    ? `/cab/applications/${applicationId}/information-required`
+    : ROUTES.cabApplicationInformationRequired
+}
+
+export function cabApplicationTechnicalFeasibilityPath(applicationId?: string): string {
+  return applicationId
+    ? `/cab/applications/${applicationId}/technical-feasibility`
+    : ROUTES.cabApplicationTechnicalFeasibility
+}
+
+export function cabApplicationQuotationPath(applicationId?: string): string {
+  return applicationId
+    ? `/cab/applications/${applicationId}/quotation`
+    : ROUTES.cabApplicationQuotation
+}
 
 /** Post-login landing page for authenticated users. */
 export const AUTHENTICATED_HOME = ROUTES.dashboard
