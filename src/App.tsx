@@ -31,6 +31,7 @@ import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 import { AddSitePage } from '@/pages/AddSitePage'
 import { ApplyMultiSiteRulePage } from '@/pages/ApplyMultiSiteRulePage'
+import { CabMultiSiteRulePreviewPage } from '@/pages/CabMultiSiteRulePreviewPage'
 import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
 import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
 import { CabApplicationInformationRequiredPage } from '@/pages/CabApplicationInformationRequiredPage'
@@ -137,6 +138,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <ApplyMultiSiteRulePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/applications/draft/sites/multi-site-rule/preview"
+              element={
+                <RequireAuth>
+                  <CabMultiSiteRulePreviewPage />
                 </RequireAuth>
               }
             />

@@ -159,7 +159,7 @@ export function ApplyMultiSiteRulePage() {
   const handleApply = () => {
     if (!canApply) return;
     savePendingMultiSiteRule(result);
-    navigate("/cab/applications/draft");
+    navigate("/cab/applications/draft/sites/multi-site-rule/preview");
   };
 
   return (

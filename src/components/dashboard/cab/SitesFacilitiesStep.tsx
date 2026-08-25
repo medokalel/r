@@ -14,7 +14,6 @@ import {
   UsersIcon,
 } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { MultiSiteRulePreview } from '@/components/dashboard/cab/MultiSiteRulePreview'
 import type { SitesFacilitiesForm } from '@/lib/sitesFacilitiesForm'
 import { cn } from '@/lib/utils'
 
@@ -246,7 +245,36 @@ export function SitesFacilitiesStep({ form, onPatch, onApplyMultiSiteRule }: Sit
         )}
       </SectionHeading>
 
-      {form.multiSiteRule && <MultiSiteRulePreview multiSiteRule={form.multiSiteRule} />}
+      {form.multiSiteRule && (
+        <div className="flex flex-wrap items-center justify-between gap-4 rounded-[var(--radius-md)] border border-primary/20 bg-[#f3f6fd] p-4">
+          <div className="flex items-center gap-3">
+            <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-white text-primary">
+              <AppIcon icon={DashboardGridIcon} size={18} />
+            </span>
+            <div>
+              <p className="text-[14px] font-semibold text-neutral-900">
+                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.appliedBadge')}
+              </p>
+              <p className="text-[13px] text-neutral-600">
+                {form.multiSiteRule.totalEstimatedMandays.toFixed(1)}{' '}
+                {t('cab.applicationDraft.sitesFacilities.multiSiteRule.preview.stats.mandaysUnit')}
+              </p>
+            </div>
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            className="h-10 rounded-[var(--radius-sm)] px-4"
+            onClick={() =>
+              navigate('/cab/applications/draft/sites/multi-site-rule/preview', {
+                state: { multiSiteRule: form.multiSiteRule },
+              })
+            }
+          >
+            {t('common.view')}
+          </Button>
+        </div>
+      )}
 
       {allActivities.length > 0 && (
         <SectionHeading

@@ -2159,6 +2159,7 @@
         "multiSiteRule": {
           "title": "Apply Multi-site Rule",
           "subtitle": "Select the applicable multi-site structure and rules to calculate accurate mandays based on IAF MD 1:2023.",
+          "appliedBadge": "Multi-Site Rule Applied",
           "noSitesMessage": "Add at least 3 sites in Sites & Facilities before applying a multi-site rule.",
           "sections": {
             "structure": "1. Multi-site Structure",
