@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import * as Dialog from '@radix-ui/react-dialog'
 import { AppIcon, CalendarIcon, DownloadIcon, FileTextIcon, MoreIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { SelectField } from '@/components/ui'
+import { SelectField, DateRangePicker, AvatarStack, type DateRange } from '@/components/ui'
 import { CalendarGrid } from '@/components/ui/CalendarGrid'
 import {
   getAuditCalendarEntries,
@@ -43,6 +43,13 @@ function toIsoDate(year: number, month: number, day: number) {
   return `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`
 }
 
+function parseIsoDate(iso: string) {
+  const [y, m, d] = iso.split('-').map(Number)
+  return new Date(y, m - 1, d)
+}
+
+const EMPTY_DATE_RANGE: DateRange = { from: null, to: null }
+
 interface AuditCalendarModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
@@ -56,6 +63,12 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
   const [viewMonth, setViewMonth] = useState(0)
   const [selectedDate, setSelectedDate] = useState('2025-01-18')
 
+  const [dateRange, setDateRange] = useState<DateRange>(EMPTY_DATE_RANGE)
+  const [auditTypeFilter, setAuditTypeFilter] = useState('')
+  const [standardFilter, setStandardFilter] = useState('')
+  const [statusFilter, setStatusFilter] = useState('')
+  const [auditorFilter, setAuditorFilter] = useState('')
+
   useEffect(() => {
     if (!open) return
     let cancelled = false
@@ -67,8 +80,41 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
     }
   }, [open])
 
-  const datesWithAudits = useMemo(() => new Set(entries.map((e) => e.date)), [entries])
-  const entriesForSelectedDate = entries.filter((e) => e.date === selectedDate)
+  const auditTypeOptions = useMemo(() => Array.from(new Set(entries.map((e) => e.auditType))).sort(), [entries])
+  const standardOptions = useMemo(() => Array.from(new Set(entries.map((e) => e.standard))).sort(), [entries])
+  const auditorOptions = useMemo(() => Array.from(new Set(entries.flatMap((e) => e.auditTeam))).sort(), [entries])
+  const statusFilterOptions = (
+    ['planned', 'inProgress', 'completed', 'reportFinalization', 'cancelled', 'postponed'] as AuditCalendarStatus[]
+  ).map((key) => ({ value: key, label: t(`cab.dashboard.auditCalendar.status.${key}`) }))
+
+  const hasActiveFilters =
+    Boolean(dateRange.from) || Boolean(auditTypeFilter) || Boolean(standardFilter) || Boolean(statusFilter) || Boolean(auditorFilter)
+
+  const filteredEntries = useMemo(() => {
+    return entries.filter((entry) => {
+      if (dateRange.from) {
+        const entryDate = parseIsoDate(entry.date)
+        const rangeEnd = dateRange.to ?? dateRange.from
+        if (entryDate < dateRange.from || entryDate > rangeEnd) return false
+      }
+      if (auditTypeFilter && entry.auditType !== auditTypeFilter) return false
+      if (standardFilter && entry.standard !== standardFilter) return false
+      if (statusFilter && entry.status !== statusFilter) return false
+      if (auditorFilter && !entry.auditTeam.includes(auditorFilter)) return false
+      return true
+    })
+  }, [entries, dateRange, auditTypeFilter, standardFilter, statusFilter, auditorFilter])
+
+  function handleResetFilters() {
+    setDateRange(EMPTY_DATE_RANGE)
+    setAuditTypeFilter('')
+    setStandardFilter('')
+    setStatusFilter('')
+    setAuditorFilter('')
+  }
+
+  const datesWithAudits = useMemo(() => new Set(filteredEntries.map((e) => e.date)), [filteredEntries])
+  const entriesForSelectedDate = filteredEntries.filter((e) => e.date === selectedDate)
 
   const selectedDateLabel = new Date(selectedDate).toLocaleDateString(i18n.language, {
     weekday: 'long',
@@ -140,40 +186,59 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
                 <p className="text-[13px] font-medium text-neutral-700">
                   {t('cab.dashboard.auditCalendar.filters.dateRange')}
                 </p>
-                <button
-                  type="button"
-                  className="flex h-11 w-full items-center justify-between rounded-[var(--radius-sm)] border border-neutral-200 px-3 text-[14px] text-neutral-700"
-                >
-                  {t('cab.dashboard.auditCalendar.filters.dateRangeValue')}
-                  <AppIcon icon={CalendarIcon} size={16} className="text-neutral-400" />
-                </button>
+                <DateRangePicker value={dateRange} onChange={setDateRange} className="[&_button]:h-11" />
               </div>
               <div className="space-y-1.5">
                 <p className="text-[13px] font-medium text-neutral-700">
                   {t('cab.dashboard.auditCalendar.filters.auditType')}
                 </p>
-                <SelectField value="" onChange={() => {}} options={[]} placeholder={t('cab.dashboard.auditCalendar.filters.allTypes')} />
+                <SelectField
+                  value={auditTypeFilter}
+                  onChange={setAuditTypeFilter}
+                  options={auditTypeOptions}
+                  placeholder={t('cab.dashboard.auditCalendar.filters.allTypes')}
+                />
               </div>
               <div className="space-y-1.5">
                 <p className="text-[13px] font-medium text-neutral-700">
                   {t('cab.dashboard.auditCalendar.filters.standard')}
                 </p>
-                <SelectField value="" onChange={() => {}} options={[]} placeholder={t('cab.dashboard.auditCalendar.filters.all')} />
+                <SelectField
+                  value={standardFilter}
+                  onChange={setStandardFilter}
+                  options={standardOptions}
+                  placeholder={t('cab.dashboard.auditCalendar.filters.all')}
+                />
               </div>
               <div className="space-y-1.5">
                 <p className="text-[13px] font-medium text-neutral-700">
                   {t('cab.dashboard.auditCalendar.filters.auditStatus')}
                 </p>
-                <SelectField value="" onChange={() => {}} options={[]} placeholder={t('cab.dashboard.auditCalendar.filters.allStatus')} />
+                <SelectField
+                  value={statusFilter}
+                  onChange={setStatusFilter}
+                  options={statusFilterOptions}
+                  placeholder={t('cab.dashboard.auditCalendar.filters.allStatus')}
+                />
               </div>
               <div className="space-y-1.5">
                 <p className="text-[13px] font-medium text-neutral-700">
                   {t('cab.dashboard.auditCalendar.filters.auditorTeam')}
                 </p>
-                <SelectField value="" onChange={() => {}} options={[]} placeholder={t('cab.dashboard.auditCalendar.filters.all')} />
+                <SelectField
+                  value={auditorFilter}
+                  onChange={setAuditorFilter}
+                  options={auditorOptions}
+                  placeholder={t('cab.dashboard.auditCalendar.filters.all')}
+                />
               </div>
               <div className="flex items-end">
-                <Button variant="secondary" className="h-11 w-full rounded-[var(--radius-sm)]">
+                <Button
+                  variant="secondary"
+                  className="h-11 w-full rounded-[var(--radius-sm)]"
+                  disabled={!hasActiveFilters}
+                  onClick={handleResetFilters}
+                >
                   {t('cab.dashboard.auditCalendar.filters.reset')}
                 </Button>
               </div>
@@ -261,8 +326,8 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
                         </span>
 
                         <div className="min-w-0 flex-1">
-                          <p className="text-[14px] font-semibold text-neutral-900">{entry.clientName}</p>
-                          <span className="mt-1 inline-flex items-center rounded-[6px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[12px] font-medium text-primary">
+                          <p className="text-[15px] font-bold text-neutral-900">{entry.clientName}</p>
+                          <span className="mt-1 inline-flex items-center rounded-full border border-primary/30 bg-primary/5 px-3 py-0.5 text-[12px] font-medium text-primary">
                             {entry.standard}
                           </span>
                           <p className="mt-1 text-[12px] text-neutral-500">{entry.auditType}</p>
@@ -272,10 +337,7 @@ export function AuditCalendarModal({ open, onOpenChange }: AuditCalendarModalPro
                           <span className="text-[11px] text-neutral-400">
                             {t('cab.dashboard.auditCalendar.auditTeam')}
                           </span>
-                          <span className="inline-flex items-center rounded-[6px] border border-primary/20 bg-primary/5 px-2 py-0.5 text-[12px] font-medium text-primary">
-                            {entry.auditTeam[0]}
-                            {entry.auditTeam.length > 1 && ` +${entry.auditTeam.length - 1}`}
-                          </span>
+                          <AvatarStack items={entry.auditTeam} max={2} />
                         </div>
 
                         <div className="hidden shrink-0 flex-col items-start gap-1 md:flex">

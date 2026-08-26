@@ -31,6 +31,8 @@ interface CalendarGridProps {
   isToday?: (date: Date) => boolean
   /** Extra content rendered inside a day button (e.g. an event dot). */
   renderDayIndicator?: (date: Date) => ReactNode
+  /** Extra classes appended to a day's button (e.g. range-selection shading). Additive — never overrides the base selected/today styling. */
+  dayClassName?: (date: Date) => string | undefined
   /** Cell/text sizing — 'md' (default, used by the DatePicker popover) or 'sm' (used by the inline audit calendar). */
   size?: 'sm' | 'md'
   className?: string
@@ -52,6 +54,7 @@ export function CalendarGrid({
   isDaySelected,
   isToday,
   renderDayIndicator,
+  dayClassName,
   size = 'md',
   className,
 }: CalendarGridProps) {
@@ -127,6 +130,7 @@ export function CalendarGrid({
               className={cn(
                 'relative mx-auto flex items-center justify-center rounded-full transition-colors',
                 cell,
+                dayClassName?.(date),
                 text,
                 selected
                   ? 'bg-primary font-semibold text-white'
