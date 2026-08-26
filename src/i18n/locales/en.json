@@ -2530,6 +2530,8 @@
           "documentCategoryPlaceholder": "Select category",
           "documentType": "Document Type",
           "documentTypePlaceholder": "Select document type",
+          "documentTypeHint": "Optional — pick a suggestion to fill in the name below, or type your own.",
+          "newDocumentHint": "This adds a new supplementary document. To fill one of the 12 required documents, use its upload button in the table instead.",
           "documentName": "Document Name",
           "documentNamePlaceholder": "Enter document name",
           "documentNameHint": "Enter a clear and specific name for the document.",

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
@@ -37,8 +37,9 @@ const donutColors: Record<DocumentUploadStatus, string> = {
 export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
   const { t } = useTranslation()
   const [filter, setFilter] = useState<FilterKey>('all')
-  const [uploadModalOpen, setUploadModalOpen] = useState(false)
-  const [presetDocumentId, setPresetDocumentId] = useState<string | undefined>(undefined)
+  const [addDocumentModalOpen, setAddDocumentModalOpen] = useState(false)
+  const rowFileInputRef = useRef<HTMLInputElement>(null)
+  const pendingRowUploadId = useRef<string | null>(null)
 
   const counts = documentCompletionCounts(form)
 
@@ -83,29 +84,30 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
     })
   }
 
-  const openUploadModal = (documentId?: string) => {
-    setPresetDocumentId(documentId)
-    setUploadModalOpen(true)
+  const openRowFilePicker = (documentId: string) => {
+    pendingRowUploadId.current = documentId
+    rowFileInputRef.current?.click()
   }
 
-  const handleUpload: React.ComponentProps<typeof UploadDocumentModal>['onUpload'] = (payload) => {
-    const uploadedDate = new Date().toLocaleDateString()
-    const fileUrl = URL.createObjectURL(payload.file)
-
-    if (payload.documentId) {
-      updateDocument(payload.documentId, {
+  const onRowFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    const id = pendingRowUploadId.current
+    if (file && id) {
+      updateDocument(id, {
         status: 'uploaded',
-        requirement: payload.requirement,
-        applicableTo: payload.applicableTo,
-        description: payload.description || undefined,
-        fileName: payload.file.name,
-        fileUrl,
-        uploadedDate,
+        fileName: file.name,
+        fileUrl: URL.createObjectURL(file),
+        uploadedDate: new Date().toLocaleDateString(),
       })
-      return
     }
+    event.target.value = ''
+    pendingRowUploadId.current = null
+  }
 
-    // Ad-hoc document that didn't match an existing checklist item.
+  // The modal is only ever used for adding a brand-new supplementary
+  // document (13, 14, ...) via the header button — it never targets one of
+  // the 12 required rows, so this always appends.
+  const handleAddDocument: React.ComponentProps<typeof UploadDocumentModal>['onUpload'] = (payload) => {
     onPatch({
       documents: [
         ...form.documents,
@@ -119,8 +121,8 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
           applicableTo: payload.applicableTo,
           description: payload.description || undefined,
           fileName: payload.file.name,
-          fileUrl,
-          uploadedDate,
+          fileUrl: URL.createObjectURL(payload.file),
+          uploadedDate: new Date().toLocaleDateString(),
         },
       ],
     })
@@ -144,7 +146,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
             type="button"
             variant="secondary"
             className="h-[40px] gap-2 rounded-[var(--radius-sm)] px-4"
-            onClick={() => openUploadModal()}
+            onClick={() => setAddDocumentModalOpen(true)}
           >
             <AppIcon icon={UploadOutlineIcon} size={24} />
             {t('cab.applicationDraft.documents.uploadDocument')}
@@ -154,6 +156,9 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
         <p className="mb-4 text-[14px] text-neutral-500">
           {t('cab.applicationDraft.documents.subtitle')}
         </p>
+
+        {/* Row-level uploads pick a file directly — no modal, straight to browse. */}
+        <input ref={rowFileInputRef} type="file" accept=".pdf" className="hidden" onChange={onRowFileSelected} />
 
         <div className="mb-4 flex flex-wrap gap-2">
           {filterOptions.map((option) => (
@@ -220,7 +225,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
                     docLabel={docLabel}
                     docNote={docNote}
                     onView={(doc) => doc.fileUrl && window.open(doc.fileUrl, '_blank', 'noopener')}
-                    onUpload={openUploadModal}
+                    onUpload={openRowFilePicker}
                     onRemove={resetDocument}
                   />
                 ))
@@ -303,7 +308,7 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
                           ) : (
                             <button
                               type="button"
-                              onClick={() => openUploadModal(doc.id)}
+                              onClick={() => openRowFilePicker(doc.id)}
                               className="text-[14px] font-medium text-primary hover:underline"
                             >
                               {t('cab.applicationDraft.documents.uploadDocument')}
@@ -325,11 +330,10 @@ export function DocumentsStep({ form, onPatch }: DocumentsStepProps) {
       </SectionHeading>
 
       <UploadDocumentModal
-        open={uploadModalOpen}
-        onOpenChange={setUploadModalOpen}
+        open={addDocumentModalOpen}
+        onOpenChange={setAddDocumentModalOpen}
         documents={form.documents}
-        presetDocumentId={presetDocumentId}
-        onUpload={handleUpload}
+        onUpload={handleAddDocument}
       />
     </>
   )

@@ -18,15 +18,11 @@ import { cn } from '@/lib/utils'
 interface UploadDocumentModalProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  /** All documents, used to populate the "Document Type" list per category. */
+  /** Existing documents, used to populate the "Document Type" naming suggestions per category. */
   documents: DocumentRecord[]
-  /** When opened from a row's upload action, preselects that document. */
-  presetDocumentId?: string
   onUpload: (payload: {
-    documentId?: string
     category: DocumentCategory
-    nameKey?: string
-    customName?: string
+    customName: string
     requirement: DocumentRequirement
     applicableTo: DocumentApplicableTo
     description: string
@@ -43,13 +39,7 @@ const emptyState = {
   description: '',
 }
 
-export function UploadDocumentModal({
-  open,
-  onOpenChange,
-  documents,
-  presetDocumentId,
-  onUpload,
-}: UploadDocumentModalProps) {
+export function UploadDocumentModal({ open, onOpenChange, documents, onUpload }: UploadDocumentModalProps) {
   const { t } = useTranslation()
   const [form, setForm] = useState(emptyState)
   const [file, setFile] = useState<File | null>(null)
@@ -60,34 +50,20 @@ export function UploadDocumentModal({
 
   useEffect(() => {
     if (!open) return
-    const preset = documents.find((doc) => doc.id === presetDocumentId)
-    setForm(
-      preset
-        ? {
-            category: preset.category,
-            documentId: preset.id,
-            customName: '',
-            requirement: preset.requirement,
-            applicableTo: preset.applicableTo ?? '',
-            description: preset.description ?? '',
-          }
-        : emptyState
-    )
+    setForm(emptyState)
     setFile(null)
-  }, [open, presetDocumentId, documents])
+  }, [open])
 
-  const documentTypeOptions = form.category
+  // This is just a naming shortcut (picking one fills the Document Name
+  // field below) — it never targets or overwrites an existing row. This
+  // modal always adds a brand-new supplementary document.
+  const documentTypeSuggestions = form.category
     ? documents
         .filter((doc) => doc.category === form.category)
         .map((doc) => ({ value: doc.id, label: t(`cab.applicationDraft.documents.items.${doc.nameKey}.title`) }))
     : []
 
-  const selectedDoc = documents.find((doc) => doc.id === form.documentId)
-  const documentNameValue = selectedDoc
-    ? t(`cab.applicationDraft.documents.items.${selectedDoc.nameKey}.title`)
-    : form.customName
-
-  const canUpload = Boolean(form.category && documentNameValue.trim() && form.applicableTo && file)
+  const canUpload = Boolean(form.category && form.customName.trim() && form.applicableTo && file)
 
   const reset = () => {
     setForm(emptyState)
@@ -102,10 +78,8 @@ export function UploadDocumentModal({
   const handleUpload = () => {
     if (!canUpload || !file || !form.category || !form.applicableTo) return
     onUpload({
-      documentId: selectedDoc?.id,
       category: form.category,
-      nameKey: selectedDoc?.nameKey,
-      customName: selectedDoc ? undefined : form.customName.trim(),
+      customName: form.customName.trim(),
       requirement: form.requirement,
       applicableTo: form.applicableTo,
       description: form.description.trim(),
@@ -152,6 +126,10 @@ export function UploadDocumentModal({
           </div>
 
           <div className="flex-1 space-y-5 overflow-y-auto px-6 py-5">
+            <div className="rounded-[var(--radius-sm)] bg-[#f3f6fd] px-4 py-3 text-[13px] text-primary">
+              {t('cab.applicationDraft.documents.uploadModal.newDocumentHint')}
+            </div>
+
             <div className="grid gap-5 sm:grid-cols-2">
               <FormField label={t('cab.applicationDraft.documents.uploadModal.documentCategory')} required>
                 <SelectField
@@ -166,32 +144,32 @@ export function UploadDocumentModal({
                   }))}
                 />
               </FormField>
-              <FormField label={t('cab.applicationDraft.documents.uploadModal.documentType')} required>
+              <FormField label={t('cab.applicationDraft.documents.uploadModal.documentType')}>
                 <SelectField
                   value={form.documentId}
-                  onChange={(value) => patch({ documentId: value })}
+                  onChange={(value) => {
+                    const suggestion = documentTypeSuggestions.find((option) => option.value === value)
+                    patch({ documentId: value, customName: suggestion?.label ?? form.customName })
+                  }}
                   placeholder={t('cab.applicationDraft.documents.uploadModal.documentTypePlaceholder')}
-                  options={documentTypeOptions}
+                  options={documentTypeSuggestions}
                   disabled={!form.category}
                 />
+                <p className="text-[13px] text-neutral-500">
+                  {t('cab.applicationDraft.documents.uploadModal.documentTypeHint')}
+                </p>
               </FormField>
             </div>
 
             <FormField label={t('cab.applicationDraft.documents.uploadModal.documentName')} required>
-              {selectedDoc ? (
-                <div className="flex h-12 items-center rounded-[var(--radius-sm)] border border-neutral-200 bg-neutral-50 px-4 text-[16px] text-neutral-700">
-                  {documentNameValue}
-                </div>
-              ) : (
-                <input
-                  type="text"
-                  value={form.customName}
-                  onChange={(e) => patch({ customName: e.target.value })}
-                  placeholder={t('cab.applicationDraft.documents.uploadModal.documentNamePlaceholder')}
-                  disabled={!form.category}
-                  className="h-12 w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 text-[16px] focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-neutral-50"
-                />
-              )}
+              <input
+                type="text"
+                value={form.customName}
+                onChange={(e) => patch({ customName: e.target.value })}
+                placeholder={t('cab.applicationDraft.documents.uploadModal.documentNamePlaceholder')}
+                disabled={!form.category}
+                className="h-12 w-full rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-4 text-[16px] focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 disabled:cursor-not-allowed disabled:bg-neutral-50"
+              />
               <p className="text-[13px] text-neutral-500">
                 {t('cab.applicationDraft.documents.uploadModal.documentNameHint')}
               </p>

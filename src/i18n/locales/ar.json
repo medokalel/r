@@ -2528,6 +2528,8 @@
           "documentCategoryPlaceholder": "اختر الفئة",
           "documentType": "نوع المستند",
           "documentTypePlaceholder": "اختر نوع المستند",
+          "documentTypeHint": "اختياري — اختر اقتراح لتعبئة الاسم تحت، أو اكتب اسم مختلف.",
+          "newDocumentHint": "ده هيضيف مستند إضافي جديد. لتعبئة واحد من الـ 12 مستند المطلوبين، استخدم زرار الرفع بتاعه في الجدول.",
           "documentName": "اسم المستند",
           "documentNamePlaceholder": "أدخل اسم المستند",
           "documentNameHint": "أدخل اسمًا واضحًا ومحددًا للمستند.",
