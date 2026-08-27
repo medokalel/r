@@ -2550,6 +2550,129 @@
           "dropzoneBrowse": "اضغط للاستعراض",
           "dropzoneMaxSize": "الحد الأقصى لحجم الملف: 25 ميجابايت"
         }
+      },
+      "review": {
+        "title": "المراجعة والتأكيد",
+        "subtitle": "راجع كل المعلومات قبل إرسال الطلب. يمكنك العودة لأي قسم للتعديل.",
+        "preview": "معاينة",
+        "submitApplication": "إرسال الطلب",
+        "checklist": {
+          "title": "قائمة المراجعة",
+          "subtitle": "يرجى مراجعة جميع الأقسام. يجب اكتمال جميع الأقسام المطلوبة قبل الإرسال.",
+          "completedBadge": "{{completed}} من {{total}} مكتمل",
+          "columns": {
+            "number": "#",
+            "section": "القسم",
+            "description": "الوصف",
+            "status": "الحالة",
+            "actions": "الإجراءات"
+          },
+          "status": {
+            "complete": "مكتمل",
+            "inProgress": "قيد التنفيذ"
+          },
+          "sections": {
+            "clientInformation": {
+              "title": "بيانات العميل",
+              "description": "بيانات الشركة وجهة الاتصال والمعلومات الأساسية"
+            },
+            "standardsScope": {
+              "title": "المعايير والنطاق",
+              "description": "معايير الشهادة والنطاق وأكواد IAF"
+            },
+            "sitesFacilities": {
+              "title": "المواقع والمنشآت",
+              "description": "المواقع والأنشطة وهيكل المواقع المتعددة وتفاصيل العينات"
+            },
+            "documents": {
+              "title": "المستندات",
+              "description": "حالة رفع المستندات المطلوبة"
+            },
+            "reviewConfirm": {
+              "title": "المراجعة والتأكيد",
+              "description": "المراجعة النهائية والتأكيد"
+            }
+          }
+        },
+        "summary": {
+          "title": "ملخص المعلومات الأساسية",
+          "standardsApplied": "المعايير المطبقة ({{count}})",
+          "totalSites": "إجمالي المواقع",
+          "totalSitesHint": "({{headOffice}} مقر رئيسي + {{others}} مواقع أخرى)",
+          "multiSiteStructure": "هيكل المواقع المتعددة",
+          "singleSite": "موقع واحد",
+          "totalEstimatedMandays": "إجمالي أيام العمل المقدرة",
+          "mandaysUnit": "أيام عمل",
+          "calculated": "(محسوب)"
+        },
+        "sitesSampling": {
+          "title": "نظرة عامة على المواقع والعينات",
+          "totalSites": "إجمالي المواقع",
+          "sitesToBeSampled": "المواقع المطلوب أخذ عينة منها",
+          "samplingMethod": "طريقة أخذ العينات",
+          "samplingFactor": "معامل أخذ العينات",
+          "viewDetails": "عرض تفاصيل المواقع والعينات"
+        },
+        "travelAccess": {
+          "title": "متطلبات السفر والوصول",
+          "airplaneRequired": "يتطلب طيران",
+          "trainRequired": "يتطلب قطار",
+          "airplaneAndTrainRequired": "يتطلب طيران وقطار",
+          "permitRequired": "يتطلب تصريح",
+          "sitesCount": "{{count}} مواقع",
+          "viewDetails": "عرض تفاصيل السفر والوصول"
+        },
+        "documentsOverview": {
+          "title": "نظرة عامة على المستندات",
+          "totalRequired": "إجمالي المستندات المطلوبة",
+          "uploaded": "تم الرفع",
+          "pending": "قيد الانتظار",
+          "notApplicable": "غير منطبق",
+          "percentValue": "{{count}} ({{percent}}٪)",
+          "viewDocuments": "عرض المستندات"
+        },
+        "importantNotes": {
+          "title": "ملاحظات هامة",
+          "item1": "يرجى التأكد من دقة واكتمال جميع المعلومات المقدمة.",
+          "item2": "يمكنك العودة لأي قسم بالضغط على زر 'رجوع'.",
+          "item3": "بعد الإرسال، لن تتمكن من إجراء تعديلات إلا إذا طلب فريقنا ذلك.",
+          "item4": "سيقوم فريقنا بمراجعة طلبك والتواصل معك في حال الحاجة لأي معلومات إضافية."
+        },
+        "readiness": {
+          "title": "جاهزية الطلب",
+          "ready": "جاهز",
+          "checklist": {
+            "allSectionsCompleted": "اكتملت جميع الأقسام",
+            "allDocumentsUploaded": "تم رفع جميع المستندات المطلوبة",
+            "multiSiteRuleApplied": "تم تطبيق قاعدة المواقع المتعددة",
+            "mandaysCalculated": "تم حساب أيام العمل",
+            "readyForSubmission": "جاهز للإرسال"
+          }
+        },
+        "details": {
+          "title": "تفاصيل الطلب",
+          "applicationId": "رقم الطلب",
+          "applicationType": "نوع الطلب",
+          "standardsApplied": "المعايير المطبقة",
+          "totalSites": "إجمالي المواقع",
+          "estimatedMandays": "أيام العمل المقدرة",
+          "applicationDate": "تاريخ الطلب",
+          "status": "الحالة",
+          "draft": "مسودة",
+          "standardsCount": "{{count}} معايير"
+        },
+        "nextSteps": {
+          "title": "الخطوات التالية",
+          "item1": "راجع جميع المعلومات بعناية",
+          "item2": "اضغط 'إرسال الطلب' لإرساله",
+          "item3": "سيقوم فريقنا بمراجعة طلبك",
+          "item4": "ستصلك رسالة تأكيد عبر البريد الإلكتروني"
+        },
+        "needHelp": {
+          "title": "تحتاج مساعدة؟",
+          "description": "إذا كان لديك أي استفسار، يرجى التواصل مع فريق الدعم.",
+          "contactSupport": "تواصل مع الدعم"
+        }
       }
     },
     "applications": {

@@ -2,8 +2,9 @@ import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
+import { NeedHelpCard } from '@/components/dashboard/cab/NeedHelpCard'
 import { UploadDocumentModal } from '@/components/dashboard/cab/UploadDocumentModal'
-import { AppIcon, DownloadIcon, EyeIcon, HeadsetIcon, SuccessCircleIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
+import { AppIcon, DownloadIcon, EyeIcon, SuccessCircleIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import {
   documentCompletionCounts,
@@ -388,18 +389,11 @@ export function DocumentsSidebar({ form }: { form: DocumentsForm }) {
         </ul>
       </div>
 
-      <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-        <h3 className="mb-2 text-[16px] font-semibold text-neutral-900">
-          {t('cab.applicationDraft.documents.needHelp.title')}
-        </h3>
-        <p className="mb-4 text-[13px] text-neutral-500">
-          {t('cab.applicationDraft.documents.needHelp.description')}
-        </p>
-        <Button type="button" variant="secondary" className="w-full gap-2 rounded-[var(--radius-sm)]">
-          <AppIcon icon={HeadsetIcon} size={18} />
-          {t('cab.applicationDraft.documents.needHelp.contactSupport')}
-        </Button>
-      </div>
+      <NeedHelpCard
+        title={t('cab.applicationDraft.documents.needHelp.title')}
+        description={t('cab.applicationDraft.documents.needHelp.description')}
+        contactSupportLabel={t('cab.applicationDraft.documents.needHelp.contactSupport')}
+      />
     </aside>
   )
 }

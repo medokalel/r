@@ -37,6 +37,11 @@ export const ACCREDITATION_BODY_OPTIONS: string[] = [
 // TODO: replace with a real lookup once the backend defines supported audit languages
 export const AUDIT_LANGUAGE_OPTIONS: string[] = ['English', 'Arabic', 'French']
 
+// TODO: replace with the ID returned once the backend assigns one on draft
+// creation — matches the APP-xxxx reference already shown in the breadcrumb
+// this page is reached from (see MOCK_CLIENT below).
+export const MOCK_DRAFT_APPLICATION_ID = 'APP-2025-0086'
+
 export interface DraftClientSummary {
   clientId: string
   legalEntityName: string

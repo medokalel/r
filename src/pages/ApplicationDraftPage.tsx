@@ -8,9 +8,12 @@ import { ApplicationDraftForm } from '@/components/dashboard/cab/ApplicationDraf
 import { StandardsScopeStep } from '@/components/dashboard/cab/StandardsScopeStep'
 import { SitesFacilitiesStep } from '@/components/dashboard/cab/SitesFacilitiesStep'
 import { DocumentsStep, DocumentsSidebar } from '@/components/dashboard/cab/DocumentsStep'
+import { ReviewConfirmStep } from '@/components/dashboard/cab/ReviewConfirmStep'
+import { ReviewConfirmSidebar } from '@/components/dashboard/cab/ReviewConfirmSidebar'
 import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
+import { Button } from '@/components/ui/Button'
 import {
   emptyApplicationDraftForm,
   isApplicationDraftComplete,
@@ -89,13 +92,24 @@ export function ApplicationDraftPage() {
           ? isSitesFacilitiesComplete(sitesFacilitiesForm)
           : step === 4
             ? isDocumentsComplete(documentsForm)
-            : true
+            : // Step 5 (Review & Confirm): gate "Submit Application" on every
+              // earlier step actually being complete, not just on having
+              // reached this step.
+              isApplicationDraftComplete(form) &&
+              isStandardsScopeComplete(standardsScopeForm) &&
+              isSitesFacilitiesComplete(sitesFacilitiesForm) &&
+              isDocumentsComplete(documentsForm)
 
   // TODO: wire to a real "save application draft" endpoint once the backend
   // exposes one — for now this is a no-op stub, matching the other
   // not-yet-backed CAB workflow actions. Unlike "Save & Continue", saving a
   // draft doesn't require the form to be complete.
   const handleSaveDraft = () => {}
+
+  // TODO: wire to a real print/PDF preview once the backend exposes a
+  // submission-ready rendering — for now this is a no-op stub, matching
+  // handleSaveDraft above.
+  const handlePreview = () => {}
 
   const handleBack = () => {
     if (step === 1) {
@@ -105,18 +119,18 @@ export function ApplicationDraftPage() {
     setStep((s) => (s - 1) as typeof step)
   }
 
-  // TODO: wire to a real "save application draft" endpoint once the backend
-  // exposes one, and build step 5 (Review & Confirm) — for now this just
-  // returns to the dashboard once step 4 is done, matching the other
-  // not-yet-backed CAB workflow steps.
+  // TODO: wire to a real "submit application" endpoint once the backend
+  // exposes one — for now this just sends the user to the (also mocked)
+  // Application Receipt page, matching the other not-yet-backed CAB
+  // workflow steps.
   const handleNext = () => {
     if (!complete) return
-    if (step < 4) {
+    if (step < 5) {
       setStep((s) => (s + 1) as typeof step)
       return
     }
     clearApplicationDraftSnapshot()
-    navigate('/cab/dashboard')
+    navigate('/cab/applications/receipt')
   }
 
     return (
@@ -127,9 +141,21 @@ export function ApplicationDraftPage() {
       <ApplicationStepper current={step} onStepClick={setStep} />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <div className="space-y-1">
-          <h2 className="text-h3-semi text-neutral-900">{t('cab.applicationDraft.title')}</h2>
-          <p className="text-body-2 text-neutral-500">{t('cab.applicationDraft.subtitle')}</p>
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div className="space-y-1">
+            <h2 className="text-h3-semi text-neutral-900">{t('cab.applicationDraft.title')}</h2>
+            <p className="text-body-2 text-neutral-500">{t('cab.applicationDraft.subtitle')}</p>
+          </div>
+          {step === 5 && (
+            <Button
+              type="button"
+              variant="outline"
+              className="h-11 shrink-0 rounded-[var(--radius-sm)] px-5"
+              onClick={handlePreview}
+            >
+              {t('cab.applicationDraft.review.preview')}
+            </Button>
+          )}
         </div>
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
@@ -146,9 +172,25 @@ export function ApplicationDraftPage() {
               />
             )}
             {step === 4 && <DocumentsStep form={documentsForm} onPatch={patchDocuments} />}
+            {step === 5 && (
+              <ReviewConfirmStep
+                form={form}
+                standardsScopeForm={standardsScopeForm}
+                sitesFacilitiesForm={sitesFacilitiesForm}
+                documentsForm={documentsForm}
+                onEditStep={setStep}
+              />
+            )}
           </div>
           {step === 4 ? (
             <DocumentsSidebar form={documentsForm} />
+          ) : step === 5 ? (
+            <ReviewConfirmSidebar
+              form={form}
+              standardsScopeForm={standardsScopeForm}
+              sitesFacilitiesForm={sitesFacilitiesForm}
+              documentsForm={documentsForm}
+            />
           ) : (
             <WorkflowProgressCard
               steps={buildClientWorkflowSteps(t, 'application')}
@@ -170,7 +212,9 @@ export function ApplicationDraftPage() {
         onSaveDraft={handleSaveDraft}
         onNext={handleNext}
         nextDisabled={!complete}
-        nextLabel={t('cab.applicationDraft.saveDraftAndContinue')}
+        nextLabel={
+          step === 5 ? t('cab.applicationDraft.review.submitApplication') : t('cab.applicationDraft.saveDraftAndContinue')
+        }
       />
     </CabLayout>
   )

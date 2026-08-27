@@ -2552,6 +2552,129 @@
           "dropzoneBrowse": "click to browse",
           "dropzoneMaxSize": "Maximum file size: 25 MB"
         }
+      },
+      "review": {
+        "title": "Review & Confirm",
+        "subtitle": "Review all information before submitting your application. You can go back to any section to edit.",
+        "preview": "Preview",
+        "submitApplication": "Submit Application",
+        "checklist": {
+          "title": "Review Checklist",
+          "subtitle": "Please review all sections. All required sections must be complete before submission.",
+          "completedBadge": "{{completed}} of {{total}} Completed",
+          "columns": {
+            "number": "#",
+            "section": "Section",
+            "description": "Description",
+            "status": "Status",
+            "actions": "Actions"
+          },
+          "status": {
+            "complete": "Complete",
+            "inProgress": "In Progress"
+          },
+          "sections": {
+            "clientInformation": {
+              "title": "Client Information",
+              "description": "Company details, contact person, and basic information"
+            },
+            "standardsScope": {
+              "title": "Standards & Scopes",
+              "description": "Certification standards, scopes and IAF codes"
+            },
+            "sitesFacilities": {
+              "title": "Sites & Facilities",
+              "description": "Sites, activities, multi-site structure and sampling details"
+            },
+            "documents": {
+              "title": "Documents",
+              "description": "Required documents upload status"
+            },
+            "reviewConfirm": {
+              "title": "Review & Confirm",
+              "description": "Final review and confirmation"
+            }
+          }
+        },
+        "summary": {
+          "title": "Key Information Summary",
+          "standardsApplied": "Standards Applied ({{count}})",
+          "totalSites": "Total Sites",
+          "totalSitesHint": "({{headOffice}} Head Office + {{others}} Others)",
+          "multiSiteStructure": "Multi-site Structure",
+          "singleSite": "Single Site",
+          "totalEstimatedMandays": "Total Estimated Mandays",
+          "mandaysUnit": "Mandays",
+          "calculated": "(Calculated)"
+        },
+        "sitesSampling": {
+          "title": "Sites & Sampling Overview",
+          "totalSites": "Total Sites",
+          "sitesToBeSampled": "Sites to be Sampled",
+          "samplingMethod": "Sampling Method",
+          "samplingFactor": "Sampling Factor",
+          "viewDetails": "View Sites & Sampling Details"
+        },
+        "travelAccess": {
+          "title": "Travel & Access Requirements",
+          "airplaneRequired": "Airplane Required",
+          "trainRequired": "Train Required",
+          "airplaneAndTrainRequired": "Airplane & Train Required",
+          "permitRequired": "Permit Required",
+          "sitesCount": "{{count}} Sites",
+          "viewDetails": "View Travel & Access Details"
+        },
+        "documentsOverview": {
+          "title": "Documents Overview",
+          "totalRequired": "Total Documents Required",
+          "uploaded": "Uploaded",
+          "pending": "Pending",
+          "notApplicable": "Not Applicable",
+          "percentValue": "{{count}} ({{percent}}%)",
+          "viewDocuments": "View Documents"
+        },
+        "importantNotes": {
+          "title": "Important Notes",
+          "item1": "Please ensure all information provided is accurate and complete.",
+          "item2": "You can go back to any section by clicking the 'Back' button.",
+          "item3": "Once submitted, you will not be able to make changes unless requested by our team.",
+          "item4": "Our team will review your application and contact you if any additional information is required."
+        },
+        "readiness": {
+          "title": "Application Readiness",
+          "ready": "Ready",
+          "checklist": {
+            "allSectionsCompleted": "All sections completed",
+            "allDocumentsUploaded": "All required documents uploaded",
+            "multiSiteRuleApplied": "Multi-site rule applied",
+            "mandaysCalculated": "Mandays calculated",
+            "readyForSubmission": "Ready for submission"
+          }
+        },
+        "details": {
+          "title": "Application Details",
+          "applicationId": "Application ID",
+          "applicationType": "Application Type",
+          "standardsApplied": "Standards Applied",
+          "totalSites": "Total Sites",
+          "estimatedMandays": "Estimated Mandays",
+          "applicationDate": "Application Date",
+          "status": "Status",
+          "draft": "Draft",
+          "standardsCount": "{{count}} Standards"
+        },
+        "nextSteps": {
+          "title": "Next Steps",
+          "item1": "Review all information carefully",
+          "item2": "Click 'Submit Application' to send",
+          "item3": "Our team will review your application",
+          "item4": "You will receive a confirmation email"
+        },
+        "needHelp": {
+          "title": "Need Help?",
+          "description": "If you have any questions, please contact our support team.",
+          "contactSupport": "Contact Support"
+        }
       }
     },
     "applications": {
