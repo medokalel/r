@@ -10,15 +10,20 @@ import type { MultiSiteRuleResult } from '@/lib/multiSiteRuleForm'
 import { peekPendingMultiSiteRule } from '@/lib/applicationDraftSession'
 
 /** Reached from ApplyMultiSiteRulePage on "Apply Rule" (via the pending
- *  sessionStorage round trip), or from SitesFacilitiesStep's "View Preview"
- *  link (via router state) once a rule has already been applied. */
+ *  sessionStorage round trip), or from SitesFacilitiesStep's/Review &
+ *  Confirm's "View Preview"/"View Details" links (via router state) once a
+ *  rule has already been applied. Router-state visits are read-only — Back
+ *  and Confirm both just return to the draft page instead of dropping the
+ *  user into the rule-editing wizard, since they never asked to edit it. */
 export function CabMultiSiteRulePreviewPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
 
+  const routerStateRule = (location.state as { multiSiteRule?: MultiSiteRuleResult } | null)?.multiSiteRule
+  const viewOnly = Boolean(routerStateRule)
   const [multiSiteRule] = useState<MultiSiteRuleResult | null>(
-    () => (location.state as { multiSiteRule?: MultiSiteRuleResult } | null)?.multiSiteRule ?? peekPendingMultiSiteRule()
+    () => routerStateRule ?? peekPendingMultiSiteRule()
   )
 
   // Nothing to preview (e.g. a direct/refreshed visit to this URL) — send
@@ -34,14 +39,16 @@ export function CabMultiSiteRulePreviewPage() {
   return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-      <ApplicationStepper current={3} />
+      <ApplicationStepper current={viewOnly ? 5 : 3} />
 
       <div className="flex flex-1 flex-col overflow-auto p-6">
         <MultiSiteRulePreview multiSiteRule={multiSiteRule} />
       </div>
 
       <DashboardFooter
-        onBack={() => navigate('/cab/applications/draft/sites/multi-site-rule')}
+        onBack={() =>
+          navigate(viewOnly ? '/cab/applications/draft' : '/cab/applications/draft/sites/multi-site-rule')
+        }
         backDisabled={false}
         onNext={() => navigate('/cab/applications/draft')}
         nextLabel={t('common.confirm')}

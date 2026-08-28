@@ -32,22 +32,22 @@ export function DashboardTasksTable({
   return (
     <div className="flex flex-1 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
       <div className="mb-5 mt-1 mx-5 flex items-center justify-between gap-4">
-        <h2 className="text-[18px] font-semibold text-neutral-900 md:text-[24px]">
+        <h2 className="text-[18px] font-semibold text-neutral-900 @2xl:text-[24px]">
           {t('dashboard.tasks.title')}
         </h2>
         {onViewAll && (
           <button
             type="button"
             onClick={onViewAll}
-            className="shrink-0 text-[14px] font-medium text-primary hover:underline md:text-[16px]"
+            className="shrink-0 text-[14px] font-medium text-primary hover:underline @2xl:text-[16px]"
           >
             {t('dashboard.tasks.viewAll')}
           </button>
         )}
       </div>
 
-      {/* Desktop/tablet: table */}
-      <div className="hidden overflow-x-auto md:block">
+      {/* Table once the column has real room for it; cards below that */}
+      <div className="hidden overflow-x-auto @2xl:block">
         <table className="w-full min-w-[640px] border-collapse text-center">
           <thead className="border-b border-[#ececec]">
             <tr className="rounded-[10px] bg-[#1236a3] text-white">
@@ -121,8 +121,8 @@ export function DashboardTasksTable({
         </table>
       </div>
 
-      {/* Mobile: cards */}
-      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-2 md:hidden">
+      {/* Cards: shown while the column is too narrow for the table */}
+      <div className="mx-5 rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-2 @2xl:hidden">
         {loading ? (
           <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
         ) : tasks.length === 0 ? (

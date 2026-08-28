@@ -151,17 +151,17 @@ export function AccreditationHeader({
           </span>
         </button>
 
-        <HeaderDivider className="hidden min-[400px]:block" />
+        <HeaderDivider className="hidden xs:block" />
 
-        <div className="hidden min-[400px]:block">
+        <div className="hidden xs:block">
           <LanguageToggle variant="icon" showChevron={false} />
         </div>
 
-        <HeaderDivider className="hidden min-[400px]:block" />
+        <HeaderDivider className="hidden xs:block" />
 
         <div className="flex items-center gap-6">
           {/* Name + email — desktop only */}
-          <div className="hidden text-end min-[924px]:block">
+          <div className="hidden text-end lg:block">
             <p className="text-body-3-medium text-neutral-900">{displayName}</p>
             {secondaryLine && (
               <p className="text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>
@@ -173,7 +173,7 @@ export function AccreditationHeader({
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="min-[924px]:pointer-events-none"
+              className="lg:pointer-events-none"
               aria-label={displayName}
               aria-expanded={mobileMenuOpen}
             >
@@ -183,11 +183,11 @@ export function AccreditationHeader({
             {mobileMenuOpen && (
               <>
                 <div
-                  className="fixed inset-0 z-30 min-[924px]:hidden"
+                  className="fixed inset-0 z-30 lg:hidden"
                   onClick={() => setMobileMenuOpen(false)}
                   aria-hidden
                 />
-                <div className="absolute end-0 top-full z-40 mt-2 w-56 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] min-[924px]:hidden">
+                <div className="absolute end-0 top-full z-40 mt-2 w-56 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] lg:hidden">
                   <p className="truncate text-body-3-medium text-neutral-900">{displayName}</p>
                   {secondaryLine && (
                     <p className="truncate text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>

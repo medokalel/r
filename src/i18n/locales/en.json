@@ -2003,7 +2003,12 @@
         "time": "Time",
         "timezoneNote": "All times are shown in your local time zone (Egypt / Cairo). Click on any audit to view audit plan, team, and details.",
         "exportCalendar": "Export Calendar",
-        "viewFullCalendar": "View Full Calendar"
+        "viewFullCalendar": "View Full Calendar",
+        "full": {
+          "title": "Full Audit Calendar",
+          "subtitle": "View all planned and scheduled audits in calendar view",
+          "moreCount": "+{{count}} more"
+        }
       }
     },
     "clientRegistration": {

@@ -7,13 +7,13 @@ function SkeletonBlock({ className }: { className?: string }) {
 /** Shimmer placeholder for the four stat cards at the top of the dashboard. */
 export function DashboardStatsSkeleton() {
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4" aria-hidden>
+    <div className="grid grid-cols-2 gap-3 @5xl:grid-cols-4" aria-hidden>
       {Array.from({ length: 4 }).map((_, index) => (
         <div
           key={index}
-          className="flex flex-col gap-6 rounded-[16px] border border-[#ececec] bg-white p-5"
+          className="flex min-h-[120px] flex-col justify-between gap-3 rounded-[16px] border border-[#ececec] bg-white p-4 @sm:justify-start @sm:gap-6 @sm:p-5"
         >
-          <SkeletonBlock className="size-10 rounded-[10px]" />
+          <SkeletonBlock className="size-8 rounded-[10px] @sm:size-10" />
           <div className="flex flex-col gap-2">
             <SkeletonBlock className="h-8 w-2/5" />
             <SkeletonBlock className="h-4 w-3/5" />

@@ -29,9 +29,27 @@ export function loadApplicationDraftSnapshot(): ApplicationDraftSnapshot | null 
   if (!raw) return null
 
   try {
-    return JSON.parse(raw) as ApplicationDraftSnapshot
+    return reviveSnapshotDates(JSON.parse(raw) as ApplicationDraftSnapshot)
   } catch {
     return null
+  }
+}
+
+/** JSON.stringify turns Date fields into ISO strings; JSON.parse doesn't turn
+ *  them back. `ApplicationDraftForm.applicationDate`/`requestedAuditDate` are
+ *  the only two Date fields anywhere in the snapshot (every other form is
+ *  plain JSON-safe data) — revive them here so every consumer (DatePicker,
+ *  the Review & Confirm summary, …) keeps getting a real Date, exactly like
+ *  a freshly-filled form would, instead of each consumer having to guard
+ *  against a string on its own. */
+function reviveSnapshotDates(snapshot: ApplicationDraftSnapshot): ApplicationDraftSnapshot {
+  return {
+    ...snapshot,
+    form: {
+      ...snapshot.form,
+      applicationDate: snapshot.form.applicationDate ? new Date(snapshot.form.applicationDate) : undefined,
+      requestedAuditDate: snapshot.form.requestedAuditDate ? new Date(snapshot.form.requestedAuditDate) : undefined,
+    },
   }
 }
 

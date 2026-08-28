@@ -60,7 +60,7 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
   const { t } = useTranslation()
 
   return (
-    <div className="flex w-full flex-col rounded-[16px] border border-[#ececec] bg-white lg:max-w-[400px]">
+    <div className="flex w-full flex-col rounded-[16px] border border-[#ececec] bg-white @7xl:max-w-[400px]">
       <div className="mb-4 flex items-center border border-[#ececec] border-t-0 border-l-0 border-r-0 gap-2 rounded-t-[16px] bg-[#f3f6fd] p-[25px]">
         <AppIcon icon={CorrespondenceSentIcon} size={32} className="text-primary" />
         <h2 className="text-[22px] font-semibold text-neutral-900">

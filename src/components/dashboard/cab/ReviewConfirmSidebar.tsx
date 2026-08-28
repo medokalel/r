@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NeedHelpCard } from '@/components/dashboard/cab/NeedHelpCard'
 import { MOCK_DRAFT_APPLICATION_ID } from '@/lib/api/applicationDraftApi'
@@ -55,7 +56,7 @@ function ReadinessChecklistItem({ done, label }: { done: boolean; label: string 
   )
 }
 
-function DetailField({ label, value }: { label: string; value: React.ReactNode }) {
+function DetailField({ label, value }: { label: string; value: ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-2 text-[13px]">
       <span className="text-neutral-500">{label}</span>

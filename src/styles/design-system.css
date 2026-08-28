@@ -4,6 +4,10 @@
  */
 
 @theme {
+  /* Named breakpoints — always add new breakpoints here, never inline
+    min-[Npx] arbitrary values in components. Keeps the responsive
+    system centralized and auditable. */
+  --breakpoint-xs: 25rem;   /* 400px */
   --breakpoint-2xl: 1545px;
 
   /* ── Primary (Blue) ── */
