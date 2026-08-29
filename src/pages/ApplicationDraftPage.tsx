@@ -133,12 +133,9 @@ export function ApplicationDraftPage() {
     navigate('/cab/applications/receipt')
   }
 
-    return (
+  return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-      {/* TODO(DEV ONLY): onStepClick lets you jump between steps directly
-      while building — remove this prop once the flow is finished. */}
-      <ApplicationStepper current={step} onStepClick={setStep} />
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -146,17 +143,19 @@ export function ApplicationDraftPage() {
             <h2 className="text-h3-semi text-neutral-900">{t('cab.applicationDraft.title')}</h2>
             <p className="text-body-2 text-neutral-500">{t('cab.applicationDraft.subtitle')}</p>
           </div>
-          {step === 5 && (
-            <Button
-              type="button"
-              variant="outline"
-              className="h-11 shrink-0 rounded-[var(--radius-sm)] px-5"
-              onClick={handlePreview}
-            >
-              {t('cab.applicationDraft.review.preview')}
-            </Button>
-          )}
+          <Button
+            type="button"
+            variant="outline"
+            className="h-11 shrink-0 rounded-[var(--radius-sm)] px-5"
+            onClick={handlePreview}
+          >
+            {t('cab.applicationDraft.review.preview')}
+          </Button>
         </div>
+
+        {/* TODO(DEV ONLY): onStepClick lets you jump between steps directly
+        while building — remove this prop once the flow is finished. */}
+        <ApplicationStepper current={step} onStepClick={setStep} />
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
           <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">

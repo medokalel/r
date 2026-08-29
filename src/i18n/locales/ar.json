@@ -2091,6 +2091,13 @@
         "documents": "المستندات",
         "reviewAndConfirm": "المراجعة والتأكيد"
       },
+      "stepSubtitles": {
+        "companyContact": "الشركة وجهة الاتصال",
+        "certificationRequirements": "متطلبات الشهادة",
+        "locationsActivities": "المواقع والأنشطة",
+        "requiredDocuments": "المستندات المطلوبة",
+        "reviewBeforeSubmit": "المراجعة قبل الإرسال"
+      },
       "sections": {
         "clientInformation": "بيانات العميل",
         "applicationDetails": "تفاصيل الطلب",

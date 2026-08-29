@@ -2092,6 +2092,13 @@
         "documents": "Documents",
         "reviewAndConfirm": "Review & Confirm"
       },
+      "stepSubtitles": {
+        "companyContact": "Company & Contact",
+        "certificationRequirements": "Certification Requirements",
+        "locationsActivities": "Locations & Activities",
+        "requiredDocuments": "Required Documents",
+        "reviewBeforeSubmit": "Review Before Submit"
+      },
       "sections": {
         "clientInformation": "Client Information",
         "applicationDetails": "Application Details",

@@ -39,9 +39,9 @@ export function CabMultiSiteRulePreviewPage() {
   return (
     <CabLayout>
       <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
-      <ApplicationStepper current={viewOnly ? 5 : 3} />
 
-      <div className="flex flex-1 flex-col overflow-auto p-6">
+      <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+        <ApplicationStepper current={viewOnly ? 5 : 3} />
         <MultiSiteRulePreview multiSiteRule={multiSiteRule} />
       </div>
 
