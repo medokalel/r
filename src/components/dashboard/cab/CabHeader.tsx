@@ -88,8 +88,6 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
           <LanguageToggle variant="icon" showChevron={false} />
         </div>
 
-        <HeaderDivider className="hidden min-[400px]:block" />
-
         <div className="flex items-center gap-6">
           {/* Name + role — desktop only */}
           <div className="hidden text-end min-[924px]:block">

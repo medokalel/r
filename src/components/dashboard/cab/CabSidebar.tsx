@@ -26,6 +26,7 @@ import {
 } from '@/components/icons'
 import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
+import { CabDashboardTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 
 interface CabNavItem {
   icon: typeof DashboardIcon
@@ -240,7 +241,9 @@ export function CabSidebar() {
         )}
         aria-label={t('cab.sidebar.dashboard')}
       >
-        {renderItem(dashboardItem)}
+        <CabDashboardTourStep stepId="sidebar-navigation">
+          {renderItem(dashboardItem)}
+        </CabDashboardTourStep>
 
         {renderGroupLabel('cab.sidebar.workflow')}
         {workflowItems.map(renderItem)}

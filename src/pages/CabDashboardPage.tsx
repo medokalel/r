@@ -25,6 +25,8 @@ import {
   type WorkQueueItem,
 } from '@/lib/api/cabDashboardApi'
 
+import { CabDashboardTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+
 export function CabDashboardPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -64,50 +66,66 @@ export function CabDashboardPage() {
 
   return (
     <CabLayout>
-      <CabHeader
-        title={t('cab.dashboard.title')}
-        subtitle={t('cab.dashboard.subtitle')}
-        notificationCount={3}
-      />
+      <CabDashboardTourStep stepId="dashboard-header">
+        <CabHeader
+          title={t('cab.dashboard.title')}
+          subtitle={t('cab.dashboard.subtitle')}
+          notificationCount={3}
+        />
+      </CabDashboardTourStep>
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <CabStatCards stats={stats} loading={loading} />
+        <CabDashboardTourStep stepId="key-metrics">
+          <div>
+            <CabStatCards stats={stats} loading={loading} />
+          </div>
+        </CabDashboardTourStep>
+
+        <CabDashboardTourStep stepId="visual-analytics">
+          <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+            <CabDonutCard
+              title={t('cab.dashboard.applicationsByStage.title')}
+              entries={applicationsByStage.map((e) => ({ key: e.stageKey, count: e.count, color: e.color }))}
+              labelPrefix="cab.dashboard.applicationsByStage.stages"
+              totalLabel={t('cab.dashboard.total')}
+              // TODO: no full-pipeline view exists yet — wire this once it's built.
+              footerLink={{ label: t('cab.dashboard.applicationsByStage.viewFullPipeline'), onClick: () => undefined }}
+            />
+
+            <CabAuditsOverviewChart
+              entries={auditsOverview}
+              footerLink={{
+                label: t('cab.dashboard.auditsOverview.viewAuditCalendar'),
+                onClick: () => setIsAuditCalendarOpen(true),
+              }}
+            />
+
+            <CabDonutCard
+              title={t('cab.dashboard.certificationDecisions.title')}
+              entries={certificationDecisions.map((e) => ({ key: e.decisionKey, count: e.count, color: e.color }))}
+              labelPrefix="cab.dashboard.certificationDecisions.decisions"
+              totalLabel={t('cab.dashboard.total')}
+              footerLink={{ label: t('cab.dashboard.certificationDecisions.viewDecisions'), onClick: () => undefined }}
+            />
+          </div>
+        </CabDashboardTourStep>
 
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-          <CabDonutCard
-            title={t('cab.dashboard.applicationsByStage.title')}
-            entries={applicationsByStage.map((e) => ({ key: e.stageKey, count: e.count, color: e.color }))}
-            labelPrefix="cab.dashboard.applicationsByStage.stages"
-            totalLabel={t('cab.dashboard.total')}
-            // TODO: no full-pipeline view exists yet — wire this once it's built.
-            footerLink={{ label: t('cab.dashboard.applicationsByStage.viewFullPipeline'), onClick: () => undefined }}
-          />
+          <CabDashboardTourStep stepId="work-queue">
+            <CabWorkQueue items={workQueue} onViewAll={() => undefined} />
+          </CabDashboardTourStep>
 
-          <CabAuditsOverviewChart
-            entries={auditsOverview}
-            footerLink={{
-              label: t('cab.dashboard.auditsOverview.viewAuditCalendar'),
-              onClick: () => setIsAuditCalendarOpen(true),
-            }}
-          />
+          <CabDashboardTourStep stepId="recent-activity">
+            <CabRecentActivity activities={activities} onViewAll={() => undefined} />
+          </CabDashboardTourStep>
 
-          <CabDonutCard
-            title={t('cab.dashboard.certificationDecisions.title')}
-            entries={certificationDecisions.map((e) => ({ key: e.decisionKey, count: e.count, color: e.color }))}
-            labelPrefix="cab.dashboard.certificationDecisions.decisions"
-            totalLabel={t('cab.dashboard.total')}
-            footerLink={{ label: t('cab.dashboard.certificationDecisions.viewDecisions'), onClick: () => undefined }}
-          />
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-          <CabWorkQueue items={workQueue} onViewAll={() => undefined} />
-          <CabRecentActivity activities={activities} onViewAll={() => undefined} />
-          <CabQuickActions
-            onNewApplication={() => navigate('/cab/clients/new')}
-            onAssignReview={() => navigate('/cab/applications/review')}
-            onIssueCertificate={() => undefined}
-          />
+          <CabDashboardTourStep stepId="quick-actions">
+            <CabQuickActions
+              onNewApplication={() => navigate('/cab/clients/new')}
+              onAssignReview={() => navigate('/cab/applications/review')}
+              onIssueCertificate={() => undefined}
+            />
+          </CabDashboardTourStep>
         </div>
       </div>
       <AuditCalendarModal open={isAuditCalendarOpen} onOpenChange={setIsAuditCalendarOpen} />

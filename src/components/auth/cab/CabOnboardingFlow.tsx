@@ -79,6 +79,7 @@ export function CabOnboardingFlow() {
       })
       const organizationId = getAuthSession()?.organization?.id
       if (organizationId) markCabOnboardingComplete(organizationId)
+      localStorage.setItem('icasco_pending_tour', 'true')
       setStep(7)
     } catch {
       setSaveError(t('errors.generic'))
