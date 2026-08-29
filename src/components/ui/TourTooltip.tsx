@@ -80,13 +80,15 @@ export function TourTooltip({
         </div>
       </Popover.Anchor>
 
-      {/* Darkened spotlight backdrop — non-interactive so the rest of the page stays usable */}
+      {/* Darkened spotlight backdrop — pointer-events-auto so it blocks interaction
+          with the rest of the page while the tour is open. */}
       {open && (
         <Popover.Portal>
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-none"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-auto"
             style={{ zIndex: TOUR_Z_BACKDROP }}
             aria-hidden="true"
+            onClick={(e) => e.preventDefault()}
           />
         </Popover.Portal>
       )}
