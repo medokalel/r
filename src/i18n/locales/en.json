@@ -1878,7 +1878,8 @@
     },
     "header": {
       "timeAndDate": "Time and date",
-      "notifications": "Notifications"
+      "notifications": "Notifications",
+      "takeTour": "Take a Tour"
     },
     "dashboard": {
       "title": "CAB Dashboard",

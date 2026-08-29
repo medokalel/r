@@ -9,50 +9,17 @@ interface CabDashboardTourStepProps {
 }
 
 export function CabDashboardTourStep({ stepId, children }: CabDashboardTourStepProps) {
-  const { activeStepId, isTourActive, isSkipped, nextStep, prevStep, skipTour, goToStep } = useTour()
+  const { activeStepId, isTourActive, nextStep, prevStep, skipTour } = useTour()
   const config = CAB_DASHBOARD_TOUR_STEPS.find((s) => s.id === stepId)
 
   if (!config) {
     return <>{children}</>
   }
 
-  const isActiveStep = activeStepId === stepId
-
-  // Calculate open status:
-  // 1. If skipped: force openProp = false (hides all popups).
-  // 2. If tour is active (e.g. Next/Back clicked): open active step automatically.
-  // 3. Otherwise: openProp = undefined (hovering/touching any area opens its foreground spotlight popup).
-  let openProp: boolean | undefined = undefined
-  if (isSkipped) {
-    openProp = false
-  } else if (isTourActive) {
-    openProp = isActiveStep
-  } else {
-    openProp = undefined
-  }
-
-  const handleNext = () => {
-    if (isActiveStep) {
-      nextStep()
-    } else {
-      goToStep(config.step + 1)
-    }
-  }
-
-  const handleBack = () => {
-    if (isActiveStep) {
-      prevStep()
-    } else {
-      goToStep(config.step - 1)
-    }
-  }
-
-  const handleSelectStep = () => {
-    if (!isSkipped) {
-      goToStep(config.step)
-    }
-  }
-
+  // Only the step the tour is currently on is ever open — no hover fallback,
+  // no click-to-jump. Advancing only happens via the Skip/Back/Next buttons,
+  // so this stays a plain boolean the whole component tree can rely on.
+  const isOpen = isTourActive && activeStepId === stepId
   const isLastStep = config.step === config.totalSteps
 
   return (
@@ -63,14 +30,12 @@ export function CabDashboardTourStep({ stepId, children }: CabDashboardTourStepP
       description={config.description}
       side={config.side}
       align={config.align}
-      offsetX={config.offsetX}
-      offsetY={config.offsetY}
-      open={openProp}
-      onNext={handleNext}
+      alignOffset={config.alignOffset}
+      open={isOpen}
+      onNext={nextStep}
       nextLabel={isLastStep ? 'Finish' : 'Next'}
-      onBack={config.step > 1 ? handleBack : undefined}
+      onBack={config.step > 1 ? prevStep : undefined}
       onSkip={skipTour}
-      onSelectStep={handleSelectStep}
     >
       {children}
     </TourTooltip>

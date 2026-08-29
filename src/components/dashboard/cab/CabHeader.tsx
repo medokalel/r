@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { AppIcon, NotificationIcon, LogoutIcon } from '@/components/icons'
+import { AppIcon, NotificationIcon, LogoutIcon, TourGuideIcon } from '@/components/icons'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession, clearAuthSession } from '@/lib/authStorage'
+import { useTour } from '@/context/TourContext'
 import { cn } from '@/lib/utils'
 
 function HeaderDivider({ className }: { className?: string }) {
@@ -22,6 +24,7 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
   const { t, i18n } = useTranslation()
   const session = getAuthSession()
   const navigate = useNavigate()
+  const { startTour } = useTour()
   const [now, setNow] = useState(() => new Date())
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -67,7 +70,20 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
           </p>
         </div>
 
-        <HeaderDivider className="hidden lg:block" />
+
+
+        <Tooltip label={t('cab.header.takeTour')}>
+          <button
+            type="button"
+            onClick={startTour}
+            className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
+            aria-label={t('cab.header.takeTour')}
+          >
+            <AppIcon icon={TourGuideIcon} size={26} />
+          </button>
+        </Tooltip>
+
+        <HeaderDivider className="hidden min-[400px]:block" />
 
         <button
           type="button"

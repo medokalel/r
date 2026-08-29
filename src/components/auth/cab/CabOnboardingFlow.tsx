@@ -23,6 +23,7 @@ import { saveCabOnboardingProfile } from '@/lib/api/cabOnboardingApi'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
 import type { OrgScopeCategory } from '@/lib/api/onboardingOrgScopeApi'
 import { getAuthSession } from '@/lib/authStorage'
+import { markTourPending } from '@/context/TourContext'
 import { markCabOnboardingComplete } from '@/lib/cabOnboardingStatus'
 import { ROUTES } from '@/lib/routes'
 
@@ -79,7 +80,7 @@ export function CabOnboardingFlow() {
       })
       const organizationId = getAuthSession()?.organization?.id
       if (organizationId) markCabOnboardingComplete(organizationId)
-      localStorage.setItem('icasco_pending_tour', 'true')
+      markTourPending('cab-dashboard')
       setStep(7)
     } catch {
       setSaveError(t('errors.generic'))

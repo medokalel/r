@@ -1,15 +1,4 @@
-export interface TourStepConfig {
-  id: string
-  step: number
-  totalSteps: number
-  title: string
-  description: string
-  side?: 'top' | 'right' | 'bottom' | 'left'
-  align?: 'start' | 'center' | 'end'
-  offsetX?: number
-  offsetY?: number
-}
-
+import type { TourStepConfig } from '@/context/TourContext'
 export const CAB_DASHBOARD_TOUR_STEPS: TourStepConfig[] = [
   {
     id: 'sidebar-navigation',
@@ -40,7 +29,7 @@ export const CAB_DASHBOARD_TOUR_STEPS: TourStepConfig[] = [
       'Track your most important numbers new applications, pending reviews, upcoming audits, outstanding payments, and more.',
     side: 'bottom',
     align: 'start',
-    offsetX: 290,
+    alignOffset: 290,
   },
   {
     id: 'visual-analytics',
@@ -51,7 +40,7 @@ export const CAB_DASHBOARD_TOUR_STEPS: TourStepConfig[] = [
       'See applications by stage, audit progress, and certification decisions displayed as interactive charts.',
     side: 'bottom',
     align: 'start',
-    offsetX: 290,
+    alignOffset: 290,
   },
   {
     id: 'work-queue',

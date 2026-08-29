@@ -1877,7 +1877,8 @@
     },
     "header": {
       "timeAndDate": "الوقت والتاريخ",
-      "notifications": "الإشعارات"
+      "notifications": "الإشعارات",
+      "takeTour": "ابدأ الجولة"
     },
     "dashboard": {
       "title": "لوحة تحكم جهة الاعتماد",

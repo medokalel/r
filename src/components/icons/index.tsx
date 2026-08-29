@@ -56,6 +56,7 @@ import {
   Warning2,
   Paperclip2,
   Link21,
+  MessageQuestion,
 } from 'iconsax-reactjs'
 
 export type AppIconComponent = FC<IconProps>
@@ -623,6 +624,7 @@ export {
   TaskSquare as TaskSquareIcon,
   Paperclip2 as AttachIcon,
   Link21 as LinkIcon,
+  MessageQuestion as TourGuideIcon,
   TextBold as BoldIcon,
   Text as TextIcon,
   Buildings as BuildingsIcon,

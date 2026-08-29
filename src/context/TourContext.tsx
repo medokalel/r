@@ -1,9 +1,29 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
-import { CAB_DASHBOARD_TOUR_STEPS } from '@/config/cabTourSteps'
 import { getAuthSession } from '@/lib/authStorage'
 
-export const TOUR_STATUS_KEY = 'icasco_tour_status'
-export const TOUR_PENDING_KEY = 'icasco_pending_tour'
+export interface TourStepConfig {
+  id: string
+  step: number
+  totalSteps: number
+  title: string
+  description: string
+  side?: 'top' | 'right' | 'bottom' | 'left'
+  align?: 'start' | 'center' | 'end'
+  /** Radix Popover alignOffset — nudges the popover along the alignment axis, RTL-aware. */
+  alignOffset?: number
+}
+
+const TOUR_STATUS_KEY_PREFIX = 'icasco_tour_status'
+const TOUR_PENDING_KEY_PREFIX = 'icasco_pending_tour'
+
+/**
+ * Call this from wherever a tour's onboarding flow finishes, so the tour
+ * auto-starts the first time the user lands on the page it belongs to.
+ * `tourId` must match the `tourId` passed to that page's <TourProvider>.
+ */
+export function markTourPending(tourId: string): void {
+  localStorage.setItem(`${TOUR_PENDING_KEY_PREFIX}_${tourId}`, 'true')
+}
 
 interface TourContextType {
   currentStepIndex: number
@@ -15,25 +35,35 @@ interface TourContextType {
   prevStep: () => void
   skipTour: () => void
   startTour: () => void
-  goToStep: (stepNumber: number) => void
 }
 
 const TourContext = createContext<TourContextType | undefined>(undefined)
 
-function getUserStatusKey(): string {
-  const session = getAuthSession()
-  const id = session?.organization?.id || session?.user?.id
-  return id ? `${TOUR_STATUS_KEY}_${id}` : TOUR_STATUS_KEY
+interface TourProviderProps {
+  /** Unique id for this tour (e.g. 'cab-dashboard', 'auditee-dashboard'). Namespaces its storage keys. */
+  tourId: string
+  /** Ordered steps this tour walks through. */
+  steps: TourStepConfig[]
+  children: ReactNode
 }
 
-export function TourProvider({ children }: { children: ReactNode }) {
+export function TourProvider({ tourId, steps, children }: TourProviderProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
   const [isTourActive, setIsTourActive] = useState<boolean>(false)
   const [isSkipped, setIsSkipped] = useState<boolean>(false)
 
+  const pendingKey = `${TOUR_PENDING_KEY_PREFIX}_${tourId}`
+
+  const getStatusKey = (): string => {
+    const session = getAuthSession()
+    const id = session?.organization?.id || session?.user?.id
+    const base = `${TOUR_STATUS_KEY_PREFIX}_${tourId}`
+    return id ? `${base}_${id}` : base
+  }
+
   useEffect(() => {
-    const isPending = localStorage.getItem(TOUR_PENDING_KEY) === 'true'
-    const statusKey = getUserStatusKey()
+    const isPending = localStorage.getItem(pendingKey) === 'true'
+    const statusKey = getStatusKey()
     const status = localStorage.getItem(statusKey)
 
     // Rule 2 & 3: If THIS user explicitly clicked Skip or Completed, NEVER show again for this user (even after Logout + Login)
@@ -46,26 +76,25 @@ export function TourProvider({ children }: { children: ReactNode }) {
     // Rule 1 & 4: If new registration OR user hasn't skipped/completed yet (status is null), show tour!
     if (isPending || !status) {
       if (isPending) {
-        localStorage.removeItem(TOUR_PENDING_KEY)
+        localStorage.removeItem(pendingKey)
       }
       setCurrentStepIndex(0)
       setIsTourActive(true)
       setIsSkipped(false)
     }
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tourId])
 
-  const activeStepConfig = CAB_DASHBOARD_TOUR_STEPS[currentStepIndex]
+  const activeStepConfig = steps[currentStepIndex]
   const activeStepId = isTourActive && activeStepConfig ? activeStepConfig.id : null
 
   const nextStep = () => {
-    if (currentStepIndex < CAB_DASHBOARD_TOUR_STEPS.length - 1) {
+    if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex((prev) => prev + 1)
     } else {
       setIsTourActive(false)
       setIsSkipped(true)
-      const statusKey = getUserStatusKey()
-      localStorage.setItem(statusKey, 'completed')
-      localStorage.setItem(TOUR_STATUS_KEY, 'completed')
+      localStorage.setItem(getStatusKey(), 'completed')
     }
   }
 
@@ -78,9 +107,7 @@ export function TourProvider({ children }: { children: ReactNode }) {
   const skipTour = () => {
     setIsTourActive(false)
     setIsSkipped(true)
-    const statusKey = getUserStatusKey()
-    localStorage.setItem(statusKey, 'skipped')
-    localStorage.setItem(TOUR_STATUS_KEY, 'skipped')
+    localStorage.setItem(getStatusKey(), 'skipped')
   }
 
   const startTour = () => {
@@ -89,28 +116,18 @@ export function TourProvider({ children }: { children: ReactNode }) {
     setIsSkipped(false)
   }
 
-  const goToStep = (stepNumber: number) => {
-    const index = CAB_DASHBOARD_TOUR_STEPS.findIndex((s) => s.step === stepNumber)
-    if (index !== -1) {
-      setCurrentStepIndex(index)
-      setIsTourActive(true)
-      setIsSkipped(false)
-    }
-  }
-
   return (
     <TourContext.Provider
       value={{
         currentStepIndex,
         activeStepId,
-        totalSteps: CAB_DASHBOARD_TOUR_STEPS.length,
+        totalSteps: steps.length,
         isTourActive,
         isSkipped,
         nextStep,
         prevStep,
         skipTour,
         startTour,
-        goToStep,
       }}
     >
       {children}
@@ -125,5 +142,3 @@ export function useTour() {
   }
   return context
 }
-
-
