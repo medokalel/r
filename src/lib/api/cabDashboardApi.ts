@@ -7,6 +7,13 @@
  * real endpoints, only the bodies of these functions need to change.
  */
 
+export type CabDashboardStatTrendDirection = 'up' | 'down'
+
+export interface CabDashboardStatTrend {
+  direction: CabDashboardStatTrendDirection
+  percentage: number
+}
+
 export interface CabDashboardStats {
   newApplications: number
   pendingReviews: number
@@ -14,8 +21,23 @@ export interface CabDashboardStats {
   technicalReviewsPending: number
   decisionsPending: number
   certificatesToIssue: number
-  /** Displayed as a currency amount rather than a plain count. */
+  outstandingPayments: number
+  /** Displayed as a currency amount instead of the "View all" link. */
   outstandingPaymentsEgp: number
+  /** Displayed as the card's main value (with an "EGP" unit) instead of a plain count. */
+  freelancerPayablesEgp: number
+  /** Week-over-week change shown under each card's main value, keyed by the fields above. */
+  trends: Record <
+    | 'newApplications'
+    | 'pendingReviews'
+    | 'upcomingAudits'
+    | 'technicalReviewsPending'
+    | 'decisionsPending'
+    | 'certificatesToIssue'
+    | 'outstandingPayments'
+    | 'freelancerPayablesEgp',
+    CabDashboardStatTrend
+  >
 }
 
 export interface ApplicationsByStageEntry {
@@ -64,7 +86,19 @@ const MOCK_STATS: CabDashboardStats = {
   technicalReviewsPending: 14,
   decisionsPending: 7,
   certificatesToIssue: 11,
+  outstandingPayments: 8,
   outstandingPaymentsEgp: 1254750,
+  freelancerPayablesEgp: 254750,
+  trends: {
+    newApplications: { direction: 'up', percentage: 0.2 },
+    pendingReviews: { direction: 'up', percentage: 0.2 },
+    upcomingAudits: { direction: 'down', percentage: 0.2 },
+    technicalReviewsPending: { direction: 'up', percentage: 0.2 },
+    decisionsPending: { direction: 'up', percentage: 0.2 },
+    certificatesToIssue: { direction: 'up', percentage: 0.2 },
+    outstandingPayments: { direction: 'down', percentage: 0.2 },
+    freelancerPayablesEgp: { direction: 'up', percentage: 0.2 },
+  },
 }
 
 const MOCK_APPLICATIONS_BY_STAGE: ApplicationsByStageEntry[] = [

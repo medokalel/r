@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { PageHeaderWithAction } from '@/components/dashboard/PageHeaderWithAction'
 import { CabStatCards } from '@/components/dashboard/cab/CabStatCards'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
 import { CabAuditsOverviewChart } from '@/components/dashboard/cab/CabAuditsOverviewChart'
@@ -10,6 +11,7 @@ import { AuditCalendarModal } from '@/components/dashboard/cab/AuditCalendarModa
 import { CabWorkQueue } from '@/components/dashboard/cab/CabWorkQueue'
 import { CabRecentActivity } from '@/components/dashboard/cab/CabRecentActivity'
 import { CabQuickActions } from '@/components/dashboard/cab/CabQuickActions'
+import { AppIcon, CalendarIcon } from '@/components/icons'
 import {
   getApplicationsByStage,
   getAuditsOverview,
@@ -76,7 +78,16 @@ export function CabDashboardPage() {
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <CabDashboardTourStep stepId="key-metrics">
-          <div>
+          <div className="flex flex-col gap-5">
+            <PageHeaderWithAction
+              title={t('cab.dashboard.title')}
+              subtitle={t('cab.dashboard.subtitle')}
+              action={{
+                icon: <AppIcon icon={CalendarIcon} size={20} />,
+                label: t('cab.dashboard.auditCalendar.title'),
+                onClick: () => setIsAuditCalendarOpen(true),
+              }}
+            />
             <CabStatCards stats={stats} loading={loading} />
           </div>
         </CabDashboardTourStep>

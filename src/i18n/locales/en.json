@@ -1892,6 +1892,7 @@
         "decisionsPending": "Decisions Pending",
         "certificatesToIssue": "Certificates to Issue",
         "outstandingPayments": "Outstanding Payments",
+        "freelancerPayables": "Freelancer Payables",
         "viewAll": "View all",
         "egp": "EGP"
       },
@@ -3321,6 +3322,90 @@
           "privacyPolicy": "Privacy Policy",
           "termsOfUse": "Terms of Use"
         }
+      },
+      "quotationApproval": {
+        "title": "9. Quotation Approval",
+        "subtitle": "Review and approve the quotation before sending it to the client.",
+        "status": {
+          "inProgress": "In Progress"
+        },
+        "breadcrumb": {
+          "home": "Home",
+          "applications": "Applications",
+          "quotation": "Quotation",
+          "current": "Quotation Approval"
+        },
+        "summaryBar": {
+          "client": "Client",
+          "applicationType": "Application Type",
+          "certificationBody": "Certification Body",
+          "standardScheme": "Standard/Scheme",
+          "sites": "Sites",
+          "sitesValue": "{{count}} Sites",
+          "requestedOn": "Requested On",
+          "assignedTo": "Assigned To"
+        },
+        "actions": {
+          "downloadPdf": "Download to PDF",
+          "moreActions": "More Actions",
+          "sendApproval": "Send Approval"
+        },
+        "summary": {
+          "title": "Quotation Summary",
+          "quotationNo": "Quotation No:",
+          "version": "Version:",
+          "preparedBy": "Prepared By:",
+          "preparedOn": "Prepared On:",
+          "validUntil": "Valid Until:",
+          "validUntilValue": "{{date}} ({{days}} Days)",
+          "currency": "Currency:",
+          "totalExclTaxes": "Total Amount (Excl. Taxes):",
+          "taxes": "Taxes ({{percent}}%):",
+          "totalInclTaxes": "Total Amount (Including Taxes):"
+        },
+        "auditScope": {
+          "title": "Audit Scope",
+          "includedInScope": "Included in Scope"
+        },
+        "breakdown": {
+          "title": "Quotation Breakdown",
+          "columns": {
+            "number": "#",
+            "description": "Description",
+            "basis": "Basis",
+            "quantity": "QTY",
+            "rate": "Rate (USD)",
+            "amount": "Amount"
+          },
+          "subTotal": "Sub Total:",
+          "discount": "Discount",
+          "total": "Total (Excluding Taxes):"
+        },
+        "sites": {
+          "title": "Sites",
+          "viewDetails": "View Site Details"
+        },
+        "approvalInfo": {
+          "title": "Approval Information",
+          "reviewStatus": "Review Status",
+          "reviewedBy": "Reviewed By",
+          "reviewedOn": "Reviewed On",
+          "comments": "Comments"
+        },
+        "internalComments": {
+          "title": "Internal Comments",
+          "addComment": "Add Internal Comment"
+        },
+        "approvalHistory": {
+          "title": "Approval History"
+        },
+        "note": {
+          "title": "Note",
+          "item1": "Quotation will be sent to the client after approval.",
+          "item2": "Any change after approval requires a new version.",
+          "item3": "Ensure validity period is within policy."
+        },
+        "tabPlaceholder": "This tab content is available on the Application Review page."
       }
     }
   }

@@ -19,7 +19,7 @@ const buttonVariants = cva(
           'bg-primary !text-white',
           'hover:bg-primary-hover',
           'active:bg-primary-active',
-          'disabled:bg-blue-200 disabled:!text-white disabled:opacity-100',
+          'disabled:bg-primary-disabled disabled:!text-white disabled:opacity-100',
         ].join(' '),
         secondary: [
           'bg-white text-blue-500 border border-blue-500',

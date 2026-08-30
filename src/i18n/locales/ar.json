@@ -1891,6 +1891,7 @@
         "decisionsPending": "قرارات معلّقة",
         "certificatesToIssue": "شهادات قيد الإصدار",
         "outstandingPayments": "مدفوعات مستحقة",
+        "freelancerPayables": "مستحقات المستقلين",
         "viewAll": "عرض الكل",
         "egp": "جنيه"
       },
@@ -3319,6 +3320,90 @@
           "privacyPolicy": "سياسة الخصوصية",
           "termsOfUse": "شروط الاستخدام"
         }
+      },
+      "quotationApproval": {
+        "title": "9. اعتماد عرض السعر",
+        "subtitle": "راجع واعتمد عرض السعر قبل إرساله إلى العميل.",
+        "status": {
+          "inProgress": "قيد التنفيذ"
+        },
+        "breadcrumb": {
+          "home": "الرئيسية",
+          "applications": "الطلبات",
+          "quotation": "عرض السعر",
+          "current": "اعتماد عرض السعر"
+        },
+        "summaryBar": {
+          "client": "العميل",
+          "applicationType": "نوع الطلب",
+          "certificationBody": "جهة التصديق",
+          "standardScheme": "المعيار/المخطط",
+          "sites": "المواقع",
+          "sitesValue": "{{count}} مواقع",
+          "requestedOn": "تاريخ الطلب",
+          "assignedTo": "المسند إلى"
+        },
+        "actions": {
+          "downloadPdf": "تنزيل كـ PDF",
+          "moreActions": "إجراءات أخرى",
+          "sendApproval": "إرسال الاعتماد"
+        },
+        "summary": {
+          "title": "ملخص عرض السعر",
+          "quotationNo": "رقم عرض السعر:",
+          "version": "الإصدار:",
+          "preparedBy": "أُعد بواسطة:",
+          "preparedOn": "تاريخ الإعداد:",
+          "validUntil": "صالح حتى:",
+          "validUntilValue": "{{date}} ({{days}} يوم)",
+          "currency": "العملة:",
+          "totalExclTaxes": "الإجمالي (باستثناء الضرائب):",
+          "taxes": "الضرائب ({{percent}}%):",
+          "totalInclTaxes": "الإجمالي (شامل الضرائب):"
+        },
+        "auditScope": {
+          "title": "نطاق التدقيق",
+          "includedInScope": "المشمول في النطاق"
+        },
+        "breakdown": {
+          "title": "تفاصيل عرض السعر",
+          "columns": {
+            "number": "#",
+            "description": "الوصف",
+            "basis": "الأساس",
+            "quantity": "الكمية",
+            "rate": "السعر (دولار)",
+            "amount": "المبلغ"
+          },
+          "subTotal": "الإجمالي الفرعي:",
+          "discount": "الخصم",
+          "total": "الإجمالي (باستثناء الضرائب):"
+        },
+        "sites": {
+          "title": "المواقع",
+          "viewDetails": "عرض تفاصيل الموقع"
+        },
+        "approvalInfo": {
+          "title": "معلومات الاعتماد",
+          "reviewStatus": "حالة المراجعة",
+          "reviewedBy": "راجعه",
+          "reviewedOn": "تاريخ المراجعة",
+          "comments": "ملاحظات"
+        },
+        "internalComments": {
+          "title": "التعليقات الداخلية",
+          "addComment": "إضافة تعليق داخلي"
+        },
+        "approvalHistory": {
+          "title": "سجل الاعتماد"
+        },
+        "note": {
+          "title": "ملاحظة",
+          "item1": "سيتم إرسال عرض السعر إلى العميل بعد الاعتماد.",
+          "item2": "أي تعديل بعد الاعتماد يتطلب إصدارًا جديدًا.",
+          "item3": "تأكد من أن مدة الصلاحية ضمن السياسة المعتمدة."
+        },
+        "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب."
       }
     }
   }

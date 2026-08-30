@@ -37,6 +37,7 @@ import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
 import { CabApplicationInformationRequiredPage } from '@/pages/CabApplicationInformationRequiredPage'
 import { CabApplicationTechnicalFeasibilityPage } from '@/pages/CabApplicationTechnicalFeasibilityPage'
 import { CabApplicationQuotationPage } from '@/pages/CabApplicationQuotationPage'
+import { CabQuotationApprovalPage } from '@/pages/CabQuotationApprovalPage'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
 import { LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
 
@@ -226,6 +227,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <CabApplicationQuotationPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabQuotationApproval}
+              element={
+                <RequireAuth>
+                  <CabQuotationApprovalPage />
                 </RequireAuth>
               }
             />

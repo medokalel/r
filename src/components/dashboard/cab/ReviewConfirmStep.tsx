@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { SectionTitle } from '@/components/dashboard/SectionTitle'
+import { Card } from '@/components/dashboard/cab/ReviewPrimitives'
 import { AppIcon, AirplaneIcon, CorrectiveActionIcon, EditIcon, RoadIcon, ShieldIcon, TrainIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { type ApplicationDraftForm, isApplicationDraftComplete } from '@/lib/applicationDraftForm'
@@ -49,20 +50,6 @@ function ChecklistStatusLabel({ complete, label }: { complete: boolean; label: s
       </svg>
       {label}
     </span>
-  )
-}
-
-function SummaryStatCard({ title, children, highlight }: { title: string; children: ReactNode; highlight?: boolean }) {
-  return (
-    <div
-      className={cn(
-        'rounded-[var(--radius-md)] border p-4',
-        highlight ? 'border-dashed border-primary/40 bg-[#f3f6fd]' : 'border-[#ececec] bg-white'
-      )}
-    >
-      <p className="text-[13px] text-neutral-500">{title}</p>
-      <div className="mt-1.5">{children}</div>
-    </div>
   )
 }
 
@@ -220,13 +207,13 @@ export function ReviewConfirmStep({
         <SectionTitle title={t('cab.applicationDraft.review.summary.title')} className="mb-4" />
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <SummaryStatCard title={t('cab.applicationDraft.review.summary.standardsApplied', { count: standardNames.length })}>
+          <Card title={t('cab.applicationDraft.review.summary.standardsApplied', { count: standardNames.length })}>
             <p className="text-[15px] font-bold text-neutral-900">
               {standardNames.length > 0 ? standardNames.join(', ') : '—'}
             </p>
-          </SummaryStatCard>
+          </Card>
 
-          <SummaryStatCard title={t('cab.applicationDraft.review.summary.totalSites')}>
+          <Card title={t('cab.applicationDraft.review.summary.totalSites')}>
             <p className="text-[24px] font-bold leading-none text-neutral-900">{totalSites}</p>
             {multiSiteRule && (
               <p className="mt-1 text-[12px] text-neutral-500">
@@ -236,16 +223,16 @@ export function ReviewConfirmStep({
                 })}
               </p>
             )}
-          </SummaryStatCard>
+          </Card>
 
-          <SummaryStatCard title={t('cab.applicationDraft.review.summary.multiSiteStructure')}>
+          <Card title={t('cab.applicationDraft.review.summary.multiSiteStructure')}>
             <p className="text-[15px] font-bold text-neutral-900">
               {structureShortLabel}
               {ruleShortLabel ? `, ${ruleShortLabel}` : ''}
             </p>
-          </SummaryStatCard>
+          </Card>
 
-          <SummaryStatCard title={t('cab.applicationDraft.review.summary.totalEstimatedMandays')} highlight>
+          <Card title={t('cab.applicationDraft.review.summary.totalEstimatedMandays')} highlight>
             <p className="text-[24px] font-bold leading-none text-primary">
               {(multiSiteRule?.totalEstimatedMandays ?? 0).toFixed(1)}{' '}
               <span className="text-[13px] font-normal text-neutral-500">
@@ -253,7 +240,7 @@ export function ReviewConfirmStep({
               </span>
             </p>
             <p className="mt-1 text-[12px] text-neutral-500">{t('cab.applicationDraft.review.summary.calculated')}</p>
-          </SummaryStatCard>
+          </Card>
         </div>
 
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-3">

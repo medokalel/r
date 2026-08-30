@@ -50,6 +50,8 @@ import {
   Text,
   TextBold,
   TickCircle,
+  TrendDown,
+  TrendUp,
   User,
   UserOctagon,
   Wallet,
@@ -634,4 +636,6 @@ export {
   Message as CommentIcon,
   Clock as HistoryIcon,
   ArrowRight2 as ArrowRightIcon,
+  TrendUp as TrendUpIcon,
+  TrendDown as TrendDownIcon,
 }

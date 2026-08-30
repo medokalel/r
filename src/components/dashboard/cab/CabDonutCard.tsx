@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
 import { Cell, Pie, PieChart, ResponsiveContainer } from 'recharts'
+import { CardFooterLink } from '@/components/ui/CardFooterLink'
 
 interface DonutEntry {
   key: string
@@ -66,15 +67,7 @@ export function CabDonutCard({ title, entries, labelPrefix, totalLabel, footerLi
 
       {footer}
 
-      {footerLink && (
-        <button
-          type="button"
-          onClick={footerLink.onClick}
-          className="mt-4 self-end text-[13px] text-neutral-400 transition-colors hover:text-primary"
-        >
-          {footerLink.label} →
-        </button>
-      )}
+      {footerLink && <CardFooterLink label={footerLink.label} onClick={footerLink.onClick} />}
     </div>
   )
 }

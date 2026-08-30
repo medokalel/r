@@ -22,6 +22,7 @@ export const ROUTES = {
   cabApplicationInformationRequired: '/cab/applications/information-required',
   cabApplicationTechnicalFeasibility: '/cab/applications/technical-feasibility',
   cabApplicationQuotation: '/cab/applications/quotation',
+  cabQuotationApproval: '/cab/quotations/approval',
 } as const
 
 export function cabApplicationInformationRequiredPath(applicationId?: string): string {

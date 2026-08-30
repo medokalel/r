@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Bar, BarChart, ResponsiveContainer, XAxis } from 'recharts'
 import type { AuditsOverviewEntry } from '@/lib/api/cabDashboardApi'
+import { CardFooterLink } from '@/components/ui/CardFooterLink'
 
 interface CabAuditsOverviewChartProps {
   entries: AuditsOverviewEntry[]
@@ -48,15 +49,7 @@ export function CabAuditsOverviewChart({ entries, footerLink }: CabAuditsOvervie
         </ResponsiveContainer>
       </div>
 
-      {footerLink && (
-        <button
-          type="button"
-          onClick={footerLink.onClick}
-          className="mt-4 self-end text-[13px] text-neutral-400 transition-colors hover:text-primary"
-        >
-          {footerLink.label} →
-        </button>
-      )}
+      {footerLink && <CardFooterLink label={footerLink.label} onClick={footerLink.onClick} />}
     </div>
   )
 }
