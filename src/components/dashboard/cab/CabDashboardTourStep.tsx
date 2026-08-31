@@ -6,9 +6,12 @@ import { useTour } from '@/context/TourContext'
 interface CabDashboardTourStepProps {
   stepId: string
   children: ReactNode
+  /** Extra classes for the tour anchor's wrapper div — e.g. to center a
+   *  fixed-size child instead of letting it sit at the wrapper's start edge. */
+  className?: string
 }
 
-export function CabDashboardTourStep({ stepId, children }: CabDashboardTourStepProps) {
+export function CabDashboardTourStep({ stepId, children, className }: CabDashboardTourStepProps) {
   const { activeStepId, isTourActive, nextStep, prevStep, skipTour } = useTour()
   const config = CAB_DASHBOARD_TOUR_STEPS.find((s) => s.id === stepId)
 
@@ -36,6 +39,7 @@ export function CabDashboardTourStep({ stepId, children }: CabDashboardTourStepP
       nextLabel={isLastStep ? 'Finish' : 'Next'}
       onBack={config.step > 1 ? prevStep : undefined}
       onSkip={skipTour}
+      className={className}
     >
       {children}
     </TourTooltip>

@@ -12,6 +12,30 @@ import { cn } from '@/lib/utils'
 const TOUR_Z_BACKDROP = 100
 const TOUR_Z_CONTENT = 101
 
+/** Pill-style progress indicator — the current step's dot elongates into a
+ *  bar, completed steps stay as small filled dots, upcoming steps are muted.
+ *  Scans faster than a "Step X of Y" pill alone, especially for a 7-step tour. */
+function TourProgressDots({ total, current }: { total: number; current: number }) {
+  return (
+    <div className="flex items-center gap-1" aria-hidden>
+      {Array.from({ length: total }, (_, i) => {
+        const dotStep = i + 1
+        const isCurrent = dotStep === current
+        const isDone = dotStep < current
+        return (
+          <span
+            key={dotStep}
+            className={cn(
+              'h-1.5 rounded-full transition-all duration-300',
+              isCurrent ? 'w-5 bg-primary' : isDone ? 'w-1.5 bg-primary/40' : 'w-1.5 bg-slate-200'
+            )}
+          />
+        )
+      })}
+    </div>
+  )
+}
+
 export interface TourTooltipProps {
   step?: number
   totalSteps?: number
@@ -20,6 +44,7 @@ export interface TourTooltipProps {
   skipLabel?: string
   backLabel?: string
   nextLabel?: string
+  closeLabel?: string
   onSkip?: () => void
   onBack?: () => void
   onNext?: () => void
@@ -50,6 +75,7 @@ export function TourTooltip({
   skipLabel = 'Skip Tour',
   backLabel = 'Back',
   nextLabel = 'Next',
+  closeLabel = 'Close',
   onSkip,
   onBack,
   onNext,
@@ -70,8 +96,7 @@ export function TourTooltip({
         <div
           className={cn(
             'relative w-full transition-all duration-300',
-            open &&
-              'z-[calc(var(--tour-z-content)+1)] rounded-xl ring-2 ring-[#1236A3] ring-offset-2 ring-offset-slate-900/60 shadow-[0_0_35px_rgba(18,54,163,0.35)]',
+            open && 'z-[calc(var(--tour-z-content)+1)]',
             className
           )}
           style={{ ['--tour-z-content' as string]: TOUR_Z_CONTENT }}
@@ -85,7 +110,7 @@ export function TourTooltip({
       {open && (
         <Popover.Portal>
           <div
-            className="fixed inset-0 bg-slate-900/60 backdrop-blur-[1px] transition-opacity duration-300 pointer-events-auto"
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-[2px] transition-opacity duration-300 pointer-events-auto"
             style={{ zIndex: TOUR_Z_BACKDROP }}
             aria-hidden="true"
             onClick={(e) => e.preventDefault()}
@@ -110,22 +135,37 @@ export function TourTooltip({
           onInteractOutside={(e) => e.preventDefault()}
           style={{ zIndex: TOUR_Z_CONTENT }}
           className={cn(
-            'w-[350px] max-w-[calc(100vw-32px)] rounded-[20px] bg-white p-5.5',
-            'shadow-[0_20px_50px_rgba(0,0,0,0.18)] border border-slate-100',
-            'data-[state=open]:animate-in data-[state=open]:fade-in data-[state=open]:zoom-in-95 duration-150',
+            'w-[360px] max-w-[calc(100vw-32px)] rounded-[20px] border border-slate-100 bg-white p-6',
+            'shadow-[0_24px_60px_-12px_rgba(18,54,163,0.28)]',
+            'data-[state=open]:animate-[fadeInScale_0.2s_ease-out]',
             contentClassName
           )}
         >
-          {/* Step Badge */}
-          <div className="mb-3.5 inline-flex items-center rounded-full bg-[#EEF2FF] px-3 py-0.5 text-[12px] font-semibold text-[#1236A3]">
-            Step {step} of {totalSteps}
+          {/* Progress + close */}
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <TourProgressDots total={totalSteps} current={step} />
+              <span className="text-[12px] font-medium text-slate-400">
+                {step}/{totalSteps}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={() => onSkip?.()}
+              aria-label={closeLabel}
+              className="flex size-6 shrink-0 items-center justify-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-600 cursor-pointer"
+            >
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
           </div>
 
           {/* Title */}
-          <h3 className="mb-1.5 text-[17px] font-bold text-slate-900 leading-snug">{title}</h3>
+          <h3 className="mb-1.5 text-[18px] font-bold tracking-tight text-slate-900 leading-snug">{title}</h3>
 
           {/* Description */}
-          <p className="mb-4 text-[13px] font-normal leading-relaxed text-slate-500">{description}</p>
+          <p className="mb-5 text-[13.5px] font-normal leading-relaxed text-slate-500">{description}</p>
 
           {/* Separator Line */}
           <div className="border-t border-slate-100 pt-3.5" />
@@ -145,7 +185,7 @@ export function TourTooltip({
                 <button
                   type="button"
                   onClick={() => onBack?.()}
-                  className="rounded-xl border border-[#1236A3] px-4 py-1.5 text-[13px] font-semibold text-[#1236A3] transition-colors hover:bg-[#EEF2FF] cursor-pointer"
+                  className="rounded-xl border border-primary px-4 py-1.5 text-[13px] font-semibold text-primary transition-colors hover:bg-primary-subtle cursor-pointer"
                 >
                   {backLabel}
                 </button>
@@ -154,7 +194,7 @@ export function TourTooltip({
                 <button
                   type="button"
                   onClick={() => onNext?.()}
-                  className="rounded-xl bg-[#1236A3] px-5 py-1.5 text-[13px] font-semibold text-white transition-all hover:bg-[#0d2a80] active:scale-95 cursor-pointer shadow-md shadow-[#1236A3]/20"
+                  className="rounded-xl bg-primary px-5 py-1.5 text-[13px] font-semibold text-white transition-all hover:bg-primary-hover active:bg-primary-active active:scale-95 cursor-pointer shadow-md shadow-primary/20"
                 >
                   {nextLabel}
                 </button>

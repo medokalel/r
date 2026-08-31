@@ -241,7 +241,7 @@ export function CabSidebar() {
         )}
         aria-label={t('cab.sidebar.dashboard')}
       >
-        <CabDashboardTourStep stepId="sidebar-navigation">
+        <CabDashboardTourStep stepId="sidebar-navigation" className="flex justify-center">
           {renderItem(dashboardItem)}
         </CabDashboardTourStep>
 
