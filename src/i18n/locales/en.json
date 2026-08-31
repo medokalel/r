@@ -310,6 +310,7 @@
     "pm": "PM",
     "january": "January",
     "notifications": "Notifications",
+    "takeTour": "Take a Tour",
     "auditManager": "Audit Manager",
     "sidebar": {
       "expand": "Expand sidebar",
@@ -1125,6 +1126,24 @@
         }
       },
       "movedToAwaitingDocuments": "Moved to awaiting documents"
+    },
+    "tour": {
+      "dashboardHeader": {
+        "title": "Welcome to Your Dashboard",
+        "description": "Here you can follow your certification status, see what's pending, and keep track of every update — all in one place."
+      },
+      "keyMetrics": {
+        "title": "Your Certification at a Glance",
+        "description": "Check your approved certificates, current orders, and pending requests whenever you need to."
+      },
+      "pendingTasks": {
+        "title": "Action Needed From You",
+        "description": "These are the tasks waiting on you right now, like reviewing a document or providing more information."
+      },
+      "recentActivity": {
+        "title": "What's New",
+        "description": "Track recent updates on your certification, like documents received or changes in status."
+      }
     }
   },
   "users": {

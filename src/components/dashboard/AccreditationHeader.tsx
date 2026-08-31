@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, MailIcon, NotificationIcon, LogoutIcon } from '@/components/icons'
+import { AppIcon, MailIcon, NotificationIcon, LogoutIcon, TourGuideIcon } from '@/components/icons'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession, clearAuthSession } from '@/lib/authStorage'
 import { getUserProfile, type UserProfile } from '@/lib/api/userApi'
+import { useOptionalTour } from '@/context/TourContext'
 import { cn } from '@/lib/utils'
 import { useNavigate } from 'react-router-dom'
 
@@ -36,6 +37,9 @@ export function AccreditationHeader({
   const [now, setNow] = useState(() => new Date())
   const navigate = useNavigate()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  // Only set on pages that actually run a tour (e.g. the dashboard) — this
+  // header is shared by several pages that don't, so the button stays hidden there.
+  const tour = useOptionalTour()
 
   const handleLogout = () => {
     clearAuthSession()
@@ -139,6 +143,23 @@ export function AccreditationHeader({
         </div>
 
         <HeaderDivider className="hidden lg:block" />
+
+        {tour && (
+          <>
+            <Tooltip label={t('accreditation.takeTour')}>
+              <button
+                type="button"
+                onClick={tour.startTour}
+                className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
+                aria-label={t('accreditation.takeTour')}
+              >
+                <AppIcon icon={TourGuideIcon} size={26} />
+              </button>
+            </Tooltip>
+
+            <HeaderDivider className="hidden lg:block" />
+          </>
+        )}
 
         <button
           type="button"

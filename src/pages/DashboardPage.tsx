@@ -9,7 +9,10 @@ import {
   DashboardStatsSkeleton,
   DashboardTasksTableSkeleton,
 } from '@/components/dashboard/DashboardLoadingSkeleton'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { useAuditeeDashboardTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import {
   getDashboardActivities,
   getDashboardStats,
@@ -22,6 +25,7 @@ import { certificationRequestFormPath, ROUTES } from '@/lib/routes'
 
 export function DashboardPage() {
   const navigate = useNavigate()
+  const tourSteps = useAuditeeDashboardTourSteps()
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [tasks, setTasks] = useState<DashboardTask[]>([])
   const [activities, setActivities] = useState<DashboardActivity[]>([])
@@ -46,36 +50,51 @@ export function DashboardPage() {
   }, [])
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="nav.dashboard" />
+    <TourProvider tourId="auditee-dashboard" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="dashboard-header">
+          <AccreditationHeader titleKey="nav.dashboard" />
+        </DashboardTourStep>
 
-      <div className="@container flex flex-1 flex-col gap-5 overflow-auto p-[16px]">
-        {loading ? <DashboardStatsSkeleton /> : <DashboardStatCards stats={stats} loading={loading} />}
+        <div className="@container flex flex-1 flex-col gap-5 overflow-auto p-[16px]">
+          <DashboardTourStep steps={tourSteps} stepId="key-metrics">
+            {loading ? <DashboardStatsSkeleton /> : <DashboardStatCards stats={stats} loading={loading} />}
+          </DashboardTourStep>
 
-        <div className="flex flex-col gap-5 @7xl:flex-row">
-          {loading ? (
-            <DashboardTasksTableSkeleton />
-          ) : (
-            <DashboardTasksTable
-              tasks={tasks}
-              loading={loading}
-              onViewAll={() => navigate(ROUTES.dashboardTasks)}
-              onProcedureClick={(task) => {
-                // Document-review tasks map to the application feedback view;
-                // other task types don't have a dedicated page yet.
-                if (task.taskType === 'documentReview') {
-                  navigate(certificationRequestFormPath(task.id, 'feedback'))
-                }
-              }}
-            />
-          )}
-          {loading ? (
-            <DashboardActivitiesSkeleton />
-          ) : (
-            <DashboardActivities activities={activities} loading={loading} onViewAll={() => undefined} />
-          )}
+          <div className="flex flex-col gap-5 @7xl:flex-row">
+            <DashboardTourStep steps={tourSteps} stepId="pending-tasks" className="flex-1">
+              {loading ? (
+                <DashboardTasksTableSkeleton />
+              ) : (
+                <DashboardTasksTable
+                  tasks={tasks}
+                  loading={loading}
+                  onViewAll={() => navigate(ROUTES.dashboardTasks)}
+                  onProcedureClick={(task) => {
+                    // Document-review tasks map to the application feedback view;
+                    // other task types don't have a dedicated page yet.
+                    if (task.taskType === 'documentReview') {
+                      navigate(certificationRequestFormPath(task.id, 'feedback'))
+                    }
+                  }}
+                />
+              )}
+            </DashboardTourStep>
+
+            <DashboardTourStep
+              steps={tourSteps}
+              stepId="recent-activity"
+              className="w-full @7xl:max-w-[400px]"
+            >
+              {loading ? (
+                <DashboardActivitiesSkeleton />
+              ) : (
+                <DashboardActivities activities={activities} loading={loading} onViewAll={() => undefined} />
+              )}
+            </DashboardTourStep>
+          </div>
         </div>
-      </div>
-    </AppLayout>
+      </AppLayout>
+    </TourProvider>
   )
 }
