@@ -2618,7 +2618,8 @@
           "decisionCertification": "القرار والاعتماد",
           "auditReview": "التدقيق والمراجعة"
         },
-        "viewFullPipeline": "عرض كل المسار"
+        "viewFullPipeline": "عرض كل المسار",
+        "exportData": "تصدير البيانات"
       },
       "auditsOverview": {
         "title": "نظرة عامة على التدقيق",

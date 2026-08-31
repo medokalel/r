@@ -8,6 +8,7 @@ import { CabStatCards } from '@/components/dashboard/cab/CabStatCards'
 import { CabDonutCard } from '@/components/dashboard/cab/CabDonutCard'
 import { CabAuditsOverviewChart } from '@/components/dashboard/cab/CabAuditsOverviewChart'
 import { AuditCalendarModal } from '@/components/dashboard/cab/AuditCalendarModal'
+import { ApplicationsByStageModal } from '@/components/dashboard/cab/ApplicationsByStageModal'
 import { CabWorkQueue } from '@/components/dashboard/cab/CabWorkQueue'
 import { CabRecentActivity } from '@/components/dashboard/cab/CabRecentActivity'
 import { CabQuickActions } from '@/components/dashboard/cab/CabQuickActions'
@@ -40,6 +41,7 @@ export function CabDashboardPage() {
   const [activities, setActivities] = useState<CabActivityItem[]>([])
   const [loading, setLoading] = useState(true)
   const [isAuditCalendarOpen, setIsAuditCalendarOpen] = useState(false)
+  const [isApplicationsByStageOpen, setIsApplicationsByStageOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -99,8 +101,10 @@ export function CabDashboardPage() {
               entries={applicationsByStage.map((e) => ({ key: e.stageKey, count: e.count, color: e.color }))}
               labelPrefix="cab.dashboard.applicationsByStage.stages"
               totalLabel={t('cab.dashboard.total')}
-              // TODO: no full-pipeline view exists yet — wire this once it's built.
-              footerLink={{ label: t('cab.dashboard.applicationsByStage.viewFullPipeline'), onClick: () => undefined }}
+              footerLink={{
+                label: t('cab.dashboard.applicationsByStage.viewFullPipeline'),
+                onClick: () => setIsApplicationsByStageOpen(true),
+              }}
             />
 
             <CabAuditsOverviewChart
@@ -140,6 +144,11 @@ export function CabDashboardPage() {
         </div>
       </div>
       <AuditCalendarModal open={isAuditCalendarOpen} onOpenChange={setIsAuditCalendarOpen} />
+      <ApplicationsByStageModal
+        open={isApplicationsByStageOpen}
+        onOpenChange={setIsApplicationsByStageOpen}
+        entries={applicationsByStage}
+      />
     </CabLayout>
   )
 }

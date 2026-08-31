@@ -2579,7 +2579,8 @@
           "decisionCertification": "Decision & Certification",
           "auditReview": "Audit & Review"
         },
-        "viewFullPipeline": "View full pipeline"
+        "viewFullPipeline": "View full pipeline",
+        "exportData": "Export Data"
       },
       "auditsOverview": {
         "title": "Audits Overview",
