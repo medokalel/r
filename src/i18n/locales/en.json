@@ -1035,6 +1035,20 @@
     "newRequest": "New Certification Request",
     "interactiveInvoice": "Interactive invoice",
     "empty": "You have no certification requests yet.",
+    "tour": {
+      "header": {
+        "title": "Your Certification Requests",
+        "description": "This page lists every certification request you've submitted, along with its current status."
+      },
+      "actions": {
+        "title": "Start Something New",
+        "description": "Submit a new certification request or check an interactive invoice for your existing requests from here."
+      },
+      "requestsList": {
+        "title": "Track Every Request",
+        "description": "Each card shows a request's order number and status. Use Follow Up or Order Status to see more details or take action."
+      }
+    },
     "status": {
       "underConstruction": "Under construction",
       "underReview": "Under review",
@@ -1148,6 +1162,20 @@
   },
   "users": {
     "pageTitle": "Users",
+    "tour": {
+      "header": {
+        "title": "Manage Your Team",
+        "description": "This page is where you manage everyone with access to your account."
+      },
+      "stats": {
+        "title": "Team at a Glance",
+        "description": "Track your total, active, and inactive users at a glance."
+      },
+      "table": {
+        "title": "Add and Manage Users",
+        "description": "Search for a user, add a new one, or edit their role and status right from this table."
+      }
+    },
     "stats": {
       "inactive": "Inactive user",
       "active": "Active users",
@@ -1195,6 +1223,20 @@
   },
   "wallet": {
     "pageTitle": "Digital Wallet",
+    "tour": {
+      "header": {
+        "title": "Your Digital Wallet",
+        "description": "Manage your balance and payments for all your certification services in one place."
+      },
+      "balance": {
+        "title": "Balance and Payments",
+        "description": "Check your available credit, recharge your balance, request a refund, or add a payment method here."
+      },
+      "transactions": {
+        "title": "Transaction History",
+        "description": "Every recharge, payment, and refund is listed here so you can track your wallet activity."
+      }
+    },
     "securityNotice": "Your financial data is encrypted and is not stored directly on our servers.",
     "balanceSection": {
       "title": "Balance management and payments",

@@ -8,7 +8,10 @@ import { RequestRefundModal } from '@/components/dashboard/wallet/RequestRefundM
 import { UpdateAccountModal } from '@/components/dashboard/wallet/UpdateAccountModal'
 import { WalletToastOverlay, type WalletToastVariant } from '@/components/dashboard/wallet/WalletToast'
 import { WalletTransactionsTable } from '@/components/dashboard/wallet/WalletTransactionsTable'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { useWalletTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import {
   MOCK_LINKED_ACCOUNTS,
   MOCK_SAVED_VISA_CARDS,
@@ -21,6 +24,7 @@ type ActiveModal = 'recharge' | 'addPayment' | 'refund' | 'update' | null
 
 export function DigitalWalletPage() {
   const { t } = useTranslation()
+  const tourSteps = useWalletTourSteps()
   const [balance, setBalance] = useState<WalletBalance>(MOCK_WALLET_BALANCE)
   const [activeModal, setActiveModal] = useState<ActiveModal>(null)
   const [toast, setToast] = useState<WalletToastVariant | null>(null)
@@ -44,70 +48,78 @@ export function DigitalWalletPage() {
   }
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="wallet.pageTitle" />
+    <TourProvider tourId="auditee-wallet" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="wallet-header">
+          <AccreditationHeader titleKey="wallet.pageTitle" />
+        </DashboardTourStep>
 
-      {toast && (
-        <WalletToastOverlay
-          variant={toast}
-          onClose={() => setToast(null)}
-          onRetry={() => {
-            setToast(null)
-            setActiveModal('recharge')
-          }}
-        />
-      )}
+        {toast && (
+          <WalletToastOverlay
+            variant={toast}
+            onClose={() => setToast(null)}
+            onRetry={() => {
+              setToast(null)
+              setActiveModal('recharge')
+            }}
+          />
+        )}
 
-      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-        <BalanceSection
-          balance={balance}
-          linkedAccounts={MOCK_LINKED_ACCOUNTS}
-          onRecharge={() => setActiveModal('recharge')}
-          onRefund={() => setActiveModal('refund')}
-          onAddPaymentMethod={() => setActiveModal('addPayment')}
-          onUpdateAccount={() => setActiveModal('update')}
-        />
+        <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+          <DashboardTourStep steps={tourSteps} stepId="wallet-balance">
+            <BalanceSection
+              balance={balance}
+              linkedAccounts={MOCK_LINKED_ACCOUNTS}
+              onRecharge={() => setActiveModal('recharge')}
+              onRefund={() => setActiveModal('refund')}
+              onAddPaymentMethod={() => setActiveModal('addPayment')}
+              onUpdateAccount={() => setActiveModal('update')}
+            />
+          </DashboardTourStep>
 
-        <WalletTransactionsTable transactions={MOCK_WALLET_TRANSACTIONS} />
+          <DashboardTourStep steps={tourSteps} stepId="wallet-transactions">
+            <WalletTransactionsTable transactions={MOCK_WALLET_TRANSACTIONS} />
+          </DashboardTourStep>
 
-        <div className="flex items-center justify-end gap-3 pb-2">
-          <button
-            type="button"
-            className="rounded-[8px] border border-[#1236a3] bg-white px-10 py-3 text-[16px] font-semibold text-[#1236a3] transition-colors hover:bg-[#e8edfc]"
-          >
-            {t('common.back')}
-          </button>
-          <button
-            type="button"
-            className="rounded-[8px] bg-[#1236a3] px-10 py-3 text-[16px] font-semibold text-white transition-colors hover:bg-[#0f2d88]"
-          >
-            {t('common.next')}
-          </button>
+          <div className="flex items-center justify-end gap-3 pb-2">
+            <button
+              type="button"
+              className="rounded-[8px] border border-[#1236a3] bg-white px-10 py-3 text-[16px] font-semibold text-[#1236a3] transition-colors hover:bg-[#e8edfc]"
+            >
+              {t('common.back')}
+            </button>
+            <button
+              type="button"
+              className="rounded-[8px] bg-[#1236a3] px-10 py-3 text-[16px] font-semibold text-white transition-colors hover:bg-[#0f2d88]"
+            >
+              {t('common.next')}
+            </button>
+          </div>
         </div>
-      </div>
 
-      <RechargeBalanceModal
-        open={activeModal === 'recharge'}
-        onClose={() => setActiveModal(null)}
-        onConfirm={handleRecharge}
-        visaCards={MOCK_SAVED_VISA_CARDS}
-        bankAccounts={MOCK_LINKED_ACCOUNTS}
-      />
-      <AddPaymentMethodModal
-        open={activeModal === 'addPayment'}
-        onClose={() => setActiveModal(null)}
-        onAdd={() => undefined}
-      />
-      <RequestRefundModal
-        open={activeModal === 'refund'}
-        onClose={() => setActiveModal(null)}
-        onSubmit={() => undefined}
-      />
-      <UpdateAccountModal
-        open={activeModal === 'update'}
-        onClose={() => setActiveModal(null)}
-        onUpdate={() => undefined}
-      />
-    </AppLayout>
+        <RechargeBalanceModal
+          open={activeModal === 'recharge'}
+          onClose={() => setActiveModal(null)}
+          onConfirm={handleRecharge}
+          visaCards={MOCK_SAVED_VISA_CARDS}
+          bankAccounts={MOCK_LINKED_ACCOUNTS}
+        />
+        <AddPaymentMethodModal
+          open={activeModal === 'addPayment'}
+          onClose={() => setActiveModal(null)}
+          onAdd={() => undefined}
+        />
+        <RequestRefundModal
+          open={activeModal === 'refund'}
+          onClose={() => setActiveModal(null)}
+          onSubmit={() => undefined}
+        />
+        <UpdateAccountModal
+          open={activeModal === 'update'}
+          onClose={() => setActiveModal(null)}
+          onUpdate={() => undefined}
+        />
+      </AppLayout>
+    </TourProvider>
   )
 }

@@ -4,10 +4,13 @@ import { useNavigate } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { InteractiveInvoiceModal } from '@/components/dashboard/InteractiveInvoiceModal'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { ErrorState } from '@/components/ui'
 import { RequestCardsSkeleton } from '@/components/dashboard/entityData/ApplicationLoadingSkeleton'
 import { AddCircle } from 'iconsax-reactjs'
 import { AppIcon, ReceiptIcon } from '@/components/icons'
+import { useCertificationRequestsTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import { ApiError } from '@/lib/api/client'
 import {
   listApplications,
@@ -174,6 +177,7 @@ function RequestCard({ request, onFollowUp, onOrderStatus }: RequestCardProps) {
 export function CertificationRequestsPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = useCertificationRequestsTourSteps()
   const [requests, setRequests] = useState<CertificationRequest[]>([])
   const [loading, setLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -220,83 +224,93 @@ export function CertificationRequestsPage() {
   }, [navigate, reloadKey, t])
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="certificationRequests.title" />
-      <div className="mt-4 flex flex-1 flex-col overflow-auto min-[924px]:mt-0">
+    <TourProvider tourId="auditee-certification-requests" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="requests-header">
+          <AccreditationHeader titleKey="certificationRequests.title" />
+        </DashboardTourStep>
+        <div className="mt-4 flex flex-1 flex-col overflow-auto min-[924px]:mt-0">
 
-        {/* Action buttons */}
-        <div className="hidden md:flex md:items-center md:gap-3 md:px-5 md:py-5 lg:justify-end lg:gap-5">
-          <button
-            type="button"
-            onClick={() => navigate(ROUTES.certificationRequestNew)}
-            className="flex h-12 flex-1 items-center justify-center gap-3 rounded-[8px] bg-[#1236a3] pl-4 pr-6 text-body-3-semibold leading-[1.6] text-white transition-colors hover:bg-[#1236a3] lg:flex-none"
+          {/* Action buttons */}
+          <DashboardTourStep
+            steps={tourSteps}
+            stepId="new-request-actions"
+            className="hidden md:block"
           >
-            <AddCircle size={24} color="white" variant="Linear" />
-            {t('certificationRequests.newRequest')}
-          </button>
-          <button
-            type="button"
-            onClick={() => setIsInvoiceOpen(true)}
-            className="flex h-12 flex-1 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-body-2-semibold leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd] lg:flex-none"
-          >
-            {t('certificationRequests.interactiveInvoice')}
-          </button>
-        </div>
-
-        {/* Mobile floating action buttons */}
-        <div className="fixed end-4 top-1/3 z-20 flex flex-col gap-3 md:hidden">
-          <button
-            type="button"
-            onClick={() => setIsInvoiceOpen(true)}
-            className="flex size-15 items-center justify-center rounded-full border-1 border-[#1236a3] bg-white text-[#1236a3] shadow-[0_6px_20px_rgba(153,155,168,0.2)]"
-            aria-label={t('certificationRequests.interactiveInvoice')}
-          >
-            <AppIcon icon={ReceiptIcon} size={26} />
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate(ROUTES.certificationRequestNew)}
-            className="flex size-15 items-center justify-center rounded-full bg-[#1236a3] text-white shadow-[0_6px_20px_rgba(18,54,163,0.3)]"
-            aria-label={t('certificationRequests.newRequest')}
-          >
-            <AddCircle size={26} color="white" variant="Linear" />
-          </button>
-        </div>
-
-        {/* Cards grid */}
-        <div className="px-5 pb-8">
-          {loading ? (
-            <RequestCardsSkeleton />
-          ) : hasError ? (
-            <ErrorState
-              variant={isRateLimited ? 'rateLimit' : 'generic'}
-              title={isRateLimited ? t('errors.rateLimit.title') : undefined}
-              description={isRateLimited ? t('errors.rateLimit.description') : undefined}
-              onRetry={() => setReloadKey((key) => key + 1)}
-            />
-          ) : requests.length === 0 ? (
-            <p className="py-10 text-center text-[16px] text-neutral-600">
-              {t('certificationRequests.empty')}
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-              {requests.map((request) => (
-                <RequestCard
-                  key={request.id}
-                  request={request}
-                  onFollowUp={() =>
-                    navigate(certificationRequestFormPath(request.id, 'feedback'))
-                  }
-                  onOrderStatus={() =>
-                    navigate(certificationRequestFormPath(request.id, 'status'))
-                  }
-                />
-              ))}
+            <div className="flex md:items-center md:gap-3 md:px-5 md:py-5 lg:justify-end lg:gap-5">
+              <button
+                type="button"
+                onClick={() => navigate(ROUTES.certificationRequestNew)}
+                className="flex h-12 flex-1 items-center justify-center gap-3 rounded-[8px] bg-[#1236a3] pl-4 pr-6 text-body-3-semibold leading-[1.6] text-white transition-colors hover:bg-[#1236a3] lg:flex-none"
+              >
+                <AddCircle size={24} color="white" variant="Linear" />
+                {t('certificationRequests.newRequest')}
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsInvoiceOpen(true)}
+                className="flex h-12 flex-1 items-center justify-center rounded-[8px] border border-[#1236a3] bg-white px-6 text-body-2-semibold leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd] lg:flex-none"
+              >
+                {t('certificationRequests.interactiveInvoice')}
+              </button>
             </div>
-          )}
+          </DashboardTourStep>
+
+          {/* Mobile floating action buttons */}
+          <div className="fixed end-4 top-1/3 z-20 flex flex-col gap-3 md:hidden">
+            <button
+              type="button"
+              onClick={() => setIsInvoiceOpen(true)}
+              className="flex size-15 items-center justify-center rounded-full border-1 border-[#1236a3] bg-white text-[#1236a3] shadow-[0_6px_20px_rgba(153,155,168,0.2)]"
+              aria-label={t('certificationRequests.interactiveInvoice')}
+            >
+              <AppIcon icon={ReceiptIcon} size={26} />
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.certificationRequestNew)}
+              className="flex size-15 items-center justify-center rounded-full bg-[#1236a3] text-white shadow-[0_6px_20px_rgba(18,54,163,0.3)]"
+              aria-label={t('certificationRequests.newRequest')}
+            >
+              <AddCircle size={26} color="white" variant="Linear" />
+            </button>
+          </div>
+
+          {/* Cards grid */}
+          <DashboardTourStep steps={tourSteps} stepId="requests-list" className="px-5 pb-8">
+            {loading ? (
+              <RequestCardsSkeleton />
+            ) : hasError ? (
+              <ErrorState
+                variant={isRateLimited ? 'rateLimit' : 'generic'}
+                title={isRateLimited ? t('errors.rateLimit.title') : undefined}
+                description={isRateLimited ? t('errors.rateLimit.description') : undefined}
+                onRetry={() => setReloadKey((key) => key + 1)}
+              />
+            ) : requests.length === 0 ? (
+              <p className="py-10 text-center text-[16px] text-neutral-600">
+                {t('certificationRequests.empty')}
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
+                {requests.map((request) => (
+                  <RequestCard
+                    key={request.id}
+                    request={request}
+                    onFollowUp={() =>
+                      navigate(certificationRequestFormPath(request.id, 'feedback'))
+                    }
+                    onOrderStatus={() =>
+                      navigate(certificationRequestFormPath(request.id, 'status'))
+                    }
+                  />
+                ))}
+              </div>
+            )}
+          </DashboardTourStep>
         </div>
-      </div>
-      <InteractiveInvoiceModal open={isInvoiceOpen} onOpenChange={setIsInvoiceOpen} />
-    </AppLayout>
+        <InteractiveInvoiceModal open={isInvoiceOpen} onOpenChange={setIsInvoiceOpen} />
+      </AppLayout>
+    </TourProvider>
   )
 }

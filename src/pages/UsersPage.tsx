@@ -5,6 +5,9 @@ import { AddUserModal } from '@/components/dashboard/users/AddUserModal'
 import { EditUserModal } from '@/components/dashboard/users/EditUserModal'
 import { UsersStatCards } from '@/components/dashboard/users/UsersStatCards'
 import { UsersTable } from '@/components/dashboard/users/UsersTable'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { useUsersTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import {
   deleteUser,
   getUsersStats,
@@ -21,6 +24,7 @@ import {
 import { getAuthSession } from '@/lib/authStorage'
 
 export function UsersPage() {
+  const tourSteps = useUsersTourSteps()
   const [stats, setStats] = useState<UsersStats | null>(null)
   const [users, setUsers] = useState<AppUser[]>([])
   const [loading, setLoading] = useState(true)
@@ -57,38 +61,46 @@ export function UsersPage() {
   }
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="users.pageTitle" />
+    <TourProvider tourId="auditee-users" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="users-header">
+          <AccreditationHeader titleKey="users.pageTitle" />
+        </DashboardTourStep>
 
-      <div className="flex flex-col gap-5 overflow-auto p-5">
-        {loading ? <UsersStatsSkeleton /> : <UsersStatCards stats={stats} loading={loading} />}
+        <div className="flex flex-col gap-5 overflow-auto p-5">
+          <DashboardTourStep steps={tourSteps} stepId="users-stats">
+            {loading ? <UsersStatsSkeleton /> : <UsersStatCards stats={stats} loading={loading} />}
+          </DashboardTourStep>
 
-        {loading ? (
-          <UsersTableSkeleton />
-          ) : (
-            <UsersTable
-            users={users}
-            loading={loading}
-            currentUserId={currentUserId}
-            onStatusChange={handleStatusChange}
-            onDeleteUser={handleDeleteUser}
-            onAddUser={() => setShowAddUser(true)}
-            onEditUser={(user) => setEditingUser(user)}
-          />
-        )}
-      </div>
+          <DashboardTourStep steps={tourSteps} stepId="users-table">
+            {loading ? (
+              <UsersTableSkeleton />
+            ) : (
+              <UsersTable
+                users={users}
+                loading={loading}
+                currentUserId={currentUserId}
+                onStatusChange={handleStatusChange}
+                onDeleteUser={handleDeleteUser}
+                onAddUser={() => setShowAddUser(true)}
+                onEditUser={(user) => setEditingUser(user)}
+              />
+            )}
+          </DashboardTourStep>
+        </div>
 
-      <AddUserModal
-        open={showAddUser}
-        onClose={() => setShowAddUser(false)}
-        onCreated={load}
-      />
+        <AddUserModal
+          open={showAddUser}
+          onClose={() => setShowAddUser(false)}
+          onCreated={load}
+        />
 
-      <EditUserModal
-        user={editingUser}
-        onClose={() => setEditingUser(null)}
-        onSaved={load}
-      />
-    </AppLayout>
+        <EditUserModal
+          user={editingUser}
+          onClose={() => setEditingUser(null)}
+          onSaved={load}
+        />
+      </AppLayout>
+    </TourProvider>
   )
 }
