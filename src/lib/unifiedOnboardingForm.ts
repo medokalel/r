@@ -4,6 +4,11 @@ import type { CountryCode } from '@/lib/countries'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
 import { isOrgScopeStepComplete, type OrgScopeFormFields } from '@/lib/onboardingOrgScopeForm'
 import { type OnboardingModulesFields } from '@/lib/onboardingModulesForm'
+import { emptyCabSetupForm, type CabSetupForm } from '@/lib/cabSetupForm'
+import { emptyAbSetupForm, type AbSetupForm } from '@/lib/abSetupForm'
+import { emptyIaSetupForm, type IaSetupForm } from '@/lib/iaSetupForm'
+import { emptySoSetupForm, type SoSetupForm } from '@/lib/soSetupForm'
+import { emptySaSetupForm, type SaSetupForm } from '@/lib/saSetupForm'
 
 export interface UnifiedOnboardingForm extends OrgScopeFormFields, OnboardingModulesFields {
   entityType: EntityType | ''
@@ -29,6 +34,16 @@ export interface UnifiedOnboardingForm extends OrgScopeFormFields, OnboardingMod
   displayLogoOnCertificates: boolean
   colorPaletteIndex: number | null
   customColor: string
+  /** Extra state for the 10-screen CAB setup wizard; unused by other entity types. */
+  cabSetup: CabSetupForm
+  /** Extra state for the 10-screen AB setup wizard; unused by other entity types. */
+  abSetup: AbSetupForm
+  /** Extra state for the 10-screen Internal Audit setup wizard. */
+  iaSetup: IaSetupForm
+  /** Extra state for the 10-screen Scheme Owner setup wizard. */
+  soSetup: SoSetupForm
+  /** Extra state for the 10-screen Supplier Audit setup wizard. */
+  saSetup: SaSetupForm
 }
 
 export const emptyUnifiedOnboardingForm: UnifiedOnboardingForm = {
@@ -55,6 +70,11 @@ export const emptyUnifiedOnboardingForm: UnifiedOnboardingForm = {
   displayLogoOnCertificates: true,
   colorPaletteIndex: null,
   customColor: '#1943B8',
+  cabSetup: emptyCabSetupForm,
+  abSetup: emptyAbSetupForm,
+  iaSetup: emptyIaSetupForm,
+  soSetup: emptySoSetupForm,
+  saSetup: emptySaSetupForm,
 }
 
 export function isOrgTypeStepComplete(form: UnifiedOnboardingForm): boolean {

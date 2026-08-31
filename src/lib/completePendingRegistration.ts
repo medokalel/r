@@ -1,10 +1,22 @@
-import { register, login, type OrganizationType } from '@/lib/api/authApi'
+import { register, login, type LoginResponseData, type OrganizationType } from '@/lib/api/authApi'
+import { registerCab } from '@/lib/api/cabApi'
+import { ApiError } from '@/lib/api/client'
 import { saveAuthSession } from '@/lib/authStorage'
 import {
   clearPendingRegistration,
   loadPendingRegistration,
   type PendingRegistration,
 } from '@/lib/pendingRegistrationStorage'
+
+function assertCabAdminSession(session: LoginResponseData): void {
+  const roleName = session.user?.role?.name ?? session.role?.name
+  if (session.cab?.id || roleName === 'CAB_ADMIN') return
+
+  throw new ApiError(
+    'This email is already registered with a non-CAB account. Please use a different email to register as a Certification Body.',
+    409,
+  )
+}
 
 function buildRegisterPayload(pending: PendingRegistration, entityType: OrganizationType) {
   const registrantName = pending.fullName.trim()
@@ -22,6 +34,33 @@ function buildRegisterPayload(pending: PendingRegistration, entityType: Organiza
     password: pending.password,
     confirmPassword: pending.confirmPassword,
   }
+}
+
+/** Creates a CAB admin via `/cab-auth/register`, then logs in. */
+export async function completePendingCabRegistration(): Promise<boolean> {
+  const pending = loadPendingRegistration()
+  if (!pending) return false
+
+  try {
+    await registerCab({
+      contactPersonName: pending.fullName.trim(),
+      email: pending.email,
+      password: pending.password,
+      confirmPassword: pending.confirmPassword,
+      phone: pending.phone,
+    })
+  } catch (error) {
+    // Account may already exist from a prior attempt before login succeeded.
+    if (!(error instanceof ApiError && error.status === 409)) {
+      throw error
+    }
+  }
+
+  const session = await login(pending.email, pending.password)
+  assertCabAdminSession(session)
+  saveAuthSession(session, true)
+  clearPendingRegistration()
+  return true
 }
 
 /** Creates the account via `/auth/register` with the onboarding org type, then logs in. */

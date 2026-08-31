@@ -30,11 +30,15 @@ export function getAuthSession(): LoginResponseData | null {
  *  land on the CAB dashboard once onboarded; everyone else uses the generic
  *  dashboard. */
 export function getPostLoginRedirect(session: LoginResponseData): string {
+  if (session.cab && !session.cab.setupCompleted) {
+    return ROUTES.onboarding
+  }
+
   const org = session.organization
   if (org && !isOnboardingComplete(org.id)) {
     return ROUTES.onboarding
   }
-  if (org?.type === 'CERTIFICATION_BODY') {
+  if (session.cab?.setupCompleted || org?.type === 'CERTIFICATION_BODY') {
     return ROUTES.cabDashboard
   }
   if (org?.type === 'ACCREDITATION_BODY') {
@@ -65,4 +69,25 @@ export function patchAuthOrganizationType(type: OrganizationType): void {
   }
 
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+}
+
+export function patchCabSetupCompleted(setupCompleted: boolean): void {
+  const session = getAuthSession()
+  if (!session?.cab) return
+
+  const nextSession: LoginResponseData = {
+    ...session,
+    cab: { ...session.cab, setupCompleted },
+  }
+
+  if (localStorage.getItem(SESSION_KEY)) {
+    localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+    return
+  }
+
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+}
+
+export function isCabUserOnboarded(): boolean {
+  return getAuthSession()?.cab?.setupCompleted === true
 }

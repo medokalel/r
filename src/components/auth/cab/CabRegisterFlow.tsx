@@ -1,35 +1,32 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, SuccessCheckIcon } from '@/components/icons'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
 import { CabStepNav } from '@/components/auth/cab/CabStepNav'
 import { CabAccountBasicsStep } from '@/components/auth/cab/CabAccountBasicsStep'
 import { CabVerificationStep } from '@/components/auth/cab/CabVerificationStep'
 import { emptyCabAccountBasicsForm, isCabAccountBasicsComplete, type CabAccountBasicsForm } from '@/lib/cabAccountBasicsForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
-import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
+import { sendVerificationCode, verifyEmail, login, formatPhoneNumber } from '@/lib/api/authApi'
+import { registerCab } from '@/lib/api/cabApi'
+import { saveAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 import { ApiError } from '@/lib/api/client'
-import { getCountryOptions } from '@/lib/countries'
 
 interface CabRegisterFlowProps {
   /** Lets the user back out to entity-type selection from CAB step 1. */
   onBackToEntityType: () => void
-  /** Lets the parent page hide chrome (e.g. the "Log in" link) on the final success screen. */
-  onSubmittedChange?: (submitted: boolean) => void
 }
 
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
-export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRegisterFlowProps) {
-  const { t, i18n } = useTranslation()
+export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2>(1)
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
   const [createAccountError, setCreateAccountError] = useState<string | null>(null)
   const [basicsForm, setBasicsForm] = useState<CabAccountBasicsForm>(emptyCabAccountBasicsForm)
-  const [submitted, setSubmitted] = useState(false)
 
   // Step 2 ("verification") — same email + OTP pattern as RegisterPage.
   const [verificationEmail, setVerificationEmail] = useState('')
@@ -96,26 +93,17 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
       // post-login onboarding wizard instead). Stand in with the registrant's
       // own name/country until the backend adds a dedicated CAB submission
       // path that doesn't need these upfront.
-      const countryName =
-        getCountryOptions(i18n.language).find((c) => c.code === basicsForm.country)?.name ??
-        basicsForm.country
-
-      await register({
-        entityType: 'CERTIFICATION_BODY',
-        email: verificationEmail,
-        organizationName: basicsForm.name,
-        administrationName: basicsForm.name,
-        facilityOwnerManager: basicsForm.name,
-        activity: basicsForm.name,
-        legalCapacity: basicsForm.name,
-        city: countryName,
+      await registerCab({
+        contactPersonName: basicsForm.name.trim(),
+        email: verificationEmail.trim(),
         phone: formatPhoneNumber(basicsForm.mobileCountryCode, basicsForm.mobile),
         password: basicsForm.password,
         confirmPassword: basicsForm.confirmPassword,
       })
 
-      setSubmitted(true)
-      onSubmittedChange?.(true)
+      const session = await login(verificationEmail.trim(), basicsForm.password)
+      saveAuthSession(session, true)
+      navigate(ROUTES.onboarding)
     } catch (error) {
       setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
     } finally {
@@ -152,25 +140,6 @@ export function CabRegisterFlow({ onBackToEntityType, onSubmittedChange }: CabRe
           ? t('register.creatingAccount')
           : t('register.createAccount')
         : t('common.next')
-
-  if (submitted) {
-    return (
-      <div className="flex min-h-[520px] w-full flex-col items-center justify-center text-center">
-        <AppIcon icon={SuccessCheckIcon} size={140} className="mb-6" />
-        <h1 className="text-h1 mb-3 text-[#26a65b]">{t('register.cab.summary.submittedTitle')}</h1>
-        <p className="text-body-2 mb-8 max-w-md text-neutral-500">
-          {t('register.cab.summary.submittedDescription')}
-        </p>
-        <button
-          type="button"
-          onClick={() => navigate(ROUTES.login)}
-          className="rounded-[var(--radius-sm)] bg-primary px-8 py-3 text-body-2-semibold text-white transition-colors hover:bg-primary/90"
-        >
-          {t('register.cab.summary.goToLogin')}
-        </button>
-      </div>
-    )
-  }
 
   return (
     <>

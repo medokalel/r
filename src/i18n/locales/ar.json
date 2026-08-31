@@ -1,5 +1,6 @@
 {
   "common": {
+    "saveAndContinueLater": "حفظ والمتابعة لاحقًا",
     "appName": "كاسكو",
     "loading": "جاري التحميل...",
     "save": "حفظ",
@@ -1731,6 +1732,328 @@
       "title": "لوحة تحكم AB",
       "comingSoonTitle": "قريبًا",
       "comingSoonDescription": "لوحة تحكم جهة الاعتماد قيد التطوير. ستتمكن من إدارة أعمال الاعتماد من هنا بعد الإطلاق."
+    },
+    "setup": {
+      "badge": "إعداد جهة الاعتماد",
+      "profile": {
+        "title": "أكّد بيانات جهة الاعتماد",
+        "subtitle": "أضف الهوية القانونية والتفويض المستخدم في قرارات الاعتماد والشهادات والسجلات العامة.",
+        "legalName": "الاسم القانوني لجهة الاعتماد",
+        "legalNamePlaceholder": "الهيئة الوطنية للاعتماد",
+        "shortName": "الاسم المختصر / العام",
+        "shortNamePlaceholder": "NAA",
+        "model": "نموذج جهة الاعتماد",
+        "modelPlaceholder": "اختر نموذج الجهة",
+        "modelOther": "صف نموذج جهتك",
+        "modelOtherPlaceholder": "أدخل النموذج",
+        "mandate": "رقم التفويض / المرسوم",
+        "registrationBasis": "أساس التسجيل / التخويل",
+        "mandatePlaceholder": "أدخل مرجع التفويض",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com",
+        "contactEmail": "البريد الإلكتروني الرسمي",
+        "contactEmailPlaceholder": "accreditation@example.com",
+        "contactPhone": "رقم الهاتف الرئيسي",
+        "contactPhonePlaceholder": "+966 5X XXX XXXX",
+        "yearEstablished": "سنة التأسيس",
+        "yearEstablishedPlaceholder": "اختر السنة",
+        "note": "يتم إعداد برامج الاعتماد وترتيبات الاعتراف في الخطوات التالية."
+      },
+      "models": {
+        "national": "جهة اعتماد وطنية",
+        "governmentAgency": "جهة حكومية",
+        "regional": "جهة إقليمية / متعددة الاقتصادات",
+        "private": "جهة اعتماد خاصة",
+        "sectorSpecific": "جهة متخصصة بقطاع",
+        "other": "أخرى"
+      },
+      "locations": {
+        "title": "أين يُدار نظام الاعتماد لديك؟",
+        "subtitle": "ابدأ بالمقر الرئيسي، ثم أضف المكاتب التي تدير الطلبات أو التقييمات أو القرارات.",
+        "headOfficeCountry": "دولة المقر الرئيسي",
+        "country": "الدولة",
+        "city": "المدينة",
+        "mainOfficeAddress": "عنوان المقر الرئيسي",
+        "address": "العنوان",
+        "addressPlaceholder": "الشارع، المبنى، المنطقة",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات",
+        "jurisdiction": "نطاق الاختصاص",
+        "jurisdictionPlaceholder": "اختر نطاق الاختصاص",
+        "hasAdditional": "لدينا مكاتب اعتماد إضافية",
+        "officeTitle": "مكتب {{index}}",
+        "officeName": "اسم المكتب",
+        "officeNamePlaceholder": "مثال: مكتب جدة",
+        "officeType": "نوع المكتب",
+        "officeTypePlaceholder": "اختر نوع المكتب",
+        "officeActivities": "الأنشطة المسؤول عنها",
+        "officeActivitiesPlaceholder": "اختر الأنشطة",
+        "addOffice": "+ إضافة موقع"
+      },
+      "officeTypes": {
+        "headquarters": "المقر الرئيسي",
+        "applicationOffice": "مكتب الطلبات",
+        "assessmentCoordination": "تنسيق التقييم",
+        "decisionOffice": "مكتب القرارات",
+        "regionalOffice": "مكتب إقليمي",
+        "remoteOffice": "مكتب عن بُعد"
+      },
+      "jurisdictions": {
+        "national": "وطني",
+        "regional": "إقليمي",
+        "international": "دولي",
+        "nationalAndCrossBorder": "وطني وعابر للحدود",
+        "sectorSpecific": "متخصص بقطاع"
+      },
+      "recognitionStatus": {
+        "title": "أخبرنا عن الاعتراف الدولي",
+        "subtitle": "اختر وضع الاعتراف الحالي. سيتم حفظ كل ترتيب بشكل منفصل.",
+        "options": {
+          "signatory": "موقّع",
+          "applicant": "مقدم طلب",
+          "notSignatory": "غير موقّع"
+        },
+        "descriptions": {
+          "SIGNATORY": "اعتراف MLA / MRA ساري",
+          "APPLICANT": "تقييم الأقران قيد التنفيذ",
+          "NOT_SIGNATORY": "العمل بدون ترتيب اعتراف"
+        },
+        "recordCount": "كم عدد ترتيبات الاعتراف؟",
+        "recordCountHint": "يمكنك إضافة أو تغيير ذلك لاحقًا.",
+        "whySeparateTitle": "لماذا ترتيبات منفصلة؟",
+        "whySeparateBody": "قد تعترف هيئات IAF وILAC وهيئات التعاون الإقليمية ببرامج ومستويات وتواريخ سريان مختلفة.",
+        "multiStatusNote": "اختر أكثر من وضع فقط عندما يختلف الاعتراف فعليًا بين الترتيبات."
+      },
+      "recognitionRecords": {
+        "title": "أضف ترتيبات الاعتراف",
+        "subtitle": "سجّل الحد الأدنى من المعلومات اللازمة للتحكم في نطاق التوقيع والأدلة والادعاءات العامة.",
+        "recordTab": "ترتيب {{index}}",
+        "addAnother": "+ إضافة ترتيب آخر",
+        "cooperationBody": "هيئة التعاون",
+        "cooperationBodyPlaceholder": "اختر هيئة التعاون",
+        "cooperationBodyOther": "الاسم الرسمي لهيئة التعاون",
+        "cooperationBodyOtherPlaceholder": "أدخل الاسم الرسمي",
+        "arrangement": "الترتيب / المستوى",
+        "arrangementPlaceholder": "اختر الترتيب",
+        "reference": "مرجع الاعتراف",
+        "referencePlaceholder": "MLA-AB-0123",
+        "signatorySince": "موقّع منذ",
+        "nextPeerEvaluation": "تقييم الأقران القادم",
+        "peerAfterSignatory": "يجب أن يكون تقييم الأقران القادم بعد تاريخ التوقيع.",
+        "status": "حالة الاعتراف",
+        "statusPlaceholder": "اختر الحالة",
+        "applicationReference": "مرجع الطلب / تقييم الأقران",
+        "applicationReferencePlaceholder": "أدخل المرجع",
+        "decisionFile": "ملف القرار / النطاق",
+        "uploadPdf": "رفع ملف PDF",
+        "displayOnPublicProfile": "العرض في الملف العام لجهة الاعتماد",
+        "peerEvaluationReminders": "تفعيل تذكيرات تقييم الأقران",
+        "applicantNote": "يمكن للجهات مقدمة الطلب حفظ مرجع الطلب وتقييم الأقران بدلاً من ذلك."
+      },
+      "arrangementStatus": {
+        "active": "موقّع نشط",
+        "applicant": "مقدم طلب",
+        "suspended": "موقوف",
+        "withdrawn": "مسحوب"
+      },
+      "programmes": {
+        "title": "ما برامج الاعتماد التي تديرها؟",
+        "subtitle": "اختر معايير تقييم المطابقة التي تديرها جهة الاعتماد لديك.",
+        "programmesLabel": "برامج الاعتماد",
+        "customLabel": "البرامج المخصصة",
+        "customEmpty": "لم تتم إضافة برامج مخصصة.",
+        "addCustom": "+ إضافة برنامج آخر",
+        "customTitle": "برنامج مخصص {{index}}",
+        "customName": "اسم البرنامج",
+        "customNamePlaceholder": "أدخل اسم البرنامج",
+        "customOwner": "الجهة المالكة للبرنامج",
+        "customOwnerPlaceholder": "اختر أو أدخل الاسم",
+        "customDocument": "الوثيقة المرجعية",
+        "customDocumentPlaceholder": "أدخل الوثيقة المرجعية",
+        "customVersion": "الإصدار",
+        "customVersionPlaceholder": "مثال: 2024",
+        "lifecycleLabel": "دورة حياة الاعتماد",
+        "market": "نطاق الاختصاص / السوق",
+        "marketPlaceholder": "اختر نطاق الاختصاص",
+        "regulator": "الجهة التنظيمية / مالك المخطط (إن وُجدت)",
+        "regulatorPlaceholder": "اختر أو أدخل الاسم"
+      },
+      "lifecycle": {
+        "application": "الطلب",
+        "documentReview": "مراجعة الوثائق",
+        "assessment": "التقييم",
+        "decision": "القرار",
+        "surveillance": "المتابعة الدورية",
+        "reassessment": "إعادة التقييم",
+        "extension": "توسيع النطاق",
+        "suspensionWithdrawal": "الإيقاف / السحب"
+      },
+      "scope": {
+        "title": "حدّد نطاق كل برنامج",
+        "subtitle": "اربط التصنيفات والقطاعات والمخططات ببرنامج الاعتماد وترتيب الاعتراف الصحيح.",
+        "empty": "أضف نطاقًا لربط البرنامج بترتيب الاعتراف والمكتب المسؤول.",
+        "scopeTitle": "نطاق {{index}}",
+        "programme": "برنامج الاعتماد",
+        "programmePlaceholder": "اختر البرنامج",
+        "arrangement": "ترتيب الاعتراف",
+        "arrangementPlaceholder": "اختر الترتيب",
+        "noArrangements": "لم تتم إضافة ترتيبات اعتراف",
+        "office": "المكتب المسؤول",
+        "officePlaceholder": "اختر المكتب",
+        "headquarters": "المقر الرئيسي",
+        "headquartersWithCity": "المقر الرئيسي — {{city}}",
+        "classifications": "تصنيفات النطاق المتاحة",
+        "classificationsPlaceholder": "اختر التصنيفات",
+        "addScope": "+ إضافة نطاق",
+        "uploadTitle": "رفع نطاق البرنامج (اختياري)",
+        "uploadHint": "يمكن استيراد تصنيفات PDF / XLSX وربطها لاحقًا.",
+        "acceptOnlyActive": "قبول طلبات جهات التقييم للبرامج النشطة فقط",
+        "requireApproval": "طلب موافقة على توسيع النطاق"
+      },
+      "symbols": {
+        "title": "حدّد شعار الجهة ورموز الاعتماد والقواعد",
+        "subtitle": "احتفظ بالشعار المؤسسي منفصلاً عن رموز البرامج وعلامات الاعتراف.",
+        "abLogo": "شعار جهة الاعتماد",
+        "abLogoCaption": "يُستخدم في البوابة والقرارات",
+        "accreditationSymbol": "رمز الاعتماد",
+        "accreditationSymbolCaption": "يُمنح لجهات التقييم المعتمدة",
+        "recognitionMark": "علامة الاعتراف",
+        "recognitionMarkUnlinked": "أضف ترتيب اعتراف لربط هذه العلامة",
+        "linkedTo": "مرتبطة بترتيب {{target}}",
+        "upload": "رفع",
+        "symbolReference": "إصدار الرمز / مرجع الاعتماد",
+        "symbolReferencePlaceholder": "أدخل رقم المرجع",
+        "validFrom": "صالح من",
+        "validUntil": "صالح حتى",
+        "permittedUse": "الاستخدام المسموح",
+        "permittedUsePlaceholder": "اختر أين يمكن استخدام الرموز",
+        "usageRules": "قواعد الاستخدام",
+        "issueOnlyForGranted": "إصدار الرموز للنطاقات الممنوحة فقط",
+        "blockAfterSuspension": "منع الاستخدام بعد الإيقاف / السحب",
+        "keepAuditTrail": "الاحتفاظ بسجل تدقيق لاستخدام الرمز"
+      },
+      "permittedUse": {
+        "cabCertificate": "شهادات جهات التقييم",
+        "report": "التقارير",
+        "website": "المواقع الإلكترونية",
+        "advertisement": "الإعلانات",
+        "digitalBadge": "الشارات الرقمية"
+      },
+      "certificate": {
+        "title": "إعداد شهادات وقرارات الاعتماد",
+        "subtitle": "حدّد الترقيم الافتراضي والصلاحية وضوابط الإصدار. يمكن تحسين القوالب بعد التفعيل.",
+        "numberFormat": "صيغة رقم الاعتماد",
+        "seqRequired": "يجب أن تتضمن الصيغة {SEQ} لضمان عدم تكرار الأرقام.",
+        "example": "مثال",
+        "cycle": "دورة الاعتماد",
+        "cyclePlaceholder": "اختر الدورة",
+        "language": "لغة المستند",
+        "languagePlaceholder": "اختر اللغة",
+        "signatory": "المخوّل بتوقيع القرار",
+        "signatoryPlaceholder": "يُضاف بعد الإعداد",
+        "template": "قالب الشهادة / القرار",
+        "templatePlaceholder": "اختر القالب",
+        "displayRules": "عرض المستند",
+        "showAbLogo": "إظهار شعار جهة الاعتماد",
+        "showRecognitionMark": "إظهار علامة الاعتراف عند استيفاء الشروط",
+        "showQrCode": "إظهار رمز QR للتحقق العام",
+        "validationNote": "سيتحقق iCASCO من القرار والبرنامج والنطاق والحالة وأهلية الرمز قبل الإصدار."
+      },
+      "cycle": {
+        "oneYear": "سنة واحدة",
+        "twoYears": "سنتان",
+        "threeYears": "3 سنوات",
+        "fourYears": "4 سنوات",
+        "fiveYears": "5 سنوات",
+        "custom": "مخصص"
+      },
+      "documentLanguages": {
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "bilingual": "الإنجليزية + العربية"
+      },
+      "templates": {
+        "default": "استخدام قالب iCASCO الافتراضي",
+        "uploaded": "رفع قالب خاص بنا",
+        "designLater": "التصميم لاحقًا"
+      },
+      "roles": {
+        "title": "أضف الأدوار الرئيسية لجهة الاعتماد — لا الفريق بالكامل",
+        "subtitle": "ادعُ الحد الأدنى من الأشخاص اللازمين لإدارة أعمال الاعتماد. يمكن استكمال كفاءة المقيّمين لاحقًا.",
+        "workspaceOwner": "مالك مساحة العمل",
+        "accreditationDirector": "مدير الاعتماد",
+        "qualityManager": "مدير الجودة",
+        "decisionCommitteeSecretary": "أمين لجنة القرارات",
+        "requirement": {
+          "OWNER": "نشط",
+          "REQUIRED": "مطلوب",
+          "RECOMMENDED": "موصى به",
+          "OPTIONAL": "اختياري"
+        },
+        "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+        "addLater": "إضافة لاحقًا",
+        "emailPlaceholder": "name@example.com",
+        "ownerFallback": "مالك مساحة العمل",
+        "sendInvitations": "إرسال الدعوات عند اكتمال الإعداد",
+        "roleBasedAccess": "استخدام صلاحيات الوصول حسب الدور",
+        "importLaterNote": "يمكن استيراد المقيّمين الرئيسيين والمقيّمين والخبراء وأعضاء اللجان لاحقًا."
+      },
+      "review": {
+        "title": "راجع وفعّل مساحة عمل جهة الاعتماد",
+        "subtitle": "يمكن تعديل كل ما يلي لاحقًا. سيتم إبراز النواقص المطلوبة قبل التفعيل.",
+        "activate": "تفعيل مساحة العمل",
+        "rows": {
+          "identity": "هوية الجهة والتفويض القانوني",
+          "locations": "المواقع",
+          "recognition": "ترتيبات الاعتراف",
+          "programmes": "البرامج والنطاقات",
+          "symbols": "الرموز وقواعد القرارات",
+          "roles": "الأدوار الرئيسية"
+        },
+        "status": {
+          "READY": "جاهز",
+          "REVIEW": "للمراجعة",
+          "MISSING": "ناقص"
+        },
+        "notProvided": "لم يتم إدخاله بعد",
+        "locationsDetail_zero": "مقر رئيسي بدون مكاتب",
+        "locationsDetail_one": "مقر رئيسي + مكتب واحد",
+        "locationsDetail_two": "مقر رئيسي + مكتبان",
+        "locationsDetail_few": "مقر رئيسي + {{count}} مكاتب",
+        "locationsDetail_many": "مقر رئيسي + {{count}} مكتبًا",
+        "locationsDetail_other": "مقر رئيسي + {{count}} مكتب",
+        "recognitionDetail_zero": "لا توجد سجلات",
+        "recognitionDetail_one": "سجل واحد",
+        "recognitionDetail_two": "سجلان",
+        "recognitionDetail_few": "{{count}} سجلات",
+        "recognitionDetail_many": "{{count}} سجلًا",
+        "recognitionDetail_other": "{{count}} سجل",
+        "notSignatory": "العمل بدون ترتيب اعتراف",
+        "programmesCount_zero": "لا توجد برامج",
+        "programmesCount_one": "برنامج واحد",
+        "programmesCount_two": "برنامجان",
+        "programmesCount_few": "{{count}} برامج",
+        "programmesCount_many": "{{count}} برنامجًا",
+        "programmesCount_other": "{{count}} برنامج",
+        "scopesCount_zero": "لا توجد نطاقات مرتبطة",
+        "scopesCount_one": "نطاق مرتبط واحد",
+        "scopesCount_two": "نطاقان مرتبطان",
+        "scopesCount_few": "{{count}} نطاقات مرتبطة",
+        "scopesCount_many": "{{count}} نطاقًا مرتبطًا",
+        "scopesCount_other": "{{count}} نطاق مرتبط",
+        "configured": "تم الإعداد",
+        "needsAttention": "يحتاج إلى مراجعة",
+        "rolesDetail_zero": "لا توجد دعوات معلقة",
+        "rolesDetail_one": "دعوة واحدة معلقة",
+        "rolesDetail_two": "دعوتان معلقتان",
+        "rolesDetail_few": "{{count}} دعوات معلقة",
+        "rolesDetail_many": "{{count}} دعوة معلقة",
+        "rolesDetail_other": "{{count}} دعوة معلقة",
+        "rolesNone": "لا توجد دعوات معلقة",
+        "nextStepNote": "التالي: استيراد جهات التقييم وسجلات الاعتماد وتاريخ التقييم — أو البدء من جديد."
+      }
     }
   },
   "auditee": {
@@ -1806,6 +2129,332 @@
     }
   },
   "cab": {
+    "setup": {
+      "badge": "إعداد جهة التقييم",
+      "profile": {
+        "title": "أكّد بيانات جهتك",
+        "subtitle": "نعرف بالفعل نوع منظمتك. أضف فقط البيانات الأساسية المستخدمة في السجلات والمستندات.",
+        "legalName": "الاسم القانوني للجهة",
+        "legalNamePlaceholder": "مثال: شركة ABC لتقييم المطابقة",
+        "tradingName": "الاسم التجاري",
+        "tradingNamePlaceholder": "مثال: ABC للتصديق",
+        "activity": "نشاط جهة التقييم",
+        "activityPlaceholder": "اختر نشاط الجهة",
+        "activityNote": "يمكن إضافة أنشطة أخرى الآن أو لاحقًا.",
+        "registrationNumber": "رقم التسجيل / الترخيص",
+        "registrationNumberPlaceholder": "أدخل رقم التسجيل",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com",
+        "contactEmail": "البريد الإلكتروني الرئيسي",
+        "contactEmailPlaceholder": "admin@example.com",
+        "contactPhone": "رقم الهاتف الرئيسي",
+        "contactPhonePlaceholder": "+966 5X XXX XXXX",
+        "yearEstablished": "سنة التأسيس",
+        "yearEstablishedPlaceholder": "اختر السنة"
+      },
+      "activities": {
+        "msCertificationBody": "جهة تصديق أنظمة الإدارة",
+        "productCertificationBody": "جهة تصديق المنتجات / العمليات / الخدمات",
+        "personnelCertificationBody": "جهة تصديق الأفراد",
+        "inspectionBody": "جهة فحص",
+        "testingLaboratory": "مختبر اختبار",
+        "calibrationLaboratory": "مختبر معايرة",
+        "medicalLaboratory": "مختبر طبي",
+        "validationVerificationBody": "جهة تحقق وتصديق",
+        "proficiencyTestingProvider": "مزود اختبارات الكفاءة",
+        "referenceMaterialProducer": "منتج المواد المرجعية",
+        "biobank": "بنك حيوي"
+      },
+      "locations": {
+        "title": "أين تعمل؟",
+        "subtitle": "ابدأ بالمقر الرئيسي، ثم أضف الفروع أو المواقع التشغيلية فقط إذا كانت تؤثر على أنشطة التصديق.",
+        "headOfficeCountry": "دولة المقر الرئيسي",
+        "country": "الدولة",
+        "city": "المدينة",
+        "mainOfficeAddress": "عنوان المقر الرئيسي",
+        "address": "العنوان",
+        "addressPlaceholder": "الشارع، المبنى، المنطقة",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات",
+        "hasAdditional": "لدينا مواقع إضافية",
+        "branchTitle": "فرع {{index}}",
+        "locationName": "اسم الموقع",
+        "locationNamePlaceholder": "مثال: مكتب جدة",
+        "locationType": "نوع الموقع",
+        "locationTypePlaceholder": "اختر نوع الموقع",
+        "locationActivities": "الأنشطة في هذا الموقع",
+        "locationActivitiesPlaceholder": "اختر الأنشطة",
+        "addLocation": "+ إضافة موقع"
+      },
+      "locationTypes": {
+        "headOffice": "المقر الرئيسي",
+        "branch": "فرع",
+        "criticalLocation": "موقع حرج",
+        "laboratory": "مختبر",
+        "inspectionOffice": "مكتب فحص",
+        "remoteOffice": "مكتب عن بُعد"
+      },
+      "accreditationStatus": {
+        "title": "ما هي حالة الاعتماد لديك؟",
+        "subtitle": "اختر كل ما ينطبق. ستتم إدارة كل اعتماد كسجل منفصل.",
+        "options": {
+          "accredited": "معتمد",
+          "applicant": "مقدم طلب",
+          "unaccredited": "غير معتمد"
+        },
+        "descriptions": {
+          "ACCREDITED": "شهادة اعتماد سارية",
+          "APPLICANT": "طلب أو تقييم قيد التنفيذ",
+          "UNACCREDITED": "العمل بدون اعتماد"
+        },
+        "recordCount": "كم عدد سجلات الاعتماد؟",
+        "recordCountHint": "يمكنك إضافة أو تغيير ذلك لاحقًا.",
+        "whySeparateTitle": "لماذا سجلات منفصلة؟",
+        "whySeparateBody": "قد تغطي جهات الاعتماد المختلفة معايير ومخططات ودولًا وتواريخ صلاحية وعلامات مختلفة.",
+        "multiStatusNote": "اختر أكثر من حالة فقط عندما تكون أنشطة الجهة فعليًا في حالات اعتماد مختلفة."
+      },
+      "accreditationRecords": {
+        "title": "أضف سجلات الاعتماد",
+        "subtitle": "سجّل الحد الأدنى من البيانات اللازمة للتحكم في الصلاحية والنطاق واستخدام العلامة.",
+        "recordTab": "اعتماد {{index}}",
+        "addAnother": "+ إضافة سجل آخر",
+        "body": "جهة الاعتماد",
+        "bodyPlaceholder": "اختر جهة الاعتماد",
+        "bodyOther": "الاسم الرسمي لجهة الاعتماد",
+        "bodyOtherPlaceholder": "أدخل الاسم الرسمي",
+        "standard": "معيار الاعتماد",
+        "standardPlaceholder": "اختر المعيار",
+        "number": "رقم الاعتماد",
+        "numberPlaceholder": "CB-0123",
+        "issueDate": "تاريخ الإصدار",
+        "expiryDate": "تاريخ الانتهاء",
+        "expiryAfterIssue": "يجب أن يكون تاريخ الانتهاء بعد تاريخ الإصدار.",
+        "status": "حالة الاعتماد",
+        "statusPlaceholder": "اختر الحالة",
+        "applicationReference": "رقم مرجع الطلب",
+        "applicationReferencePlaceholder": "أدخل رقم مرجع الطلب",
+        "certificateFile": "ملف الشهادة / القرار",
+        "uploadPdf": "رفع ملف PDF",
+        "coveredByMla": "مشمول باتفاقية IAF MLA / ILAC MRA",
+        "expiryReminders": "تفعيل تذكيرات انتهاء الصلاحية",
+        "applicantNote": "لم تحصل على الاعتماد بعد؟ اختر \"مقدم طلب\" واحفظ رقم مرجع الطلب بدلاً من ذلك."
+      },
+      "recordStatus": {
+        "active": "ساري",
+        "suspended": "موقوف",
+        "withdrawn": "مسحوب",
+        "expired": "منتهي",
+        "applicant": "مقدم طلب"
+      },
+      "schemes": {
+        "title": "ما الخدمات والمخططات التي تقدمها؟",
+        "subtitle": "اختر من قائمة معتمدة. أضف مخططات مخصصة عند الحاجة فقط.",
+        "schemesLabel": "المخططات",
+        "customSchemesLabel": "المخططات المخصصة",
+        "customSchemesEmpty": "لم تتم إضافة مخططات مخصصة.",
+        "addCustomScheme": "+ إضافة مخطط مخصص",
+        "customSchemeTitle": "مخطط مخصص {{index}}",
+        "customSchemeName": "اسم المخطط",
+        "customSchemeNamePlaceholder": "أدخل اسم المخطط",
+        "customSchemeOwner": "الجهة المالكة للمخطط",
+        "customSchemeOwnerPlaceholder": "اختر أو أدخل الاسم",
+        "customSchemeDocument": "الوثيقة المرجعية",
+        "customSchemeDocumentPlaceholder": "أدخل الوثيقة المرجعية",
+        "customSchemeVersion": "الإصدار",
+        "customSchemeVersionPlaceholder": "مثال: 2024",
+        "servicesLabel": "الخدمات المختارة",
+        "primaryMarket": "السوق الرئيسي للخدمة",
+        "primaryMarketPlaceholder": "اختر السوق",
+        "schemeOwner": "الجهة المالكة للمخطط (إن وُجدت)",
+        "schemeOwnerPlaceholder": "اختر أو أدخل الاسم"
+      },
+      "services": {
+        "initial": "التصديق الأولي",
+        "surveillance": "المتابعة الدورية",
+        "recertification": "إعادة التصديق",
+        "transfer": "نقل الشهادة",
+        "extension": "توسيع / تقليص النطاق",
+        "specialAudit": "تدقيق خاص",
+        "suspensionWithdrawal": "الإيقاف / السحب"
+      },
+      "markets": {
+        "local": "عملاء محليون",
+        "international": "عملاء دوليون",
+        "both": "عملاء محليون ودوليون"
+      },
+      "scope": {
+        "title": "حدّد النطاق لكل مخطط",
+        "subtitle": "اربط النطاقات بالمخطط وسجل الاعتماد والموقع المناسب — دون إدخال مكرر لاحقًا.",
+        "empty": "أضف نطاقًا لربط المخطط بسجل الاعتماد والموقع.",
+        "scopeTitle": "نطاق {{index}}",
+        "scheme": "المخطط",
+        "schemePlaceholder": "اختر المخطط",
+        "accreditationRecord": "سجل الاعتماد",
+        "accreditationRecordPlaceholder": "اختر سجل الاعتماد",
+        "noAccreditationRecords": "لم تتم إضافة سجلات اعتماد",
+        "location": "الموقع",
+        "locationPlaceholder": "اختر الموقع",
+        "headOffice": "المقر الرئيسي",
+        "headOfficeWithCity": "المقر الرئيسي — {{city}}",
+        "codes": "رموز النطاق المعتمدة",
+        "codesPlaceholder": "اختر رموز النطاق",
+        "addScope": "+ إضافة نطاق",
+        "uploadTitle": "رفع قائمة النطاق (اختياري)",
+        "uploadHint": "يمكن استيراد ملفات PDF / XLSX وربطها لاحقًا.",
+        "restrictApplications": "السماح بالطلبات ضمن النطاق المعتمد فقط",
+        "requireTechnicalReview": "طلب مراجعة فنية لاستثناءات النطاق"
+      },
+      "marks": {
+        "title": "حدّد الشعارات والعلامات وقواعد الاستخدام",
+        "subtitle": "احتفظ بشعار الجهة منفصلاً عن علامات الاعتماد والمخططات. اربط كل علامة بالسجل الصحيح.",
+        "cabLogo": "شعار الجهة",
+        "cabLogoCaption": "يُستخدم في البوابة والمستندات",
+        "accreditationMark": "علامة الاعتماد",
+        "accreditationMarkUnlinked": "أضف سجل اعتماد لربط هذه العلامة",
+        "linkedTo": "مرتبطة بـ {{target}}",
+        "schemeMark": "علامة المخطط",
+        "schemeMarkCaption": "مرتبطة بالمخطط المختار",
+        "upload": "رفع",
+        "markReference": "رقم مرجع / اعتماد العلامة",
+        "markReferencePlaceholder": "أدخل رقم المرجع",
+        "validFrom": "صالحة من",
+        "validUntil": "صالحة حتى",
+        "allowedUse": "الاستخدام المسموح في المستندات",
+        "allowedUsePlaceholder": "اختر أين يمكن استخدام العلامات",
+        "usageRules": "قواعد الاستخدام",
+        "applyOnlyToAccredited": "تطبيق علامة الاعتماد على المخططات المعتمدة فقط",
+        "blockAfterExpiry": "منع استخدام العلامة بعد انتهاء الصلاحية",
+        "keepAuditTrail": "الاحتفاظ بسجل تدقيق لاستخدام العلامة"
+      },
+      "documentUse": {
+        "certificate": "الشهادات",
+        "report": "التقارير",
+        "portal": "البوابة",
+        "email": "البريد الإلكتروني",
+        "website": "الموقع الإلكتروني"
+      },
+      "certificate": {
+        "title": "إعداد أساسيات الشهادة",
+        "subtitle": "حدّد الهوية الافتراضية والترقيم. يمكن تصميم القوالب بعد التفعيل.",
+        "numberFormat": "صيغة رقم الشهادة",
+        "seqRequired": "يجب أن تتضمن الصيغة {SEQ} لضمان عدم تكرار الأرقام.",
+        "example": "مثال",
+        "validity": "مدة صلاحية الشهادة",
+        "validityPlaceholder": "اختر المدة",
+        "language": "لغة الشهادة",
+        "languagePlaceholder": "اختر اللغة",
+        "signatory": "المخوّل بالتوقيع",
+        "signatoryPlaceholder": "يُضاف بعد الإعداد",
+        "template": "قالب الشهادة",
+        "templatePlaceholder": "اختر القالب",
+        "displayRules": "عرض الشهادة",
+        "showCabLogo": "إظهار شعار الجهة",
+        "showAccreditationMark": "إظهار علامة الاعتماد عند استيفاء الشروط",
+        "showQrCode": "إظهار رمز QR للتحقق",
+        "validationNote": "سيتحقق iCASCO من المخطط والنطاق والحالة وأهلية العلامة قبل إصدار الشهادة."
+      },
+      "validity": {
+        "oneYear": "سنة واحدة",
+        "twoYears": "سنتان",
+        "threeYears": "3 سنوات",
+        "fourYears": "4 سنوات",
+        "fiveYears": "5 سنوات",
+        "custom": "مخصص"
+      },
+      "certificateLanguages": {
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "bilingual": "الإنجليزية + العربية"
+      },
+      "certificateTemplates": {
+        "default": "استخدام قالب iCASCO الافتراضي",
+        "uploaded": "رفع قالب خاص بنا",
+        "designLater": "التصميم لاحقًا"
+      },
+      "roles": {
+        "title": "أضف الأدوار الرئيسية — لا الفريق بالكامل",
+        "subtitle": "ادعُ الحد الأدنى من الأشخاص اللازمين للبدء. يمكن استكمال سجلات الكفاءة لاحقًا.",
+        "workspaceOwner": "مالك مساحة العمل",
+        "certificationManager": "مدير التصديق",
+        "qualityManager": "مدير الجودة",
+        "technicalReviewer": "المراجع الفني",
+        "generalManager": "الرئيس التنفيذي / المدير العام",
+        "technicalManager": "المدير الفني",
+        "decisionMaker": "متخذ القرار",
+        "auditor": "مدقق / مفتش / محلل",
+        "finance": "المالية",
+        "clientSupport": "دعم العملاء",
+        "requirement": {
+          "OWNER": "نشط",
+          "REQUIRED": "مطلوب",
+          "RECOMMENDED": "موصى به",
+          "OPTIONAL": "اختياري"
+        },
+        "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+        "addLater": "إضافة لاحقًا",
+        "emailPlaceholder": "name@example.com",
+        "ownerFallback": "مالك مساحة العمل",
+        "sendInvitations": "إرسال الدعوات عند اكتمال الإعداد",
+        "roleBasedAccess": "استخدام صلاحيات الوصول حسب الدور",
+        "importLaterNote": "يمكن استيراد المدققين والخبراء والمفتشين لاحقًا."
+      },
+      "review": {
+        "title": "راجع وفعّل مساحة عمل جهتك",
+        "subtitle": "يمكن تعديل كل ما يلي لاحقًا. سيتم إبراز النواقص المطلوبة قبل التفعيل.",
+        "activate": "تفعيل مساحة العمل",
+        "rows": {
+          "identity": "هوية الجهة",
+          "locations": "المواقع",
+          "accreditation": "الاعتماد",
+          "schemes": "المخططات والنطاقات",
+          "marks": "العلامات وقواعد الشهادات",
+          "roles": "الأدوار الرئيسية"
+        },
+        "status": {
+          "READY": "جاهز",
+          "REVIEW": "للمراجعة",
+          "MISSING": "ناقص"
+        },
+        "notProvided": "لم يتم إدخاله بعد",
+        "unaccredited": "العمل بدون اعتماد",
+        "configured": "تم الإعداد",
+        "needsAttention": "يحتاج إلى مراجعة",
+        "rolesNone": "لا توجد دعوات معلقة",
+        "nextStepNote": "التالي: استيراد العملاء والشهادات الحالية، أو البدء بمساحة عمل جديدة.",
+        "locationsDetail_zero": "مقر رئيسي بدون فروع",
+        "locationsDetail_one": "مقر رئيسي + فرع واحد",
+        "locationsDetail_two": "مقر رئيسي + فرعان",
+        "locationsDetail_few": "مقر رئيسي + {{count}} فروع",
+        "locationsDetail_many": "مقر رئيسي + {{count}} فرعًا",
+        "locationsDetail_other": "مقر رئيسي + {{count}} فرع",
+        "accreditationDetail_zero": "لا توجد سجلات",
+        "accreditationDetail_one": "سجل واحد",
+        "accreditationDetail_two": "سجلان",
+        "accreditationDetail_few": "{{count}} سجلات",
+        "accreditationDetail_many": "{{count}} سجلًا",
+        "accreditationDetail_other": "{{count}} سجل",
+        "schemesCount_zero": "لا توجد مخططات",
+        "schemesCount_one": "مخطط واحد",
+        "schemesCount_two": "مخططان",
+        "schemesCount_few": "{{count}} مخططات",
+        "schemesCount_many": "{{count}} مخططًا",
+        "schemesCount_other": "{{count}} مخطط",
+        "scopesCount_zero": "لا توجد نطاقات مرتبطة",
+        "scopesCount_one": "نطاق مرتبط واحد",
+        "scopesCount_two": "نطاقان مرتبطان",
+        "scopesCount_few": "{{count}} نطاقات مرتبطة",
+        "scopesCount_many": "{{count}} نطاقًا مرتبطًا",
+        "scopesCount_other": "{{count}} نطاق مرتبط",
+        "rolesDetail_zero": "لا توجد دعوات معلقة",
+        "rolesDetail_one": "دعوة واحدة معلقة",
+        "rolesDetail_two": "دعوتان معلقتان",
+        "rolesDetail_few": "{{count}} دعوات معلقة",
+        "rolesDetail_many": "{{count}} دعوة معلقة",
+        "rolesDetail_other": "{{count}} دعوة معلقة"
+      }
+    },
     "onboarding": {
       "intro": {
         "title": "لنقم بإعداد جهة التقييم والمطابقة الخاصة بك",
@@ -1998,7 +2647,11 @@
       "workQueue": {
         "title": "قائمة المهام",
         "goToWorkQueue": "الذهاب إلى قائمة المهام",
-        "priority": { "high": "عالية", "medium": "متوسطة", "low": "منخفضة" },
+        "priority": {
+          "high": "عالية",
+          "medium": "متوسطة",
+          "low": "منخفضة"
+        },
         "items": {
           "technicalReviewIso14001": "مراجعة فنية - ISO 14001",
           "informationRequiredFollowUp": "متابعة معلومات مطلوبة",
@@ -2027,9 +2680,18 @@
       },
       "quickActions": {
         "title": "إجراءات سريعة",
-        "newApplication": { "title": "طلب جديد", "description": "تسجيل عميل جديد" },
-        "assignReview": { "title": "تعيين مراجعة", "description": "تعيين لخبير فني" },
-        "issueCertificate": { "title": "إصدار شهادة", "description": "إنشاء وإصدار شهادة" }
+        "newApplication": {
+          "title": "طلب جديد",
+          "description": "تسجيل عميل جديد"
+        },
+        "assignReview": {
+          "title": "تعيين مراجعة",
+          "description": "تعيين لخبير فني"
+        },
+        "issueCertificate": {
+          "title": "إصدار شهادة",
+          "description": "إنشاء وإصدار شهادة"
+        }
       },
       "auditCalendar": {
         "title": "تقويم التدقيق",
@@ -2126,16 +2788,46 @@
         "pending": "قيد الانتظار",
         "viewFull": "عرض سير العمل كاملاً",
         "steps": {
-          "application": { "title": "الطلب", "description": "تقديم الطلب من قبل العميل" },
-          "applicationReview": { "title": "مراجعة الطلب", "description": "اكتمال البيانات والأهلية والجدوى" },
-          "quotation": { "title": "عرض السعر", "description": "إعداد وإرسال عرض السعر" },
-          "contracting": { "title": "التعاقد", "description": "الاتفاقية والتوقيع" },
-          "financial": { "title": "الأمور المالية", "description": "الفوترة والدفع" },
-          "auditPlanning": { "title": "التخطيط للتدقيق", "description": "الأنشطة السابقة للتدقيق وتشكيل الفريق" },
-          "auditExecution": { "title": "تنفيذ التدقيق", "description": "تنفيذ التدقيق (المرحلة 1 و2)" },
-          "auditReporting": { "title": "إعداد تقرير التدقيق", "description": "التقرير والنتائج وخطة التصحيح" },
-          "certificationDecision": { "title": "قرار المنح", "description": "مراجعة واتخاذ قرار المنح" },
-          "surveillanceProgramme": { "title": "برنامج المتابعة", "description": "زيارات المتابعة السنوية" }
+          "application": {
+            "title": "الطلب",
+            "description": "تقديم الطلب من قبل العميل"
+          },
+          "applicationReview": {
+            "title": "مراجعة الطلب",
+            "description": "اكتمال البيانات والأهلية والجدوى"
+          },
+          "quotation": {
+            "title": "عرض السعر",
+            "description": "إعداد وإرسال عرض السعر"
+          },
+          "contracting": {
+            "title": "التعاقد",
+            "description": "الاتفاقية والتوقيع"
+          },
+          "financial": {
+            "title": "الأمور المالية",
+            "description": "الفوترة والدفع"
+          },
+          "auditPlanning": {
+            "title": "التخطيط للتدقيق",
+            "description": "الأنشطة السابقة للتدقيق وتشكيل الفريق"
+          },
+          "auditExecution": {
+            "title": "تنفيذ التدقيق",
+            "description": "تنفيذ التدقيق (المرحلة 1 و2)"
+          },
+          "auditReporting": {
+            "title": "إعداد تقرير التدقيق",
+            "description": "التقرير والنتائج وخطة التصحيح"
+          },
+          "certificationDecision": {
+            "title": "قرار المنح",
+            "description": "مراجعة واتخاذ قرار المنح"
+          },
+          "surveillanceProgramme": {
+            "title": "برنامج المتابعة",
+            "description": "زيارات المتابعة السنوية"
+          }
         }
       }
     },
@@ -2868,7 +3560,9 @@
         "subtitle": "مراجعة الطلب من حيث الاكتمال والدقة والأهلية والامتثال لمتطلبات الاعتماد.",
         "help": "مساعدة",
         "chat": "دعم الدردشة",
-        "status": { "inProgress": "قيد التنفيذ" },
+        "status": {
+          "inProgress": "قيد التنفيذ"
+        },
         "breadcrumb": {
           "home": "الرئيسية",
           "applications": "الطلبات",
@@ -2969,14 +3663,23 @@
         },
         "documentsSection": {
           "title": "المستندات",
-          "columns": { "name": "اسم المستند", "fileName": "اسم الملف", "status": "الحالة" },
+          "columns": {
+            "name": "اسم المستند",
+            "fileName": "اسم الملف",
+            "status": "الحالة"
+          },
           "total": "إجمالي المستندات",
           "valid": "سارٍ",
           "expired": "منتهي"
         },
         "historySection": {
           "title": "السجل",
-          "columns": { "dateTime": "التاريخ والوقت", "by": "بواسطة", "action": "الإجراء", "details": "التفاصيل" }
+          "columns": {
+            "dateTime": "التاريخ والوقت",
+            "by": "بواسطة",
+            "action": "الإجراء",
+            "details": "التفاصيل"
+          }
         },
         "workflowSteps": {
           "application": "الطلب",
@@ -3024,7 +3727,10 @@
         "title": "6. المعلومات المطلوبة",
         "subtitle": "تتبع وإدارة طلبات المعلومات المرسلة إلى العميل أثناء مراجعة الطلب.",
         "help": "مساعدة",
-        "status": { "inProgress": "قيد التنفيذ", "pending": "قيد الانتظار" },
+        "status": {
+          "inProgress": "قيد التنفيذ",
+          "pending": "قيد الانتظار"
+        },
         "breadcrumb": {
           "home": "الرئيسية",
           "applications": "الطلبات",
@@ -3127,7 +3833,9 @@
         "title": "7. الجدوى الفنية",
         "subtitle": "تقييم الجدوى الفنية بناءً على النطاق والمعايير وتوفر الفريق وتخصيص الموارد.",
         "help": "مساعدة",
-        "status": { "inProgress": "قيد التنفيذ" },
+        "status": {
+          "inProgress": "قيد التنفيذ"
+        },
         "breadcrumb": {
           "home": "الرئيسية",
           "applications": "الطلبات",
@@ -3172,9 +3880,13 @@
             "notFeasible": "غير مجدٍ",
             "notApplicable": "غير قابل للتطبيق"
           },
-          "legend": { "title": "الحالة:" }
+          "legend": {
+            "title": "الحالة:"
+          }
         },
-        "comments": { "title": "التعليقات والتبرير" },
+        "comments": {
+          "title": "التعليقات والتبرير"
+        },
         "auditTeam": {
           "title": "فريق التدقيق المعين (مقترح)",
           "edit": "تعديل الفريق",
@@ -3259,7 +3971,9 @@
         "title": "8. عرض السعر",
         "subtitle": "إعداد وإرسال عرض السعر بناءً على نطاق التدقيق والمعايير والمواقع ومدة التدقيق.",
         "help": "مساعدة",
-        "status": { "inProgress": "قيد التنفيذ" },
+        "status": {
+          "inProgress": "قيد التنفيذ"
+        },
         "breadcrumb": {
           "home": "الرئيسية",
           "applications": "الطلبات",
@@ -3304,8 +4018,12 @@
           "discount": "الخصم",
           "total": "الإجمالي (باستثناء الضرائب)"
         },
-        "included": { "title": "مشمول في عرض السعر" },
-        "excluded": { "title": "غير مشمول في عرض السعر" },
+        "included": {
+          "title": "مشمول في عرض السعر"
+        },
+        "excluded": {
+          "title": "غير مشمول في عرض السعر"
+        },
         "paymentTerms": {
           "title": "شروط الدفع",
           "terms": "شروط الدفع",
@@ -3313,11 +4031,17 @@
           "currency": "العملة",
           "notes": "ملاحظات"
         },
-        "internalComments": { "title": "التعليقات الداخلية" },
+        "internalComments": {
+          "title": "التعليقات الداخلية"
+        },
         "documents": {
           "title": "المستندات ({{count}})",
           "viewAll": "عرض الكل",
-          "status": { "valid": "صالح", "draft": "مسودة", "expired": "منتهي" },
+          "status": {
+            "valid": "صالح",
+            "draft": "مسودة",
+            "expired": "منتهي"
+          },
           "stats": {
             "total": "إجمالي المستندات: {{count}} |",
             "valid": "صالح: {{count}} |",
@@ -3465,6 +4189,887 @@
           "item3": "تأكد من أن مدة الصلاحية ضمن السياسة المعتمدة."
         },
         "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب."
+      }
+    }
+  },
+  "ia": {
+    "setup": {
+      "badge": "إعداد التدقيق الداخلي",
+      "profile": {
+        "title": "أكّد بيانات منظمتك",
+        "subtitle": "أضف الهوية المستخدمة في خطط وتقارير ولوحات التدقيق الداخلي.",
+        "legalName": "الاسم القانوني للمنظمة",
+        "legalNamePlaceholder": "شركة ABC للتصنيع",
+        "industry": "القطاع",
+        "industryPlaceholder": "اختر القطاع",
+        "industryOther": "صف قطاعك",
+        "industryOtherPlaceholder": "أدخل القطاع",
+        "registrationNumber": "رقم التسجيل",
+        "registrationNumberPlaceholder": "أدخل الرقم",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com",
+        "contactEmail": "البريد الإلكتروني الرئيسي",
+        "contactEmailPlaceholder": "audit@example.com",
+        "employeeRange": "عدد الموظفين",
+        "employeeRangePlaceholder": "اختر النطاق"
+      },
+      "industries": {
+        "foodManufacturing": "تصنيع الأغذية",
+        "manufacturing": "التصنيع",
+        "construction": "الإنشاءات",
+        "healthcare": "الرعاية الصحية",
+        "energyUtilities": "الطاقة والمرافق",
+        "transportLogistics": "النقل والخدمات اللوجستية",
+        "informationTechnology": "تقنية المعلومات",
+        "financialServices": "الخدمات المالية",
+        "education": "التعليم",
+        "publicSector": "القطاع العام",
+        "other": "أخرى"
+      },
+      "structure": {
+        "title": "حدّد هيكل المنظمة",
+        "subtitle": "ابدأ بالمقر الرئيسي، ثم أضف المواقع والإدارات المشمولة في نطاق التدقيق.",
+        "headOfficeCountry": "دولة المقر الرئيسي",
+        "city": "المدينة",
+        "address": "عنوان المقر الرئيسي",
+        "addressPlaceholder": "أدخل العنوان",
+        "siteCount": "عدد المواقع",
+        "departmentCount": "عدد الإدارات",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات",
+        "singleManagementSystem": "تعمل المواقع تحت نظام إدارة واحد",
+        "includeRemoteFunctions": "تضمين الوظائف عن بُعد"
+      },
+      "locationTypes": {
+        "hq": "المقر الرئيسي",
+        "plant": "مصنع",
+        "branch": "فرع",
+        "warehouse": "مستودع",
+        "project": "مشروع",
+        "remote": "عن بُعد"
+      },
+      "universe": {
+        "title": "ما الذي سيغطيه التدقيق الداخلي؟",
+        "subtitle": "اختر أنظمة الإدارة والعمليات المؤسسية ومجالات الضمان الأخرى.",
+        "standardsLabel": "معايير أنظمة الإدارة",
+        "processesLabel": "العمليات المؤسسية",
+        "note": "يمكن دمج المعايير والعمليات في برنامج متكامل واحد."
+      },
+      "processes": {
+        "leadership": "القيادة",
+        "sales": "المبيعات",
+        "procurement": "المشتريات",
+        "hr": "الموارد البشرية",
+        "it": "تقنية المعلومات",
+        "operations": "العمليات",
+        "finance": "المالية",
+        "compliance": "الالتزام",
+        "support": "الدعم"
+      },
+      "criteria": {
+        "title": "حدّد معايير التدقيق",
+        "subtitle": "اربط كل برنامج بالسياسات والإجراءات والمعايير والمتطلبات القانونية.",
+        "programmeName": "اسم البرنامج",
+        "programmeNamePlaceholder": "نظام الإدارة المتكامل",
+        "primaryCriteria": "المعايير الأساسية",
+        "primaryCriteriaPlaceholder": "اختر المعايير",
+        "noUniverseSelected": "اختر مجالات التدقيق أولاً",
+        "internalPolicies": "السياسات الداخلية",
+        "uploadOrSelect": "رفع أو اختيار",
+        "legalRegister": "السجل القانوني",
+        "legalRegisterPlaceholder": "اختر السجل",
+        "auditCycle": "دورة التدقيق",
+        "auditCyclePlaceholder": "اختر الدورة",
+        "programmeOwner": "مالك البرنامج",
+        "programmeOwnerPlaceholder": "مدير الجودة",
+        "allowMultipleCriteria": "السماح بمعايير متعددة لكل تدقيق",
+        "trackClauseFindings": "تتبع النتائج على مستوى البند"
+      },
+      "criteriaTypes": {
+        "standard": "معيار",
+        "policy": "سياسة",
+        "procedure": "إجراء",
+        "law": "قانون",
+        "contract": "عقد",
+        "customerRequirement": "متطلب عميل",
+        "other": "أخرى"
+      },
+      "frequency": {
+        "monthly": "شهري",
+        "quarterly": "ربع سنوي",
+        "semiannual": "كل 6 أشهر",
+        "annual": "سنوي",
+        "biennial": "كل سنتين",
+        "riskBased": "حسب المخاطر"
+      },
+      "risk": {
+        "title": "حدّد نطاق التدقيق وتقييم المخاطر",
+        "subtitle": "رتّب أولويات المواقع والعمليات وفق المخاطر والأداء والنتائج السابقة.",
+        "riskScale": "مقياس المخاطر",
+        "riskScalePlaceholder": "اختر المقياس",
+        "riskFactors": "عوامل المخاطر الكامنة",
+        "riskFactorsPlaceholder": "اختر العوامل",
+        "previousFindings": "النتائج السابقة",
+        "previousFindingsPlaceholder": "اختر طريقة الاحتساب",
+        "performanceIndicators": "مؤشرات الأداء",
+        "performanceIndicatorsPlaceholder": "اختر المؤشرات",
+        "scoringRules": "قواعد التقييم",
+        "useHistoricalLastAuditDate": "استخدام تاريخ آخر تدقيق",
+        "automaticPriorityScore": "احتساب أولوية تلقائي",
+        "prioritizeOverdue": "إعطاء أولوية للمجالات المتأخرة",
+        "increaseFrequencyAfterMajorNc": "زيادة التكرار بعد حالات عدم مطابقة كبرى"
+      },
+      "riskScales": {
+        "lowMediumHigh": "منخفض / متوسط / مرتفع",
+        "lowMediumHighCritical": "منخفض / متوسط / مرتفع / حرج",
+        "numeric": "رقمي 1–5"
+      },
+      "riskFactors": {
+        "impact": "الأثر",
+        "change": "التغيير",
+        "complexity": "التعقيد",
+        "previousFindings": "النتائج السابقة",
+        "kpiPerformance": "أداء المؤشرات",
+        "regulatoryExposure": "التعرض التنظيمي"
+      },
+      "previousFindings": {
+        "openAndOverdue": "تضمين المفتوحة والمتأخرة",
+        "all": "تضمين جميع النتائج",
+        "majorOnly": "حالات عدم المطابقة الكبرى فقط",
+        "ignore": "عدم استخدام النتائج السابقة"
+      },
+      "programme": {
+        "title": "إعداد برنامج التدقيق السنوي",
+        "subtitle": "حدّد التكرار والتوقيت وقواعد التدقيق المتكامل.",
+        "periodStart": "بداية فترة البرنامج",
+        "periodEnd": "نهاية فترة البرنامج",
+        "endAfterStart": "يجب أن يكون تاريخ النهاية بعد تاريخ البداية.",
+        "defaultFrequency": "التكرار الافتراضي",
+        "highRiskFrequency": "تكرار المخاطر المرتفعة",
+        "frequencyPlaceholder": "اختر التكرار",
+        "planningOwner": "مسؤول التخطيط",
+        "planningOwnerPlaceholder": "مدير التدقيق الداخلي",
+        "approvalAuthority": "جهة الاعتماد",
+        "approvalAuthorityPlaceholder": "لجنة التدقيق",
+        "planningRules": "قواعد التخطيط",
+        "integratedAudits": "تفعيل التدقيق المتكامل",
+        "avoidPeakPeriods": "تجنب فترات الذروة التشغيلية",
+        "notifyProcessOwners": "إشعار مالكي العمليات تلقائيًا"
+      },
+      "findings": {
+        "title": "حدّد قواعد النتائج والمتابعة",
+        "subtitle": "وحّد التصنيفات وتواريخ الاستحقاق والتصعيد.",
+        "findingTypes": "أنواع النتائج",
+        "findingTypesPlaceholder": "اختر مجموعة التصنيف",
+        "correctionDue": "استحقاق التصحيح الافتراضي (أيام)",
+        "correctiveActionDue": "استحقاق الإجراء التصحيحي (أيام)",
+        "verificationMethod": "طريقة التحقق",
+        "verificationMethodPlaceholder": "اختر الطريقة",
+        "escalationAfter": "التصعيد بعد (أيام تأخير)",
+        "closureAuthority": "صلاحية الإغلاق",
+        "closureAuthorityPlaceholder": "المدقق الرئيسي",
+        "workflowRules": "قواعد سير العمل",
+        "requireRootCause": "اشتراط تحليل السبب الجذري",
+        "trackEffectivenessReview": "تتبع مراجعة الفعالية"
+      },
+      "findingTypes": {
+        "majorMinorOfi": "كبرى / صغرى / فرصة تحسين",
+        "majorMinorObsOfi": "كبرى / صغرى / ملاحظة / فرصة تحسين",
+        "ncObservation": "عدم مطابقة / ملاحظة"
+      },
+      "verification": {
+        "evidenceAndFollowUp": "أدلة + متابعة",
+        "evidenceOnly": "أدلة فقط",
+        "followUpAudit": "تدقيق متابعة"
+      },
+      "templates": {
+        "title": "إعداد القوالب والترقيم",
+        "subtitle": "حدّد صيغ مراجع التقارير والنتائج وعمليات التدقيق.",
+        "auditNumberFormat": "صيغة رقم التدقيق",
+        "findingNumberFormat": "صيغة رقم النتيجة",
+        "seqRequired": "يجب أن تتضمن الصيغة {SEQ} لضمان عدم تكرار المعرفات.",
+        "example": "مثال",
+        "auditPlanTemplate": "قالب خطة التدقيق",
+        "checklistTemplate": "قالب قائمة الفحص",
+        "templatePlaceholder": "اختر القالب",
+        "reportLanguage": "لغة التقرير",
+        "reportLanguagePlaceholder": "اختر اللغة",
+        "documentRules": "قواعد المستندات",
+        "electronicApproval": "تفعيل الاعتماد الإلكتروني",
+        "useControlledTemplates": "استخدام قوالب محكومة",
+        "showRevisionHistory": "إظهار سجل المراجعات",
+        "default": "استخدام قالب iCASCO الافتراضي",
+        "upload": "رفع قالب خاص بنا",
+        "createLater": "الإنشاء لاحقًا"
+      },
+      "reportLanguages": {
+        "english": "الإنجليزية",
+        "arabic": "العربية",
+        "bilingual": "الإنجليزية + العربية"
+      },
+      "roles": {
+        "title": "أضف أدوار التدقيق الرئيسية",
+        "subtitle": "ادعُ فريق التدقيق الداخلي الأساسي؛ يمكن استكمال سجلات الكفاءة لاحقًا.",
+        "programmeManager": "مدير برنامج التدقيق",
+        "leadAuditor": "المدقق الرئيسي",
+        "auditors": "المدققون",
+        "technicalExperts": "الخبراء الفنيون",
+        "committeeViewer": "مطّلع لجنة التدقيق",
+        "processOwners": "مالكو العمليات",
+        "requirement": {
+          "REQUIRED": "مطلوب",
+          "RECOMMENDED": "موصى به",
+          "OPTIONAL": "اختياري"
+        },
+        "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+        "addLater": "إضافة لاحقًا",
+        "importLater": "استيراد لاحقًا",
+        "emailPlaceholder": "name@example.com",
+        "enforceIndependence": "فرض استقلالية المدقق",
+        "roleBasedPermissions": "استخدام الصلاحيات حسب الدور",
+        "independenceNote": "لا يمكن للمدقق تدقيق العملية التي يشرف عليها دون تحذير اعتماد."
+      },
+      "review": {
+        "title": "راجع وفعّل التدقيق الداخلي",
+        "subtitle": "أكّد أساس البرنامج قبل جدولة أول تدقيق.",
+        "activate": "تفعيل مساحة العمل",
+        "rows": {
+          "structure": "هيكل المنظمة",
+          "universe": "نطاق التدقيق",
+          "criteria": "المعايير وقواعد المخاطر",
+          "programme": "البرنامج السنوي",
+          "findings": "سير عمل النتائج",
+          "roles": "أدوار التدقيق"
+        },
+        "status": {
+          "READY": "جاهز",
+          "REVIEW": "للمراجعة",
+          "MISSING": "ناقص"
+        },
+        "sitesCount_zero": "لا توجد مواقع",
+        "sitesCount_one": "موقع واحد",
+        "sitesCount_two": "موقعان",
+        "sitesCount_few": "{{count}} مواقع",
+        "sitesCount_many": "{{count}} موقعًا",
+        "sitesCount_other": "{{count}} موقع",
+        "departmentsCount_zero": "لا توجد إدارات",
+        "departmentsCount_one": "إدارة واحدة",
+        "departmentsCount_two": "إدارتان",
+        "departmentsCount_few": "{{count}} إدارات",
+        "departmentsCount_many": "{{count}} إدارة",
+        "departmentsCount_other": "{{count}} إدارة",
+        "areasCount_zero": "لا توجد مجالات",
+        "areasCount_one": "مجال واحد",
+        "areasCount_two": "مجالان",
+        "areasCount_few": "{{count}} مجالات",
+        "areasCount_many": "{{count}} مجالًا",
+        "areasCount_other": "{{count}} مجال",
+        "configured": "تم الإعداد",
+        "draftReady": "المسودة جاهزة",
+        "needsAttention": "يحتاج إلى مراجعة",
+        "rolesDetail_zero": "لا توجد دعوات معلقة",
+        "rolesDetail_one": "دعوة واحدة معلقة",
+        "rolesDetail_two": "دعوتان معلقتان",
+        "rolesDetail_few": "{{count}} دعوات معلقة",
+        "rolesDetail_many": "{{count}} دعوة معلقة",
+        "rolesDetail_other": "{{count}} دعوة معلقة",
+        "rolesNone": "لا توجد دعوات معلقة",
+        "nextStepNote": "التالي: استيراد عمليات التدقيق السابقة والنتائج المفتوحة، أو بناء البرنامج السنوي الجديد."
+      }
+    }
+  },
+  "so": {
+    "setup": {
+      "badge": "إعداد مالك المخطط",
+      "profile": {
+        "title": "أكّد بيانات مالك المخطط",
+        "subtitle": "أضف الهوية القانونية ونموذج الملكية المستخدم في وثائق وتراخيص المخطط.",
+        "legalName": "الاسم القانوني للمنظمة",
+        "legalNamePlaceholder": "شركة المخطط العالمي للاستدامة",
+        "ownerType": "نوع مالك المخطط",
+        "ownerTypePlaceholder": "اختر نوع المالك",
+        "ownerTypeOther": "صف نموذج الملكية",
+        "ownerTypeOtherPlaceholder": "أدخل نموذج الملكية والأساس القانوني",
+        "registrationNumber": "رقم التسجيل",
+        "registrationNumberPlaceholder": "أدخل رقم التسجيل",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com",
+        "contactEmail": "البريد الإلكتروني الرئيسي",
+        "contactEmailPlaceholder": "scheme@example.com",
+        "yearEstablished": "سنة التأسيس",
+        "yearEstablishedPlaceholder": "اختر السنة"
+      },
+      "ownerTypes": {
+        "regulatory": "مالك مخطط تنظيمي",
+        "government": "مالك مخطط حكومي",
+        "industryAssociation": "مالك مخطط صناعي / جمعية",
+        "privateCertification": "مالك مخطط تصديق خاص",
+        "sustainabilityEsg": "مالك مخطط استدامة / ESG",
+        "retailerBrand": "مالك مخطط تجزئة / علامة تجارية",
+        "other": "أخرى"
+      },
+      "location": {
+        "title": "أين تتم حوكمة المخطط؟",
+        "subtitle": "حدّد المقر الرئيسي والأسواق واللغات التي يغطيها المخطط.",
+        "country": "الدولة",
+        "city": "المدينة",
+        "address": "عنوان المقر الرئيسي",
+        "addressPlaceholder": "أدخل العنوان",
+        "coverage": "نطاق تغطية المخطط",
+        "coveragePlaceholder": "اختر النطاق",
+        "coverageCountries": "الدول المغطاة",
+        "coverageCountriesPlaceholder": "اختر الدول",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات",
+        "timeZone": "المنطقة الزمنية",
+        "timeZonePlaceholder": "اختر الدولة أولاً",
+        "hasRegionalOffices": "لدينا مكاتب إقليمية",
+        "offeredCrossBorder": "يُقدَّم المخطط عبر الحدود"
+      },
+      "coverage": {
+        "national": "وطني",
+        "regional": "إقليمي",
+        "international": "دولي",
+        "sectorSpecific": "متخصص بقطاع"
+      },
+      "families": {
+        "title": "ما نوع المخططات التي تملكها؟",
+        "subtitle": "اختر عائلة أو أكثر من عائلات المخططات لضبط الضوابط الصحيحة.",
+        "schemeCount": "عدد المخططات النشطة",
+        "familiesLabel": "عائلات المخططات",
+        "note": "سيتم إنشاء كل مخطط كسجل محكوم منفصل."
+      },
+      "familyOptions": {
+        "regulatory": "تنظيمي",
+        "government": "حكومي",
+        "industryAssociation": "صناعي / جمعية",
+        "privateCertification": "تصديق خاص",
+        "sustainabilityEsg": "استدامة / ESG",
+        "productProcess": "منتج / عملية",
+        "service": "خدمة",
+        "personnel": "أفراد",
+        "auditRating": "تدقيق / تصنيف"
+      },
+      "schemes": {
+        "title": "أضف سجلات المخططات",
+        "subtitle": "سجّل الهوية والإصدار والحالة والغرض من المخطط.",
+        "schemeTab": "مخطط {{index}}",
+        "addAnother": "+ إضافة مخطط آخر",
+        "name": "اسم المخطط",
+        "namePlaceholder": "معيار التوريد المستدام",
+        "code": "رمز المخطط",
+        "codePlaceholder": "SSS",
+        "version": "الإصدار الحالي",
+        "versionPlaceholder": "الإصدار 3.0",
+        "effectiveDate": "تاريخ السريان",
+        "status": "حالة المخطط",
+        "statusPlaceholder": "اختر الحالة",
+        "document": "وثيقة المخطط",
+        "uploadPdf": "رفع ملف PDF",
+        "reviewReminders": "تفعيل تذكيرات تاريخ المراجعة",
+        "keepPreviousVersions": "الاحتفاظ بإمكانية الوصول للإصدارات السابقة"
+      },
+      "schemeStatus": {
+        "draft": "مسودة",
+        "active": "نشط",
+        "underReview": "قيد المراجعة",
+        "suspended": "موقوف",
+        "withdrawn": "مسحوب",
+        "retired": "متقاعد"
+      },
+      "activities": {
+        "title": "حدّد أنشطة تقييم المطابقة",
+        "subtitle": "حدّد ما يصرّح به المخطط والمعايير التي تحكم جهات التقييم.",
+        "activitiesLabel": "أنشطة التقييم",
+        "cabStandard": "معيار متطلبات جهة التقييم",
+        "cabStandardPlaceholder": "اختر المعيار",
+        "outcome": "ناتج التقييم",
+        "outcomePlaceholder": "اختر الناتج",
+        "certificationCycle": "دورة التصديق",
+        "certificationCyclePlaceholder": "اختر الدورة",
+        "certification": "تصديق",
+        "inspection": "فحص",
+        "testing": "اختبار",
+        "validationVerification": "تحقق / تصديق",
+        "auditRating": "تدقيق / تصنيف"
+      },
+      "outcomes": {
+        "certificate": "شهادة",
+        "licence": "ترخيص",
+        "certificateAndLicence": "شهادة + ترخيص",
+        "mark": "علامة",
+        "rating": "تصنيف",
+        "report": "تقرير"
+      },
+      "cycle": {
+        "oneYear": "سنة واحدة",
+        "twoYears": "سنتان",
+        "threeYears": "3 سنوات",
+        "fourYears": "4 سنوات",
+        "fiveYears": "5 سنوات",
+        "custom": "مخصص"
+      },
+      "scope": {
+        "title": "حدّد نطاق المخطط والأهلية",
+        "subtitle": "حدّد المنتجات والقطاعات والنطاقات الجغرافية وأهلية المتقدمين.",
+        "classification": "تصنيف النطاق",
+        "classificationPlaceholder": "اختر التصنيفات",
+        "eligibleApplicants": "المتقدمون المؤهلون",
+        "eligibleApplicantsPlaceholder": "اختر أنواع المتقدمين",
+        "geographicLimits": "الحدود الجغرافية",
+        "geographicLimitsPlaceholder": "اختر الحدود",
+        "geographicCountries": "الدول المختارة",
+        "geographicCountriesPlaceholder": "اختر الدول",
+        "excludedActivities": "الأنشطة المستثناة",
+        "excludedActivitiesPlaceholder": "أدخل الاستثناءات",
+        "normativeRequirements": "المتطلبات المرجعية",
+        "uploadRequirements": "رفع المتطلبات",
+        "scopeRules": "قواعد النطاق",
+        "publicScopeList": "نشر قائمة نطاق عامة",
+        "blockOutsideScope": "منع الطلبات خارج النطاق",
+        "requireEligibilityReview": "طلب مراجعة الأهلية"
+      },
+      "scopeClasses": {
+        "foodAgriculture": "المنتجات الغذائية والزراعية",
+        "manufacturedGoods": "السلع المصنعة",
+        "textiles": "المنسوجات والملابس",
+        "chemicals": "الكيماويات",
+        "construction": "الإنشاءات",
+        "energy": "الطاقة",
+        "services": "الخدمات",
+        "forestry": "الغابات والورق"
+      },
+      "applicants": {
+        "manufacturer": "المصنّعون",
+        "processor": "المعالِجون",
+        "serviceProvider": "مزودو الخدمات",
+        "farm": "المزارع والمنتجون",
+        "organization": "المنظمات",
+        "person": "الأفراد",
+        "cab": "جهات تقييم المطابقة",
+        "other": "أخرى"
+      },
+      "geography": {
+        "global": "عالمي",
+        "selectedCountries": "دول مختارة"
+      },
+      "approval": {
+        "title": "حدّد قواعد الاعتماد والترخيص",
+        "subtitle": "تحكّم في جهات التقييم التي يمكنها تشغيل المخطط وكيفية الحفاظ على الاعتمادات.",
+        "route": "مسار اعتماد جهة التقييم",
+        "routePlaceholder": "اختر المسار",
+        "validity": "صلاحية الاعتماد",
+        "validityPlaceholder": "اختر الصلاحية",
+        "surveillance": "تكرار المتابعة",
+        "surveillancePlaceholder": "اختر التكرار",
+        "licenceFormat": "صيغة رقم الترخيص",
+        "seqRequired": "يجب أن تتضمن الصيغة {SEQ} لضمان عدم تكرار التراخيص.",
+        "example": "مثال",
+        "renewalRule": "قاعدة التجديد",
+        "renewalRulePlaceholder": "إعادة التقييم قبل الانتهاء",
+        "suspensionRule": "قاعدة الإيقاف",
+        "suspensionRulePlaceholder": "تقييد فوري لاستخدام العلامة",
+        "licensingRules": "قواعد الترخيص",
+        "requireActiveAccreditation": "اشتراط اعتماد ساري",
+        "publishDirectory": "نشر دليل جهات التقييم المعتمدة",
+        "recognitionNote": "يعتمد مسار الاعتراف على دليل الاعتماد — أبقِ خيار \"اشتراط اعتماد ساري\" مفعّلاً."
+      },
+      "approvalRoutes": {
+        "documentReview": "مراجعة وثائق",
+        "assessment": "تقييم",
+        "applicationAndAssessment": "طلب + تقييم",
+        "recognitionOfAccreditation": "الاعتراف بالاعتماد",
+        "witness": "تقييم بالمعاينة",
+        "combined": "مشترك"
+      },
+      "surveillance": {
+        "semiannual": "كل 6 أشهر",
+        "annual": "سنوي",
+        "biennial": "كل سنتين",
+        "riskBased": "حسب المخاطر"
+      },
+      "marks": {
+        "title": "ارفع علامات المخطط وقواعد الاستخدام",
+        "subtitle": "احتفظ بعلامة المخطط وشروط الترخيص وإصدارات التصميم تحت السيطرة.",
+        "schemeMark": "علامة المخطط",
+        "schemeMarkCaption": "رفع SVG / PNG",
+        "upload": "رفع",
+        "artworkVersion": "إصدار التصميم",
+        "artworkVersionPlaceholder": "الإصدار 2.1",
+        "permittedUse": "الاستخدام المسموح",
+        "permittedUsePlaceholder": "اختر أين يمكن استخدام العلامة",
+        "approvalReference": "مرجع الاعتماد",
+        "approvalReferencePlaceholder": "أدخل المرجع",
+        "validFrom": "صالح من",
+        "validUntil": "صالح حتى",
+        "usageGuide": "دليل الاستخدام",
+        "uploadPdf": "رفع ملف PDF",
+        "usageRules": "قواعد الاستخدام",
+        "blockAfterSuspension": "منع الاستخدام بعد الإيقاف",
+        "keepAuditTrail": "الاحتفاظ بسجل تدقيق لاستخدام العلامة"
+      },
+      "markUse": {
+        "product": "المنتجات",
+        "packaging": "التغليف",
+        "certificate": "الشهادات",
+        "website": "المواقع الإلكترونية",
+        "marketing": "التسويق",
+        "digitalBadge": "الشارات الرقمية"
+      },
+      "roles": {
+        "title": "أضف أدوار المخطط الرئيسية",
+        "subtitle": "ادعُ الأدوار اللازمة فقط لتشغيل المخطط واعتماده.",
+        "workspaceOwner": "مالك مساحة العمل",
+        "schemeManager": "مدير المخطط",
+        "technicalCommitteeLead": "رئيس اللجنة الفنية",
+        "licensingAdministrator": "مسؤول التراخيص",
+        "complaintsManager": "مدير الشكاوى",
+        "documentController": "مراقب الوثائق",
+        "requirement": {
+          "OWNER": "نشط",
+          "REQUIRED": "مطلوب",
+          "RECOMMENDED": "موصى به",
+          "OPTIONAL": "اختياري"
+        },
+        "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+        "addLater": "إضافة لاحقًا",
+        "emailPlaceholder": "name@example.com",
+        "ownerFallback": "مالك مساحة العمل",
+        "roleBasedPermissions": "استخدام الصلاحيات حسب الدور",
+        "sendInvitations": "إرسال الدعوات بعد التفعيل"
+      },
+      "review": {
+        "title": "راجع وفعّل مساحة عمل مالك المخطط",
+        "subtitle": "أكّد أساس المخطط قبل ترخيص جهات التقييم أو نشر المتطلبات.",
+        "activate": "تفعيل مساحة العمل",
+        "rows": {
+          "identity": "الهوية والمواقع",
+          "schemes": "سجلات المخططات",
+          "scope": "النطاق والأهلية",
+          "approval": "قواعد اعتماد جهات التقييم",
+          "marks": "العلامات والتراخيص",
+          "roles": "الأدوار الرئيسية"
+        },
+        "status": {
+          "READY": "جاهز",
+          "REVIEW": "للمراجعة",
+          "MISSING": "ناقص"
+        },
+        "notProvided": "لم يتم إدخاله بعد",
+        "activeSchemes_zero": "لا توجد مخططات نشطة",
+        "activeSchemes_one": "مخطط نشط واحد",
+        "activeSchemes_two": "مخططان نشطان",
+        "activeSchemes_few": "{{count}} مخططات نشطة",
+        "activeSchemes_many": "{{count}} مخططًا نشطًا",
+        "activeSchemes_other": "{{count}} مخطط نشط",
+        "configured": "تم الإعداد",
+        "ready": "جاهز",
+        "markMissing": "لم يتم رفع علامة المخطط",
+        "needsAttention": "يحتاج إلى مراجعة",
+        "rolesDetail_zero": "لا توجد دعوات معلقة",
+        "rolesDetail_one": "دعوة واحدة معلقة",
+        "rolesDetail_two": "دعوتان معلقتان",
+        "rolesDetail_few": "{{count}} دعوات معلقة",
+        "rolesDetail_many": "{{count}} دعوة معلقة",
+        "rolesDetail_other": "{{count}} دعوة معلقة",
+        "rolesNone": "لا توجد دعوات معلقة",
+        "nextStepNote": "التالي: استيراد جهات التقييم المعتمدة والتراخيص وإصدارات المخططات — أو البدء من جديد."
+      }
+    }
+  },
+  "sa": {
+    "setup": {
+      "badge": "إعداد تدقيق الموردين",
+      "profile": {
+        "title": "أكّد بيانات المنظمة المشترية",
+        "subtitle": "أضف الهوية المستخدمة في تأهيل الموردين وعمليات التدقيق وتقارير الأداء.",
+        "legalName": "الاسم القانوني للمنظمة",
+        "legalNamePlaceholder": "مجموعة ABC للتجزئة",
+        "industry": "القطاع",
+        "industryPlaceholder": "اختر القطاع",
+        "industryOther": "صف قطاعك",
+        "industryOtherPlaceholder": "أدخل القطاع",
+        "registrationNumber": "رقم التسجيل",
+        "registrationNumberPlaceholder": "أدخل الرقم",
+        "website": "الموقع الإلكتروني",
+        "websitePlaceholder": "https://example.com",
+        "contactEmail": "البريد الإلكتروني الرئيسي",
+        "contactEmailPlaceholder": "supplier@example.com",
+        "supplierCount": "عدد الموردين السنوي",
+        "supplierCountPlaceholder": "اختر النطاق"
+      },
+      "industries": {
+        "retailDistribution": "التجزئة والتوزيع",
+        "foodBeverage": "الأغذية والمشروبات",
+        "manufacturing": "التصنيع",
+        "pharmaceuticals": "الأدوية",
+        "automotive": "السيارات",
+        "construction": "الإنشاءات",
+        "energyUtilities": "الطاقة والمرافق",
+        "healthcare": "الرعاية الصحية",
+        "technology": "التقنية",
+        "other": "أخرى"
+      },
+      "locations": {
+        "title": "أين تُدار علاقات الموردين؟",
+        "subtitle": "حدّد مواقع المشتريات ومواقع الاستلام وأسواق التشغيل.",
+        "headOfficeCountry": "دولة المقر الرئيسي",
+        "city": "المدينة",
+        "procurementOffices": "مكاتب المشتريات",
+        "receivingSites": "مواقع الاستلام",
+        "supplierCountries": "دول الموردين",
+        "approvalModel": "نموذج اعتماد الموردين",
+        "approvalModelPlaceholder": "اختر النموذج",
+        "languages": "لغات العمل",
+        "languagesPlaceholder": "اختر اللغات",
+        "centralizedApproval": "استخدام اعتماد مركزي للموردين",
+        "allowSiteSpecific": "السماح بموردين خاصين بالموقع",
+        "siteSpecificDisabledHint": "متاح فقط لنماذج الاعتماد اللامركزية أو المختلطة."
+      },
+      "approvalModels": {
+        "centralized": "مركزي",
+        "decentralized": "لامركزي",
+        "hybrid": "مختلط"
+      },
+      "categories": {
+        "title": "حدّد فئات الموردين",
+        "subtitle": "أنشئ هيكل الفئات المستخدم في التأهيل والمخاطر وتخطيط التدقيق.",
+        "categoryOwner": "مالك الفئة",
+        "categoryOwnerPlaceholder": "مدير المشتريات",
+        "customCategories": "فئات مخصصة",
+        "customCategoriesPlaceholder": "إضافة لاحقًا",
+        "keyCategories": "الفئات الرئيسية",
+        "rawMaterials": "المواد الخام",
+        "packaging": "التغليف",
+        "logistics": "الخدمات اللوجستية",
+        "cleaning": "النظافة",
+        "maintenance": "الصيانة",
+        "itServices": "خدمات تقنية المعلومات",
+        "contractors": "المقاولون",
+        "criticalEquipment": "المعدات الحرجة",
+        "professionalServices": "الخدمات المهنية",
+        "utilities": "المرافق"
+      },
+      "risk": {
+        "title": "حدّد معايير مخاطر الموردين",
+        "subtitle": "قيّم الموردين وفق الأهمية والإنفاق والدولة والأداء والتعرض للامتثال.",
+        "riskLevels": "مستويات المخاطر",
+        "riskLevelsPlaceholder": "اختر المقياس",
+        "riskFactors": "عوامل الأهمية",
+        "riskFactorsPlaceholder": "اختر العوامل",
+        "spendThreshold": "حد الإنفاق",
+        "spendThresholdPlaceholder": "أدخل القيمة السنوية",
+        "scoringRules": "قواعد التقييم",
+        "countryRisk": "تضمين مخاطر الدولة",
+        "regulatoryRisk": "تضمين المخاطر التنظيمية",
+        "automaticRiskScore": "احتساب المخاطر تلقائيًا",
+        "recalculateAfterIncidents": "إعادة الاحتساب بعد الحوادث",
+        "requireApprovalForCritical": "اشتراط اعتماد الموردين الحرجين"
+      },
+      "riskLevels": {
+        "lowMediumHigh": "منخفض / متوسط / مرتفع",
+        "lowMediumHighCritical": "منخفض / متوسط / مرتفع / حرج",
+        "numeric": "رقمي 1–5"
+      },
+      "riskFactors": {
+        "criticality": "الأهمية",
+        "spend": "الإنفاق",
+        "country": "الدولة",
+        "regulatory": "التنظيمي",
+        "performance": "الأداء",
+        "singleSource": "مصدر وحيد",
+        "incidentHistory": "سجل الحوادث"
+      },
+      "qualification": {
+        "title": "إعداد متطلبات التأهيل",
+        "subtitle": "اجمع فقط الأدلة اللازمة لكل فئة مورد ومستوى مخاطر.",
+        "route": "مسار التأهيل",
+        "routePlaceholder": "اختر المسار",
+        "approvalValidity": "صلاحية الاعتماد",
+        "approvalValidityPlaceholder": "اختر الصلاحية",
+        "requiredEvidence": "الأدلة المطلوبة",
+        "requiredEvidencePlaceholder": "اختر أنواع الأدلة",
+        "requiredLicences": "التراخيص المطلوبة",
+        "requiredLicencesPlaceholder": "حسب الفئة",
+        "managementCertificates": "شهادات أنظمة الإدارة",
+        "managementCertificatesPlaceholder": "ISO 9001 / 14001 / 45001",
+        "financialChecks": "الفحوصات المالية",
+        "financialChecksPlaceholder": "للموردين الحرجين",
+        "insuranceEvidence": "أدلة التأمين",
+        "insuranceEvidencePlaceholder": "حيثما ينطبق",
+        "documentRules": "قواعد المستندات",
+        "blockExpiredDocuments": "منع المستندات منتهية الصلاحية",
+        "applyConditionalApproval": "تطبيق الاعتماد المشروط"
+      },
+      "qualificationRoutes": {
+        "questionnaire": "استبيان فقط",
+        "questionnaireAndDocuments": "استبيان + مراجعة وثائق",
+        "documentReview": "مراجعة وثائق فقط",
+        "auditRequired": "تدقيق مطلوب"
+      },
+      "evidence": {
+        "licence": "ترخيص",
+        "isoCertificate": "شهادة ISO",
+        "insurance": "تأمين",
+        "financial": "مالي",
+        "productSpecs": "مواصفات المنتج",
+        "esg": "ESG",
+        "other": "أخرى"
+      },
+      "validity": {
+        "oneYear": "سنة واحدة",
+        "twoYears": "سنتان",
+        "threeYears": "3 سنوات",
+        "custom": "مخصص"
+      },
+      "auditTypes": {
+        "title": "حدّد أنواع التدقيق والمعايير",
+        "subtitle": "حدّد عمليات تدقيق الطرف الثاني للتأهيل والمتابعة والحوادث وإعادة الاعتماد.",
+        "typesLabel": "أنواع التدقيق",
+        "modesLabel": "أساليب التدقيق",
+        "criteria": "معايير التدقيق الافتراضية",
+        "criteriaPlaceholder": "اختر المعايير",
+        "frequency": "تكرار التدقيق",
+        "frequencyPlaceholder": "اختر التكرار",
+        "additionalStandards": "معايير إضافية",
+        "additionalStandardsPlaceholder": "اختر المعايير",
+        "initialQualification": "التأهيل الأولي",
+        "routineSurveillance": "المتابعة الدورية",
+        "reapproval": "إعادة الاعتماد",
+        "forCause": "لسبب محدد",
+        "incident": "حادثة",
+        "followUp": "متابعة"
+      },
+      "auditModes": {
+        "onSite": "تدقيق ميداني",
+        "remote": "تدقيق عن بُعد",
+        "hybrid": "مختلط",
+        "desktop": "مكتبي"
+      },
+      "auditCriteria": {
+        "supplierCode": "مدونة الموردين",
+        "contract": "العقد",
+        "standard": "معيار",
+        "legal": "قانوني",
+        "customerSpecific": "خاص بالعميل"
+      },
+      "auditFrequency": {
+        "annual": "سنوي",
+        "biennial": "كل سنتين",
+        "riskBased": "حسب المخاطر",
+        "byCategory": "حسب الفئة"
+      },
+      "scoring": {
+        "title": "حدّد التقييم وقرارات الاعتماد",
+        "subtitle": "حوّل نتائج التدقيق إلى حالة وإجراءات متسقة للموردين.",
+        "scoreScale": "مقياس درجة التدقيق",
+        "scoreScalePlaceholder": "اختر المقياس",
+        "approvalThreshold": "حد الاعتماد (%)",
+        "conditionalLowerBound": "الحد الأدنى المشروط (%)",
+        "rejectionThreshold": "حد الرفض (%)",
+        "bandsOverlap": "يجب ألا تتداخل الحدود: الرفض ≤ المشروط < الاعتماد.",
+        "criticalRule": "قاعدة النتيجة الحرجة",
+        "criticalRulePlaceholder": "اختر القاعدة",
+        "decisionAuthority": "صلاحية القرار",
+        "decisionAuthorityPlaceholder": "لجنة اعتماد الموردين",
+        "decisionRules": "قواعد القرار",
+        "requireActionPlan": "اشتراط خطة عمل للفجوات",
+        "recalculateStatus": "إعادة احتساب حالة المورد"
+      },
+      "scoreScales": {
+        "percentage": "0–100",
+        "oneToFive": "1–5",
+        "passFail": "ناجح / راسب",
+        "weighted": "مرجّح"
+      },
+      "criticalRules": {
+        "automaticHold": "تعليق تلقائي",
+        "automaticReject": "رفض تلقائي",
+        "conditionalOnly": "اعتماد مشروط فقط",
+        "scoreOnly": "التأثير على الدرجة فقط"
+      },
+      "findings": {
+        "title": "إعداد النتائج والمتابعة",
+        "subtitle": "وحّد التصحيح والإجراء التصحيحي والتحقق والتصعيد.",
+        "findingClasses": "فئات النتائج",
+        "findingClassesPlaceholder": "اختر مجموعة التصنيف",
+        "correctionDue": "استحقاق التصحيح (أيام)",
+        "correctiveActionDue": "استحقاق الإجراء التصحيحي (أيام)",
+        "followUpTrigger": "مُشغّل تدقيق المتابعة",
+        "followUpTriggerPlaceholder": "اختر المُشغّل",
+        "escalationOwner": "مسؤول التصعيد",
+        "escalationOwnerPlaceholder": "مدير المشتريات",
+        "workflowRules": "قواعد سير العمل",
+        "evidenceReview": "اشتراط مراجعة الأدلة",
+        "requireRootCause": "اشتراط تحليل السبب الجذري",
+        "trackEffectivenessReview": "تتبع مراجعة الفعالية"
+      },
+      "findingClasses": {
+        "criticalMajorMinor": "حرجة / كبرى / صغرى",
+        "criticalMajorMinorObs": "حرجة / كبرى / صغرى / ملاحظة",
+        "majorMinor": "كبرى / صغرى"
+      },
+      "followUpTriggers": {
+        "criticalOrRepeated": "مشكلة حرجة أو متكررة",
+        "criticalOnly": "الحرجة فقط",
+        "always": "دائمًا",
+        "never": "أبدًا"
+      },
+      "roles": {
+        "title": "أضف أدوار ضمان الموردين الرئيسية",
+        "subtitle": "ادعُ الأشخاص اللازمين لتأهيل الموردين وتدقيقهم واعتمادهم.",
+        "assuranceManager": "مدير ضمان الموردين",
+        "procurementManager": "مدير المشتريات",
+        "leadAuditor": "مدقق الموردين الرئيسي",
+        "categoryManagers": "مديرو الفئات",
+        "technicalExperts": "الخبراء الفنيون",
+        "approvalCommittee": "لجنة الاعتماد",
+        "requirement": {
+          "REQUIRED": "مطلوب",
+          "RECOMMENDED": "موصى به",
+          "OPTIONAL": "اختياري"
+        },
+        "inviteByEmail": "دعوة عبر البريد الإلكتروني",
+        "addLater": "إضافة لاحقًا",
+        "emailPlaceholder": "name@example.com",
+        "independenceNote": "افصل بين المدقق وصلاحية الاعتماد حيثما تتطلب السياسة ذلك.",
+        "separateAuditFromApproval": "الفصل بين التدقيق والاعتماد",
+        "categoryBasedAccess": "استخدام الوصول حسب الفئة"
+      },
+      "review": {
+        "title": "راجع وفعّل تدقيق الموردين",
+        "subtitle": "أكّد إطار ضمان الموردين قبل استيراد الموردين.",
+        "activate": "تفعيل مساحة العمل",
+        "rows": {
+          "profile": "ملف المنظمة",
+          "categories": "فئات الموردين",
+          "risk": "قواعد المخاطر والتأهيل",
+          "audits": "أنواع التدقيق والمعايير",
+          "scoring": "التقييم والإجراءات التصحيحية",
+          "roles": "الأدوار الرئيسية"
+        },
+        "status": {
+          "READY": "جاهز",
+          "REVIEW": "للمراجعة",
+          "MISSING": "ناقص"
+        },
+        "notProvided": "لم يتم إدخاله بعد",
+        "categoriesCount_zero": "لا توجد فئات",
+        "categoriesCount_one": "فئة واحدة",
+        "categoriesCount_two": "فئتان",
+        "categoriesCount_few": "{{count}} فئات",
+        "categoriesCount_many": "{{count}} فئة",
+        "categoriesCount_other": "{{count}} فئة",
+        "configured": "تم الإعداد",
+        "needsAttention": "يحتاج إلى مراجعة",
+        "rolesDetail_zero": "لا توجد دعوات معلقة",
+        "rolesDetail_one": "دعوة واحدة معلقة",
+        "rolesDetail_two": "دعوتان معلقتان",
+        "rolesDetail_few": "{{count}} دعوات معلقة",
+        "rolesDetail_many": "{{count}} دعوة معلقة",
+        "rolesDetail_other": "{{count}} دعوة معلقة",
+        "rolesNone": "لا توجد دعوات معلقة",
+        "nextStepNote": "التالي: استيراد قائمة الموردين والمستندات والدرجات وعمليات التدقيق السابقة — أو البدء من جديد."
       }
     }
   }

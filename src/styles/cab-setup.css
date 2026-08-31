@@ -1,0 +1,81 @@
+/*
+ * CAB setup wizard — visual spec lifted from the CAB onboarding deck.
+ *
+ * The deck's canvas is 1280x720 with a 78px gutter (1124px content column).
+ * Everything below is scoped to `.cab-setup` so no other screen is affected;
+ * a descendant selector (0,2,0) outranks the single-class Tailwind utilities
+ * (0,1,0) the shared field primitives already carry.
+ */
+
+.cab-setup {
+  --cab-ink: #0f172a;
+  --cab-primary: #1236a5;
+  --cab-muted: #64748b;
+  --cab-border: #d9e2f0;
+  --cab-subtle: #e8eeff;
+  --cab-panel: #f5f8ff;
+  --cab-placeholder: #94a3b8;
+  --cab-canvas: #fafbfd;
+  --cab-hairline: #eef2f7;
+  --cab-chip: #f8fafc;
+}
+
+/* ---- Labels: 10pt bold #0F172A ---- */
+.cab-setup .field-label {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.6;
+  color: var(--cab-ink);
+}
+
+/* ---- Inputs / select triggers: 45px tall, 8px radius, #D9E2F0 border ---- */
+.cab-setup .field-text,
+.cab-setup .multiselect-trigger {
+  min-height: 45px;
+  height: 45px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--cab-ink);
+  border-radius: 8px;
+  border-color: var(--cab-border);
+  padding-inline: 14px;
+}
+
+/* Stacked multi-selects grow with their chips. */
+.cab-setup .multiselect-trigger {
+  height: auto;
+}
+
+.cab-setup .field-text::placeholder {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--cab-placeholder);
+}
+
+.cab-setup .field-text:focus,
+.cab-setup .field-text:focus-visible,
+.cab-setup .multiselect-trigger:focus-visible {
+  border-color: var(--cab-primary);
+  box-shadow: 0 0 0 1px var(--cab-primary);
+  outline: none;
+}
+
+/* Placeholder text rendered as a span (select triggers, multi-selects). */
+.cab-setup .field-text > span,
+.cab-setup .multiselect-trigger span {
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* Textareas keep their natural height. */
+.cab-setup textarea.field-text {
+  height: auto;
+  padding-block: 10px;
+}
+
+/* Dropdown popovers inherit the deck's type scale. */
+.cab-setup-popover,
+.cab-setup-popover button,
+.cab-setup-popover input {
+  font-size: 13px;
+}

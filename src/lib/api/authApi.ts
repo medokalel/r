@@ -15,6 +15,7 @@ export interface LoginResponseData {
     email: string
     phone: string | null
     status: 'ACTIVE' | 'PENDING' | 'SUSPENDED'
+    role?: { id: string; name: string }
   }
   role: { id: string; name: string } | null
   organization: {
@@ -24,6 +25,11 @@ export interface LoginResponseData {
     name: string
     type: OrganizationType
   } | null
+  cab?: {
+    id: string
+    setupCompleted: boolean
+    status: string
+  }
 }
 
 export interface RegisterPayload {

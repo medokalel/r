@@ -39,6 +39,11 @@ interface OnboardingFlowShellProps {
   children: ReactNode
   actions?: ReactNode
   error?: ReactNode
+  /** e.g. "CAB SETUP" — shown with the step counter above each form screen. */
+  stepBadgeLabel?: string
+  /** 1-based position of the current screen within `stepBadgeTotal`. */
+  stepBadgeCurrent?: number
+  stepBadgeTotal?: number
 }
 
 export function OnboardingFlowShell({
@@ -58,6 +63,9 @@ export function OnboardingFlowShell({
   children,
   actions,
   error,
+  stepBadgeLabel,
+  stepBadgeCurrent,
+  stepBadgeTotal,
 }: OnboardingFlowShellProps) {
   const isFormStep = step >= firstFormStep && step <= lastFormStep
   const previousStepRef = useRef(step)
@@ -158,6 +166,16 @@ export function OnboardingFlowShell({
 
         {isFormStep && (
           <OnboardingStepTransition key={step} direction={direction} className={cn(stepClassName)}>
+            {stepBadgeLabel && stepBadgeCurrent !== undefined && stepBadgeTotal !== undefined && (
+              <p className="mb-4 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.08em] text-primary">
+                <span className="inline-flex items-center rounded-full bg-primary-subtle px-3 py-1">
+                  {stepBadgeLabel}
+                </span>
+                <span lang="en" dir="ltr" className="text-neutral-500">
+                  {stepBadgeCurrent}/{stepBadgeTotal}
+                </span>
+              </p>
+            )}
             {children}
             {error}
             {actions}

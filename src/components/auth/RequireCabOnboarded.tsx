@@ -1,5 +1,6 @@
 import { Navigate } from 'react-router-dom'
-import { getAuthSession } from '@/lib/authStorage'
+import { getAuthSession, isCabUserOnboarded } from '@/lib/authStorage'
+import { isCabAdminSession } from '@/lib/cabOnboardingStatus'
 import { isOnboardingComplete } from '@/lib/onboardingStatus'
 import { ROUTES } from '@/lib/routes'
 
@@ -8,7 +9,16 @@ interface RequireCabOnboardedProps {
 }
 
 export function RequireCabOnboarded({ children }: RequireCabOnboardedProps) {
-  const org = getAuthSession()?.organization
+  const session = getAuthSession()
+
+  if (isCabAdminSession()) {
+    if (!isCabUserOnboarded()) {
+      return <Navigate to={ROUTES.onboarding} replace />
+    }
+    return children
+  }
+
+  const org = session?.organization
   if (org?.type === 'CERTIFICATION_BODY' && !isOnboardingComplete(org.id)) {
     return <Navigate to={ROUTES.onboarding} replace />
   }
