@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { OnboardingStepTransition } from '@/components/auth/OnboardingStepTransition'
+import { LanguageToggle } from '@/components/ui/LanguageToggle'
 
 interface CabSetupShellProps {
   /** Wordmark shown next to the counter, e.g. "CAB Setup" / "AB Setup". */
@@ -47,13 +48,16 @@ export function CabSetupShell({
       {/* Topbar — 70px, white, hairline underline */}
       <header className="flex h-[70px] shrink-0 items-center justify-between border-b border-[var(--cab-hairline)] bg-white px-6 sm:px-[58px]">
         <span className="text-[24px] font-bold leading-none text-[var(--cab-primary)]">iCASCO</span>
-        <span
-          className="text-[12px] font-bold uppercase tracking-[0.04em] text-[var(--cab-muted)]"
-          lang="en"
-          dir="ltr"
-        >
-          {badge} &nbsp;•&nbsp; {current}/{total}
-        </span>
+        <div className="flex items-center gap-4">
+          <span
+            className="text-[12px] font-bold uppercase tracking-[0.04em] text-[var(--cab-muted)]"
+            lang="en"
+            dir="ltr"
+          >
+            {badge} &nbsp;•&nbsp; {current}/{total}
+          </span>
+          <LanguageToggle variant="icon" showChevron={false} />
+        </div>
       </header>
 
       <main className="mx-auto w-full max-w-[1124px] flex-1 px-6 pb-10 pt-[30px] sm:px-0">

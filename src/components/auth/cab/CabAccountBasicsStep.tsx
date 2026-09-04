@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router-dom'
 import * as Checkbox from '@radix-ui/react-checkbox'
@@ -7,6 +7,7 @@ import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon, PhoneIcon } from '@/components/icons'
 import { FormLabel, TextField, fieldHeightClassName, fieldInputClassName } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
+import { useIpLocation } from '@/hooks/useIpLocation'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
 import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
@@ -26,6 +27,25 @@ export function CabAccountBasicsStep({ form, onPatch }: CabAccountBasicsStepProp
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
+  const ipLocation = useIpLocation()
+
+  // Pre-fill the dial code and address country from the visitor's IP once it
+  // resolves — only for fields the user hasn't already touched, and only if
+  // the detected country is one we support.
+  useEffect(() => {
+    if (!ipLocation) return
+    const detected = ipLocation.countryCode as CountryCode
+    if (!countries.some((country) => country.code === detected)) return
+    if (form.mobileCountryCode && form.country) return
+
+    onPatch({
+      ...(form.mobileCountryCode ? {} : { mobileCountryCode: detected }),
+      ...(form.country ? {} : { country: detected }),
+    })
+    // Runs once per resolved IP lookup; form/onPatch identity changes on every
+    // keystroke and would otherwise fight the user's own selection.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, countries])
 
   const emailError =
     form.email.trim().length > 0 && !isValidEmailFormat(form.email)

@@ -155,8 +155,8 @@
         "verification": "التحقق",
         "accountSetup": "إعداد الحساب"
       },
-      "cabType": "نوع AB",
-      "cabTypePlaceholder": "اختر نوع AB",
+      "abType": "نوع AB",
+      "abTypePlaceholder": "اختر نوع AB",
       "abName": "اسم AB",
       "abNamePlaceholder": "أدخل الاسم القانوني لـ AB",
       "abNameSearchPlaceholder": "بحث...",
@@ -727,6 +727,7 @@
       "mainData": "البيانات الرئيسية",
       "regulatoryData": "البيانات التنظيمية",
       "requiredStandard": "المواصفة القياسية المطلوبة",
+      "requiredStandardPlaceholder": "اختر مواصفة قياسية",
       "otherStandardOption": "أخرى",
       "otherStandard": "في حالة وجود مواصفات أخرى غير مدرجة، يرجى تحديدها.",
       "otherStandardPlaceholder": "أدخل اسم المواصفة",
@@ -3207,6 +3208,7 @@
           "optional": "اختياري",
           "notApplicable": "غير قابل للتطبيق"
         },
+        "notApplicable": "غير قابل للتطبيق",
         "status": {
           "uploaded": "تم الرفع",
           "pending": "قيد الانتظار",

@@ -16,7 +16,7 @@ export interface CabAccountBasicsForm {
 export const emptyCabAccountBasicsForm: CabAccountBasicsForm = {
   name: '',
   email: '',
-  mobileCountryCode: 'EG',
+  mobileCountryCode: '' as CountryCode,
   mobile: '',
   country: '' as CountryCode,
   password: '',

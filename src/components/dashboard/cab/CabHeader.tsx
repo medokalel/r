@@ -6,7 +6,7 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession, clearAuthSession } from '@/lib/authStorage'
-import { useTour } from '@/context/TourContext'
+import { useOptionalTour } from '@/context/TourContext'
 import { cn } from '@/lib/utils'
 
 function HeaderDivider({ className }: { className?: string }) {
@@ -24,7 +24,10 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
   const { t, i18n } = useTranslation()
   const session = getAuthSession()
   const navigate = useNavigate()
-  const { startTour } = useTour()
+  // Only set on pages that actually run a tour (e.g. the dashboard) — this
+  // header is shared with onboarding screens that don't, so the button stays
+  // hidden there instead of crashing.
+  const tour = useOptionalTour()
   const [now, setNow] = useState(() => new Date())
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -70,20 +73,22 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
           </p>
         </div>
 
+        {tour && (
+          <>
+            <Tooltip label={t('cab.header.takeTour')}>
+              <button
+                type="button"
+                onClick={tour.startTour}
+                className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
+                aria-label={t('cab.header.takeTour')}
+              >
+                <AppIcon icon={TourGuideIcon} size={26} />
+              </button>
+            </Tooltip>
 
-
-        <Tooltip label={t('cab.header.takeTour')}>
-          <button
-            type="button"
-            onClick={startTour}
-            className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
-            aria-label={t('cab.header.takeTour')}
-          >
-            <AppIcon icon={TourGuideIcon} size={26} />
-          </button>
-        </Tooltip>
-
-        <HeaderDivider className="hidden min-[400px]:block" />
+            <HeaderDivider className="hidden min-[400px]:block" />
+          </>
+        )}
 
         <button
           type="button"
