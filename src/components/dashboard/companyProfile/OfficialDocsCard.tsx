@@ -20,7 +20,7 @@ import {
   type OrgDocument,
   type OrgDocumentType,
 } from '@/lib/api/organizationProfileApi'
-import { DOC_ACCEPT, DOC_MAX_BYTES, DOC_TYPE_BY_KEY } from './constants'
+import { DOC_ACCEPT, DOC_MAX_BYTES, DOC_TYPE_BY_KEY, profileCardClassName } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 
@@ -161,7 +161,7 @@ export function OfficialDocsCard() {
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       {/* Required documents — one accordion per type, multiple files supported */}
       <CardHeader title={t('companyProfile.officialDocs.title')} />
       <div className="flex flex-col gap-3 rounded-[12px] border border-dashed border-primary/30 p-3">

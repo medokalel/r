@@ -13,7 +13,7 @@ import {
 import { cn } from '@/lib/utils'
 import { formatFileSize } from '@/lib/files'
 import { useBlobUrl } from '@/hooks/useBlobUrl'
-import { DOC_ACCEPT } from './constants'
+import { DOC_ACCEPT, profileCardClassName } from './constants'
 import { countryDisplayName } from './mappers'
 import { useDocumentActions } from './OfficialDocsCard'
 import { CardHeader } from './Primitives'
@@ -29,7 +29,7 @@ export function NationalAddressToggleCard({
 }) {
   const { t } = useTranslation()
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <CardHeader title={t('companyProfile.nationalAddress.hasAddressTitle')} />
       <div className="flex items-center gap-4">
         {(['yes', 'no'] as const).map((option) => {

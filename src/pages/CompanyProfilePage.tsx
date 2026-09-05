@@ -48,7 +48,7 @@ export function CompanyProfilePage() {
       <AccreditationHeader titleKey="companyProfile.title" />
 
       <ProfileFormContext.Provider value={contextValue}>
-        <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+        <div className="flex min-w-0 flex-1 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
           <Breadcrumb />
 
           <div className="flex flex-col gap-1">
@@ -74,7 +74,7 @@ export function CompanyProfilePage() {
           )}
         </div>
 
-        <footer className="flex shrink-0 items-center justify-between gap-4 border-t border-[#ececec] bg-white px-6 py-3">
+        <footer className="flex shrink-0 flex-col gap-3 border-t border-[#ececec] bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="min-w-0 flex-1">
             {notification && (
               <p
@@ -87,13 +87,13 @@ export function CompanyProfilePage() {
               </p>
             )}
           </div>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Button
               variant="tertiary"
               size="lg"
               onClick={saveDraft}
               disabled={saving || loading}
-              className="min-w-[180px] bg-[#F3F6FD]"
+              className="min-w-[120px] flex-1 bg-[#F3F6FD] sm:min-w-[180px] sm:flex-none"
             >
               {saving ? t('common.loading') : t('companyProfile.footer.saveDraft')}
             </Button>
@@ -102,7 +102,7 @@ export function CompanyProfilePage() {
               size="lg"
               onClick={goBack}
               disabled={activeStep === STEPS[0]}
-              className="min-w-[180px]"
+              className="min-w-[120px] flex-1 sm:min-w-[180px] sm:flex-none"
             >
               {t('companyProfile.footer.back')}
             </Button>
@@ -115,7 +115,7 @@ export function CompanyProfilePage() {
                 submitting ||
                 (isLastStep ? !allStepsComplete : !currentStepComplete)
               }
-              className="min-w-[180px]"
+              className="min-w-[120px] flex-1 sm:min-w-[180px] sm:flex-none"
             >
               {isLastStep
                 ? submitting

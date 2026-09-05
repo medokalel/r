@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
-import { AppIcon, ExcelFileIcon, FilterFunnelIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, ExcelFileIcon, FilterFunnelIcon, MoreIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import { certificationRequestFormPath } from '@/lib/routes'
 import { getDashboardTasks } from '@/lib/api/dashboardApi'
 import type { DashboardTask, DashboardTaskStatus } from '@/lib/api/dashboardApi'
@@ -98,11 +99,11 @@ export function DashboardTasksPage() {
     <AppLayout>
       <AccreditationHeader titleKey="dashboard.tasks.title" />
 
-      <div className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-        <div className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-3">
-              <div className="relative min-w-[240px] flex-1 sm:max-w-[360px]">
+      <div className="flex min-w-0 flex-1 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
+        <div className="flex min-w-0 flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-3 sm:p-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
+            <div className="flex min-w-0 w-full flex-col gap-3 sm:flex-1 sm:flex-row sm:flex-wrap sm:items-center">
+              <div className="relative min-w-0 w-full sm:min-w-[240px] sm:max-w-[360px] sm:flex-1">
                 <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
                   <AppIcon icon={SearchIcon} size={18} />
                 </span>
@@ -115,52 +116,55 @@ export function DashboardTasksPage() {
                   className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
                 />
               </div>
-              <button
-                type="button"
-                onClick={handleSearch}
-                className="h-11 shrink-0 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white hover:opacity-90"
-              >
-                {t('dashboard.tasks.search')}
-              </button>
-              <TableFilterSelect
-                label={t('dashboard.tasks.filters.status')}
-                value={statusFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setStatusFilter(value)
-                }}
-                options={[
-                  { value: 'all', label: t('dashboard.tasks.filters.allStatuses') },
-                  { value: 'urgent', label: t('dashboard.tasks.status.urgent') },
-                  { value: 'underReview', label: t('dashboard.tasks.status.underReview') },
-                  { value: 'pending', label: t('dashboard.tasks.status.pending') },
-                ]}
-              />
-              <TableFilterSelect
-                label={t('dashboard.tasks.filters.taskType')}
-                value={taskTypeFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setTaskTypeFilter(value)
-                }}
-                options={[
-                  { value: 'all', label: t('dashboard.tasks.filters.allTypes') },
-                  { value: 'documentReview', label: t('dashboard.tasks.type.documentReview') },
-                  { value: 'contractProcessing', label: t('dashboard.tasks.type.contractProcessing') },
-                  { value: 'feeCollection', label: t('dashboard.tasks.type.feeCollection') },
-                ]}
-              />
-              <button
-                type="button"
-                aria-label={t('common.filter')}
-                className="flex size-11 shrink-0 items-center justify-center rounded-[8px] bg-[#f3f6fd] text-primary hover:bg-[#e8edfc]"
-                onClick={handleSearch}
-              >
-                <AppIcon icon={FilterFunnelIcon} size={20} />
-              </button>
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onClick={handleSearch}
+                  className="h-11 flex-1 shrink-0 rounded-[8px] bg-primary px-6 text-[14px] font-medium text-white hover:opacity-90 sm:flex-none"
+                >
+                  {t('dashboard.tasks.search')}
+                </button>
+                <TableFilterSelect
+                  label={t('dashboard.tasks.filters.status')}
+                  value={statusFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setStatusFilter(value)
+                  }}
+                  options={[
+                    { value: 'all', label: t('dashboard.tasks.filters.allStatuses') },
+                    { value: 'urgent', label: t('dashboard.tasks.status.urgent') },
+                    { value: 'underReview', label: t('dashboard.tasks.status.underReview') },
+                    { value: 'pending', label: t('dashboard.tasks.status.pending') },
+                  ]}
+                />
+                <TableFilterSelect
+                  label={t('dashboard.tasks.filters.taskType')}
+                  value={taskTypeFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setTaskTypeFilter(value)
+                  }}
+                  options={[
+                    { value: 'all', label: t('dashboard.tasks.filters.allTypes') },
+                    { value: 'documentReview', label: t('dashboard.tasks.type.documentReview') },
+                    { value: 'contractProcessing', label: t('dashboard.tasks.type.contractProcessing') },
+                    { value: 'feeCollection', label: t('dashboard.tasks.type.feeCollection') },
+                  ]}
+                />
+                <button
+                  type="button"
+                  aria-label={t('common.filter')}
+                  className="flex size-11 shrink-0 items-center justify-center rounded-[8px] bg-[#f3f6fd] text-primary hover:bg-[#e8edfc]"
+                  onClick={handleSearch}
+                >
+                  <AppIcon icon={FilterFunnelIcon} size={20} />
+                </button>
+              </div>
             </div>
 
-            <div className="flex shrink-0 items-center gap-3">
+            <div className="flex w-full items-center gap-2 sm:w-auto sm:gap-3">
+              {/* Desktop / tablet: the two export buttons, as before */}
               <button
                 type="button"
                 disabled={filtered.length === 0}
@@ -172,24 +176,68 @@ export function DashboardTasksPage() {
                     filtered
                   )
                 }
-                className="flex h-13 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium disabled:opacity-50"
+                className="hidden h-11 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium disabled:opacity-50 min-[950px]:flex"
               >
-                <AppIcon icon={PdfFileIcon} size={26} />
+                <AppIcon icon={PdfFileIcon} size={22} />
                 {t('dashboard.tasks.downloadPdf')}
               </button>
               <button
                 type="button"
                 disabled={filtered.length === 0}
                 onClick={() => downloadExcelCsv('dashboard-tasks.csv', exportColumns, filtered)}
-                className="flex h-13 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium disabled:opacity-50"
+                className="hidden h-11 items-center gap-2 rounded-[8px] border-2 border-[#1236A3] px-4 text-[14px] font-medium disabled:opacity-50 min-[950px]:flex"
               >
-                <AppIcon icon={ExcelFileIcon} size={26} />
+                <AppIcon icon={ExcelFileIcon} size={22} />
                 {t('dashboard.tasks.exportExcel')}
               </button>
+
+              {/* Mobile: a single "⋮" button that opens a dropdown with the export options */}
+              <DropdownMenu.Root>
+                <DropdownMenu.Trigger asChild>
+                  <button
+                    type="button"
+                    disabled={filtered.length === 0}
+                    aria-label={t('dashboard.tasks.downloadOptions')}
+                    className="flex size-11 shrink-0 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50 min-[950px]:hidden"
+                  >
+                    <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
+                  </button>
+                </DropdownMenu.Trigger>
+                <DropdownMenu.Portal>
+                  <DropdownMenu.Content
+                    align="end"
+                    sideOffset={4}
+                    className="z-50 min-w-[180px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
+                  >
+                    <DropdownMenu.Item
+                      onSelect={() =>
+                        downloadPdfFromTable(
+                          'dashboard-tasks.pdf',
+                          t('dashboard.tasks.title'),
+                          exportColumns,
+                          filtered
+                        )
+                      }
+                      className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                    >
+                      <AppIcon icon={PdfFileIcon} size={18} />
+                      {t('dashboard.tasks.downloadPdf')}
+                    </DropdownMenu.Item>
+                    <DropdownMenu.Item
+                      onSelect={() => downloadExcelCsv('dashboard-tasks.csv', exportColumns, filtered)}
+                      className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                    >
+                      <AppIcon icon={ExcelFileIcon} size={18} />
+                      {t('dashboard.tasks.exportExcel')}
+                    </DropdownMenu.Item>
+                  </DropdownMenu.Content>
+                </DropdownMenu.Portal>
+              </DropdownMenu.Root>
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          {/* Desktop: table */}
+          <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[720px] border-collapse text-center">
               <thead className="border-b border-[#ececec]">
                 <tr className="rounded-[10px] bg-[#1236a3] text-white">
@@ -258,6 +306,53 @@ export function DashboardTasksPage() {
                 )}
               </tbody>
             </table>
+          </div>
+
+          {/* Mobile: cards */}
+          <div className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3 md:hidden">
+            {loading ? (
+              <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
+            ) : paginated.length === 0 ? (
+              <p className="py-6 text-center text-neutral-500">—</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {paginated.map((task) => (
+                  <div key={task.id} className="rounded-[12px] border border-[#ececec] bg-white p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="truncate text-[15px] font-medium text-neutral-900">
+                          {task.applicantName}
+                        </p>
+                        <p className="text-[13px] text-neutral-500">
+                          {t('dashboard.tasks.companyCode')} {task.companyCode}
+                        </p>
+                      </div>
+                      <span
+                        className={cn(
+                          'inline-flex shrink-0 items-center justify-center rounded-[6px] px-3 py-1.5 text-[13px] font-medium',
+                          statusStyles[task.status]
+                        )}
+                      >
+                        {t(`dashboard.tasks.status.${task.status}`)}
+                      </span>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between gap-3">
+                      <span className="text-[14px] text-neutral-700">
+                        {t(`dashboard.tasks.type.${task.taskType}`)}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleProcedureClick(task)}
+                        className="text-[14px] font-medium text-primary hover:underline"
+                      >
+                        {t(procedureLabelKeys[task.taskType])}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {!loading && filtered.length > 0 && (

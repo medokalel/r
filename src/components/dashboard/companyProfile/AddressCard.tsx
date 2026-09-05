@@ -6,6 +6,7 @@ import { FormField, SelectField, TextField } from '@/components/ui'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import type { CountryCode } from '@/lib/countries'
 import { GoogleMapUrlField } from './GoogleMapUrlField'
+import { profileCardClassName } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 
@@ -58,7 +59,7 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
   }, [governorates, form.city])
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <CardHeader title={t('companyProfile.addressCard.title')} />
 
       <div className="flex flex-col gap-5">

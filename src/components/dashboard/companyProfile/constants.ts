@@ -1,5 +1,11 @@
 import type { OrgDocumentType } from '@/lib/api/organizationProfileApi'
 
+// Shared box style for the wizard's section cards (map, form, branches list,
+// official docs, etc). Padding narrows on small screens so the desktop p-8
+// doesn't eat into the content width on mobile.
+export const profileCardClassName =
+  'flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-4 sm:p-6 lg:p-8'
+
 export const SECTOR_OPTIONS = [
   'الخدمات اللوجستية',
   'إنشاءات',

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
 import { deleteBranch } from '@/lib/api/organizationProfileApi'
 import { BranchCard } from './BranchCard'
+import { profileCardClassName } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 
@@ -47,7 +48,7 @@ export function BranchesListCard() {
   const showCarousel = pageCount > 1
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <CardHeader title={t('companyProfile.branchesCard.title')} />
       <div className="overflow-hidden">
         <div

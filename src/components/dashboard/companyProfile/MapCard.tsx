@@ -7,6 +7,7 @@ import {
   type GeocodeResult,
   type LatLng,
 } from '@/components/maps/LocationPicker'
+import { profileCardClassName } from './constants'
 import { CardHeader } from './Primitives'
 
 interface MapCardProps {
@@ -20,7 +21,7 @@ export function MapCard({ location, onLocationChange, onGeocodeResult }: MapCard
   const [address, setAddress] = useState('')
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <CardHeader title={t('companyProfile.mapCard.title')} />
       <LocationPicker
         value={location}

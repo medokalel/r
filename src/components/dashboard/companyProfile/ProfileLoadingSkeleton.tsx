@@ -39,13 +39,13 @@ export function ProfileLoadingSkeleton() {
 
         {/* Map + basic data cards */}
         <div className="flex flex-col items-start gap-5 lg:flex-row">
-          <div className="w-full rounded-[12px] border border-[#ececec] bg-white p-8 lg:w-[42%] lg:shrink-0">
+          <div className="w-full rounded-[12px] border border-[#ececec] bg-white p-4 sm:p-6 lg:w-[42%] lg:shrink-0 lg:p-8">
             <div className="flex flex-col gap-6">
               <SkeletonBlock className="h-6 w-1/2" />
               <SkeletonBlock className="h-[320px] w-full rounded-[12px]" />
             </div>
           </div>
-          <div className="min-w-0 flex-1 rounded-[12px] border border-[#ececec] bg-white p-8">
+          <div className="min-w-0 flex-1 rounded-[12px] border border-[#ececec] bg-white p-4 sm:p-6 lg:p-8">
             <div className="flex flex-col gap-6">
               <SkeletonBlock className="h-6 w-1/3" />
               <div className="grid grid-cols-1 gap-5 md:grid-cols-2">

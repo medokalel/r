@@ -7,6 +7,7 @@ import { useIpLocation } from '@/hooks/useIpLocation'
 import { createBranch } from '@/lib/api/organizationProfileApi'
 import { BranchFormFields } from './BranchFormFields'
 import { branchPayloadFrom } from './mappers'
+import { profileCardClassName } from './constants'
 import { useProfileForm } from './ProfileFormContext'
 import { EMPTY_BRANCH_FORM, type BranchFormValues } from './types'
 import { isBranchFormComplete } from './validation'
@@ -39,7 +40,7 @@ export function AddBranchForm() {
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <div className="flex items-center gap-2">
         <AppIcon icon={AddCircleIcon} size={22} className="text-primary" />
         <p className="text-[18px] font-bold leading-[1.6] text-primary">

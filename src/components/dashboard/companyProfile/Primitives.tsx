@@ -35,12 +35,12 @@ export function Stepper({ activeStep, onStepClick }: StepperProps) {
   const { t } = useTranslation()
   const activeIndex = STEPS.indexOf(activeStep)
   return (
-    <div className="flex items-center justify-center gap-3">
+    <div className="flex flex-nowrap items-center justify-start gap-2 overflow-x-auto scrollbar-hide sm:justify-center sm:gap-3">
       {STEPS.map((step, index) => {
         // Completed steps stay highlighted like the active one
         const highlighted = index <= activeIndex
         return (
-          <div key={step} className="flex items-center gap-3">
+          <div key={step} className="flex shrink-0 items-center gap-2 sm:gap-3">
             {index > 0 && (
               <svg
                 width="16"
@@ -60,7 +60,7 @@ export function Stepper({ activeStep, onStepClick }: StepperProps) {
               type="button"
               onClick={() => onStepClick(step)}
               className={cn(
-                'flex items-center justify-center gap-3 rounded-[50px] px-5 py-4 transition-colors',
+                'flex shrink-0 items-center justify-center gap-2 rounded-[50px] px-3 py-2.5 transition-colors sm:gap-3 sm:px-5 sm:py-4',
                 highlighted
                   ? 'border border-primary bg-[#e8edfc]'
                   : 'border border-[#ececec] bg-[#fcfcfc] hover:border-primary/40 hover:bg-[#f3f6fd]'
@@ -68,13 +68,13 @@ export function Stepper({ activeStep, onStepClick }: StepperProps) {
             >
               <span
                 className={cn(
-                  'flex size-8 shrink-0 items-center justify-center rounded-full text-[16px] font-medium rtl:order-first',
+                  'flex size-7 shrink-0 items-center justify-center rounded-full text-[14px] font-medium rtl:order-first sm:size-8 sm:text-[16px]',
                   highlighted ? 'bg-white text-primary' : 'bg-[#f3f6fd] text-[#666]'
                 )}
               >
                 {STEP_NUMBERS[step]}
               </span>
-              <span className={cn('whitespace-nowrap text-[18px] font-medium leading-[1.6] rtl:order-last', highlighted ? 'text-primary' : 'text-[#666]')}>
+              <span className={cn('whitespace-nowrap text-[15px] font-medium leading-[1.6] rtl:order-last sm:text-[18px]', highlighted ? 'text-primary' : 'text-[#666]')}>
                 {t(`companyProfile.steps.${step}`)}
               </span>
             </button>

@@ -1089,6 +1089,7 @@
     "tasks": {
       "title": "Tasks required now",
       "viewAll": "View All",
+      "downloadOptions": "Download options",
       "applicantName": "Applicant's name",
       "taskType": "Task type",
       "statusHeader": "Status",

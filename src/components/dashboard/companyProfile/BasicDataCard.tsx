@@ -4,7 +4,7 @@ import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { FormField, SelectField, TextField } from '@/components/ui'
 import { AppIcon, MailIcon, UserIcon } from '@/components/icons'
-import { STATUS_OPTIONS } from './constants'
+import { profileCardClassName, STATUS_OPTIONS } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 
@@ -39,7 +39,7 @@ export function BasicDataCard() {
   }
 
   return (
-    <div className="flex flex-col gap-6 rounded-[12px] border border-[#ececec] bg-white p-8">
+    <div className={profileCardClassName}>
       <CardHeader title={t('companyProfile.basicDataCard.title')} />
 
       <div className="flex flex-col gap-5">
