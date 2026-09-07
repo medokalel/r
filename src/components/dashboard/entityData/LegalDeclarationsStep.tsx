@@ -72,7 +72,6 @@ export function LegalDeclarationsStep() {
                   type="text"
                   value={form.signatoryName}
                   onChange={(e) => update('signatoryName', e.target.value)}
-                  placeholder={t('accreditation.entityData.fields.legal.signatoryPlaceholder')}
                 />
               </FormField>
 
@@ -80,6 +79,7 @@ export function LegalDeclarationsStep() {
                 <DatePicker
                   value={form.declarationDate}
                   onChange={(date) => update('declarationDate', date)}
+                  placeholder=""
                 />
               </FormField>
             </div>
@@ -121,7 +121,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateNameAr}
                 onChange={(e) => update('certificateNameAr', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.certificateNameArPlaceholder')}
               />
             </FormField>
 
@@ -134,7 +133,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateNameEn}
                 onChange={(e) => update('certificateNameEn', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.certificateNameEnPlaceholder')}
               />
             </FormField>
           </div>
@@ -149,7 +147,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateAddressAr}
                 onChange={(e) => update('certificateAddressAr', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.certificateAddressArPlaceholder')}
               />
             </FormField>
 
@@ -162,7 +159,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateAddressEn}
                 onChange={(e) => update('certificateAddressEn', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.certificateAddressEnPlaceholder')}
               />
             </FormField>
           </div>
@@ -177,7 +173,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateScopeAr}
                 onChange={(e) => update('certificateScopeAr', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.legal.certificateFieldArPlaceholder')}
               />
             </FormField>
 
@@ -190,7 +185,6 @@ export function LegalDeclarationsStep() {
                 type="text"
                 value={form.certificateScopeEn}
                 onChange={(e) => update('certificateScopeEn', e.target.value)}
-                placeholder="Ex: Chemicals"
               />
             </FormField>
           </div>

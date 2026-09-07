@@ -159,7 +159,7 @@ export const emptyIaSetupForm: IaSetupForm = {
 export function isIaProfileStepComplete(form: IaSetupForm, legalName: string): boolean {
   if (!legalName.trim() || !form.industry) return false
   if (form.industry === 'OTHER' && !form.industryOther.trim()) return false
-  return isValidRequiredEmail(form.primaryContactEmail)
+  return true
 }
 
 export function isIaStructureStepComplete(
@@ -197,7 +197,11 @@ export function isIaProgrammeStepComplete(form: IaSetupForm): boolean {
 
 export function isIaFindingsStepComplete(form: IaSetupForm): boolean {
   return Boolean(
-    form.findingTypes && form.correctiveActionDueDays >= 1 && form.closureAuthority.trim()
+    form.findingTypes &&
+      form.correctionDueDays >= 1 &&
+      form.correctiveActionDueDays >= form.correctionDueDays &&
+      form.escalationAfterDays >= 1 &&
+      form.closureAuthority.trim()
   )
 }
 

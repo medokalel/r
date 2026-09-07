@@ -85,7 +85,6 @@ function BranchForm({
             min={0}
             value={branch.employees}
             onChange={(e) => onChange(branch.localId, { employees: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.branchEmployeesPlaceholder')}
           />
         </FormField>
 
@@ -99,7 +98,6 @@ function BranchForm({
             min={0}
             value={branch.employeesInScope}
             onChange={(e) => onChange(branch.localId, { employeesInScope: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.auditScopeEmployeesPlaceholder')}
           />
         </FormField>
       </div>
@@ -115,7 +113,6 @@ function BranchForm({
             min={0}
             value={branch.shifts}
             onChange={(e) => onChange(branch.localId, { shifts: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.shiftCountPlaceholder')}
           />
         </FormField>
 
@@ -125,7 +122,6 @@ function BranchForm({
             min={0}
             value={branch.workingHours}
             onChange={(e) => onChange(branch.localId, { workingHours: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.openingHoursPlaceholder')}
           />
         </FormField>
       </div>
@@ -136,7 +132,6 @@ function BranchForm({
             value={branch.weeklyHoliday}
             onChange={(value) => onChange(branch.localId, { weeklyHoliday: value })}
             options={weeklyHolidayOptions}
-            placeholder={t('accreditation.entityData.fields.scope.weeklyVacationPlaceholder')}
           />
         </FormField>
 
@@ -149,8 +144,6 @@ function BranchForm({
             min={0}
             value={branch.productionLines}
             onChange={(e) => onChange(branch.localId, { productionLines: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.productionLinesPlaceholder')}
-            className="rtl:placeholder:text-right"
           />
         </FormField>
       </div>
@@ -164,6 +157,7 @@ function BranchForm({
           <DatePicker
             value={branch.phase1ExpectedDate}
             onChange={(date) => onChange(branch.localId, { phase1ExpectedDate: date })}
+            placeholder=""
           />
         </FormField>
 
@@ -186,7 +180,6 @@ function BranchForm({
                   label: t('accreditation.entityData.fields.scope.addNewBranchOption'),
                 },
               ]}
-              placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
             />
           ) : (
             <TextField
@@ -194,7 +187,6 @@ function BranchForm({
               value={branch.branchName}
               onChange={(e) => onChange(branch.localId, { branchName: e.target.value })}
               onBlur={handleBranchNameBlur}
-              placeholder={t('accreditation.entityData.fields.scope.branchNamePlaceholder')}
             />
           )}
         </FormField>
@@ -210,7 +202,6 @@ function BranchForm({
             type="text"
             value={branch.address}
             onChange={(e) => onChange(branch.localId, { address: e.target.value })}
-            placeholder={t('accreditation.entityData.fields.scope.branchAddressPlaceholder')}
           />
         </FormField>
 
@@ -250,7 +241,6 @@ function BranchForm({
           type="text"
           value={branch.activities}
           onChange={(e) => onChange(branch.localId, { activities: e.target.value })}
-          placeholder={t('accreditation.entityData.fields.scope.chooseActivities')}
         />
       </FormField>
 
@@ -262,7 +252,6 @@ function BranchForm({
         <Textarea
           value={branch.products}
           onChange={(e) => onChange(branch.localId, { products: e.target.value })}
-          placeholder={t('accreditation.entityData.fields.common.writeHere')}
         />
       </FormField>
 
@@ -276,7 +265,6 @@ function BranchForm({
           onChange={(e) =>
             onChange(branch.localId, { technicalCommunication: e.target.value })
           }
-          placeholder={t('accreditation.entityData.fields.common.writeHere')}
         />
       </FormField>
     </FormSection>
@@ -337,7 +325,6 @@ export function ScopeOfActivityStep() {
               type="text"
               value={form.fieldOfWork}
               onChange={(e) => update('fieldOfWork', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.scope.scopeOfWorkPlaceholder')}
             />
           </FormField>
 
@@ -361,7 +348,6 @@ export function ScopeOfActivityStep() {
             <Textarea
               value={form.productsServices}
               onChange={(e) => update('productsServices', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.common.writeHere')}
             />
           </FormField>
 
@@ -373,7 +359,6 @@ export function ScopeOfActivityStep() {
             <Textarea
               value={form.annualCapacity}
               onChange={(e) => update('annualCapacity', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.common.writeHere')}
             />
           </FormField>
 
@@ -385,7 +370,6 @@ export function ScopeOfActivityStep() {
             <Textarea
               value={form.technicalSpecifications}
               onChange={(e) => update('technicalSpecifications', e.target.value)}
-              placeholder={t('accreditation.entityData.fields.common.writeHere')}
             />
           </FormField>
 
@@ -421,7 +405,6 @@ export function ScopeOfActivityStep() {
                       label: t('accreditation.entityData.fields.scope.addNewBranchOption'),
                     },
                   ]}
-                  placeholder={t('accreditation.entityData.fields.scope.addBranch')}
                 />
               </FormField>
             )}

@@ -11,7 +11,7 @@ import {
   SetupToggleRow,
 } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { SCOPE_CODE_OPTIONS, getSchemeOptions } from '@/lib/api/cabSetupApi'
-import { createScopeRecord, type CabScopeRecord } from '@/lib/cabSetupForm'
+import { createScopeRecord, ensureScopeRecords, type CabScopeRecord } from '@/lib/cabSetupForm'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
 const HEAD_OFFICE_ID = 'HEAD_OFFICE'
@@ -81,12 +81,14 @@ export function CabScopeStep({ form, onPatchSetup }: CabSetupStepProps) {
     })
   }
 
+  // Open with a scope card ready — same pattern as accreditation records.
+  useEffect(() => {
+    if (scopes.length > 0) return
+    onPatchSetup({ scopes: ensureScopeRecords(1, []) })
+  }, [scopes.length, onPatchSetup])
+
   return (
     <div className="w-full space-y-6">
-
-      {scopes.length === 0 && (
-        <p className="text-[12px] text-[var(--cab-muted)]">{t('cab.setup.scope.empty')}</p>
-      )}
 
       <div className="space-y-4">
         {scopes.map((scope, index) => (

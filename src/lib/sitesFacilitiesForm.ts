@@ -47,7 +47,36 @@ export interface SitesFacilitiesForm {
 }
 
 export const emptySitesFacilitiesForm: SitesFacilitiesForm = {
-  sites: [],
+  sites: [
+    {
+      id: 'site-1',
+      name: 'Main HQ & Manufacturing Facility',
+      siteType: 'Head Office',
+      address: 'Plot 12, Industrial Area, Cairo',
+      country: 'Egypt',
+      activities: ['Management', 'Design & Development', 'Manufacturing'],
+      employees: 120,
+      contact: {
+        name: 'Ahmed Hassan',
+        phone: '+20 100 123 4567',
+        email: 'ahmed.hassan@greenleaf.com',
+      },
+    },
+    {
+      id: 'site-2',
+      name: 'Alexandria Logistics Hub',
+      siteType: 'Warehouse',
+      address: 'Free Zone, Port Area, Alexandria',
+      country: 'Egypt',
+      activities: ['Packing', 'Quality Control'],
+      employees: 45,
+      contact: {
+        name: 'Mahmoud Ali',
+        phone: '+20 111 987 6543',
+        email: 'mahmoud.ali@greenleaf.com',
+      },
+    },
+  ],
 }
 
 /** At least one site gates "Save & Continue". */

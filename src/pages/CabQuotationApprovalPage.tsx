@@ -23,6 +23,9 @@ import { getCabQuotationApproval, type CabQuotationApproval } from '@/lib/api/ca
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { useQuotationApprovalTourSteps } from '@/config/quotationApprovalTourSteps'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -436,6 +439,7 @@ export function CabQuotationApprovalPage() {
   const [data, setData] = useState<CabQuotationApproval | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('quotationApproval')
+  const tourSteps = useQuotationApprovalTourSteps()
 
   useEffect(() => {
     let cancelled = false
@@ -461,154 +465,177 @@ export function CabQuotationApprovalPage() {
   }
 
   return (
-    <CabLayout className="bg-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-          <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
-            {t('cab.applications.quotationApproval.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.applications')}</span>
-          <Chevron />
-          <span className="font-light text-[#000000]">{data.applicationId}</span>
-          <Chevron />
-          <span className="font-light text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.quotation')}</span>
-          <Chevron />
-          <span className="font-bold text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.current')}</span>
-        </nav>
+    <CabLayout className="bg-white" tourId="cab-quotation-approval" tourSteps={tourSteps}>
+      <DashboardTourStep steps={tourSteps} stepId="header">
+        <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+          <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+            <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+              {t('cab.applications.quotationApproval.breadcrumb.home')}
+            </Link>
+            <Chevron />
+            <span className="font-light text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.applications')}</span>
+            <Chevron />
+            <span className="font-light text-[#000000]">{data.applicationId}</span>
+            <Chevron />
+            <span className="font-light text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.quotation')}</span>
+            <Chevron />
+            <span className="font-bold text-[#000000]">{t('cab.applications.quotationApproval.breadcrumb.current')}</span>
+          </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center text-neutral-600"
-            aria-label={t('cab.header.notifications')}
-          >
-            <AppIcon icon={NotificationIcon} size={24} />
-            <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-              3
-            </span>
-          </button>
-          <LanguageToggle variant="icon" />
-          <div className="flex items-center gap-2">
-            <UserAvatar alt="Ahmed Mohamed" className="size-10 border-2" />
-            <div className="hidden text-end sm:block">
-              <p className="text-[13px] font-semibold text-[#000000]">Ahmed Mohamed</p>
-              <p className="text-[12px] text-[#000000]">Admin</p>
+          <div className="flex items-center gap-3">
+            <StartTourButton />
+            <button
+              type="button"
+              className="relative flex size-9 items-center justify-center text-neutral-600"
+              aria-label={t('cab.header.notifications')}
+            >
+              <AppIcon icon={NotificationIcon} size={24} />
+              <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                3
+              </span>
+            </button>
+            <LanguageToggle variant="icon" />
+            <div className="flex items-center gap-2">
+              <UserAvatar alt="Ahmed Mohamed" className="size-10 border-2" />
+              <div className="hidden text-end sm:block">
+                <p className="text-[13px] font-semibold text-[#000000]">Ahmed Mohamed</p>
+                <p className="text-[12px] text-[#000000]">Admin</p>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
+        </header>
+      </DashboardTourStep>
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
             <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
               <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
-                <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
-                  <div className="min-w-0 flex-1">
-                    <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
-                      {t('cab.applications.quotationApproval.title')}
-                    </h1>
-                    <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.quotationApproval.subtitle')}</p>
-                  </div>
-                  <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      <AppIcon icon={PdfFileIcon} size={16} className="text-[#e74c3c]" />
-                      {t('cab.applications.quotationApproval.actions.downloadPdf')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      {t('cab.applications.quotationApproval.actions.moreActions')}
-                      <AppIcon icon={AddCircleIcon} size={14} />
-                    </Button>
-                  </div>
-                </div>
-
-                <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
-                      <AppIcon icon={FileTextIcon} size={28} />
-                    </span>
-                    <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
-                    <StatusBadge label={t('cab.applications.quotationApproval.status.inProgress')} variant="inProgress" pill />
-                  </div>
-
-                  <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
-                    <SummaryField icon={<ClientIcon />} label={t('cab.applications.quotationApproval.summaryBar.client')} value={data.client} />
-                    <SummaryField icon={<BoxIcon />} label={t('cab.applications.quotationApproval.summaryBar.applicationType')} value={data.applicationType} />
-                    <SummaryField icon={<GearIcon />} label={t('cab.applications.quotationApproval.summaryBar.certificationBody')} value={data.certificationBody} />
-                    <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.quotationApproval.summaryBar.standardScheme')} value={data.standardScheme} />
-                    <SummaryField
-                      icon={<AppIcon icon={BuildingsIcon} size={18} />}
-                      label={t('cab.applications.quotationApproval.summaryBar.sites')}
-                      value={t('cab.applications.quotationApproval.summaryBar.sitesValue', { count: data.sitesCount })}
-                    />
-                    <SummaryField
-                      label={t('cab.applications.quotationApproval.summaryBar.requestedOn')}
-                      value={
-                        <>
-                          <span className="block">{data.requestedOnDate}</span>
-                          <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
-                        </>
-                      }
-                    />
-                    <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-                      <AvatarInitials initials={data.assignedTo.initials} />
-                      <div>
-                        <p className="text-[11px] font-semibold text-[#989898]">{t('cab.applications.quotationApproval.summaryBar.assignedTo')}</p>
-                        <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.assignedTo.name}</p>
-                        <p className="text-[10px] font-medium text-[#989898]">({data.assignedTo.role})</p>
-                      </div>
+                <DashboardTourStep steps={tourSteps} stepId="page-header">
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
+                    <div className="min-w-0 flex-1">
+                      <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
+                        {t('cab.applications.quotationApproval.title')}
+                      </h1>
+                      <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.quotationApproval.subtitle')}</p>
+                    </div>
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        <AppIcon icon={PdfFileIcon} size={16} className="text-[#e74c3c]" />
+                        {t('cab.applications.quotationApproval.actions.downloadPdf')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        {t('cab.applications.quotationApproval.actions.moreActions')}
+                        <AppIcon icon={AddCircleIcon} size={14} />
+                      </Button>
                     </div>
                   </div>
-                </section>
+                </DashboardTourStep>
 
-                <div className="flex flex-wrap items-center gap-1 overflow-x-auto border-b border-[#ececec]">
-                  {TABS.map((tab) => {
-                    const active = activeTab === tab
-                    return (
-                      <button
-                        key={tab}
-                        type="button"
-                        aria-selected={active}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                          'flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
-                          active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
-                        )}
-                      >
-                        {t(TAB_LABEL_KEYS[tab])}
-                        {tab === 'documents' && <span>(7)</span>}
-                        {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
-                      </button>
-                    )
-                  })}
-                </div>
+                <DashboardTourStep steps={tourSteps} stepId="summary-card">
+                  <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
+                        <AppIcon icon={FileTextIcon} size={28} />
+                      </span>
+                      <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
+                      <StatusBadge label={t('cab.applications.quotationApproval.status.inProgress')} variant="inProgress" pill />
+                    </div>
+
+                    <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
+                      <SummaryField icon={<ClientIcon />} label={t('cab.applications.quotationApproval.summaryBar.client')} value={data.client} />
+                      <SummaryField icon={<BoxIcon />} label={t('cab.applications.quotationApproval.summaryBar.applicationType')} value={data.applicationType} />
+                      <SummaryField icon={<GearIcon />} label={t('cab.applications.quotationApproval.summaryBar.certificationBody')} value={data.certificationBody} />
+                      <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.quotationApproval.summaryBar.standardScheme')} value={data.standardScheme} />
+                      <SummaryField
+                        icon={<AppIcon icon={BuildingsIcon} size={18} />}
+                        label={t('cab.applications.quotationApproval.summaryBar.sites')}
+                        value={t('cab.applications.quotationApproval.summaryBar.sitesValue', { count: data.sitesCount })}
+                      />
+                      <SummaryField
+                        label={t('cab.applications.quotationApproval.summaryBar.requestedOn')}
+                        value={
+                          <>
+                            <span className="block">{data.requestedOnDate}</span>
+                            <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
+                          </>
+                        }
+                      />
+                      <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
+                        <AvatarInitials initials={data.assignedTo.initials} />
+                        <div>
+                          <p className="text-[11px] font-semibold text-[#989898]">{t('cab.applications.quotationApproval.summaryBar.assignedTo')}</p>
+                          <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.assignedTo.name}</p>
+                          <p className="text-[10px] font-medium text-[#989898]">({data.assignedTo.role})</p>
+                        </div>
+                      </div>
+                    </div>
+                  </section>
+                </DashboardTourStep>
+
+                <DashboardTourStep steps={tourSteps} stepId="tabs">
+                  <div className="flex flex-wrap items-center gap-1 overflow-x-auto border-b border-[#ececec]">
+                    {TABS.map((tab) => {
+                      const active = activeTab === tab
+                      return (
+                        <button
+                          key={tab}
+                          type="button"
+                          aria-selected={active}
+                          onClick={() => setActiveTab(tab)}
+                          className={cn(
+                            'flex shrink-0 items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
+                            active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
+                          )}
+                        >
+                          {t(TAB_LABEL_KEYS[tab])}
+                          {tab === 'documents' && <span>(7)</span>}
+                          {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </DashboardTourStep>
 
                 {activeTab === 'quotationApproval' ? (
                   <>
-                    <QuotationSummaryCard data={data} t={t} />
-                    <AuditScopeCard data={data} t={t} />
-                    <BreakdownTable data={data} t={t} />
+                    <DashboardTourStep steps={tourSteps} stepId="quotation-summary">
+                      <QuotationSummaryCard data={data} t={t} />
+                    </DashboardTourStep>
+                    <DashboardTourStep steps={tourSteps} stepId="audit-scope">
+                      <AuditScopeCard data={data} t={t} />
+                    </DashboardTourStep>
+                    <DashboardTourStep steps={tourSteps} stepId="breakdown-table">
+                      <BreakdownTable data={data} t={t} />
+                    </DashboardTourStep>
 
                     <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
-                      <SitesCard data={data} t={t} />
-                      <ApprovalInformationCard data={data} t={t} />
+                      <DashboardTourStep steps={tourSteps} stepId="sites-card">
+                        <SitesCard data={data} t={t} />
+                      </DashboardTourStep>
+                      <DashboardTourStep steps={tourSteps} stepId="approval-info">
+                        <ApprovalInformationCard data={data} t={t} />
+                      </DashboardTourStep>
                     </div>
 
                     <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
-                      <InternalCommentsCard data={data} t={t} />
+                      <DashboardTourStep steps={tourSteps} stepId="internal-comments">
+                        <InternalCommentsCard data={data} t={t} />
+                      </DashboardTourStep>
                       <ApprovalHistoryCard data={data} t={t} />
                     </div>
 
-                    <ApprovalNoteCard t={t} />
+                    <DashboardTourStep steps={tourSteps} stepId="approval-note">
+                      <ApprovalNoteCard t={t} />
+                    </DashboardTourStep>
                   </>
                 ) : (
                   <section className={cn(cardClassName, 'flex min-h-[200px] items-center justify-center p-6')}>
@@ -619,26 +646,30 @@ export function CabQuotationApprovalPage() {
                 )}
               </div>
 
-              <WorkflowProgressCard
-                steps={buildClientWorkflowSteps(t, 'quotation')}
-                title={t('cab.clientRegistration.workflow.title')}
-                viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
-                statusLabels={{
-                  completed: t('cab.applications.receipt.workflow.completed'),
-                  inProgress: t('cab.clientRegistration.workflow.inProgress'),
-                  pending: t('cab.clientRegistration.workflow.pending'),
-                }}
-              />
+              <DashboardTourStep steps={tourSteps} stepId="workflow-steps">
+                <WorkflowProgressCard
+                  steps={buildClientWorkflowSteps(t, 'quotation')}
+                  title={t('cab.clientRegistration.workflow.title')}
+                  viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
+                  statusLabels={{
+                    completed: t('cab.applications.receipt.workflow.completed'),
+                    inProgress: t('cab.clientRegistration.workflow.inProgress'),
+                    pending: t('cab.clientRegistration.workflow.pending'),
+                  }}
+                />
+              </DashboardTourStep>
             </div>
           </div>
 
-          <DashboardFooter
-            onSaveDraft={() => {}}
-            onBack={() => {}}
-            onNext={() => {}}
-            backDisabled={false}
-            nextLabel={t('cab.applications.quotationApproval.actions.sendApproval')}
-          />
+          <DashboardTourStep steps={tourSteps} stepId="footer-actions">
+            <DashboardFooter
+              onSaveDraft={() => { }}
+              onBack={() => { }}
+              onNext={() => { }}
+              backDisabled={false}
+              nextLabel={t('cab.applications.quotationApproval.actions.sendApproval')}
+            />
+          </DashboardTourStep>
         </div>
       </div>
     </CabLayout>

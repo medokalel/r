@@ -15,6 +15,7 @@ interface CabVerificationStepProps {
   onEmailChange: (email: string) => void
   onOtpChange: (otp: string[]) => void
   onSendCode: () => void
+  isVerifyingEmail?: boolean
   /** When false, OTP is sent automatically and the inline verify button is hidden. */
   showSendButton?: boolean
 }
@@ -27,6 +28,7 @@ export function CabVerificationStep({
   onEmailChange,
   onOtpChange,
   onSendCode,
+  isVerifyingEmail = false,
   showSendButton = true,
 }: CabVerificationStepProps) {
   const { t } = useTranslation()
@@ -54,7 +56,14 @@ export function CabVerificationStep({
               {isSendingCode ? t('register.sendingCodeToEmail') : t('register.codeSentPrompt')}
             </p>
           </div>
-          <OtpInput value={otp} onChange={onOtpChange} disabled={!codeSent || isSendingCode} />
+          <OtpInput
+            value={otp}
+            onChange={onOtpChange}
+            disabled={!codeSent || isSendingCode || isVerifyingEmail}
+          />
+          {isVerifyingEmail && (
+            <p className="text-center text-body-2 text-primary">{t('register.verifyingEmail')}</p>
+          )}
           {codeSent && (
             <button
               type="button"
@@ -118,7 +127,14 @@ export function CabVerificationStep({
             <p className="text-body-1-medium text-neutral-900">{t('register.emailVerification')}</p>
             <p className="text-body-2 text-neutral-500">{t('register.codeSentPrompt')}</p>
           </div>
-          <OtpInput value={otp} onChange={onOtpChange} />
+          <OtpInput
+            value={otp}
+            onChange={onOtpChange}
+            disabled={isVerifyingEmail}
+          />
+          {isVerifyingEmail && (
+            <p className="text-center text-body-2 text-primary">{t('register.verifyingEmail')}</p>
+          )}
         </div>
       )}
     </div>

@@ -39,6 +39,7 @@ export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps)
       <SetupSection title={t('cab.setup.marks.cabLogo')}>
         <p className="mb-3 text-[12px] text-[var(--cab-muted)]">{t('cab.setup.marks.cabLogoCaption')}</p>
         <OnboardingLogoUpload
+          target="cab"
           logoUrl={form.logoUrl}
           onLogoUrlChange={(logoUrl) => onPatch({ logoUrl })}
         />

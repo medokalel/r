@@ -70,11 +70,14 @@
     "invalidWebsite": "Please enter a valid website URL",
     "passwordTooShort": "Password must be at least 8 characters",
     "invalidMobile": "Please enter a valid mobile number (8–15 digits)",
+    "invalidDocumentType": "Please upload a PDF, PNG, or JPEG file",
     "fileTooLarge": "File must be {{size}} MB or smaller"
   },
   "register": {
     "title": "Create a new account",
     "chooseEntityType": "Please select the entity type",
+    "chooseRegistrationType": "Choose how you want to register",
+    "organizations": "Organizations",
     "selectedEntityLabel": "Registering as:",
     "account": {
       "subtitle": "Create your account first. You will choose your role and organization details after you sign in.",
@@ -226,7 +229,7 @@
         "accountSetup": "Account Setup"
       },
       "summary": {
-        "submittedTitle": "Registration Submitted Successfully!",
+        "submittedTitle": "Account created successfully!",
         "submittedDescription": "Your account has been created. You can now log in and get started.",
         "goToDashboard": "Go to Dashboard",
         "goToLogin": "Go to Login"
@@ -2111,6 +2114,41 @@
     }
   },
   "cab": {
+    "companyProfile": {
+      "title": "Company Profile",
+      "subtitle": "View and update the CAB details saved during registration and onboarding.",
+      "save": "Save changes",
+      "saved": "Company profile saved.",
+      "email": "Email",
+      "phone": "Phone",
+      "accountNote": "Email and phone come from your account and cannot be changed here.",
+      "organizationType": "Organization type",
+      "organizationTypePlaceholder": "Select organization type",
+      "organizationTypes": {
+        "CERTIFICATION_BODY": "Certification body",
+        "INSPECTION_BODY": "Inspection body",
+        "TESTING_LABORATORY": "Testing laboratory",
+        "CALIBRATION_LABORATORY": "Calibration laboratory"
+      },
+      "selectPlaceholder": "Select",
+      "accreditationStatus": "Accreditation status",
+      "accreditationBody": "Accreditation body",
+      "noBranches": "No additional locations were saved.",
+      "noFile": "No file uploaded",
+      "noMarks": "No marks were saved.",
+      "openFile": "Open file",
+      "scopeCodes": "Approved scope codes",
+      "sections": {
+        "account": "Account",
+        "identity": "Identity",
+        "location": "Location",
+        "accreditation": "Accreditation",
+        "schemes": "Schemes and services",
+        "marks": "Marks and branding",
+        "certificate": "Certificate settings",
+        "branches": "Locations and branches"
+      }
+    },
     "setup": {
       "badge": "CAB Setup",
       "profile": {
@@ -2221,7 +2259,9 @@
         "uploadPdf": "Upload PDF",
         "coveredByMla": "Covered by IAF MLA / ILAC MRA",
         "expiryReminders": "Set expiry reminders",
-        "applicantNote": "Not accredited yet? Choose \"Applicant\" and save the application reference instead."
+        "applicantNote": "Not accredited yet? Choose \"Applicant\" and save the application reference instead.",
+        "incompleteRecordsHint": "Complete the required fields on each accreditation tab to continue.",
+        "incompleteRecord": "Accreditation {{index}} still needs: {{fields}}"
       },
       "recordStatus": {
         "active": "Active",
@@ -2329,6 +2369,23 @@
         "languagePlaceholder": "Select language",
         "signatory": "Authorised signatory",
         "signatoryPlaceholder": "Add after setup",
+        "signatoriesTitle": "Certificate settings by scheme",
+        "signatoriesEmpty": "Select at least one scheme on the previous step to configure certificates.",
+        "recordTab": "Certificate {{index}}",
+        "addAnother": "+ Add another scheme",
+        "scheme": "Scheme",
+        "schemePlaceholder": "Choose a scheme to configure",
+        "chooseSchemeHint": "Pick a scheme above to configure numbering, validity, template, and signatory details.",
+        "optionalNote": "Certificate setup is optional. Choose only the schemes you want to configure now — you can refine templates after activation.",
+        "schemeSignatoryTitle": "{{scheme}}",
+        "signatoryName": "Authorised signatory name",
+        "signatoryNamePlaceholder": "Enter full name",
+        "signatoryTitle": "Title",
+        "signatoryTitlePlaceholder": "e.g. Managing Director",
+        "signatoryImage": "Signatory image",
+        "signatoryImageHint": "PNG or JPEG, max 2 MB",
+        "signatoryImageTooLarge": "Image must be 2 MB or smaller.",
+        "signatoryImageType": "Only PNG and JPEG images are supported.",
         "template": "Certificate template",
         "templatePlaceholder": "Select template",
         "displayRules": "Certificate display",
@@ -2542,6 +2599,7 @@
       "auditTeamProposal": "Audit Team Proposal",
       "conflictDeclaration": "Conflict Declaration",
       "assignmentAcceptance": "Assignment Acceptance",
+      "companyProfile": "Company Profile",
       "clients": "Clients",
       "audits": "Audits",
       "auditTeams": "Audit Teams",
@@ -2551,6 +2609,71 @@
       "timeAndDate": "Time and date",
       "notifications": "Notifications",
       "takeTour": "Take a Tour"
+    },
+    "tour": {
+      "finish": "Finish Tour",
+      "next": "Next",
+      "back": "Back",
+      "skip": "Skip Tour",
+      "close": "Close",
+      "steps": {
+        "sidebar-navigation": {
+          "title": "System Navigation",
+          "description": "Use the sidebar to navigate between sections such as Dashboard, Client Registration, Applications, and Reviews."
+        },
+        "dashboard-header": {
+          "title": "Dashboard Overview",
+          "description": "Track conformity assessment activities and overall workload at a glance."
+        },
+        "key-metrics": {
+          "title": "Key Metrics",
+          "description": "Monitor vital figures like new applications, pending reviews, upcoming audits, and due payments."
+        },
+        "visual-analytics": {
+          "title": "Visual Analytics",
+          "description": "Explore application distribution by stage, audit progress, and certification decisions in interactive charts."
+        },
+        "work-queue": {
+          "title": "Work Queue",
+          "description": "View and manage pending tasks including technical reviews, info requests, and pending approvals."
+        },
+        "recent-activity": {
+          "title": "Recent Activity",
+          "description": "Follow real-time updates such as certificate issuance, audit completion, and reviewer assignments."
+        },
+        "quick-actions": {
+          "title": "Quick Actions",
+          "description": "Perform common tasks immediately like creating applications, assigning reviewers, or issuing certificates."
+        }
+      },
+      "sidebarAppReview": {
+        "title": "Application Review Icon",
+        "description": "Directly access application documents, review data, and make certification decisions."
+      },
+      "sidebarAppInfo": {
+        "title": "Information Required Icon",
+        "description": "Track missing items and required documentation to be fulfilled by the client."
+      },
+      "sidebarAppFeasibility": {
+        "title": "Technical Feasibility Icon",
+        "description": "Directly access technical feasibility evaluation, auditor competency, and resource availability."
+      },
+      "sidebarAppQuotation": {
+        "title": "Quotation Preparation Icon",
+        "description": "Directly access client quotation preparation, financial breakdown, and terms."
+      },
+      "sidebarQuotationApproval": {
+        "title": "Quotation Approval Icon",
+        "description": "Directly access client approval verification and final quotation authorization."
+      },
+      "sidebarClientsNew": {
+        "title": "New Client Registration Icon",
+        "description": "Directly access the new client registration form to add an organization."
+      },
+      "sidebarAppDraft": {
+        "title": "Application Draft Icon",
+        "description": "Directly access application drafts to create and edit certification requests."
+      }
     },
     "dashboard": {
       "title": "CAB Dashboard",
@@ -2700,8 +2823,42 @@
     },
     "clientRegistration": {
       "title": "Client Registration",
+      "editTitle": "Edit Client",
       "subtitle": "Register client information accurately. All fields marked with * are required.",
       "saveDraftAndContinue": "Save & Continue",
+      "saveChanges": "Save Changes",
+      "viewRegisteredClients": "View Registered Clients",
+      "saveError": "The client could not be saved. Please try again.",
+      "tour": {
+        "header": {
+          "title": "Client Registration",
+          "description": "Fill out this form to register a new client organisation under your CAB."
+        },
+        "clientInformation": {
+          "title": "Client Information",
+          "description": "Enter the legal entity name, trading name, organisation type, and registration details."
+        },
+        "registeredAddress": {
+          "title": "Registered Address",
+          "description": "Provide the official address including country, state, city, and postal code."
+        },
+        "primaryContact": {
+          "title": "Primary Contact Person",
+          "description": "Specify the contact person's full name, designation, email address, and phone numbers."
+        },
+        "additionalInformation": {
+          "title": "Additional Details & Attachments",
+          "description": "Select industry and turnover, describe client activities, and upload supporting documents."
+        },
+        "workflowProgress": {
+          "title": "Workflow Progress",
+          "description": "Track where this registration sits in the overall certification pipeline."
+        },
+        "actionButtons": {
+          "title": "Save & Continue",
+          "description": "Save your progress as a draft or proceed to the next step once all required fields are complete."
+        }
+      },
       "sections": {
         "clientInformation": "Client Information",
         "registeredAddress": "Registered Address",
@@ -2794,10 +2951,61 @@
         }
       }
     },
+    "clientsPage": {
+      "title": "Clients",
+      "total": "{{count}} clients",
+      "addClient": "Register Client",
+      "search": "Search",
+      "searchPlaceholder": "Search by client, registration number, contact, or email",
+      "loadError": "Clients could not be loaded.",
+      "empty": "No clients found.",
+      "view": "View client",
+      "status": {
+        "draft": "Draft",
+        "registered": "Registered",
+        "inactive": "Inactive"
+      },
+      "table": {
+        "client": "Client",
+        "registration": "Registration No.",
+        "contact": "Primary Contact",
+        "location": "Location",
+        "status": "Status",
+        "actions": "Actions"
+      }
+    },
+    "clientDetails": {
+      "title": "Client Details",
+      "backToClients": "Back to clients",
+      "editClient": "Edit Client",
+      "openDocument": "Open supporting document"
+    },
     "applicationDraft": {
       "title": "Application Draft",
       "subtitle": "Create and save the application draft. You can edit and submit later.",
       "saveDraftAndContinue": "Save & Continue",
+      "tour": {
+        "header": {
+          "title": "Application Draft",
+          "description": "Create and edit a new certification application for your client."
+        },
+        "stepper": {
+          "title": "Application Steps",
+          "description": "Follow the 5 steps: General Info, Standards & Scope, Sites, Documents, and Review."
+        },
+        "formContent": {
+          "title": "Form Details",
+          "description": "Fill in the required information for the selected step."
+        },
+        "workflowProgress": {
+          "title": "Workflow & Summary",
+          "description": "View application status, document overview, or review details here."
+        },
+        "actionButtons": {
+          "title": "Save & Continue",
+          "description": "Save draft or move forward to the next step when fields are complete."
+        }
+      },
       "viewClientDetails": "View Client Details",
       "registeredClient": "Registered Client",
       "clientId": "Client ID",
@@ -3412,6 +3620,36 @@
         "subtitle": "The application has been received successfully and is under preliminary processing.",
         "help": "Help",
         "chat": "Chat support",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and profile details."
+          },
+          "pageHeader": {
+            "title": "Application Receipt Title & Actions",
+            "description": "View receipt status, download receipt PDF, and access additional options."
+          },
+          "receiptSummary": {
+            "title": "Receipt Details",
+            "description": "Overview of receipt reference, receipt date, client name, and logged by user."
+          },
+          "applicationDetails": {
+            "title": "Application Details",
+            "description": "Inspect application type, primary standard, and registered sites."
+          },
+          "clientSummary": {
+            "title": "Client Summary",
+            "description": "Review client legal name, ID, and organization type."
+          },
+          "documentsSummary": {
+            "title": "Received Documents Summary",
+            "description": "Check status and count of all uploaded application documents."
+          },
+          "workflowProgress": {
+            "title": "Workflow Progress",
+            "description": "Track progress and next steps in the application review lifecycle."
+          }
+        },
         "status": {
           "received": "Received"
         },
@@ -3524,6 +3762,32 @@
         "subtitle": "Review the application for completeness, accuracy, eligibility and compliance with certification requirements.",
         "help": "Help",
         "chat": "Chat support",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and reviewer profile."
+          },
+          "pageHeader": {
+            "title": "Review Title & Actions",
+            "description": "Review status, download application, and send for technical feasibility assessment."
+          },
+          "summaryCard": {
+            "title": "Application Summary",
+            "description": "Overview of client, application type, certification body, and assigned reviewer."
+          },
+          "tabs": {
+            "title": "Review Sections & Tabs",
+            "description": "Switch between Checklist, Application Details, Documents, Comments, and History."
+          },
+          "checklistTable": {
+            "title": "Review Checklist",
+            "description": "Inspect each area's completion status, add comments, and set overall decision."
+          },
+          "workflowProgress": {
+            "title": "Workflow Progress",
+            "description": "Track stages from Application Receipt through Feasibility, Quotation, and Decision."
+          }
+        },
         "status": {
           "inProgress": "In Progress"
         },
@@ -3691,6 +3955,40 @@
         "title": "6. Information Required",
         "subtitle": "Track and manage information requests sent to the client during application review.",
         "help": "Help",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and profile details."
+          },
+          "pageHeader": {
+            "title": "Information Required Title & Actions",
+            "description": "View current request status, send reminders to the client, or download request packages."
+          },
+          "summaryCard": {
+            "title": "Request Summary",
+            "description": "Overview of client, application type, requested date, and requester details."
+          },
+          "tabs": {
+            "title": "Information Sections & Tabs",
+            "description": "Switch between Requested Information, Documents, Communication Log, and History."
+          },
+          "requestsTable": {
+            "title": "Requested Items Table",
+            "description": "Review missing items, clause references, requester, due date, and priority level."
+          },
+          "clientResponses": {
+            "title": "Client Responses & Attachments",
+            "description": "Review responses and uploaded files received from the client for verification."
+          },
+          "internalComments": {
+            "title": "Internal Team Comments",
+            "description": "Add and track internal notes and instructions between assessment team members."
+          },
+          "workflowProgress": {
+            "title": "Workflow Progress",
+            "description": "Track current stage status, timeline, and pending client actions."
+          }
+        },
         "status": {
           "inProgress": "In Progress",
           "pending": "Pending"
@@ -3797,6 +4095,44 @@
         "title": "7. Technical Feasibility",
         "subtitle": "Assess technical feasibility based on scope, standards, team availability, and resource allocation.",
         "help": "Help",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and profile details."
+          },
+          "pageHeader": {
+            "title": "Technical Feasibility Title & Actions",
+            "description": "View assessment status, download report, and proceed to quotation preparation."
+          },
+          "summaryCard": {
+            "title": "Feasibility Summary",
+            "description": "Overview of client, application type, number of sites, requested date, and assigned evaluator."
+          },
+          "tabs": {
+            "title": "Feasibility Sections & Tabs",
+            "description": "Switch between Assessment Table, Documents, Review Comments, and History."
+          },
+          "assessmentTable": {
+            "title": "Technical Feasibility Assessment Table",
+            "description": "Detailed evaluation of technical competence, standards compliance, resources, and scope."
+          },
+          "commentsSection": {
+            "title": "Technical Comments & Justifications",
+            "description": "Review assessment notes, lead auditor justifications, and add internal evaluation comments."
+          },
+          "reviewSummary": {
+            "title": "Feasibility Completion Indicator",
+            "description": "View overall evaluation completion percentage and number of feasible areas verified."
+          },
+          "auditTeam": {
+            "title": "Audit Team, Resources & Recommendation",
+            "description": "Inspect auditor competencies, technical experts, key info, and proceed to quotation."
+          },
+          "workflowProgress": {
+            "title": "Workflow Progress",
+            "description": "Track stage progress and automatic transition to quotation preparation."
+          }
+        },
         "status": {
           "inProgress": "In Progress"
         },
@@ -3935,6 +4271,44 @@
         "title": "8. Quotation",
         "subtitle": "Prepare and send quotation based on the audit scope, standards, sites and audit duration.",
         "help": "Help",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and profile details."
+          },
+          "pageHeader": {
+            "title": "Quotation Title & Actions",
+            "description": "View quotation status, download PDF, and send final quotation package to client."
+          },
+          "summaryCard": {
+            "title": "Quotation Summary",
+            "description": "Overview of quotation ID, client, total fees, currency, issue date, and assigned manager."
+          },
+          "tabs": {
+            "title": "Quotation Sections & Tabs",
+            "description": "Switch between Financial Breakdown, Documents, Review Comments, and History."
+          },
+          "statsCards": {
+            "title": "Quotation Key Statistics",
+            "description": "Summary of total amount, audit days, team structure, sites covered, and offer validity."
+          },
+          "breakdownTable": {
+            "title": "Financial Cost Breakdown",
+            "description": "Detailed cost structure covering stage 1/2 audits, mandays, surveillance, and additional fees."
+          },
+          "paymentTerms": {
+            "title": "Payment Terms & Conditions",
+            "description": "Review payment schedules, advance deposits, accepted currencies, and validity terms."
+          },
+          "internalComments": {
+            "title": "Internal Comments & Notes",
+            "description": "Track internal notes and reviewer instructions before releasing quotation to client."
+          },
+          "documentsCard": {
+            "title": "Attached Quotation Documents",
+            "description": "Inspect all attached proposal documents, terms of service, and validity indicators."
+          }
+        },
         "status": {
           "inProgress": "In Progress"
         },
@@ -4073,6 +4447,56 @@
       "quotationApproval": {
         "title": "9. Quotation Approval",
         "subtitle": "Review and approve the quotation before sending it to the client.",
+        "tour": {
+          "header": {
+            "title": "Header & Control Bar",
+            "description": "Displays breadcrumb navigation, tour controls, notifications, and profile details."
+          },
+          "pageHeader": {
+            "title": "Quotation Approval Title & Actions",
+            "description": "View approval stage status, download PDF documents, and access additional actions."
+          },
+          "summaryCard": {
+            "title": "Application & Client Summary",
+            "description": "Overview of application reference, client name, scheme, site count, and assigned lead."
+          },
+          "tabs": {
+            "title": "Approval Sections & Tabs",
+            "description": "Navigate between Application Details, Documents, Comments, Technical Feasibility, and Quotation Approval."
+          },
+          "quotationSummary": {
+            "title": "Quotation & Cost Summary",
+            "description": "Inspect quotation reference (QUO), version, author, validity date, subtotal, and tax fees."
+          },
+          "auditScope": {
+            "title": "Audit Scope & Standards",
+            "description": "Review audit scope coverage, primary standards, and certified activities."
+          },
+          "breakdownTable": {
+            "title": "Financial Cost Breakdown",
+            "description": "Detailed cost breakdown including stage 1/2 mandays, technical experts, and total fees."
+          },
+          "sitesCard": {
+            "title": "Client Sites & Locations",
+            "description": "List of all certified client facilities and branch sites included in the audit scope."
+          },
+          "approvalInfo": {
+            "title": "Approval Status & Decision",
+            "description": "View quotation review status, lead auditor remarks, and approval timestamps."
+          },
+          "internalComments": {
+            "title": "Internal Comments & History",
+            "description": "Track internal team discussion, notes, and complete decision history."
+          },
+          "approvalNote": {
+            "title": "Approval Policy Notes",
+            "description": "Important terms and policies regarding quotation release and client dispatch."
+          },
+          "footerActions": {
+            "title": "Approval Actions & Save",
+            "description": "Save current changes as draft or approve and dispatch final quotation directly to the client."
+          }
+        },
         "status": {
           "inProgress": "In Progress"
         },

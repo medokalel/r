@@ -11,7 +11,10 @@ interface RedirectAbFromGenericDashboardProps {
 export function RedirectAbFromGenericDashboard({ children }: RedirectAbFromGenericDashboardProps) {
   const org = getAuthSession()?.organization
 
-  if (org?.type === 'ACCREDITATION_BODY' && isOnboardingComplete(org.id)) {
+  if (
+    org?.type === 'ACCREDITATION_BODY' &&
+    isOnboardingComplete(org.id, org.onboardingStatus)
+  ) {
     return <Navigate to={ROUTES.abDashboard} replace />
   }
 

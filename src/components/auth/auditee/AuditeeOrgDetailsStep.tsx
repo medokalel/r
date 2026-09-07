@@ -4,6 +4,7 @@ import { TextField } from '@/components/ui'
 import { ORG_SCOPE_CATEGORY_OPTIONS } from '@/lib/api/onboardingOrgScopeApi'
 import type { AuditeeOnboardingForm } from '@/lib/auditeeOnboardingForm'
 import { getOrgScopeNameFieldLabels } from '@/lib/orgScopeNameField'
+import { isValidWebsite } from '@/lib/validators'
 
 interface AuditeeOrgDetailsStepProps {
   form: AuditeeOnboardingForm
@@ -73,6 +74,7 @@ export function AuditeeOrgDetailsStep({ form, onPatch }: AuditeeOrgDetailsStepPr
           value={form.website}
           placeholder={t('auditee.onboarding.orgDetails.websitePlaceholder')}
           onChange={(e) => onPatch({ website: e.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
     </div>

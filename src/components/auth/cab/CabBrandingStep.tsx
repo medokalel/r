@@ -51,6 +51,7 @@ export function CabBrandingStep({ form, onPatch }: CabBrandingStepProps) {
           <p className="mb-3 text-body-1-semibold text-neutral-900">{t('cab.onboarding.branding.visualIdentity')}</p>
           <p className="text-body-3-medium text-neutral-700 mb-2">{t('cab.onboarding.branding.logo')}</p>
           <OnboardingLogoUpload
+            target="cab"
             logoUrl={form.logoUrl}
             onLogoUrlChange={(logoUrl) => onPatch({ logoUrl })}
           />

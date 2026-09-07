@@ -15,6 +15,9 @@ interface AuditeeVerificationStepProps {
   onEmailChange: (email: string) => void
   onOtpChange: (otp: string[]) => void
   onSendCode: () => void
+  isVerifyingEmail?: boolean
+  isCreatingAccount?: boolean
+  showSendButton?: boolean
 }
 
 /** Step 2 ("verification"): same email + inline "verify" + OTP pattern as the AB/CAB flows. */
@@ -26,10 +29,48 @@ export function AuditeeVerificationStep({
   onEmailChange,
   onOtpChange,
   onSendCode,
+  isVerifyingEmail = false,
+  isCreatingAccount = false,
+  showSendButton = true,
 }: AuditeeVerificationStepProps) {
   const { t } = useTranslation()
   const emailValid = isValidRequiredEmail(email)
   const emailError = email.trim().length > 0 && !emailValid ? t('validation.invalidEmail') : undefined
+
+  if (!showSendButton) {
+    return (
+      <div className="w-full space-y-6">
+        <div className="space-y-4">
+          <div className="space-y-1">
+            <p className="text-body-1-medium text-neutral-900">{t('register.emailVerification')}</p>
+            <p className="text-body-2 text-neutral-500">
+              {isSendingCode ? t('register.sendingCodeToEmail') : t('register.codeSentPrompt')}
+            </p>
+          </div>
+          <OtpInput
+            value={otp}
+            onChange={onOtpChange}
+            disabled={!codeSent || isSendingCode || isVerifyingEmail || isCreatingAccount}
+          />
+          {isCreatingAccount ? (
+            <p className="text-center text-body-2 text-primary">{t('register.creatingAccount')}</p>
+          ) : isVerifyingEmail ? (
+            <p className="text-center text-body-2 text-primary">{t('register.verifyingEmail')}</p>
+          ) : null}
+          {codeSent && (
+            <button
+              type="button"
+              onClick={onSendCode}
+              disabled={isSendingCode}
+              className="text-body-2-semibold text-primary underline underline-offset-2 disabled:opacity-50"
+            >
+              {isSendingCode ? t('register.sendingCode') : t('register.resendCode')}
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full space-y-6">
@@ -79,7 +120,14 @@ export function AuditeeVerificationStep({
             <p className="text-body-1-medium text-neutral-900">{t('register.emailVerification')}</p>
             <p className="text-body-2 text-neutral-500">{t('register.codeSentPrompt')}</p>
           </div>
-          <OtpInput value={otp} onChange={onOtpChange} />
+          <OtpInput
+            value={otp}
+            onChange={onOtpChange}
+            disabled={isVerifyingEmail}
+          />
+          {isVerifyingEmail && (
+            <p className="text-center text-body-2 text-primary">{t('register.verifyingEmail')}</p>
+          )}
         </div>
       )}
     </div>

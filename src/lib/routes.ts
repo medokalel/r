@@ -14,6 +14,7 @@ export const ROUTES = {
   periodicVisits: '/periodic-visits',
   invoices: '/invoices',
   cabDashboard: '/cab/dashboard',
+  cabCompanyProfile: '/cab/company-profile',
   abDashboard: '/ab/dashboard',
   cabOnboarding: '/cab/onboarding',
   abOnboarding: '/ab/onboarding',

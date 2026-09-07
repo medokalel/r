@@ -4,8 +4,7 @@ import { TextField } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SetupNote } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { AB_MODEL_OPTIONS, getYearEstablishedOptions, requiresMandateReference } from '@/lib/api/abSetupApi'
-import { isValidEmailFormat } from '@/lib/validators'
-import { toEnglishDigits } from '@/lib/englishDigits'
+import { isValidWebsite } from '@/lib/validators'
 import type { AbSetupStepProps } from '@/components/auth/ab/setup/types'
 
 export function AbProfileStep({ form, onPatch, onPatchSetup }: AbSetupStepProps) {
@@ -17,11 +16,6 @@ export function AbProfileStep({ form, onPatch, onPatchSetup }: AbSetupStepProps)
     [t]
   )
   const yearOptions = useMemo(() => getYearEstablishedOptions(), [])
-
-  const emailError =
-    setup.primaryContactEmail.trim().length > 0 && !isValidEmailFormat(setup.primaryContactEmail)
-      ? t('validation.invalidEmail')
-      : undefined
 
   // National/government ABs cite a decree; private ones cite a registration.
   const mandateLabel = requiresMandateReference(setup.abModel)
@@ -84,7 +78,7 @@ export function AbProfileStep({ form, onPatch, onPatchSetup }: AbSetupStepProps)
         />
       )}
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <TextField
           id="ab-setup-website"
           label={t('ab.setup.profile.website')}
@@ -94,33 +88,8 @@ export function AbProfileStep({ form, onPatch, onPatchSetup }: AbSetupStepProps)
           value={form.website}
           placeholder={t('ab.setup.profile.websitePlaceholder')}
           onChange={(event) => onPatch({ website: event.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
-        <TextField
-          id="ab-setup-contact-email"
-          label={t('ab.setup.profile.contactEmail')}
-          required
-          type="email"
-          lang="en"
-          dir="ltr"
-          value={setup.primaryContactEmail}
-          placeholder={t('ab.setup.profile.contactEmailPlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactEmail: toEnglishDigits(event.target.value) })}
-          error={emailError}
-        />
-        <TextField
-          id="ab-setup-contact-phone"
-          label={t('ab.setup.profile.contactPhone')}
-          required
-          type="tel"
-          lang="en"
-          dir="ltr"
-          value={setup.primaryContactPhone}
-          placeholder={t('ab.setup.profile.contactPhonePlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactPhone: toEnglishDigits(event.target.value) })}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <SearchableSelect
           id="ab-setup-year"
           label={t('ab.setup.profile.yearEstablished')}

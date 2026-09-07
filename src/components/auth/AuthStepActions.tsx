@@ -9,6 +9,8 @@ interface AuthStepActionsProps {
   nextDisabled?: boolean
   nextType?: 'button' | 'submit'
   showBack?: boolean
+  /** When false, the primary action button is hidden (e.g. auto OTP verify). */
+  showNext?: boolean
   /** Renders a "Save & continue later" link under the buttons when provided. */
   onSaveAndExit?: () => void
   saveAndExitLabel?: string
@@ -22,6 +24,7 @@ export function AuthStepActions({
   nextDisabled,
   nextType = 'button',
   showBack = true,
+  showNext = true,
   onSaveAndExit,
   saveAndExitLabel,
   className,
@@ -41,18 +44,20 @@ export function AuthStepActions({
             {t('common.back')}
           </Button>
         )}
-        <Button
-          type={nextType}
-          variant="primary"
-          className={cn(
-            'h-12 rounded-[var(--radius-sm)] text-body-2-semibold',
-            showBack && onBack ? 'flex-1' : 'w-full'
-          )}
-          onClick={onNext}
-          disabled={nextDisabled}
-        >
-          {nextLabel ?? t('common.next')}
-        </Button>
+        {showNext && (
+          <Button
+            type={nextType}
+            variant="primary"
+            className={cn(
+              'h-12 rounded-[var(--radius-sm)] text-body-2-semibold',
+              showBack && onBack ? 'flex-1' : 'w-full'
+            )}
+            onClick={onNext}
+            disabled={nextDisabled}
+          >
+            {nextLabel ?? t('common.next')}
+          </Button>
+        )}
       </div>
 
       {onSaveAndExit && (

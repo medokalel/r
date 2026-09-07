@@ -24,6 +24,9 @@ export interface LoginResponseData {
     id: string
     name: string
     type: OrganizationType
+    legalCapacity?: string | null
+    onboardingStatus?: 'DRAFT' | 'COMPLETED' | null
+    onboardingCompleted?: boolean
   } | null
   cab?: {
     id: string

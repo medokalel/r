@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -29,9 +29,12 @@ import {
 } from '@/lib/api/cabDashboardApi'
 
 import { CabDashboardTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useCabDashboardTourSteps } from '@/config/cabTourSteps'
+import { markCabWorkflowTourPending, resetCabWorkflowTour } from '@/config/cabTourSequence'
 
 export function CabDashboardPage() {
   const { t } = useTranslation()
+  const dashboardTourSteps = useCabDashboardTourSteps()
   const navigate = useNavigate()
   const [stats, setStats] = useState<CabDashboardStats | null>(null)
   const [applicationsByStage, setApplicationsByStage] = useState<ApplicationsByStageEntry[]>([])
@@ -42,6 +45,19 @@ export function CabDashboardPage() {
   const [loading, setLoading] = useState(true)
   const [isAuditCalendarOpen, setIsAuditCalendarOpen] = useState(false)
   const [isApplicationsByStageOpen, setIsApplicationsByStageOpen] = useState(false)
+  const [tourSessionKey, setTourSessionKey] = useState(0)
+
+  useLayoutEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('restartCabTour') === '1') {
+      resetCabWorkflowTour()
+      markCabWorkflowTourPending()
+      params.delete('restartCabTour')
+      const query = params.toString()
+      window.history.replaceState({}, '', query ? `${window.location.pathname}?${query}` : window.location.pathname)
+      setTourSessionKey((key) => key + 1)
+    }
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -69,7 +85,7 @@ export function CabDashboardPage() {
   }, [])
 
   return (
-    <CabLayout>
+    <CabLayout tourId="cab-dashboard" tourSteps={dashboardTourSteps} tourSessionKey={tourSessionKey}>
       <CabDashboardTourStep stepId="dashboard-header">
         <CabHeader
           title={t('cab.dashboard.title')}

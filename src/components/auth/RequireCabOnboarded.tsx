@@ -19,7 +19,10 @@ export function RequireCabOnboarded({ children }: RequireCabOnboardedProps) {
   }
 
   const org = session?.organization
-  if (org?.type === 'CERTIFICATION_BODY' && !isOnboardingComplete(org.id)) {
+  if (
+    org?.type === 'CERTIFICATION_BODY' &&
+    !isOnboardingComplete(org.id, org.onboardingStatus)
+  ) {
     return <Navigate to={ROUTES.onboarding} replace />
   }
 

@@ -250,7 +250,13 @@ export function isAbProfileStepComplete(form: AbSetupForm, legalName: string): b
   if (form.abModel === 'OTHER' && !form.abModelOther.trim()) return false
   // National/government mandates and private registrations both land here.
   if (!form.mandateReference.trim()) return false
-  return isValidRequiredEmail(form.primaryContactEmail) && Boolean(form.primaryContactPhone.trim())
+  const year = Number(form.yearEstablished)
+  const yearValid =
+    !form.yearEstablished ||
+    (/^\d{4}$/.test(form.yearEstablished) &&
+      year >= 1800 &&
+      year <= new Date().getFullYear())
+  return yearValid
 }
 
 /** Surfaced so the profile screen can relabel the mandate field. */
@@ -315,6 +321,9 @@ export function isAbScopeStepComplete(form: AbSetupForm): boolean {
 }
 
 export function isAbSymbolsStepComplete(form: AbSetupForm): boolean {
+  if (form.symbolValidFrom && form.symbolValidUntil && form.symbolValidUntil <= form.symbolValidFrom) {
+    return false
+  }
   return form.permittedUse.length > 0
 }
 

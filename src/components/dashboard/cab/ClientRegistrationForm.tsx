@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormField, SelectField, TextField, Textarea } from '@/components/ui'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
-import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { AppIcon, MailIcon, PhoneIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { isValidEmailFormat, isValidPhoneNumber, isValidWebsite } from '@/lib/validators'
-import type { CountryCode } from '@/lib/countries'
+import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import {
   ORGANIZATION_TYPE_OPTIONS,
@@ -23,7 +24,9 @@ interface ClientRegistrationFormProps {
   form: ClientRegistrationFormData
   onPatch: (f: Partial<ClientRegistrationFormData>) => void
   attachedFile: File | null
+  existingDocumentName?: string | null
   onAttachFile: (file: File | null) => void
+  onClearDocument?: () => void
 }
 
 /** Loads State/Province options for a given country, mirroring LegalIdentityStep's governorate pattern. */
@@ -55,12 +58,23 @@ export function ClientRegistrationForm({
   form,
   onPatch,
   attachedFile,
+  existingDocumentName,
   onAttachFile,
+  onClearDocument,
 }: ClientRegistrationFormProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const [fileError, setFileError] = useState('')
 
   const stateOptions = useStateOptions(form.country)
   const addressStateOptions = useStateOptions(form.addressCountry)
+  const countryOptions = useMemo(
+    () =>
+      getCountryOptions(i18n.language).map((country) => ({
+        value: country.code,
+        label: `${country.flag} ${country.name}`,
+      })),
+    [i18n.language]
+  )
 
   const { fieldProps } = useFieldValidation(form, {
     contactEmail: (value) => (!isValidEmailFormat(value) ? t('validation.invalidEmail') : undefined),
@@ -73,7 +87,8 @@ export function ClientRegistrationForm({
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title={t('cab.clientRegistration.sections.clientInformation')} accordion>
+      <DashboardTourStep stepId="client-information">
+        <SectionHeading title={t('cab.clientRegistration.sections.clientInformation')} accordion>
         <div className="space-y-5">
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField label={t('cab.clientRegistration.fields.legalEntityName')} required>
@@ -120,9 +135,13 @@ export function ClientRegistrationForm({
               />
             </FormField>
             <FormField label={t('cab.clientRegistration.fields.country')} required>
-              <CountrySelectField
-                value={form.country || null}
-                onChange={(code) => onPatch({ country: code, state: '' })}
+              <SearchableSelect
+                id="client-registration-country"
+                value={form.country}
+                options={countryOptions}
+                placeholder={t('register.countryPlaceholder')}
+                searchPlaceholder={t('common.search')}
+                onChange={(code) => onPatch({ country: code as CountryCode, state: '' })}
               />
             </FormField>
           </div>
@@ -130,9 +149,12 @@ export function ClientRegistrationForm({
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField label={t('cab.clientRegistration.fields.state')} required>
               {stateOptions.length > 0 ? (
-                <SelectField
+                <SearchableSelect
+                  id="client-registration-state"
                   value={form.state}
-                  options={stateOptions}
+                  options={stateOptions.map((state) => ({ value: state, label: state }))}
+                  placeholder={t('cab.clientRegistration.fields.statePlaceholder')}
+                  searchPlaceholder={t('common.search')}
                   onChange={(value) => onPatch({ state: value })}
                 />
               ) : (
@@ -155,8 +177,10 @@ export function ClientRegistrationForm({
           </div>
         </div>
       </SectionHeading>
+      </DashboardTourStep>
 
-      <SectionHeading title={t('cab.clientRegistration.sections.registeredAddress')} accordion>
+      <DashboardTourStep stepId="registered-address">
+        <SectionHeading title={t('cab.clientRegistration.sections.registeredAddress')} accordion>
         <div className="space-y-5">
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField label={t('cab.clientRegistration.fields.addressLine1')} required>
@@ -199,16 +223,25 @@ export function ClientRegistrationForm({
 
           <div className="grid gap-5 lg:grid-cols-3">
             <FormField label={t('cab.clientRegistration.fields.country')} required>
-              <CountrySelectField
-                value={form.addressCountry || null}
-                onChange={(code) => onPatch({ addressCountry: code, addressState: '' })}
+              <SearchableSelect
+                id="client-registration-address-country"
+                value={form.addressCountry}
+                options={countryOptions}
+                placeholder={t('register.countryPlaceholder')}
+                searchPlaceholder={t('common.search')}
+                onChange={(code) =>
+                  onPatch({ addressCountry: code as CountryCode, addressState: '' })
+                }
               />
             </FormField>
             <FormField label={t('cab.clientRegistration.fields.state')} required>
               {addressStateOptions.length > 0 ? (
-                <SelectField
+                <SearchableSelect
+                  id="client-registration-address-state"
                   value={form.addressState}
-                  options={addressStateOptions}
+                  options={addressStateOptions.map((state) => ({ value: state, label: state }))}
+                  placeholder={t('cab.clientRegistration.fields.statePlaceholder')}
+                  searchPlaceholder={t('common.search')}
                   onChange={(value) => onPatch({ addressState: value })}
                 />
               ) : (
@@ -231,8 +264,10 @@ export function ClientRegistrationForm({
           </div>
         </div>
       </SectionHeading>
+      </DashboardTourStep>
 
-      <SectionHeading title={t('cab.clientRegistration.sections.primaryContact')} accordion>
+      <DashboardTourStep stepId="primary-contact">
+        <SectionHeading title={t('cab.clientRegistration.sections.primaryContact')} accordion>
         <div className="space-y-5">
           <div className="grid gap-5 lg:grid-cols-3">
             <FormField label={t('cab.clientRegistration.fields.fullName')} required>
@@ -305,8 +340,10 @@ export function ClientRegistrationForm({
           </div>
         </div>
       </SectionHeading>
+      </DashboardTourStep>
 
-      <SectionHeading title={t('cab.clientRegistration.sections.additionalInformation')} accordion>
+      <DashboardTourStep stepId="additional-information">
+        <SectionHeading title={t('cab.clientRegistration.sections.additionalInformation')} accordion>
         <div className="space-y-5">
           <div className="grid gap-5 lg:grid-cols-4">
             <FormField label={t('cab.clientRegistration.fields.industry')} required>
@@ -351,13 +388,13 @@ export function ClientRegistrationForm({
             />
           </FormField>
 
-          {/* Simple optional single-file dashed dropzone — DocumentUploadField's
-              row layout with a file history list is more than this optional
-              attachment needs, so this stays a lightweight standalone control. */}
+          {/* Simple optional single-file dashed dropzone */}
           <label className="flex cursor-pointer flex-col items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-primary/40 bg-[#f9fafc] px-6 py-8 text-center">
             <AppIcon icon={UploadOutlineIcon} size={40} className="text-primary" />
             <span className="text-[14px] text-neutral-600">
-              {attachedFile ? attachedFile.name : t('cab.clientRegistration.fields.attachDocument')}
+              {attachedFile?.name ??
+                existingDocumentName ??
+                t('cab.clientRegistration.fields.attachDocument')}
             </span>
             <Button
               type="button"
@@ -370,11 +407,38 @@ export function ClientRegistrationForm({
               type="file"
               className="hidden"
               accept=".pdf,.png,.jpg,.jpeg"
-              onChange={(e) => onAttachFile(e.target.files?.[0] ?? null)}
+              onChange={(event) => {
+                const file = event.target.files?.[0] ?? null
+                event.target.value = ''
+                if (!file) return
+                if (!['application/pdf', 'image/png', 'image/jpeg'].includes(file.type)) {
+                  setFileError(t('validation.invalidDocumentType'))
+                  onAttachFile(null)
+                  return
+                }
+                if (file.size > 10 * 1024 * 1024) {
+                  setFileError(t('validation.fileTooLarge', { size: 10 }))
+                  onAttachFile(null)
+                  return
+                }
+                setFileError('')
+                onAttachFile(file)
+              }}
             />
           </label>
+          {(attachedFile || existingDocumentName) && onClearDocument && (
+            <button
+              type="button"
+              onClick={onClearDocument}
+              className="text-body-3 text-error-500 hover:underline"
+            >
+              {t('common.delete')}
+            </button>
+          )}
+          {fileError && <p className="text-small-light text-error-500">{fileError}</p>}
         </div>
       </SectionHeading>
+      </DashboardTourStep>
     </div>
   )
 }

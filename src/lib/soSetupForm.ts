@@ -187,7 +187,13 @@ export function isSoSchemeComplete(scheme: SoSchemeRecord): boolean {
 export function isSoProfileStepComplete(form: SoSetupForm, legalName: string): boolean {
   if (!legalName.trim() || !form.ownerType) return false
   if (form.ownerType === 'OTHER' && !form.ownerTypeOther.trim()) return false
-  return isValidRequiredEmail(form.primaryContactEmail)
+  const year = Number(form.yearEstablished)
+  const yearValid =
+    !form.yearEstablished ||
+    (/^\d{4}$/.test(form.yearEstablished) &&
+      year >= 1800 &&
+      year <= new Date().getFullYear())
+  return yearValid
 }
 
 export function isSoLocationStepComplete(
@@ -245,6 +251,9 @@ export function isSoApprovalStepComplete(form: SoSetupForm): boolean {
 }
 
 export function isSoMarksStepComplete(form: SoSetupForm): boolean {
+  if (form.markValidFrom && form.markValidUntil && form.markValidUntil <= form.markValidFrom) {
+    return false
+  }
   return form.permittedUse.length > 0
 }
 

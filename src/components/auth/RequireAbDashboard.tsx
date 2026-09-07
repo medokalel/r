@@ -14,7 +14,7 @@ export function RequireAbDashboard({ children }: RequireAbDashboardProps) {
     return <Navigate to={ROUTES.dashboard} replace />
   }
 
-  if (!isOnboardingComplete(org.id)) {
+  if (!isOnboardingComplete(org.id, org.onboardingStatus)) {
     return <Navigate to={ROUTES.onboarding} replace />
   }
 

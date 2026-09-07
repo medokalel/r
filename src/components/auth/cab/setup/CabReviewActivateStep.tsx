@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { SetupNote } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import {
   isAccreditationRecordsStepComplete,
-  isCertificateStepComplete,
-  isKeyRolesStepComplete,
+  isCertificateConfigurationReady,
   isLocationsStepComplete,
   isMarksStepComplete,
   isProfileStepComplete,
@@ -54,12 +53,10 @@ export function CabReviewActivateStep({ form, onGoToStep }: CabReviewActivateSte
     const schemesReady = isSchemesStepComplete(setup)
     const scopeReady = isScopeStepComplete(setup)
     const marksReady = isMarksStepComplete(setup)
-    const certificateReady = isCertificateStepComplete(setup)
-    const rolesReady = isKeyRolesStepComplete(setup)
+    const certificateReady = isCertificateConfigurationReady(setup)
 
     const branchCount = setup.hasAdditionalLocations ? setup.locations.length : 0
     const schemeCount = setup.schemes.length + setup.customSchemes.filter((s) => s.name.trim()).length
-    const pendingInvites = setup.roleInvites.filter((invite) => invite.status === 'INVITE').length
 
     return [
       {
@@ -105,15 +102,6 @@ export function CabReviewActivateStep({ form, onGoToStep }: CabReviewActivateSte
           : t('cab.setup.review.needsAttention'),
         status: marksReady && certificateReady ? 'READY' : 'REVIEW',
         step: 8,
-      },
-      {
-        key: 'roles',
-        label: t('cab.setup.review.rows.roles'),
-        detail: pendingInvites > 0
-          ? t('cab.setup.review.rolesDetail', { count: pendingInvites })
-          : t('cab.setup.review.rolesNone'),
-        status: !rolesReady ? 'MISSING' : pendingInvites > 0 ? 'REVIEW' : 'READY',
-        step: 10,
       },
     ]
   }, [form.address, form.city, form.country, form.languages, form.legalEntityName, setup, t])

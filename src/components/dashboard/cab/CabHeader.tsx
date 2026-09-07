@@ -6,6 +6,7 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { getAuthSession, clearAuthSession } from '@/lib/authStorage'
+import { clearPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import { useOptionalTour } from '@/context/TourContext'
 import { cn } from '@/lib/utils'
 
@@ -33,6 +34,7 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
 
   const handleLogout = () => {
     clearAuthSession()
+    clearPendingRegistration()
     navigate('/login', { replace: true })
   }
 
@@ -58,7 +60,15 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
   return (
     <header className="flex shrink-0 flex-wrap items-center justify-between gap-x-6 gap-y-4 border-b-2 border-[#ececec] bg-white px-5 py-4">
       <div>
-        <h1 className="text-h3-semi text-primary whitespace-nowrap">{title}</h1>
+        {title ? (
+          <h1 className="text-h3-semi text-primary whitespace-nowrap">{title}</h1>
+        ) : (
+          <img
+            src="/casco-logo.svg"
+            alt={t('common.appName')}
+            className="h-10 w-auto object-contain sm:h-12"
+          />
+        )}
         {subtitle && <p className="text-body-3 text-neutral-500">{subtitle}</p>}
       </div>
 
@@ -125,7 +135,6 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
             <button
               type="button"
               onClick={() => setMobileMenuOpen((prev) => !prev)}
-              className="min-[924px]:pointer-events-none"
               aria-label={userName}
               aria-expanded={mobileMenuOpen}
             >
@@ -135,11 +144,11 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
             {mobileMenuOpen && (
               <>
                 <div
-                  className="fixed inset-0 z-30 min-[924px]:hidden"
+                  className="fixed inset-0 z-30"
                   onClick={() => setMobileMenuOpen(false)}
                   aria-hidden
                 />
-                <div className="absolute end-0 top-full z-40 mt-2 w-56 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)] min-[924px]:hidden">
+                <div className="absolute end-0 top-full z-40 mt-2 w-56 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-3 shadow-[0_10px_30px_rgba(0,0,0,0.12)]">
                   <p className="truncate text-body-3-medium text-neutral-900">{userName}</p>
                   {roleName && (
                     <p className="truncate text-body-3 text-neutral-600" dir="ltr">

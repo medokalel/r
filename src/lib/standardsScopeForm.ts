@@ -14,7 +14,17 @@ export interface StandardsScopeForm {
 }
 
 export const emptyStandardsScopeForm: StandardsScopeForm = {
-  standards: [],
+  standards: [
+    {
+      id: 'std-1',
+      standard: 'ISO_9001_2015',
+      ihfCode: 'GP 34',
+      ihfCategory: 'Engineering',
+      certificationType: 'Quality Management System',
+      accreditationBody: 'Emirates International',
+      scopeText: 'Design, manufacturing, and distribution of high-grade industrial automation components and equipment.',
+    },
+  ],
 }
 
 export const SCOPE_TEXT_MAX_LENGTH = 5000

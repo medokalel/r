@@ -47,7 +47,11 @@ export function CabSetupShell({
     <div className="cab-setup flex min-h-screen flex-col bg-[var(--cab-canvas)]">
       {/* Topbar — 70px, white, hairline underline */}
       <header className="flex h-[70px] shrink-0 items-center justify-between border-b border-[var(--cab-hairline)] bg-white px-6 sm:px-[58px]">
-        <span className="text-[24px] font-bold leading-none text-[var(--cab-primary)]">iCASCO</span>
+        <img
+          src="/casco-logo.svg"
+          alt={t('common.appName')}
+          className="h-10 w-auto object-contain sm:h-12"
+        />
         <div className="flex items-center gap-4">
           <span
             className="text-[12px] font-bold uppercase tracking-[0.04em] text-[var(--cab-muted)]"

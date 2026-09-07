@@ -26,6 +26,14 @@ export function getAuthSession(): LoginResponseData | null {
   }
 }
 
+export function isAuditClientSession(session = getAuthSession()): boolean {
+  const organization = session?.organization
+  return (
+    organization?.type === 'CONSULTATION_BODY' &&
+    organization.legalCapacity?.trim().toLowerCase() === 'audit client'
+  )
+}
+
 /** After login, unfinished onboarding goes to the shared wizard. CAB users
  *  land on the CAB dashboard once onboarded; everyone else uses the generic
  *  dashboard. */
@@ -34,8 +42,12 @@ export function getPostLoginRedirect(session: LoginResponseData): string {
     return ROUTES.onboarding
   }
 
+  if (isAuditClientSession(session)) {
+    return AUTHENTICATED_HOME
+  }
+
   const org = session.organization
-  if (org && !isOnboardingComplete(org.id)) {
+  if (org && !isOnboardingComplete(org.id, org.onboardingStatus)) {
     return ROUTES.onboarding
   }
   if (session.cab?.setupCompleted || org?.type === 'CERTIFICATION_BODY') {

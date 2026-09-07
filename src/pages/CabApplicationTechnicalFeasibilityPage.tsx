@@ -26,9 +26,12 @@ import {
 } from '@/lib/api/cabApplicationTechnicalFeasibilityApi'
 import { ROUTES, cabApplicationQuotationPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { useFitScale } from '@/lib/useFitScale'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { useApplicationTechnicalFeasibilityTourSteps } from '@/config/applicationTechnicalFeasibilityTourSteps'
 
 type Translate = ReturnType<typeof useTranslation>['t']
-import { useFitScale } from '@/lib/useFitScale'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -518,6 +521,8 @@ export function CabApplicationTechnicalFeasibilityPage() {
     }
   }, [])
 
+  const tourSteps = useApplicationTechnicalFeasibilityTourSteps()
+
   if (loading || !data) {
     return (
       <CabLayout className="bg-white">
@@ -531,174 +536,184 @@ export function CabApplicationTechnicalFeasibilityPage() {
   const proceedToQuotation = () => navigate(cabApplicationQuotationPath(data.applicationId))
 
   return (
-    <CabLayout className="bg-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-          <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
-            {t('cab.applications.technicalFeasibility.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#000000]">{t('cab.applications.technicalFeasibility.breadcrumb.applications')}</span>
-          <Chevron />
-          <span className="font-light text-[#000000]">{data.applicationId}</span>
-          <Chevron />
-          <span className="font-bold text-[#000000]">{t('cab.applications.technicalFeasibility.breadcrumb.current')}</span>
-        </nav>
+    <CabLayout className="bg-white" tourId="cab-application-technical-feasibility" tourSteps={tourSteps}>
+        <DashboardTourStep steps={tourSteps} stepId="header">
+          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+              <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+                {t('cab.applications.technicalFeasibility.breadcrumb.home')}
+              </Link>
+              <Chevron />
+              <span className="font-light text-[#000000]">{t('cab.applications.technicalFeasibility.breadcrumb.applications')}</span>
+              <Chevron />
+              <span className="font-light text-[#000000]">{data.applicationId}</span>
+              <Chevron />
+              <span className="font-bold text-[#000000]">{t('cab.applications.technicalFeasibility.breadcrumb.current')}</span>
+            </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex size-9 items-center justify-center rounded-full border border-[#ececec] text-[#1236a3]"
-            aria-label={t('cab.applications.technicalFeasibility.help')}
-          >
-            ?
-          </button>
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center text-neutral-600"
-            aria-label={t('cab.header.notifications')}
-          >
-            <AppIcon icon={NotificationIcon} size={24} />
-            <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-              5
-            </span>
-          </button>
-          <LanguageToggle variant="icon" />
-          <div className="flex items-center gap-2">
-            <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
-            <div className="hidden text-end sm:block">
-              <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
-              <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+            <div className="flex items-center gap-3">
+              <StartTourButton />
+              <button
+                type="button"
+                className="relative flex size-9 items-center justify-center text-neutral-600"
+                aria-label={t('cab.header.notifications')}
+              >
+                <AppIcon icon={NotificationIcon} size={24} />
+                <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                  5
+                </span>
+              </button>
+              <LanguageToggle variant="icon" />
+              <div className="flex items-center gap-2">
+                <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
+                <div className="hidden text-end sm:block">
+                  <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
+                  <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
+        </DashboardTourStep>
 
-      <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
+        <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
             <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
               <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
-                <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
-                  <div className="min-w-0 flex-1">
+                <DashboardTourStep steps={tourSteps} stepId="page-header">
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
+                          {t('cab.applications.technicalFeasibility.title')}
+                        </h1>
+                        <StatusBadge
+                          label={t('cab.applications.technicalFeasibility.status.inProgress')}
+                          variant="inProgress"
+                          pill
+                        />
+                      </div>
+                      <p className="mt-1.5 text-[13px] text-[#000000]">
+                        {t('cab.applications.technicalFeasibility.subtitle')}
+                      </p>
+                    </div>
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        <AppIcon icon={DownloadIcon} size={16} />
+                        {t('cab.applications.technicalFeasibility.actions.downloadAssessment')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        {t('cab.applications.technicalFeasibility.actions.moreActions')} ▾
+                      </Button>
+                      <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto" onClick={proceedToQuotation}>
+                        {t('cab.applications.technicalFeasibility.actions.proceedToQuotation')}
+                        <AppIcon icon={ArrowRightIcon} size={14} className="text-white" />
+                      </Button>
+                    </div>
+                  </div>
+                </DashboardTourStep>
+
+                <DashboardTourStep steps={tourSteps} stepId="summary-card">
+                  <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
                     <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
-                        {t('cab.applications.technicalFeasibility.title')}
-                      </h1>
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
+                        <AppIcon icon={FileTextIcon} size={28} />
+                      </span>
+                      <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
                       <StatusBadge
                         label={t('cab.applications.technicalFeasibility.status.inProgress')}
                         variant="inProgress"
                         pill
                       />
                     </div>
-                    <p className="mt-1.5 text-[13px] text-[#000000]">
-                      {t('cab.applications.technicalFeasibility.subtitle')}
-                    </p>
-                  </div>
-                  <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      <AppIcon icon={DownloadIcon} size={16} />
-                      {t('cab.applications.technicalFeasibility.actions.downloadAssessment')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      {t('cab.applications.technicalFeasibility.actions.moreActions')} ▾
-                    </Button>
-                    <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto" onClick={proceedToQuotation}>
-                      {t('cab.applications.technicalFeasibility.actions.proceedToQuotation')}
-                      <AppIcon icon={ArrowRightIcon} size={14} className="text-white" />
-                    </Button>
-                  </div>
-                </div>
 
-                <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
-                      <AppIcon icon={FileTextIcon} size={28} />
-                    </span>
-                    <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
-                    <StatusBadge
-                      label={t('cab.applications.technicalFeasibility.status.inProgress')}
-                      variant="inProgress"
-                      pill
-                    />
-                  </div>
-
-                  <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
-                    <SummaryField icon={<ClientIcon />} label={t('cab.applications.technicalFeasibility.summary.client')} value={data.client} />
-                    <SummaryField icon={<BoxIcon />} label={t('cab.applications.technicalFeasibility.summary.applicationType')} value={data.applicationType} />
-                    <SummaryField icon={<GearIcon />} label={t('cab.applications.technicalFeasibility.summary.certificationBody')} value={data.certificationBody} />
-                    <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.technicalFeasibility.summary.standardScheme')} value={data.primaryStandard} />
-                    <SummaryField
-                      icon={<AppIcon icon={BuildingsIcon} size={18} />}
-                      label={t('cab.applications.technicalFeasibility.summary.sites')}
-                      value={String(data.sitesCount)}
-                    />
-                    <SummaryField
-                      label={t('cab.applications.technicalFeasibility.summary.requestedOn')}
-                      value={
-                        <>
-                          <span className="block">{data.requestedOnDate}</span>
-                          <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
-                        </>
-                      }
-                    />
-                    <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-                      <AvatarInitials initials={data.requestedBy.initials} color="#7c3aed" />
-                      <div>
-                        <p className="text-[11px] font-semibold text-[#989898]">
-                          {t('cab.applications.technicalFeasibility.summary.requestedBy')}
-                        </p>
-                        <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.requestedBy.name}</p>
-                        <p className="text-[10px] font-medium text-[#989898]">{data.requestedBy.role}</p>
+                    <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
+                      <SummaryField icon={<ClientIcon />} label={t('cab.applications.technicalFeasibility.summary.client')} value={data.client} />
+                      <SummaryField icon={<BoxIcon />} label={t('cab.applications.technicalFeasibility.summary.applicationType')} value={data.applicationType} />
+                      <SummaryField icon={<GearIcon />} label={t('cab.applications.technicalFeasibility.summary.certificationBody')} value={data.certificationBody} />
+                      <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.technicalFeasibility.summary.standardScheme')} value={data.primaryStandard} />
+                      <SummaryField
+                        icon={<AppIcon icon={BuildingsIcon} size={18} />}
+                        label={t('cab.applications.technicalFeasibility.summary.sites')}
+                        value={String(data.sitesCount)}
+                      />
+                      <SummaryField
+                        label={t('cab.applications.technicalFeasibility.summary.requestedOn')}
+                        value={
+                          <>
+                            <span className="block">{data.requestedOnDate}</span>
+                            <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
+                          </>
+                        }
+                      />
+                      <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
+                        <AvatarInitials initials={data.requestedBy.initials} color="#7c3aed" />
+                        <div>
+                          <p className="text-[11px] font-semibold text-[#989898]">
+                            {t('cab.applications.technicalFeasibility.summary.requestedBy')}
+                          </p>
+                          <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.requestedBy.name}</p>
+                          <p className="text-[10px] font-medium text-[#989898]">{data.requestedBy.role}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
+                </DashboardTourStep>
 
-                <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
-                  {TABS.map((tab) => {
-                    const active = activeTab === tab
-                    const badge = tab === 'documents' ? data.documentCount : undefined
-                    return (
-                      <button
-                        key={tab}
-                        type="button"
-                        aria-selected={active}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                          'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
-                          active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
-                        )}
-                      >
-                        {t(TAB_LABEL_KEYS[tab])}
-                        {badge !== undefined && <span>({badge})</span>}
-                        {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
-                      </button>
-                    )
-                  })}
-                </div>
+                <DashboardTourStep steps={tourSteps} stepId="tabs">
+                  <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
+                    {TABS.map((tab) => {
+                      const active = activeTab === tab
+                      const badge = tab === 'documents' ? data.documentCount : undefined
+                      return (
+                        <button
+                          key={tab}
+                          type="button"
+                          aria-selected={active}
+                          onClick={() => setActiveTab(tab)}
+                          className={cn(
+                            'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
+                            active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
+                          )}
+                        >
+                          {t(TAB_LABEL_KEYS[tab])}
+                          {badge !== undefined && <span>({badge})</span>}
+                          {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </DashboardTourStep>
 
                 {activeTab === 'technicalFeasibility' && (
                   <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
                     <div className="flex min-w-0 flex-col gap-4">
-                      <AssessmentTable data={data} t={t} />
-                      <CommentsSection data={data} t={t} />
-                      <ReviewSummaryCard data={data} t={t} />
+                      <DashboardTourStep steps={tourSteps} stepId="assessment-table">
+                        <AssessmentTable data={data} t={t} />
+                      </DashboardTourStep>
+                      <DashboardTourStep steps={tourSteps} stepId="comments-section">
+                        <CommentsSection data={data} t={t} />
+                      </DashboardTourStep>
+                      <DashboardTourStep steps={tourSteps} stepId="review-summary">
+                        <ReviewSummaryCard data={data} t={t} />
+                      </DashboardTourStep>
                     </div>
-                    <div className="flex min-w-0 flex-col gap-4">
-                      <AuditTeamCard data={data} t={t} />
-                      <ResourcesCard data={data} t={t} />
-                      <RecommendationCard t={t} onProceed={proceedToQuotation} />
-                      <KeyInformationCard data={data} t={t} />
-                    </div>
+                    <DashboardTourStep steps={tourSteps} stepId="audit-team">
+                      <div className="flex min-w-0 flex-col gap-4">
+                        <AuditTeamCard data={data} t={t} />
+                        <ResourcesCard data={data} t={t} />
+                        <RecommendationCard t={t} onProceed={proceedToQuotation} />
+                        <KeyInformationCard data={data} t={t} />
+                      </div>
+                    </DashboardTourStep>
                   </div>
                 )}
 
@@ -707,10 +722,12 @@ export function CabApplicationTechnicalFeasibilityPage() {
                 )}
               </div>
 
-              <div className="flex min-w-0 flex-col gap-4">
-                <WorkflowProgressSidebar data={data} t={t} />
-                <QuickActionsCard t={t} />
-              </div>
+              <DashboardTourStep steps={tourSteps} stepId="workflow-progress">
+                <div className="flex min-w-0 flex-col gap-4">
+                  <WorkflowProgressSidebar data={data} t={t} />
+                  <QuickActionsCard t={t} />
+                </div>
+              </DashboardTourStep>
             </div>
           </div>
 

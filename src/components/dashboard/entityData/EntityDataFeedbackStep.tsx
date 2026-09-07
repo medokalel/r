@@ -301,7 +301,6 @@ export function EntityDataFeedbackStep() {
                 sendReply()
               }
             }}
-            placeholder={t('accreditation.entityData.feedback.replyPlaceholder')}
             className="min-h-24 w-full resize-none rounded-[var(--radius-md)] border-0 bg-transparent p-4 text-[16px] leading-[1.6] text-neutral-900 placeholder:text-[#989898] focus:outline-none focus:ring-0"
           />
 

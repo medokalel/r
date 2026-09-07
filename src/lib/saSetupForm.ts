@@ -158,7 +158,7 @@ export const emptySaSetupForm: SaSetupForm = {
 export function isSaProfileStepComplete(form: SaSetupForm, legalName: string): boolean {
   if (!legalName.trim() || !form.industry) return false
   if (form.industry === 'OTHER' && !form.industryOther.trim()) return false
-  return isValidRequiredEmail(form.primaryContactEmail)
+  return true
 }
 
 export function isSaLocationsStepComplete(
@@ -198,14 +198,27 @@ export function isSaScoringStepComplete(form: SaSetupForm): boolean {
   if (!form.scoreScale || !form.decisionAuthority.trim() || !form.criticalFindingRule) return false
   // Pass/fail has no numeric bands to validate.
   if (form.scoreScale === 'PASS_FAIL') return true
+  if (
+    form.rejectionThreshold < 0 ||
+    form.conditionalLowerBound < 0 ||
+    form.approvalThreshold < 0 ||
+    form.rejectionThreshold > 100 ||
+    form.conditionalLowerBound > 100 ||
+    form.approvalThreshold > 100
+  ) {
+    return false
+  }
   // Bands must not overlap: rejection < conditional lower bound < approval.
-  return form.rejectionThreshold <= form.conditionalLowerBound &&
+  return form.rejectionThreshold < form.conditionalLowerBound &&
     form.conditionalLowerBound < form.approvalThreshold
 }
 
 export function isSaFindingsStepComplete(form: SaSetupForm): boolean {
   return Boolean(
-    form.findingClasses && form.correctiveActionDueDays >= 1 && form.escalationOwner.trim()
+    form.findingClasses &&
+      form.correctionDueDays >= 1 &&
+      form.correctiveActionDueDays >= form.correctionDueDays &&
+      form.escalationOwner.trim()
   )
 }
 

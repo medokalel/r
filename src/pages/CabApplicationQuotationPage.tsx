@@ -28,6 +28,9 @@ import {
 } from '@/lib/api/cabApplicationQuotationApi'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { useApplicationQuotationTourSteps } from '@/config/applicationQuotationTourSteps'
 import { useFitScale } from '@/lib/useFitScale'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
@@ -578,6 +581,8 @@ export function CabApplicationQuotationPage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('quotation')
 
+  const tourSteps = useApplicationQuotationTourSteps()
+
   useEffect(() => {
     let cancelled = false
     getCabApplicationQuotation().then((result) => {
@@ -602,148 +607,150 @@ export function CabApplicationQuotationPage() {
   }
 
   return (
-    <CabLayout className="bg-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-          <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
-            {t('cab.applications.quotation.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#000000]">{t('cab.applications.quotation.breadcrumb.applications')}</span>
-          <Chevron />
-          <span className="font-light text-[#000000]">{data.applicationId}</span>
-          <Chevron />
-          <span className="font-bold text-[#000000]">{t('cab.applications.quotation.breadcrumb.current')}</span>
-        </nav>
+    <CabLayout className="bg-white" tourId="cab-application-quotation" tourSteps={tourSteps}>
+        <DashboardTourStep steps={tourSteps} stepId="header">
+          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+              <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+                {t('cab.applications.quotation.breadcrumb.home')}
+              </Link>
+              <Chevron />
+              <span className="font-light text-[#000000]">{t('cab.applications.quotation.breadcrumb.applications')}</span>
+              <Chevron />
+              <span className="font-light text-[#000000]">{data.applicationId}</span>
+              <Chevron />
+              <span className="font-bold text-[#000000]">{t('cab.applications.quotation.breadcrumb.current')}</span>
+            </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex size-9 items-center justify-center rounded-full border border-[#ececec] text-[#1236a3]"
-            aria-label={t('cab.applications.quotation.help')}
-          >
-            ?
-          </button>
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center text-neutral-600"
-            aria-label={t('cab.header.notifications')}
-          >
-            <AppIcon icon={NotificationIcon} size={24} />
-            <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-              5
-            </span>
-          </button>
-          <LanguageToggle variant="icon" />
-          <div className="flex items-center gap-2">
-            <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
-            <div className="hidden text-end sm:block">
-              <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
-              <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+            <div className="flex items-center gap-3">
+              <StartTourButton />
+              <button
+                type="button"
+                className="relative flex size-9 items-center justify-center text-neutral-600"
+                aria-label={t('cab.header.notifications')}
+              >
+                <AppIcon icon={NotificationIcon} size={24} />
+                <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                  5
+                </span>
+              </button>
+              <LanguageToggle variant="icon" />
+              <div className="flex items-center gap-2">
+                <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
+                <div className="hidden text-end sm:block">
+                  <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
+                  <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
+        </DashboardTourStep>
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
             <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
               <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
-                <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
-                        {t('cab.applications.quotation.title')}
-                      </h1>
-                      <StatusBadge label={t('cab.applications.quotation.status.inProgress')} variant="inProgress" />
+                <DashboardTourStep steps={tourSteps} stepId="page-header">
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
+                          {t('cab.applications.quotation.title')}
+                        </h1>
+                        <StatusBadge label={t('cab.applications.quotation.status.inProgress')} variant="inProgress" />
+                      </div>
+                      <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.quotation.subtitle')}</p>
                     </div>
-                    <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.quotation.subtitle')}</p>
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        <AppIcon icon={DownloadIcon} size={16} />
+                        {t('cab.applications.quotation.actions.downloadQuotation')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        {t('cab.applications.quotation.actions.moreActions')} ▾
+                      </Button>
+                      <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto">
+                        <AppIcon icon={ExportIcon} size={14} />
+                        {t('cab.applications.quotation.actions.sendToClient')}
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      <AppIcon icon={DownloadIcon} size={16} />
-                      {t('cab.applications.quotation.actions.downloadQuotation')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      {t('cab.applications.quotation.actions.moreActions')} ▾
-                    </Button>
-                    <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto">
-                      <AppIcon icon={ExportIcon} size={14} />
-                      {t('cab.applications.quotation.actions.sendToClient')}
-                    </Button>
-                  </div>
-                </div>
+                </DashboardTourStep>
 
-                <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
-                      <AppIcon icon={FileTextIcon} size={28} />
-                    </span>
-                    <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
-                    <StatusBadge label={t('cab.applications.quotation.status.inProgress')} variant="inProgress" pill />
-                  </div>
+                <DashboardTourStep steps={tourSteps} stepId="summary-card">
+                  <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
+                        <AppIcon icon={FileTextIcon} size={28} />
+                      </span>
+                      <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
+                      <StatusBadge label={t('cab.applications.quotation.status.inProgress')} variant="inProgress" pill />
+                    </div>
 
-                  <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
-                    <SummaryField icon={<ClientIcon />} label={t('cab.applications.quotation.summary.client')} value={data.client} />
-                    <SummaryField icon={<BoxIcon />} label={t('cab.applications.quotation.summary.applicationType')} value={data.applicationType} />
-                    <SummaryField icon={<GearIcon />} label={t('cab.applications.quotation.summary.certificationBody')} value={data.certificationBody} />
-                    <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.quotation.summary.standardScheme')} value={data.primaryStandard} />
-                    <SummaryField
-                      icon={<AppIcon icon={BuildingsIcon} size={18} />}
-                      label={t('cab.applications.quotation.summary.sites')}
-                      value={String(data.sitesCount)}
-                    />
-                    <SummaryField
-                      label={t('cab.applications.quotation.summary.requestedOn')}
-                      value={
-                        <>
-                          <span className="block">{data.requestedOnDate}</span>
-                          <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
-                        </>
-                      }
-                    />
-                    <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
-                      <AvatarInitials initials={data.assignedTo.initials} />
-                      <div>
-                        <p className="text-[11px] font-semibold text-[#989898]">{t('cab.applications.quotation.summary.assignedTo')}</p>
-                        <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.assignedTo.name}</p>
-                        <p className="text-[10px] font-medium text-[#989898]">{data.assignedTo.role}</p>
+                    <div className="mt-6 flex items-start gap-x-5 overflow-x-auto pb-1 xl:justify-between xl:gap-x-6">
+                      <SummaryField icon={<ClientIcon />} label={t('cab.applications.quotation.summary.client')} value={data.client} />
+                      <SummaryField icon={<BoxIcon />} label={t('cab.applications.quotation.summary.applicationType')} value={data.applicationType} />
+                      <SummaryField icon={<GearIcon />} label={t('cab.applications.quotation.summary.certificationBody')} value={data.certificationBody} />
+                      <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.quotation.summary.standardScheme')} value={data.primaryStandard} />
+                      <SummaryField
+                        icon={<AppIcon icon={BuildingsIcon} size={18} />}
+                        label={t('cab.applications.quotation.summary.sites')}
+                        value={String(data.sitesCount)}
+                      />
+                      <SummaryField
+                        label={t('cab.applications.quotation.summary.requestedOn')}
+                        value={
+                          <>
+                            <span className="block">{data.requestedOnDate}</span>
+                            <span className="block text-[11px] font-medium text-[#989898]">{data.requestedOnTime}</span>
+                          </>
+                        }
+                      />
+                      <div className="flex shrink-0 items-center gap-2 whitespace-nowrap">
+                        <AvatarInitials initials={data.assignedTo.initials} />
+                        <div>
+                          <p className="text-[11px] font-semibold text-[#989898]">{t('cab.applications.quotation.summary.assignedTo')}</p>
+                          <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.assignedTo.name}</p>
+                          <p className="text-[10px] font-medium text-[#989898]">{data.assignedTo.role}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
+                </DashboardTourStep>
 
-                <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
-                  {TABS.map((tab) => {
-                    const active = activeTab === tab
-                    const badge = tab === 'documents' ? data.documentCount : undefined
-                    return (
-                      <button
-                        key={tab}
-                        type="button"
-                        aria-selected={active}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                          'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
-                          active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
-                        )}
-                      >
-                        {t(TAB_LABEL_KEYS[tab])}
-                        {badge !== undefined && <span>({badge})</span>}
-                        {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
-                      </button>
-                    )
-                  })}
-                </div>
+                <DashboardTourStep steps={tourSteps} stepId="tabs">
+                  <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
+                    {TABS.map((tab) => {
+                      const active = activeTab === tab
+                      const badge = tab === 'documents' ? data.documentCount : undefined
+                      return (
+                        <button
+                          key={tab}
+                          type="button"
+                          aria-selected={active}
+                          onClick={() => setActiveTab(tab)}
+                          className={cn(
+                            'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
+                            active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
+                          )}
+                        >
+                          {t(TAB_LABEL_KEYS[tab])}
+                          {badge !== undefined && <span>({badge})</span>}
+                          {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </DashboardTourStep>
 
                 {activeTab === 'quotation' && (
                   <>
@@ -754,40 +761,44 @@ export function CabApplicationQuotationPage() {
                       </p>
                     </div>
 
-                    <div className="flex min-w-0 gap-3 overflow-x-auto pb-1">
-                      <SummaryStatCard
-                        icon="amount"
-                        label={t('cab.applications.quotation.stats.totalAmount')}
-                        primary={data.totalAmount}
-                        secondary={data.totalAmountNote}
-                      />
-                      <SummaryStatCard
-                        icon="calendar"
-                        label={t('cab.applications.quotation.stats.proposedAuditDates')}
-                        primary={data.proposedAuditDates}
-                        secondary={data.proposedAuditDays}
-                      />
-                      <SummaryStatCard
-                        icon="team"
-                        label={t('cab.applications.quotation.stats.auditTeam')}
-                        primary={data.auditTeamSummary}
-                        secondary={data.auditTeamDetail}
-                      />
-                      <SummaryStatCard
-                        icon="sites"
-                        label={t('cab.applications.quotation.stats.sites')}
-                        primary={data.sitesSummary}
-                        secondary={data.sitesDetail}
-                      />
-                      <SummaryStatCard
-                        icon="validity"
-                        label={t('cab.applications.quotation.stats.validity')}
-                        primary={data.validitySummary}
-                        secondary={data.validityDetail}
-                      />
-                    </div>
+                    <DashboardTourStep steps={tourSteps} stepId="stats-cards">
+                      <div className="flex min-w-0 gap-3 overflow-x-auto pb-1">
+                        <SummaryStatCard
+                          icon="amount"
+                          label={t('cab.applications.quotation.stats.totalAmount')}
+                          primary={data.totalAmount}
+                          secondary={data.totalAmountNote}
+                        />
+                        <SummaryStatCard
+                          icon="calendar"
+                          label={t('cab.applications.quotation.stats.proposedAuditDates')}
+                          primary={data.proposedAuditDates}
+                          secondary={data.proposedAuditDays}
+                        />
+                        <SummaryStatCard
+                          icon="team"
+                          label={t('cab.applications.quotation.stats.auditTeam')}
+                          primary={data.auditTeamSummary}
+                          secondary={data.auditTeamDetail}
+                        />
+                        <SummaryStatCard
+                          icon="sites"
+                          label={t('cab.applications.quotation.stats.sites')}
+                          primary={data.sitesSummary}
+                          secondary={data.sitesDetail}
+                        />
+                        <SummaryStatCard
+                          icon="validity"
+                          label={t('cab.applications.quotation.stats.validity')}
+                          primary={data.validitySummary}
+                          secondary={data.validityDetail}
+                        />
+                      </div>
+                    </DashboardTourStep>
 
-                    <BreakdownWithSidebarSection data={data} t={t} />
+                    <DashboardTourStep steps={tourSteps} stepId="breakdown-table">
+                      <BreakdownWithSidebarSection data={data} t={t} />
+                    </DashboardTourStep>
                     <BottomThreeColumnSection data={data} t={t} />
                   </>
                 )}
@@ -797,10 +808,12 @@ export function CabApplicationQuotationPage() {
                 )}
               </div>
 
-              <div className="flex min-w-0 flex-col gap-4">
-                <WorkflowProgressSidebar data={data} t={t} />
-                <QuickActionsCard t={t} />
-              </div>
+              <DashboardTourStep steps={tourSteps} stepId="workflow-progress">
+                <div className="flex min-w-0 flex-col gap-4">
+                  <WorkflowProgressSidebar data={data} t={t} />
+                  <QuickActionsCard t={t} />
+                </div>
+              </DashboardTourStep>
             </div>
           </div>
 

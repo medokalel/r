@@ -1,6 +1,9 @@
-import { type ReactNode, useRef } from 'react'
+import { type ReactNode, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
+import { uploadOnboardingAsset } from '@/lib/api/uploadsApi'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
+import { ApiError } from '@/lib/api/client'
 import { cn } from '@/lib/utils'
 
 /** Tinted info panel from the deck (#F5F8FF on a #D9E2F0 hairline). */
@@ -201,10 +204,6 @@ export function SetupRecordCard({
   )
 }
 
-/**
- * Local-only file picker: records the chosen file's name so the screen can show
- * it, without uploading anything. The real upload endpoint is added later.
- */
 export function SetupFileInput({
   id,
   fileName,
@@ -222,61 +221,95 @@ export function SetupFileInput({
   changeLabel: string
   removeLabel: string
 }) {
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
+  const [displayName, setDisplayName] = useState('')
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError(t('validation.fileTooLarge', { size: 10 }))
+      return
+    }
+
+    setUploading(true)
+    setError(null)
+    try {
+      const uploaded = await uploadOnboardingAsset(file)
+      setDisplayName(uploaded.fileName)
+      onFileNameChange(uploaded.fileUrl)
+    } catch (uploadError) {
+      setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const persistedName = fileName.split('/').pop() || fileName
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {fileName ? (
-        <>
-          <span className="max-w-[220px] truncate rounded-[var(--radius-sm)] bg-primary-subtle px-3 py-2 text-body-3 text-primary">
-            {fileName}
-          </span>
+    <div className="space-y-2">
+      <div className="flex flex-wrap items-center gap-2">
+        {fileName ? (
+          <>
+            <a
+              href={resolvePublicAssetUrl(fileName)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="max-w-[220px] truncate rounded-[var(--radius-sm)] bg-primary-subtle px-3 py-2 text-body-3 text-primary"
+            >
+              {displayName || persistedName}
+            </a>
+            <button
+              type="button"
+              onClick={() => inputRef.current?.click()}
+              disabled={uploading}
+              className="rounded-[var(--radius-sm)] border border-neutral-200 px-3 py-2 text-body-3-medium text-primary hover:bg-neutral-50 disabled:opacity-50"
+            >
+              {uploading ? t('common.loading') : changeLabel}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setDisplayName('')
+                onFileNameChange('')
+              }}
+              disabled={uploading}
+              className="rounded-[var(--radius-sm)] px-3 py-2 text-body-3-medium text-error-500 hover:bg-[#fef2f2] disabled:opacity-50"
+            >
+              {removeLabel}
+            </button>
+          </>
+        ) : (
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="rounded-[var(--radius-sm)] border border-neutral-200 px-3 py-2 text-body-3-medium text-primary hover:bg-neutral-50"
+            disabled={uploading}
+            className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[#7594f0] px-4 py-2 text-body-3-medium text-primary hover:bg-primary-subtle disabled:opacity-50"
           >
-            {changeLabel}
+            <AppIcon icon={UploadOutlineIcon} size={18} />
+            {uploading ? t('common.loading') : selectLabel}
           </button>
-          <button
-            type="button"
-            onClick={() => onFileNameChange('')}
-            className="rounded-[var(--radius-sm)] px-3 py-2 text-body-3-medium text-error-500 hover:bg-[#fef2f2]"
-          >
-            {removeLabel}
-          </button>
-        </>
-      ) : (
-        <button
-          type="button"
-          onClick={() => inputRef.current?.click()}
-          className="flex items-center gap-2 rounded-[var(--radius-sm)] border border-dashed border-[#7594f0] px-4 py-2 text-body-3-medium text-primary hover:bg-primary-subtle"
-        >
-          <AppIcon icon={UploadOutlineIcon} size={18} />
-          {selectLabel}
-        </button>
-      )}
-      <input
-        ref={inputRef}
-        id={id}
-        type="file"
-        accept={accept}
-        className="sr-only"
-        onChange={(event) => {
-          const file = event.target.files?.[0]
-          event.target.value = ''
-          if (file) onFileNameChange(file.name)
-        }}
-      />
+        )}
+        <input
+          ref={inputRef}
+          id={id}
+          type="file"
+          accept={accept}
+          className="sr-only"
+          onChange={(event) => void handleSelect(event)}
+        />
+      </div>
+      {error && <p className="text-small-light text-error-500">{error}</p>}
     </div>
   )
 }
 
-/**
- * Local-only image picker for accreditation and scheme marks — previews the
- * selection as a data URL held in the onboarding draft. Unlike the CAB logo
- * (which has a real endpoint) marks have no upload API yet.
- */
 export function SetupMarkUpload({
   id,
   label,
@@ -296,15 +329,29 @@ export function SetupMarkUpload({
 }) {
   const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
+  const [uploading, setUploading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     event.target.value = ''
     if (!file) return
 
-    const reader = new FileReader()
-    reader.onload = () => onImageUrlChange(typeof reader.result === 'string' ? reader.result : null)
-    reader.readAsDataURL(file)
+    if (file.size > 10 * 1024 * 1024) {
+      setError(t('validation.fileTooLarge', { size: 10 }))
+      return
+    }
+
+    setUploading(true)
+    setError(null)
+    try {
+      const uploaded = await uploadOnboardingAsset(file)
+      onImageUrlChange(uploaded.fileUrl)
+    } catch (uploadError) {
+      setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
+    } finally {
+      setUploading(false)
+    }
   }
 
   return (
@@ -312,7 +359,7 @@ export function SetupMarkUpload({
       <p className="text-[13px] font-bold text-[var(--cab-ink)]">{label}</p>
 
       {imageUrl ? (
-        <img src={imageUrl} alt={label} className="h-12 max-w-[140px] object-contain" />
+        <img src={resolvePublicAssetUrl(imageUrl)} alt={label} className="h-12 max-w-[140px] object-contain" />
       ) : (
         <AppIcon icon={UploadOutlineIcon} size={28} className="text-primary" />
       )}
@@ -323,9 +370,14 @@ export function SetupMarkUpload({
         <button
           type="button"
           onClick={() => inputRef.current?.click()}
-          className="rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-3 py-1.5 text-body-3-medium text-primary hover:bg-neutral-50"
+          disabled={uploading}
+          className="rounded-[var(--radius-sm)] border border-neutral-200 bg-white px-3 py-1.5 text-body-3-medium text-primary hover:bg-neutral-50 disabled:opacity-50"
         >
-          {imageUrl ? t('companyProfile.profileHeader.changeFile') : uploadLabel}
+          {uploading
+            ? t('common.loading')
+            : imageUrl
+              ? t('companyProfile.profileHeader.changeFile')
+              : uploadLabel}
         </button>
         {imageUrl && (
           <button
@@ -344,8 +396,9 @@ export function SetupMarkUpload({
         type="file"
         accept="image/svg+xml,image/png,image/webp,image/jpeg"
         className="sr-only"
-        onChange={handleSelect}
+        onChange={(event) => void handleSelect(event)}
       />
+      {error && <p className="text-small-light text-error-500">{error}</p>}
     </div>
   )
 }

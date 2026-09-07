@@ -81,7 +81,6 @@ export function ConsultingReadinessStep() {
                   type="text"
                   value={form.consultantName}
                   onChange={(e) => update('consultantName', e.target.value)}
-                  placeholder={t('accreditation.entityData.fields.consulting.consultantNamePlaceholder')}
                 />
               </FormField>
             )}
@@ -109,7 +108,6 @@ export function ConsultingReadinessStep() {
                 min={1}
                 value={form.consultancyMonths}
                 onChange={(e) => update('consultancyMonths', e.target.value)}
-                placeholder="0"
               />
             </FormField>
           </div>
@@ -164,8 +162,6 @@ export function ConsultingReadinessStep() {
                 value={form.systemLanguage}
                 onChange={(v) => update('systemLanguage', v)}
                 options={languageOptions}
-                placeholder={t('accreditation.entityData.fields.readiness.systemLanguagePlaceholder')}
-                searchPlaceholder={t('accreditation.entityData.fields.readiness.searchLanguage')}
               />
             </FormField>
 
@@ -271,7 +267,6 @@ export function ConsultingReadinessStep() {
                 type="text"
                 value={form.otherSpecification}
                 onChange={(e) => update('otherSpecification', e.target.value)}
-                placeholder={t('accreditation.entityData.fields.readiness.other')}
               />
             </FormField>
           )}
@@ -304,7 +299,6 @@ export function ConsultingReadinessStep() {
                   type="text"
                   value={form.designException}
                   onChange={(e) => update('designException', e.target.value)}
-                  placeholder={t('accreditation.form.stateReasonPlaceholder')}
                 />
               </FormField>
             )}

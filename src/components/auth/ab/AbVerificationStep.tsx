@@ -15,6 +15,7 @@ interface AbVerificationStepProps {
   onEmailChange: (email: string) => void
   onOtpChange: (otp: string[]) => void
   onSendCode: () => void
+  isVerifyingEmail?: boolean
 }
 
 /** Step 3 ("verification"): same email + inline "verify" + OTP pattern as RegisterPage's StepVerification. */
@@ -26,6 +27,7 @@ export function AbVerificationStep({
   onEmailChange,
   onOtpChange,
   onSendCode,
+  isVerifyingEmail = false,
 }: AbVerificationStepProps) {
   const { t } = useTranslation()
   const emailValid = isValidRequiredEmail(email)
@@ -79,7 +81,14 @@ export function AbVerificationStep({
             <p className="text-body-1-medium text-neutral-900">{t('register.emailVerification')}</p>
             <p className="text-body-2 text-neutral-500">{t('register.codeSentPrompt')}</p>
           </div>
-          <OtpInput value={otp} onChange={onOtpChange} />
+          <OtpInput
+            value={otp}
+            onChange={onOtpChange}
+            disabled={isVerifyingEmail}
+          />
+          {isVerifyingEmail && (
+            <p className="text-center text-body-2 text-primary">{t('register.verifyingEmail')}</p>
+          )}
         </div>
       )}
     </div>

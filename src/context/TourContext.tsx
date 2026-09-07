@@ -16,6 +16,21 @@ export interface TourStepConfig {
 const TOUR_STATUS_KEY_PREFIX = 'icasco_tour_status'
 const TOUR_PENDING_KEY_PREFIX = 'icasco_pending_tour'
 
+export function getTourUserKey(): string | null {
+  const session = getAuthSession()
+  return session?.cab?.id ?? session?.organization?.id ?? session?.user?.id ?? null
+}
+
+export function getTourStatusKey(tourId: string): string {
+  const id = getTourUserKey()
+  const base = `${TOUR_STATUS_KEY_PREFIX}_${tourId}`
+  return id ? `${base}_${id}` : base
+}
+
+export function setTourStatus(tourId: string, status: 'completed' | 'skipped'): void {
+  localStorage.setItem(getTourStatusKey(tourId), status)
+}
+
 /**
  * Call this from wherever a tour's onboarding flow finishes, so the tour
  * auto-starts the first time the user lands on the page it belongs to.
@@ -25,7 +40,9 @@ export function markTourPending(tourId: string): void {
   localStorage.setItem(`${TOUR_PENDING_KEY_PREFIX}_${tourId}`, 'true')
 }
 
+
 interface TourContextType {
+  steps: TourStepConfig[]
   currentStepIndex: number
   activeStepId: string | null
   totalSteps: number
@@ -45,25 +62,22 @@ interface TourProviderProps {
   /** Ordered steps this tour walks through. */
   steps: TourStepConfig[]
   children: ReactNode
+  /** Called after the user clicks Finish on the last step. */
+  onComplete?: () => void
+  /** Called after the user skips the tour (in addition to persisting skipped status). */
+  onSkip?: () => void
 }
 
-export function TourProvider({ tourId, steps, children }: TourProviderProps) {
+export function TourProvider({ tourId, steps, children, onComplete, onSkip }: TourProviderProps) {
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0)
   const [isTourActive, setIsTourActive] = useState<boolean>(false)
   const [isSkipped, setIsSkipped] = useState<boolean>(false)
 
   const pendingKey = `${TOUR_PENDING_KEY_PREFIX}_${tourId}`
 
-  const getStatusKey = (): string => {
-    const session = getAuthSession()
-    const id = session?.organization?.id || session?.user?.id
-    const base = `${TOUR_STATUS_KEY_PREFIX}_${tourId}`
-    return id ? `${base}_${id}` : base
-  }
-
   useEffect(() => {
     const isPending = localStorage.getItem(pendingKey) === 'true'
-    const statusKey = getStatusKey()
+    const statusKey = getTourStatusKey(tourId)
     const status = localStorage.getItem(statusKey)
 
     // Rule 2 & 3: If THIS user explicitly clicked Skip or Completed, NEVER show again for this user (even after Logout + Login)
@@ -94,7 +108,8 @@ export function TourProvider({ tourId, steps, children }: TourProviderProps) {
     } else {
       setIsTourActive(false)
       setIsSkipped(true)
-      localStorage.setItem(getStatusKey(), 'completed')
+      setTourStatus(tourId, 'completed')
+      onComplete?.()
     }
   }
 
@@ -107,10 +122,14 @@ export function TourProvider({ tourId, steps, children }: TourProviderProps) {
   const skipTour = () => {
     setIsTourActive(false)
     setIsSkipped(true)
-    localStorage.setItem(getStatusKey(), 'skipped')
+    setTourStatus(tourId, 'skipped')
+    onSkip?.()
   }
 
   const startTour = () => {
+    // Clear any previous skip/complete status so the tour can always
+    // be manually restarted via the StartTourButton.
+    localStorage.removeItem(getTourStatusKey(tourId))
     setCurrentStepIndex(0)
     setIsTourActive(true)
     setIsSkipped(false)
@@ -119,6 +138,7 @@ export function TourProvider({ tourId, steps, children }: TourProviderProps) {
   return (
     <TourContext.Provider
       value={{
+        steps,
         currentStepIndex,
         activeStepId,
         totalSteps: steps.length,

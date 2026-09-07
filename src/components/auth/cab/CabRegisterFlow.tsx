@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
@@ -12,6 +12,7 @@ import { registerCab } from '@/lib/api/cabApi'
 import { saveAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 import { ApiError } from '@/lib/api/client'
+import { useAutoVerifyOtp } from '@/hooks/useAutoVerifyOtp'
 
 interface CabRegisterFlowProps {
   /** Lets the user back out to entity-type selection from CAB step 1. */
@@ -59,7 +60,7 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
     }
   }
 
-  const handleVerifyAndContinue = async () => {
+  const handleVerifyAndContinue = useCallback(async () => {
     if (!emailValid || !otpComplete || isVerifyingEmail) return
     setIsVerifyingEmail(true)
     setVerificationError(null)
@@ -68,10 +69,21 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
       setEmailVerified(true)
     } catch (error) {
       setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
+      setOtp(emptyOtp())
     } finally {
       setIsVerifyingEmail(false)
     }
-  }
+  }, [emailValid, otpComplete, isVerifyingEmail, verificationEmail, otp, t])
+
+  useAutoVerifyOtp({
+    active: step === 2,
+    otp,
+    codeSent,
+    emailVerified,
+    isVerifyingEmail,
+    emailValid,
+    onVerify: handleVerifyAndContinue,
+  })
 
   const handleBack = () => {
     if (step === 1) {
@@ -81,18 +93,11 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
     setStep(1)
   }
 
-  const handleCreateAccount = async () => {
+  const handleCreateAccount = useCallback(async () => {
     if (isCreatingAccount) return
     setIsCreatingAccount(true)
     setCreateAccountError(null)
     try {
-      // Same backend limitation as before: /auth/register still requires
-      // organizationName/administrationName/facilityOwnerManager/activity/
-      // legalCapacity/city, none of which this trimmed sign-up collects
-      // anymore (organization name, location etc. are now collected in the
-      // post-login onboarding wizard instead). Stand in with the registrant's
-      // own name/country until the backend adds a dedicated CAB submission
-      // path that doesn't need these upfront.
       await registerCab({
         contactPersonName: basicsForm.name.trim(),
         email: verificationEmail.trim(),
@@ -109,37 +114,34 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
     } finally {
       setIsCreatingAccount(false)
     }
-  }
+  }, [
+    basicsForm.confirmPassword,
+    basicsForm.mobile,
+    basicsForm.mobileCountryCode,
+    basicsForm.name,
+    basicsForm.password,
+    isCreatingAccount,
+    navigate,
+    t,
+    verificationEmail,
+  ])
+
+  useEffect(() => {
+    if (step !== 2 || !emailVerified || isCreatingAccount) return
+    void handleCreateAccount()
+  }, [step, emailVerified, isCreatingAccount, handleCreateAccount])
 
   const handleNext = () => {
     if (step === 1) {
       setVerificationEmail(basicsForm.email)
       setStep(2)
-      return
     }
-    if (!emailVerified) {
-      void handleVerifyAndContinue()
-      return
-    }
-    if (isCreatingAccount) return
-    void handleCreateAccount()
   }
 
-  const nextDisabled =
-    step === 1
-      ? !isCabAccountBasicsComplete(basicsForm)
-      : !emailValid || !codeSent || !otpComplete || isVerifyingEmail || isCreatingAccount
+  const nextDisabled = step === 1 ? !isCabAccountBasicsComplete(basicsForm) : true
 
   const nextLabel =
-    step === 2 && codeSent && !emailVerified
-      ? isVerifyingEmail
-        ? t('register.verifyingEmail')
-        : t('register.verifyEmail')
-      : step === 2 && emailVerified
-        ? isCreatingAccount
-          ? t('register.creatingAccount')
-          : t('register.createAccount')
-        : t('common.next')
+    step === 2 && isCreatingAccount ? t('register.creatingAccount') : t('common.next')
 
   return (
     <>
@@ -169,6 +171,7 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
           otp={otp}
           codeSent={codeSent}
           isSendingCode={isSendingCode}
+          isVerifyingEmail={isVerifyingEmail}
           onEmailChange={setVerificationEmail}
           onOtpChange={setOtp}
           onSendCode={() => void handleSendCode()}
@@ -177,6 +180,9 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
 
       {verificationError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
+      )}
+      {step === 2 && isCreatingAccount && (
+        <p className="mt-4 text-center text-body-2 text-primary">{t('register.creatingAccount')}</p>
       )}
       {createAccountError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
@@ -188,6 +194,7 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
         onNext={handleNext}
         nextLabel={nextLabel}
         nextDisabled={nextDisabled}
+        showNext={step === 1}
         showBack
       />
     </>

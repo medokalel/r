@@ -22,21 +22,21 @@ export interface ApplicationDraftForm {
 }
 
 export const emptyApplicationDraftForm: ApplicationDraftForm = {
-  applicationType: '',
-  primaryStandard: '',
-  applicationDate: undefined,
-  certificationBody: '',
-  additionalStandards: [],
-  requestedAuditDate: undefined,
-  applicableScheme: '',
-  accreditationBody: '',
-  auditLanguage: '',
-  scopeDescription: '',
-  billingFullName: '',
-  billingEmail: '',
+  applicationType: 'Initial Certification',
+  primaryStandard: 'ISO 9001:2015 - Quality Management',
+  applicationDate: new Date(),
+  certificationBody: 'TÜV Rheinland / Casco',
+  additionalStandards: ['ISO 14001:2015 - Environmental Management'],
+  requestedAuditDate: new Date(Date.now() + 14 * 86400000),
+  applicableScheme: 'IAF MD 22:2023',
+  accreditationBody: 'Emirates International',
+  auditLanguage: 'English',
+  scopeDescription: 'Design, manufacturing, testing, and distribution of industrial automation components and systems.',
+  billingFullName: 'Arjun Verma',
+  billingEmail: 'arjun.verma@greenleaf.com',
   billingMobileCountryCode: 'EG',
-  billingMobile: '',
-  billingAddress: '',
+  billingMobile: '1001234567',
+  billingAddress: 'Building 4, Industrial Zone, Cairo, Egypt',
 }
 
 /** Only the fields marked required (*) in the design gate "Save & Continue" — Billing Contact is optional throughout. */

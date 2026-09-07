@@ -26,18 +26,21 @@ import {
 } from '@/components/icons'
 import { clearAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
-import { CabDashboardTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { useOptionalTour } from '@/context/TourContext'
 
 interface CabNavItem {
   icon: typeof DashboardIcon
   labelKey: string
   href: string
+  stepId?: string
 }
 
 const dashboardItem: CabNavItem = {
   icon: DashboardIcon,
   labelKey: 'cab.sidebar.dashboard',
   href: '/cab/dashboard',
+  stepId: 'sidebar-navigation',
 }
 
 /** True when `pathname` points at `href`, including its `/:id/<lastSegment>`
@@ -59,15 +62,15 @@ function matchesWorkflowHref(pathname: string, href: string) {
 }
 
 const workflowItems: CabNavItem[] = [
-  { icon: UsersIcon, labelKey: 'cab.sidebar.clientRegistration', href: '/cab/clients/new' },
-  { icon: FileTextIcon, labelKey: 'cab.sidebar.applicationDraft', href: '/cab/applications/draft' },
-  { icon: ExportIcon, labelKey: 'cab.sidebar.applicationSubmission', href: '/cab/applications/submission' },
-  { icon: DownloadIcon, labelKey: 'cab.sidebar.applicationReceipt', href: '/cab/applications/receipt' },
-  { icon: FileReviewIcon, labelKey: 'cab.sidebar.applicationReview', href: '/cab/applications/review' },
-  { icon: CorrectiveActionIcon, labelKey: 'cab.sidebar.informationRequired', href: '/cab/applications/information-required' },
-  { icon: SettingsIcon, labelKey: 'cab.sidebar.technicalFeasibility', href: '/cab/applications/technical-feasibility' },
-  { icon: WalletIcon, labelKey: 'cab.sidebar.quotation', href: '/cab/applications/quotation' },
-  { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.quotationApproval', href: '/cab/quotations/approval' },
+  { icon: UsersIcon, labelKey: 'cab.sidebar.clientRegistration', href: '/cab/clients/new', stepId: 'sidebar-clients-new' },
+  { icon: FileTextIcon, labelKey: 'cab.sidebar.applicationDraft', href: '/cab/applications/draft', stepId: 'sidebar-app-draft' },
+  { icon: ExportIcon, labelKey: 'cab.sidebar.applicationSubmission', href: '/cab/applications/submission', stepId: 'sidebar-app-submission' },
+  { icon: DownloadIcon, labelKey: 'cab.sidebar.applicationReceipt', href: '/cab/applications/receipt', stepId: 'sidebar-app-receipt' },
+  { icon: FileReviewIcon, labelKey: 'cab.sidebar.applicationReview', href: '/cab/applications/review', stepId: 'sidebar-app-review' },
+  { icon: CorrectiveActionIcon, labelKey: 'cab.sidebar.informationRequired', href: '/cab/applications/information-required', stepId: 'sidebar-app-info' },
+  { icon: SettingsIcon, labelKey: 'cab.sidebar.technicalFeasibility', href: '/cab/applications/technical-feasibility', stepId: 'sidebar-app-feasibility' },
+  { icon: WalletIcon, labelKey: 'cab.sidebar.applicationQuotation', href: '/cab/applications/quotation', stepId: 'sidebar-app-quotation' },
+  { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.quotationApproval', href: '/cab/quotations/approval', stepId: 'sidebar-quotation-approval' },
   { icon: MailIcon, labelKey: 'cab.sidebar.quotationSent', href: '/cab/quotations/sent' },
   { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.quotationAcceptance', href: '/cab/quotations/acceptance' },
   { icon: EditIcon, labelKey: 'cab.sidebar.contractSigning', href: '/cab/contracts/signing' },
@@ -79,6 +82,7 @@ const workflowItems: CabNavItem[] = [
 ]
 
 const manageItems: CabNavItem[] = [
+  { icon: BuildingsIcon, labelKey: 'cab.sidebar.companyProfile', href: '/cab/company-profile' },
   { icon: UsersIcon, labelKey: 'cab.sidebar.clients', href: '/cab/clients' },
   { icon: SearchIcon, labelKey: 'cab.sidebar.audits', href: '/cab/audits' },
   { icon: BuildingsIcon, labelKey: 'cab.sidebar.auditTeams', href: '/cab/audit-teams' },
@@ -113,6 +117,11 @@ export function CabSidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const { expanded, setExpanded } = useCabSidebar()
+  const tour = useOptionalTour()
+
+  const activeStepId = tour?.isTourActive ? tour.activeStepId : null
+  const isSidebarStepActive = Boolean(activeStepId && activeStepId.startsWith('sidebar-'))
+  const isExpanded = expanded || isSidebarStepActive
 
   const handleLogout = () => {
     clearAuthSession()
@@ -131,7 +140,7 @@ export function CabSidebar() {
     const itemIndex = workflowItems.indexOf(item)
     const showCompletedCheck = onWorkflowStep && itemIndex >= 0 && itemIndex < currentStepIndex
 
-    return (
+    const buttonElement = (
       <button
         key={item.href}
         type="button"
@@ -141,7 +150,7 @@ export function CabSidebar() {
         onClick={() => navigate(item.href)}
         className={cn(
           'relative flex items-center transition-colors',
-          expanded
+          isExpanded
             ? cn(
                 'w-full gap-3 rounded-[var(--radius-md)] px-3 py-2 text-neutral-500',
                 'hover:bg-primary-subtle hover:text-primary',
@@ -159,21 +168,31 @@ export function CabSidebar() {
               )
         )}
       >
-        <AppIcon icon={item.icon} size={expanded ? 20 : 22} className="shrink-0" />
-        {expanded && (
+        <AppIcon icon={item.icon} size={isExpanded ? 20 : 22} className="shrink-0" />
+        {isExpanded && (
           <span className="min-w-0 flex-1 truncate text-start text-body-3-medium">{t(item.labelKey)}</span>
         )}
         {showCompletedCheck && (
-          <span className={cn('shrink-0', !expanded && 'absolute -end-0.5 -top-0.5')}>
-            <CompletedStepCheck size={expanded ? 18 : 12} />
+          <span className={cn('shrink-0', !isExpanded && 'absolute -end-0.5 -top-0.5')}>
+            <CompletedStepCheck size={isExpanded ? 18 : 12} />
           </span>
         )}
       </button>
     )
+
+    if (item.stepId) {
+      return (
+        <DashboardTourStep key={item.href} stepId={item.stepId} className="w-full">
+          {buttonElement}
+        </DashboardTourStep>
+      )
+    }
+
+    return buttonElement
   }
 
   const renderGroupLabel = (labelKey: string) =>
-    expanded ? (
+    isExpanded ? (
       <p
         key={labelKey}
         className="px-3 pb-1 pt-4 text-[11px] font-semibold uppercase tracking-wide text-neutral-400"
@@ -191,7 +210,9 @@ export function CabSidebar() {
         'md:flex md:w-[112px] md:items-center md:gap-6',
         expanded
           ? 'lg:w-[266px] lg:items-stretch lg:gap-6 lg:px-4'
-          : 'lg:w-[112px] lg:items-center lg:gap-6'
+          : 'lg:w-[112px] lg:items-center lg:gap-6',
+        isSidebarStepActive &&
+          '!flex fixed inset-y-0 start-0 z-[1001] w-[270px] max-w-[85vw] items-stretch gap-6 px-4 shadow-2xl overflow-y-auto md:relative md:inset-auto md:z-auto md:w-auto md:max-w-none md:shadow-[0_5px_1px_rgba(0,0,0,0.13)]'
       )}
     >
       {/* Collapse toggle — same control as the internal DashboardSidebar */}
@@ -224,7 +245,7 @@ export function CabSidebar() {
       </div>
 
       {/* Logo */}
-      <div className={cn('shrink-0', expanded ? 'w-full px-4' : 'w-[116px] px-[6px]')}>
+      <div className={cn('shrink-0', isExpanded ? 'w-full px-4' : 'w-[116px] px-[6px]')}>
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
@@ -237,13 +258,11 @@ export function CabSidebar() {
       <nav
         className={cn(
           'flex flex-1 flex-col gap-1 overflow-y-auto',
-          expanded ? 'w-full items-stretch px-1' : 'w-[70px] items-center'
+          isExpanded ? 'w-full items-stretch px-1' : 'w-[70px] items-center'
         )}
         aria-label={t('cab.sidebar.dashboard')}
       >
-        <CabDashboardTourStep stepId="sidebar-navigation" className="flex justify-center">
-          {renderItem(dashboardItem)}
-        </CabDashboardTourStep>
+        {renderItem(dashboardItem)}
 
         {renderGroupLabel('cab.sidebar.workflow')}
         {workflowItems.map(renderItem)}
@@ -258,11 +277,11 @@ export function CabSidebar() {
           aria-label={t('nav.logout')}
           className={cn(
             'mt-4 flex items-center text-error-500 transition-colors hover:text-error-600',
-            expanded ? 'w-full gap-3 px-3 py-2' : 'size-11 justify-center'
+            isExpanded ? 'w-full gap-3 px-3 py-2' : 'size-11 justify-center'
           )}
         >
-          <AppIcon icon={LogoutIcon} size={expanded ? 20 : 22} className="shrink-0" />
-          {expanded && <span className="whitespace-nowrap text-body-3-medium">{t('nav.logout')}</span>}
+          <AppIcon icon={LogoutIcon} size={isExpanded ? 20 : 22} className="shrink-0" />
+          {isExpanded && <span className="whitespace-nowrap text-body-3-medium">{t('nav.logout')}</span>}
         </button>
       </nav>
     </aside>

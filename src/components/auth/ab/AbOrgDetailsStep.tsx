@@ -10,6 +10,7 @@ import {
 } from '@/lib/api/onboardingOrgScopeApi'
 import type { AbOnboardingForm } from '@/lib/abOnboardingForm'
 import { getOrgScopeNameFieldLabels } from '@/lib/orgScopeNameField'
+import { isValidWebsite } from '@/lib/validators'
 
 interface AbOrgDetailsStepProps {
   form: AbOnboardingForm
@@ -138,6 +139,7 @@ export function AbOrgDetailsStep({ form, onPatch }: AbOrgDetailsStepProps) {
           value={form.website}
           placeholder={t('ab.onboarding.orgDetails.websitePlaceholder')}
           onChange={(e) => onPatch({ website: e.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
     </div>

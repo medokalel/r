@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, SuccessCheckIcon } from '@/components/icons'
@@ -12,6 +12,7 @@ import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '
 import { ROUTES } from '@/lib/routes'
 import { ApiError } from '@/lib/api/client'
 import { getCountryOptions } from '@/lib/countries'
+import { useAutoVerifyOtp } from '@/hooks/useAutoVerifyOtp'
 
 interface AbRegisterFlowProps {
   /** Lets the user back out to entity-type selection from AB step 1. */
@@ -62,7 +63,7 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
     }
   }
 
-  const handleVerifyAndContinue = async () => {
+  const handleVerifyAndContinue = useCallback(async () => {
     if (!emailValid || !otpComplete || isVerifyingEmail) return
     setIsVerifyingEmail(true)
     setVerificationError(null)
@@ -71,10 +72,21 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
       setEmailVerified(true)
     } catch (error) {
       setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
+      setOtp(emptyOtp())
     } finally {
       setIsVerifyingEmail(false)
     }
-  }
+  }, [emailValid, otpComplete, isVerifyingEmail, verificationEmail, otp, t])
+
+  useAutoVerifyOtp({
+    active: step === 2,
+    otp,
+    codeSent,
+    emailVerified,
+    isVerifyingEmail,
+    emailValid,
+    onVerify: handleVerifyAndContinue,
+  })
 
   const handleBack = () => {
     if (step === 1) {
@@ -84,18 +96,11 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
     setStep(1)
   }
 
-  const handleCreateAccount = async () => {
+  const handleCreateAccount = useCallback(async () => {
     if (isCreatingAccount) return
     setIsCreatingAccount(true)
     setCreateAccountError(null)
     try {
-      // Same backend limitation as the CAB flow: /auth/register still
-      // requires organizationName/administrationName/facilityOwnerManager/
-      // activity/legalCapacity/city, none of which this trimmed sign-up
-      // collects anymore (organization name, location etc. are now
-      // collected in the post-login onboarding wizard instead). Stand in
-      // with the registrant's own name/country until the backend adds a
-      // dedicated AB submission path that doesn't need these upfront.
       const countryName =
         getCountryOptions(i18n.language).find((c) => c.code === basicsForm.country)?.name ??
         basicsForm.country
@@ -121,37 +126,36 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
     } finally {
       setIsCreatingAccount(false)
     }
-  }
+  }, [
+    basicsForm.abName,
+    basicsForm.confirmPassword,
+    basicsForm.country,
+    basicsForm.mobile,
+    basicsForm.mobileCountryCode,
+    basicsForm.password,
+    i18n.language,
+    isCreatingAccount,
+    onSubmittedChange,
+    t,
+    verificationEmail,
+  ])
+
+  useEffect(() => {
+    if (step !== 2 || !emailVerified || isCreatingAccount) return
+    void handleCreateAccount()
+  }, [step, emailVerified, isCreatingAccount, handleCreateAccount])
 
   const handleNext = () => {
     if (step === 1) {
       setVerificationEmail(basicsForm.email)
       setStep(2)
-      return
     }
-    if (!emailVerified) {
-      void handleVerifyAndContinue()
-      return
-    }
-    if (isCreatingAccount) return
-    void handleCreateAccount()
   }
 
-  const nextDisabled =
-    step === 1
-      ? !isAbAccountBasicsComplete(basicsForm)
-      : !emailValid || !codeSent || !otpComplete || isVerifyingEmail || isCreatingAccount
+  const nextDisabled = step === 1 ? !isAbAccountBasicsComplete(basicsForm) : true
 
   const nextLabel =
-    step === 2 && codeSent && !emailVerified
-      ? isVerifyingEmail
-        ? t('register.verifyingEmail')
-        : t('register.verifyEmail')
-      : step === 2 && emailVerified
-        ? isCreatingAccount
-          ? t('register.creatingAccount')
-          : t('register.createAccount')
-        : t('common.next')
+    step === 2 && isCreatingAccount ? t('register.creatingAccount') : t('common.next')
 
   if (submitted) {
     return (
@@ -200,6 +204,7 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
           otp={otp}
           codeSent={codeSent}
           isSendingCode={isSendingCode}
+          isVerifyingEmail={isVerifyingEmail}
           onEmailChange={setVerificationEmail}
           onOtpChange={setOtp}
           onSendCode={() => void handleSendCode()}
@@ -208,6 +213,9 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
 
       {verificationError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
+      )}
+      {step === 2 && isCreatingAccount && (
+        <p className="mt-4 text-center text-body-2 text-primary">{t('register.creatingAccount')}</p>
       )}
       {createAccountError && step === 2 && (
         <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
@@ -219,6 +227,7 @@ export function AbRegisterFlow({ onBackToEntityType, onSubmittedChange }: AbRegi
         onNext={handleNext}
         nextLabel={nextLabel}
         nextDisabled={nextDisabled}
+        showNext={step === 1}
         showBack
       />
     </>

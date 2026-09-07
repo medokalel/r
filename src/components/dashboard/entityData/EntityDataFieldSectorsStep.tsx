@@ -115,7 +115,6 @@ export function EntityDataFieldSectorsStep({
             type="search"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
-            placeholder={t('accreditation.entityData.field.searchPlaceholder')}
             className="ps-14 pe-6"
           />
         </div>

@@ -21,6 +21,8 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { useApplicationDraftTourSteps } from '@/config/applicationDraftTourSteps'
 import {
   clearApplicationDraftSnapshot,
   clearPendingMultiSiteRule,
@@ -34,6 +36,7 @@ import {
 export function ApplicationDraftPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = useApplicationDraftTourSteps()
 
   // Resume from sessionStorage if returning from AddSitePage (lazy
   // initializer, not a module constant, so it re-reads on every mount).
@@ -93,23 +96,23 @@ export function ApplicationDraftPage() {
           : step === 4
             ? isDocumentsComplete(documentsForm)
             : // Step 5 (Review & Confirm): gate "Submit Application" on every
-              // earlier step actually being complete, not just on having
-              // reached this step.
-              isApplicationDraftComplete(form) &&
-              isStandardsScopeComplete(standardsScopeForm) &&
-              isSitesFacilitiesComplete(sitesFacilitiesForm) &&
-              isDocumentsComplete(documentsForm)
+            // earlier step actually being complete, not just on having
+            // reached this step.
+            isApplicationDraftComplete(form) &&
+            isStandardsScopeComplete(standardsScopeForm) &&
+            isSitesFacilitiesComplete(sitesFacilitiesForm) &&
+            isDocumentsComplete(documentsForm)
 
   // TODO: wire to a real "save application draft" endpoint once the backend
   // exposes one — for now this is a no-op stub, matching the other
   // not-yet-backed CAB workflow actions. Unlike "Save & Continue", saving a
   // draft doesn't require the form to be complete.
-  const handleSaveDraft = () => {}
+  const handleSaveDraft = () => { }
 
   // TODO: wire to a real print/PDF preview once the backend exposes a
   // submission-ready rendering — for now this is a no-op stub, matching
   // handleSaveDraft above.
-  const handlePreview = () => {}
+  const handlePreview = () => { }
 
   const handleBack = () => {
     if (step === 1) {
@@ -134,8 +137,10 @@ export function ApplicationDraftPage() {
   }
 
   return (
-    <CabLayout>
-      <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
+    <CabLayout tourId="cab-application-draft" tourSteps={tourSteps}>
+      <DashboardTourStep steps={tourSteps} stepId="header">
+        <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
+      </DashboardTourStep>
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
@@ -153,68 +158,75 @@ export function ApplicationDraftPage() {
           </Button>
         </div>
 
-        {/* TODO(DEV ONLY): onStepClick lets you jump between steps directly
-        while building — remove this prop once the flow is finished. */}
-        <ApplicationStepper current={step} onStepClick={setStep} />
+        <DashboardTourStep steps={tourSteps} stepId="stepper">
+          <ApplicationStepper current={step} onStepClick={setStep} />
+        </DashboardTourStep>
 
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-          <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-            {step === 1 && <ApplicationDraftForm form={form} onPatch={patch} />}
-            {step === 2 && (
-              <StandardsScopeStep form={standardsScopeForm} onPatch={patchStandardsScope} />
-            )}
-            {step === 3 && (
-              <SitesFacilitiesStep
-                form={sitesFacilitiesForm}
-                onPatch={patchSitesFacilities}
-                onApplyMultiSiteRule={() => navigate('/cab/applications/draft/sites/multi-site-rule')}
-              />
-            )}
-            {step === 4 && <DocumentsStep form={documentsForm} onPatch={patchDocuments} />}
-            {step === 5 && (
-              <ReviewConfirmStep
+          <DashboardTourStep steps={tourSteps} stepId="form-content" className="min-w-0 flex-1">
+            <div className="w-full rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              {step === 1 && <ApplicationDraftForm form={form} onPatch={patch} />}
+              {step === 2 && (
+                <StandardsScopeStep form={standardsScopeForm} onPatch={patchStandardsScope} />
+              )}
+              {step === 3 && (
+                <SitesFacilitiesStep
+                  form={sitesFacilitiesForm}
+                  onPatch={patchSitesFacilities}
+                  onApplyMultiSiteRule={() => navigate('/cab/applications/draft/sites/multi-site-rule')}
+                />
+              )}
+              {step === 4 && <DocumentsStep form={documentsForm} onPatch={patchDocuments} />}
+              {step === 5 && (
+                <ReviewConfirmStep
+                  form={form}
+                  standardsScopeForm={standardsScopeForm}
+                  sitesFacilitiesForm={sitesFacilitiesForm}
+                  documentsForm={documentsForm}
+                  onEditStep={setStep}
+                />
+              )}
+            </div>
+          </DashboardTourStep>
+
+          <DashboardTourStep steps={tourSteps} stepId="workflow-progress" className="w-full shrink-0 lg:w-[340px]">
+            {step === 4 ? (
+              <DocumentsSidebar form={documentsForm} />
+            ) : step === 5 ? (
+              <ReviewConfirmSidebar
                 form={form}
                 standardsScopeForm={standardsScopeForm}
                 sitesFacilitiesForm={sitesFacilitiesForm}
                 documentsForm={documentsForm}
-                onEditStep={setStep}
+              />
+            ) : (
+              <WorkflowProgressCard
+                steps={buildClientWorkflowSteps(t, 'application')}
+                title={t('cab.clientRegistration.workflow.title')}
+                viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
+                statusLabels={{
+                  completed: t('cab.applications.receipt.workflow.completed'),
+                  inProgress: t('cab.clientRegistration.workflow.inProgress'),
+                  pending: t('cab.clientRegistration.workflow.pending'),
+                }}
               />
             )}
-          </div>
-          {step === 4 ? (
-            <DocumentsSidebar form={documentsForm} />
-          ) : step === 5 ? (
-            <ReviewConfirmSidebar
-              form={form}
-              standardsScopeForm={standardsScopeForm}
-              sitesFacilitiesForm={sitesFacilitiesForm}
-              documentsForm={documentsForm}
-            />
-          ) : (
-            <WorkflowProgressCard
-              steps={buildClientWorkflowSteps(t, 'application')}
-              title={t('cab.clientRegistration.workflow.title')}
-              viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
-              statusLabels={{
-                completed: t('cab.applications.receipt.workflow.completed'),
-                inProgress: t('cab.clientRegistration.workflow.inProgress'),
-                pending: t('cab.clientRegistration.workflow.pending'),
-              }}
-            />
-          )}
+          </DashboardTourStep>
         </div>
       </div>
 
-      <DashboardFooter
-        onBack={handleBack}
-        backDisabled={false}
-        onSaveDraft={handleSaveDraft}
-        onNext={handleNext}
-        nextDisabled={!complete}
-        nextLabel={
-          step === 5 ? t('cab.applicationDraft.review.submitApplication') : t('cab.applicationDraft.saveDraftAndContinue')
-        }
-      />
+      <DashboardTourStep steps={tourSteps} stepId="action-buttons">
+        <DashboardFooter
+          onBack={handleBack}
+          backDisabled={false}
+          onSaveDraft={handleSaveDraft}
+          onNext={handleNext}
+          nextDisabled={!complete}
+          nextLabel={
+            step === 5 ? t('cab.applicationDraft.review.submitApplication') : t('cab.applicationDraft.saveDraftAndContinue')
+          }
+        />
+      </DashboardTourStep>
     </CabLayout>
   )
 }

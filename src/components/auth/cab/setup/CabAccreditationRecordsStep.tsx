@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormLabel, TextField } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
@@ -16,7 +16,14 @@ import {
 } from '@/lib/api/cabSetupApi'
 import {
   createAccreditationRecord,
+  ensureAccreditationRecords,
+  getAccreditationRecordMissingFields,
+  getDefaultAccreditationRecordStatus,
+  isAccreditationRecordComplete,
+  isAccreditationRecordsStepComplete,
   isApplicantRecord,
+  requiresAccreditationRecords,
+  type AccreditationRecordMissingField,
   type CabAccreditationRecord,
 } from '@/lib/cabSetupForm'
 import { cn } from '@/lib/utils'
@@ -33,6 +40,17 @@ function fromIsoDate(value: string): Date | undefined {
   if (!value) return undefined
   const parsed = new Date(`${value}T00:00:00`)
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
+
+const MISSING_FIELD_LABEL_KEYS: Record<AccreditationRecordMissingField, string> = {
+  body: 'cab.setup.accreditationRecords.body',
+  bodyOther: 'cab.setup.accreditationRecords.bodyOther',
+  standard: 'cab.setup.accreditationRecords.standard',
+  applicationReference: 'cab.setup.accreditationRecords.applicationReference',
+  number: 'cab.setup.accreditationRecords.number',
+  issueDate: 'cab.setup.accreditationRecords.issueDate',
+  expiryDate: 'cab.setup.accreditationRecords.expiryDate',
+  expiryAfterIssue: 'cab.setup.accreditationRecords.expiryAfterIssue',
 }
 
 function RecordDateField({
@@ -63,8 +81,20 @@ function RecordDateField({
 
 export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStepProps) {
   const { t } = useTranslation()
-  const records = form.cabSetup.accreditationRecords
+  const setup = form.cabSetup
+  const { accreditationRecords: records, accreditationRecordCount } = setup
   const [activeIndex, setActiveIndex] = useState(0)
+  const defaultRecordStatus = getDefaultAccreditationRecordStatus(setup)
+  const recordsToValidate = records.slice(0, Math.max(accreditationRecordCount, 1))
+  const stepComplete = isAccreditationRecordsStepComplete(setup)
+
+  // Open with record cards ready — seeded on the status step, but guard if the user skipped that.
+  useEffect(() => {
+    if (records.length > 0 || !requiresAccreditationRecords(setup)) return
+    onPatchSetup({
+      accreditationRecords: ensureAccreditationRecords(accreditationRecordCount, [], defaultRecordStatus),
+    })
+  }, [records.length, accreditationRecordCount, setup, onPatchSetup, defaultRecordStatus])
 
   const standardOptions = useMemo(
     () => getAccreditationStandardOptions(form.cabSetup.activities),
@@ -92,7 +122,7 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
 
   const addRecord = () => {
     onPatchSetup({
-      accreditationRecords: [...records, createAccreditationRecord()],
+      accreditationRecords: [...records, createAccreditationRecord(defaultRecordStatus)],
       accreditationRecordCount: records.length + 1,
     })
     setActiveIndex(records.length)
@@ -129,7 +159,10 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
   return (
     <div className="w-full space-y-6">
       <div className="flex flex-wrap items-center gap-2">
-        {records.map((record, index) => (
+        {records.map((record, index) => {
+          const incomplete =
+            index < recordsToValidate.length && !isAccreditationRecordComplete(record)
+          return (
           <button
             key={record.id}
             type="button"
@@ -138,12 +171,14 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
               'rounded-full border px-4 py-2 text-body-3-medium transition-colors',
               index === activeIndex
                 ? 'border-primary bg-primary-subtle text-primary'
-                : 'border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300'
+                : 'border-neutral-200 bg-white text-neutral-600 hover:border-neutral-300',
+              incomplete && index !== activeIndex && 'border-warning-400 text-warning-700'
             )}
           >
             {t('cab.setup.accreditationRecords.recordTab', { index: index + 1 })}
+            {incomplete ? ' •' : ''}
           </button>
-        ))}
+        )})}
         <button
           type="button"
           onClick={addRecord}
@@ -289,6 +324,27 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
           </div>
         </div>
       </SetupSection>
+
+      {!stepComplete && (
+        <div className="rounded-[var(--radius-sm)] border border-warning-200 bg-[#fffbeb] px-4 py-3 text-[12px] text-warning-800">
+          <p className="font-semibold">{t('cab.setup.accreditationRecords.incompleteRecordsHint')}</p>
+          <ul className="mt-2 list-disc space-y-1 ps-5">
+            {recordsToValidate.map((record, index) => {
+              const missing = getAccreditationRecordMissingFields(record)
+              if (missing.length === 0) return null
+              const fields = missing.map((field) => t(MISSING_FIELD_LABEL_KEYS[field])).join(', ')
+              return (
+                <li key={record.id}>
+                  {t('cab.setup.accreditationRecords.incompleteRecord', {
+                    index: index + 1,
+                    fields,
+                  })}
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      )}
 
       <SetupNote>{t('cab.setup.accreditationRecords.applicantNote')}</SetupNote>
     </div>

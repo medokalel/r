@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TextField } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SO_OWNER_TYPE_OPTIONS, getYearEstablishedOptions } from '@/lib/api/soSetupApi'
-import { isValidEmailFormat } from '@/lib/validators'
-import { toEnglishDigits } from '@/lib/englishDigits'
+import { isValidWebsite } from '@/lib/validators'
 import type { SoSetupStepProps } from '@/components/auth/so/setup/types'
 
 export function SoProfileStep({ form, onPatch, onPatchSetup }: SoSetupStepProps) {
@@ -16,11 +15,6 @@ export function SoProfileStep({ form, onPatch, onPatchSetup }: SoSetupStepProps)
     [t]
   )
   const yearOptions = useMemo(() => getYearEstablishedOptions(), [])
-
-  const emailError =
-    setup.primaryContactEmail.trim().length > 0 && !isValidEmailFormat(setup.primaryContactEmail)
-      ? t('validation.invalidEmail')
-      : undefined
 
   return (
     <div className="w-full space-y-6">
@@ -76,32 +70,19 @@ export function SoProfileStep({ form, onPatch, onPatchSetup }: SoSetupStepProps)
           value={form.website}
           placeholder={t('so.setup.profile.websitePlaceholder')}
           onChange={(event) => onPatch({ website: event.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <TextField
-          id="so-setup-contact-email"
-          label={t('so.setup.profile.contactEmail')}
-          required
-          type="email"
-          lang="en"
-          dir="ltr"
-          value={setup.primaryContactEmail}
-          placeholder={t('so.setup.profile.contactEmailPlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactEmail: toEnglishDigits(event.target.value) })}
-          error={emailError}
-        />
-        <SearchableSelect
-          id="so-setup-year"
-          label={t('so.setup.profile.yearEstablished')}
-          value={setup.yearEstablished}
-          onChange={(yearEstablished) => onPatchSetup({ yearEstablished })}
-          options={yearOptions}
-          placeholder={t('so.setup.profile.yearEstablishedPlaceholder')}
-          searchPlaceholder={t('common.search')}
-        />
-      </div>
+      <SearchableSelect
+        id="so-setup-year"
+        label={t('so.setup.profile.yearEstablished')}
+        value={setup.yearEstablished}
+        onChange={(yearEstablished) => onPatchSetup({ yearEstablished })}
+        options={yearOptions}
+        placeholder={t('so.setup.profile.yearEstablishedPlaceholder')}
+        searchPlaceholder={t('common.search')}
+      />
     </div>
   )
 }

@@ -59,6 +59,7 @@ function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
         <DatePicker
           value={value}
           onChange={(next) => setSpecAnswer(question.questionKey, next.toISOString())}
+          placeholder=""
         />
       </FormField>
     )
@@ -72,7 +73,6 @@ function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
           min={0}
           value={raw}
           onChange={(e) => setSpecAnswer(question.questionKey, e.target.value)}
-          placeholder={t('accreditation.entityData.fields.common.writeHere')}
         />
       </FormField>
     )
@@ -83,7 +83,6 @@ function SpecQuestionField({ question }: { question: SpecQuestionDef }) {
       <Textarea
         value={raw}
         onChange={(e) => setSpecAnswer(question.questionKey, e.target.value)}
-        placeholder={t('accreditation.entityData.fields.common.writeHere')}
       />
     </FormField>
   )

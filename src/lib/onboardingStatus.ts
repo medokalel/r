@@ -4,7 +4,13 @@ import { isCabOnboardingComplete } from '@/lib/cabOnboardingStatus'
 
 const KEY_PREFIX = 'icasco_onboarding_complete_'
 
-export function isOnboardingComplete(organizationId: string): boolean {
+export function isOnboardingComplete(
+  organizationId: string,
+  serverStatus?: 'DRAFT' | 'COMPLETED' | null
+): boolean {
+  if (serverStatus === 'COMPLETED') return true
+  if (serverStatus === 'DRAFT') return false
+
   return (
     localStorage.getItem(KEY_PREFIX + organizationId) === 'true' ||
     isCabOnboardingComplete(organizationId) ||

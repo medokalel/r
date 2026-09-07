@@ -2,6 +2,7 @@ import type { EntityType } from '@/lib/entityTypes'
 import type { OrgScopeCategory } from '@/lib/api/onboardingOrgScopeApi'
 import type { CountryCode } from '@/lib/countries'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
+import { isValidWebsite } from '@/lib/validators'
 import { isOrgScopeStepComplete, type OrgScopeFormFields } from '@/lib/onboardingOrgScopeForm'
 import { type OnboardingModulesFields } from '@/lib/onboardingModulesForm'
 import { emptyCabSetupForm, type CabSetupForm } from '@/lib/cabSetupForm'
@@ -95,7 +96,12 @@ export function syncAbTypeFromScopeAreas(form: Pick<UnifiedOnboardingForm, 'enti
 
 export { isModulesStepComplete } from '@/lib/onboardingModulesForm'
 
+export function isSharedWebsiteValid(form: Pick<UnifiedOnboardingForm, 'website'>): boolean {
+  return isValidWebsite(form.website)
+}
+
 export function isOrgDetailsStepComplete(form: UnifiedOnboardingForm): boolean {
+  if (!isSharedWebsiteValid(form)) return false
   if (form.scopeCategory === 'ACCREDITATION_BODY') {
     return form.accreditationBodyNames.length > 0
   }

@@ -127,7 +127,6 @@ const { fieldProps } = useFieldValidation(form, {
               tags={standardTags}
               options={standardOptions}
               onChange={onStandardTagsChange}
-              placeholder={t('accreditation.form.requiredStandardPlaceholder')}
             />
           </FormField>
 
@@ -140,7 +139,6 @@ const { fieldProps } = useFieldValidation(form, {
                 type="text"
                 value={form.otherStandard}
                 onChange={(e) => update('otherStandard', e.target.value)}
-                placeholder={t('accreditation.form.otherStandardPlaceholder')}
               />
             </FormField>
           )}
@@ -150,7 +148,6 @@ const { fieldProps } = useFieldValidation(form, {
               <TextField
                 type="text"
                 value={form.organizationName}
-                placeholder={t('accreditation.form.organizationNamePlaceholder')}
                 onChange={(e) => update('organizationName', e.target.value)}
               />
             </FormField>
@@ -161,7 +158,6 @@ const { fieldProps } = useFieldValidation(form, {
                   type="url"
                   value={form.website}
                   onChange={(e) => update('website', e.target.value)}
-                  placeholder={t('accreditation.form.websitePlaceholder')}
                   className="pe-10"
                   {...fieldProps('website')}
                 />
@@ -177,7 +173,6 @@ const { fieldProps } = useFieldValidation(form, {
               <Textarea
                 value={form.headOfficeAddress}
                 onChange={(e) => update('headOfficeAddress', e.target.value)}
-                placeholder={t('accreditation.form.headOfficeAddressPlaceholder')}
                 rows={3}
                 className="min-h-[60px]"
               />
@@ -187,7 +182,6 @@ const { fieldProps } = useFieldValidation(form, {
               <Textarea
                 value={form.auditSiteAddress}
                 onChange={(e) => update('auditSiteAddress', e.target.value)}
-                placeholder={t('accreditation.form.auditPlaceAddressPlaceholder')}
                 rows={3}
                 className="min-h-[60px]"
               />
@@ -200,7 +194,6 @@ const { fieldProps } = useFieldValidation(form, {
               inputMode="numeric"
               value={form.commercialRegisterNumber}
               onChange={(e) => update('commercialRegisterNumber', e.target.value)}
-              placeholder={t('accreditation.form.commercialRegistrationNoPlaceholder')}
             />
           </FormField>
         
@@ -225,7 +218,6 @@ const { fieldProps } = useFieldValidation(form, {
                   type="text"
                   value={form.excludedReason}
                   onChange={(e) => update('excludedReason', e.target.value)}
-                  placeholder={t('accreditation.form.stateReasonPlaceholder')}
                 />
               </FormField>
             )}
@@ -242,7 +234,6 @@ const { fieldProps } = useFieldValidation(form, {
                 icon={MailIcon}
                 value={form.email}
                 onChange={(e) => update('email', e.target.value)}
-                placeholder="info@example.com"
                 {...fieldProps('email')}
               />
             </FormField>
@@ -258,12 +249,10 @@ const { fieldProps } = useFieldValidation(form, {
                 value={form.city}
                 options={cityOptions}
                 onChange={(value) => update('city', value)}
-                placeholder={t('accreditation.form.cityPlaceholder')}
               />
             ) : (
               <TextField
                 type="text"
-                placeholder={t('accreditation.form.cityPlaceholder')}
                 value={form.city}
                 onChange={(e) => update('city', e.target.value)}
               />
@@ -276,7 +265,6 @@ const { fieldProps } = useFieldValidation(form, {
                 type="text"
                 value={form.representativeName}
                 onChange={(e) => update('representativeName', e.target.value)}
-                placeholder={t('accreditation.form.representativeNamePlaceholder')}
               />
             </FormField>
 
@@ -285,7 +273,6 @@ const { fieldProps } = useFieldValidation(form, {
                 type="text"
                 value={form.jobTitle}
                 onChange={(e) => update('jobTitle', e.target.value)}
-                placeholder={t('accreditation.form.representativeTitlePlaceholder')}
               />
             </FormField>
           </div>
@@ -304,7 +291,6 @@ const { fieldProps } = useFieldValidation(form, {
                     icon={PhoneIcon}
                     value={form.mobileNumber}
                     onChange={(e) => update('mobileNumber', e.target.value)}
-                    placeholder="567XXXXXXXX"
                     {...fieldProps('mobileNumber')}
                   />
                 </div>
@@ -327,7 +313,6 @@ const { fieldProps } = useFieldValidation(form, {
                 type="text"
                 value={form.mainActivity}
                 onChange={(e) => update('mainActivity', e.target.value)}
-                placeholder={t('accreditation.form.mainActivityPlaceholder')}
               />
             </FormField>
 

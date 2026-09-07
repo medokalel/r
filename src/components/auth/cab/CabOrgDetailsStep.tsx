@@ -9,6 +9,7 @@ import {
 } from '@/lib/api/onboardingOrgScopeApi'
 import type { CabOnboardingForm } from '@/lib/cabOnboardingForm'
 import { getOrgScopeNameFieldLabels } from '@/lib/orgScopeNameField'
+import { isValidWebsite } from '@/lib/validators'
 
 interface CabOrgDetailsStepProps {
   form: CabOnboardingForm
@@ -99,6 +100,7 @@ export function CabOrgDetailsStep({ form, onPatch }: CabOrgDetailsStepProps) {
           value={form.website}
           placeholder={t('cab.onboarding.orgDetails.websitePlaceholder')}
           onChange={(e) => onPatch({ website: e.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
     </div>

@@ -54,7 +54,12 @@ export function SectionHeading({
   if (!accordion) return heading
 
   return (
-    <div className="overflow-hidden rounded-[var(--radius-md)] border border-[#ececec] bg-white">
+    <div
+      className={cn(
+        'rounded-[var(--radius-md)] border border-[#ececec] bg-white',
+        open ? 'overflow-visible' : 'overflow-hidden'
+      )}
+    >
       <div className="px-5">{heading}</div>
       {open && children && (
         <>

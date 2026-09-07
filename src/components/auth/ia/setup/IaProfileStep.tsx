@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { TextField } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { IA_EMPLOYEE_RANGE_OPTIONS, IA_INDUSTRY_OPTIONS } from '@/lib/api/iaSetupApi'
-import { isValidEmailFormat } from '@/lib/validators'
-import { toEnglishDigits } from '@/lib/englishDigits'
+import { isValidWebsite } from '@/lib/validators'
 import type { IaSetupStepProps } from '@/components/auth/ia/setup/types'
 
 export function IaProfileStep({ form, onPatch, onPatchSetup }: IaSetupStepProps) {
@@ -15,11 +14,6 @@ export function IaProfileStep({ form, onPatch, onPatchSetup }: IaSetupStepProps)
     () => IA_INDUSTRY_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
     [t]
   )
-
-  const emailError =
-    setup.primaryContactEmail.trim().length > 0 && !isValidEmailFormat(setup.primaryContactEmail)
-      ? t('validation.invalidEmail')
-      : undefined
 
   return (
     <div className="w-full space-y-6">
@@ -75,32 +69,19 @@ export function IaProfileStep({ form, onPatch, onPatchSetup }: IaSetupStepProps)
           value={form.website}
           placeholder={t('ia.setup.profile.websitePlaceholder')}
           onChange={(event) => onPatch({ website: event.target.value })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <TextField
-          id="ia-setup-contact-email"
-          label={t('ia.setup.profile.contactEmail')}
-          required
-          type="email"
-          lang="en"
-          dir="ltr"
-          value={setup.primaryContactEmail}
-          placeholder={t('ia.setup.profile.contactEmailPlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactEmail: toEnglishDigits(event.target.value) })}
-          error={emailError}
-        />
-        <SearchableSelect
-          id="ia-setup-employee-range"
-          label={t('ia.setup.profile.employeeRange')}
-          value={setup.employeeRange}
-          onChange={(employeeRange) => onPatchSetup({ employeeRange })}
-          options={IA_EMPLOYEE_RANGE_OPTIONS}
-          placeholder={t('ia.setup.profile.employeeRangePlaceholder')}
-          searchPlaceholder={t('common.search')}
-        />
-      </div>
+      <SearchableSelect
+        id="ia-setup-employee-range"
+        label={t('ia.setup.profile.employeeRange')}
+        value={setup.employeeRange}
+        onChange={(employeeRange) => onPatchSetup({ employeeRange })}
+        options={IA_EMPLOYEE_RANGE_OPTIONS}
+        placeholder={t('ia.setup.profile.employeeRangePlaceholder')}
+        searchPlaceholder={t('common.search')}
+      />
     </div>
   )
 }

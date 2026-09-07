@@ -1,4 +1,5 @@
 import type { CountryCode } from '@/lib/countries'
+import { isValidEmailFormat, isValidPhoneNumber, isValidWebsite } from '@/lib/validators'
 
 export interface ClientRegistrationForm {
   // Client Information
@@ -71,13 +72,17 @@ export const emptyClientRegistrationForm: ClientRegistrationForm = {
 }
 
 export function isClientInfoComplete(form: ClientRegistrationForm): boolean {
+  const incorporationDateValid =
+    form.incorporationDate instanceof Date &&
+    !Number.isNaN(form.incorporationDate.getTime()) &&
+    form.incorporationDate.getTime() <= Date.now()
   return Boolean(
     form.legalEntityName.trim() &&
       form.organizationType &&
       form.registrationNumber.trim() &&
-      form.incorporationDate &&
+      incorporationDateValid &&
       form.country &&
-      form.state &&
+      form.state.trim() &&
       form.city.trim()
   )
 }
@@ -87,7 +92,7 @@ export function isRegisteredAddressComplete(form: ClientRegistrationForm): boole
     form.addressLine1.trim() &&
       form.postalCode.trim() &&
       form.addressCountry &&
-      form.addressState &&
+      form.addressState.trim() &&
       form.addressCity.trim()
   )
 }
@@ -97,13 +102,21 @@ export function isPrimaryContactComplete(form: ClientRegistrationForm): boolean 
     form.contactFullName.trim() &&
       form.contactDesignation.trim() &&
       form.contactEmail.trim() &&
-      form.phoneNumber.trim()
+      isValidEmailFormat(form.contactEmail) &&
+      form.phoneNumber.trim() &&
+      isValidPhoneNumber(form.phoneNumber, form.phoneCountryCode) &&
+      (!form.mobileNumber.trim() ||
+        isValidPhoneNumber(form.mobileNumber, form.mobileCountryCode))
   )
 }
 
 export function isAdditionalInfoComplete(form: ClientRegistrationForm): boolean {
   return Boolean(
-    form.industry && form.employeeCount && form.annualTurnover && form.activitiesDescription.trim()
+    form.industry &&
+      form.employeeCount &&
+      form.annualTurnover &&
+      form.activitiesDescription.trim() &&
+      isValidWebsite(form.website)
   )
 }
 

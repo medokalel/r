@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { AuthStepActions } from '@/components/auth/AuthStepActions'
@@ -15,14 +15,19 @@ import { getRegistrationAuthError } from '@/lib/authErrors'
 import { ROUTES } from '@/lib/routes'
 import { getCountryOptions } from '@/lib/countries'
 import { savePendingRegistration } from '@/lib/pendingRegistrationStorage'
+import { useAutoVerifyOtp } from '@/hooks/useAutoVerifyOtp'
 
 interface AccountRegisterFlowProps {
+  onBackToRegistrationType?: () => void
   onSubmittedChange?: (submitted: boolean) => void
 }
 
 const emptyOtp = () => Array.from({ length: 6 }, () => '')
 
-export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowProps) {
+export function AccountRegisterFlow({
+  onBackToRegistrationType,
+  onSubmittedChange,
+}: AccountRegisterFlowProps) {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2>(1)
@@ -70,24 +75,7 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
     }
   }
 
-  const handleVerifyAndContinue = async () => {
-    if (!emailValid || !otpComplete || isVerifyingEmail) return
-    setIsVerifyingEmail(true)
-    setVerificationError(null)
-    setEmailAlreadyRegistered(false)
-    try {
-      await verifyEmail(verificationEmail.trim(), otp.join(''))
-      setEmailVerified(true)
-    } catch (error) {
-      const authError = getRegistrationAuthError(error, t)
-      setVerificationError(authError.message)
-      setEmailAlreadyRegistered(authError.emailAlreadyRegistered)
-    } finally {
-      setIsVerifyingEmail(false)
-    }
-  }
-
-  const handleContinueToOnboarding = () => {
+  const handleContinueToOnboarding = useCallback(() => {
     if (isContinuing) return
     setIsContinuing(true)
 
@@ -107,7 +95,56 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
 
     onSubmittedChange?.(true)
     navigate(ROUTES.onboarding)
-  }
+  }, [
+    form.confirmPassword,
+    form.country,
+    form.fullName,
+    form.mobile,
+    form.mobileCountryCode,
+    form.password,
+    i18n.language,
+    isContinuing,
+    navigate,
+    onSubmittedChange,
+    verificationEmail,
+  ])
+
+  const handleVerifyAndContinue = useCallback(async () => {
+    if (!emailValid || !otpComplete || isVerifyingEmail) return
+    setIsVerifyingEmail(true)
+    setVerificationError(null)
+    setEmailAlreadyRegistered(false)
+    try {
+      await verifyEmail(verificationEmail.trim(), otp.join(''))
+      setEmailVerified(true)
+      handleContinueToOnboarding()
+    } catch (error) {
+      const authError = getRegistrationAuthError(error, t)
+      setVerificationError(authError.message)
+      setEmailAlreadyRegistered(authError.emailAlreadyRegistered)
+      setOtp(emptyOtp())
+    } finally {
+      setIsVerifyingEmail(false)
+    }
+  }, [
+    emailValid,
+    handleContinueToOnboarding,
+    isVerifyingEmail,
+    otp,
+    otpComplete,
+    t,
+    verificationEmail,
+  ])
+
+  useAutoVerifyOtp({
+    active: step === 2,
+    otp,
+    codeSent,
+    emailVerified,
+    isVerifyingEmail,
+    emailValid,
+    onVerify: handleVerifyAndContinue,
+  })
 
   const handleBackToBasics = () => {
     setStep(1)
@@ -126,29 +163,13 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
       void handleSendCode(email).then((sent) => {
         if (sent) setStep(2)
       })
-      return
     }
-    if (!emailVerified) {
-      void handleVerifyAndContinue()
-      return
-    }
-    if (isContinuing) return
-    handleContinueToOnboarding()
   }
 
-  const nextDisabled =
-    step === 1
-      ? !isAccountRegisterComplete(form) || isSendingCode
-      : !emailValid || !codeSent || !otpComplete || isSendingCode || isVerifyingEmail || isContinuing
+  const nextDisabled = step === 1 ? !isAccountRegisterComplete(form) || isSendingCode : true
 
   const nextLabel =
-    step === 1 && isSendingCode
-      ? t('register.sendingCode')
-      : step === 2 && codeSent && !emailVerified
-        ? isVerifyingEmail
-          ? t('register.verifyingEmail')
-          : t('register.verifyEmail')
-        : t('common.next')
+    step === 1 && isSendingCode ? t('register.sendingCode') : t('common.next')
 
   return (
     <>
@@ -162,6 +183,7 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
           otp={otp}
           codeSent={codeSent}
           isSendingCode={isSendingCode}
+          isVerifyingEmail={isVerifyingEmail}
           onEmailChange={setVerificationEmail}
           onOtpChange={setOtp}
           onSendCode={() => void handleSendCode()}
@@ -183,11 +205,12 @@ export function AccountRegisterFlow({ onSubmittedChange }: AccountRegisterFlowPr
       )}
       <AuthStepActions
         className="mt-8"
-        onBack={step === 1 ? undefined : handleBackToBasics}
+        onBack={step === 1 ? onBackToRegistrationType : handleBackToBasics}
         onNext={handleNext}
         nextLabel={nextLabel}
         nextDisabled={nextDisabled}
-        showBack={step === 2}
+        showNext={step === 1}
+        showBack={step === 2 || Boolean(onBackToRegistrationType)}
       />
     </>
   )

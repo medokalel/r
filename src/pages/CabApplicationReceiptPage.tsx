@@ -26,6 +26,9 @@ import { useCabSidebar } from '@/context/CabSidebarContext'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { useApplicationReceiptTourSteps } from '@/config/applicationReceiptTourSteps'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -234,6 +237,8 @@ export function CabApplicationReceiptPage() {
   const [receipt, setReceipt] = useState<CabApplicationReceipt | null>(null)
   const [loading, setLoading] = useState(true)
 
+  const tourSteps = useApplicationReceiptTourSteps()
+
   useEffect(() => {
     let cancelled = false
     getCabApplicationReceipt().then((data) => {
@@ -258,101 +263,101 @@ export function CabApplicationReceiptPage() {
   }
 
   return (
-    <CabLayout className="bg-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-          <Link to="/cab/dashboard" className="font-light text-[#989898] hover:text-primary">
-            {t('cab.applications.receipt.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#989898]">
-            {t('cab.applications.receipt.breadcrumb.applications')}
-          </span>
-          <Chevron />
-          <span className="font-light text-[#989898]">{receipt.applicationId}</span>
-          <Chevron />
-          <span className="font-bold text-[#464646]">
-            {t('cab.applications.receipt.breadcrumb.current')}
-          </span>
-        </nav>
+    <CabLayout className="bg-white" tourId="cab-application-receipt" tourSteps={tourSteps}>
+        <DashboardTourStep steps={tourSteps} stepId="header">
+          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+              <Link to="/cab/dashboard" className="font-light text-[#989898] hover:text-primary">
+                {t('cab.applications.receipt.breadcrumb.home')}
+              </Link>
+              <Chevron />
+              <span className="font-light text-[#989898]">
+                {t('cab.applications.receipt.breadcrumb.applications')}
+              </span>
+              <Chevron />
+              <span className="font-light text-[#989898]">{receipt.applicationId}</span>
+              <Chevron />
+              <span className="font-bold text-[#464646]">
+                {t('cab.applications.receipt.breadcrumb.current')}
+              </span>
+            </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex size-9 items-center justify-center rounded-full border border-[#ececec] text-[#1236a3]"
-            aria-label={t('cab.applications.receipt.help')}
-          >
-            ?
-          </button>
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center text-neutral-600"
-            aria-label={t('cab.header.notifications')}
-          >
-            <AppIcon icon={NotificationIcon} size={24} />
-            <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-              3
-            </span>
-          </button>
-          <LanguageToggle variant="icon" />
-          <div className="flex items-center gap-2">
-            <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
-            <div className="hidden text-end sm:block">
-              <p className="text-[13px] font-semibold text-[#464646]">Arjun Verma</p>
-              <p className="text-[12px] text-[#989898]">Lead Auditor</p>
+            <div className="flex items-center gap-3">
+              <StartTourButton />
+              <button
+                type="button"
+                className="relative flex size-9 items-center justify-center text-neutral-600"
+                aria-label={t('cab.header.notifications')}
+              >
+                <AppIcon icon={NotificationIcon} size={24} />
+                <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                  3
+                </span>
+              </button>
+              <LanguageToggle variant="icon" />
+              <div className="flex items-center gap-2">
+                <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
+                <div className="hidden text-end sm:block">
+                  <p className="text-[13px] font-semibold text-[#464646]">Arjun Verma</p>
+                  <p className="text-[12px] text-[#989898]">Lead Auditor</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
+        </DashboardTourStep>
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
           <div className="grid min-w-0 grid-cols-1 items-stretch gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
             <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
-            <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-[18px] font-bold text-[#464646] sm:text-[22px]">
-                    {t('cab.applications.receipt.title')}
-                  </h1>
-                  <StatusBadge
-                    label={t('cab.applications.receipt.status.received')}
-                    variant="received"
-                  />
+            <DashboardTourStep steps={tourSteps} stepId="page-header">
+              <div className="flex flex-wrap items-start justify-between gap-3 sm:gap-4">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="text-[18px] font-bold text-[#464646] sm:text-[22px]">
+                      {t('cab.applications.receipt.title')}
+                    </h1>
+                    <StatusBadge
+                      label={t('cab.applications.receipt.status.received')}
+                      variant="received"
+                    />
+                  </div>
+                  <p className="mt-1 text-[14px] text-[#989898]">
+                    {t('cab.applications.receipt.subtitle')}
+                  </p>
                 </div>
-                <p className="mt-1 text-[14px] text-[#989898]">
-                  {t('cab.applications.receipt.subtitle')}
-                </p>
+                <div className="flex flex-wrap items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
+                  >
+                    <AppIcon icon={DownloadIcon} size={16} />
+                    {t('cab.applications.receipt.actions.downloadReceipt')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
+                  >
+                    <PrintIcon />
+                    {t('cab.applications.receipt.actions.printReceipt')}
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
+                  >
+                    {t('cab.applications.receipt.actions.moreActions')} ▾
+                  </Button>
+                </div>
               </div>
-              <div className="flex flex-wrap items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
-                >
-                  <AppIcon icon={DownloadIcon} size={16} />
-                  {t('cab.applications.receipt.actions.downloadReceipt')}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
-                >
-                  <PrintIcon />
-                  {t('cab.applications.receipt.actions.printReceipt')}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="h-9 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#464646]"
-                >
-                  {t('cab.applications.receipt.actions.moreActions')} ▾
-                </Button>
-              </div>
-            </div>
+            </DashboardTourStep>
 
-            <ReceiptSummaryCard receipt={receipt} />
+            <DashboardTourStep steps={tourSteps} stepId="receipt-summary">
+              <ReceiptSummaryCard receipt={receipt} />
+            </DashboardTourStep>
 
             <div className="flex items-start gap-3 rounded-[8px] bg-[#f0fdf4] px-5 py-4">
               <SuccessAlertCheckIcon />
@@ -366,197 +371,202 @@ export function CabApplicationReceiptPage() {
               </div>
             </div>
 
-            <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-3 sm:p-5')}>
-              <h2 className="mb-5 text-[15px] font-bold text-[#464646]">
-                {t('cab.applications.receipt.sections.applicationDetails')}
-              </h2>
-              <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)] lg:gap-0">
-                <div className="flex min-w-0 max-w-full flex-col gap-5 overflow-hidden lg:pr-4 xl:pr-8">
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<ClipboardOutlineIcon />}
-                    label={t('cab.applications.receipt.fields.applicationType')}
-                    value={receipt.applicationType}
-                  />
-                  <div className="flex min-w-0 max-w-full items-start gap-2.5">
-                    <span className="mt-0.5 shrink-0 text-[#1236a3]">
-                      <AppIcon icon={DocumentTextOutlineIcon} size={18} />
-                    </span>
-                    <div className="flex min-w-0 max-w-full flex-col gap-1.5">
-                      <span className="text-[12px] font-bold text-[#8a96a8]">
-                        {t('cab.applications.receipt.fields.primaryStandard')}
+            <DashboardTourStep steps={tourSteps} stepId="application-details">
+              <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-3 sm:p-5')}>
+                <h2 className="mb-5 text-[15px] font-bold text-[#464646]">
+                  {t('cab.applications.receipt.sections.applicationDetails')}
+                </h2>
+                <div className="grid min-w-0 grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)_1px_minmax(0,1fr)] lg:gap-0">
+                  <div className="flex min-w-0 max-w-full flex-col gap-5 overflow-hidden lg:pr-4 xl:pr-8">
+                    <DetailField
+                      variant="applicationDetails"
+                      icon={<ClipboardOutlineIcon />}
+                      label={t('cab.applications.receipt.fields.applicationType')}
+                      value={receipt.applicationType}
+                    />
+                    <div className="flex min-w-0 max-w-full items-start gap-2.5">
+                      <span className="mt-0.5 shrink-0 text-[#1236a3]">
+                        <AppIcon icon={DocumentTextOutlineIcon} size={18} />
                       </span>
-                      <div className="mt-1.5">
-                        <PrimaryStandardsTags standards={receipt.primaryStandards} />
+                      <div className="flex min-w-0 max-w-full flex-col gap-1.5">
+                        <span className="text-[12px] font-bold text-[#8a96a8]">
+                          {t('cab.applications.receipt.fields.primaryStandard')}
+                        </span>
+                        <div className="mt-1.5">
+                          <PrimaryStandardsTags standards={receipt.primaryStandards} />
+                        </div>
                       </div>
                     </div>
+                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                      <DetailField
+                        variant="applicationDetails"
+                        icon={<CalendarOutlineIcon />}
+                        label={t('cab.applications.receipt.fields.requestedCertificationDate')}
+                        value={receipt.requestedCertificationDate}
+                      />
+                      <DetailField
+                        variant="applicationDetails"
+                        icon={<AppIcon icon={BuildingsIcon} size={18} />}
+                        label={t('cab.applications.receipt.fields.numberOfSites')}
+                        value={receipt.numberOfSites}
+                      />
+                    </div>
                   </div>
-                  <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+
+                  <div className="hidden bg-[#ececec] lg:block" aria-hidden />
+
+                  <div className="flex min-w-0 flex-col gap-5 lg:px-4 xl:px-8">
+                    <DetailField
+                      variant="applicationDetails"
+                      icon={<GearOutlineIcon />}
+                      label={t('cab.applications.receipt.fields.certificationBody')}
+                      value={receipt.certificationBody}
+                    />
+                    <DetailField
+                      variant="applicationDetails"
+                      icon={<AppIcon icon={CertificateBadgeIcon} size={18} />}
+                      label={t('cab.applications.receipt.fields.accreditationBody')}
+                      value={receipt.accreditationBody}
+                    />
+                    <DetailField
+                      variant="applicationDetails"
+                      icon={<AppIcon icon={GlobeIcon} size={18} />}
+                      label={t('cab.applications.receipt.fields.auditLanguage')}
+                      value={receipt.auditLanguage}
+                    />
+                  </div>
+
+                  <div className="hidden bg-[#ececec] lg:block" aria-hidden />
+
+                  <div className="flex min-w-0 flex-col gap-5 lg:pl-4 xl:pl-8">
                     <DetailField
                       variant="applicationDetails"
                       icon={<CalendarOutlineIcon />}
-                      label={t('cab.applications.receipt.fields.requestedCertificationDate')}
-                      value={receipt.requestedCertificationDate}
+                      label={t('cab.applications.receipt.fields.applicationDate')}
+                      value={receipt.applicationDate}
                     />
                     <DetailField
                       variant="applicationDetails"
-                      icon={<AppIcon icon={BuildingsIcon} size={18} />}
-                      label={t('cab.applications.receipt.fields.numberOfSites')}
-                      value={receipt.numberOfSites}
+                      icon={<CalendarOutlineIcon />}
+                      label={t('cab.applications.receipt.fields.applicationReceivedDate')}
+                      value={receipt.applicationReceivedDate}
+                    />
+                    <DetailField
+                      variant="applicationDetails"
+                      icon={<AppIcon icon={FileTextIcon} size={18} />}
+                      label={t('cab.applications.receipt.fields.referenceNo')}
+                      value={receipt.referenceNo}
                     />
                   </div>
                 </div>
+              </section>
+            </DashboardTourStep>
 
-                <div className="hidden bg-[#ececec] lg:block" aria-hidden />
+            <DashboardTourStep steps={tourSteps} stepId="client-summary">
+              <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
+                <section className={cn(cardClassName, 'min-w-0 p-4')}>
+                  <h2 className="mb-3 text-[15px] font-bold text-[#464646]">
+                    {t('cab.applications.receipt.sections.clientSummary')}
+                  </h2>
 
-                <div className="flex min-w-0 flex-col gap-5 lg:px-4 xl:px-8">
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<GearOutlineIcon />}
-                    label={t('cab.applications.receipt.fields.certificationBody')}
-                    value={receipt.certificationBody}
-                  />
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<AppIcon icon={CertificateBadgeIcon} size={18} />}
-                    label={t('cab.applications.receipt.fields.accreditationBody')}
-                    value={receipt.accreditationBody}
-                  />
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<AppIcon icon={GlobeIcon} size={18} />}
-                    label={t('cab.applications.receipt.fields.auditLanguage')}
-                    value={receipt.auditLanguage}
-                  />
-                </div>
-
-                <div className="hidden bg-[#ececec] lg:block" aria-hidden />
-
-                <div className="flex min-w-0 flex-col gap-5 lg:pl-4 xl:pl-8">
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<CalendarOutlineIcon />}
-                    label={t('cab.applications.receipt.fields.applicationDate')}
-                    value={receipt.applicationDate}
-                  />
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<CalendarOutlineIcon />}
-                    label={t('cab.applications.receipt.fields.applicationReceivedDate')}
-                    value={receipt.applicationReceivedDate}
-                  />
-                  <DetailField
-                    variant="applicationDetails"
-                    icon={<AppIcon icon={FileTextIcon} size={18} />}
-                    label={t('cab.applications.receipt.fields.referenceNo')}
-                    value={receipt.referenceNo}
-                  />
-                </div>
-              </div>
-            </section>
-
-            <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
-              <section className={cn(cardClassName, 'min-w-0 p-4')}>
-                <h2 className="mb-3 text-[15px] font-bold text-[#464646]">
-                  {t('cab.applications.receipt.sections.clientSummary')}
-                </h2>
-
-                <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] md:gap-0">
-                  <div className="min-w-0 md:pe-5">
-                    <div className="flex items-center gap-4">
-                      <div className="flex size-14 shrink-0 items-center justify-center rounded-[8px] border border-neutral-200 bg-white">
-                        <AppIcon icon={BuildingsIcon} size={26} className="text-[#1236a3]" />
-                      </div>
-                      <div className="min-w-0 space-y-1">
-                        <p className="text-[17px] font-semibold text-neutral-900">{receipt.client.name}</p>
-                        <span className="inline-flex items-center rounded-[6px] bg-[#f4fcf7] px-2 py-0.5 text-[12px] font-medium text-[#26a65b]">
-                          {t('cab.applications.receipt.client.registeredClient')}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex flex-col gap-2.5">
-                      <ClientSummaryRowField
-                        label={t('cab.applications.receipt.client.clientId')}
-                        value={receipt.client.clientId}
-                      />
-                      <ClientSummaryRowField
-                        label={t('cab.applications.receipt.client.organizationType')}
-                        value={receipt.client.organizationType}
-                      />
-                      <ClientSummaryRowField
-                        label={t('cab.applications.receipt.client.country')}
-                        value={
-                          <span className="inline-flex items-center gap-1.5">
-                            <img
-                              src={`https://flagcdn.com/w40/${receipt.client.countryCode.toLowerCase()}.png`}
-                              alt=""
-                              className="h-3.5 w-[21px] shrink-0 rounded-[2px] object-cover"
-                              aria-hidden
-                            />
-                            {receipt.client.country}
+                  <div className="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_1px_minmax(0,1fr)] md:gap-0">
+                    <div className="min-w-0 md:pe-5">
+                      <div className="flex items-center gap-4">
+                        <div className="flex size-14 shrink-0 items-center justify-center rounded-[8px] border border-neutral-200 bg-white">
+                          <AppIcon icon={BuildingsIcon} size={26} className="text-[#1236a3]" />
+                        </div>
+                        <div className="min-w-0 space-y-1">
+                          <p className="text-[17px] font-semibold text-neutral-900">{receipt.client.name}</p>
+                          <span className="inline-flex items-center rounded-[6px] bg-[#f4fcf7] px-2 py-0.5 text-[12px] font-medium text-[#26a65b]">
+                            {t('cab.applications.receipt.client.registeredClient')}
                           </span>
-                        }
+                        </div>
+                      </div>
+                      <div className="mt-4 flex flex-col gap-2.5">
+                        <ClientSummaryRowField
+                          label={t('cab.applications.receipt.client.clientId')}
+                          value={receipt.client.clientId}
+                        />
+                        <ClientSummaryRowField
+                          label={t('cab.applications.receipt.client.organizationType')}
+                          value={receipt.client.organizationType}
+                        />
+                        <ClientSummaryRowField
+                          label={t('cab.applications.receipt.client.country')}
+                          value={
+                            <span className="inline-flex items-center gap-1.5">
+                              <img
+                                src={`https://flagcdn.com/w40/${receipt.client.countryCode.toLowerCase()}.png`}
+                                alt=""
+                                className="h-3.5 w-[21px] shrink-0 rounded-[2px] object-cover"
+                                aria-hidden
+                              />
+                              {receipt.client.country}
+                            </span>
+                          }
+                        />
+                      </div>
+                    </div>
+
+                    <div className="hidden bg-[#ececec] md:block" aria-hidden />
+
+                    <div className="flex min-w-0 flex-col gap-3.5 md:ps-5">
+                      <ClientSummaryStackField
+                        label={t('cab.applications.receipt.client.legalEntityName')}
+                        value={receipt.client.legalEntityName}
+                      />
+                      <ClientSummaryStackField
+                        label={t('cab.applications.receipt.client.registrationLicenseNo')}
+                        value={receipt.client.registrationLicenseNo}
+                      />
+                      <ClientSummaryStackField
+                        label={t('cab.applications.receipt.client.industry')}
+                        value={receipt.client.industry}
                       />
                     </div>
                   </div>
+                </section>
 
-                  <div className="hidden bg-[#ececec] md:block" aria-hidden />
+                <section className={cn(cardClassName, 'flex h-full min-w-0 flex-col p-5')}>
+                  <h2 className="mb-3 text-[16px] font-bold text-[#1a1c21]">
+                    {t('cab.applications.receipt.sections.scopeOfCertification')}
+                  </h2>
+                  <p className="text-[12px] font-normal leading-[1.5] text-[#464646]">
+                    {receipt.scopeSummary}
+                  </p>
+                  <button
+                    type="button"
+                    className="mt-5 inline-flex items-center gap-1.5 self-start rounded-[6px] border border-[#d0d5dd] bg-white px-3 py-1.5 text-[12px] font-medium text-[#1236a3] transition-colors hover:bg-[#f9fafb]"
+                  >
+                    {t('cab.applications.receipt.actions.viewFullScope')}
+                    <AppIcon icon={ExternalLinkArrowIcon} size={12} className="text-[#1236a3]" />
+                  </button>
+                </section>
+              </div>
+            </DashboardTourStep>
 
-                  <div className="flex min-w-0 flex-col gap-3.5 md:ps-5">
-                    <ClientSummaryStackField
-                      label={t('cab.applications.receipt.client.legalEntityName')}
-                      value={receipt.client.legalEntityName}
-                    />
-                    <ClientSummaryStackField
-                      label={t('cab.applications.receipt.client.registrationLicenseNo')}
-                      value={receipt.client.registrationLicenseNo}
-                    />
-                    <ClientSummaryStackField
-                      label={t('cab.applications.receipt.client.industry')}
-                      value={receipt.client.industry}
-                    />
+            <DashboardTourStep steps={tourSteps} stepId="documents-summary">
+              <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
+                <div className="flex min-w-0 flex-col gap-3">
+                  <div className="flex min-w-0 items-start gap-3 rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-4 py-3">
+                    <AppIcon icon={MailIcon} size={18} className="mt-0.5 shrink-0 text-[#1236a3]" />
+                    <p className="min-w-0 text-[12px] font-medium leading-snug text-[#1236a3] sm:text-[13px]">
+                      {t('cab.applications.receipt.emailConfirmation', {
+                        email1: receipt.confirmationEmails[0],
+                        email2: receipt.confirmationEmails[1],
+                      })}
+                    </p>
                   </div>
                 </div>
-              </section>
 
-              <section className={cn(cardClassName, 'flex h-full min-w-0 flex-col p-5')}>
-                <h2 className="mb-3 text-[16px] font-bold text-[#1a1c21]">
-                  {t('cab.applications.receipt.sections.scopeOfCertification')}
-                </h2>
-                <p className="text-[12px] font-normal leading-[1.5] text-[#464646]">
-                  {receipt.scopeSummary}
-                </p>
-                <button
-                  type="button"
-                  className="mt-5 inline-flex items-center gap-1.5 self-start rounded-[6px] border border-[#d0d5dd] bg-white px-3 py-1.5 text-[12px] font-medium text-[#1236a3] transition-colors hover:bg-[#f9fafb]"
-                >
-                  {t('cab.applications.receipt.actions.viewFullScope')}
-                  <AppIcon icon={ExternalLinkArrowIcon} size={12} className="text-[#1236a3]" />
-                </button>
-              </section>
-            </div>
-
-            <div className="grid min-w-0 grid-cols-1 items-stretch gap-5 xl:grid-cols-[minmax(0,2fr)_minmax(240px,1fr)]">
-              <div className="flex min-w-0 flex-col gap-3">
-                <div className="flex min-w-0 items-start gap-3 rounded-[10px] border border-[#b6d0ff] bg-[#e8edfc] px-4 py-3">
-                  <AppIcon icon={MailIcon} size={18} className="mt-0.5 shrink-0 text-[#1236a3]" />
-                  <p className="min-w-0 text-[12px] font-medium leading-snug text-[#1236a3] sm:text-[13px]">
-                    {t('cab.applications.receipt.emailConfirmation', {
-                      email1: receipt.confirmationEmails[0],
-                      email2: receipt.confirmationEmails[1],
-                    })}
-                  </p>
-                </div>
+                <DocumentsSummaryCard receipt={receipt} />
               </div>
-
-              <DocumentsSummaryCard receipt={receipt} />
-            </div>
+            </DashboardTourStep>
             </div>
 
-            <aside className="hidden min-h-0 xl:flex xl:h-full xl:flex-col">
+            <div className="hidden min-h-0 xl:flex xl:h-full xl:flex-col xl:w-[340px] xl:shrink-0">
               <ReceiptSidebarPanels receipt={receipt} />
-            </aside>
-
+            </div>
             <div className="xl:hidden">
               <ReceiptSidebarPanels receipt={receipt} />
             </div>

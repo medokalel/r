@@ -1,21 +1,28 @@
 import type { ReactNode } from 'react'
+import { useTranslation } from 'react-i18next'
 import { TourTooltip } from '@/components/ui/TourTooltip'
-import { useTour, type TourStepConfig } from '@/context/TourContext'
+import { useOptionalTour, type TourStepConfig } from '@/context/TourContext'
 
 interface DashboardTourStepProps {
-  /** Ordered steps for the tour this stepId belongs to (e.g. CAB_DASHBOARD_TOUR_STEPS,
-   *  AUDITEE_DASHBOARD_TOUR_STEPS). Keeps this component role-agnostic. */
-  steps: TourStepConfig[]
+  /** Ordered steps for the tour this stepId belongs to. Defaults to active tour's steps. */
+  steps?: TourStepConfig[]
   stepId: string
   children: ReactNode
-  /** Extra classes for the tour anchor's wrapper div — e.g. to preserve a
-   *  sibling's own flex-basis/max-width instead of letting the wrapper's
-   *  default `w-full` override it. */
+  /** Extra classes for the tour anchor's wrapper div */
   className?: string
 }
 
-export function DashboardTourStep({ steps, stepId, children, className }: DashboardTourStepProps) {
-  const { activeStepId, isTourActive, nextStep, prevStep, skipTour } = useTour()
+export function DashboardTourStep({ steps: stepsProp, stepId, children, className }: DashboardTourStepProps) {
+  const tour = useOptionalTour()
+  const { t } = useTranslation()
+
+  if (!tour) {
+    return <>{children}</>
+  }
+
+  const steps = stepsProp ?? tour.steps
+
+  const { activeStepId, isTourActive, nextStep, prevStep, skipTour } = tour
   const config = steps.find((s) => s.id === stepId)
 
   if (!config) {
@@ -39,7 +46,10 @@ export function DashboardTourStep({ steps, stepId, children, className }: Dashbo
       alignOffset={config.alignOffset}
       open={isOpen}
       onNext={nextStep}
-      nextLabel={isLastStep ? 'Finish' : 'Next'}
+      nextLabel={isLastStep ? t('cab.tour.finish', 'إنهاء الجولة') : t('cab.tour.next', 'التالي')}
+      backLabel={t('cab.tour.back', 'السابق')}
+      skipLabel={t('cab.tour.skip', 'تخطي الجولة')}
+      closeLabel={t('cab.tour.close', 'إغلاق')}
       onBack={config.step > 1 ? prevStep : undefined}
       onSkip={skipTour}
       className={className}

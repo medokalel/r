@@ -143,6 +143,8 @@ export function AuditeeAccountBasicsStep({ form, onPatch }: AuditeeAccountBasics
         </PhoneInputRow>
         {mobileError && <p className="text-small-light text-error-500">{mobileError}</p>}
       </div>
+
+      <AuditeeAccountSetupStep form={form} onPatch={onPatch} />
     </div>
   )
 }

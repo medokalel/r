@@ -7,6 +7,7 @@ import {
   getOrganizationProfile,
   uploadOrganizationLogo,
 } from '@/lib/api/organizationProfileApi'
+import { deleteCabLogo, getCabProfile, uploadCabLogo } from '@/lib/api/cabApi'
 import { LOGO_ACCEPT, LOGO_MAX_BYTES } from '@/components/dashboard/companyProfile/constants'
 import { ApiError } from '@/lib/api/client'
 import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
@@ -14,9 +15,15 @@ import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 interface OnboardingLogoUploadProps {
   logoUrl: string | null
   onLogoUrlChange: (logoUrl: string | null) => void
+  /** Organization onboarding uses /organizations/profile/logo; CAB uses /uploads/onboarding-asset then PATCH /cab-setup/draft. */
+  target?: 'organization' | 'cab'
 }
 
-export function OnboardingLogoUpload({ logoUrl, onLogoUrlChange }: OnboardingLogoUploadProps) {
+export function OnboardingLogoUpload({
+  logoUrl,
+  onLogoUrlChange,
+  target = 'organization',
+}: OnboardingLogoUploadProps) {
   const { t } = useTranslation()
   const logoInputRef = useRef<HTMLInputElement>(null)
   const [uploadingLogo, setUploadingLogo] = useState(false)
@@ -25,10 +32,15 @@ export function OnboardingLogoUpload({ logoUrl, onLogoUrlChange }: OnboardingLog
   useEffect(() => {
     let cancelled = false
 
-    getOrganizationProfile()
-      .then((data) => {
-        if (!cancelled && data.profile?.logoUrl && !logoUrl) {
-          onLogoUrlChange(data.profile.logoUrl)
+    const loadExistingLogo =
+      target === 'cab'
+        ? getCabProfile().then((data) => data.cab.logoUrl ?? null)
+        : getOrganizationProfile().then((data) => data.profile?.logoUrl ?? null)
+
+    loadExistingLogo
+      .then((existingLogoUrl) => {
+        if (!cancelled && existingLogoUrl && !logoUrl) {
+          onLogoUrlChange(existingLogoUrl)
         }
       })
       .catch(() => undefined)
@@ -36,7 +48,7 @@ export function OnboardingLogoUpload({ logoUrl, onLogoUrlChange }: OnboardingLog
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [target])
 
   const onLogoSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -52,7 +64,8 @@ export function OnboardingLogoUpload({ logoUrl, onLogoUrlChange }: OnboardingLog
     setError(null)
 
     try {
-      const result = await uploadOrganizationLogo(file)
+      const result =
+        target === 'cab' ? await uploadCabLogo(file) : await uploadOrganizationLogo(file)
       onLogoUrlChange(result.logoUrl ?? null)
     } catch (uploadError) {
       setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
@@ -64,7 +77,11 @@ export function OnboardingLogoUpload({ logoUrl, onLogoUrlChange }: OnboardingLog
   const onDeleteLogo = async () => {
     setError(null)
     try {
-      await deleteOrganizationLogo()
+      if (target === 'cab') {
+        await deleteCabLogo()
+      } else {
+        await deleteOrganizationLogo()
+      }
       onLogoUrlChange(null)
     } catch (deleteError) {
       setError(deleteError instanceof ApiError ? deleteError.message : t('errors.generic'))

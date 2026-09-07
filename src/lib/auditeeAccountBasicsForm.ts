@@ -35,7 +35,8 @@ export function isAuditeeAccountBasicsComplete(form: AuditeeAccountBasicsForm): 
       isValidRequiredEmail(form.email) &&
       isValidPhoneNumber(form.mobile, form.mobileCountryCode) &&
       form.country &&
-      form.city
+      form.city &&
+      isAuditeeAccountSetupComplete(form)
   )
 }
 

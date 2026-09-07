@@ -26,6 +26,9 @@ import {
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { useApplicationInformationRequiredTourSteps } from '@/config/applicationInformationRequiredTourSteps'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
 
@@ -438,6 +441,8 @@ export function CabApplicationInformationRequiredPage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('informationRequired')
 
+  const tourSteps = useApplicationInformationRequiredTourSteps()
+
   useEffect(() => {
     let cancelled = false
     getCabApplicationInformationRequired().then((result) => {
@@ -462,146 +467,148 @@ export function CabApplicationInformationRequiredPage() {
   }
 
   return (
-    <CabLayout className="bg-white">
-      <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-          <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
-            {t('cab.applications.informationRequired.breadcrumb.home')}
-          </Link>
-          <Chevron />
-          <span className="font-light text-[#000000]">{t('cab.applications.informationRequired.breadcrumb.applications')}</span>
-          <Chevron />
-          <span className="font-light text-[#000000]">{data.applicationId}</span>
-          <Chevron />
-          <span className="font-bold text-[#000000]">{t('cab.applications.informationRequired.breadcrumb.current')}</span>
-        </nav>
+    <CabLayout className="bg-white" tourId="cab-application-information-required" tourSteps={tourSteps}>
+        <DashboardTourStep steps={tourSteps} stepId="header">
+          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+              <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+                {t('cab.applications.informationRequired.breadcrumb.home')}
+              </Link>
+              <Chevron />
+              <span className="font-light text-[#000000]">{t('cab.applications.informationRequired.breadcrumb.applications')}</span>
+              <Chevron />
+              <span className="font-light text-[#000000]">{data.applicationId}</span>
+              <Chevron />
+              <span className="font-bold text-[#000000]">{t('cab.applications.informationRequired.breadcrumb.current')}</span>
+            </nav>
 
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            className="flex size-9 items-center justify-center rounded-full border border-[#ececec] text-[#1236a3]"
-            aria-label={t('cab.applications.informationRequired.help')}
-          >
-            ?
-          </button>
-          <button
-            type="button"
-            className="relative flex size-9 items-center justify-center text-neutral-600"
-            aria-label={t('cab.header.notifications')}
-          >
-            <AppIcon icon={NotificationIcon} size={24} />
-            <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-              5
-            </span>
-          </button>
-          <LanguageToggle variant="icon" />
-          <div className="flex items-center gap-2">
-            <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
-            <div className="hidden text-end sm:block">
-              <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
-              <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+            <div className="flex items-center gap-3">
+              <StartTourButton />
+              <button
+                type="button"
+                className="relative flex size-9 items-center justify-center text-neutral-600"
+                aria-label={t('cab.header.notifications')}
+              >
+                <AppIcon icon={NotificationIcon} size={24} />
+                <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                  5
+                </span>
+              </button>
+              <LanguageToggle variant="icon" />
+              <div className="flex items-center gap-2">
+                <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
+                <div className="hidden text-end sm:block">
+                  <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
+                  <p className="text-[12px] text-[#000000]">Lead Auditor</p>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </header>
+          </header>
+        </DashboardTourStep>
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
           <div className="flex min-w-0 flex-col gap-4 p-3 sm:gap-5 sm:p-5 lg:p-6">
             <div className="grid min-w-0 grid-cols-1 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
               <div className="flex min-w-0 flex-col gap-4 sm:gap-5" style={{ zoom: scale }}>
-                <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
-                  <div className="min-w-0 flex-1">
+                <DashboardTourStep steps={tourSteps} stepId="page-header">
+                  <div className="flex flex-wrap items-center justify-between gap-3 sm:gap-4 lg:flex-nowrap">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
+                          {t('cab.applications.informationRequired.title')}
+                        </h1>
+                        <StatusBadge label={t('cab.applications.informationRequired.status.inProgress')} variant="inProgress" />
+                      </div>
+                      <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.informationRequired.subtitle')}</p>
+                    </div>
+                    <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        <AppIcon icon={DownloadIcon} size={16} />
+                        {t('cab.applications.informationRequired.actions.downloadRequest')}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
+                      >
+                        {t('cab.applications.informationRequired.actions.moreActions')} ▾
+                      </Button>
+                      <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto">
+                        <AppIcon icon={ExportIcon} size={14} />
+                        {t('cab.applications.informationRequired.actions.sendReminder')}
+                      </Button>
+                    </div>
+                  </div>
+                </DashboardTourStep>
+
+                <DashboardTourStep steps={tourSteps} stepId="summary-card">
+                  <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
                     <div className="flex flex-wrap items-center gap-3">
-                      <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
-                        {t('cab.applications.informationRequired.title')}
-                      </h1>
+                      <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
+                        <AppIcon icon={FileTextIcon} size={28} />
+                      </span>
+                      <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
                       <StatusBadge label={t('cab.applications.informationRequired.status.inProgress')} variant="inProgress" />
                     </div>
-                    <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.informationRequired.subtitle')}</p>
-                  </div>
-                  <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:shrink-0">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 gap-1.5 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      <AppIcon icon={DownloadIcon} size={16} />
-                      {t('cab.applications.informationRequired.actions.downloadRequest')}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-9 min-w-0 flex-1 rounded-[8px] border-[#ececec] px-3 text-[12px] font-medium text-[#000000] sm:flex-none"
-                    >
-                      {t('cab.applications.informationRequired.actions.moreActions')} ▾
-                    </Button>
-                    <Button className="h-9 w-full gap-1.5 rounded-[8px] px-3 text-[12px] font-semibold sm:w-auto">
-                      <AppIcon icon={ExportIcon} size={14} />
-                      {t('cab.applications.informationRequired.actions.sendReminder')}
-                    </Button>
-                  </div>
-                </div>
 
-                <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
-                      <AppIcon icon={FileTextIcon} size={28} />
-                    </span>
-                    <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{data.applicationId}</span>
-                    <StatusBadge label={t('cab.applications.informationRequired.status.inProgress')} variant="inProgress" />
-                  </div>
-
-                  <div className="mt-6 flex min-w-0 flex-wrap items-start justify-between gap-x-8 gap-y-4">
-                    <SummaryField icon={<ClientIcon />} label={t('cab.applications.informationRequired.summary.client')} value={data.client} />
-                    <SummaryField icon={<BoxIcon />} label={t('cab.applications.informationRequired.summary.applicationType')} value={data.applicationType} />
-                    <SummaryField icon={<GearIcon />} label={t('cab.applications.informationRequired.summary.certificationBody')} value={data.certificationBody} />
-                    <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.informationRequired.summary.primaryStandard')} value={data.primaryStandard} />
-                    <SummaryField
-                      icon={<AppIcon icon={CalendarIcon} size={18} />}
-                      label={t('cab.applications.informationRequired.summary.requestedOn')}
-                      value={
-                        <>
-                          <span className="block">{data.requestedOnDate}</span>
-                          <span className="block text-[11px] font-semibold text-[#000000]">{data.requestedOnTime}</span>
-                        </>
-                      }
-                    />
-                    <div className="flex min-w-0 items-center gap-2">
-                      <AvatarInitials initials={data.requestedBy.initials} />
-                      <div>
-                        <p className="text-[11px] font-semibold text-[#000000]">
-                          {t('cab.applications.informationRequired.summary.requestedBy')}
-                        </p>
-                        <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.requestedBy.name}</p>
-                        <p className="text-[10px] font-medium text-[#000000]">{data.requestedBy.role}</p>
+                    <div className="mt-6 flex min-w-0 flex-wrap items-start justify-between gap-x-8 gap-y-4">
+                      <SummaryField icon={<ClientIcon />} label={t('cab.applications.informationRequired.summary.client')} value={data.client} />
+                      <SummaryField icon={<BoxIcon />} label={t('cab.applications.informationRequired.summary.applicationType')} value={data.applicationType} />
+                      <SummaryField icon={<GearIcon />} label={t('cab.applications.informationRequired.summary.certificationBody')} value={data.certificationBody} />
+                      <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.informationRequired.summary.primaryStandard')} value={data.primaryStandard} />
+                      <SummaryField
+                        icon={<AppIcon icon={CalendarIcon} size={18} />}
+                        label={t('cab.applications.informationRequired.summary.requestedOn')}
+                        value={
+                          <>
+                            <span className="block">{data.requestedOnDate}</span>
+                            <span className="block text-[11px] font-semibold text-[#000000]">{data.requestedOnTime}</span>
+                          </>
+                        }
+                      />
+                      <div className="flex min-w-0 items-center gap-2">
+                        <AvatarInitials initials={data.requestedBy.initials} />
+                        <div>
+                          <p className="text-[11px] font-semibold text-[#000000]">
+                            {t('cab.applications.informationRequired.summary.requestedBy')}
+                          </p>
+                          <p className="text-[13px] font-bold leading-tight text-[#000000]">{data.requestedBy.name}</p>
+                          <p className="text-[10px] font-medium text-[#000000]">{data.requestedBy.role}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </section>
+                  </section>
+                </DashboardTourStep>
 
-                <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
-                  {TABS.map((tab) => {
-                    const active = activeTab === tab
-                    const badge = tab === 'documents' ? data.documentCount : undefined
-                    return (
-                      <button
-                        key={tab}
-                        type="button"
-                        aria-selected={active}
-                        onClick={() => setActiveTab(tab)}
-                        className={cn(
-                          'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
-                          active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
-                        )}
-                      >
-                        {t(TAB_LABEL_KEYS[tab])}
-                        {badge !== undefined && <span>({badge})</span>}
-                        {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
-                      </button>
-                    )
-                  })}
-                </div>
+                <DashboardTourStep steps={tourSteps} stepId="tabs">
+                  <div className="flex flex-wrap items-center gap-1 border-b border-[#ececec]">
+                    {TABS.map((tab) => {
+                      const active = activeTab === tab
+                      const badge = tab === 'documents' ? data.documentCount : undefined
+                      return (
+                        <button
+                          key={tab}
+                          type="button"
+                          aria-selected={active}
+                          onClick={() => setActiveTab(tab)}
+                          className={cn(
+                            'flex items-center gap-1.5 border-b-2 px-3 py-2.5 text-[13px] font-semibold transition-colors',
+                            active ? 'border-[#1236a3] text-[#1236a3]' : 'border-transparent text-[#000000] hover:text-[#000000]'
+                          )}
+                        >
+                          {t(TAB_LABEL_KEYS[tab])}
+                          {badge !== undefined && <span>({badge})</span>}
+                          {tab === 'history' && <AppIcon icon={HistoryIcon} size={13} />}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </DashboardTourStep>
 
                 {activeTab === 'informationRequired' && (
                   <>
@@ -617,9 +624,15 @@ export function CabApplicationInformationRequiredPage() {
                         <p className="mt-1 text-[12px] leading-relaxed text-[#000000]">{data.deadlineNote}</p>
                       </div>
                     </div>
-                    <RequestedInformationTable data={data} />
-                    <ResponsesSection />
-                    <InternalCommentsSection data={data} />
+                    <DashboardTourStep steps={tourSteps} stepId="requests-table">
+                      <RequestedInformationTable data={data} />
+                    </DashboardTourStep>
+                    <DashboardTourStep steps={tourSteps} stepId="client-responses">
+                      <ResponsesSection />
+                    </DashboardTourStep>
+                    <DashboardTourStep steps={tourSteps} stepId="internal-comments">
+                      <InternalCommentsSection data={data} />
+                    </DashboardTourStep>
                   </>
                 )}
 
@@ -630,15 +643,12 @@ export function CabApplicationInformationRequiredPage() {
                 {activeTab === 'internalComments' && <InternalCommentsSection data={data} />}
               </div>
 
-              <aside className="hidden flex-col gap-4 xl:flex">
-                <WorkflowProgressSidebar data={data} />
-                <KeyActionsCard />
-              </aside>
-
-              <div className="flex flex-col gap-4 xl:hidden">
-                <WorkflowProgressSidebar data={data} />
-                <KeyActionsCard />
-              </div>
+              <DashboardTourStep steps={tourSteps} stepId="workflow-progress" className="w-full shrink-0 xl:w-[340px]">
+                <div className="flex flex-col gap-4">
+                  <WorkflowProgressSidebar data={data} />
+                  <KeyActionsCard />
+                </div>
+              </DashboardTourStep>
             </div>
           </div>
 

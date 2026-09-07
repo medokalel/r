@@ -22,12 +22,15 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
+import { CabCompanyProfilePage } from '@/pages/CabCompanyProfilePage'
 import { AbDashboardPage } from '@/pages/AbDashboardPage'
 import { OnboardingPage } from '@/pages/OnboardingPage'
 import { CabOnboardingPage } from '@/pages/CabOnboardingPage'
 import { AbOnboardingPage } from '@/pages/AbOnboardingPage'
 import { AuditeeOnboardingPage } from '@/pages/AuditeeOnboardingPage'
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
+import { CabClientsPage } from '@/pages/CabClientsPage'
+import { CabClientDetailsPage } from '@/pages/CabClientDetailsPage'
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 import { AddSitePage } from '@/pages/AddSitePage'
 import { ApplyMultiSiteRulePage } from '@/pages/ApplyMultiSiteRulePage'
@@ -64,6 +67,16 @@ export default function App() {
                 <RequireAuth>
                   <RequireCabOnboarded>
                     <CabDashboardPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabCompanyProfile}
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabCompanyProfilePage />
                   </RequireCabOnboarded>
                 </RequireAuth>
               }
@@ -111,10 +124,42 @@ export default function App() {
               }
             />
             <Route
+              path="/cab/clients"
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabClientsPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
               path="/cab/clients/new"
               element={
                 <RequireAuth>
-                  <ClientRegistrationPage />
+                  <RequireCabOnboarded>
+                    <ClientRegistrationPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/clients/:clientId/edit"
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <ClientRegistrationPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/cab/clients/:clientId"
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabClientDetailsPage />
+                  </RequireCabOnboarded>
                 </RequireAuth>
               }
             />

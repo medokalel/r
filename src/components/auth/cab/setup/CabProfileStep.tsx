@@ -5,8 +5,7 @@ import { MultiSelect } from '@/components/ui/MultiSelect'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SetupNote } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { CAB_ACTIVITY_OPTIONS, getYearEstablishedOptions } from '@/lib/api/cabSetupApi'
-import { isValidEmailFormat } from '@/lib/validators'
-import { toEnglishDigits } from '@/lib/englishDigits'
+import { isValidWebsite } from '@/lib/validators'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
 export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProps) {
@@ -17,15 +16,6 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
     [t]
   )
   const yearOptions = useMemo(() => getYearEstablishedOptions(), [])
-
-  // Read-only when the org-type screen already pinned exactly one activity.
-  const isActivityLocked = form.scopeAreas.length === 1
-
-  const emailError =
-    form.cabSetup.primaryContactEmail.trim().length > 0 &&
-    !isValidEmailFormat(form.cabSetup.primaryContactEmail)
-      ? t('validation.invalidEmail')
-      : undefined
 
   return (
     <div className="w-full space-y-6">
@@ -56,7 +46,6 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
           options={activityOptions}
           onChange={(activities) => onPatchSetup({ activities })}
           layout="stacked"
-          readOnly={isActivityLocked}
           searchable
           placeholder={t('cab.setup.profile.activityPlaceholder')}
           searchPlaceholder={t('common.search')}
@@ -82,32 +71,7 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
           value={form.website}
           placeholder={t('cab.setup.profile.websitePlaceholder')}
           onChange={(event) => onPatch({ website: event.target.value })}
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-        <TextField
-          id="cab-setup-contact-email"
-          label={t('cab.setup.profile.contactEmail')}
-          required
-          type="email"
-          lang="en"
-          dir="ltr"
-          value={form.cabSetup.primaryContactEmail}
-          placeholder={t('cab.setup.profile.contactEmailPlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactEmail: toEnglishDigits(event.target.value) })}
-          error={emailError}
-        />
-        <TextField
-          id="cab-setup-contact-phone"
-          label={t('cab.setup.profile.contactPhone')}
-          required
-          type="tel"
-          lang="en"
-          dir="ltr"
-          value={form.cabSetup.primaryContactPhone}
-          placeholder={t('cab.setup.profile.contactPhonePlaceholder')}
-          onChange={(event) => onPatchSetup({ primaryContactPhone: toEnglishDigits(event.target.value) })}
+          error={!isValidWebsite(form.website) ? t('validation.invalidWebsite') : undefined}
         />
       </div>
 

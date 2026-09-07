@@ -56,7 +56,6 @@ import { CabSchemesServicesStep } from '@/components/auth/cab/setup/CabSchemesSe
 import { CabScopeStep } from '@/components/auth/cab/setup/CabScopeStep'
 import { CabMarksStep } from '@/components/auth/cab/setup/CabMarksStep'
 import { CabCertificateStep } from '@/components/auth/cab/setup/CabCertificateStep'
-import { CabKeyRolesStep } from '@/components/auth/cab/setup/CabKeyRolesStep'
 import { CabReviewActivateStep } from '@/components/auth/cab/setup/CabReviewActivateStep'
 import { CabSetupShell } from '@/components/auth/cab/setup/CabSetupShell'
 import { AuditeeOrgDetailsStep } from '@/components/auth/auditee/AuditeeOrgDetailsStep'
@@ -67,11 +66,12 @@ import { saveOrganizationProfile } from '@/lib/api/organizationProfileApi'
 import { completeCabSetup, getCabProfile, saveCabSetupDraft } from '@/lib/api/cabApi'
 import { ApiError } from '@/lib/api/client'
 import { completePendingRegistration, completePendingCabRegistration } from '@/lib/completePendingRegistration'
-import { clearPendingRegistration, hasPendingRegistration } from '@/lib/pendingRegistrationStorage'
+import { clearPendingRegistration, hasPendingRegistration, loadPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import type { OrgScopeCategory } from '@/lib/api/onboardingOrgScopeApi'
 import type { OrganizationType } from '@/lib/api/authApi'
 import { getAuthSession, getAuthToken, getPostLoginRedirect, patchAuthOrganizationType, patchCabSetupCompleted } from '@/lib/authStorage'
 import { mergeCabProfileIntoForm, mapFormToCabSetupDraft } from '@/lib/cabSetupMapper'
+import { markCabWorkflowTourPending } from '@/config/cabTourSequence'
 import { getCabId, isCabAdminSession, markCabOnboardingComplete } from '@/lib/cabOnboardingStatus'
 import { loadOnboardingDraft, saveOnboardingDraft } from '@/lib/onboardingDraftStorage'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
@@ -84,6 +84,7 @@ import {
   isModulesStepComplete,
   isOrgDetailsStepComplete,
   isOrgTypeStepComplete,
+  isSharedWebsiteValid,
   syncCabTypeFromScopeAreas,
   syncAbTypeFromScopeAreas,
   scopeCategoryToEntityType,
@@ -143,10 +144,12 @@ import {
 } from '@/lib/abSetupForm'
 import {
   emptyCabSetupForm,
+  hydratePrimaryContactPhoneFields,
+  normalizeCabSetupForm,
+  parsePrimaryContactPhone,
   isAccreditationRecordsStepComplete,
   isAccreditationStatusStepComplete,
   isCertificateStepComplete,
-  isKeyRolesStepComplete,
   isLocationsStepComplete,
   isMarksStepComplete,
   isProfileStepComplete,
@@ -187,13 +190,13 @@ function getSetupDeck(scopeCategory: OrgScopeCategory | ''): SetupDeck | null {
 }
 
 /**
- * The CAB path runs the 10 screens from the CAB onboarding deck at steps 2-11
+ * The CAB path runs 9 setup screens from the CAB onboarding deck at steps 2-10
  * (step 1 is always the shared org-scope picker). Other entity types keep the
  * shorter details → modules → location → branding → summary route.
  */
-const CAB_SETUP_SCREEN_COUNT = 10
+const CAB_SETUP_SCREEN_COUNT = 9
 const CAB_FIRST_SETUP_STEP = 2
-const CAB_REVIEW_STEP = CAB_FIRST_SETUP_STEP + CAB_SETUP_SCREEN_COUNT - 1 // 11
+const CAB_REVIEW_STEP = CAB_FIRST_SETUP_STEP + CAB_SETUP_SCREEN_COUNT - 1 // 10
 
 /** i18n namespace per CAB setup screen, in deck order — drives the shell heading. */
 const CAB_SETUP_SCREEN_KEYS = [
@@ -205,7 +208,6 @@ const CAB_SETUP_SCREEN_KEYS = [
   'scope',
   'marks',
   'certificate',
-  'roles',
   'review',
 ] as const
 
@@ -277,6 +279,60 @@ function getSuccessStep(deck: SetupDeck | null) {
   return getSummaryStep(deck) + 1
 }
 
+function getRegistrationEmail(): string {
+  return (
+    getAuthSession()?.user?.email?.trim() ||
+    loadPendingRegistration()?.email?.trim() ||
+    ''
+  )
+}
+
+function getRegistrationPrimaryContactPhone(): string {
+  return (
+    getAuthSession()?.user?.phone?.trim() ||
+    loadPendingRegistration()?.phone?.trim() ||
+    ''
+  )
+}
+
+function withRegistrationEmail<T extends { primaryContactEmail: string }>(setup: T): T {
+  if (setup.primaryContactEmail.trim()) return setup
+  const email = getRegistrationEmail()
+  return email ? { ...setup, primaryContactEmail: email } : setup
+}
+
+function withRegistrationCabContactDefaults(
+  cabSetup: UnifiedOnboardingForm['cabSetup'],
+): UnifiedOnboardingForm['cabSetup'] {
+  let next = withRegistrationEmail(hydratePrimaryContactPhoneFields(normalizeCabSetupForm(cabSetup)))
+
+  if (!next.primaryContactPhoneNumber.trim()) {
+    const registrationPhone = getRegistrationPrimaryContactPhone()
+    if (registrationPhone) {
+      const parsed = parsePrimaryContactPhone(registrationPhone)
+      next = hydratePrimaryContactPhoneFields({
+        ...next,
+        primaryContactPhoneCountryCode: parsed.countryCode,
+        primaryContactPhoneNumber: parsed.number,
+        primaryContactPhone: registrationPhone,
+      })
+    }
+  }
+
+  return next
+}
+
+function withRegistrationAbContactDefaults(
+  abSetup: UnifiedOnboardingForm['abSetup'],
+): UnifiedOnboardingForm['abSetup'] {
+  let next = withRegistrationEmail(abSetup)
+  if (!next.primaryContactPhone.trim()) {
+    const phone = getRegistrationPrimaryContactPhone()
+    if (phone) next = { ...next, primaryContactPhone: phone }
+  }
+  return next
+}
+
 function createInitialForm(): UnifiedOnboardingForm {
   const draftKey = getAuthSession()?.organization?.id ?? getCabId() ?? undefined
   const draft = draftKey ? loadOnboardingDraft(draftKey) : null
@@ -297,11 +353,14 @@ function createInitialForm(): UnifiedOnboardingForm {
     abType: draft?.abType ?? draft?.scopeAreas ?? [],
     logoUrl: draft?.logoUrl ?? null,
     // Older drafts predate the CAB setup block — merge so new keys get defaults.
-    cabSetup: { ...emptyCabSetupForm, ...draft?.cabSetup },
-    abSetup: { ...emptyAbSetupForm, ...draft?.abSetup },
-    iaSetup: { ...emptyIaSetupForm, ...draft?.iaSetup },
-    soSetup: { ...emptySoSetupForm, ...draft?.soSetup },
-    saSetup: { ...emptySaSetupForm, ...draft?.saSetup },
+    cabSetup: withRegistrationCabContactDefaults({
+      ...emptyCabSetupForm,
+      ...draft?.cabSetup,
+    }),
+    abSetup: withRegistrationAbContactDefaults({ ...emptyAbSetupForm, ...draft?.abSetup }),
+    iaSetup: withRegistrationEmail({ ...emptyIaSetupForm, ...draft?.iaSetup }),
+    soSetup: withRegistrationEmail({ ...emptySoSetupForm, ...draft?.soSetup }),
+    saSetup: withRegistrationEmail({ ...emptySaSetupForm, ...draft?.saSetup }),
   }
 }
 
@@ -340,14 +399,20 @@ export function UnifiedOnboardingFlow() {
 
         setForm((prev) => {
           const merged = mergeCabProfileIntoForm(prev, cab)
-          if (merged.scopeCategory) return merged
+          const next =
+            merged.scopeCategory
+              ? merged
+              : {
+                  ...merged,
+                  scopeCategory: 'CONFORMITY_ASSESSMENT_BODY' as const,
+                  entityType: 'CERTIFICATION_BODY' as const,
+                  scopeAreas:
+                    merged.cabSetup.activities.length > 0 ? merged.cabSetup.activities : merged.scopeAreas,
+                }
 
           return {
-            ...merged,
-            scopeCategory: 'CONFORMITY_ASSESSMENT_BODY',
-            entityType: 'CERTIFICATION_BODY',
-            scopeAreas:
-              merged.cabSetup.activities.length > 0 ? merged.cabSetup.activities : merged.scopeAreas,
+            ...next,
+            cabSetup: withRegistrationCabContactDefaults(next.cabSetup),
           }
         })
       } catch {
@@ -426,7 +491,21 @@ export function UnifiedOnboardingFlow() {
   }
 
   const persistCabSetupDraft = async () => {
-    await saveCabSetupDraft(mapFormToCabSetupDraft(form))
+    let existing = null
+    try {
+      existing = (await getCabProfile()).cab
+    } catch {
+      existing = null
+    }
+
+    await saveCabSetupDraft(mapFormToCabSetupDraft(form, existing))
+
+    try {
+      const { cab } = await getCabProfile()
+      setForm((prev) => mergeCabProfileIntoForm(prev, cab))
+    } catch {
+      // Keep the local form if the profile cannot be reloaded.
+    }
   }
 
   const handleFinish = async () => {
@@ -451,6 +530,7 @@ export function UnifiedOnboardingFlow() {
         await persistCabSetupDraft()
         await completeCabSetup()
         patchCabSetupCompleted(true)
+        markCabWorkflowTourPending()
         finishOnboarding(deck)
         return
       }
@@ -502,6 +582,10 @@ export function UnifiedOnboardingFlow() {
       try {
         if (form.scopeCategory === 'CONFORMITY_ASSESSMENT_BODY') {
           await completePendingCabRegistration()
+          setForm((prev) => ({
+            ...prev,
+            cabSetup: withRegistrationCabContactDefaults(prev.cabSetup),
+          }))
         } else {
           const entityType = mapOrgScopeToBackendType(form.scopeCategory)
           await completePendingRegistration(entityType)
@@ -540,12 +624,12 @@ export function UnifiedOnboardingFlow() {
   const brandingStep = getBrandingStep(deck)
   const summaryStep = getSummaryStep(deck)
 
-  /** Per-screen gate for the 10-screen CAB path (steps 2-11). */
+  /** Per-screen gate for the 9-screen CAB path (steps 2-10). */
   const cabStepBlocked = (currentStep: number): boolean => {
     const setup = form.cabSetup
     switch (currentStep) {
       case 2:
-        return !isProfileStepComplete(setup, form.legalEntityName)
+        return !isProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
       case 3:
         return !isLocationsStepComplete(setup, form.country, form.city, form.address, form.languages)
       case 4:
@@ -560,8 +644,6 @@ export function UnifiedOnboardingFlow() {
         return !isMarksStepComplete(setup)
       case 9:
         return !isCertificateStepComplete(setup)
-      case 10:
-        return !isKeyRolesStepComplete(setup)
       case CAB_REVIEW_STEP:
         return isSaving
       default:
@@ -574,7 +656,7 @@ export function UnifiedOnboardingFlow() {
     const setup = form.abSetup
     switch (currentStep) {
       case 2:
-        return !isAbProfileStepComplete(setup, form.legalEntityName)
+        return !isAbProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
       case 3:
         return !isAbLocationsStepComplete(setup, form.country, form.city, form.address, form.languages)
       case 4:
@@ -603,7 +685,7 @@ export function UnifiedOnboardingFlow() {
     const setup = form.iaSetup
     switch (currentStep) {
       case 2:
-        return !isIaProfileStepComplete(setup, form.legalEntityName)
+        return !isIaProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
       case 3:
         return !isIaStructureStepComplete(setup, form.country, form.city)
       case 4:
@@ -632,7 +714,7 @@ export function UnifiedOnboardingFlow() {
     const setup = form.soSetup
     switch (currentStep) {
       case 2:
-        return !isSoProfileStepComplete(setup, form.legalEntityName)
+        return !isSoProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
       case 3:
         return !isSoLocationStepComplete(setup, form.country, form.city, form.address)
       case 4:
@@ -661,7 +743,7 @@ export function UnifiedOnboardingFlow() {
     const setup = form.saSetup
     switch (currentStep) {
       case 2:
-        return !isSaProfileStepComplete(setup, form.legalEntityName)
+        return !isSaProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
       case 3:
         return !isSaLocationsStepComplete(setup, form.country, form.city)
       case 4:
@@ -713,15 +795,20 @@ export function UnifiedOnboardingFlow() {
   const orgDisplayName = form.tradingName || form.legalEntityName
   const successStep = getSuccessStep(deck)
 
-  /** "Save & continue later" — persist CAB drafts to the server, then exit. */
-  const handleSaveAndExit = () => {
+  /** "Save & continue later" — persist CAB drafts to PATCH /cab-setup/draft, then exit. */
+  const handleSaveAndExit = async () => {
     if (deck === 'cab' && getAuthToken() && isCabAdminSession()) {
-      void persistCabSetupDraft()
-        .catch(() => undefined)
-        .finally(() => {
-          const session = getAuthSession()
-          navigate(session ? getPostLoginRedirect(session) : ROUTES.login)
-        })
+      setIsSaving(true)
+      setSaveError(null)
+      try {
+        await persistCabSetupDraft()
+        const session = getAuthSession()
+        navigate(session ? getPostLoginRedirect(session) : ROUTES.login)
+      } catch (error) {
+        setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
+      } finally {
+        setIsSaving(false)
+      }
       return
     }
 
@@ -742,7 +829,6 @@ export function UnifiedOnboardingFlow() {
           {step === 7 && <CabScopeStep {...setupProps} />}
           {step === 8 && <CabMarksStep {...setupProps} />}
           {step === 9 && <CabCertificateStep {...setupProps} />}
-          {step === 10 && <CabKeyRolesStep {...setupProps} />}
           {step === CAB_REVIEW_STEP && (
             <CabReviewActivateStep form={form} onGoToStep={setStep} />
           )}
@@ -895,9 +981,7 @@ export function UnifiedOnboardingFlow() {
         nextDisabled={nextDisabled}
         onSaveAndExit={handleSaveAndExit}
         error={
-          saveError && step === CAB_REVIEW_STEP ? (
-            <p className="mt-4 text-[12px] text-error-500">{saveError}</p>
-          ) : null
+          saveError ? <p className="mt-4 text-[12px] text-error-500">{saveError}</p> : null
         }
       >
         {renderDetailsAndBeyond()}
