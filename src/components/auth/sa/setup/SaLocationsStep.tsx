@@ -6,6 +6,7 @@ import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SetupSection, SetupToggleRow } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { SA_APPROVAL_MODEL_OPTIONS, allowsSiteSpecificSuppliers } from '@/lib/api/saSetupApi'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
+import { useIpLocation } from '@/hooks/useIpLocation'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { OPERATING_LANGUAGE_OPTIONS } from '@/lib/api/cabOnboardingApi'
 import type { SaSetupStepProps } from '@/components/auth/sa/setup/types'
@@ -33,6 +34,7 @@ export function SaLocationsStep({ form, onPatch, onPatchSetup }: SaSetupStepProp
   )
 
   const [governorates, setGovernorates] = useState<GovernorateOption[]>([])
+  const ipLocation = useIpLocation()
 
   useEffect(() => {
     let cancelled = false
@@ -46,6 +48,28 @@ export function SaLocationsStep({ form, onPatch, onPatchSetup }: SaSetupStepProp
       cancelled = true
     }
   }, [form.country])
+
+  // Pre-fill the head office country from the visitor's IP once it resolves,
+  // but only if the user hasn't already picked one.
+  useEffect(() => {
+    if (!ipLocation || form.country) return
+    const detected = ipLocation.countryCode as CountryCode
+    if (!countries.some((country) => country.value === detected)) return
+    onPatch({ country: detected })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, countries])
+
+  // Once the IP-detected country's governorate list loads, try to match the
+  // IP's city by name — best effort only, never overrides a manual pick.
+  useEffect(() => {
+    if (!ipLocation?.city || form.city || governorates.length === 0) return
+    if (form.country !== ipLocation.countryCode) return
+    const match = governorates.find(
+      (governorate) => governorate.name.toLowerCase() === ipLocation.city?.toLowerCase()
+    )
+    if (match) onPatch({ city: match.id })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, governorates])
 
   const siteSpecificAllowed = allowsSiteSpecificSuppliers(setup.approvalModel)
 

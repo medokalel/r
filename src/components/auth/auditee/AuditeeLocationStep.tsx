@@ -4,6 +4,7 @@ import { FormLabel, TextField } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { fieldHeightClassName, fieldInputClassName } from '@/components/ui/fieldStyles'
+import { useIpLocation } from '@/hooks/useIpLocation'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { getTimezoneForCountry, OPERATING_LANGUAGE_OPTIONS } from '@/lib/api/auditeeOnboardingApi'
@@ -19,6 +20,7 @@ export function AuditeeLocationStep({ form, onPatch }: AuditeeLocationStepProps)
   const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
   const [governorates, setGovernorates] = useState<GovernorateOption[]>([])
+  const ipLocation = useIpLocation()
 
   useEffect(() => {
     if (!form.country) {
@@ -33,6 +35,28 @@ export function AuditeeLocationStep({ form, onPatch }: AuditeeLocationStepProps)
       cancelled = true
     }
   }, [form.country])
+
+  // Pre-fill the office country from the visitor's IP once it resolves,
+  // but only if the user hasn't already picked one.
+  useEffect(() => {
+    if (!ipLocation || form.country) return
+    const detected = ipLocation.countryCode as CountryCode
+    if (!countries.some((country) => country.code === detected)) return
+    onPatch({ country: detected })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, countries])
+
+  // Once the IP-detected country's governorate list loads, try to match the
+  // IP's city by name — best effort only, never overrides a manual pick.
+  useEffect(() => {
+    if (!ipLocation?.city || form.city || governorates.length === 0) return
+    if (form.country !== ipLocation.countryCode) return
+    const match = governorates.find(
+      (governorate) => governorate.name.toLowerCase() === ipLocation.city?.toLowerCase()
+    )
+    if (match) onPatch({ city: match.id })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, governorates])
 
   const timezoneLabel = form.country
     ? `${getTimezoneForCountry(form.country)} (${t('auditee.onboarding.location.autoDetected')})`

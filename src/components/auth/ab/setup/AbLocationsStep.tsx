@@ -14,6 +14,7 @@ import {
   AB_OFFICE_TYPE_OPTIONS,
 } from '@/lib/api/abSetupApi'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
+import { useIpLocation } from '@/hooks/useIpLocation'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { getTimezoneForCountry, OPERATING_LANGUAGE_OPTIONS } from '@/lib/api/cabOnboardingApi'
 import { createAbOffice, type AbOfficeRecord } from '@/lib/abSetupForm'
@@ -154,6 +155,7 @@ export function AbLocationsStep({ form, onPatch, onPatchSetup }: AbSetupStepProp
     () => AB_JURISDICTION_OPTIONS.map((o) => ({ value: o.value, label: t(o.labelKey) })),
     [t]
   )
+  const ipLocation = useIpLocation()
 
   useEffect(() => {
     if (!form.country) return
@@ -161,6 +163,28 @@ export function AbLocationsStep({ form, onPatch, onPatchSetup }: AbSetupStepProp
     if (derived && setup.timeZone !== derived) onPatchSetup({ timeZone: derived })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.country])
+
+  // Pre-fill the head office country from the visitor's IP once it resolves,
+  // but only if the user hasn't already picked one.
+  useEffect(() => {
+    if (!ipLocation || form.country) return
+    const detected = ipLocation.countryCode as CountryCode
+    if (!countries.some((country) => country.value === detected)) return
+    onPatch({ country: detected })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, countries])
+
+  // Once the IP-detected country's governorate list loads, try to match the
+  // IP's city by name — best effort only, never overrides a manual pick.
+  useEffect(() => {
+    if (!ipLocation?.city || form.city || governorates.length === 0) return
+    if (form.country !== ipLocation.countryCode) return
+    const match = governorates.find(
+      (governorate) => governorate.name.toLowerCase() === ipLocation.city?.toLowerCase()
+    )
+    if (match) onPatch({ city: match.id })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ipLocation, governorates])
 
   const updateOffice = (id: string, fields: Partial<AbOfficeRecord>) => {
     onPatchSetup({
