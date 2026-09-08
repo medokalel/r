@@ -2611,7 +2611,7 @@
       "takeTour": "Take a Tour"
     },
     "tour": {
-      "finish": "Finish Tour",
+      "finish": "Next Page",
       "next": "Next",
       "back": "Back",
       "skip": "Skip Tour",
@@ -2673,6 +2673,10 @@
       "sidebarAppDraft": {
         "title": "Application Draft Icon",
         "description": "Directly access application drafts to create and edit certification requests."
+      },
+      "sidebarAppReceipt": {
+        "title": "Application Receipt Icon",
+        "description": "View, download, or print the official application receipt."
       }
     },
     "dashboard": {

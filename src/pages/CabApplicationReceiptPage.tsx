@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
@@ -28,6 +28,7 @@ import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { StartTourButton } from '@/components/dashboard/cab/StartTourButton'
+import { markTourPending } from '@/context/TourContext'
 import { useApplicationReceiptTourSteps } from '@/config/applicationReceiptTourSteps'
 
 const cardClassName = 'rounded-[16px] border border-[#ececec] bg-white'
@@ -233,6 +234,7 @@ function ReceiptSummaryCard({ receipt }: { receipt: CabApplicationReceipt }) {
 
 export function CabApplicationReceiptPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const scale = useFitScale()
   const [receipt, setReceipt] = useState<CabApplicationReceipt | null>(null)
   const [loading, setLoading] = useState(true)
@@ -263,7 +265,15 @@ export function CabApplicationReceiptPage() {
   }
 
   return (
-    <CabLayout className="bg-white" tourId="cab-application-receipt" tourSteps={tourSteps}>
+    <CabLayout
+      className="bg-white"
+      tourId="cab-application-receipt"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-application-review')
+        navigate('/cab/applications/review')
+      }}
+    >
         <DashboardTourStep steps={tourSteps} stepId="header">
           <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
             <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">

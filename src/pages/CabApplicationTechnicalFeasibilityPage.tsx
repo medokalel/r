@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { markTourPending } from '@/context/TourContext'
 import { WorkflowProgressCard as SharedWorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import {
   AppIcon,
@@ -536,7 +537,15 @@ export function CabApplicationTechnicalFeasibilityPage() {
   const proceedToQuotation = () => navigate(cabApplicationQuotationPath(data.applicationId))
 
   return (
-    <CabLayout className="bg-white" tourId="cab-application-technical-feasibility" tourSteps={tourSteps}>
+    <CabLayout
+      className="bg-white"
+      tourId="cab-application-technical-feasibility"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-application-quotation')
+        navigate('/cab/applications/quotation')
+      }}
+    >
         <DashboardTourStep steps={tourSteps} stepId="header">
           <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
             <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">

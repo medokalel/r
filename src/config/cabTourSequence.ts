@@ -7,21 +7,27 @@ import {
 
 export const CAB_WORKFLOW_TOUR_IDS = [
   'cab-dashboard',
+  'cab-client-registration',
   'cab-application-draft',
-  'cab-application-review',
   'cab-application-receipt',
+  'cab-application-review',
   'cab-application-information-required',
   'cab-application-technical-feasibility',
+  'cab-application-quotation',
+  'cab-quotation-approval',
 ] as const
 
 export type CabWorkflowTourId = (typeof CAB_WORKFLOW_TOUR_IDS)[number]
 
 export const CAB_TOUR_NEXT_ROUTE: Partial<Record<CabWorkflowTourId, string>> = {
-  'cab-dashboard': '/cab/applications/draft',
-  'cab-application-draft': '/cab/applications/review',
-  'cab-application-review': '/cab/applications/receipt',
-  'cab-application-receipt': '/cab/applications/information-required',
+  'cab-dashboard': '/cab/clients/new',
+  'cab-client-registration': '/cab/applications/draft',
+  'cab-application-draft': '/cab/applications/receipt',
+  'cab-application-receipt': '/cab/applications/review',
+  'cab-application-review': '/cab/applications/information-required',
   'cab-application-information-required': '/cab/applications/technical-feasibility',
+  'cab-application-technical-feasibility': '/cab/applications/quotation',
+  'cab-application-quotation': '/cab/quotations/approval',
 }
 
 const TOUR_PENDING_KEY_PREFIX = 'icasco_pending_tour'

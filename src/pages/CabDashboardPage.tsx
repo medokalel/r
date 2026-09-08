@@ -28,6 +28,7 @@ import {
   type WorkQueueItem,
 } from '@/lib/api/cabDashboardApi'
 
+import { markTourPending } from '@/context/TourContext'
 import { CabDashboardTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useCabDashboardTourSteps } from '@/config/cabTourSteps'
 import { markCabWorkflowTourPending, resetCabWorkflowTour } from '@/config/cabTourSequence'
@@ -85,7 +86,15 @@ export function CabDashboardPage() {
   }, [])
 
   return (
-    <CabLayout tourId="cab-dashboard" tourSteps={dashboardTourSteps} tourSessionKey={tourSessionKey}>
+    <CabLayout
+      tourId="cab-dashboard"
+      tourSteps={dashboardTourSteps}
+      tourSessionKey={tourSessionKey}
+      onTourComplete={() => {
+        markTourPending('cab-client-registration')
+        navigate('/cab/clients/new')
+      }}
+    >
       <CabDashboardTourStep stepId="dashboard-header">
         <CabHeader
           title={t('cab.dashboard.title')}

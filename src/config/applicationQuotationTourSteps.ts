@@ -8,7 +8,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'sidebar-app-quotation',
       step: 1,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.tour.sidebarAppQuotation.title', 'أيقونة عرض السعر'),
       description: t(
         'cab.tour.sidebarAppQuotation.description',
@@ -20,7 +20,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'header',
       step: 2,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.header.title', 'الهيدر الرئيسي والتحكم'),
       description: t(
         'cab.applications.quotation.tour.header.description',
@@ -32,7 +32,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'page-header',
       step: 3,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.pageHeader.title', 'عنوان وإجراءات عرض السعر'),
       description: t(
         'cab.applications.quotation.tour.pageHeader.description',
@@ -44,7 +44,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'summary-card',
       step: 4,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.summaryCard.title', 'ملخص عرض السعر'),
       description: t(
         'cab.applications.quotation.tour.summaryCard.description',
@@ -56,7 +56,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'tabs',
       step: 5,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.tabs.title', 'أبواب وتبويبات الصفحة'),
       description: t(
         'cab.applications.quotation.tour.tabs.description',
@@ -68,7 +68,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'stats-cards',
       step: 6,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.statsCards.title', 'إحصائيات عرض السعر'),
       description: t(
         'cab.applications.quotation.tour.statsCards.description',
@@ -80,7 +80,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'breakdown-table',
       step: 7,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.breakdownTable.title', 'جدول تفاصيل عرض السعر المالي'),
       description: t(
         'cab.applications.quotation.tour.breakdownTable.description',
@@ -92,7 +92,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'payment-terms',
       step: 8,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.paymentTerms.title', 'شروط وأحكام الدفع'),
       description: t(
         'cab.applications.quotation.tour.paymentTerms.description',
@@ -104,7 +104,7 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'internal-comments',
       step: 9,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.internalComments.title', 'التعليقات الداخلية'),
       description: t(
         'cab.applications.quotation.tour.internalComments.description',
@@ -116,13 +116,25 @@ export function useApplicationQuotationTourSteps(): TourStepConfig[] {
     {
       id: 'documents-card',
       step: 10,
-      totalSteps: 10,
+      totalSteps: 11,
       title: t('cab.applications.quotation.tour.documentsCard.title', 'مستندات عرض السعر الإجمالية'),
       description: t(
         'cab.applications.quotation.tour.documentsCard.description',
         'استعراض قائمة وتفاصيل كافة المستندات المرفقة وحالتها ومؤشرات الصلاحية.'
       ),
       side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'workflow-progress',
+      step: 11,
+      totalSteps: 11,
+      title: t('cab.applications.quotation.tour.workflowProgress.title', 'متابعة سير العمل'),
+      description: t(
+        'cab.applications.quotation.tour.workflowProgress.description',
+        'تتبع مراحل سير العمل والانتقال إلى مرحلة اعتماد عرض السعر.'
+      ),
+      side: 'left',
       align: 'start',
     },
   ]

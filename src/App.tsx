@@ -284,6 +284,14 @@ export default function App() {
               }
             />
             <Route
+              path="/cab/quotations/:applicationId/approval"
+              element={
+                <RequireAuth>
+                  <CabQuotationApprovalPage />
+                </RequireAuth>
+              }
+            />
+            <Route
               path={ROUTES.dashboard}
               element={
                 <RequireAuth>

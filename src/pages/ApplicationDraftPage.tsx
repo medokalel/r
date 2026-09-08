@@ -21,6 +21,7 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
+import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useApplicationDraftTourSteps } from '@/config/applicationDraftTourSteps'
 import {
@@ -137,7 +138,14 @@ export function ApplicationDraftPage() {
   }
 
   return (
-    <CabLayout tourId="cab-application-draft" tourSteps={tourSteps}>
+    <CabLayout
+      tourId="cab-application-draft"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-application-receipt')
+        navigate('/cab/applications/receipt')
+      }}
+    >
       <DashboardTourStep steps={tourSteps} stepId="header">
         <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
       </DashboardTourStep>

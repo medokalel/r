@@ -46,7 +46,7 @@ export function DashboardTourStep({ steps: stepsProp, stepId, children, classNam
       alignOffset={config.alignOffset}
       open={isOpen}
       onNext={nextStep}
-      nextLabel={isLastStep ? t('cab.tour.finish', 'إنهاء الجولة') : t('cab.tour.next', 'التالي')}
+      nextLabel={isLastStep ? t('cab.tour.finish', 'الصفحة التالية') : t('cab.tour.next', 'التالي')}
       backLabel={t('cab.tour.back', 'السابق')}
       skipLabel={t('cab.tour.skip', 'تخطي الجولة')}
       closeLabel={t('cab.tour.close', 'إغلاق')}

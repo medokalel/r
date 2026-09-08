@@ -2,10 +2,8 @@ import { cn } from '@/lib/utils'
 import { useDirection } from '@/context/DirectionContext'
 import { CabSidebarProvider } from '@/context/CabSidebarContext'
 import { CabSidebar } from '@/components/dashboard/cab/CabSidebar'
-import { CabTourProvider } from '@/components/layout/CabTourProvider'
 import { TourProvider, type TourStepConfig } from '@/context/TourContext'
 import { useCabDashboardTourSteps } from '@/config/cabTourSteps'
-import { isCabWorkflowTour } from '@/config/cabTourSequence'
 
 interface CabLayoutProps {
   children: React.ReactNode
@@ -14,6 +12,8 @@ interface CabLayoutProps {
    *  If omitted, falls back to the default CAB-dashboard tour. */
   tourId?: string
   tourSteps?: TourStepConfig[]
+  /** Fired when the user finishes this page's tour (used to chain the next CAB tour). */
+  onTourComplete?: () => void
   /** Bump to remount the tour provider after resetting tour state. */
   tourSessionKey?: number
 }
@@ -30,10 +30,25 @@ function CabShell({ children, className }: { children: React.ReactNode; classNam
   )
 }
 
-function CabLayoutWithDashboardTour({ children, className }: { children: React.ReactNode; className?: string }) {
+function CabLayoutWithDashboardTour({
+  children,
+  className,
+  onTourComplete,
+  tourSessionKey,
+}: {
+  children: React.ReactNode
+  className?: string
+  onTourComplete?: () => void
+  tourSessionKey: number
+}) {
   const dashboardTourSteps = useCabDashboardTourSteps()
   return (
-    <TourProvider tourId="cab-dashboard" steps={dashboardTourSteps}>
+    <TourProvider
+      key={tourSessionKey}
+      tourId="cab-dashboard"
+      steps={dashboardTourSteps}
+      onComplete={onTourComplete}
+    >
       <CabShell className={className}>{children}</CabShell>
     </TourProvider>
   )
@@ -44,25 +59,29 @@ export function CabLayout({
   className,
   tourId,
   tourSteps,
+  onTourComplete,
   tourSessionKey = 0,
 }: CabLayoutProps) {
   if (tourId && tourSteps) {
-    const shell = <CabShell className={className}>{children}</CabShell>
-    if (isCabWorkflowTour(tourId)) {
-      return (
-        <CabTourProvider key={tourSessionKey} tourId={tourId} steps={tourSteps}>
-          {shell}
-        </CabTourProvider>
-      )
-    }
     return (
-      <TourProvider key={tourSessionKey} tourId={tourId} steps={tourSteps}>
-        {shell}
+      <TourProvider
+        key={tourSessionKey}
+        tourId={tourId}
+        steps={tourSteps}
+        onComplete={onTourComplete}
+      >
+        <CabShell className={className}>{children}</CabShell>
       </TourProvider>
     )
   }
 
   return (
-    <CabLayoutWithDashboardTour className={className}>{children}</CabLayoutWithDashboardTour>
+    <CabLayoutWithDashboardTour
+      className={className}
+      onTourComplete={onTourComplete}
+      tourSessionKey={tourSessionKey}
+    >
+      {children}
+    </CabLayoutWithDashboardTour>
   )
 }

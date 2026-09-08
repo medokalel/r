@@ -38,8 +38,13 @@ export function setTourStatus(tourId: string, status: 'completed' | 'skipped'): 
  */
 export function markTourPending(tourId: string): void {
   localStorage.setItem(`${TOUR_PENDING_KEY_PREFIX}_${tourId}`, 'true')
+  const session = getAuthSession()
+  const id = session?.cab?.id ?? session?.organization?.id ?? session?.user?.id
+  const base = `${TOUR_STATUS_KEY_PREFIX}_${tourId}`
+  const statusKey = id ? `${base}_${id}` : base
+  localStorage.removeItem(statusKey)
+  localStorage.removeItem(base)
 }
-
 
 interface TourContextType {
   steps: TourStepConfig[]
@@ -80,18 +85,23 @@ export function TourProvider({ tourId, steps, children, onComplete, onSkip }: To
     const statusKey = getTourStatusKey(tourId)
     const status = localStorage.getItem(statusKey)
 
-    // Rule 2 & 3: If THIS user explicitly clicked Skip or Completed, NEVER show again for this user (even after Logout + Login)
+    // If marked pending (e.g. navigated from previous page tour), ALWAYS auto-start.
+    if (isPending) {
+      localStorage.removeItem(pendingKey)
+      localStorage.removeItem(statusKey)
+      setCurrentStepIndex(0)
+      setIsTourActive(true)
+      setIsSkipped(false)
+      return
+    }
+
     if (status === 'skipped' || status === 'completed') {
       setIsTourActive(false)
       setIsSkipped(true)
       return
     }
 
-    // Rule 1 & 4: If new registration OR user hasn't skipped/completed yet (status is null), show tour!
-    if (isPending || !status) {
-      if (isPending) {
-        localStorage.removeItem(pendingKey)
-      }
+    if (!status) {
       setCurrentStepIndex(0)
       setIsTourActive(true)
       setIsSkipped(false)
@@ -127,8 +137,6 @@ export function TourProvider({ tourId, steps, children, onComplete, onSkip }: To
   }
 
   const startTour = () => {
-    // Clear any previous skip/complete status so the tour can always
-    // be manually restarted via the StartTourButton.
     localStorage.removeItem(getTourStatusKey(tourId))
     setCurrentStepIndex(0)
     setIsTourActive(true)

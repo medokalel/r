@@ -19,6 +19,7 @@ import {
 } from '@/lib/api/clientRegistrationApi'
 import { ApiError } from '@/lib/api/client'
 
+import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useClientRegistrationTourSteps } from '@/config/clientRegistrationTourSteps'
 
@@ -105,7 +106,14 @@ export function ClientRegistrationPage() {
   }
 
   return (
-    <CabLayout tourId="cab-client-registration" tourSteps={tourSteps}>
+    <CabLayout
+      tourId="cab-client-registration"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-application-draft')
+        navigate('/cab/applications/draft')
+      }}
+    >
       <DashboardTourStep steps={tourSteps} stepId="header">
         <CabHeader
           title={t(editing ? 'cab.clientRegistration.editTitle' : 'cab.clientRegistration.title')}

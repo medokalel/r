@@ -143,7 +143,7 @@ export function TourTooltip({
 
   const isLastStep = step === totalSteps
   const resolvedNextLabel =
-    nextLabel ?? (isLastStep ? t('cab.tour.finish', 'إنهاء الجولة') : t('cab.tour.next', 'التالي'))
+    nextLabel ?? (isLastStep ? t('cab.tour.finish', 'الصفحة التالية') : t('cab.tour.next', 'التالي'))
   const resolvedBackLabel = backLabel ?? t('cab.tour.back', 'السابق')
   const resolvedSkipLabel = skipLabel ?? t('cab.tour.skip', 'تخطي الجولة')
   const resolvedCloseLabel = closeLabel ?? t('cab.tour.close', 'إغلاق')

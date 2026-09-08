@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { markTourPending } from '@/context/TourContext'
 import { WorkflowProgressCard as SharedWorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import {
   AppIcon,
@@ -468,12 +469,26 @@ function DocumentsCard({ data, t }: { data: CabApplicationQuotation; t: ReturnTy
   )
 }
 
-function BottomThreeColumnSection({ data, t }: { data: CabApplicationQuotation; t: ReturnType<typeof useTranslation>['t'] }) {
+function BottomThreeColumnSection({
+  data,
+  t,
+  tourSteps,
+}: {
+  data: CabApplicationQuotation
+  t: ReturnType<typeof useTranslation>['t']
+  tourSteps: ReturnType<typeof useApplicationQuotationTourSteps>
+}) {
   return (
     <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-3">
-      <PaymentTermsCard data={data} t={t} />
-      <InternalCommentsCard data={data} t={t} />
-      <DocumentsCard data={data} t={t} />
+      <DashboardTourStep steps={tourSteps} stepId="payment-terms">
+        <PaymentTermsCard data={data} t={t} />
+      </DashboardTourStep>
+      <DashboardTourStep steps={tourSteps} stepId="internal-comments">
+        <InternalCommentsCard data={data} t={t} />
+      </DashboardTourStep>
+      <DashboardTourStep steps={tourSteps} stepId="documents-card">
+        <DocumentsCard data={data} t={t} />
+      </DashboardTourStep>
     </div>
   )
 }
@@ -576,6 +591,7 @@ const TAB_LABEL_KEYS: Record<TabKey, string> = {
 
 export function CabApplicationQuotationPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const scale = useFitScale()
   const [data, setData] = useState<CabApplicationQuotation | null>(null)
   const [loading, setLoading] = useState(true)
@@ -607,44 +623,52 @@ export function CabApplicationQuotationPage() {
   }
 
   return (
-    <CabLayout className="bg-white" tourId="cab-application-quotation" tourSteps={tourSteps}>
-        <DashboardTourStep steps={tourSteps} stepId="header">
-          <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
-            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-              <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
-                {t('cab.applications.quotation.breadcrumb.home')}
-              </Link>
-              <Chevron />
-              <span className="font-light text-[#000000]">{t('cab.applications.quotation.breadcrumb.applications')}</span>
-              <Chevron />
-              <span className="font-light text-[#000000]">{data.applicationId}</span>
-              <Chevron />
-              <span className="font-bold text-[#000000]">{t('cab.applications.quotation.breadcrumb.current')}</span>
-            </nav>
+    <CabLayout
+      className="bg-white"
+      tourId="cab-application-quotation"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-quotation-approval')
+        navigate(ROUTES.cabQuotationApproval)
+      }}
+    >
+      <DashboardTourStep steps={tourSteps} stepId="header">
+        <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
+          <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
+            <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+              {t('cab.applications.quotation.breadcrumb.home')}
+            </Link>
+            <Chevron />
+            <span className="font-light text-[#000000]">{t('cab.applications.quotation.breadcrumb.applications')}</span>
+            <Chevron />
+            <span className="font-light text-[#000000]">{data.applicationId}</span>
+            <Chevron />
+            <span className="font-bold text-[#000000]">{t('cab.applications.quotation.breadcrumb.current')}</span>
+          </nav>
 
-            <div className="flex items-center gap-3">
-              <StartTourButton />
-              <button
-                type="button"
-                className="relative flex size-9 items-center justify-center text-neutral-600"
-                aria-label={t('cab.header.notifications')}
-              >
-                <AppIcon icon={NotificationIcon} size={24} />
-                <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
-                  5
-                </span>
-              </button>
-              <LanguageToggle variant="icon" />
-              <div className="flex items-center gap-2">
-                <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
-                <div className="hidden text-end sm:block">
-                  <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
-                  <p className="text-[12px] text-[#000000]">Lead Auditor</p>
-                </div>
+          <div className="flex items-center gap-3">
+            <StartTourButton />
+            <button
+              type="button"
+              className="relative flex size-9 items-center justify-center text-neutral-600"
+              aria-label={t('cab.header.notifications')}
+            >
+              <AppIcon icon={NotificationIcon} size={24} />
+              <span className="absolute end-0 top-0 flex size-4 items-center justify-center rounded-full bg-[#1236a3] text-[10px] font-semibold text-white">
+                5
+              </span>
+            </button>
+            <LanguageToggle variant="icon" />
+            <div className="flex items-center gap-2">
+              <UserAvatar alt="Arjun Verma" className="size-10 border-2" />
+              <div className="hidden text-end sm:block">
+                <p className="text-[13px] font-semibold text-[#000000]">Arjun Verma</p>
+                <p className="text-[12px] text-[#000000]">Lead Auditor</p>
               </div>
             </div>
-          </header>
-        </DashboardTourStep>
+          </div>
+        </header>
+      </DashboardTourStep>
 
       <div className="flex min-w-0 flex-1 overflow-hidden bg-white">
         <div className="flex min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto bg-white">
@@ -799,7 +823,7 @@ export function CabApplicationQuotationPage() {
                     <DashboardTourStep steps={tourSteps} stepId="breakdown-table">
                       <BreakdownWithSidebarSection data={data} t={t} />
                     </DashboardTourStep>
-                    <BottomThreeColumnSection data={data} t={t} />
+                    <BottomThreeColumnSection data={data} t={t} tourSteps={tourSteps} />
                   </>
                 )}
 

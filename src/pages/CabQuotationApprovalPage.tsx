@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { markTourPending } from '@/context/TourContext'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
@@ -435,6 +436,7 @@ function ApprovalNoteCard({ t }: { t: (key: string) => string }) {
 
 export function CabQuotationApprovalPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const scale = useFitScale()
   const [data, setData] = useState<CabQuotationApproval | null>(null)
   const [loading, setLoading] = useState(true)
@@ -465,7 +467,15 @@ export function CabQuotationApprovalPage() {
   }
 
   return (
-    <CabLayout className="bg-white" tourId="cab-quotation-approval" tourSteps={tourSteps}>
+    <CabLayout
+      className="bg-white"
+      tourId="cab-quotation-approval"
+      tourSteps={tourSteps}
+      onTourComplete={() => {
+        markTourPending('cab-dashboard')
+        navigate(ROUTES.cabDashboard)
+      }}
+    >
       <DashboardTourStep steps={tourSteps} stepId="header">
         <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
           <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
