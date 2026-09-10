@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { InvoicesTable } from '@/components/dashboard/invoices/InvoicesTable'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { useInvoicesTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import {
   listInvoices,
   type Invoice,
@@ -12,6 +15,7 @@ import {
 const PAGE_SIZE = 10
 
 export function InvoicesPage() {
+  const tourSteps = useInvoicesTourSteps()
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -69,25 +73,29 @@ export function InvoicesPage() {
   }
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="invoices.pageTitle" />
-      <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
-        <InvoicesTable
-          invoices={invoices}
-          loading={loading}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          search={search}
-          onSearchChange={setSearch}
-          onSearch={handleSearch}
-          currencyFilter={currencyFilter}
-          onCurrencyFilterChange={handleCurrencyFilterChange}
-          statusFilter={statusFilter}
-          onStatusFilterChange={handleStatusFilterChange}
-          onExportAll={handleExportAll}
-        />
-      </div>
-    </AppLayout>
+    <TourProvider tourId="auditee-invoices" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="invoices-header">
+          <AccreditationHeader titleKey="invoices.pageTitle" />
+        </DashboardTourStep>
+        <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
+          <InvoicesTable
+            invoices={invoices}
+            loading={loading}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            search={search}
+            onSearchChange={setSearch}
+            onSearch={handleSearch}
+            currencyFilter={currencyFilter}
+            onCurrencyFilterChange={handleCurrencyFilterChange}
+            statusFilter={statusFilter}
+            onStatusFilterChange={handleStatusFilterChange}
+            onExportAll={handleExportAll}
+          />
+        </div>
+      </AppLayout>
+    </TourProvider>
   )
 }

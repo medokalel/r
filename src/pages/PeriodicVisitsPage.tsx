@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { PeriodicVisitsTable } from '@/components/dashboard/periodicVisits/PeriodicVisitsTable'
 import { AppLayout } from '@/components/layout/AppLayout'
+import { usePeriodicVisitsTourSteps } from '@/config/auditeeTourSteps'
+import { TourProvider } from '@/context/TourContext'
 import {
   listPeriodicVisits,
   type PeriodicVisit,
@@ -11,6 +14,7 @@ import {
 const PAGE_SIZE = 10
 
 export function PeriodicVisitsPage() {
+  const tourSteps = usePeriodicVisitsTourSteps()
   const [visits, setVisits] = useState<PeriodicVisit[]>([])
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
@@ -60,31 +64,35 @@ export function PeriodicVisitsPage() {
   }
 
   return (
-    <AppLayout>
-      <AccreditationHeader titleKey="periodicVisits.pageTitle" />
-      <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
-        <PeriodicVisitsTable
-          visits={visits}
-          loading={loading}
-          page={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-          search={search}
-          onSearchChange={setSearch}
-          onSearch={handleSearch}
-          procedureFilter={procedureFilter}
-          onProcedureFilterChange={(value) => {
-            setPage(1)
-            setProcedureFilter(value)
-          }}
-          specificationFilter={specificationFilter}
-          onSpecificationFilterChange={(value) => {
-            setPage(1)
-            setSpecificationFilter(value)
-          }}
-          onExportAll={handleExportAll}
-        />
-      </div>
-    </AppLayout>
+    <TourProvider tourId="auditee-periodic-visits" steps={tourSteps}>
+      <AppLayout>
+        <DashboardTourStep steps={tourSteps} stepId="visits-header">
+          <AccreditationHeader titleKey="periodicVisits.pageTitle" />
+        </DashboardTourStep>
+        <div className="flex min-w-0 flex-col gap-5 overflow-x-hidden overflow-y-auto p-3 sm:p-5">
+          <PeriodicVisitsTable
+            visits={visits}
+            loading={loading}
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
+            search={search}
+            onSearchChange={setSearch}
+            onSearch={handleSearch}
+            procedureFilter={procedureFilter}
+            onProcedureFilterChange={(value) => {
+              setPage(1)
+              setProcedureFilter(value)
+            }}
+            specificationFilter={specificationFilter}
+            onSpecificationFilterChange={(value) => {
+              setPage(1)
+              setSpecificationFilter(value)
+            }}
+            onExportAll={handleExportAll}
+          />
+        </div>
+      </AppLayout>
+    </TourProvider>
   )
 }

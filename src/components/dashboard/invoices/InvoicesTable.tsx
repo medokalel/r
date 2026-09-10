@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { AppIcon, ExcelFileIcon, FilterFunnelIcon, MoreIcon, PdfFileIcon, RiyalSymbolIcon, SearchIcon } from '@/components/icons'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import {
@@ -172,6 +173,7 @@ export function InvoicesTable({
 
   return (
     <section className="flex min-w-0 flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-3 sm:p-5">
+      <DashboardTourStep stepId="invoices-toolbar">
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <div className="flex min-w-0 w-full flex-col gap-3 sm:flex-1 sm:flex-row sm:flex-wrap sm:items-center">
           <div className="relative min-w-0 w-full sm:min-w-[240px] sm:max-w-[360px] sm:flex-1">
@@ -268,6 +270,7 @@ export function InvoicesTable({
           </DropdownMenu.Root>
         </div>
       </div>
+      </DashboardTourStep>
 
       {filtersOpen && (
         <div className="flex flex-wrap items-center gap-3 border-t border-[#ececec] pt-4">
@@ -299,6 +302,7 @@ export function InvoicesTable({
       )}
 
       {/* Desktop: table */}
+      <DashboardTourStep stepId="invoices-table">
       <div className="hidden min-w-0 overflow-x-auto md:block">
         <table className="w-full min-w-[1100px] table-fixed border-collapse text-center">
           <colgroup>
@@ -516,6 +520,7 @@ export function InvoicesTable({
           </div>
         )}
       </div>
+      </DashboardTourStep>
 
       {!loading && invoices.length > 0 && (
         <TablePagination page={page} totalPages={totalPages} onPageChange={onPageChange} />

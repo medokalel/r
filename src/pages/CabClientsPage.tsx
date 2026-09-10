@@ -4,8 +4,22 @@ import { useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { TablePagination } from '@/components/dashboard/TablePagination'
-import { AddCircleIcon, AppIcon, EyeIcon, SearchIcon } from '@/components/icons'
-import { listCabClients, type CabClient, type CabClientList } from '@/lib/api/clientRegistrationApi'
+import { AddCircleIcon, AppIcon, DownloadTrayIcon, SearchIcon, TrashIcon } from '@/components/icons'
+import { Tooltip } from '@/components/ui'
+import {
+  deleteCabClient,
+  listCabClients,
+  type CabClient,
+  type CabClientList,
+  type CabClientStatus,
+} from '@/lib/api/clientRegistrationApi'
+import { cn } from '@/lib/utils'
+
+const statusStyles: Record<CabClientStatus, string> = {
+  DRAFT: 'bg-[#f3f4f6] text-[#4b5563]',
+  REGISTERED: 'bg-[#e8edfc] text-primary',
+  INACTIVE: 'bg-[#fee2e2] text-[#dc2626]',
+}
 
 const EMPTY_RESULT: CabClientList = {
   items: [],
@@ -16,7 +30,7 @@ const EMPTY_RESULT: CabClientList = {
 }
 
 export function CabClientsPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const [result, setResult] = useState<CabClientList>(EMPTY_RESULT)
   const [query, setQuery] = useState('')
@@ -54,6 +68,42 @@ export function CabClientsPage() {
   }
 
   const openClient = (client: CabClient) => navigate(`/cab/clients/${client.id}`)
+
+  const startIndex = (result.page - 1) * result.limit
+
+  const formatDate = (iso: string) =>
+    new Intl.DateTimeFormat(i18n.language, { year: 'numeric', month: 'short', day: '2-digit' }).format(
+      new Date(iso)
+    )
+
+  const handleDelete = (client: CabClient) => {
+    const name = client.legalEntityName || t('cab.clientsPage.table.client')
+    if (!window.confirm(t('cab.clientsPage.deleteConfirm', { name }))) return
+    setResult((prev) => ({
+      ...prev,
+      items: prev.items.filter((item) => item.id !== client.id),
+      total: prev.total - 1,
+    }))
+    deleteCabClient(client.id).catch((deleteError: unknown) => {
+      setError(deleteError instanceof Error ? deleteError.message : t('cab.clientsPage.loadError'))
+      // Roll back the optimistic removal — refetch the current page.
+      setPage((current) => current)
+      setLoading(true)
+      listCabClients({ page, limit: 10, search })
+        .then(setResult)
+        .finally(() => setLoading(false))
+    })
+  }
+
+  const handleDownload = (client: CabClient) => {
+    if (!client.supportingDocumentUrl) return
+    const link = document.createElement('a')
+    link.href = client.supportingDocumentUrl
+    link.download = client.supportingDocumentOriginalName || ''
+    link.target = '_blank'
+    link.rel = 'noopener noreferrer'
+    link.click()
+  }
 
   return (
     <CabLayout>
@@ -102,38 +152,64 @@ export function CabClientsPage() {
             <table className="w-full min-w-[850px] border-collapse text-center">
               <thead>
                 <tr className="bg-[#1236a3] text-white">
+                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.serial')}</th>
                   <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.client')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.registration')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.contact')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.location')}</th>
+                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.applicationNumber')}</th>
+                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.assignedPerson')}</th>
                   <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.status')}</th>
+                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.createdAt')}</th>
                   <th className="px-4 py-4 text-[14px] font-medium">{t('cab.clientsPage.table.actions')}</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-neutral-500">{t('common.loading')}</td></tr>
+                  <tr><td colSpan={7} className="px-4 py-8 text-neutral-500">{t('common.loading')}</td></tr>
                 ) : result.items.length === 0 ? (
-                  <tr><td colSpan={6} className="px-4 py-8 text-neutral-500">{t('cab.clientsPage.empty')}</td></tr>
+                  <tr><td colSpan={7} className="px-4 py-8 text-neutral-500">{t('cab.clientsPage.empty')}</td></tr>
                 ) : (
                   result.items.map((client, index) => (
-                    <tr key={client.id} className={index % 2 ? 'bg-[#f9fafc]' : ''}>
+                    <tr
+                      key={client.id}
+                      onClick={() => openClient(client)}
+                      className={cn('cursor-pointer', index % 2 ? 'bg-[#f9fafc]' : '')}
+                    >
+                      <td className="px-4 py-4 text-neutral-700">{startIndex + index + 1}</td>
                       <td className="px-4 py-4 font-medium text-neutral-900">{client.legalEntityName || '—'}</td>
-                      <td className="px-4 py-4 text-neutral-700">{client.registrationNumber || '—'}</td>
-                      <td className="px-4 py-4 text-neutral-700">
-                        <div>{client.contactFullName || '—'}</div>
-                        <div className="text-[13px] text-neutral-500">{client.contactEmail || '—'}</div>
-                      </td>
-                      <td className="px-4 py-4 text-neutral-700">{[client.city, client.country].filter(Boolean).join(', ') || '—'}</td>
+                      <td className="px-4 py-4 text-neutral-700">{client.applicationNumber || '—'}</td>
+                      <td className="px-4 py-4 text-neutral-700">{client.assignedToName || '—'}</td>
                       <td className="px-4 py-4">
-                        <span className="rounded-full bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary">
+                        <span
+                          className={cn(
+                            'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                            statusStyles[client.status]
+                          )}
+                        >
                           {t(`cab.clientsPage.status.${client.status.toLowerCase()}`)}
                         </span>
                       </td>
+                      <td className="px-4 py-4 text-neutral-700">{formatDate(client.createdAt)}</td>
                       <td className="px-4 py-4">
-                        <button type="button" onClick={() => openClient(client)} aria-label={t('cab.clientsPage.view')} className="text-primary">
-                          <AppIcon icon={EyeIcon} size={20} />
-                        </button>
+                        <div className="flex items-center justify-center gap-3" onClick={(event) => event.stopPropagation()}>
+                          <Tooltip label={client.supportingDocumentUrl ? t('cab.clientsPage.download') : t('cab.clientsPage.downloadUnavailable')}>
+                            <button
+                              type="button"
+                              onClick={() => handleDownload(client)}
+                              disabled={!client.supportingDocumentUrl}
+                              aria-label={t('cab.clientsPage.download')}
+                              className="text-primary disabled:cursor-not-allowed disabled:text-neutral-300"
+                            >
+                              <AppIcon icon={DownloadTrayIcon} size={20} />
+                            </button>
+                          </Tooltip>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(client)}
+                            aria-label={t('cab.clientsPage.delete')}
+                            className="text-error-500"
+                          >
+                            <AppIcon icon={TrashIcon} size={20} />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -143,17 +219,46 @@ export function CabClientsPage() {
           </div>
 
           <div className="space-y-3 px-5 md:hidden">
-            {!loading && result.items.map((client) => (
-              <button
-                key={client.id}
-                type="button"
-                onClick={() => openClient(client)}
-                className="w-full rounded-[12px] border border-[#ececec] p-4 text-start"
-              >
-                <p className="font-semibold text-neutral-900">{client.legalEntityName || '—'}</p>
-                <p className="text-[13px] text-neutral-500">{client.registrationNumber || '—'}</p>
-                <p className="mt-2 text-[14px] text-neutral-700">{client.contactEmail || '—'}</p>
-              </button>
+            {!loading && result.items.map((client, index) => (
+              <div key={client.id} className="w-full rounded-[12px] border border-[#ececec] p-4">
+                <button type="button" onClick={() => openClient(client)} className="w-full text-start">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="font-semibold text-neutral-900">{client.legalEntityName || '—'}</p>
+                    <span
+                      className={cn(
+                        'inline-flex shrink-0 items-center justify-center rounded-[10px] px-3 py-1 text-[12px] font-medium',
+                        statusStyles[client.status]
+                      )}
+                    >
+                      {t(`cab.clientsPage.status.${client.status.toLowerCase()}`)}
+                    </span>
+                  </div>
+                  <p className="text-[13px] text-neutral-500">
+                    {t('cab.clientsPage.table.serial')} {startIndex + index + 1} · {client.applicationNumber || '—'}
+                  </p>
+                  <p className="mt-2 text-[14px] text-neutral-700">{client.assignedToName || '—'}</p>
+                  <p className="text-[13px] text-neutral-500">{formatDate(client.createdAt)}</p>
+                </button>
+                <div className="mt-3 flex items-center justify-end gap-4 border-t border-[#ececec] pt-3">
+                  <button
+                    type="button"
+                    onClick={() => handleDownload(client)}
+                    disabled={!client.supportingDocumentUrl}
+                    aria-label={client.supportingDocumentUrl ? t('cab.clientsPage.download') : t('cab.clientsPage.downloadUnavailable')}
+                    className="text-primary disabled:cursor-not-allowed disabled:text-neutral-300"
+                  >
+                    <AppIcon icon={DownloadTrayIcon} size={20} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(client)}
+                    aria-label={t('cab.clientsPage.delete')}
+                    className="text-error-500"
+                  >
+                    <AppIcon icon={TrashIcon} size={20} />
+                  </button>
+                </div>
+              </div>
             ))}
             {loading && <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>}
             {!loading && !result.items.length && <p className="py-6 text-center text-neutral-500">{t('cab.clientsPage.empty')}</p>}

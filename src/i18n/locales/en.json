@@ -846,6 +846,24 @@
       "branches": "Branches",
       "officialDocs": "Official Documents"
     },
+    "tour": {
+      "header": {
+        "title": "Your Company Profile",
+        "description": "Complete your company's data here — it's required before you can submit certification requests."
+      },
+      "stepper": {
+        "title": "Four Simple Steps",
+        "description": "Main data, address, branches, and official documents. Jump between completed steps anytime."
+      },
+      "content": {
+        "title": "Fill In the Details",
+        "description": "Each step has its own form — fill it out, then move to the next."
+      },
+      "footer": {
+        "title": "Save & Continue",
+        "description": "Save a draft anytime, or move to the next step once the current one is complete."
+      }
+    },
     "profileHeader": {
       "companySummaryLabel": "Company Summary",
       "companySummaryPlaceholder": "Enter main data about your company to start creating the company profile",
@@ -1390,6 +1408,20 @@
       "currency": "Currency",
       "invoiceStatus": "Invoice status",
       "details": "Invoice details"
+    },
+    "tour": {
+      "header": {
+        "title": "Your Invoices",
+        "description": "This page lists every invoice issued to you, with its amount, currency, and payment status."
+      },
+      "toolbar": {
+        "title": "Search, Filter & Export",
+        "description": "Search by name or order number, filter by currency or status, and export the list to PDF or Excel."
+      },
+      "table": {
+        "title": "Invoice Details",
+        "description": "Each row shows the order, amount, and payment status — preview or print any invoice from here."
+      }
     }
   },
   "periodicVisits": {
@@ -1413,6 +1445,20 @@
       "economicSector": "Economic sector",
       "visitingDate": "Visiting date",
       "procedures": "Procedures"
+    },
+    "tour": {
+      "header": {
+        "title": "Your Periodic Visits",
+        "description": "This page lists every periodic visit scheduled for your certificates, along with its procedure type."
+      },
+      "toolbar": {
+        "title": "Search, Filter & Export",
+        "description": "Search by certificate or specification, filter by specification or procedure, and export the list to PDF or Excel."
+      },
+      "table": {
+        "title": "Visit Details",
+        "description": "Each row shows the certificate, specification, sector, visiting date, and procedure for that visit."
+      }
     }
   },
   "onboarding": {
@@ -2964,17 +3010,22 @@
       "loadError": "Clients could not be loaded.",
       "empty": "No clients found.",
       "view": "View client",
+      "delete": "Delete client",
+      "deleteConfirm": "Delete {{name}}? This cannot be undone.",
+      "download": "Download supporting document",
+      "downloadUnavailable": "No document to download",
       "status": {
         "draft": "Draft",
         "registered": "Registered",
         "inactive": "Inactive"
       },
       "table": {
-        "client": "Client",
-        "registration": "Registration No.",
-        "contact": "Primary Contact",
-        "location": "Location",
+        "serial": "#",
+        "client": "Audit Client",
+        "applicationNumber": "Application No.",
+        "assignedPerson": "Assigned Person",
         "status": "Status",
+        "createdAt": "Date of Creation",
         "actions": "Actions"
       }
     },

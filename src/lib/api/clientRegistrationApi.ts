@@ -43,6 +43,8 @@ export interface CabClient {
   status: CabClientStatus
   createdAt: string
   updatedAt: string
+  applicationNumber?: string | null
+  assignedToName?: string | null
 }
 
 export interface CabClientList {
@@ -134,6 +136,12 @@ export function getCabClient(clientId: string): Promise<CabClient> {
     `/cab-clients/${clientId}`,
     requireToken()
   ).then((result) => result.client)
+}
+
+export function deleteCabClient(clientId: string): Promise<void> {
+  return apiRequestWithAuth<void>(`/cab-clients/${clientId}`, requireToken(), {
+    method: 'DELETE',
+  })
 }
 
 export function cabClientToForm(client: CabClient): ClientRegistrationForm {

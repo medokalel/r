@@ -163,3 +163,127 @@ export function useWalletTourSteps(): TourStepConfig[] {
     },
   ]
 }
+
+/**
+ * Tour steps for the Periodic Visits page. Same hook-per-page pattern as the
+ * other auditee tours, kept separate since it runs its own tourId/storage key.
+ */
+export function usePeriodicVisitsTourSteps(): TourStepConfig[] {
+  const { t } = useTranslation()
+
+  return [
+    {
+      id: 'visits-header',
+      step: 1,
+      totalSteps: 3,
+      title: t('periodicVisits.tour.header.title'),
+      description: t('periodicVisits.tour.header.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'visits-toolbar',
+      step: 2,
+      totalSteps: 3,
+      title: t('periodicVisits.tour.toolbar.title'),
+      description: t('periodicVisits.tour.toolbar.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'visits-table',
+      step: 3,
+      totalSteps: 3,
+      title: t('periodicVisits.tour.table.title'),
+      description: t('periodicVisits.tour.table.description'),
+      side: 'top',
+      align: 'start',
+    },
+  ]
+}
+
+/**
+ * Tour steps for the Invoices page. Same hook-per-page pattern as the other
+ * auditee tours, kept separate since it runs its own tourId/storage key.
+ */
+export function useInvoicesTourSteps(): TourStepConfig[] {
+  const { t } = useTranslation()
+
+  return [
+    {
+      id: 'invoices-header',
+      step: 1,
+      totalSteps: 3,
+      title: t('invoices.tour.header.title'),
+      description: t('invoices.tour.header.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'invoices-toolbar',
+      step: 2,
+      totalSteps: 3,
+      title: t('invoices.tour.toolbar.title'),
+      description: t('invoices.tour.toolbar.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'invoices-table',
+      step: 3,
+      totalSteps: 3,
+      title: t('invoices.tour.table.title'),
+      description: t('invoices.tour.table.description'),
+      side: 'top',
+      align: 'start',
+    },
+  ]
+}
+
+/**
+ * Tour steps for the Company Profile wizard. Same hook-per-page pattern as
+ * the other auditee tours, kept separate since it runs its own
+ * tourId/storage key.
+ */
+export function useCompanyProfileTourSteps(): TourStepConfig[] {
+  const { t } = useTranslation()
+
+  return [
+    {
+      id: 'profile-header',
+      step: 1,
+      totalSteps: 4,
+      title: t('companyProfile.tour.header.title'),
+      description: t('companyProfile.tour.header.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'profile-stepper',
+      step: 2,
+      totalSteps: 4,
+      title: t('companyProfile.tour.stepper.title'),
+      description: t('companyProfile.tour.stepper.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'profile-content',
+      step: 3,
+      totalSteps: 4,
+      title: t('companyProfile.tour.content.title'),
+      description: t('companyProfile.tour.content.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'profile-footer',
+      step: 4,
+      totalSteps: 4,
+      title: t('companyProfile.tour.footer.title'),
+      description: t('companyProfile.tour.footer.description'),
+      side: 'top',
+      align: 'end',
+    },
+  ]
+}
