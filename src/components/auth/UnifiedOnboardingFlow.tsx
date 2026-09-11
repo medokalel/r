@@ -1018,16 +1018,14 @@ export function UnifiedOnboardingFlow() {
       onSuccessBack={() => setStep(summaryStep)}
       onSuccessContinue={() => {
         const session = getAuthSession()
-        if (session?.cab?.setupCompleted || deck === 'cab') {
-          navigate(ROUTES.cabDashboard)
+        if (session?.cab?.setupCompleted || deck === 'cab' || form.entityType === 'CERTIFICATION_BODY') {
+          navigate(ROUTES.workspace)
           return
         }
         navigate(
-          form.entityType === 'CERTIFICATION_BODY'
-            ? ROUTES.cabDashboard
-            : form.entityType === 'ACCREDITATION_BODY'
-              ? ROUTES.abDashboard
-              : ROUTES.dashboard
+          form.entityType === 'ACCREDITATION_BODY'
+            ? ROUTES.abDashboard
+            : ROUTES.dashboard
         )
       }}
       error={

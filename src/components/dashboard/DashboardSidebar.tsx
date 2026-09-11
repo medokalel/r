@@ -16,11 +16,11 @@ import {
 } from '@/components/icons'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import { clearAuthSession } from '@/lib/authStorage'
-import { isDashboardNavActive, ROUTES } from '@/lib/routes'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
-  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
+  { icon: DashboardGridIcon, labelKey: 'nav.home', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
@@ -101,11 +101,7 @@ export function DashboardSidebar() {
       >
         <div className={cn('flex flex-col', expanded ? 'gap-2' : 'items-center gap-10')}>
           {navItems.map(({ icon, labelKey, href }) => {
-            const isActive = href
-              ? href === ROUTES.dashboard
-                ? isDashboardNavActive(location.pathname)
-                : location.pathname === href
-              : false
+            const isActive = href ? location.pathname === href : false
             return (
               <button
                 key={labelKey}

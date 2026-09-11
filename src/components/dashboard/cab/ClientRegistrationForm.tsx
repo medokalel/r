@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormField, SelectField, TextField, Textarea } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
@@ -64,6 +64,7 @@ export function ClientRegistrationForm({
 }: ClientRegistrationFormProps) {
   const { t, i18n } = useTranslation()
   const [fileError, setFileError] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const stateOptions = useStateOptions(form.country)
   const addressStateOptions = useStateOptions(form.addressCountry)
@@ -388,8 +389,7 @@ export function ClientRegistrationForm({
             />
           </FormField>
 
-          {/* Simple optional single-file dashed dropzone */}
-          <label className="flex cursor-pointer flex-col items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-primary/40 bg-[#f9fafc] px-6 py-8 text-center">
+          <div className="flex flex-col items-center gap-3 rounded-[var(--radius-md)] border border-dashed border-primary/40 bg-[#f9fafc] px-6 py-8 text-center">
             <AppIcon icon={UploadOutlineIcon} size={40} className="text-primary" />
             <span className="text-[14px] text-neutral-600">
               {attachedFile?.name ??
@@ -399,33 +399,36 @@ export function ClientRegistrationForm({
             <Button
               type="button"
               variant="tertiary"
-              className="pointer-events-none h-10 min-w-[140px] rounded-[8px] bg-white"
+              className="h-10 min-w-[140px] rounded-[8px] bg-white"
+              onClick={() => fileInputRef.current?.click()}
             >
               {t('documentUpload.selectFile')}
             </Button>
             <input
+              ref={fileInputRef}
               type="file"
               className="hidden"
-              accept=".pdf,.png,.jpg,.jpeg"
+              accept=".pdf,.png,.jpg,.jpeg,application/pdf,image/png,image/jpeg"
               onChange={(event) => {
                 const file = event.target.files?.[0] ?? null
                 event.target.value = ''
                 if (!file) return
-                if (!['application/pdf', 'image/png', 'image/jpeg'].includes(file.type)) {
+                const allowedType =
+                  ['application/pdf', 'image/png', 'image/jpeg', 'image/jpg'].includes(file.type) ||
+                  /\.(pdf|png|jpe?g)$/i.test(file.name)
+                if (!allowedType) {
                   setFileError(t('validation.invalidDocumentType'))
-                  onAttachFile(null)
                   return
                 }
                 if (file.size > 10 * 1024 * 1024) {
                   setFileError(t('validation.fileTooLarge', { size: 10 }))
-                  onAttachFile(null)
                   return
                 }
                 setFileError('')
                 onAttachFile(file)
               }}
             />
-          </label>
+          </div>
           {(attachedFile || existingDocumentName) && onClearDocument && (
             <button
               type="button"

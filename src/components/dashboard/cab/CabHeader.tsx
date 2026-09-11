@@ -18,10 +18,16 @@ interface CabHeaderProps {
   title: string
   subtitle?: string
   notificationCount?: number
+  logoClassName?: string
 }
 
 /** Matches AccreditationHeader's style/layout exactly, scoped to the CAB dashboard's simpler title+subtitle. */
-export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderProps) {
+export function CabHeader({
+  title,
+  subtitle,
+  notificationCount = 0,
+  logoClassName = 'h-10 w-auto object-contain sm:h-12',
+}: CabHeaderProps) {
   const { t, i18n } = useTranslation()
   const session = getAuthSession()
   const navigate = useNavigate()
@@ -66,7 +72,7 @@ export function CabHeader({ title, subtitle, notificationCount = 0 }: CabHeaderP
           <img
             src="/casco-logo.svg"
             alt={t('common.appName')}
-            className="h-10 w-auto object-contain sm:h-12"
+            className={logoClassName}
           />
         )}
         {subtitle && <p className="text-body-3 text-neutral-500">{subtitle}</p>}

@@ -72,10 +72,12 @@ export const emptyClientRegistrationForm: ClientRegistrationForm = {
 }
 
 export function isClientInfoComplete(form: ClientRegistrationForm): boolean {
+  const incorporationDate = form.incorporationDate
   const incorporationDateValid =
-    form.incorporationDate instanceof Date &&
-    !Number.isNaN(form.incorporationDate.getTime()) &&
-    form.incorporationDate.getTime() <= Date.now()
+    incorporationDate instanceof Date &&
+    !Number.isNaN(incorporationDate.getTime()) &&
+    new Date(incorporationDate.getFullYear(), incorporationDate.getMonth(), incorporationDate.getDate()).getTime() <=
+      new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime()
   return Boolean(
     form.legalEntityName.trim() &&
       form.organizationType &&

@@ -9,7 +9,6 @@ import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgres
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import {
   emptyClientRegistrationForm,
-  isClientRegistrationComplete,
 } from '@/lib/clientRegistrationForm'
 import {
   cabClientToForm,
@@ -36,6 +35,16 @@ export function ClientRegistrationPage() {
   const [loading, setLoading] = useState(editing)
   const [saving, setSaving] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
+  const [formKey, setFormKey] = useState(0)
+
+  const resetCreateForm = () => {
+    setForm(emptyClientRegistrationForm)
+    setAttachedFile(null)
+    setExistingDocumentName(null)
+    setClearDocument(false)
+    setDraftId(null)
+    setFormKey((key) => key + 1)
+  }
 
   useEffect(() => {
     if (!clientId) return
@@ -66,8 +75,6 @@ export function ClientRegistrationPage() {
 
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
 
-  const complete = isClientRegistrationComplete(form)
-
   const save = async (status: 'DRAFT' | 'REGISTERED') => {
     setSaving(true)
     setFeedback(null)
@@ -79,7 +86,7 @@ export function ClientRegistrationPage() {
       setAttachedFile(null)
       setClearDocument(false)
       setExistingDocumentName(result.client.supportingDocumentOriginalName)
-      if (!clientId) {
+      if (!clientId && status === 'DRAFT') {
         navigate(`/cab/clients/${result.client.id}/edit`, { replace: true })
       }
       setFeedback({ type: 'success', message: result.message })
@@ -87,7 +94,10 @@ export function ClientRegistrationPage() {
     } catch (error) {
       setFeedback({
         type: 'error',
-        message: error instanceof ApiError ? error.message : t('cab.clientRegistration.saveError'),
+        message:
+          error instanceof ApiError
+            ? [error.message, ...(error.errors ?? [])].filter(Boolean).join(' ')
+            : t('cab.clientRegistration.saveError'),
       })
       return null
     } finally {
@@ -99,10 +109,15 @@ export function ClientRegistrationPage() {
     void save('DRAFT')
   }
 
+  const handleSaveChanges = () => {
+    void save('REGISTERED')
+  }
+
   const handleSaveDraftAndContinue = async () => {
-    if (!complete) return
     const client = await save('REGISTERED')
-    if (client) navigate(`/cab/clients/${client.id}`)
+    if (!client) return
+    resetCreateForm()
+    navigate('/cab/clients/new', { replace: true })
   }
 
   return (
@@ -154,6 +169,7 @@ export function ClientRegistrationPage() {
         <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
           <div className="min-w-0 flex-1 space-y-5">
             <ClientRegistrationForm
+              key={formKey}
               form={form}
               onPatch={patch}
               attachedFile={attachedFile}
@@ -192,8 +208,8 @@ export function ClientRegistrationPage() {
           onSaveDraft={handleSaveDraft}
           saveDraftDisabled={saving || loading}
           saveDraftLoading={saving}
-          onNext={handleSaveDraftAndContinue}
-          nextDisabled={!complete || saving || loading}
+          onNext={editing ? handleSaveChanges : handleSaveDraftAndContinue}
+          nextDisabled={saving || loading}
           nextLabel={
             saving
               ? t('common.loading')

@@ -4,6 +4,7 @@ export const ROUTES = {
   register: '/register',
   forgotPassword: '/forgot-password',
   privacyPolicy: '/privacy-policy',
+  workspace: '/workspace',
   dashboard: '/dashboard',
   dashboardTasks: '/dashboard/tasks',
   certificationRequestNew: '/certification-request/new',
@@ -44,7 +45,7 @@ export function cabApplicationQuotationPath(applicationId?: string): string {
     : ROUTES.cabApplicationQuotation
 }
 
-/** Post-login landing page for authenticated users. */
+/** Default post-login landing page for non-CAB authenticated users. */
 export const AUTHENTICATED_HOME = ROUTES.dashboard
 
 /** Previous dashboard URL — redirect only, do not link to this in new code. */

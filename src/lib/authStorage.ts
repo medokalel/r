@@ -34,16 +34,15 @@ export function isAuditClientSession(session = getAuthSession()): boolean {
   )
 }
 
-/** After login, unfinished onboarding goes to the shared wizard. CAB users
- *  land on the CAB dashboard once onboarded; everyone else uses the generic
- *  dashboard. */
+/** After login, unfinished onboarding goes to the shared wizard. Every
+ *  onboarded account lands in the application workspace. */
 export function getPostLoginRedirect(session: LoginResponseData): string {
   if (session.cab && !session.cab.setupCompleted) {
     return ROUTES.onboarding
   }
 
   if (isAuditClientSession(session)) {
-    return AUTHENTICATED_HOME
+    return ROUTES.dashboard
   }
 
   const org = session.organization
@@ -51,7 +50,7 @@ export function getPostLoginRedirect(session: LoginResponseData): string {
     return ROUTES.onboarding
   }
   if (session.cab?.setupCompleted || org?.type === 'CERTIFICATION_BODY') {
-    return ROUTES.cabDashboard
+    return ROUTES.workspace
   }
   if (org?.type === 'ACCREDITATION_BODY') {
     return ROUTES.abDashboard

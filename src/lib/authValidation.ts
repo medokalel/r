@@ -8,6 +8,13 @@ export function isValidRequiredEmail(value: string): boolean {
   return trimmed.length > 0 && EMAIL_PATTERN.test(trimmed)
 }
 
+/** Login accepts a full email or a local demo username (mapped to @icasco.co). */
+export function isValidLoginIdentifier(value: string): boolean {
+  const trimmed = value.trim()
+  if (isValidRequiredEmail(trimmed)) return true
+  return /^[a-zA-Z0-9._-]{3,}$/.test(trimmed)
+}
+
 export function isValidPassword(value: string): boolean {
   return value.length >= MIN_PASSWORD_LENGTH
 }

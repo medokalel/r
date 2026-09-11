@@ -21,6 +21,7 @@ import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
+import { WorkspacePage } from '@/pages/WorkspacePage'
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
 import { CabCompanyProfilePage } from '@/pages/CabCompanyProfilePage'
 import { AbDashboardPage } from '@/pages/AbDashboardPage'
@@ -61,6 +62,14 @@ export default function App() {
             <Route path={ROUTES.register} element={<RegisterPage />} />
             <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
             <Route path={ROUTES.privacyPolicy} element={<PrivacyPolicyPage />} />
+            <Route
+              path={ROUTES.workspace}
+              element={
+                <RequireAuth>
+                  <WorkspacePage />
+                </RequireAuth>
+              }
+            />
             <Route
               path={ROUTES.cabDashboard}
               element={

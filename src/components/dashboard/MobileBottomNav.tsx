@@ -16,11 +16,11 @@ import {
   MoreIcon,
 } from '@/components/icons'
 import { clearAuthSession } from '@/lib/authStorage'
-import { isDashboardNavActive, ROUTES } from '@/lib/routes'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const primaryItems = [
-  { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
+  { icon: DashboardGridIcon, labelKey: 'nav.home', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
@@ -52,11 +52,7 @@ export function MobileBottomNav() {
         aria-label={t('nav.dashboard')}
       >
         {primaryItems.map(({ icon, labelKey, href }) => {
-          const isActive = href
-            ? href === ROUTES.dashboard
-              ? isDashboardNavActive(location.pathname)
-              : location.pathname === href
-            : false
+          const isActive = href ? location.pathname === href : false
           return (
             <button
               key={labelKey}

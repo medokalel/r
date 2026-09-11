@@ -76,7 +76,12 @@ function toClientFormData(
 
   for (const [key, value] of Object.entries(form)) {
     if (key === 'incorporationDate') {
-      data.set(key, value instanceof Date ? value.toISOString() : '')
+      if (value instanceof Date && !Number.isNaN(value.getTime())) {
+        const year = value.getFullYear()
+        const month = String(value.getMonth() + 1).padStart(2, '0')
+        const day = String(value.getDate()).padStart(2, '0')
+        data.set(key, `${year}-${month}-${day}`)
+      }
       continue
     }
     if (key === 'website') {

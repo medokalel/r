@@ -25,6 +25,7 @@ import {
   WalletIcon,
 } from '@/components/icons'
 import { clearAuthSession } from '@/lib/authStorage'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useOptionalTour } from '@/context/TourContext'
@@ -38,8 +39,8 @@ interface CabNavItem {
 
 const dashboardItem: CabNavItem = {
   icon: DashboardIcon,
-  labelKey: 'cab.sidebar.dashboard',
-  href: '/cab/dashboard',
+  labelKey: 'nav.home',
+  href: ROUTES.workspace,
   stepId: 'sidebar-navigation',
 }
 

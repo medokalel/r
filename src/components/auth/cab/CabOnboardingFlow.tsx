@@ -146,7 +146,7 @@ export function CabOnboardingFlow() {
       }}
       onIntroStart={() => setStep(1)}
       onSuccessBack={() => setStep(6)}
-      onSuccessContinue={() => navigate(ROUTES.cabDashboard)}
+      onSuccessContinue={() => navigate(ROUTES.workspace)}
       error={saveError && step === 6 ? <p className="text-small-light text-error-500 mt-4">{saveError}</p> : null}
       actions={
         <AuthStepActions
