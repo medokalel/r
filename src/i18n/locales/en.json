@@ -4633,6 +4633,48 @@
         },
         "tabPlaceholder": "This tab content is available on the Application Review page."
       }
+    },
+    "applicationRegister": {
+      "title": "Application register",
+      "subtitle": "View and manage certification applications.",
+      "newApplication": "New application",
+      "export": "Export",
+      "exportPdf": "Export as PDF",
+      "exportExcel": "Export as Excel",
+      "clearFilters": "Clear filters",
+      "empty": "No applications found.",
+      "loadError": "Applications could not be loaded.",
+      "showingRange": "Showing {{from}} to {{to}} of {{total}} applications",
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "Search by application code or client code...",
+        "createdPeriod": "Created period",
+        "createdPeriodPlaceholder": "Select period",
+        "country": "Country",
+        "allCountries": "All countries",
+        "status": "Status",
+        "allStatuses": "All statuses"
+      },
+      "table": {
+        "applicationCode": "Application code",
+        "clientCode": "Client code",
+        "clientName": "Client name",
+        "standards": "Standards",
+        "stage": "Stage",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "status": {
+        "draft": "Draft",
+        "underReview": "Under Review",
+        "assessment": "Assessment",
+        "approved": "Approved",
+        "inProgress": "In Progress"
+      },
+      "rowActions": {
+        "view": "View",
+        "continueDraft": "Continue draft"
+      }
     }
   },
   "ia": {

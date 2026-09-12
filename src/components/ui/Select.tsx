@@ -6,8 +6,7 @@ import { fieldHeightClassName, fieldInputClassName, fieldTextClassName } from '@
 import { useDirection } from '@/context/DirectionContext'
 import { cn } from '@/lib/utils'
 
-/** Options may be plain strings (value === label) or explicit value/label pairs. */
-type SelectOption = string | { value: string; label: string }
+type SelectOption = string | { value: string; label: string; textValue?: string }
 
 interface SelectFieldProps {
   value: string
@@ -82,6 +81,7 @@ export function SelectField({
               <Select.Item
                 key={opt.value}
                 value={opt.value}
+                textValue={opt.textValue ?? opt.label}
                 className={cn(
                   fieldTextClassName,
                   'relative flex cursor-pointer select-none items-center rounded-[var(--radius-xs)] px-3 py-2 font-light text-neutral-900 outline-none',

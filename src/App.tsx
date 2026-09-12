@@ -23,6 +23,7 @@ import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { WorkspacePage } from '@/pages/WorkspacePage'
 import { CabDashboardPage } from '@/pages/CabDashboardPage'
+import { CabApplicationRegisterPage } from '@/pages/CabApplicationRegisterPage'
 import { CabCompanyProfilePage } from '@/pages/CabCompanyProfilePage'
 import { AbDashboardPage } from '@/pages/AbDashboardPage'
 import { OnboardingPage } from '@/pages/OnboardingPage'
@@ -129,6 +130,16 @@ export default function App() {
               element={
                 <RequireAuth>
                   <AuditeeOnboardingPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabApplicationRegister}
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabApplicationRegisterPage />
+                  </RequireCabOnboarded>
                 </RequireAuth>
               }
             />

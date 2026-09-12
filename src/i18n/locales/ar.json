@@ -4673,6 +4673,48 @@
         },
         "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب."
       }
+    },
+    "applicationRegister": {
+      "title": "سجل الطلبات",
+      "subtitle": "عرض وإدارة طلبات إصدار الشهادات.",
+      "newApplication": "طلب جديد",
+      "export": "تصدير",
+      "exportPdf": "تصدير كملف PDF",
+      "exportExcel": "تصدير كملف Excel",
+      "clearFilters": "مسح الفلاتر",
+      "empty": "لا توجد طلبات.",
+      "loadError": "تعذر تحميل الطلبات.",
+      "showingRange": "عرض {{from}} إلى {{to}} من أصل {{total}} طلب",
+      "filters": {
+        "search": "بحث",
+        "searchPlaceholder": "ابحث برمز الطلب أو رمز العميل...",
+        "createdPeriod": "فترة الإنشاء",
+        "createdPeriodPlaceholder": "اختر الفترة",
+        "country": "الدولة",
+        "allCountries": "كل الدول",
+        "status": "الحالة",
+        "allStatuses": "كل الحالات"
+      },
+      "table": {
+        "applicationCode": "رمز الطلب",
+        "clientCode": "رمز العميل",
+        "clientName": "اسم العميل",
+        "standards": "المعايير",
+        "stage": "المرحلة",
+        "updated": "آخر تحديث",
+        "actions": "إجراءات"
+      },
+      "status": {
+        "draft": "مسودة",
+        "underReview": "قيد المراجعة",
+        "assessment": "قيد التقييم",
+        "approved": "معتمد",
+        "inProgress": "قيد التنفيذ"
+      },
+      "rowActions": {
+        "view": "عرض",
+        "continueDraft": "متابعة المسودة"
+      }
     }
   },
   "ia": {

@@ -4,8 +4,8 @@ import { cn } from '@/lib/utils'
 
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2',
-    'rounded-[var(--radius-default)] text-[16px] font-semibold',
+    'inline-flex items-center justify-center gap-2.5',
+    'rounded-[var(--radius-sm)] text-[16px] font-semibold',
     'transition-[background-color,color,border-color,transform] duration-150',
     'cursor-pointer disabled:cursor-not-allowed',
     // Press feedback: a quick, subtle scale-down on click, skipped when disabled
@@ -48,9 +48,9 @@ const buttonVariants = cva(
         ].join(' '),
       },
       size: {
-        default: 'h-12 px-4',
+        default: 'h-14 px-6 py-2.5',
         sm: 'h-8 px-3 text-small-medium',
-        lg: 'h-12 px-6',
+        lg: 'h-14 px-6 py-2.5',
         icon: 'h-12 w-12 p-0',
         'icon-sm': 'h-8 w-8 p-0',
       },

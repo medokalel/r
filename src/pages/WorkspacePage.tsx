@@ -38,8 +38,8 @@ interface WorkspaceApp {
 const cabApps: WorkspaceApp[] = [
   {
     title: 'Applications',
-    description: 'Create and manage certification application drafts.',
-    route: '/cab/applications/draft',
+    description: 'View, create, and manage certification applications.',
+    route: ROUTES.cabApplicationRegister,
     icon: FileTextIcon,
   },
   {

@@ -30,7 +30,11 @@ export function CountrySelectField({ value, onChange, className }: CountrySelect
   return (
     <SelectField
       value={selected ? labelFor(selected) : ''}
-      options={countries.map(labelFor)}
+      options={countries.map((country) => ({
+        value: labelFor(country),
+        label: labelFor(country),
+        textValue: country.name,
+      }))}
       onChange={onLabelChange}
       className={className}
     />
