@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -26,6 +26,7 @@ import {
 import { getCountryOptions } from '@/lib/countries' 
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
+import { ROUTES } from '@/lib/routes'
 
 const statusStyles: Record<ApplicationRegisterStatus, string> = {
   DRAFT: 'bg-[#f3f4f6] text-[#4b5563]',
@@ -41,6 +42,14 @@ const STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, string> = {
   ASSESSMENT: 'assessment',
   APPROVED: 'approved',
   IN_PROGRESS: 'inProgress',
+}
+
+function Chevron() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip" aria-hidden>
+      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
 }
 
 function applicationRoute(app: ApplicationRegisterItem): string {
@@ -142,6 +151,13 @@ export function CabApplicationRegisterPage() {
     <CabLayout>
       <CabHeader title={t('cab.applicationRegister.title')} notificationCount={3} />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+          <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
+            {t('cab.applicationRegister.breadcrumbParent')}
+          </Link>
+          <Chevron />
+          <span className="font-medium text-neutral-700">{t('cab.applicationRegister.title')}</span>
+        </nav>
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <h1 className="text-[28px] font-bold leading-tight text-neutral-900">

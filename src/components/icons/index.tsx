@@ -5,6 +5,7 @@ import {
   AddCircle,
   ArrowDown2,
   ArrowRight2,
+  ArrowSwapVertical,
   BoxSearch,
   Buildings,
   Call,
@@ -636,6 +637,7 @@ export {
   Message as CommentIcon,
   Clock as HistoryIcon,
   ArrowRight2 as ArrowRightIcon,
+  ArrowSwapVertical as SortIcon,
   TrendUp as TrendUpIcon,
   TrendDown as TrendDownIcon,
 }

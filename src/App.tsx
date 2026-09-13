@@ -32,6 +32,7 @@ import { AbOnboardingPage } from '@/pages/AbOnboardingPage'
 import { AuditeeOnboardingPage } from '@/pages/AuditeeOnboardingPage'
 import { ClientRegistrationPage } from '@/pages/ClientRegistrationPage'
 import { CabClientsPage } from '@/pages/CabClientsPage'
+import { ClientRegisterPage } from '@/pages/ClientRegisterPage'
 import { CabClientDetailsPage } from '@/pages/CabClientDetailsPage'
 import { ApplicationDraftPage } from '@/pages/ApplicationDraftPage'
 import { AddSitePage } from '@/pages/AddSitePage'
@@ -149,6 +150,16 @@ export default function App() {
                 <RequireAuth>
                   <RequireCabOnboarded>
                     <CabClientsPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabAuditClients}
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <ClientRegisterPage />
                   </RequireCabOnboarded>
                 </RequireAuth>
               }

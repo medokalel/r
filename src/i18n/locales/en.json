@@ -3029,6 +3029,39 @@
         "actions": "Actions"
       }
     },
+    "clientRegister": {
+      "breadcrumbParent": "Workspace",
+      "title": "Client Register",
+      "subtitle": "View and manage your audit clients.",
+      "newClient": "New client",
+      "export": "Export",
+      "exportPdf": "Export as PDF",
+      "exportExcel": "Export as Excel",
+      "clearFilters": "Clear filters",
+      "empty": "No clients found.",
+      "showingRange": "Showing {{from}} to {{to}} of {{total}} clients",
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "Search by client name or code...",
+        "addedPeriod": "Added period",
+        "addedPeriodPlaceholder": "All periods",
+        "country": "Country",
+        "allCountries": "All countries"
+      },
+      "table": {
+        "code": "Code",
+        "client": "Client",
+        "country": "Country",
+        "primaryContact": "Primary contact",
+        "updated": "Updated",
+        "actions": "Actions"
+      },
+      "rowActions": {
+        "view": "View client",
+        "edit": "Edit client",
+        "unavailable": "Available once this page is connected to live data"
+      }
+    },
     "clientDetails": {
       "title": "Client Details",
       "backToClients": "Back to clients",
@@ -4635,6 +4668,7 @@
       }
     },
     "applicationRegister": {
+      "breadcrumbParent": "Workspace",
       "title": "Application register",
       "subtitle": "View and manage certification applications.",
       "newApplication": "New application",

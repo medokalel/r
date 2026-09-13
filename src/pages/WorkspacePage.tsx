@@ -45,7 +45,7 @@ const cabApps: WorkspaceApp[] = [
   {
     title: 'Audit Clients',
     description: 'View and manage registered audit clients.',
-    route: '/cab/clients',
+    route: ROUTES.cabAuditClients,
     icon: UsersIcon,
   },
   {

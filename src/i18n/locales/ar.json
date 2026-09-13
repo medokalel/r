@@ -3069,6 +3069,39 @@
         "actions": "الإجراءات"
       }
     },
+    "clientRegister": {
+      "breadcrumbParent": "مساحة العمل",
+      "title": "سجل العملاء",
+      "subtitle": "عرض وإدارة عملاء التدقيق الخاصين بك.",
+      "newClient": "عميل جديد",
+      "export": "تصدير",
+      "exportPdf": "تصدير PDF",
+      "exportExcel": "تصدير Excel",
+      "clearFilters": "مسح الفلاتر",
+      "empty": "لا يوجد عملاء.",
+      "showingRange": "عرض {{from}} إلى {{to}} من {{total}} عميل",
+      "filters": {
+        "search": "بحث",
+        "searchPlaceholder": "ابحث باسم العميل أو الكود...",
+        "addedPeriod": "فترة الإضافة",
+        "addedPeriodPlaceholder": "كل الفترات",
+        "country": "الدولة",
+        "allCountries": "كل الدول"
+      },
+      "table": {
+        "code": "الكود",
+        "client": "العميل",
+        "country": "الدولة",
+        "primaryContact": "جهة الاتصال الرئيسية",
+        "updated": "آخر تحديث",
+        "actions": "الإجراءات"
+      },
+      "rowActions": {
+        "view": "عرض العميل",
+        "edit": "تعديل العميل",
+        "unavailable": "هتتفعل لما الصفحة ترتبط بالبيانات الفعلية"
+      }
+    },
     "clientDetails": {
       "title": "بيانات العميل",
       "backToClients": "العودة إلى العملاء",
@@ -4675,6 +4708,7 @@
       }
     },
     "applicationRegister": {
+      "breadcrumbParent": "مساحة العمل",
       "title": "سجل الطلبات",
       "subtitle": "عرض وإدارة طلبات إصدار الشهادات.",
       "newApplication": "طلب جديد",
