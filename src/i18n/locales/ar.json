@@ -3000,6 +3000,8 @@
       }
     },
     "clientRegistration": {
+      "breadcrumbWorkspace": "مساحة العمل",
+      "breadcrumbClientRegister": "سجل العملاء",
       "title": "تسجيل عميل",
       "editTitle": "تعديل العميل",
       "subtitle": "سجّل بيانات العميل بدقة. جميع الحقول المعلّمة بـ * إلزامية.",
@@ -3197,6 +3199,8 @@
       "openDocument": "فتح المستند الداعم"
     },
     "applicationDraft": {
+      "breadcrumbWorkspace": "مساحة العمل",
+      "breadcrumbApplicationRegister": "سجل الطلبات",
       "title": "مسودة الطلب",
       "subtitle": "أنشئ واحفظ مسودة الطلب. يمكنك التعديل والإرسال لاحقًا.",
       "saveDraftAndContinue": "حفظ ومتابعة",

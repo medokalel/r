@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ClientRegistrationForm } from '@/components/dashboard/cab/ClientRegistrationForm'
@@ -21,6 +21,16 @@ import { ApiError } from '@/lib/api/client'
 import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useClientRegistrationTourSteps } from '@/config/clientRegistrationTourSteps'
+
+import { ROUTES } from '@/lib/routes'
+
+function Chevron() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip" aria-hidden>
+      <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}
 
 export function ClientRegistrationPage() {
   const { t } = useTranslation()
@@ -137,6 +147,19 @@ export function ClientRegistrationPage() {
       </DashboardTourStep>
 
       <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+          <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
+            {t('cab.clientRegistration.breadcrumbWorkspace')}
+          </Link>
+          <Chevron />
+          <Link to={ROUTES.cabAuditClients} className="font-light text-neutral-400 hover:text-primary">
+            {t('cab.clientRegistration.breadcrumbClientRegister')}
+          </Link>
+          <Chevron />
+          <span className="font-medium text-neutral-700">
+            {t(editing ? 'cab.clientRegistration.editTitle' : 'cab.clientRegistration.title')}
+          </span>
+        </nav>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="space-y-1">
             <h2 className="text-h3-semi text-neutral-900">

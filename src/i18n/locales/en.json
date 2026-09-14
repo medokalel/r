@@ -2960,6 +2960,8 @@
       }
     },
     "clientRegistration": {
+      "breadcrumbWorkspace": "Workspace",
+      "breadcrumbClientRegister": "Client Register",
       "title": "Client Registration",
       "editTitle": "Edit Client",
       "subtitle": "Register client information accurately. All fields marked with * are required.",
@@ -3157,6 +3159,8 @@
       "openDocument": "Open supporting document"
     },
     "applicationDraft": {
+      "breadcrumbWorkspace": "Workspace",
+      "breadcrumbApplicationRegister": "Application register",
       "title": "Application Draft",
       "subtitle": "Create and save the application draft. You can edit and submit later.",
       "saveDraftAndContinue": "Save & Continue",
