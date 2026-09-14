@@ -15,12 +15,14 @@ import { DashboardPage } from '@/pages/DashboardPage'
 import { DashboardTasksPage } from '@/pages/DashboardTasksPage'
 import { UsersPage } from '@/pages/UsersPage'
 import { DigitalWalletPage } from '@/pages/DigitalWalletPage'
+import { InvoicesPage } from '@/pages/InvoicesPage'
 import { PeriodicVisitsPage } from '@/pages/PeriodicVisitsPage'
 import { LoginPage } from '@/pages/LoginPage'
 import { RegisterPage } from '@/pages/RegisterPage'
 import { ForgotPasswordPage } from '@/pages/ForgotPasswordPage'
 import { PrivacyPolicyPage } from '@/pages/PrivacyPolicyPage'
 import { WorkspacePage } from '@/pages/WorkspacePage'
+import { CabDashboardPage } from '@/pages/CabDashboardPage'
 import { CabApplicationRegisterPage } from '@/pages/CabApplicationRegisterPage'
 import { CabCompanyProfilePage } from '@/pages/CabCompanyProfilePage'
 import { AbDashboardPage } from '@/pages/AbDashboardPage'
@@ -38,23 +40,10 @@ import { ApplyMultiSiteRulePage } from '@/pages/ApplyMultiSiteRulePage'
 import { CabMultiSiteRulePreviewPage } from '@/pages/CabMultiSiteRulePreviewPage'
 import { CabApplicationReceiptPage } from '@/pages/CabApplicationReceiptPage'
 import { CabApplicationReviewPage } from '@/pages/CabApplicationReviewPage'
-import { CabWorkspaceLauncherPage } from '@/pages/CabWorkspaceLauncherPage'
-import { CabApplicationReviewQueuePage } from '@/pages/CabApplicationReviewQueuePage'
-import { CabContactsListPage } from '@/pages/CabContactsListPage'
-import { CabAddContactPage } from '@/pages/CabAddContactPage'
 import { CabApplicationInformationRequiredPage } from '@/pages/CabApplicationInformationRequiredPage'
 import { CabApplicationTechnicalFeasibilityPage } from '@/pages/CabApplicationTechnicalFeasibilityPage'
 import { CabApplicationQuotationPage } from '@/pages/CabApplicationQuotationPage'
 import { CabQuotationApprovalPage } from '@/pages/CabQuotationApprovalPage'
-import { CabOfferRegisterPage } from '@/pages/CabOfferRegisterPage'
-import { CabCreateOfferPage } from '@/pages/CabCreateOfferPage'
-import { CabInvoiceRegisterPage } from '@/pages/CabInvoiceRegisterPage'
-import { CabInvoiceDetailsPage } from '@/pages/CabInvoiceDetailsPage'
-import { CabAuditSchedulePage } from '@/pages/CabAuditSchedulePage'
-import { CabBuildAuditPlanPage } from '@/pages/CabBuildAuditPlanPage'
-import { CabAuditReportingPage } from '@/pages/CabAuditReportingPage'
-import { CabAddFindingPage } from '@/pages/CabAddFindingPage'
-import { CabSidebarProvider } from '@/context/CabSidebarContext'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
 import { LEGACY_DASHBOARD_PATH, ROUTES } from '@/lib/routes'
 
@@ -69,8 +58,7 @@ export default function App() {
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <DirectionProvider>
         <BrowserRouter>
-          <CabSidebarProvider>
-            <Routes>
+          <Routes>
             <Route path="/" element={<HomeRedirect />} />
             <Route path={ROUTES.login} element={<LoginPage />} />
             <Route path={ROUTES.register} element={<RegisterPage />} />
@@ -85,28 +73,14 @@ export default function App() {
               }
             />
             <Route
-              path={ROUTES.cabWorkspace}
-              element={
-                <RequireAuth>
-                  <RequireCabOnboarded>
-                    <CabWorkspaceLauncherPage />
-                  </RequireCabOnboarded>
-                </RequireAuth>
-              }
-            />
-            <Route
               path={ROUTES.cabDashboard}
               element={
                 <RequireAuth>
                   <RequireCabOnboarded>
-                    <CabWorkspaceLauncherPage />
+                    <CabDashboardPage />
                   </RequireCabOnboarded>
                 </RequireAuth>
               }
-            />
-            <Route
-              path={ROUTES.cabDashboard}
-              element={<Navigate to={ROUTES.cabWorkspace} replace />}
             />
             <Route
               path={ROUTES.cabCompanyProfile}
@@ -253,40 +227,6 @@ export default function App() {
               }
             />
             <Route
-              path={ROUTES.cabWorkspace}
-              element={
-                <RequireAuth>
-                  <RequireCabOnboarded>
-                    <CabWorkspaceLauncherPage />
-                  </RequireCabOnboarded>
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/cab/applications/review-queue"
-              element={
-                <RequireAuth>
-                  <CabApplicationReviewQueuePage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/cab/contacts"
-              element={
-                <RequireAuth>
-                  <CabContactsListPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path="/cab/contacts/new"
-              element={
-                <RequireAuth>
-                  <CabAddContactPage />
-                </RequireAuth>
-              }
-            />
-            <Route
               path="/cab/applications/receipt"
               element={
                 <RequireAuth>
@@ -383,94 +323,6 @@ export default function App() {
               }
             />
             <Route
-              path={ROUTES.cabOffers}
-              element={
-                <RequireAuth>
-                  <CabOfferRegisterPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabOfferNew}
-              element={
-                <RequireAuth>
-                  <CabCreateOfferPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabInvoices}
-              element={
-                <RequireAuth>
-                  <CabInvoiceRegisterPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabInvoiceDetails}
-              element={
-                <RequireAuth>
-                  <CabInvoiceDetailsPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAuditPlanning}
-              element={
-                <RequireAuth>
-                  <CabAuditSchedulePage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAuditSchedule}
-              element={
-                <RequireAuth>
-                  <CabAuditSchedulePage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabBuildAuditPlan}
-              element={
-                <RequireAuth>
-                  <CabBuildAuditPlanPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAuditPlanNew}
-              element={
-                <RequireAuth>
-                  <CabBuildAuditPlanPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAuditReporting}
-              element={
-                <RequireAuth>
-                  <CabAuditReportingPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAuditWorkspace}
-              element={
-                <RequireAuth>
-                  <CabAuditReportingPage />
-                </RequireAuth>
-              }
-            />
-            <Route
-              path={ROUTES.cabAddFinding}
-              element={
-                <RequireAuth>
-                  <CabAddFindingPage />
-                </RequireAuth>
-              }
-            />
-            <Route
               path={ROUTES.dashboard}
               element={
                 <RequireAuth>
@@ -545,13 +397,12 @@ export default function App() {
               path={ROUTES.invoices}
               element={
                 <RequireAuth>
-                  <CabInvoiceRegisterPage />
+                  <InvoicesPage />
                 </RequireAuth>
               }
             />
             <Route path="*" element={<HomeRedirect />} />
           </Routes>
-          </CabSidebarProvider>
         </BrowserRouter>
       </DirectionProvider>
     </Suspense>

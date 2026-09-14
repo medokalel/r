@@ -37,24 +37,20 @@ export function isAuditClientSession(session = getAuthSession()): boolean {
 /** After login, unfinished onboarding goes to the shared wizard. Every
  *  onboarded account lands in the application workspace. */
 export function getPostLoginRedirect(session: LoginResponseData): string {
+  if (session.cab && !session.cab.setupCompleted) {
+    return ROUTES.onboarding
+  }
+
   if (isAuditClientSession(session)) {
     return ROUTES.dashboard
   }
 
   const org = session.organization
-
-  // CAB users: check all onboarding sources (session flag + localStorage fallbacks)
-  if (
-    session.cab ||
-    org?.type === 'CERTIFICATION_BODY'
-  ) {
-    if (isCabUserOnboarded()) {
-      return ROUTES.cabWorkspace
-    }
-    return ROUTES.onboarding
-  }
   if (org && !isOnboardingComplete(org.id, org.onboardingStatus)) {
     return ROUTES.onboarding
+  }
+  if (session.cab?.setupCompleted || org?.type === 'CERTIFICATION_BODY') {
+    return ROUTES.workspace
   }
   if (org?.type === 'ACCREDITATION_BODY') {
     return ROUTES.abDashboard
@@ -88,45 +84,21 @@ export function patchAuthOrganizationType(type: OrganizationType): void {
 
 export function patchCabSetupCompleted(setupCompleted: boolean): void {
   const session = getAuthSession()
-  if (setupCompleted) {
-    localStorage.setItem('icasco_cab_onboarding_completed', 'true')
-    sessionStorage.setItem('icasco_cab_onboarding_completed', 'true')
-    if (session?.organization?.id) {
-      localStorage.setItem('icasco_onboarding_complete_' + session.organization.id, 'true')
-    }
-  }
-
-  if (!session) return
+  if (!session?.cab) return
 
   const nextSession: LoginResponseData = {
     ...session,
-    cab: {
-      id: session.cab?.id || session.organization?.id || 'cab-default',
-      status: session.cab?.status || 'ACTIVE',
-      setupCompleted,
-    },
+    cab: { ...session.cab, setupCompleted },
   }
 
   if (localStorage.getItem(SESSION_KEY)) {
     localStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
+    return
   }
+
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(nextSession))
 }
 
 export function isCabUserOnboarded(): boolean {
-  const session = getAuthSession()
-  if (session?.cab?.setupCompleted === true) return true
-  if (
-    localStorage.getItem('icasco_cab_onboarding_completed') === 'true' ||
-    sessionStorage.getItem('icasco_cab_onboarding_completed') === 'true'
-  ) {
-    return true
-  }
-  if (
-    session?.organization?.id &&
-    isOnboardingComplete(session.organization.id, session.organization.onboardingStatus)
-  ) {
-    return true
-  }
-  return false
+  return getAuthSession()?.cab?.setupCompleted === true
 }

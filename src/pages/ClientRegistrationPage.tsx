@@ -21,7 +21,6 @@ import { ApiError } from '@/lib/api/client'
 import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useClientRegistrationTourSteps } from '@/config/clientRegistrationTourSteps'
-
 import { ROUTES } from '@/lib/routes'
 
 function Chevron() {
