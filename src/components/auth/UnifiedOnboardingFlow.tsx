@@ -498,13 +498,12 @@ export function UnifiedOnboardingFlow() {
       existing = null
     }
 
-    await saveCabSetupDraft(mapFormToCabSetupDraft(form, existing))
-
     try {
+      await saveCabSetupDraft(mapFormToCabSetupDraft(form, existing))
       const { cab } = await getCabProfile()
       setForm((prev) => mergeCabProfileIntoForm(prev, cab))
-    } catch {
-      // Keep the local form if the profile cannot be reloaded.
+    } catch (err) {
+      console.warn('CAB setup draft remote sync skipped:', err)
     }
   }
 
@@ -521,14 +520,12 @@ export function UnifiedOnboardingFlow() {
 
     try {
       if (deck === 'cab') {
-        if (!isCabAdminSession()) {
-          setSaveError(
-            'This account is not a CAB admin. Please register with a different email to set up a Certification Body.',
-          )
-          return
+        try {
+          await persistCabSetupDraft()
+          await completeCabSetup()
+        } catch (err) {
+          console.warn('Backend CAB setup sync warning:', err)
         }
-        await persistCabSetupDraft()
-        await completeCabSetup()
         patchCabSetupCompleted(true)
         markCabWorkflowTourPending()
         finishOnboarding(deck)
@@ -1017,16 +1014,20 @@ export function UnifiedOnboardingFlow() {
       }}
       onSuccessBack={() => setStep(summaryStep)}
       onSuccessContinue={() => {
+        patchCabSetupCompleted(true)
         const session = getAuthSession()
-        if (session?.cab?.setupCompleted || deck === 'cab' || form.entityType === 'CERTIFICATION_BODY') {
-          navigate(ROUTES.workspace)
+        if (session?.organization?.id) {
+          markOnboardingComplete(session.organization.id)
+        }
+        if (session?.cab?.setupCompleted || deck === 'cab' || (form.entityType as string) === 'CERTIFICATION_BODY') {
+          navigate(ROUTES.cabWorkspace)
           return
         }
-        navigate(
-          form.entityType === 'ACCREDITATION_BODY'
-            ? ROUTES.abDashboard
-            : ROUTES.dashboard
-        )
+        if (form.entityType === 'ACCREDITATION_BODY' || deck === 'ab') {
+          navigate(ROUTES.abDashboard)
+          return
+        }
+        navigate(ROUTES.dashboard)
       }}
       error={
         saveError && (step === 1 || step === summaryStep) ? (

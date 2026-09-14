@@ -15,7 +15,7 @@ function HeaderDivider({ className }: { className?: string }) {
 }
 
 interface CabHeaderProps {
-  title: string
+  title?: string
   subtitle?: string
   notificationCount?: number
   logoClassName?: string

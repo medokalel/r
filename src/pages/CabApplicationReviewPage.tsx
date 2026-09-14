@@ -806,6 +806,7 @@ export function CabApplicationReviewPage() {
   return (
     <CabLayout
       className="bg-white"
+      sidebarVariant="applicationReview"
       tourId="cab-application-review"
       tourSteps={tourSteps}
       onTourComplete={() => {

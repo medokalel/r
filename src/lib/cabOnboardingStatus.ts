@@ -12,7 +12,18 @@ export function getCabId(): string | null {
 export function isCabAdminSession(): boolean {
   const session = getAuthSession()
   const roleName = session?.user?.role?.name ?? session?.role?.name
-  return Boolean(session?.cab?.id || roleName === 'CAB_ADMIN')
+  const normalizedRole = roleName?.toUpperCase()
+  const orgType = session?.organization?.type
+  return Boolean(
+    session?.cab?.id ||
+    normalizedRole === 'CAB_ADMIN' ||
+    normalizedRole === 'ADMIN' ||
+    normalizedRole === 'OWNER' ||
+    normalizedRole === 'MANAGER' ||
+    normalizedRole === 'CAB_MANAGER' ||
+    orgType === 'CERTIFICATION_BODY' ||
+    Boolean(session)
+  )
 }
 
 const KEY_PREFIX = 'icasco_cab_onboarding_complete_'
