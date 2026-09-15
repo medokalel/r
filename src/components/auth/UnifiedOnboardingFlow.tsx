@@ -1018,7 +1018,10 @@ export function UnifiedOnboardingFlow() {
       onSuccessBack={() => setStep(summaryStep)}
       onSuccessContinue={() => {
         const session = getAuthSession()
-        if (session?.cab?.setupCompleted || deck === 'cab' || form.entityType === 'CERTIFICATION_BODY') {
+        if (session?.organization?.id) {
+          markOnboardingComplete(session.organization.id)
+        }
+        if (session?.cab?.setupCompleted || deck === 'cab' || (form.entityType as string) === 'CERTIFICATION_BODY') {
           navigate(ROUTES.workspace)
           return
         }

@@ -619,6 +619,8 @@ export {
   Element3 as FieldIcon,
   Judge as AccreditationFieldIcon,
   Check as ChecklistIcon,
+  Check as CheckIcon,
+  AddCircle as PlusIcon,
   BoxSearch as FileReviewIcon,
   Monitor as DocumentReviewIcon,
   Warning2 as CorrectiveActionIcon,

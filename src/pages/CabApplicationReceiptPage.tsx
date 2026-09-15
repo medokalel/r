@@ -277,7 +277,7 @@ export function CabApplicationReceiptPage() {
         <DashboardTourStep steps={tourSteps} stepId="header">
           <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
             <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-              <Link to="/cab/dashboard" className="font-light text-[#989898] hover:text-primary">
+              <Link to={ROUTES.workspace} className="font-light text-[#989898] hover:text-primary">
                 {t('cab.applications.receipt.breadcrumb.home')}
               </Link>
               <Chevron />

@@ -8,6 +8,8 @@ import { useCabDashboardTourSteps } from '@/config/cabTourSteps'
 interface CabLayoutProps {
   children: React.ReactNode
   className?: string
+  /** Legacy prop from cab-workspace pages — ignored; main navbar is always used. */
+  sidebarVariant?: string
   /** Override the tour that StartTourButton launches on this page.
    *  If omitted, falls back to the default CAB-dashboard tour. */
   tourId?: string

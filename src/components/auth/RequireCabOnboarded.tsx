@@ -11,6 +11,11 @@ interface RequireCabOnboardedProps {
 export function RequireCabOnboarded({ children }: RequireCabOnboardedProps) {
   const session = getAuthSession()
 
+  // Server truth first: setup completed → never block.
+  if (session?.cab?.setupCompleted) {
+    return children
+  }
+
   if (isCabAdminSession()) {
     if (!isCabUserOnboarded()) {
       return <Navigate to={ROUTES.onboarding} replace />

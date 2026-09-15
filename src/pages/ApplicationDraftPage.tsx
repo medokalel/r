@@ -21,6 +21,7 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
+import { ROUTES } from '@/lib/routes'
 import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useApplicationDraftTourSteps } from '@/config/applicationDraftTourSteps'
@@ -33,7 +34,6 @@ import {
   peekPendingNewSite,
   saveApplicationDraftSnapshot,
 } from '@/lib/applicationDraftSession'
-import { ROUTES } from '@/lib/routes'
 
 function Chevron() {
   return (
@@ -126,7 +126,7 @@ export function ApplicationDraftPage() {
 
   const handleBack = () => {
     if (step === 1) {
-      navigate('/cab/dashboard')
+      navigate(ROUTES.workspace)
       return
     }
     setStep((s) => (s - 1) as typeof step)

@@ -90,7 +90,7 @@ export function CabClientDetailsPage() {
                   <p className="text-[14px] text-neutral-500">{client.tradingName || client.registrationNumber || '—'}</p>
                 </div>
                 <span className="rounded-full bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary">
-                  {t(`cab.clientsPage.status.${client.status.toLowerCase()}`)}
+                  {t(`cab.clientsPage.status.${client.status === 'COMPLETED' ? 'registered' : client.status.toLowerCase()}`)}
                 </span>
               </div>
             </div>

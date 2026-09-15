@@ -481,7 +481,7 @@ export function CabApplicationInformationRequiredPage() {
         <DashboardTourStep steps={tourSteps} stepId="header">
           <header className="flex shrink-0 flex-wrap items-center justify-between gap-3 border-b border-[#ececec] bg-white px-3 py-3 sm:gap-4 sm:px-5">
             <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[12px] sm:text-[13px]" aria-label="breadcrumb">
-              <Link to={ROUTES.cabDashboard} className="font-light text-[#000000] hover:text-primary">
+              <Link to={ROUTES.workspace} className="font-light text-[#000000] hover:text-primary">
                 {t('cab.applications.informationRequired.breadcrumb.home')}
               </Link>
               <Chevron />

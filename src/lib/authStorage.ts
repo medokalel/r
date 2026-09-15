@@ -5,9 +5,20 @@ const TOKEN_KEY = 'icasco_auth_token'
 const SESSION_KEY = 'icasco_auth_session'
 
 export function saveAuthSession(data: LoginResponseData, remember: boolean): void {
-  const storage = remember ? localStorage : sessionStorage
-  storage.setItem(TOKEN_KEY, data.token)
-  storage.setItem(SESSION_KEY, JSON.stringify(data))
+  // Always clear the other storage first: otherwise a stale token in
+  // localStorage would shadow the fresh sessionStorage token (getAuthToken
+  // reads localStorage first) and the user gets kicked back to /login.
+  if (remember) {
+    sessionStorage.removeItem(TOKEN_KEY)
+    sessionStorage.removeItem(SESSION_KEY)
+    localStorage.setItem(TOKEN_KEY, data.token)
+    localStorage.setItem(SESSION_KEY, JSON.stringify(data))
+  } else {
+    localStorage.removeItem(TOKEN_KEY)
+    localStorage.removeItem(SESSION_KEY)
+    sessionStorage.setItem(TOKEN_KEY, data.token)
+    sessionStorage.setItem(SESSION_KEY, JSON.stringify(data))
+  }
 }
 
 export function getAuthToken(): string | null {
@@ -37,20 +48,26 @@ export function isAuditClientSession(session = getAuthSession()): boolean {
 /** After login, unfinished onboarding goes to the shared wizard. Every
  *  onboarded account lands in the application workspace. */
 export function getPostLoginRedirect(session: LoginResponseData): string {
-  if (session.cab && !session.cab.setupCompleted) {
-    return ROUTES.onboarding
-  }
-
   if (isAuditClientSession(session)) {
     return ROUTES.dashboard
+  }
+
+  // CAB admin with completed setup goes straight to the workspace — even when
+  // the generic organization record still reports DRAFT/null.
+  if (session.cab?.setupCompleted || session.organization?.type === 'CERTIFICATION_BODY') {
+    if (session.cab && !session.cab.setupCompleted) {
+      return ROUTES.onboarding
+    }
+    return ROUTES.workspace
+  }
+
+  if (session.cab && !session.cab.setupCompleted) {
+    return ROUTES.onboarding
   }
 
   const org = session.organization
   if (org && !isOnboardingComplete(org.id, org.onboardingStatus)) {
     return ROUTES.onboarding
-  }
-  if (session.cab?.setupCompleted || org?.type === 'CERTIFICATION_BODY') {
-    return ROUTES.workspace
   }
   if (org?.type === 'ACCREDITATION_BODY') {
     return ROUTES.abDashboard

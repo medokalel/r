@@ -17,11 +17,11 @@ import {
   updateCabClient,
 } from '@/lib/api/clientRegistrationApi'
 import { ApiError } from '@/lib/api/client'
+import { ROUTES } from '@/lib/routes'
 
 import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useClientRegistrationTourSteps } from '@/config/clientRegistrationTourSteps'
-import { ROUTES } from '@/lib/routes'
 
 function Chevron() {
   return (
@@ -225,7 +225,7 @@ export function ClientRegistrationPage() {
 
       <DashboardTourStep steps={tourSteps} stepId="action-buttons">
         <DashboardFooter
-          onBack={() => navigate(editing && clientId ? `/cab/clients/${clientId}` : '/cab/dashboard')}
+          onBack={() => navigate(editing && clientId ? `/cab/clients/${clientId}` : ROUTES.workspace)}
           backDisabled={saving || loading}
           onSaveDraft={handleSaveDraft}
           saveDraftDisabled={saving || loading}

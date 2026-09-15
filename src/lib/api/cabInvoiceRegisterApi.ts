@@ -1,3 +1,16 @@
+export type CabInvoiceStatus = 'Unpaid' | 'Paid' | 'Partially paid' | 'Draft' | 'Issued'
+
+export interface CabCreditNote {
+  id: string
+  creditNoteNumber: string
+  /** Stable link to the original invoice — never detached. */
+  linkedInvoiceId: string
+  linkedInvoiceNumber: string
+  amount: number
+  currency: string
+  reason: string
+  createdOn: string
+}
 export interface CabInvoiceItem {
   id: string
   invoiceNumber: string
@@ -10,7 +23,12 @@ export interface CabInvoiceItem {
   amount: number
   paidAmount: number
   balance: number
-  status: 'Unpaid' | 'Paid' | 'Partially paid' | 'Draft'
+  status: CabInvoiceStatus
+  /** CAB-client relationship scope — never cross-tenant sharing. */
+  organizationId: string
+  siteId: string
+  contactId: string
+  documentIds: string[]
   relatedOrder: string
   orderStatus: string
   relatedApplication: string
@@ -81,6 +99,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 0.0,
     balance: 2300.0,
     status: 'Unpaid',
+    organizationId: 'org-al-noor',
+    siteId: 'site-riyadh-main',
+    contactId: 'contact-sara-ali',
+    documentIds: ['doc-OF-0024'],
     relatedOrder: 'OF-0024',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0024',
@@ -143,6 +165,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 1750.0,
     balance: 0.0,
     status: 'Paid',
+    organizationId: 'org-riyadh-fresh',
+    siteId: 'site-riyadh-north',
+    contactId: 'contact-fahad-otaibi',
+    documentIds: ['doc-OF-0021'],
     relatedOrder: 'OF-0021',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0021',
@@ -197,6 +223,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 980.0,
     balance: 0.0,
     status: 'Paid',
+    organizationId: 'org-desert-grains',
+    siteId: 'site-ahsa-plant',
+    contactId: 'contact-omar-khaled',
+    documentIds: ['doc-OF-0018'],
     relatedOrder: 'OF-0018',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0018',
@@ -236,6 +266,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 600.0,
     balance: 600.0,
     status: 'Partially paid',
+    organizationId: 'org-amanah',
+    siteId: 'site-qassim-farm',
+    contactId: 'contact-mona-salem',
+    documentIds: ['doc-OF-0015'],
     relatedOrder: 'OF-0015',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0015',
@@ -282,6 +316,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 1450.0,
     balance: 0.0,
     status: 'Paid',
+    organizationId: 'org-gulf-dairy',
+    siteId: 'site-dubai-quoz',
+    contactId: 'contact-zaid-hassan',
+    documentIds: ['doc-OF-0011'],
     relatedOrder: 'OF-0011',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0011',
@@ -320,6 +358,10 @@ let cabInvoicesStore: CabInvoiceItem[] = [
     paidAmount: 0.0,
     balance: 3100.0,
     status: 'Unpaid',
+    organizationId: 'org-red-sea',
+    siteId: 'site-jeddah-port',
+    contactId: 'contact-yasser-badr',
+    documentIds: ['doc-OF-0009'],
     relatedOrder: 'OF-0009',
     orderStatus: 'Accepted',
     relatedApplication: 'APP-0009',
@@ -386,25 +428,49 @@ export function recordPayment(
   invoiceId: string,
   payment: { amount: number; date: string; method: string; reference: string; note?: string }
 ): Promise<CabInvoiceItem | null> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const idx = cabInvoicesStore.findIndex(
         (i) => i.id === invoiceId || i.invoiceNumber.toLowerCase() === invoiceId.toLowerCase()
       )
-      if (idx !== -1) {
-        const inv = cabInvoicesStore[idx]
-        const newPaid = inv.paidAmount + payment.amount
-        const newBalance = Math.max(0, inv.amount - newPaid)
-        const newStatus: 'Unpaid' | 'Paid' | 'Partially paid' =
+      if (idx === -1) {
+        reject(new Error('INVOICE_NOT_FOUND'))
+        return
+      }
+      const inv = cabInvoicesStore[idx]
+      // Finalized invoices stay immutable — payments only allocate against the balance.
+      if (inv.status === 'Issued' || inv.status === 'Paid') {
+        if (inv.balance <= 0) {
+          reject(new Error('INVOICE_SETTLED'))
+          return
+        }
+      }
+      if (!Number.isFinite(payment.amount) || payment.amount <= 0) {
+        reject(new Error('INVALID_AMOUNT'))
+        return
+      }
+      if (payment.amount - inv.balance > 0.009) {
+        reject(new Error('AMOUNT_EXCEEDS_BALANCE'))
+        return
+      }
+      if (!payment.date || !payment.method) {
+        reject(new Error('PAYMENT_DETAILS_REQUIRED'))
+        return
+      }
+      {
+        const current = cabInvoicesStore[idx]
+        const newPaid = current.paidAmount + payment.amount
+        const newBalance = Math.max(0, current.amount - newPaid)
+        const newStatus: CabInvoiceStatus =
           newBalance === 0 ? 'Paid' : newPaid > 0 ? 'Partially paid' : 'Unpaid'
 
         const updated: CabInvoiceItem = {
-          ...inv,
+          ...current,
           paidAmount: newPaid,
           balance: newBalance,
           status: newStatus,
           payments: [
-            ...inv.payments,
+            ...current.payments,
             {
               id: `pay-${Date.now()}`,
               ...payment,
@@ -413,8 +479,6 @@ export function recordPayment(
         }
         cabInvoicesStore[idx] = updated
         resolve(updated)
-      } else {
-        resolve(null)
       }
     }, 200)
   })
@@ -424,11 +488,21 @@ export function updateInvoiceTax(
   invoiceId: string,
   taxRate: { id: string; label: string; percentage: number }
 ): Promise<CabInvoiceItem | null> {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     setTimeout(() => {
       const idx = cabInvoicesStore.findIndex(
         (i) => i.id === invoiceId || i.invoiceNumber.toLowerCase() === invoiceId.toLowerCase()
       )
+      if (idx === -1) {
+        reject(new Error('INVOICE_NOT_FOUND'))
+        return
+      }
+      const inv = cabInvoicesStore[idx]
+      // Finalized invoices are immutable — tax cannot change after issue.
+      if (inv.status === 'Issued' || inv.status === 'Paid' || inv.status === 'Partially paid') {
+        reject(new Error('INVOICE_IMMUTABLE'))
+        return
+      }
       if (idx !== -1) {
         cabInvoicesStore[idx].taxRate = taxRate
         resolve(cabInvoicesStore[idx])
@@ -436,5 +510,136 @@ export function updateInvoiceTax(
         resolve(null)
       }
     }, 150)
+  })
+}
+
+/** Draft save permits incomplete later-stage data (billing/tax may be missing). */
+export function saveInvoiceDraft(
+  invoiceId: string,
+  patch: Partial<CabInvoiceItem>
+): Promise<CabInvoiceItem | null> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const idx = cabInvoicesStore.findIndex(
+        (i) => i.id === invoiceId || i.invoiceNumber.toLowerCase() === invoiceId.toLowerCase()
+      )
+      if (idx === -1) {
+        reject(new Error('INVOICE_NOT_FOUND'))
+        return
+      }
+      const current = cabInvoicesStore[idx]
+      if (current.status !== 'Draft' && current.status !== 'Unpaid') {
+        reject(new Error('INVOICE_IMMUTABLE'))
+        return
+      }
+      const updated: CabInvoiceItem = {
+        ...current,
+        ...patch,
+        id: current.id,
+        invoiceNumber: current.invoiceNumber,
+        // Tenant scope is stable within the CAB-client relationship.
+        organizationId: current.organizationId,
+        siteId: current.siteId,
+        contactId: current.contactId,
+        documentIds: current.documentIds,
+        status: 'Draft',
+        paidAmount: current.paidAmount,
+        balance: current.balance,
+        payments: current.payments,
+      }
+      cabInvoicesStore[idx] = updated
+      resolve(updated)
+    }, 150)
+  })
+}
+
+export interface InvoiceIssueGate {
+  ok: boolean
+  missingBilling: boolean
+  missingTax: boolean
+}
+
+/** Issuing requires billing + applicable tax configuration. */
+export function getInvoiceIssueGate(invoice: CabInvoiceItem): InvoiceIssueGate {
+  const billing = invoice.billingAddress
+  const missingBilling = !billing || !billing.name?.trim() || !billing.line1?.trim() || !billing.country?.trim()
+  const missingTax = !invoice.taxRate
+  return { ok: !missingBilling && !missingTax, missingBilling, missingTax }
+}
+
+/** Issue a draft invoice — the finalized invoice becomes immutable. */
+export function issueInvoice(invoiceId: string): Promise<CabInvoiceItem | null> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const idx = cabInvoicesStore.findIndex(
+        (i) => i.id === invoiceId || i.invoiceNumber.toLowerCase() === invoiceId.toLowerCase()
+      )
+      if (idx === -1) {
+        reject(new Error('INVOICE_NOT_FOUND'))
+        return
+      }
+      const current = cabInvoicesStore[idx]
+      if (current.status !== 'Draft' && current.status !== 'Unpaid') {
+        reject(new Error('INVOICE_IMMUTABLE'))
+        return
+      }
+      const gate = getInvoiceIssueGate(current)
+      if (!gate.ok) {
+        reject(new Error(gate.missingBilling ? 'BILLING_REQUIRED' : 'TAX_REQUIRED'))
+        return
+      }
+      const updated: CabInvoiceItem = { ...current, status: current.paidAmount > 0 ? current.status : 'Issued' }
+      // Draft with no payments moves to Issued (still immutable for header/tax/items).
+      if (current.status === 'Draft' && current.paidAmount <= 0) {
+        updated.status = 'Issued'
+        updated.balance = updated.amount
+      }
+      cabInvoicesStore[idx] = updated
+      resolve(updated)
+    }, 180)
+  })
+}
+
+let cabCreditNotesStore: CabCreditNote[] = []
+
+/** Credit note stays linked to the original — issued invoices are never deleted. */
+export function createCreditNote(
+  invoiceId: string,
+  input: { amount: number; reason: string }
+): Promise<CabCreditNote> {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const inv = cabInvoicesStore.find(
+        (i) => i.id === invoiceId || i.invoiceNumber.toLowerCase() === invoiceId.toLowerCase()
+      )
+      if (!inv) {
+        reject(new Error('INVOICE_NOT_FOUND'))
+        return
+      }
+      if (inv.status === 'Draft') {
+        reject(new Error('CREDIT_NOTE_REQUIRES_ISSUED'))
+        return
+      }
+      if (!Number.isFinite(input.amount) || input.amount <= 0) {
+        reject(new Error('INVALID_AMOUNT'))
+        return
+      }
+      if (!input.reason?.trim()) {
+        reject(new Error('REASON_REQUIRED'))
+        return
+      }
+      const note: CabCreditNote = {
+        id: `cn-${Date.now()}`,
+        creditNoteNumber: `CN-${inv.invoiceNumber.replace(/^INV-/, '')}-${String(cabCreditNotesStore.length + 1).padStart(2, '0')}`,
+        linkedInvoiceId: inv.id,
+        linkedInvoiceNumber: inv.invoiceNumber,
+        amount: input.amount,
+        currency: inv.currency,
+        reason: input.reason.trim(),
+        createdOn: new Date().toISOString(),
+      }
+      cabCreditNotesStore = [...cabCreditNotesStore, note]
+      resolve(note)
+    }, 180)
   })
 }
