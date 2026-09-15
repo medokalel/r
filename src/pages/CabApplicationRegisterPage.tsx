@@ -23,26 +23,14 @@ import {
   type ApplicationRegisterItem,
   type ApplicationRegisterStatus,
 } from '@/lib/api/cabApplicationRegisterApi'
+import {
+  APPLICATION_STATUS_LABEL_KEYS as STATUS_LABEL_KEYS,
+  APPLICATION_STATUS_STYLES as statusStyles,
+} from '@/lib/applicationStatus'
 import { getCountryOptions } from '@/lib/countries' 
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
 import { ROUTES } from '@/lib/routes'
-
-const statusStyles: Record<ApplicationRegisterStatus, string> = {
-  DRAFT: 'bg-[#f3f4f6] text-[#4b5563]',
-  UNDER_REVIEW: 'bg-[#e0e7ff] text-[#1236a3]',
-  ASSESSMENT: 'bg-[#dbeafe] text-[#1447e6]',
-  APPROVED: 'bg-[#d0fae5] text-[#007a55]',
-  IN_PROGRESS: 'bg-[#fef3c6] text-[#a58401]',
-}
-
-const STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, string> = {
-  DRAFT: 'draft',
-  UNDER_REVIEW: 'underReview',
-  ASSESSMENT: 'assessment',
-  APPROVED: 'approved',
-  IN_PROGRESS: 'inProgress',
-}
 
 function Chevron() {
   return (

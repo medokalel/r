@@ -3244,11 +3244,12 @@
         "allCountries": "كل الدول"
       },
       "table": {
-        "code": "الكود",
-        "client": "العميل",
-        "country": "الدولة",
-        "primaryContact": "جهة الاتصال الرئيسية",
-        "updated": "آخر تحديث",
+        "serial": "م",
+        "auditClient": "عميل التدقيق",
+        "applicationNumber": "رقم الطلب",
+        "assignedPerson": "الشخص المسؤول",
+        "status": "الحالة",
+        "dateOfCreation": "تاريخ الإنشاء",
         "actions": "الإجراءات"
       },
       "rowActions": {

@@ -9,12 +9,14 @@ import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
 import { Tooltip } from '@/components/ui'
+import { UserAvatar } from '@/components/ui/UserAvatar'
 import { AddCircleIcon, AppIcon, ChevronDownIcon, ExcelFileIcon, ExportIcon, MoreIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import {
   MOCK_CLIENT_REGISTER_ENTRIES,
   type ClientRegisterEntry,
 } from '@/lib/api/clientRegisterMockData'
-import { countryFlag, getCountryOptions, type CountryCode } from '@/lib/countries'
+import { APPLICATION_STATUS_LABEL_KEYS, APPLICATION_STATUS_STYLES } from '@/lib/applicationStatus'
+import { getCountryOptions } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
@@ -48,16 +50,17 @@ export function ClientRegisterPage() {
   const [page, setPage] = useState(1)
 
   const countryOptions = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const countryName = (code: CountryCode) =>
-    countryOptions.find((option) => option.code === code)?.name ?? code
 
   const filtered = useMemo(() => {
     return MOCK_CLIENT_REGISTER_ENTRIES.filter((client) => {
-      const matchesQuery = matchesSearch([client.code, client.name, client.contactName, client.contactEmail], query)
+      const matchesQuery = matchesSearch(
+        [client.code, client.name, client.applicationNumber, client.assignedTo.name],
+        query
+      )
       const matchesCountry = countryFilter === 'all' || client.countryCode === countryFilter
-      const updatedAt = new Date(client.updatedAt)
-      const matchesFrom = !period.from || updatedAt >= period.from
-      const matchesTo = !period.to || updatedAt <= period.to
+      const createdAt = new Date(client.createdAt)
+      const matchesFrom = !period.from || createdAt >= period.from
+      const matchesTo = !period.to || createdAt <= period.to
       return matchesQuery && matchesCountry && matchesFrom && matchesTo
     })
   }, [query, countryFilter, period])
@@ -80,12 +83,15 @@ export function ClientRegisterPage() {
     new Intl.DateTimeFormat(i18n.language, { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso))
 
   const exportColumns: TableColumn<ClientRegisterEntry>[] = [
-    { header: t('cab.clientRegister.table.code'), value: (row) => row.code },
-    { header: t('cab.clientRegister.table.client'), value: (row) => row.name },
-    { header: t('cab.clientRegister.table.country'), value: (row) => countryName(row.countryCode) },
-    { header: t('cab.clientRegister.table.primaryContact'), value: (row) => row.contactName },
-    { header: 'Email', value: (row) => row.contactEmail },
-    { header: t('cab.clientRegister.table.updated'), value: (row) => formatDate(row.updatedAt) },
+    { header: t('cab.clientRegister.table.serial'), value: (_row, index) => index + 1 },
+    { header: t('cab.clientRegister.table.auditClient'), value: (row) => row.name },
+    { header: t('cab.clientRegister.table.applicationNumber'), value: (row) => row.applicationNumber },
+    { header: t('cab.clientRegister.table.assignedPerson'), value: (row) => row.assignedTo.name },
+    {
+      header: t('cab.clientRegister.table.status'),
+      value: (row) => t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[row.status]}`),
+    },
+    { header: t('cab.clientRegister.table.dateOfCreation'), value: (row) => formatDate(row.createdAt) },
   ]
 
   const handleExportPdf = () =>
@@ -93,11 +99,12 @@ export function ClientRegisterPage() {
   const handleExportExcel = () => downloadExcelCsv('client-register.csv', exportColumns, filtered)
 
   const columns: { key: string; label: string }[] = [
-    { key: 'code', label: t('cab.clientRegister.table.code') },
-    { key: 'name', label: t('cab.clientRegister.table.client') },
-    { key: 'country', label: t('cab.clientRegister.table.country') },
-    { key: 'contact', label: t('cab.clientRegister.table.primaryContact') },
-    { key: 'updated', label: t('cab.clientRegister.table.updated') },
+    { key: 'serial', label: t('cab.clientRegister.table.serial') },
+    { key: 'auditClient', label: t('cab.clientRegister.table.auditClient') },
+    { key: 'applicationNumber', label: t('cab.clientRegister.table.applicationNumber') },
+    { key: 'assignedPerson', label: t('cab.clientRegister.table.assignedPerson') },
+    { key: 'status', label: t('cab.clientRegister.table.status') },
+    { key: 'dateOfCreation', label: t('cab.clientRegister.table.dateOfCreation') },
   ]
 
   return (
@@ -260,24 +267,31 @@ export function ClientRegisterPage() {
                 ) : (
                   paginated.map((client, index) => (
                     <tr key={client.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
-                      <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
-                        {client.code}
+                      <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
+                        {(currentPage - 1) * PAGE_SIZE + index + 1}
                       </td>
                       <td className="px-4 py-4 font-medium text-[15px] text-neutral-900">{client.name}</td>
-                      <td className="px-4 py-4 text-[14px] text-neutral-700">
+                      <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
+                        {client.applicationNumber}
+                      </td>
+                      <td className="px-4 py-4">
                         <span className="inline-flex items-center justify-center gap-2">
-                          <span aria-hidden>{countryFlag(client.countryCode)}</span>
-                          {countryName(client.countryCode)}
+                          <UserAvatar alt={client.assignedTo.name} src={client.assignedTo.avatarUrl} className="size-8" />
+                          <span className="text-[14px] font-medium text-neutral-900">{client.assignedTo.name}</span>
                         </span>
                       </td>
-                      <td className="px-4 py-4 text-start">
-                        <p className="text-[14px] font-medium text-neutral-900">{client.contactName}</p>
-                        <p className="text-[13px] text-neutral-500" dir="ltr">
-                          {client.contactEmail}
-                        </p>
+                      <td className="px-4 py-4">
+                        <span
+                          className={cn(
+                            'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                            APPLICATION_STATUS_STYLES[client.status]
+                          )}
+                        >
+                          {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[client.status]}`)}
+                        </span>
                       </td>
                       <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
-                        {formatDate(client.updatedAt)}
+                        {formatDate(client.createdAt)}
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-center">
@@ -327,24 +341,31 @@ export function ClientRegisterPage() {
             {paginated.length === 0 ? (
               <p className="py-6 text-center text-[14px] text-neutral-500">{t('cab.clientRegister.empty')}</p>
             ) : (
-              paginated.map((client) => (
+              paginated.map((client, index) => (
                 <div key={client.id} className="w-full rounded-[12px] border border-[#ececec] p-4">
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold text-[14px] text-primary" dir="ltr">
-                      {client.code}
+                      {client.applicationNumber}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 text-[13px] text-neutral-600">
-                      <span aria-hidden>{countryFlag(client.countryCode)}</span>
-                      {countryName(client.countryCode)}
+                    <span
+                      className={cn(
+                        'inline-flex shrink-0 items-center justify-center rounded-[10px] px-3 py-1 text-[12px] font-medium',
+                        APPLICATION_STATUS_STYLES[client.status]
+                      )}
+                    >
+                      {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[client.status]}`)}
                     </span>
                   </div>
-                  <p className="mt-2 text-[14px] font-medium text-neutral-900">{client.name}</p>
-                  <p className="text-[13px] text-neutral-500">{client.contactName}</p>
-                  <p className="text-[13px] text-neutral-500" dir="ltr">
-                    {client.contactEmail}
-                  </p>
                   <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
-                    {formatDate(client.updatedAt)}
+                    #{(currentPage - 1) * PAGE_SIZE + index + 1}
+                  </p>
+                  <p className="mt-1 text-[14px] font-medium text-neutral-900">{client.name}</p>
+                  <div className="mt-2 flex items-center gap-2">
+                    <UserAvatar alt={client.assignedTo.name} src={client.assignedTo.avatarUrl} className="size-7" />
+                    <p className="text-[13px] text-neutral-600">{client.assignedTo.name}</p>
+                  </div>
+                  <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
+                    {formatDate(client.createdAt)}
                   </p>
                 </div>
               ))

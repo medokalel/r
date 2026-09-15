@@ -3204,11 +3204,12 @@
         "allCountries": "All countries"
       },
       "table": {
-        "code": "Code",
-        "client": "Client",
-        "country": "Country",
-        "primaryContact": "Primary contact",
-        "updated": "Updated",
+        "serial": "S.No",
+        "auditClient": "Audit client",
+        "applicationNumber": "Application number",
+        "assignedPerson": "Assigned person",
+        "status": "Status",
+        "dateOfCreation": "Date of creation",
         "actions": "Actions"
       },
       "rowActions": {
