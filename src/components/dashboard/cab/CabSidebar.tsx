@@ -128,7 +128,7 @@ const navGroups: CabNavGroup[] = [
     labelKey: 'cab.sidebar.groups.certification',
     items: [
       { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.decisions', href: ROUTES.cabDecisions },
-      { icon: ShieldIcon, labelKey: 'cab.sidebar.certification', disabled: true },
+      { icon: ShieldIcon, labelKey: 'cab.sidebar.certification', href: ROUTES.cabCertificationCycles },
       { icon: CertificateBadgeIcon, labelKey: 'cab.sidebar.certificates', disabled: true },
     ],
   },

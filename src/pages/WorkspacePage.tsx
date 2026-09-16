@@ -105,8 +105,8 @@ const cabApps: WorkspaceApp[] = [
   {
     title: 'Certification',
     description: 'Manage the certification lifecycle.',
+    route: ROUTES.cabCertificationCycles,
     icon: ShieldIcon,
-    comingSoon: true,
   },
   {
     title: 'Reports & Analytics',

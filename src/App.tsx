@@ -57,6 +57,7 @@ import { CabAuditReportingPage } from '@/pages/CabAuditReportingPage'
 import { CabAddFindingPage } from '@/pages/CabAddFindingPage'
 import { CabDecisionQueuePage } from '@/pages/CabDecisionQueuePage'
 import { CabDecisionDetailsPage } from '@/pages/CabDecisionDetailsPage'
+import { CabCertificationCyclesPage } from '@/pages/CabCertificationCyclesPage'
 import { CabSidebarProvider } from '@/context/CabSidebarContext'
 import { ScrollToTop } from '@/components/routing/ScrollToTop'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
@@ -470,6 +471,16 @@ export default function App() {
               element={
                 <RequireAuth>
                   <CabDecisionDetailsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabCertificationCycles}
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabCertificationCyclesPage />
+                  </RequireCabOnboarded>
                 </RequireAuth>
               }
             />

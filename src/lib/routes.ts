@@ -44,6 +44,7 @@ export const ROUTES = {
   cabQuotationApproval: '/cab/quotations/approval',
   cabDecisions: '/cab/decisions',
   cabDecisionDetails: '/cab/decisions/:decisionId',
+  cabCertificationCycles: '/cab/certification',
 } as const
 
 export function cabApplicationInformationRequiredPath(applicationId?: string): string {
