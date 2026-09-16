@@ -37,6 +37,67 @@ export interface CertificationCycle {
   upcomingActivities: CertificationUpcomingActivity[]
 }
 
+/** Cycle event lifecycle — drives the dot/badge styling on the manage page. */
+export type CycleEventStatus = 'next' | 'planned' | 'completed'
+
+export interface CertificationCycleEvent {
+  id: string
+  /** i18n key suffix under `cab.manageCycle.eventTypes.*` (e.g. `surveillance`). */
+  type: string
+  typeLabel: string
+  windowStart: string
+  windowEnd: string
+  status: CycleEventStatus
+  statusLabel: string
+}
+
+export interface CertificationCycleNextEvent extends CertificationCycleEvent {
+  /** Negative when the target window has already passed. */
+  dueInDays: number
+  responsibleCoordinator: string
+  scheduled: boolean
+  schedulingStatusLabel: string
+}
+
+export interface CertificationActiveCertificate {
+  certificateNumber: string
+  standard: string
+  standardLabel: string
+  status: CertificationLifecycleStatus
+  statusLabel: string
+  validFrom: string
+  validUntil: string
+}
+
+export interface CertificationCycleRecord {
+  id: string
+  title: string
+  date: string
+  status: string
+}
+
+/** One collapsible row in the "More details" section. */
+export interface CertificationCycleRecordGroup {
+  /** i18n key suffix under `cab.manageCycle.records.*`. */
+  id: string
+  count: number
+  /** Shown as the trailing pill; falls back to a "no records" pill when 0. */
+  highlightCount?: number
+  records: CertificationCycleRecord[]
+}
+
+export interface CertificationCycleDetail extends CertificationCycle {
+  cycleRangeLabel: string
+  cycleStatusLabel: string
+  initialCertificationDate: string
+  certificationExpiryDate: string
+  primaryContactPhone: string
+  certificate: CertificationActiveCertificate
+  nextEvent: CertificationCycleNextEvent | null
+  upcomingEvents: CertificationCycleEvent[]
+  recordGroups: CertificationCycleRecordGroup[]
+}
+
 export interface CertificationCycleFilterParams {
   searchQuery?: string
   dueWithinDays?: number
@@ -158,6 +219,215 @@ export async function getCertificationCycles(
     }
     return true
   })
+}
+
+/** Detail-only fields, keyed by cycle id and merged onto the list record. */
+const MOCK_CYCLE_DETAILS: Record <
+  string,
+  Omit<CertificationCycleDetail, keyof CertificationCycle>
+> = {
+  'cyc-0001': {
+    cycleRangeLabel: '2024 – 2027',
+    cycleStatusLabel: 'In progress',
+    initialCertificationDate: '15 Jan 2024',
+    certificationExpiryDate: '14 Jan 2027',
+    primaryContactPhone: '+966 50 123 4567',
+    certificate: {
+      certificateNumber: 'CERT-0024',
+      standard: 'ISO 22000:2018',
+      standardLabel: 'Food safety management systems',
+      status: 'active',
+      statusLabel: 'Active',
+      validFrom: '15 Jan 2024',
+      validUntil: '14 Jan 2027',
+    },
+    nextEvent: {
+      id: 'evt-1',
+      type: 'surveillance',
+      typeLabel: 'Surveillance',
+      windowStart: '15 Jan 2025',
+      windowEnd: '15 Mar 2025',
+      status: 'next',
+      statusLabel: 'Next',
+      dueInDays: 45,
+      responsibleCoordinator: 'Sara Ali',
+      scheduled: false,
+      schedulingStatusLabel: 'Not yet scheduled',
+    },
+    upcomingEvents: [
+      {
+        id: 'evt-1',
+        type: 'surveillance',
+        typeLabel: 'Surveillance',
+        windowStart: '15 Jan 2025',
+        windowEnd: '15 Mar 2025',
+        status: 'next',
+        statusLabel: 'Next',
+      },
+      {
+        id: 'evt-2',
+        type: 'surveillance',
+        typeLabel: 'Surveillance',
+        windowStart: '15 Jan 2026',
+        windowEnd: '15 Mar 2026',
+        status: 'planned',
+        statusLabel: 'Planned',
+      },
+      {
+        id: 'evt-3',
+        type: 'recertification',
+        typeLabel: 'Recertification',
+        windowStart: '15 Oct 2026',
+        windowEnd: '14 Jan 2027',
+        status: 'planned',
+        statusLabel: 'Planned',
+      },
+    ],
+    recordGroups: [
+      {
+        id: 'scopeChanges',
+        count: 1,
+        highlightCount: 1,
+        records: [{ id: 'sc-1', title: 'Add HACCP scope line', date: '02 Feb 2025', status: 'Open' }],
+      },
+      {
+        id: 'siteChanges',
+        count: 2,
+        records: [
+          { id: 'si-1', title: 'Add Jeddah warehouse', date: '11 Dec 2024', status: 'Approved' },
+          { id: 'si-2', title: 'Remove Dammam depot', date: '03 Sep 2024', status: 'Approved' },
+        ],
+      },
+      { id: 'transfers', count: 0, records: [] },
+      { id: 'suspensions', count: 0, records: [] },
+    ],
+  },
+  'cyc-0002': {
+    cycleRangeLabel: '2025 – 2028',
+    cycleStatusLabel: 'Upcoming',
+    initialCertificationDate: '02 Mar 2025',
+    certificationExpiryDate: '01 Mar 2028',
+    primaryContactPhone: '+971 50 998 2211',
+    certificate: {
+      certificateNumber: 'CERT-0031',
+      standard: 'ISO 22000:2018',
+      standardLabel: 'Food safety management systems',
+      status: 'upcoming',
+      statusLabel: 'Upcoming',
+      validFrom: '02 Mar 2025',
+      validUntil: '01 Mar 2028',
+    },
+    nextEvent: {
+      id: 'evt-1',
+      type: 'surveillance',
+      typeLabel: 'Surveillance',
+      windowStart: '02 Mar 2026',
+      windowEnd: '02 May 2026',
+      status: 'next',
+      statusLabel: 'Next',
+      dueInDays: 165,
+      responsibleCoordinator: 'Omar Khalid',
+      scheduled: false,
+      schedulingStatusLabel: 'Not yet scheduled',
+    },
+    upcomingEvents: [
+      {
+        id: 'evt-1',
+        type: 'surveillance',
+        typeLabel: 'Surveillance',
+        windowStart: '02 Mar 2026',
+        windowEnd: '02 May 2026',
+        status: 'next',
+        statusLabel: 'Next',
+      },
+      {
+        id: 'evt-2',
+        type: 'surveillance',
+        typeLabel: 'Surveillance',
+        windowStart: '02 Mar 2027',
+        windowEnd: '02 May 2027',
+        status: 'planned',
+        statusLabel: 'Planned',
+      },
+    ],
+    recordGroups: [
+      { id: 'scopeChanges', count: 0, records: [] },
+      { id: 'siteChanges', count: 0, records: [] },
+      { id: 'transfers', count: 0, records: [] },
+      { id: 'suspensions', count: 0, records: [] },
+    ],
+  },
+  'cyc-0003': {
+    cycleRangeLabel: '2022 – 2025',
+    cycleStatusLabel: 'Suspended',
+    initialCertificationDate: '20 Jan 2022',
+    certificationExpiryDate: '19 Jan 2025',
+    primaryContactPhone: '+20 100 447 8890',
+    certificate: {
+      certificateNumber: 'CERT-0019',
+      standard: 'ISO 13485:2016',
+      standardLabel: 'Medical devices quality management',
+      status: 'suspended',
+      statusLabel: 'Suspended',
+      validFrom: '20 Jan 2022',
+      validUntil: '19 Jan 2025',
+    },
+    nextEvent: {
+      id: 'evt-1',
+      type: 'recertification',
+      typeLabel: 'Recertification',
+      windowStart: '19 Oct 2024',
+      windowEnd: '19 Jan 2025',
+      status: 'next',
+      statusLabel: 'Next',
+      dueInDays: -14,
+      responsibleCoordinator: 'Mohammed Khan',
+      scheduled: true,
+      schedulingStatusLabel: 'Scheduled',
+    },
+    upcomingEvents: [
+      {
+        id: 'evt-1',
+        type: 'recertification',
+        typeLabel: 'Recertification',
+        windowStart: '19 Oct 2024',
+        windowEnd: '19 Jan 2025',
+        status: 'next',
+        statusLabel: 'Next',
+      },
+    ],
+    recordGroups: [
+      { id: 'scopeChanges', count: 0, records: [] },
+      { id: 'siteChanges', count: 0, records: [] },
+      { id: 'transfers', count: 0, records: [] },
+      {
+        id: 'suspensions',
+        count: 1,
+        highlightCount: 1,
+        records: [{ id: 'su-1', title: 'Suspended — overdue recertification', date: '20 Jan 2025', status: 'Open' }],
+      },
+    ],
+  },
+}
+
+/**
+ * Loads one cycle for the manage page. Accepts either the internal id
+ * (`cyc-0001`) or the human-facing cycle id (`CYC-0001`) so links from the
+ * register and from external notifications both resolve.
+ */
+export async function getCertificationCycleDetail(
+  cycleId: string,
+): Promise<CertificationCycleDetail | null> {
+  await wait()
+  const needle = cycleId.trim().toLowerCase()
+  const cycle = MOCK_CYCLES.find(
+    (item) => item.id.toLowerCase() === needle || item.cycleId.toLowerCase() === needle,
+  )
+  const detail = cycle ? MOCK_CYCLE_DETAILS[cycle.id] : undefined
+
+  if (!cycle || !detail) return null
+
+  return { ...cycle, ...detail }
 }
 
 export function certificationCyclesToCsv(cycles: CertificationCycle[]): string {

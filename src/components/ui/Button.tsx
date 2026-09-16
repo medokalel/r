@@ -80,14 +80,18 @@ export function Button({
   children,
   ...props
 }: ButtonProps) {
-  const Comp = asChild ? Slot : 'button'
   const isIconOnly = size === 'icon' || size === 'icon-sm'
 
+  if (asChild) {
+    return (
+      <Slot className={cn(buttonVariants({ variant, size, className }))} {...props}>
+        {children}
+      </Slot>
+    )
+  }
+
   return (
-    <Comp
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    >
+    <button className={cn(buttonVariants({ variant, size, className }))} {...props}>
       {icon && iconPosition === 'start' && (
         <span className="shrink-0 [&_svg]:rtl-flip">{icon}</span>
       )}
@@ -96,7 +100,7 @@ export function Button({
       {icon && iconPosition === 'end' && (
         <span className="shrink-0 [&_svg]:rtl-flip">{icon}</span>
       )}
-    </Comp>
+    </button>
   )
 }
 

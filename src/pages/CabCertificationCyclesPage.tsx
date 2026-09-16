@@ -5,6 +5,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CertificationCycleTimeline } from '@/components/dashboard/cab/CertificationCycleTimeline'
+import { CertificationLifecycleBadge } from '@/components/dashboard/cab/CertificationLifecycleBadge'
 import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
 import { Button } from '@/components/ui/Button'
 import {
@@ -26,11 +27,10 @@ import {
   getCertificationCycles,
   type CertificationCycle,
   type CertificationCycleStage,
-  type CertificationLifecycleStatus,
 } from '@/lib/api/cabCertificationApi'
 import { downloadExcelCsv, downloadPdfFromTable, type TableColumn } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabManageCertificationCyclePath } from '@/lib/routes'
 
 /** Same breadcrumb chevron used across every CAB page (e.g. CabApplicationRegisterPage). */
 function Chevron() {
@@ -54,25 +54,10 @@ const STAGE_STATUS_LABELS: Record<CertificationCycleStage['status'], string> = {
   pending: 'Pending',
 }
 
-const LIFECYCLE_STATUS_STYLES: Record<CertificationLifecycleStatus, string> = {
-  active: 'bg-[#eafaf1] text-[#16a34a]',
-  upcoming: 'bg-[#e8edfc] text-primary',
-  suspended: 'bg-[#fff7ed] text-[#ea580c]',
-  expired: 'bg-[#fef2f2] text-[#dc2626]',
-}
-
 const ACTIVITY_STATUS_STYLES: Record<string, string> = {
   Planned: 'bg-[#e8edfc] text-primary',
   Open: 'bg-[#fef3c6] text-[#a58401]',
   Done: 'bg-[#eafaf1] text-[#16a34a]',
-}
-
-function LifecycleBadge({ status, label }: { status: CertificationLifecycleStatus; label: string }) {
-  return (
-    <span className={cn('inline-flex rounded-full px-3 py-1 text-[12px] font-medium', LIFECYCLE_STATUS_STYLES[status])}>
-      {label}
-    </span>
-  )
 }
 
 function Field({ label, children }: { label: string; children: ReactNode }) {
@@ -343,7 +328,7 @@ export function CabCertificationCyclesPage() {
                     <div className="min-w-0 flex-1">
                       <div className="flex items-start justify-between gap-2">
                         <p className="truncate text-[14px] font-semibold text-neutral-900">{cycle.clientName}</p>
-                        <LifecycleBadge status={cycle.lifecycleStatus} label={cycle.lifecycleStatusLabel} />
+                        <CertificationLifecycleBadge status={cycle.lifecycleStatus} label={cycle.lifecycleStatusLabel} />
                       </div>
                       <p className="mt-0.5 text-[13px] text-neutral-500">{cycle.certificateStandard}</p>
                       <p className="mt-0.5 text-[12px] text-neutral-400">
@@ -388,8 +373,10 @@ export function CabCertificationCyclesPage() {
                       </div>
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
-                      <Button type="button" variant="primary" size="sm">
-                        {t('cab.certification.manageCycle', 'Manage cycle')}
+                      <Button asChild variant="primary" size="sm">
+                        <Link to={cabManageCertificationCyclePath(selected.id)}>
+                          {t('cab.certification.manageCycle', 'Manage cycle')}
+                        </Link>
                       </Button>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
@@ -458,7 +445,7 @@ export function CabCertificationCyclesPage() {
                         </Field>
                         <Field label={t('cab.certification.fields.application', 'Application')}>{selected.applicationId}</Field>
                         <Field label={t('cab.certification.fields.cycleStatus', 'Cycle status')}>
-                          <LifecycleBadge status={selected.lifecycleStatus} label={selected.lifecycleStatusLabel} />
+                          <CertificationLifecycleBadge status={selected.lifecycleStatus} label={selected.lifecycleStatusLabel} />
                         </Field>
                         <Field label={t('cab.certification.fields.startDate', 'Cycle start date')}>{selected.cycleStartDate}</Field>
                         <Field label={t('cab.certification.fields.nextSurveillance', 'Next surveillance due')}>

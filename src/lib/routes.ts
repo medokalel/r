@@ -45,6 +45,7 @@ export const ROUTES = {
   cabDecisions: '/cab/decisions',
   cabDecisionDetails: '/cab/decisions/:decisionId',
   cabCertificationCycles: '/cab/certification',
+  cabManageCertificationCycle: '/cab/certification/:cycleId',
 } as const
 
 export function cabApplicationInformationRequiredPath(applicationId?: string): string {
@@ -63,6 +64,10 @@ export function cabApplicationQuotationPath(applicationId?: string): string {
   return applicationId
     ? `/cab/applications/${applicationId}/quotation`
     : ROUTES.cabApplicationQuotation
+}
+
+export function cabManageCertificationCyclePath(cycleId: string): string {
+  return `/cab/certification/${cycleId}`
 }
 
 export function cabDecisionPath(decisionId?: string): string {
