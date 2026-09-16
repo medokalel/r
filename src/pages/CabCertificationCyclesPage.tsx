@@ -193,7 +193,7 @@ export function CabCertificationCyclesPage() {
           </div>
           <div className="flex w-full items-center gap-3 sm:w-auto">
             <Button variant="primary" icon={<AppIcon icon={AddCircleIcon} size={20} />} className="flex-1 sm:flex-none">
-              {t('cab.certification.openCycle', 'Open cycle')}
+              {t('cab.certification.newCycle', 'New cycle')}
             </Button>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
@@ -389,7 +389,7 @@ export function CabCertificationCyclesPage() {
                     </div>
                     <div className="flex shrink-0 items-center gap-2">
                       <Button type="button" variant="primary" size="sm">
-                        {t('cab.certification.openCycle', 'Open cycle')}
+                        {t('cab.certification.manageCycle', 'Manage cycle')}
                       </Button>
                       <DropdownMenu.Root>
                         <DropdownMenu.Trigger asChild>
