@@ -6,7 +6,7 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CertificationCycleTimeline } from '@/components/dashboard/cab/CertificationCycleTimeline'
 import { CertificationLifecycleBadge } from '@/components/dashboard/cab/CertificationLifecycleBadge'
-import { TableFilterSelect } from '@/components/dashboard/TableFilterSelect'
+import { SelectField } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
 import {
   AddCircleIcon,
@@ -237,12 +237,14 @@ export function CabCertificationCyclesPage() {
             </div>
 
             <div className="space-y-1.5">
-              <p className="text-[13px] font-medium text-neutral-700">{t('cab.certification.duePeriod', 'Due period')}</p>
-              <TableFilterSelect
-                label={t('cab.certification.duePeriod', 'Due period')}
+              <label htmlFor="certification-due-period" className="text-[13px] font-medium text-neutral-700">
+                {t('cab.certification.duePeriod', 'Due period')}
+              </label>
+              <SelectField
+                id="certification-due-period"
                 value={duePeriod}
                 onChange={setDuePeriod}
-                className="w-full [&>select]:h-11 [&>select]:w-full"
+                className="h-11"
                 options={[
                   { value: 'all', label: t('common.all', 'All') },
                   { value: '30', label: t('cab.certification.duePeriodOptions.30', 'Due in 30 days') },
@@ -253,12 +255,14 @@ export function CabCertificationCyclesPage() {
             </div>
 
             <div className="space-y-1.5">
-              <p className="text-[13px] font-medium text-neutral-700">{t('cab.certification.country', 'Country')}</p>
-              <TableFilterSelect
-                label={t('cab.certification.country', 'Country')}
+              <label htmlFor="certification-country" className="text-[13px] font-medium text-neutral-700">
+                {t('cab.certification.country', 'Country')}
+              </label>
+              <SelectField
+                id="certification-country"
                 value={country}
                 onChange={setCountry}
-                className="w-full [&>select]:h-11 [&>select]:w-full"
+                className="h-11"
                 options={[
                   { value: 'all', label: t('common.all', 'All') },
                   { value: 'Saudi Arabia', label: 'Saudi Arabia' },
@@ -269,14 +273,14 @@ export function CabCertificationCyclesPage() {
             </div>
 
             <div className="space-y-1.5">
-              <p className="text-[13px] font-medium text-neutral-700">
+              <label htmlFor="certification-lifecycle-status" className="text-[13px] font-medium text-neutral-700">
                 {t('cab.certification.lifecycleStatus', 'Lifecycle status')}
-              </p>
-              <TableFilterSelect
-                label={t('cab.certification.lifecycleStatus', 'Lifecycle status')}
+              </label>
+              <SelectField
+                id="certification-lifecycle-status"
                 value={lifecycleStatus}
                 onChange={setLifecycleStatus}
-                className="w-full [&>select]:h-11 [&>select]:w-full"
+                className="h-11"
                 options={[
                   { value: 'all', label: t('common.all', 'All') },
                   { value: 'active', label: t('cab.certification.status.active', 'Active') },
@@ -304,7 +308,7 @@ export function CabCertificationCyclesPage() {
                 : t('cab.certification.resultCount', '{{count}} result', { count: cycles.length })}
             </p>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col">
               {!loading && cycles.length === 0 && (
                 <p className="px-2 py-6 text-center text-[13px] text-neutral-400">
                   {t('cab.certification.empty', 'No certification cycles match the current filters.')}
@@ -321,7 +325,7 @@ export function CabCertificationCyclesPage() {
                       setTab('overview')
                     }}
                     className={cn(
-                      'flex items-start gap-2 rounded-[10px] border-s-4 px-3 py-3 text-start transition-colors',
+                      'flex items-start gap-2 border-b border-b-[#f0f0f0] border-s-4 px-3 py-3.5 text-start transition-colors last:border-b-0',
                       isSelected ? 'border-s-primary bg-[#e8edfc]/50' : 'border-s-transparent hover:bg-neutral-50',
                     )}
                   >
