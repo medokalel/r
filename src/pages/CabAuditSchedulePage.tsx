@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { TablePagination } from '@/components/dashboard/TablePagination'
+import { AppIcon, DownloadTrayIcon } from '@/components/icons'
 import {
   fetchAuditPlans,
   saveAuditPlan,
@@ -348,11 +349,7 @@ export function CabAuditSchedulePage() {
                   onClick={() => setExportMenuOpen((prev) => !prev)}
                   className="inline-flex items-center gap-2 rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] font-medium text-neutral-700 transition hover:bg-neutral-50"
                 >
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                    <polyline points="7 10 12 15 17 10" />
-                    <line x1="12" y1="15" x2="12" y2="3" />
-                  </svg>
+                  <AppIcon icon={DownloadTrayIcon} size={18} />
                   <span>{t('common.export', 'Export')}</span>
                   <span className="text-[10px] text-neutral-400">▼</span>
                 </button>

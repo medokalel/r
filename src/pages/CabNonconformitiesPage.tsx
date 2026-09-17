@@ -8,7 +8,7 @@ import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import { AppIcon, AttachIcon, ExportIcon, HistoryIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, AttachIcon, DownloadTrayIcon, HistoryIcon, SearchIcon } from '@/components/icons'
 import {
   getNonconformities,
   getNonconformityCountries,
@@ -172,7 +172,7 @@ export function CabNonconformitiesPage() {
           </div>
           <Button
             variant="outline"
-            icon={<AppIcon icon={ExportIcon} size={20} />}
+            icon={<AppIcon icon={DownloadTrayIcon} size={20} />}
             onClick={handleExport}
             disabled={exporting || filtered.length === 0}
             className="w-full sm:w-auto"

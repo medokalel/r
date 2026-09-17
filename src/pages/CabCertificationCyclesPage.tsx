@@ -15,7 +15,7 @@ import {
   ChevronDownIcon,
   EditIcon,
   ExcelFileIcon,
-  ExportIcon,
+  DownloadTrayIcon,
   MailIcon,
   MapPinIcon,
   MoreIcon,
@@ -184,7 +184,7 @@ export function CabCertificationCyclesPage() {
               <DropdownMenu.Trigger asChild>
                 <Button
                   variant="outline"
-                  icon={<AppIcon icon={ExportIcon} size={20} />}
+                  icon={<AppIcon icon={DownloadTrayIcon} size={20} />}
                   disabled={exporting || cycles.length === 0}
                   className="flex-1 sm:flex-none"
                 >
