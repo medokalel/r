@@ -120,7 +120,11 @@ const navGroups: CabNavGroup[] = [
     items: [
       { icon: TaskSquareIcon, labelKey: 'cab.sidebar.auditPlanning', href: ROUTES.cabAuditPlanning },
       { icon: ReportIcon, labelKey: 'cab.sidebar.auditReporting', href: ROUTES.cabAuditReporting },
-      { icon: CorrectiveActionIcon, labelKey: 'cab.sidebar.nonconformities', disabled: true },
+      {
+        icon: CorrectiveActionIcon,
+        labelKey: 'cab.sidebar.nonconformities',
+        href: ROUTES.cabNonconformities,
+      },
     ],
   },
   {

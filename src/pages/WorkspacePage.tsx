@@ -99,8 +99,8 @@ const cabApps: WorkspaceApp[] = [
   {
     title: 'Nonconformities',
     description: 'Record and follow up on nonconformities.',
+    route: ROUTES.cabNonconformities,
     icon: CorrectiveActionIcon,
-    comingSoon: true,
   },
   {
     title: 'Certification',

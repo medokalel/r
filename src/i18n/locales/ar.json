@@ -22,7 +22,9 @@
     "language": "اللغة",
     "filter": "تصفية",
     "actions": "الإجراءات",
-    "selectAll": "تحديد الكل"
+    "selectAll": "تحديد الكل",
+    "export": "تصدير",
+    "exporting": "جاري التصدير…"
   },
   "nav": {
     "home": "الرئيسية",
@@ -2376,6 +2378,70 @@
         "suspensions": { "title": "سجل الإيقاف", "description": "عرض سجلات الإيقاف وإعادة التفعيل لهذه الشهادة." }
       },
       "table": { "record": "السجل" }
+    },
+    "nonconformities": {
+      "title": "سجل الإجراءات التصحيحية",
+      "breadcrumbParent": "حالات عدم المطابقة",
+      "subtitle": "إدارة الإجراءات التصحيحية للعملاء الناتجة عن نتائج التدقيق ومصادر أخرى.",
+      "tabsLabel": "أقسام حالة عدم المطابقة",
+      "resultCount": "{{count}} نتيجة",
+      "resultCount_other": "{{count}} نتائج",
+      "empty": "لا توجد حالات عدم مطابقة مطابقة للفلاتر الحالية.",
+      "noActions": "لم يتم تسجيل أي إجراءات تصحيحية حتى الآن.",
+      "noAttachments": "لم يتم رفع أي مرفقات حتى الآن.",
+      "openResponse": "فتح الرد",
+      "sortBy": "ترتيب حسب {{column}}",
+      "filters": {
+        "search": "البحث عن نتيجة أو عميل",
+        "searchPlaceholder": "ابحث برقم النتيجة أو اسم العميل أو رقم العميل...",
+        "raisedPeriod": "فترة الإصدار",
+        "allCountries": "الكل",
+        "allStatuses": "الكل",
+        "clear": "مسح الفلاتر"
+      },
+      "table": {
+        "ncId": "رقم عدم المطابقة",
+        "finding": "النتيجة",
+        "client": "العميل",
+        "classification": "التصنيف",
+        "due": "تاريخ الاستحقاق",
+        "owner": "المسؤول",
+        "status": "الحالة"
+      },
+      "fields": {
+        "clientId": "رقم العميل",
+        "country": "الدولة",
+        "finding": "النتيجة",
+        "description": "الوصف",
+        "raisedDate": "تاريخ الإصدار",
+        "primaryContact": "جهة الاتصال الرئيسية",
+        "email": "البريد الإلكتروني"
+      },
+      "tabs": {
+        "details": "التفاصيل",
+        "actions": "الإجراءات",
+        "attachments": "المرفقات",
+        "history": "السجل"
+      },
+      "status": {
+        "open": "مفتوحة",
+        "in_progress": "قيد التنفيذ",
+        "submitted": "تم الإرسال",
+        "closed": "مغلقة",
+        "overdue": "متأخرة"
+      },
+      "actionStage": {
+        "correction": "التصحيح",
+        "root_cause": "تحليل السبب الجذري",
+        "corrective_action": "الإجراء التصحيحي",
+        "verification": "التحقق"
+      },
+      "actionStatus": {
+        "pending": "قيد الانتظار",
+        "submitted": "تم الإرسال",
+        "accepted": "مقبول",
+        "rejected": "مرفوض"
+      }
     },
     "auditPlanning": {
       "title": "تخطيط التدقيق",

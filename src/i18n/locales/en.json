@@ -22,7 +22,9 @@
     "language": "Language",
     "filter": "Filter",
     "actions": "Actions",
-    "selectAll": "Select all"
+    "selectAll": "Select all",
+    "export": "Export",
+    "exporting": "Exporting…"
   },
   "nav": {
     "home": "Home",
@@ -2356,6 +2358,70 @@
         "suspensions": { "title": "Suspension history", "description": "View suspension and reinstatement records for this certificate." }
       },
       "table": { "record": "Record" }
+    },
+    "nonconformities": {
+      "title": "Corrective action register",
+      "breadcrumbParent": "Nonconformities",
+      "subtitle": "Manage client corrective actions raised from audit findings and other sources.",
+      "tabsLabel": "Nonconformity sections",
+      "resultCount": "{{count}} result",
+      "resultCount_other": "{{count}} results",
+      "empty": "No nonconformities match the current filters.",
+      "noActions": "No corrective actions have been recorded yet.",
+      "noAttachments": "No attachments have been uploaded yet.",
+      "openResponse": "Open response",
+      "sortBy": "Sort by {{column}}",
+      "filters": {
+        "search": "Search finding or client",
+        "searchPlaceholder": "Search by finding ID, client name or client ID...",
+        "raisedPeriod": "Raised period",
+        "allCountries": "All",
+        "allStatuses": "All",
+        "clear": "Clear filters"
+      },
+      "table": {
+        "ncId": "NC ID",
+        "finding": "Finding",
+        "client": "Client",
+        "classification": "Classification",
+        "due": "Due",
+        "owner": "Owner",
+        "status": "Status"
+      },
+      "fields": {
+        "clientId": "Client ID",
+        "country": "Country",
+        "finding": "Finding",
+        "description": "Description",
+        "raisedDate": "Raised date",
+        "primaryContact": "Primary contact",
+        "email": "Email"
+      },
+      "tabs": {
+        "details": "Details",
+        "actions": "Actions",
+        "attachments": "Attachments",
+        "history": "History"
+      },
+      "status": {
+        "open": "Open",
+        "in_progress": "In progress",
+        "submitted": "Submitted",
+        "closed": "Closed",
+        "overdue": "Overdue"
+      },
+      "actionStage": {
+        "correction": "Correction",
+        "root_cause": "Root cause analysis",
+        "corrective_action": "Corrective action",
+        "verification": "Verification"
+      },
+      "actionStatus": {
+        "pending": "Pending",
+        "submitted": "Submitted",
+        "accepted": "Accepted",
+        "rejected": "Rejected"
+      }
     },
     "auditPlanning": {
       "title": "Audit Planning",
