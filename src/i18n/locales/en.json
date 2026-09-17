@@ -2360,8 +2360,8 @@
       "table": { "record": "Record" }
     },
     "nonconformities": {
-      "title": "Corrective action register",
-      "breadcrumbParent": "Nonconformities",
+      "title": "Nonconformities",
+      "breadcrumbParent": "Workspace",
       "subtitle": "Manage client corrective actions raised from audit findings and other sources.",
       "tabsLabel": "Nonconformity sections",
       "resultCount": "{{count}} result",
@@ -2421,6 +2421,77 @@
         "submitted": "Submitted",
         "accepted": "Accepted",
         "rejected": "Rejected"
+      }
+    },
+    "nonconformityResponse": {
+      "title": "Review corrective action",
+      "tabsLabel": "Corrective action sections",
+      "statusCard": "Nonconformity status",
+      "yourResponse": "Your response",
+      "reviewerAction": "Reviewer action",
+      "reviewerHint": "Perform verification before closing. Request a revision if the response is incomplete or not effective.",
+      "moreDetails": "More details",
+      "effectivenessReview": "Effectiveness review",
+      "viewApplication": "View application",
+      "viewFinding": "View audit finding",
+      "moreActions": "More actions",
+      "lastSaved": "Last saved",
+      "savedBy": "By",
+      "neverSaved": "Not saved yet",
+      "saveDraft": "Save response draft",
+      "submitResponse": "Submit response",
+      "requestRevision": "Request revision",
+      "closeAfterVerification": "Close after verification",
+      "noActivity": "No activity has been recorded yet.",
+      "notFound": "Nonconformity not found",
+      "notFoundHint": "This nonconformity may have been closed or removed from the register.",
+      "backToRegister": "Back to nonconformities",
+      "tabs": {
+        "corrective_action": "Corrective action",
+        "activity": "Activity log",
+        "related": "Related records",
+        "attachments": "Attachments"
+      },
+      "fields": {
+        "application": "Application",
+        "originalFinding": "Original finding (read-only)",
+        "correction": "Correction",
+        "rootCause": "Root cause",
+        "correctiveAction": "Corrective action",
+        "evidence": "Implementation evidence",
+        "responsiblePerson": "Responsible person",
+        "targetDate": "Target date",
+        "targetClosureDate": "Target closure date",
+        "daysOpen": "Days open",
+        "effectivenessReviewDate": "Effectiveness review date",
+        "effectivenessResult": "Effectiveness review result",
+        "comments": "Comments"
+      },
+      "placeholders": {
+        "correction": "Describe the immediate action taken to contain the nonconformity...",
+        "rootCause": "Describe the underlying cause identified through analysis...",
+        "correctiveAction": "Describe the action taken to prevent recurrence...",
+        "responsiblePerson": "Select a responsible person",
+        "date": "Select a date",
+        "comments": "Add comments (optional)"
+      },
+      "effectiveness": {
+        "not_reviewed": "Not yet reviewed",
+        "effective": "Effective",
+        "partially_effective": "Partially effective",
+        "not_effective": "Not effective"
+      },
+      "evidence": {
+        "dropHint": "Drag and drop files here, or",
+        "browse": "click to upload",
+        "hint": "PDF, DOCX, JPG, PNG (max 10 MB)",
+        "version": "Version {{version}}",
+        "download": "Download",
+        "rowActions": "Actions for {{name}}"
+      },
+      "errors": {
+        "required": "This field is required.",
+        "evidenceRequired": "Upload at least one evidence file."
       }
     },
     "auditPlanning": {

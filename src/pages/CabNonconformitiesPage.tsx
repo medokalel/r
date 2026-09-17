@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
@@ -17,7 +17,7 @@ import {
   type NonconformityStatus,
 } from '@/lib/api/cabNonconformitiesApi'
 import { downloadExcelCsv, matchesSearch, type TableColumn } from '@/lib/tableTools'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabNonconformityResponsePath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 function Chevron() {
@@ -51,6 +51,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 
 export function CabNonconformitiesPage() {
   const { t } = useTranslation()
+  const navigate = useNavigate()
 
   const [nonconformities, setNonconformities] = useState<NonconformityItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -541,7 +542,11 @@ export function CabNonconformitiesPage() {
               </div>
 
               <div className="mt-5 flex flex-col gap-3 border-t border-[#ececec] pt-5 sm:flex-row">
-                <Button variant="primary" className="h-11 flex-1 text-[14px]">
+                <Button
+                  variant="primary"
+                  onClick={() => navigate(cabNonconformityResponsePath(selected.id))}
+                  className="h-11 flex-1 text-[14px]"
+                >
                   {t('cab.nonconformities.openResponse')}
                 </Button>
                 <Button

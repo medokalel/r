@@ -2380,8 +2380,8 @@
       "table": { "record": "السجل" }
     },
     "nonconformities": {
-      "title": "سجل الإجراءات التصحيحية",
-      "breadcrumbParent": "حالات عدم المطابقة",
+      "title": "حالات عدم المطابقة",
+      "breadcrumbParent": "مساحة العمل",
       "subtitle": "إدارة الإجراءات التصحيحية للعملاء الناتجة عن نتائج التدقيق ومصادر أخرى.",
       "tabsLabel": "أقسام حالة عدم المطابقة",
       "resultCount": "{{count}} نتيجة",
@@ -2441,6 +2441,77 @@
         "submitted": "تم الإرسال",
         "accepted": "مقبول",
         "rejected": "مرفوض"
+      }
+    },
+    "nonconformityResponse": {
+      "title": "مراجعة الإجراء التصحيحي",
+      "tabsLabel": "أقسام الإجراء التصحيحي",
+      "statusCard": "حالة عدم المطابقة",
+      "yourResponse": "ردك",
+      "reviewerAction": "إجراء المراجع",
+      "reviewerHint": "قم بالتحقق قبل الإغلاق. اطلب مراجعة إذا كان الرد غير مكتمل أو غير فعال.",
+      "moreDetails": "تفاصيل إضافية",
+      "effectivenessReview": "مراجعة الفعالية",
+      "viewApplication": "عرض الطلب",
+      "viewFinding": "عرض نتيجة التدقيق",
+      "moreActions": "إجراءات إضافية",
+      "lastSaved": "آخر حفظ",
+      "savedBy": "بواسطة",
+      "neverSaved": "لم يتم الحفظ بعد",
+      "saveDraft": "حفظ مسودة الرد",
+      "submitResponse": "إرسال الرد",
+      "requestRevision": "طلب مراجعة",
+      "closeAfterVerification": "الإغلاق بعد التحقق",
+      "noActivity": "لم يتم تسجيل أي نشاط حتى الآن.",
+      "notFound": "حالة عدم المطابقة غير موجودة",
+      "notFoundHint": "ربما تم إغلاق حالة عدم المطابقة هذه أو إزالتها من السجل.",
+      "backToRegister": "العودة إلى حالات عدم المطابقة",
+      "tabs": {
+        "corrective_action": "الإجراء التصحيحي",
+        "activity": "سجل النشاط",
+        "related": "السجلات المرتبطة",
+        "attachments": "المرفقات"
+      },
+      "fields": {
+        "application": "الطلب",
+        "originalFinding": "النتيجة الأصلية (للقراءة فقط)",
+        "correction": "التصحيح",
+        "rootCause": "السبب الجذري",
+        "correctiveAction": "الإجراء التصحيحي",
+        "evidence": "أدلة التنفيذ",
+        "responsiblePerson": "الشخص المسؤول",
+        "targetDate": "التاريخ المستهدف",
+        "targetClosureDate": "تاريخ الإغلاق المستهدف",
+        "daysOpen": "عدد الأيام المفتوحة",
+        "effectivenessReviewDate": "تاريخ مراجعة الفعالية",
+        "effectivenessResult": "نتيجة مراجعة الفعالية",
+        "comments": "الملاحظات"
+      },
+      "placeholders": {
+        "correction": "صف الإجراء الفوري المتخذ لاحتواء حالة عدم المطابقة...",
+        "rootCause": "صف السبب الكامن الذي تم تحديده من خلال التحليل...",
+        "correctiveAction": "صف الإجراء المتخذ لمنع التكرار...",
+        "responsiblePerson": "اختر الشخص المسؤول",
+        "date": "اختر التاريخ",
+        "comments": "أضف ملاحظات (اختياري)"
+      },
+      "effectiveness": {
+        "not_reviewed": "لم تتم المراجعة بعد",
+        "effective": "فعال",
+        "partially_effective": "فعال جزئياً",
+        "not_effective": "غير فعال"
+      },
+      "evidence": {
+        "dropHint": "اسحب الملفات وأفلتها هنا، أو",
+        "browse": "اضغط للرفع",
+        "hint": "PDF، DOCX، JPG، PNG (بحد أقصى 10 ميجابايت)",
+        "version": "الإصدار {{version}}",
+        "download": "تنزيل",
+        "rowActions": "إجراءات {{name}}"
+      },
+      "errors": {
+        "required": "هذا الحقل مطلوب.",
+        "evidenceRequired": "ارفع ملف دليل واحد على الأقل."
       }
     },
     "auditPlanning": {
