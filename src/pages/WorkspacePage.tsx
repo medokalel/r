@@ -93,8 +93,8 @@ const cabApps: WorkspaceApp[] = [
   {
     title: 'Certificates',
     description: 'Issue and manage certification records.',
+    route: ROUTES.cabCertificates,
     icon: CertificateBadgeIcon,
-    comingSoon: true,
   },
   {
     title: 'Nonconformities',

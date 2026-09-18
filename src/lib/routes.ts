@@ -48,6 +48,7 @@ export const ROUTES = {
   cabManageCertificationCycle: '/cab/certification/:cycleId',
   cabNonconformities: '/cab/nonconformities',
   cabNonconformityResponse: '/cab/nonconformities/:ncId/response',
+  cabCertificates: '/cab/certificates',
 } as const
 
 export function cabNonconformityResponsePath(ncId: string): string {

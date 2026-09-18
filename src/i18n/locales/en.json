@@ -5171,6 +5171,52 @@
         "view": "View",
         "continueDraft": "Continue draft"
       }
+    },
+    "certificateRegister": {
+      "breadcrumbParent": "Workspace",
+      "title": "Certificate register",
+      "subtitle": "Search and manage certificates issued by your CAB.",
+      "prepareCertificate": "Prepare certificate",
+      "export": "Export",
+      "exportExcel": "Export to Excel (.xlsx)",
+      "exportCsv": "Export to CSV (.csv)",
+      "clearFilters": "Clear filters",
+      "empty": "No certificates found.",
+      "resultCount": "{{count}} result",
+      "resultCount_other": "{{count}} results",
+      "filters": {
+        "search": "Search certificate or client",
+        "searchPlaceholder": "Enter certificate number, client name or client ID",
+        "issuePeriod": "Issue period",
+        "country": "Country",
+        "allCountries": "All countries",
+        "status": "Status",
+        "allStatuses": "All statuses"
+      },
+      "table": {
+        "number": "Number",
+        "client": "Client",
+        "standard": "Standard",
+        "scope": "Scope",
+        "validUntil": "Valid until",
+        "status": "Status",
+        "actions": "Actions"
+      },
+      "status": {
+        "draft": "Draft",
+        "issued": "Issued",
+        "suspended": "Suspended",
+        "withdrawn": "Withdrawn"
+      },
+      "rowActions": {
+        "view": "View",
+        "editDraft": "Edit draft",
+        "issue": "Issue",
+        "reissue": "Reissue",
+        "suspend": "Suspend",
+        "prepareCertificate": "Prepare certificate",
+        "withdraw": "Withdraw"
+      }
     }
   },
   "ia": {

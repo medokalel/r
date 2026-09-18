@@ -133,7 +133,7 @@ const navGroups: CabNavGroup[] = [
     items: [
       { icon: SuccessCircleIcon, labelKey: 'cab.sidebar.decisions', href: ROUTES.cabDecisions },
       { icon: ShieldIcon, labelKey: 'cab.sidebar.certification', href: ROUTES.cabCertificationCycles },
-      { icon: CertificateBadgeIcon, labelKey: 'cab.sidebar.certificates', disabled: true },
+      { icon: CertificateBadgeIcon, labelKey: 'cab.sidebar.certificates', href: ROUTES.cabCertificates },
     ],
   },
   {

@@ -5211,6 +5211,52 @@
         "view": "عرض",
         "continueDraft": "متابعة المسودة"
       }
+    },
+    "certificateRegister": {
+      "breadcrumbParent": "مساحة العمل",
+      "title": "سجل الشهادات",
+      "subtitle": "البحث عن الشهادات الصادرة عن جهتكم وإدارتها.",
+      "prepareCertificate": "تجهيز شهادة",
+      "export": "تصدير",
+      "exportExcel": "تصدير كملف Excel (.xlsx)",
+      "exportCsv": "تصدير كملف CSV (.csv)",
+      "clearFilters": "مسح الفلاتر",
+      "empty": "لا توجد شهادات.",
+      "resultCount": "نتيجة واحدة",
+      "resultCount_other": "{{count}} نتيجة",
+      "filters": {
+        "search": "بحث عن شهادة أو عميل",
+        "searchPlaceholder": "أدخل رقم الشهادة أو اسم العميل أو رمز العميل",
+        "issuePeriod": "فترة الإصدار",
+        "country": "الدولة",
+        "allCountries": "كل الدول",
+        "status": "الحالة",
+        "allStatuses": "كل الحالات"
+      },
+      "table": {
+        "number": "الرقم",
+        "client": "العميل",
+        "standard": "المعيار",
+        "scope": "النطاق",
+        "validUntil": "صالحة حتى",
+        "status": "الحالة",
+        "actions": "إجراءات"
+      },
+      "status": {
+        "draft": "مسودة",
+        "issued": "صادرة",
+        "suspended": "موقوفة",
+        "withdrawn": "مسحوبة"
+      },
+      "rowActions": {
+        "view": "عرض",
+        "editDraft": "تعديل المسودة",
+        "issue": "إصدار",
+        "reissue": "إعادة إصدار",
+        "suspend": "إيقاف",
+        "prepareCertificate": "تجهيز شهادة",
+        "withdraw": "سحب"
+      }
     }
   },
   "ia": {
