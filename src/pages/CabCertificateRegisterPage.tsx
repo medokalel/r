@@ -12,11 +12,7 @@ import {
   AddCircleIcon,
   AppIcon,
   CertificateBadgeIcon,
-  ChevronDownIcon,
-  DocumentFileIcon,
-  DownloadTrayIcon,
   EditIcon,
-  ExcelFileIcon,
   EyeIcon,
   MoreIcon,
   RefreshIcon,
@@ -25,6 +21,7 @@ import {
   CheckIcon,
   ErrorCircleIcon,
 } from '@/components/icons'
+import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
 import {
   listCabCertificates,
   type CertificateRegisterItem,
@@ -35,7 +32,7 @@ import {
   CERTIFICATE_STATUS_STYLES as statusStyles,
 } from '@/lib/certificateStatus'
 import { getCountryOptions } from '@/lib/countries'
-import { downloadExcelCsv, matchesSearch, type TableColumn } from '@/lib/tableTools'
+import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
 import { ROUTES } from '@/lib/routes'
 
@@ -139,10 +136,10 @@ export function CabCertificateRegisterPage() {
       setExporting(false)
     }
   }
-  const handleExportCsv = () => {
+  const handleExportPdf = () => {
     setExporting(true)
     try {
-      downloadExcelCsv('certificate-register.csv', exportColumns, filtered)
+      downloadPdfFromTable('certificate-register.pdf', t('cab.certificateRegister.title'), exportColumns, filtered)
     } finally {
       setExporting(false)
     }
@@ -200,41 +197,14 @@ export function CabCertificateRegisterPage() {
             >
               {t('cab.certificateRegister.prepareCertificate')}
             </Button>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <Button
-                  variant="outline"
-                  icon={<AppIcon icon={DownloadTrayIcon} size={20} />}
-                  disabled={exporting || filtered.length === 0}
-                  className="flex-1 sm:flex-none"
-                >
-                  {t('cab.certificateRegister.export')}
-                  <AppIcon icon={ChevronDownIcon} size={16} />
-                </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content
-                  align="end"
-                  sideOffset={4}
-                  className="z-50 min-w-[220px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
-                >
-                  <DropdownMenu.Item
-                    onSelect={handleExportExcel}
-                    className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
-                  >
-                    <AppIcon icon={ExcelFileIcon} size={18} />
-                    {t('cab.certificateRegister.exportExcel')}
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item
-                    onSelect={handleExportCsv}
-                    className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
-                  >
-                    <AppIcon icon={DocumentFileIcon} size={18} />
-                    {t('cab.certificateRegister.exportCsv')}
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
+            <ExportMenuButton
+              exporting={exporting}
+              disabled={filtered.length === 0}
+              onExportExcel={handleExportExcel}
+              onExportPdf={handleExportPdf}
+              label={t('cab.certificateRegister.export')}
+              excelLabel={t('cab.certificateRegister.exportExcel')}
+            />
           </div>
         </div>
 

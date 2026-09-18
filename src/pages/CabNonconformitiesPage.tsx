@@ -6,9 +6,10 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
+import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import { AppIcon, AttachIcon, DownloadTrayIcon, HistoryIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, AttachIcon, HistoryIcon, SearchIcon } from '@/components/icons'
 import {
   getNonconformities,
   getNonconformityCountries,
@@ -16,7 +17,7 @@ import {
   type NonconformityItem,
   type NonconformityStatus,
 } from '@/lib/api/cabNonconformitiesApi'
-import { downloadExcelCsv, matchesSearch, type TableColumn } from '@/lib/tableTools'
+import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES, cabNonconformityResponsePath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -135,10 +136,18 @@ export function CabNonconformitiesPage() {
     { header: t('cab.nonconformities.table.status'), value: (row) => statusLabel(row.status) },
   ]
 
-  const handleExport = () => {
+  const handleExportExcel = () => {
     setExporting(true)
     try {
-      downloadExcelCsv('nonconformities.csv', exportColumns, filtered)
+      downloadExcelCsv('nonconformities.xlsx', exportColumns, filtered)
+    } finally {
+      setExporting(false)
+    }
+  }
+  const handleExportPdf = () => {
+    setExporting(true)
+    try {
+      downloadPdfFromTable('nonconformities.pdf', t('cab.nonconformities.title'), exportColumns, filtered)
     } finally {
       setExporting(false)
     }
@@ -170,15 +179,13 @@ export function CabNonconformitiesPage() {
             </h1>
             <p className="mt-1 text-[14px] text-neutral-500">{t('cab.nonconformities.subtitle')}</p>
           </div>
-          <Button
-            variant="outline"
-            icon={<AppIcon icon={DownloadTrayIcon} size={20} />}
-            onClick={handleExport}
-            disabled={exporting || filtered.length === 0}
+          <ExportMenuButton
+            exporting={exporting}
+            disabled={filtered.length === 0}
+            onExportExcel={handleExportExcel}
+            onExportPdf={handleExportPdf}
             className="w-full sm:w-auto"
-          >
-            {exporting ? t('common.exporting') : t('common.export')}
-          </Button>
+          />
         </div>
 
         {/* Filters */}

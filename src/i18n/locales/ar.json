@@ -24,7 +24,9 @@
     "actions": "الإجراءات",
     "selectAll": "تحديد الكل",
     "export": "تصدير",
-    "exporting": "جاري التصدير…"
+    "exporting": "جاري التصدير…",
+    "exportPdf": "تصدير كملف PDF",
+    "exportExcel": "تصدير كملف Excel"
   },
   "nav": {
     "home": "الرئيسية",

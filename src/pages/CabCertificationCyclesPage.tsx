@@ -8,14 +8,13 @@ import { CertificationCycleTimeline } from '@/components/dashboard/cab/Certifica
 import { CertificationLifecycleBadge } from '@/components/dashboard/cab/CertificationLifecycleBadge'
 import { SelectField } from '@/components/ui/Select'
 import { Button } from '@/components/ui/Button'
+import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
 import {
   AddCircleIcon,
   AppIcon,
   CalendarIcon,
-  ChevronDownIcon,
   EditIcon,
   ExcelFileIcon,
-  DownloadTrayIcon,
   MailIcon,
   MapPinIcon,
   MoreIcon,
@@ -180,31 +179,14 @@ export function CabCertificationCyclesPage() {
             <Button variant="primary" icon={<AppIcon icon={AddCircleIcon} size={20} />} className="flex-1 sm:flex-none">
               {t('cab.certification.newCycle', 'New cycle')}
             </Button>
-            <DropdownMenu.Root>
-              <DropdownMenu.Trigger asChild>
-                <Button
-                  variant="outline"
-                  icon={<AppIcon icon={DownloadTrayIcon} size={20} />}
-                  disabled={exporting || cycles.length === 0}
-                  className="flex-1 sm:flex-none"
-                >
-                  {exporting ? t('common.exporting', 'Exporting…') : t('common.export', 'Export')}
-                  <AppIcon icon={ChevronDownIcon} size={16} />
-                </Button>
-              </DropdownMenu.Trigger>
-              <DropdownMenu.Portal>
-                <DropdownMenu.Content align="end" sideOffset={4} className={dropdownMenuContentClassName}>
-                  <DropdownMenu.Item onSelect={handleExportPdf} className={dropdownMenuItemClassName}>
-                    <AppIcon icon={PdfFileIcon} size={18} />
-                    {t('cab.certification.exportPdf', 'Download PDF')}
-                  </DropdownMenu.Item>
-                  <DropdownMenu.Item onSelect={handleExportExcel} className={dropdownMenuItemClassName}>
-                    <AppIcon icon={ExcelFileIcon} size={18} />
-                    {t('cab.certification.exportExcel', 'Download Excel')}
-                  </DropdownMenu.Item>
-                </DropdownMenu.Content>
-              </DropdownMenu.Portal>
-            </DropdownMenu.Root>
+            <ExportMenuButton
+              exporting={exporting}
+              disabled={cycles.length === 0}
+              onExportPdf={handleExportPdf}
+              onExportExcel={handleExportExcel}
+              pdfLabel={t('cab.certification.exportPdf', 'Download PDF')}
+              excelLabel={t('cab.certification.exportExcel', 'Download Excel')}
+            />
           </div>
         </div>
 

@@ -24,7 +24,9 @@
     "actions": "Actions",
     "selectAll": "Select all",
     "export": "Export",
-    "exporting": "Exporting…"
+    "exporting": "Exporting…",
+    "exportPdf": "Export as PDF",
+    "exportExcel": "Export as Excel"
   },
   "nav": {
     "home": "Home",
