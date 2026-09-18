@@ -461,7 +461,7 @@ export function CabManageCertificationCyclePage() {
         <div
           role="tablist"
           aria-label={t('cab.manageCycle.tabsLabel', 'Certification cycle sections')}
-          className="flex gap-1 overflow-x-auto border-b border-[#ececec]"
+          className="flex gap-1 overflow-x-auto scrollbar-hide border-b border-[#ececec]"
         >
           {TABS.map((tabId) => (
             <button
