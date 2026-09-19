@@ -5219,6 +5219,103 @@
         "prepareCertificate": "Prepare certificate",
         "withdraw": "Withdraw"
       }
+    },
+    "certificatePrepare": {
+      "title": "Prepare certificate",
+      "subtitle": "Generate and issue the certificate based on the authorized decision.",
+      "breadcrumbLabel": "Breadcrumb",
+      "actions": {
+        "preview": "Preview",
+        "issue": "Issue certificate",
+        "issuing": "Issuing…",
+        "expandPreview": "Expand preview"
+      },
+      "sections": {
+        "applicationAndClient": "Application and client",
+        "authorizedDecision": "Authorized decision",
+        "certificateDetails": "Certificate details"
+      },
+      "fields": {
+        "applicationNumber": "Application number",
+        "clientNumber": "Client number",
+        "legalName": "Legal name",
+        "country": "Country",
+        "primaryContact": "Primary contact",
+        "email": "Email",
+        "decisionNumber": "Decision number",
+        "decisionDate": "Decision date",
+        "decision": "Decision",
+        "approvedScope": "Scope (approved)",
+        "includedSites": "Included sites",
+        "certificateNumber": "Certificate number",
+        "issueDate": "Issue date",
+        "effectiveDate": "Effective date",
+        "expiryDate": "Expiry date",
+        "template": "Certificate template",
+        "moreDetails": "More details",
+        "language": "Certificate language",
+        "signatory": "Authorized signatory",
+        "applicableMarks": "Applicable marks",
+        "verificationQr": "Verification QR code"
+      },
+      "decisionOutcome": {
+        "granted": "Granted"
+      },
+      "sites": {
+        "siteId": "Site ID",
+        "siteName": "Site name",
+        "address": "Address",
+        "scope": "Scope"
+      },
+      "languages": {
+        "en": "English",
+        "ar": "Arabic"
+      },
+      "marks": {
+        "none": "No marks selected",
+        "configure": "Configure authorized marks"
+      },
+      "marksModal": {
+        "title": "Configure authorized marks",
+        "subtitle": "Choose the marks to print on this certificate.",
+        "empty": "No authorized marks are available for your organization.",
+        "apply": "Apply"
+      },
+      "qr": {
+        "include": "Include QR code",
+        "hint": "Links to online certificate verification."
+      },
+      "errors": {
+        "expiryNotAfterEffective": "Expiry date must be after the effective date."
+      },
+      "notices": {
+        "issuedTitle": "Certificate issued",
+        "issuedBody": "{{number}} has been issued.",
+        "backToRegister": "Back to certificate register",
+        "notDraftTitle": "This certificate can't be issued",
+        "notDraftBody": "Only draft certificates can be issued, and this one is {{status}}. Use Reissue from the certificate register instead.",
+        "issueFailedTitle": "Couldn't issue the certificate",
+        "issueFailedBody": "Something went wrong while issuing. Your changes are still here — please try again."
+      },
+      "notFound": {
+        "title": "Certificate not found",
+        "description": "This certificate doesn't exist or isn't available to your organization.",
+        "back": "Back to certificate register"
+      },
+      "preview": {
+        "title": "Certificate preview",
+        "certificate": "Certificate",
+        "certificationBody": "Certification Body",
+        "certifyThat": "This is to certify that",
+        "assessedAgainst": "has been assessed and found to conform to the requirements of",
+        "forScope": "for the following scope:",
+        "certificateNumber": "Certificate number",
+        "issueDate": "Issue date",
+        "effectiveDate": "Effective date",
+        "expiryDate": "Expiry date",
+        "verifyOnline": "Verify online",
+        "draftSample": "Draft – Sample"
+      }
     }
   },
   "ia": {

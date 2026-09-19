@@ -5259,6 +5259,103 @@
         "prepareCertificate": "تجهيز شهادة",
         "withdraw": "سحب"
       }
+    },
+    "certificatePrepare": {
+      "title": "تجهيز شهادة",
+      "subtitle": "إنشاء الشهادة وإصدارها بناءً على القرار المعتمد.",
+      "breadcrumbLabel": "مسار التنقل",
+      "actions": {
+        "preview": "معاينة",
+        "issue": "إصدار الشهادة",
+        "issuing": "جارٍ الإصدار…",
+        "expandPreview": "تكبير المعاينة"
+      },
+      "sections": {
+        "applicationAndClient": "الطلب والعميل",
+        "authorizedDecision": "القرار المعتمد",
+        "certificateDetails": "تفاصيل الشهادة"
+      },
+      "fields": {
+        "applicationNumber": "رقم الطلب",
+        "clientNumber": "رقم العميل",
+        "legalName": "الاسم القانوني",
+        "country": "الدولة",
+        "primaryContact": "جهة الاتصال الرئيسية",
+        "email": "البريد الإلكتروني",
+        "decisionNumber": "رقم القرار",
+        "decisionDate": "تاريخ القرار",
+        "decision": "القرار",
+        "approvedScope": "النطاق (المعتمد)",
+        "includedSites": "المواقع المشمولة",
+        "certificateNumber": "رقم الشهادة",
+        "issueDate": "تاريخ الإصدار",
+        "effectiveDate": "تاريخ السريان",
+        "expiryDate": "تاريخ الانتهاء",
+        "template": "قالب الشهادة",
+        "moreDetails": "المزيد من التفاصيل",
+        "language": "لغة الشهادة",
+        "signatory": "الموقّع المعتمد",
+        "applicableMarks": "العلامات المطبقة",
+        "verificationQr": "رمز QR للتحقق"
+      },
+      "decisionOutcome": {
+        "granted": "ممنوحة"
+      },
+      "sites": {
+        "siteId": "رمز الموقع",
+        "siteName": "اسم الموقع",
+        "address": "العنوان",
+        "scope": "النطاق"
+      },
+      "languages": {
+        "en": "الإنجليزية",
+        "ar": "العربية"
+      },
+      "marks": {
+        "none": "لم يتم اختيار علامات",
+        "configure": "تهيئة العلامات المعتمدة"
+      },
+      "marksModal": {
+        "title": "تهيئة العلامات المعتمدة",
+        "subtitle": "اختر العلامات التي ستُطبع على هذه الشهادة.",
+        "empty": "لا توجد علامات معتمدة متاحة لجهتكم.",
+        "apply": "تطبيق"
+      },
+      "qr": {
+        "include": "تضمين رمز QR",
+        "hint": "يرتبط بصفحة التحقق الإلكتروني من الشهادة."
+      },
+      "errors": {
+        "expiryNotAfterEffective": "يجب أن يكون تاريخ الانتهاء بعد تاريخ السريان."
+      },
+      "notices": {
+        "issuedTitle": "تم إصدار الشهادة",
+        "issuedBody": "تم إصدار الشهادة {{number}}.",
+        "backToRegister": "العودة إلى سجل الشهادات",
+        "notDraftTitle": "لا يمكن إصدار هذه الشهادة",
+        "notDraftBody": "يمكن إصدار المسودات فقط، وحالة هذه الشهادة: {{status}}. استخدم «إعادة إصدار» من سجل الشهادات بدلًا من ذلك.",
+        "issueFailedTitle": "تعذّر إصدار الشهادة",
+        "issueFailedBody": "حدث خطأ أثناء الإصدار. تعديلاتك ما زالت محفوظة، يُرجى المحاولة مرة أخرى."
+      },
+      "notFound": {
+        "title": "الشهادة غير موجودة",
+        "description": "هذه الشهادة غير موجودة أو غير متاحة لجهتكم.",
+        "back": "العودة إلى سجل الشهادات"
+      },
+      "preview": {
+        "title": "معاينة الشهادة",
+        "certificate": "شهادة",
+        "certificationBody": "جهة إصدار الشهادات",
+        "certifyThat": "نشهد بأن",
+        "assessedAgainst": "قد تم تقييمها وثبتت مطابقتها لمتطلبات",
+        "forScope": "للنطاق التالي:",
+        "certificateNumber": "رقم الشهادة",
+        "issueDate": "تاريخ الإصدار",
+        "effectiveDate": "تاريخ السريان",
+        "expiryDate": "تاريخ الانتهاء",
+        "verifyOnline": "تحقق عبر الإنترنت",
+        "draftSample": "مسودة – عينة"
+      }
     }
   },
   "ia": {

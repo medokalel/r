@@ -11,6 +11,7 @@ export const fieldBodyTextClassName = 'text-body-compact leading-[1.6]'
 export const fieldTitleClassName = 'field-card-title'
 export const fieldLabelClassName = 'field-label text-neutral-900'
 export const questionLabelClassName = fieldLabelClassName
+export const fieldCompactLabelClassName = 'text-[12px] font-medium leading-normal text-neutral-500'
 export const fieldHeightClassName = 'h-12'
 
 // Placeholder + inner text styling shared by the plain input and the

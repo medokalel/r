@@ -19,6 +19,7 @@ interface SelectFieldProps {
   required?: boolean
   id?: string
   className?: string
+  labelVariant?: 'default' | 'compact'
 }
 
 function normalizeOption(option: SelectOption) {
@@ -35,6 +36,7 @@ export function SelectField({
   required,
   id,
   className,
+  labelVariant = 'default',
 }: SelectFieldProps) {
   const { dir } = useDirection()
   const items = (options ?? (value ? [value] : [])).map(normalizeOption)
@@ -101,10 +103,11 @@ export function SelectField({
 
   return (
     <div className="space-y-2">
-      <FormLabel htmlFor={id} required={required}>
+      <FormLabel htmlFor={id} required={required} variant={labelVariant}>
         {label}
       </FormLabel>
       {select}
     </div>
   )
+  
 }

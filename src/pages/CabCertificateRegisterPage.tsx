@@ -34,7 +34,7 @@ import {
 import { getCountryOptions } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { cn } from '@/lib/utils'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabPrepareCertificatePath } from '@/lib/routes'
 
 function Chevron() {
   return (
@@ -387,7 +387,13 @@ export function CabCertificateRegisterPage() {
                                 {availableActions(cert).map((action) => (
                                   <DropdownMenu.Item
                                     key={action}
-                                    onSelect={() => navigate(ROUTES.cabCertificates)}
+                                    onSelect={() =>
+                                      navigate(
+                                        action === 'prepareCertificate'
+                                          ? cabPrepareCertificatePath(cert.id)
+                                          : ROUTES.cabCertificates,
+                                      )
+                                    }
                                     className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                                   >
                                     <AppIcon icon={actionIcon[action]} size={16} />
@@ -441,7 +447,7 @@ export function CabCertificateRegisterPage() {
                     variant="outline"
                     size="sm"
                     className="mt-3 w-full"
-                    onClick={() => navigate(ROUTES.cabCertificates)}
+                    onClick={() => navigate(cabPrepareCertificatePath(cert.id))}
                   >
                     {t('cab.certificateRegister.prepareCertificate')}
                   </Button>

@@ -1,5 +1,6 @@
 import { cn } from '@/lib/utils'
 import {
+  fieldCompactLabelClassName,
   fieldLabelClassName,
   formSectionClassName,
   questionLabelClassName,
@@ -15,11 +16,12 @@ interface FormLabelProps {
   htmlFor?: string
   children: React.ReactNode
   required?: boolean
+  variant?: 'default' | 'compact'
 }
 
-export function FormLabel({ htmlFor, children, required }: FormLabelProps) {
+export function FormLabel({ htmlFor, children, required, variant = 'default' }: FormLabelProps) {
   return (
-    <label htmlFor={htmlFor} className={fieldLabelClassName}>
+    <label htmlFor={htmlFor} className={variant === 'compact' ? fieldCompactLabelClassName : fieldLabelClassName}>
       {children}
       {required && <RequiredMark />}
     </label>
@@ -31,7 +33,7 @@ interface FormFieldProps {
   required?: boolean
   children: React.ReactNode
   className?: string
-  variant?: 'default' | 'question'
+  variant?: 'default' | 'question' | 'compact'
 }
 
 export function FormField({
@@ -49,7 +51,9 @@ export function FormField({
           {required && <RequiredMark />}
         </p>
       ) : (
-        <FormLabel required={required}>{label}</FormLabel>
+        <FormLabel required={required} variant={variant === 'compact' ? 'compact' : 'default'}>
+          {label}
+        </FormLabel>
       )}
       {children}
     </div>

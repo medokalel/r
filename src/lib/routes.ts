@@ -49,6 +49,7 @@ export const ROUTES = {
   cabNonconformities: '/cab/nonconformities',
   cabNonconformityResponse: '/cab/nonconformities/:ncId/response',
   cabCertificates: '/cab/certificates',
+  cabPrepareCertificate: '/cab/certificates/:certificateId/prepare',
 } as const
 
 export function cabNonconformityResponsePath(ncId: string): string {
@@ -75,6 +76,10 @@ export function cabApplicationQuotationPath(applicationId?: string): string {
 
 export function cabManageCertificationCyclePath(cycleId: string): string {
   return `/cab/certification/${cycleId}`
+}
+
+export function cabPrepareCertificatePath(certificateId: string): string {
+  return `/cab/certificates/${certificateId}/prepare`
 }
 
 export function cabDecisionPath(decisionId?: string): string {

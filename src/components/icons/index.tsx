@@ -59,6 +59,7 @@ import {
   Warning2,
   Paperclip2,
   Link21,
+  Maximize4,
   MessageQuestion,
 } from 'iconsax-reactjs'
 
@@ -642,4 +643,5 @@ export {
   ArrowSwapVertical as SortIcon,
   TrendUp as TrendUpIcon,
   TrendDown as TrendDownIcon,
+  Maximize4 as ExpandIcon,
 }

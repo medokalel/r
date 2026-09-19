@@ -62,6 +62,7 @@ import { CabManageCertificationCyclePage } from '@/pages/CabManageCertificationC
 import { CabNonconformitiesPage } from '@/pages/CabNonconformitiesPage'
 import { CabNonconformityResponsePage } from '@/pages/CabNonconformityResponsePage'
 import { CabCertificateRegisterPage } from '@/pages/CabCertificateRegisterPage'
+import { CabPrepareCertificatePage } from '@/pages/CabPrepareCertificatePage'
 import { CabSidebarProvider } from '@/context/CabSidebarContext'
 import { ScrollToTop } from '@/components/routing/ScrollToTop'
 import { getAuthSession, getAuthToken, getPostLoginRedirect } from '@/lib/authStorage'
@@ -488,6 +489,16 @@ export default function App() {
                 <RequireAuth>
                   <RequireCabOnboarded>
                     <CabCertificateRegisterPage />
+                  </RequireCabOnboarded>
+                </RequireAuth>
+              }
+            />
+            <Route
+              path={ROUTES.cabPrepareCertificate}
+              element={
+                <RequireAuth>
+                  <RequireCabOnboarded>
+                    <CabPrepareCertificatePage />
                   </RequireCabOnboarded>
                 </RequireAuth>
               }

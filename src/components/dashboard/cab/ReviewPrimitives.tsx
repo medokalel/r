@@ -35,6 +35,23 @@ export function Badge({ tone, children }: { tone: 'green' | 'red' | 'neutral'; c
   )
 }
 
+export function ReadOnlyField({
+  label,
+  children,
+  className,
+}: {
+  label: string
+  children?: ReactNode
+  className?: string
+}) {
+  return (
+    <div className={cn('min-w-0', className)}>
+      <p className="text-[12px] font-medium text-neutral-500">{label}</p>
+      <div className="mt-1 break-words text-[14px] font-semibold text-neutral-900">{children || '—'}</div>
+    </div>
+  )
+}
+
 export function SectionCard({
   title,
   action,
@@ -63,7 +80,7 @@ export function CalloutCard({
   title,
   children,
 }: {
-  tone: 'blue' | 'amber'
+  tone: 'blue' | 'amber' | 'green' | 'red'
   icon: ReactNode
   title: string
   children: ReactNode
@@ -73,7 +90,9 @@ export function CalloutCard({
       className={cn(
         'flex items-start gap-3 rounded-[var(--radius-md)] border p-4',
         tone === 'blue' && 'border-[#dbe4fb] bg-[#f3f6fd] text-[#1236a3]',
-        tone === 'amber' && 'border-[#fde9c8] bg-[#fef8ee] text-[#a05a00]'
+        tone === 'amber' && 'border-[#fde9c8] bg-[#fef8ee] text-[#a05a00]',
+        tone === 'green' && 'border-success-200 bg-success-50 text-success-700',
+        tone === 'red' && 'border-error-200 bg-error-50 text-error-700'
       )}
     >
       <span className="mt-0.5 shrink-0">{icon}</span>
