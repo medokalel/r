@@ -50,6 +50,7 @@ import { CabQuotationApprovalPage } from '@/pages/CabQuotationApprovalPage'
 import { CabOfferRegisterPage } from '@/pages/CabOfferRegisterPage'
 import { CabCreateOfferPage } from '@/pages/CabCreateOfferPage'
 import { CabInvoiceRegisterPage } from '@/pages/CabInvoiceRegisterPage'
+import { InvoicesPage } from '@/pages/InvoicesPage'
 import { CabInvoiceDetailsPage } from '@/pages/CabInvoiceDetailsPage'
 import { CabAuditSchedulePage } from '@/pages/CabAuditSchedulePage'
 import { CabBuildAuditPlanPage } from '@/pages/CabBuildAuditPlanPage'
@@ -614,7 +615,7 @@ export default function App() {
               path={ROUTES.invoices}
               element={
                 <RequireAuth>
-                  <CabInvoiceRegisterPage />
+                  <InvoicesPage />
                 </RequireAuth>
               }
             />

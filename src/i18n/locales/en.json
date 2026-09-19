@@ -6168,6 +6168,51 @@
     }
   },
   "invoices": {
+    "pageTitle": "Invoices",
+    "searchPlaceholder": "search...",
+    "downloadPdf": "Download to PDF",
+    "downloadOptions": "Download options",
+    "exportExcel": "Export to Excel",
+    "paymentMade": "Payment made",
+    "preview": "Preview",
+    "printInvoice": "Print the invoice",
+    "filters": {
+      "currency": "Currency",
+      "status": "Status",
+      "allCurrencies": "All currencies",
+      "allStatuses": "All statuses",
+      "pending": "Pending",
+      "overdue": "Overdue"
+    },
+    "columns": {
+      "index": "#",
+      "commercialRegister": "Commercial registration number",
+      "username": "Username",
+      "email": "E-mail",
+      "orderNumber": "Order Number",
+      "orderStatus": "Order Status",
+      "invoiceType": "Invoice type",
+      "paymentNumber": "Payment number",
+      "paymentDate": "Payment date",
+      "totalAmount": "Total Amount",
+      "currency": "Currency",
+      "invoiceStatus": "Invoice status",
+      "details": "Invoice details"
+    },
+    "tour": {
+      "header": {
+        "title": "Your Invoices",
+        "description": "This page lists every invoice issued to you, with its amount, currency, and payment status."
+      },
+      "toolbar": {
+        "title": "Search, Filter & Export",
+        "description": "Search by name or order number, filter by currency or status, and export the list to PDF or Excel."
+      },
+      "table": {
+        "title": "Invoice Details",
+        "description": "Each row shows the order, amount, and payment status — preview or print any invoice from here."
+      }
+    },
     "register": {
       "breadcrumb": "Finance",
       "title": "Invoice register",

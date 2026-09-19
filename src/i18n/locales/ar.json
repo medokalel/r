@@ -6240,6 +6240,51 @@
     }
   },
   "invoices": {
+    "pageTitle": "الفواتير",
+    "searchPlaceholder": "بحث...",
+    "downloadPdf": "تحميل PDF",
+    "downloadOptions": "خيارات التحميل",
+    "exportExcel": "تصدير Excel",
+    "paymentMade": "تم الدفع",
+    "preview": "معاينة",
+    "printInvoice": "طباعة الفاتورة",
+    "filters": {
+      "currency": "العملة",
+      "status": "الحالة",
+      "allCurrencies": "جميع العملات",
+      "allStatuses": "جميع الحالات",
+      "pending": "قيد الانتظار",
+      "overdue": "متأخر"
+    },
+    "columns": {
+      "index": "#",
+      "commercialRegister": "رقم السجل التجاري",
+      "username": "اسم المستخدم",
+      "email": "البريد الإلكتروني",
+      "orderNumber": "رقم الطلب",
+      "orderStatus": "حالة الطلب",
+      "invoiceType": "نوع الفاتورة",
+      "paymentNumber": "رقم الدفع",
+      "paymentDate": "تاريخ الدفع",
+      "totalAmount": "المبلغ الإجمالي",
+      "currency": "العملة",
+      "invoiceStatus": "حالة الفاتورة",
+      "details": "تفاصيل الفاتورة"
+    },
+    "tour": {
+      "header": {
+        "title": "فواتيرك",
+        "description": "هنا تقدر تشوف كل فاتورة صادرة ليك، مع المبلغ والعملة وحالة الدفع."
+      },
+      "toolbar": {
+        "title": "بحث وفلترة وتصدير",
+        "description": "ابحث بالاسم أو رقم الطلب، فلتر حسب العملة أو الحالة، وصدّر القائمة PDF أو Excel."
+      },
+      "table": {
+        "title": "تفاصيل الفاتورة",
+        "description": "كل صف بيوضح الطلب والمبلغ وحالة الدفع — تقدر تعاين أو تطبع أي فاتورة من هنا."
+      }
+    },
     "register": {
       "breadcrumb": "المالية",
       "title": "سجل الفواتير",
