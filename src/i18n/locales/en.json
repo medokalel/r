@@ -1104,6 +1104,30 @@
       "addItemTitle": "Add an interactive invoice"
     }
   },
+  "certificationRequestForm": {
+    "tour": {
+      "header": {
+        "title": "Your Certification Request",
+        "description": "Follow your request's order number and status here as you fill it in."
+      },
+      "entityData": {
+        "title": "Entity Data",
+        "description": "Start by entering your organization's legal identity, scope of activity, and other core details."
+      },
+      "field": {
+        "title": "Field",
+        "description": "Pick the economic sector and standard codes that match your certification scope."
+      },
+      "documents": {
+        "title": "Documents",
+        "description": "Attach the documents required to complete your certification request."
+      },
+      "feedback": {
+        "title": "Feedback",
+        "description": "Once submitted, review and respond to any comments from the reviewer here."
+      }
+    }
+  },
   "dashboard": {
     "stats": {
       "approvedCertificates": "Approved certificates",
