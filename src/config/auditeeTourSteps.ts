@@ -241,6 +241,95 @@ export function useInvoicesTourSteps(): TourStepConfig[] {
 }
 
 /**
+ * Tour steps for the Certification Request form page. Same hook-per-page
+ * pattern as the other auditee tours, kept separate since it runs its own
+ * tourId/storage key.
+ *
+ * Steps 3–5 walk through the Entity Data sub-steps the user lands on first:
+ * Legal Identity (Main Data, Regulatory Data), then Scope of Activity &
+ * Branches. Per-branch cards are user-generated and variable in count, so
+ * they aren't given their own fixed tour step.
+ */
+export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
+  const { t } = useTranslation()
+
+  return [
+    {
+      id: 'form-header',
+      step: 1,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.header.title'),
+      description: t('certificationRequestForm.tour.header.description'),
+      side: 'bottom',
+      align: 'start',
+    },
+    {
+      id: 'entity-data-tab',
+      step: 2,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.entityData.title'),
+      description: t('certificationRequestForm.tour.entityData.description'),
+      side: 'right',
+      align: 'start',
+    },
+    {
+      id: 'legal-identity-main-data',
+      step: 3,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.legalIdentityMainData.title'),
+      description: t('certificationRequestForm.tour.legalIdentityMainData.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'legal-identity-regulatory-data',
+      step: 4,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.legalIdentityRegulatoryData.title'),
+      description: t('certificationRequestForm.tour.legalIdentityRegulatoryData.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'scope-of-activity',
+      step: 5,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.scopeOfActivity.title'),
+      description: t('certificationRequestForm.tour.scopeOfActivity.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'field-tab',
+      step: 6,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.field.title'),
+      description: t('certificationRequestForm.tour.field.description'),
+      side: 'right',
+      align: 'start',
+    },
+    {
+      id: 'documents-tab',
+      step: 7,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.documents.title'),
+      description: t('certificationRequestForm.tour.documents.description'),
+      side: 'right',
+      align: 'start',
+    },
+    {
+      id: 'feedback-tab',
+      step: 8,
+      totalSteps: 8,
+      title: t('certificationRequestForm.tour.feedback.title'),
+      description: t('certificationRequestForm.tour.feedback.description'),
+      side: 'right',
+      align: 'start',
+    },
+  ]
+}
+
+/**
  * Tour steps for the Company Profile wizard. Same hook-per-page pattern as
  * the other auditee tours, kept separate since it runs its own
  * tourId/storage key.

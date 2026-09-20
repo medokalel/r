@@ -16,6 +16,7 @@ import {
   Textarea,
 } from '@/components/ui'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
@@ -120,7 +121,8 @@ const { fieldProps } = useFieldValidation(form, {
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title={t('accreditation.form.mainData')} accordion>
+      <DashboardTourStep stepId="legal-identity-main-data">
+        <SectionHeading title={t('accreditation.form.mainData')} accordion>
         <div className="space-y-5">
           <FormField label={t('accreditation.form.requiredStandard')} required>
             <MultiSelect
@@ -224,8 +226,10 @@ const { fieldProps } = useFieldValidation(form, {
           </div>
         </div>
       </SectionHeading>
+      </DashboardTourStep>
 
-      <SectionHeading title={t('accreditation.form.regulatoryData')} accordion>
+      <DashboardTourStep stepId="legal-identity-regulatory-data">
+        <SectionHeading title={t('accreditation.form.regulatoryData')} accordion>
         <FormSection>
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField label={t('accreditation.form.email')}>
@@ -327,6 +331,7 @@ const { fieldProps } = useFieldValidation(form, {
           </div>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
     </div>
   )
 }

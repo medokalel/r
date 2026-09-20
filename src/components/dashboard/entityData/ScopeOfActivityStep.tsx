@@ -12,6 +12,7 @@ import {
   TextField,
   Textarea,
 } from '@/components/ui'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
@@ -314,7 +315,8 @@ export function ScopeOfActivityStep() {
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title={t('accreditation.entityData.fields.scope.operationalData')} accordion>
+      <DashboardTourStep stepId="scope-of-activity">
+        <SectionHeading title={t('accreditation.entityData.fields.scope.operationalData')} accordion>
         <FormSection>
           <FormField
             label={t('accreditation.entityData.fields.scope.scopeOfWork')}
@@ -411,6 +413,7 @@ export function ScopeOfActivityStep() {
           </div>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
 
       {form.hasBranches === 'yes' &&
         form.branches.map((branch, index) => (
