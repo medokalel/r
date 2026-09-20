@@ -1104,30 +1104,6 @@
       "addItemTitle": "إضافة فاتورة تفاعلية"
     }
   },
-  "certificationRequestForm": {
-    "tour": {
-      "header": {
-        "title": "طلب التصديق الخاص بك",
-        "description": "تابع رقم الطلب وحالته من هنا أثناء تعبئة البيانات."
-      },
-      "entityData": {
-        "title": "بيانات الجهة",
-        "description": "ابدأ بإدخال الهوية القانونية للمنظمة ونطاق نشاطها والتفاصيل الأساسية الأخرى."
-      },
-      "field": {
-        "title": "المجال",
-        "description": "اختر القطاع الاقتصادي وأكواد المعايير المطابقة لنطاق التصديق الخاص بك."
-      },
-      "documents": {
-        "title": "المستندات",
-        "description": "أرفق المستندات المطلوبة لاستكمال طلب التصديق."
-      },
-      "feedback": {
-        "title": "الملاحظات",
-        "description": "بعد التقديم، راجع ورد على أي ملاحظات من المراجع من هنا."
-      }
-    }
-  },
   "dashboard": {
     "stats": {
       "approvedCertificates": "الشهادات المعتمدة",
@@ -5368,17 +5344,24 @@
       },
       "preview": {
         "title": "معاينة الشهادة",
-        "certificate": "شهادة",
-        "certificationBody": "جهة إصدار الشهادات",
-        "certifyThat": "نشهد بأن",
-        "assessedAgainst": "قد تم تقييمها وثبتت مطابقتها لمتطلبات",
-        "forScope": "للنطاق التالي:",
-        "certificateNumber": "رقم الشهادة",
-        "issueDate": "تاريخ الإصدار",
-        "effectiveDate": "تاريخ السريان",
-        "expiryDate": "تاريخ الانتهاء",
-        "verifyOnline": "تحقق عبر الإنترنت",
-        "draftSample": "مسودة – عينة"
+        "draftSample": "مسودة – عينة",
+        "certificateTitle": "شهادة التسجيل",
+        "certifyThat": "هذا للتأكيد على أن {{name}}",
+        "approvedBy": "تمت الموافقة عليه من قبل مجلس إدارة خدمات شهادات النظام لمعايير {{system}} التالية",
+        "applicableTo": "ينطبق {{system}} على:",
+        "certificationNo": "رقم الشهادة:",
+        "initialCertificationDate": "تاريخ الشهادة الأولية:",
+        "validUntil": "صالح حتى :",
+        "firstSurveillance": "المراقبة الأولى واجبة على:",
+        "secondSurveillance": "المراقبة الثانية واجبة على:",
+        "verifyValidity": "للتحقق من الصلاحية",
+        "accreditedBy": "معتمدة من قبل:",
+        "validityNotice": "تظل هذه الشهادة صالحة بينما يحتفظ حاملها بنظام الإدارة وفقًا للمعيار أعلاه، والذي سيتم تدقيقه بواسطة {{issuer}} وفقًا لجدول المراقبة المذكور أعلاه. تظل هذه الشهادة ملكًا لشركة {{issuer}}، ويجب إعادتها عند الطلب.",
+        "conditionNotice": "قد يؤدي عدم استيفاء الشرط المنصوص عليه في اتفاقية الشهادة إلى جعل هذه الشهادة غير صالحة.",
+        "visitUs": "زورونا :",
+        "callUs": "اتصل بنا :",
+        "page": "الصفحة {{current}} من {{total}}",
+        "version": "الإصدار رقم {{version}}"
       }
     }
   },

@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { WalletModalBody, WalletModalShell } from '@/components/dashboard/wallet/WalletModalShell'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
-import type { CertificateOption } from '@/lib/api/cabCertificatesApi'
+import type { CertificateMark } from '@/lib/api/cabCertificatesApi'
 
 interface ConfigureMarksModalProps {
   open: boolean
   onClose: () => void
-  marks: CertificateOption[]
+  marks: CertificateMark[]
   selectedIds: string[]
   onApply: (markIds: string[]) => void
 }
@@ -37,6 +37,7 @@ function MarksChecklist({ onClose, marks, selectedIds, onApply }: MarksChecklist
             <li key={mark.id}>
               <label className="flex cursor-pointer items-center gap-3 rounded-[var(--radius-sm)] border border-neutral-200 px-4 py-3 transition-colors hover:bg-neutral-50">
                 <Checkbox checked={draftIds.includes(mark.id)} onChange={() => toggle(mark.id)} />
+                <img src={mark.imageUrl} alt="" className="h-9 w-auto shrink-0 object-contain" />
                 <span className="text-[14px] font-medium text-neutral-900">{mark.name}</span>
               </label>
             </li>

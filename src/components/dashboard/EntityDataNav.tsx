@@ -1,5 +1,4 @@
 import { useTranslation } from 'react-i18next'
-import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { entityDataNavIconComponents } from '@/components/icons/entityDataNavIcons'
 import { cn } from '@/lib/utils'
 
@@ -20,16 +19,6 @@ export { subSections }
 type NavViewTab = keyof typeof import('@/components/icons/entityDataNavIcons').entityDataNavIconComponents
 
 const viewTabs: NavViewTab[] = ['field', 'documents', 'feedback']
-
-// Maps each view tab to its guided-tour step id (see
-// useCertificationRequestFormTourSteps). DashboardTourStep falls back to
-// the ambient TourProvider's steps, so no steps prop needs to be threaded
-// through here — it only lights up when that tour is actually running.
-const viewTabTourStepIds: Record<NavViewTab, string> = {
-  field: 'field-tab',
-  documents: 'documents-tab',
-  feedback: 'feedback-tab',
-}
 
 interface EntityDataNavProps {
   activeSubSection?: EntityDataSubSection
@@ -61,32 +50,30 @@ export function EntityDataNav({
           isEntityDataExpanded && 'bg-[rgba(232,237,252,0.5)]'
         )}
       >
-        <DashboardTourStep stepId="entity-data-tab">
-          <button
-            type="button"
-            onClick={() => onViewTabChange?.('entityData')}
-            aria-expanded={isEntityDataExpanded}
-            aria-current={isEntityDataExpanded ? 'page' : undefined}
+        <button
+          type="button"
+          onClick={() => onViewTabChange?.('entityData')}
+          aria-expanded={isEntityDataExpanded}
+          aria-current={isEntityDataExpanded ? 'page' : undefined}
+          className={cn(
+            'flex w-full items-center gap-3 py-2.5 text-[16px] font-medium leading-[1.6] transition-colors',
+            isEntityDataExpanded
+              ? 'border-s-[3px] border-primary ps-[5px] pe-2 text-primary'
+              : 'rounded-[var(--radius-sm)] px-2 text-neutral-600 hover:bg-[#f4f4f4]'
+          )}
+        >
+          <span
             className={cn(
-              'flex w-full items-center gap-3 py-2.5 text-[16px] font-medium leading-[1.6] transition-colors',
+              'flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
               isEntityDataExpanded
-                ? 'border-s-[3px] border-primary ps-[5px] pe-2 text-primary'
-                : 'rounded-[var(--radius-sm)] px-2 text-neutral-600 hover:bg-[#f4f4f4]'
+                ? 'bg-primary text-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
+                : 'bg-[#f4f4f4] text-neutral-600'
             )}
           >
-            <span
-              className={cn(
-                'flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
-                isEntityDataExpanded
-                  ? 'bg-primary text-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
-                  : 'bg-[#f4f4f4] text-neutral-600'
-              )}
-            >
-              <EntityDataIcon className={isEntityDataExpanded ? 'text-white' : undefined} />
-            </span>
-            {t('accreditation.entityData.title')}
-          </button>
-        </DashboardTourStep>
+            <EntityDataIcon className={isEntityDataExpanded ? 'text-white' : undefined} />
+          </span>
+          {t('accreditation.entityData.title')}
+        </button>
 
         {isEntityDataExpanded && (
           <ul className="relative px-2 pb-2">
@@ -143,31 +130,29 @@ export function EntityDataNav({
 
           return (
             <li key={key}>
-              <DashboardTourStep stepId={viewTabTourStepIds[key]}>
-                <button
-                  type="button"
-                  onClick={() => onViewTabChange?.(key)}
-                  aria-current={isActive ? 'page' : undefined}
+              <button
+                type="button"
+                onClick={() => onViewTabChange?.(key)}
+                aria-current={isActive ? 'page' : undefined}
+                className={cn(
+                  'flex w-full items-center gap-3 rounded-[var(--radius-sm)] py-2.5 text-[16px] font-medium leading-[1.6] transition-colors',
+                  isActive
+                    ? 'border-s-[3px] border-primary bg-[#f3f6fd] ps-[5px] pe-2 text-primary'
+                    : 'px-2 text-neutral-600 hover:bg-[#f4f4f4]'
+                )}
+              >
+                <span
                   className={cn(
-                    'flex w-full items-center gap-3 rounded-[var(--radius-sm)] py-2.5 text-[16px] font-medium leading-[1.6] transition-colors',
+                    'flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
                     isActive
-                      ? 'border-s-[3px] border-primary bg-[#f3f6fd] ps-[5px] pe-2 text-primary'
-                      : 'px-2 text-neutral-600 hover:bg-[#f4f4f4]'
+                      ? 'bg-primary text-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
+                      : 'bg-[#f4f4f4] text-neutral-600'
                   )}
                 >
-                  <span
-                    className={cn(
-                      'flex size-8 shrink-0 items-center justify-center rounded-[var(--radius-sm)]',
-                      isActive
-                        ? 'bg-primary text-white shadow-[0_10px_15px_-3px_rgba(18,54,163,0.3)]'
-                        : 'bg-[#f4f4f4] text-neutral-600'
-                    )}
-                  >
-                    <Icon className={isActive ? 'text-white' : undefined} />
-                  </span>
-                  {t(`accreditation.entityData.nav.${key}`)}
-                </button>
-              </DashboardTourStep>
+                  <Icon className={isActive ? 'text-white' : undefined} />
+                </span>
+                {t(`accreditation.entityData.nav.${key}`)}
+              </button>
             </li>
           )
         })}

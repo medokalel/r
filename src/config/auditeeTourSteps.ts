@@ -89,63 +89,6 @@ export function useCertificationRequestsTourSteps(): TourStepConfig[] {
 }
 
 /**
- * Tour steps for the Certification Request form (Entity Data, Field,
- * Documents, Feedback tabs). Same hook-per-page pattern as the other
- * auditee tours, kept separate since it runs its own tourId/storage key.
- */
-export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
-  const { t } = useTranslation()
-
-  return [
-    {
-      id: 'form-header',
-      step: 1,
-      totalSteps: 5,
-      title: t('certificationRequestForm.tour.header.title'),
-      description: t('certificationRequestForm.tour.header.description'),
-      side: 'bottom',
-      align: 'start',
-    },
-    {
-      id: 'entity-data-tab',
-      step: 2,
-      totalSteps: 5,
-      title: t('certificationRequestForm.tour.entityData.title'),
-      description: t('certificationRequestForm.tour.entityData.description'),
-      side: 'right',
-      align: 'start',
-    },
-    {
-      id: 'field-tab',
-      step: 3,
-      totalSteps: 5,
-      title: t('certificationRequestForm.tour.field.title'),
-      description: t('certificationRequestForm.tour.field.description'),
-      side: 'right',
-      align: 'start',
-    },
-    {
-      id: 'documents-tab',
-      step: 4,
-      totalSteps: 5,
-      title: t('certificationRequestForm.tour.documents.title'),
-      description: t('certificationRequestForm.tour.documents.description'),
-      side: 'right',
-      align: 'start',
-    },
-    {
-      id: 'feedback-tab',
-      step: 5,
-      totalSteps: 5,
-      title: t('certificationRequestForm.tour.feedback.title'),
-      description: t('certificationRequestForm.tour.feedback.description'),
-      side: 'right',
-      align: 'start',
-    },
-  ]
-}
-
-/**
  * Tour steps for the Users page. Same hook-per-page pattern as the other
  * auditee tours, kept separate since it runs its own tourId/storage key.
  */

@@ -39,13 +39,34 @@ export function formatCertificateDate(date: Date, language: string): string {
   }).format(date)
 }
 
-/** Same calendar day `CERTIFICATE_VALIDITY_YEARS` later, minus one day (10 Mar 2025 → 09 Mar 2028). */
+/** Same calendar day `years` later, minus one day (10 Mar 2025 + 3y → 09 Mar 2028). */
+function addYearsMinusOneDay(date: Date, years: number): Date {
+  return new Date(date.getFullYear() + years, date.getMonth(), date.getDate() - 1)
+}
+
 export function defaultExpiryDate(effectiveDate: Date): Date {
-  return new Date(
-    effectiveDate.getFullYear() + CERTIFICATE_VALIDITY_YEARS,
-    effectiveDate.getMonth(),
-    effectiveDate.getDate() - 1,
-  )
+  return addYearsMinusOneDay(effectiveDate, CERTIFICATE_VALIDITY_YEARS)
+}
+
+/** 1st and 2nd surveillance due dates: one and two years into the cycle, minus a day. */
+export function getSurveillanceDates(effectiveDate: Date): [Date, Date] {
+  return [addYearsMinusOneDay(effectiveDate, 1), addYearsMinusOneDay(effectiveDate, 2)]
+}
+
+function englishOrdinal(day: number): string {
+  const lastTwo = day % 100
+  if (lastTwo >= 11 && lastTwo <= 13) return `${day}th`
+  const suffix = { 1: 'st', 2: 'nd', 3: 'rd' }[day % 10] ?? 'th'
+  return `${day}${suffix}`
+}
+
+/** Printed-certificate date: `13th December 2026` / `13 ديسمبر 2026` (Western digits in both). */
+export function formatCertificateLongDate(date: Date, language: CertificateLanguage): string {
+  if (language === 'en') {
+    const month = new Intl.DateTimeFormat('en-GB', { month: 'long' }).format(date)
+    return `${englishOrdinal(date.getDate())} ${month} ${date.getFullYear()}`
+  }
+  return new Intl.DateTimeFormat('ar-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric' }).format(date)
 }
 
 export function buildInitialCertificateForm(preparation: CertificatePreparation): CertificatePreparationForm {

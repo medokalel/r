@@ -1104,30 +1104,6 @@
       "addItemTitle": "Add an interactive invoice"
     }
   },
-  "certificationRequestForm": {
-    "tour": {
-      "header": {
-        "title": "Your Certification Request",
-        "description": "Follow your request's order number and status here as you fill it in."
-      },
-      "entityData": {
-        "title": "Entity Data",
-        "description": "Start by entering your organization's legal identity, scope of activity, and other core details."
-      },
-      "field": {
-        "title": "Field",
-        "description": "Pick the economic sector and standard codes that match your certification scope."
-      },
-      "documents": {
-        "title": "Documents",
-        "description": "Attach the documents required to complete your certification request."
-      },
-      "feedback": {
-        "title": "Feedback",
-        "description": "Once submitted, review and respond to any comments from the reviewer here."
-      }
-    }
-  },
   "dashboard": {
     "stats": {
       "approvedCertificates": "Approved certificates",
@@ -5328,17 +5304,24 @@
       },
       "preview": {
         "title": "Certificate preview",
-        "certificate": "Certificate",
-        "certificationBody": "Certification Body",
-        "certifyThat": "This is to certify that",
-        "assessedAgainst": "has been assessed and found to conform to the requirements of",
-        "forScope": "for the following scope:",
-        "certificateNumber": "Certificate number",
-        "issueDate": "Issue date",
-        "effectiveDate": "Effective date",
-        "expiryDate": "Expiry date",
-        "verifyOnline": "Verify online",
-        "draftSample": "Draft – Sample"
+        "draftSample": "Draft – Sample",
+        "certificateTitle": "Certificate of Registration",
+        "certifyThat": "This is to certify that {{name}}",
+        "approvedBy": "has been approved by the governing board of System Certification Services to the following {{system}} Standard",
+        "applicableTo": "The {{system}} is applicable to:",
+        "certificationNo": "Certification No:",
+        "initialCertificationDate": "Initial certification date:",
+        "validUntil": "Valid:",
+        "firstSurveillance": "1st Surveillance due on:",
+        "secondSurveillance": "2nd Surveillance due on:",
+        "verifyValidity": "To verify the validity",
+        "accreditedBy": "Accredited by:",
+        "validityNotice": "This certificate remains valid while the holder maintains the management system in accordance with the standard above, which will be audited by {{issuer}} as per the surveillance schedule mentioned above. This certificate remains the property of {{issuer}}. and must be returned on request.",
+        "conditionNotice": "Lack of fulfillment of condition as set out in the certification agreement may render this certificate invalid.",
+        "visitUs": "Visit us :",
+        "callUs": "Call us :",
+        "page": "Page {{current}} of {{total}}",
+        "version": "Version No.{{version}}"
       }
     }
   },

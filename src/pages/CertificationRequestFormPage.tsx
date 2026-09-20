@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
-import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { EntityDataForm } from '@/components/dashboard/EntityDataForm'
 import {
   EntityDataNav,
@@ -21,8 +20,6 @@ import { useApplicationState } from '@/components/dashboard/entityData/useApplic
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ErrorState } from '@/components/ui'
-import { useCertificationRequestFormTourSteps } from '@/config/auditeeTourSteps'
-import { TourProvider } from '@/context/TourContext'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -54,7 +51,6 @@ export function CertificationRequestFormPage() {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
   const navigate = useNavigate()
-  const tourSteps = useCertificationRequestFormTourSteps()
   const [activeSubSection, setActiveSubSection] = useState<EntityDataSubSection>('legalIdentity')
   const [activeViewTab, setActiveViewTab] = useState<EntityDataViewTab>('entityData')
   const [fieldPhase, setFieldPhase] = useState<FieldPhase>('sectors')
@@ -337,79 +333,75 @@ export function CertificationRequestFormPage() {
   ) : undefined
 
   return (
-    <TourProvider tourId="certification-request-form" steps={tourSteps}>
-      <AppLayout>
-        <ApplicationFormContext.Provider value={contextValue}>
-          <DashboardTourStep steps={tourSteps} stepId="form-header">
-            <AccreditationHeader orderNumber={orderNumber ?? lastReviewOrderNumber ?? undefined} />
-          </DashboardTourStep>
-          <ProcessStepper activeStep={0} />
+    <AppLayout>
+      <ApplicationFormContext.Provider value={contextValue}>
+        <AccreditationHeader orderNumber={orderNumber ?? lastReviewOrderNumber ?? undefined} />
+        <ProcessStepper activeStep={0} />
 
-          <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
-            {loadError ? (
-              <div className="flex flex-1 items-center justify-center rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-                <ErrorState
-                  variant={loadError === 'rateLimit' ? 'rateLimit' : 'generic'}
-                  title={loadError === 'rateLimit' ? t('errors.rateLimit.title') : undefined}
-                  description={
-                    loadError === 'rateLimit' ? t('errors.rateLimit.description') : undefined
-                  }
-                  onRetry={reload}
-                />
-              </div>
-            ) : loading || !viewReady ? (
-              <div className="flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-                <ApplicationLoadingSkeleton />
-              </div>
-            ) : (
-              <>
-                {!isStatusView && copyKeys.title && (
-                  <div className="space-y-2">
-                    <h2 className="text-h3-semi text-neutral-900">{t(copyKeys.title)}</h2>
-                    <p className={`text-body-2 text-neutral-600${isRTL ? ' font-light' : ''}`}>{t(copyKeys.subtitle)}</p>
-                  </div>
-                )}
+        <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
+          {loadError ? (
+            <div className="flex flex-1 items-center justify-center rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              <ErrorState
+                variant={loadError === 'rateLimit' ? 'rateLimit' : 'generic'}
+                title={loadError === 'rateLimit' ? t('errors.rateLimit.title') : undefined}
+                description={
+                  loadError === 'rateLimit' ? t('errors.rateLimit.description') : undefined
+                }
+                onRetry={reload}
+              />
+            </div>
+          ) : loading || !viewReady ? (
+            <div className="flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              <ApplicationLoadingSkeleton />
+            </div>
+          ) : (
+            <>
+          {!isStatusView && copyKeys.title && (
+            <div className="space-y-2">
+              <h2 className="text-h3-semi text-neutral-900">{t(copyKeys.title)}</h2>
+              <p className={`text-body-2 text-neutral-600${isRTL ? ' font-light' : ''}`}>{t(copyKeys.subtitle)}</p>
+            </div>
+          )}
 
-                <div className="flex flex-1 gap-5">
-                  {!isStatusView && (
-                    <EntityDataNav
-                      activeSubSection={activeSubSection}
-                      activeViewTab={activeViewTab}
-                      onSubSectionChange={handleSubSectionChange}
-                      onViewTabChange={handleViewTabChange}
-                    />
-                  )}
-                  <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-                    <EntityDataForm
-                      section={activeSubSection}
-                      viewTab={activeViewTab}
-                      fieldPhase={fieldPhase}
-                      selectedSectors={selectedSectors}
-                      onSelectedSectorsChange={setSelectedSectors}
-                      selectedStandards={selectedStandards}
-                      onSelectedStandardsChange={setSelectedStandards}
-                      selectedCodes={form.selectedCodes}
-                      onSelectedCodesChange={setSelectedCodes}
-                    />
-                  </div>
-                </div>
-              </>
+          <div className="flex flex-1 gap-5">
+            {!isStatusView && (
+              <EntityDataNav
+                activeSubSection={activeSubSection}
+                activeViewTab={activeViewTab}
+                onSubSectionChange={handleSubSectionChange}
+                onViewTabChange={handleViewTabChange}
+              />
             )}
+            <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+              <EntityDataForm
+                section={activeSubSection}
+                viewTab={activeViewTab}
+                fieldPhase={fieldPhase}
+                selectedSectors={selectedSectors}
+                onSelectedSectorsChange={setSelectedSectors}
+                selectedStandards={selectedStandards}
+                onSelectedStandardsChange={setSelectedStandards}
+                selectedCodes={form.selectedCodes}
+                onSelectedCodesChange={setSelectedCodes}
+              />
+            </div>
           </div>
+            </>
+          )}
+        </div>
 
-          <DashboardFooter
-            backDisabled={footerBackDisabled}
-            nextDisabled={footerNextDisabled}
-            nextLabel={footerNextLabel}
-            startContent={footerStartContent}
-            onBack={handleBack}
-            onNext={handleNext}
-            onSaveDraft={handleSaveDraftClick}
-            saveDraftDisabled={footerSaveDraftDisabled}
-            saveDraftLoading={saving && activeAction === 'draft'}
-          />
-        </ApplicationFormContext.Provider>
-      </AppLayout>
-    </TourProvider>
+        <DashboardFooter
+          backDisabled={footerBackDisabled}
+          nextDisabled={footerNextDisabled}
+          nextLabel={footerNextLabel}
+          startContent={footerStartContent}
+          onBack={handleBack}
+          onNext={handleNext}
+          onSaveDraft={handleSaveDraftClick}
+          saveDraftDisabled={footerSaveDraftDisabled}
+          saveDraftLoading={saving && activeAction === 'draft'}
+        />
+      </ApplicationFormContext.Provider>
+    </AppLayout>
   )
 }

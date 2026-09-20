@@ -28,10 +28,11 @@ import {
 import {
   getCertificatePreparation,
   issueCertificate,
+  type CertificateLanguage,
   type CertificatePreparation,
   type IssueCertificatePayload,
+  type LocalizedText,
 } from '@/lib/api/cabCertificatesApi'
-import { getAuthSession } from '@/lib/authStorage'
 import { CERTIFICATE_STATUS_LABEL_KEYS } from '@/lib/certificateStatus'
 import {
   CERTIFICATE_LANGUAGES,
@@ -39,6 +40,7 @@ import {
   defaultExpiryDate,
   formatCertificateDate,
   getCertificateFormErrors,
+  getSurveillanceDates,
   isCertificateFormComplete,
   parseIsoDate,
   type CertificatePreparationForm,
@@ -90,7 +92,7 @@ function LoadingSkeleton() {
 
 function PrepareCertificateWorkspace({ preparation }: { preparation: CertificatePreparation }) {
   const { t, i18n } = useTranslation()
-  const { application, decision, options } = preparation
+  const { application, decision, options, content, issuer } = preparation
 
   const [form, setForm] = useState<CertificatePreparationForm>(() => buildInitialCertificateForm(preparation))
   // Until the user edits the expiry date themselves, it keeps following the effective date.
@@ -102,10 +104,10 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
   const [issued, setIssued] = useState(false)
   const [issueFailed, setIssueFailed] = useState(false)
 
+  const uiLanguage: CertificateLanguage = i18n.language.startsWith('ar') ? 'ar' : 'en'
   const uiCountries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const certificateCountries = useMemo(() => getCountryOptions(form.language), [form.language])
-  const countryNameIn = (countries: typeof uiCountries) =>
-    countries.find((country) => country.code === application.countryCode)?.name ?? application.countryCode
+  const countryName =
+    uiCountries.find((country) => country.code === application.countryCode)?.name ?? application.countryCode
 
   const isDraft = preparation.status === 'DRAFT'
   const errors = getCertificateFormErrors(form)
@@ -155,23 +157,46 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
     }
   }
 
+  const inCertificateLanguage = (text: LocalizedText) => text[form.language]
+
   const previewData: CertificatePreviewData = {
     language: form.language,
-    issuerName: getAuthSession()?.organization?.name ?? '',
-    clientName: application.legalName,
-    location: application.legalAddress || countryNameIn(certificateCountries),
+    issuer: {
+      shortName: issuer.shortName,
+      name: inCertificateLanguage(issuer.name),
+      logoUrl: issuer.logoUrl,
+      watermarkUrl: issuer.watermarkUrl,
+      tagline: issuer.tagline,
+      addressLines: issuer.addressLines.map(inCertificateLanguage),
+      website: issuer.website,
+      email: issuer.email,
+      phone: issuer.phone,
+      workingHours: inCertificateLanguage(issuer.workingHours),
+      formCode: issuer.formCode,
+      version: issuer.version,
+      accreditationName: inCertificateLanguage(issuer.accreditation.name),
+      accreditationAddress: inCertificateLanguage(issuer.accreditation.address),
+    },
+    client: {
+      tradeName: inCertificateLanguage(content.tradeName),
+      name: inCertificateLanguage(content.clientName),
+      address: inCertificateLanguage(content.clientAddress),
+      logoUrl: content.clientLogoUrl,
+    },
     standardCode: preparation.standard.code,
-    standardTitle: preparation.standard.titles[form.language],
-    scope: decision.approvedScope,
+    systemName: inCertificateLanguage(preparation.standard.systemNames),
+    scope: inCertificateLanguage(content.scope),
     certificateNumber: preparation.certificateNumber,
-    issueDate: form.issueDate,
-    effectiveDate: form.effectiveDate,
-    expiryDate: form.expiryDate,
-    signatoryName: signatory?.name ?? '',
-    signatoryTitle: signatory?.title ?? '',
-    markNames: selectedMarks.map((mark) => mark.name),
+    // The certification cycle starts on the effective date; surveillance follows from it.
+    initialCertificationDate: form.effectiveDate,
+    validUntil: form.expiryDate,
+    surveillanceDates: getSurveillanceDates(form.effectiveDate),
     includeQrCode: form.includeQrCode,
-    isDraft: !issued && isDraft,
+    signatory: {
+      title: signatory ? inCertificateLanguage(signatory.title) : '',
+      signatureUrl: signatory?.signatureUrl ?? null,
+    },
+    marks: selectedMarks,
   }
 
   return (
@@ -246,7 +271,7 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
               </ReadOnlyField>
               <ReadOnlyField label={t('cab.certificatePrepare.fields.legalName')}>{application.legalName}</ReadOnlyField>
               <ReadOnlyField label={t('cab.certificatePrepare.fields.country')}>
-                {countryNameIn(uiCountries)}
+                {countryName}
               </ReadOnlyField>
               <ReadOnlyField label={t('cab.certificatePrepare.fields.primaryContact')}>
                 {application.primaryContact}
@@ -385,7 +410,7 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
                       onChange={(signatoryId) => patch({ signatoryId })}
                       options={options.signatories.map((option) => ({ value: option.id, label: option.name }))}
                     />
-                    {signatory && <p className={fieldHintClassName}>{signatory.title}</p>}
+                    {signatory && <p className={fieldHintClassName}>{signatory.title[uiLanguage]}</p>}
                   </div>
 
                   <div className="flex flex-col gap-2">
@@ -449,11 +474,11 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
         onClose={() => setPreviewOpen(false)}
         title={t('cab.certificatePrepare.preview.title')}
         wide
+        className="w-[min(1280px,calc(100vw-32px))]"
       >
-        <WalletModalBody className="overflow-y-auto">
-          <div className="mx-auto w-[min(100%,calc((100dvh-10rem)*210/297))]">
-            <CertificatePreview data={previewData} />
-          </div>
+        {/* Full-width certificate that scrolls inside the dialog, so every detail is legible. */}
+        <WalletModalBody className="min-h-0 overflow-y-auto">
+          <CertificatePreview data={previewData} />
         </WalletModalBody>
       </WalletModalShell>
 
