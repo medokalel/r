@@ -170,7 +170,7 @@ export function useCompanyProfileState(): CompanyProfileState {
     setSubmitting(true)
     setNotification(null)
     try {
-      await saveOrganizationProfile(payloadFromForm(form, { forSubmit: true }))
+      await saveOrganizationProfile(payloadFromForm(form))
       await submitOrganizationProfile()
       setProfileStatus('COMPLETED')
       setNotification({ type: 'success', message: t('companyProfile.messages.submitted') })

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -8,29 +8,26 @@ import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import { Tooltip } from '@/components/ui'
-import { UserAvatar } from '@/components/ui/UserAvatar'
 import { AddCircleIcon, AppIcon, ChevronDownIcon, ExcelFileIcon, ExportIcon, MoreIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
 import {
-  MOCK_CLIENT_REGISTER_ENTRIES,
+  listAllCabAuditClients,
+  toClientRegisterEntry,
   type ClientRegisterEntry,
-} from '@/lib/api/clientRegisterMockData'
-import { APPLICATION_STATUS_LABEL_KEYS, APPLICATION_STATUS_STYLES } from '@/lib/applicationStatus'
-import { getCountryOptions } from '@/lib/countries'
+} from '@/lib/api/clientRegistrationApi'
+import { countryFlag, getCountryOptions, type CountryCode } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
-/**
- * This page has no backend yet — it renders `MOCK_CLIENT_REGISTER_ENTRIES`
- * (see clientRegisterMockData.ts). The existing `/cab/clients` page
- * (CabClientsPage + clientRegistrationApi) is untouched and keeps its real
- * API; this page only replaces the "Audit Clients" tile's destination from
- * the workspace. Swap the mock data for a real `listX` API call once one
- * exists — the filtering/pagination logic below won't need to change.
- */
-
 const PAGE_SIZE = 10
+
+function startOfDay(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime()
+}
+
+function endOfDay(date: Date): number {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).getTime()
+}
 
 function ChevronSeparator() {
   return (
@@ -44,26 +41,61 @@ export function ClientRegisterPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
 
+  const [clients, setClients] = useState<ClientRegisterEntry[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
   const [query, setQuery] = useState('')
   const [period, setPeriod] = useState<DateRange>({ from: null, to: null })
   const [countryFilter, setCountryFilter] = useState('all')
   const [page, setPage] = useState(1)
 
   const countryOptions = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
+  const countryName = (code: CountryCode) =>
+    countryOptions.find((option) => option.code === code)?.name ?? code
+
+  useEffect(() => {
+    let cancelled = false
+    listAllCabAuditClients()
+      .then((items) => {
+        if (!cancelled) setClients(items.map(toClientRegisterEntry))
+      })
+      .catch((loadError: unknown) => {
+        if (!cancelled) {
+          setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [t])
 
   const filtered = useMemo(() => {
-    return MOCK_CLIENT_REGISTER_ENTRIES.filter((client) => {
+    const periodStart = period.from ? startOfDay(period.from) : null
+    // A single selected date means that full day. A completed range includes
+    // every timestamp on its final day, rather than stopping at midnight.
+    const periodEnd = period.to
+      ? endOfDay(period.to)
+      : period.from
+        ? endOfDay(period.from)
+        : null
+
+    return clients.filter((client) => {
       const matchesQuery = matchesSearch(
-        [client.code, client.name, client.applicationNumber, client.assignedTo.name],
+        [client.code, client.name, client.contactName, client.contactEmail, client.city],
         query
       )
-      const matchesCountry = countryFilter === 'all' || client.countryCode === countryFilter
-      const createdAt = new Date(client.createdAt)
-      const matchesFrom = !period.from || createdAt >= period.from
-      const matchesTo = !period.to || createdAt <= period.to
+      const matchesCountry =
+        countryFilter === 'all' || !client.countryCode || client.countryCode === countryFilter
+      const addedAt = new Date(client.updatedAt).getTime()
+      const hasValidDate = !Number.isNaN(addedAt)
+      const matchesFrom = periodStart === null || (hasValidDate && addedAt >= periodStart)
+      const matchesTo = periodEnd === null || (hasValidDate && addedAt <= periodEnd)
       return matchesQuery && matchesCountry && matchesFrom && matchesTo
     })
-  }, [query, countryFilter, period])
+  }, [clients, query, countryFilter, period])
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
@@ -79,19 +111,22 @@ export function ClientRegisterPage() {
     setPage(1)
   }
 
-  const formatDate = (iso: string) =>
-    new Intl.DateTimeFormat(i18n.language, { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(iso))
+  const formatDate = (iso: string) => {
+    const date = new Date(iso)
+    if (Number.isNaN(date.getTime())) return '—'
+    return new Intl.DateTimeFormat(i18n.language, { day: '2-digit', month: 'short', year: 'numeric' }).format(date)
+  }
 
   const exportColumns: TableColumn<ClientRegisterEntry>[] = [
-    { header: t('cab.clientRegister.table.serial'), value: (_row, index) => index + 1 },
-    { header: t('cab.clientRegister.table.auditClient'), value: (row) => row.name },
-    { header: t('cab.clientRegister.table.applicationNumber'), value: (row) => row.applicationNumber },
-    { header: t('cab.clientRegister.table.assignedPerson'), value: (row) => row.assignedTo.name },
+    { header: t('cab.clientRegister.table.code'), value: (row) => row.code },
+    { header: t('cab.clientRegister.table.client'), value: (row) => row.name },
     {
-      header: t('cab.clientRegister.table.status'),
-      value: (row) => t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[row.status]}`),
+      header: t('cab.clientRegister.table.country'),
+      value: (row) => (row.countryCode ? countryName(row.countryCode) : row.city || '—'),
     },
-    { header: t('cab.clientRegister.table.dateOfCreation'), value: (row) => formatDate(row.createdAt) },
+    { header: t('cab.clientRegister.table.primaryContact'), value: (row) => row.contactName },
+    { header: 'Email', value: (row) => row.contactEmail },
+    { header: t('cab.clientRegister.table.updated'), value: (row) => formatDate(row.updatedAt) },
   ]
 
   const handleExportPdf = () =>
@@ -99,12 +134,11 @@ export function ClientRegisterPage() {
   const handleExportExcel = () => downloadExcelCsv('client-register.csv', exportColumns, filtered)
 
   const columns: { key: string; label: string }[] = [
-    { key: 'serial', label: t('cab.clientRegister.table.serial') },
-    { key: 'auditClient', label: t('cab.clientRegister.table.auditClient') },
-    { key: 'applicationNumber', label: t('cab.clientRegister.table.applicationNumber') },
-    { key: 'assignedPerson', label: t('cab.clientRegister.table.assignedPerson') },
-    { key: 'status', label: t('cab.clientRegister.table.status') },
-    { key: 'dateOfCreation', label: t('cab.clientRegister.table.dateOfCreation') },
+    { key: 'code', label: t('cab.clientRegister.table.code') },
+    { key: 'client', label: t('cab.clientRegister.table.client') },
+    { key: 'country', label: t('cab.clientRegister.table.country') },
+    { key: 'primaryContact', label: t('cab.clientRegister.table.primaryContact') },
+    { key: 'updated', label: t('cab.clientRegister.table.updated') },
   ]
 
   return (
@@ -170,6 +204,12 @@ export function ClientRegisterPage() {
             </DropdownMenu.Root>
           </div>
         </div>
+
+        {error && (
+          <p role="alert" className="text-[14px] text-error-500">
+            {error}
+          </p>
+        )}
 
         <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.4fr_1.2fr_auto] lg:items-end">
@@ -258,7 +298,13 @@ export function ClientRegisterPage() {
                 </tr>
               </thead>
               <tbody>
-                {paginated.length === 0 ? (
+                {loading ? (
+                  <tr>
+                    <td colSpan={columns.length + 1} className="px-4 py-8 text-[15px] text-neutral-500">
+                      {t('common.loading')}
+                    </td>
+                  </tr>
+                ) : paginated.length === 0 ? (
                   <tr>
                     <td colSpan={columns.length + 1} className="px-4 py-8 text-[15px] text-neutral-500">
                       {t('cab.clientRegister.empty')}
@@ -268,45 +314,40 @@ export function ClientRegisterPage() {
                   paginated.map((client, index) => (
                     <tr key={client.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
                       <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
-                        {(currentPage - 1) * PAGE_SIZE + index + 1}
+                        {client.code}
                       </td>
                       <td className="px-4 py-4 font-medium text-[15px] text-neutral-900">{client.name}</td>
-                      <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
-                        {client.applicationNumber}
+                      <td className="px-4 py-4 text-[14px] text-neutral-700">
+                        {client.countryCode ? (
+                          <span className="inline-flex items-center justify-center gap-2">
+                            <span aria-hidden>{countryFlag(client.countryCode)}</span>
+                            {countryName(client.countryCode)}
+                          </span>
+                        ) : (
+                          client.city || '—'
+                        )}
                       </td>
-                      <td className="px-4 py-4">
-                        <span className="inline-flex items-center justify-center gap-2">
-                          <UserAvatar alt={client.assignedTo.name} src={client.assignedTo.avatarUrl} className="size-8" />
-                          <span className="text-[14px] font-medium text-neutral-900">{client.assignedTo.name}</span>
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <span
-                          className={cn(
-                            'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
-                            APPLICATION_STATUS_STYLES[client.status]
-                          )}
-                        >
-                          {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[client.status]}`)}
-                        </span>
+                      <td className="px-4 py-4 text-start">
+                        <p className="text-[14px] font-medium text-neutral-900">{client.contactName || '—'}</p>
+                        <p className="text-[13px] text-neutral-500" dir="ltr">
+                          {client.contactEmail || '—'}
+                        </p>
                       </td>
                       <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
-                        {formatDate(client.createdAt)}
+                        {formatDate(client.updatedAt)}
                       </td>
                       <td className="px-4 py-4">
                         <div className="flex items-center justify-center">
                           <DropdownMenu.Root>
-                            <Tooltip label={t('cab.clientRegister.rowActions.unavailable')}>
-                              <DropdownMenu.Trigger asChild>
-                                <button
-                                  type="button"
-                                  aria-label={t('cab.clientRegister.table.actions')}
-                                  className="flex size-9 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-50 hover:text-primary"
-                                >
-                                  <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
-                                </button>
-                              </DropdownMenu.Trigger>
-                            </Tooltip>
+                            <DropdownMenu.Trigger asChild>
+                              <button
+                                type="button"
+                                aria-label={t('cab.clientRegister.table.actions')}
+                                className="flex size-9 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-50 hover:text-primary"
+                              >
+                                <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
+                              </button>
+                            </DropdownMenu.Trigger>
                             <DropdownMenu.Portal>
                               <DropdownMenu.Content
                                 align="end"
@@ -314,14 +355,14 @@ export function ClientRegisterPage() {
                                 className="z-50 min-w-[170px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
                               >
                                 <DropdownMenu.Item
-                                  disabled
-                                  className="cursor-not-allowed select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-400 outline-none"
+                                  onSelect={() => navigate(`/cab/clients/${client.id}`)}
+                                  className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                                 >
                                   {t('cab.clientRegister.rowActions.view')}
                                 </DropdownMenu.Item>
                                 <DropdownMenu.Item
-                                  disabled
-                                  className="cursor-not-allowed select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-400 outline-none"
+                                  onSelect={() => navigate(`/cab/clients/${client.id}/profile`)}
+                                  className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                                 >
                                   {t('cab.clientRegister.rowActions.edit')}
                                 </DropdownMenu.Item>
@@ -338,36 +379,39 @@ export function ClientRegisterPage() {
           </div>
 
           <div className="space-y-3 px-5 md:hidden">
-            {paginated.length === 0 ? (
+            {loading ? (
+              <p className="py-6 text-center text-[14px] text-neutral-500">{t('common.loading')}</p>
+            ) : paginated.length === 0 ? (
               <p className="py-6 text-center text-[14px] text-neutral-500">{t('cab.clientRegister.empty')}</p>
             ) : (
-              paginated.map((client, index) => (
-                <div key={client.id} className="w-full rounded-[12px] border border-[#ececec] p-4">
+              paginated.map((client) => (
+                <button
+                  key={client.id}
+                  type="button"
+                  onClick={() => navigate(`/cab/clients/${client.id}`)}
+                  className="w-full rounded-[12px] border border-[#ececec] p-4 text-start"
+                >
                   <div className="flex items-center justify-between gap-2">
                     <p className="font-semibold text-[14px] text-primary" dir="ltr">
-                      {client.applicationNumber}
+                      {client.code}
                     </p>
-                    <span
-                      className={cn(
-                        'inline-flex shrink-0 items-center justify-center rounded-[10px] px-3 py-1 text-[12px] font-medium',
-                        APPLICATION_STATUS_STYLES[client.status]
+                    <span className="inline-flex items-center gap-1.5 text-[13px] text-neutral-600">
+                      {client.countryCode ? (
+                        <>
+                          <span aria-hidden>{countryFlag(client.countryCode)}</span>
+                          {countryName(client.countryCode)}
+                        </>
+                      ) : (
+                        client.city || '—'
                       )}
-                    >
-                      {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[client.status]}`)}
                     </span>
                   </div>
-                  <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
-                    #{(currentPage - 1) * PAGE_SIZE + index + 1}
-                  </p>
                   <p className="mt-1 text-[14px] font-medium text-neutral-900">{client.name}</p>
-                  <div className="mt-2 flex items-center gap-2">
-                    <UserAvatar alt={client.assignedTo.name} src={client.assignedTo.avatarUrl} className="size-7" />
-                    <p className="text-[13px] text-neutral-600">{client.assignedTo.name}</p>
-                  </div>
+                  <p className="text-[13px] text-neutral-500">{client.contactName || '—'}</p>
                   <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
-                    {formatDate(client.createdAt)}
+                    {formatDate(client.updatedAt)}
                   </p>
-                </div>
+                </button>
               ))
             )}
           </div>

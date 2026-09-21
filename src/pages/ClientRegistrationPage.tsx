@@ -7,9 +7,7 @@ import { ClientRegistrationForm } from '@/components/dashboard/cab/ClientRegistr
 import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
-import {
-  emptyClientRegistrationForm,
-} from '@/lib/clientRegistrationForm'
+import { emptyClientRegistrationForm } from '@/lib/clientRegistrationForm'
 import {
   cabClientToForm,
   createCabClient,
@@ -37,23 +35,10 @@ export function ClientRegistrationPage() {
   const { clientId } = useParams()
   const editing = Boolean(clientId)
   const [form, setForm] = useState(emptyClientRegistrationForm)
-  const [attachedFile, setAttachedFile] = useState<File | null>(null)
-  const [existingDocumentName, setExistingDocumentName] = useState<string | null>(null)
-  const [clearDocument, setClearDocument] = useState(false)
   const [draftId, setDraftId] = useState<string | null>(clientId ?? null)
   const [loading, setLoading] = useState(editing)
   const [saving, setSaving] = useState(false)
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
-  const [formKey, setFormKey] = useState(0)
-
-  const resetCreateForm = () => {
-    setForm(emptyClientRegistrationForm)
-    setAttachedFile(null)
-    setExistingDocumentName(null)
-    setClearDocument(false)
-    setDraftId(null)
-    setFormKey((key) => key + 1)
-  }
 
   useEffect(() => {
     if (!clientId) return
@@ -62,7 +47,6 @@ export function ClientRegistrationPage() {
       .then((client) => {
         if (cancelled) return
         setForm(cabClientToForm(client))
-        setExistingDocumentName(client.supportingDocumentOriginalName)
       })
       .catch((error: unknown) => {
         if (!cancelled) {
@@ -81,26 +65,28 @@ export function ClientRegistrationPage() {
   }, [clientId, t])
 
   const tourSteps = useClientRegistrationTourSteps()
-
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
 
-  const save = async (status: 'DRAFT' | 'REGISTERED') => {
+  const save = async (options?: { skipEditRedirect?: boolean }) => {
     setSaving(true)
     setFeedback(null)
     try {
-      const result = draftId
-        ? await updateCabClient(draftId, form, status, attachedFile, clearDocument)
-        : await createCabClient(form, status, attachedFile)
+      const result = draftId ? await updateCabClient(draftId, form) : await createCabClient(form)
       setDraftId(result.client.id)
-      setAttachedFile(null)
-      setClearDocument(false)
-      setExistingDocumentName(result.client.supportingDocumentOriginalName)
-      if (!clientId && status === 'DRAFT') {
+      if (!clientId && !options?.skipEditRedirect) {
         navigate(`/cab/clients/${result.client.id}/edit`, { replace: true })
       }
       setFeedback({ type: 'success', message: result.message })
       return result.client
     } catch (error) {
+      const organizationId =
+        error && typeof error === 'object' && 'organizationId' in error
+          ? String((error as { organizationId?: string }).organizationId ?? '')
+          : ''
+      if (organizationId && !draftId) {
+        setDraftId(organizationId)
+        navigate(`/cab/clients/${organizationId}/edit`, { replace: true })
+      }
       setFeedback({
         type: 'error',
         message:
@@ -115,18 +101,13 @@ export function ClientRegistrationPage() {
   }
 
   const handleSaveDraft = () => {
-    void save('DRAFT')
-  }
-
-  const handleSaveChanges = () => {
-    void save('REGISTERED')
+    void save()
   }
 
   const handleSaveDraftAndContinue = async () => {
-    const client = await save('REGISTERED')
+    const client = await save({ skipEditRedirect: true })
     if (!client) return
-    resetCreateForm()
-    navigate('/cab/clients/new', { replace: true })
+    navigate(`/cab/clients/${client.id}/profile`)
   }
 
   return (
@@ -168,19 +149,19 @@ export function ClientRegistrationPage() {
           </div>
           <button
             type="button"
-            onClick={() => navigate('/cab/clients')}
+            onClick={() => navigate(ROUTES.cabAuditClients)}
             className="rounded-[8px] border border-primary px-4 py-2.5 text-[14px] font-medium text-primary hover:bg-[#e8edfc]"
           >
             {t('cab.clientRegistration.viewRegisteredClients')}
           </button>
         </div>
         {feedback && (
-            <p
-              role={feedback.type === 'error' ? 'alert' : 'status'}
-              className={feedback.type === 'error' ? 'text-body-3 text-error-500' : 'text-body-3 text-success-600'}
-            >
-              {feedback.message}
-            </p>
+          <p
+            role={feedback.type === 'error' ? 'alert' : 'status'}
+            className={feedback.type === 'error' ? 'text-body-3 text-error-500' : 'text-body-3 text-success-600'}
+          >
+            {feedback.message}
+          </p>
         )}
 
         {loading ? (
@@ -188,38 +169,23 @@ export function ClientRegistrationPage() {
             {t('common.loading')}
           </div>
         ) : (
-        <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
-          <div className="min-w-0 flex-1 space-y-5">
-            <ClientRegistrationForm
-              key={formKey}
-              form={form}
-              onPatch={patch}
-              attachedFile={attachedFile}
-              existingDocumentName={existingDocumentName}
-              onAttachFile={(file) => {
-                setClearDocument(false)
-                setAttachedFile(file)
-              }}
-              onClearDocument={() => {
-                setAttachedFile(null)
-                setExistingDocumentName(null)
-                setClearDocument(true)
-              }}
-            />
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+            <div className="min-w-0 flex-1 space-y-5">
+              <ClientRegistrationForm form={form} onPatch={patch} />
+            </div>
+            <DashboardTourStep steps={tourSteps} stepId="workflow-progress" className="w-full shrink-0 lg:w-[340px]">
+              <WorkflowProgressCard
+                steps={buildClientWorkflowSteps(t, 'application')}
+                title={t('cab.clientRegistration.workflow.title')}
+                viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
+                statusLabels={{
+                  completed: t('cab.applications.receipt.workflow.completed'),
+                  inProgress: t('cab.clientRegistration.workflow.inProgress'),
+                  pending: t('cab.clientRegistration.workflow.pending'),
+                }}
+              />
+            </DashboardTourStep>
           </div>
-          <DashboardTourStep steps={tourSteps} stepId="workflow-progress" className="w-full shrink-0 lg:w-[340px]">
-            <WorkflowProgressCard
-              steps={buildClientWorkflowSteps(t, 'application')}
-              title={t('cab.clientRegistration.workflow.title')}
-              viewFullLabel={t('cab.clientRegistration.workflow.viewFull')}
-              statusLabels={{
-                completed: t('cab.applications.receipt.workflow.completed'),
-                inProgress: t('cab.clientRegistration.workflow.inProgress'),
-                pending: t('cab.clientRegistration.workflow.pending'),
-              }}
-            />
-          </DashboardTourStep>
-        </div>
         )}
       </div>
 
@@ -230,12 +196,12 @@ export function ClientRegistrationPage() {
           onSaveDraft={handleSaveDraft}
           saveDraftDisabled={saving || loading}
           saveDraftLoading={saving}
-          onNext={editing ? handleSaveChanges : handleSaveDraftAndContinue}
+          onNext={handleSaveDraftAndContinue}
           nextDisabled={saving || loading}
           nextLabel={
             saving
               ? t('common.loading')
-              : t(editing ? 'cab.clientRegistration.saveChanges' : 'cab.clientRegistration.saveDraftAndContinue')
+              : t('cab.clientRegistration.saveDraftAndContinue')
           }
         />
       </DashboardTourStep>

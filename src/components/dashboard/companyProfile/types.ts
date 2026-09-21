@@ -56,6 +56,8 @@ export interface ProfileFormValues {
   organizationStatus: string
   employeeCount: string
   registrationDate: Date | undefined
+  allProductionLinesActive: boolean
+  inactiveReason: string
   // Step 2 – address (country is kept as an ISO code; mapped to a name for the API)
   country: CountryCode | null
   city: string
@@ -85,6 +87,8 @@ export const EMPTY_PROFILE_FORM: ProfileFormValues = {
   organizationStatus: '',
   employeeCount: '',
   registrationDate: undefined,
+  allProductionLinesActive: true,
+  inactiveReason: '',
   country: null,
   city: '',
   district: '',

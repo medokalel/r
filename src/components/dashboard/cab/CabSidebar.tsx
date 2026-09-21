@@ -297,7 +297,11 @@ export function CabSidebar() {
 
     if (item.stepId) {
       return (
-        <DashboardTourStep key={`${item.labelKey}-${item.href}`} stepId={item.stepId} className="w-full">
+        <DashboardTourStep
+          key={`${item.labelKey}-${item.href}`}
+          stepId={item.stepId}
+          className={cn('w-full', !isExpanded && 'flex justify-center')}
+        >
           {buttonElement}
         </DashboardTourStep>
       )

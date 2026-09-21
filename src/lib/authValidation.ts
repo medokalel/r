@@ -15,6 +15,11 @@ export function isValidLoginIdentifier(value: string): boolean {
   return /^[a-zA-Z0-9._-]{3,}$/.test(trimmed)
 }
 
+export function normalizeLoginIdentifier(value: string): string {
+  const trimmed = value.trim()
+  return isValidRequiredEmail(trimmed) ? trimmed : `${trimmed}@icasco.co`
+}
+
 export function isValidPassword(value: string): boolean {
   return value.length >= MIN_PASSWORD_LENGTH
 }

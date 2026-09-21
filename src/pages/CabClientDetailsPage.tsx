@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { getCabClient, type CabClient } from '@/lib/api/clientRegistrationApi'
-import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
+import { ROUTES } from '@/lib/routes'
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -25,7 +25,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function CabClientDetailsPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { clientId = '' } = useParams()
   const [client, setClient] = useState<CabClient | null>(null)
@@ -49,25 +49,18 @@ export function CabClientDetailsPage() {
     }
   }, [clientId, t])
 
-  const date = client?.incorporationDate
-    ? new Intl.DateTimeFormat(i18n.language, { dateStyle: 'medium' }).format(new Date(client.incorporationDate))
-    : '—'
-  const websiteHref = client?.website
-    ? /^https?:\/\//i.test(client.website) ? client.website : `https://${client.website}`
-    : undefined
-
   return (
     <CabLayout>
       <CabHeader title={t('cab.clientDetails.title')} notificationCount={3} />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <button type="button" onClick={() => navigate('/cab/clients')} className="text-[14px] font-medium text-primary">
+          <button type="button" onClick={() => navigate(ROUTES.cabAuditClients)} className="text-[14px] font-medium text-primary">
             {t('cab.clientDetails.backToClients')}
           </button>
           <div className="flex flex-wrap gap-3">
             <button
               type="button"
-              onClick={() => navigate(`/cab/clients/${clientId}/edit`)}
+              onClick={() => navigate(`/cab/clients/${clientId}/profile`)}
               className="rounded-[8px] border border-primary px-4 py-2.5 text-[14px] font-medium text-primary"
             >
               {t('cab.clientDetails.editClient')}
@@ -86,8 +79,8 @@ export function CabClientDetailsPage() {
             <div className="rounded-[16px] border border-[#ececec] bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div>
-                  <h1 className="text-[24px] font-bold text-neutral-900">{client.legalEntityName || '—'}</h1>
-                  <p className="text-[14px] text-neutral-500">{client.tradingName || client.registrationNumber || '—'}</p>
+                  <h1 className="text-[24px] font-bold text-neutral-900">{client.organizationName || '—'}</h1>
+                  <p className="text-[14px] text-neutral-500">{client.city || '—'}</p>
                 </div>
                 <span className="rounded-full bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary">
                   {t(`cab.clientsPage.status.${client.status === 'COMPLETED' ? 'registered' : client.status.toLowerCase()}`)}
@@ -96,54 +89,21 @@ export function CabClientDetailsPage() {
             </div>
 
             <Section title={t('cab.clientRegistration.sections.clientInformation')}>
-              <Detail label={t('cab.clientRegistration.fields.legalEntityName')}>{client.legalEntityName}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.tradingName')}>{client.tradingName}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.organizationType')}>{client.organizationType}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.registrationNumber')}>{client.registrationNumber}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.incorporationDate')}>{date}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.country')}>{client.country}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.state')}>{client.state}</Detail>
+              <Detail label={t('cab.clientRegistration.fields.organizationName')}>{client.organizationName}</Detail>
+              <Detail label={t('cab.clientRegistration.fields.legalCapacity')}>{client.legalCapacity}</Detail>
+              <Detail label={t('cab.clientRegistration.fields.administrationName')}>{client.administrationName}</Detail>
               <Detail label={t('cab.clientRegistration.fields.city')}>{client.city}</Detail>
-            </Section>
-
-            <Section title={t('cab.clientRegistration.sections.registeredAddress')}>
-              <Detail label={t('cab.clientRegistration.fields.addressLine1')}>{client.addressLine1}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.addressLine2')}>{client.addressLine2}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.landmark')}>{client.landmark}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.postalCode')}>{client.postalCode}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.country')}>{client.addressCountry}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.state')}>{client.addressState}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.city')}>{client.addressCity}</Detail>
-            </Section>
-
-            <Section title={t('cab.clientRegistration.sections.primaryContact')}>
-              <Detail label={t('cab.clientRegistration.fields.fullName')}>{client.contactFullName}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.designation')}>{client.contactDesignation}</Detail>
+              <Detail label={t('cab.clientRegistration.fields.activity')}>{client.activity}</Detail>
+              <Detail label={t('cab.clientRegistration.fields.facilityOwnerManager')}>{client.facilityOwnerManager}</Detail>
               <Detail label={t('cab.clientRegistration.fields.email')}>
-                {client.contactEmail && <a className="text-primary" href={`mailto:${client.contactEmail}`}>{client.contactEmail}</a>}
+                {client.email && (
+                  <a className="text-primary" href={`mailto:${client.email}`}>
+                    {client.email}
+                  </a>
+                )}
               </Detail>
               <Detail label={t('cab.clientRegistration.fields.phoneNumber')}>
                 {[client.phoneCountryCode, client.phoneNumber].filter(Boolean).join(' ')}
-              </Detail>
-              <Detail label={t('cab.clientRegistration.fields.mobileNumber')}>
-                {[client.mobileCountryCode, client.mobileNumber].filter(Boolean).join(' ')}
-              </Detail>
-            </Section>
-
-            <Section title={t('cab.clientRegistration.sections.additionalInformation')}>
-              <Detail label={t('cab.clientRegistration.fields.industry')}>{client.industry}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.employeeCount')}>{client.employeeCount}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.annualTurnover')}>{client.annualTurnover}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.website')}>
-                {websiteHref && <a className="text-primary" href={websiteHref} target="_blank" rel="noreferrer">{client.website}</a>}
-              </Detail>
-              <Detail label={t('cab.clientRegistration.fields.activitiesDescription')}>{client.activitiesDescription}</Detail>
-              <Detail label={t('cab.clientRegistration.fields.attachDocument')}>
-                {client.supportingDocumentUrl && (
-                  <a className="text-primary" href={resolvePublicAssetUrl(client.supportingDocumentUrl)} target="_blank" rel="noreferrer">
-                    {client.supportingDocumentOriginalName || t('cab.clientDetails.openDocument')}
-                  </a>
-                )}
               </Detail>
             </Section>
           </>

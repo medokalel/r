@@ -3276,6 +3276,12 @@
         }
       }
     },
+    "clientCompanyProfile": {
+      "title": "Client Profile",
+      "logoUrl": "Logo URL",
+      "productionLines": "Are all production lines active?",
+      "inactiveReason": "Inactive reason"
+    },
     "clientRegistration": {
       "breadcrumbWorkspace": "Workspace",
       "breadcrumbClientRegister": "Client Register",
@@ -3323,6 +3329,15 @@
         "additionalInformation": "Additional Information"
       },
       "fields": {
+        "organizationName": "Organization Name",
+        "organizationNamePlaceholder": "e.g. Al-Rashid Food Industries",
+        "administrationName": "Administration / Head Office",
+        "administrationNamePlaceholder": "e.g. King Fahd Road, Building 12, Riyadh",
+        "facilityOwnerManager": "Facility Owner / Manager",
+        "facilityOwnerManagerPlaceholder": "e.g. Mohammed Al-Rashid",
+        "activity": "Main Business Activity",
+        "activityPlaceholder": "e.g. Manufacturing and packaging of dairy products",
+        "legalCapacity": "Legal Capacity",
         "legalEntityName": "Legal Entity Name",
         "legalEntityNamePlaceholder": "e.g. GreenLeaf PVT. LTD.",
         "tradingName": "Trading / Brand Name",
@@ -5166,6 +5181,11 @@
         },
         "tabPlaceholder": "This tab content is available on the Application Review page."
       }
+    },
+    "applicationSubmission": {
+      "title": "Application Submission",
+      "submitted": "Submitted",
+      "backToRegister": "Back to application register"
     },
     "applicationRegister": {
       "breadcrumbParent": "Workspace",

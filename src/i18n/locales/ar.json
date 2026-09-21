@@ -3316,6 +3316,12 @@
         }
       }
     },
+    "clientCompanyProfile": {
+      "title": "ملف العميل",
+      "logoUrl": "رابط الشعار",
+      "productionLines": "هل جميع خطوط الإنتاج نشطة؟",
+      "inactiveReason": "سبب عدم النشاط"
+    },
     "clientRegistration": {
       "breadcrumbWorkspace": "مساحة العمل",
       "breadcrumbClientRegister": "سجل العملاء",
@@ -3363,6 +3369,15 @@
         "additionalInformation": "معلومات إضافية"
       },
       "fields": {
+        "organizationName": "اسم المنشأة",
+        "organizationNamePlaceholder": "مثال: الرشيد للصناعات الغذائية",
+        "administrationName": "الإدارة / المقر الرئيسي",
+        "administrationNamePlaceholder": "مثال: طريق الملك فهد، مبنى 12، الرياض",
+        "facilityOwnerManager": "مالك / مدير المنشأة",
+        "facilityOwnerManagerPlaceholder": "مثال: محمد الرشيد",
+        "activity": "النشاط الرئيسي",
+        "activityPlaceholder": "مثال: تصنيع وتعبئة منتجات الألبان",
+        "legalCapacity": "الشكل القانوني",
         "legalEntityName": "الاسم القانوني للمنشأة",
         "legalEntityNamePlaceholder": "مثال: جرين ليف ش.م.م.",
         "tradingName": "الاسم التجاري",
@@ -5206,6 +5221,11 @@
         },
         "tabPlaceholder": "محتوى هذا التبويب متاح في صفحة مراجعة الطلب."
       }
+    },
+    "applicationSubmission": {
+      "title": "تقديم الطلب",
+      "submitted": "تم التقديم",
+      "backToRegister": "العودة إلى سجل الطلبات"
     },
     "applicationRegister": {
       "breadcrumbParent": "مساحة العمل",

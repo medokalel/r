@@ -205,6 +205,8 @@ export function formValuesFromProfile(data: OrganizationProfileData): ProfileFor
     organizationStatus: profile.organizationStatus ?? '',
     employeeCount: profile.employeeCount != null ? String(profile.employeeCount) : '',
     registrationDate: parseIsoDate(profile.registrationDate),
+    allProductionLinesActive: profile.allProductionLinesActive ?? true,
+    inactiveReason: profile.inactiveReason ?? '',
     country: countryCodeFromName(address.country),
     city: address.city ?? original.city ?? '',
     district: address.district ?? '',
@@ -218,14 +220,8 @@ export function formValuesFromProfile(data: OrganizationProfileData): ProfileFor
   }
 }
 
-/**
- * Build the save payload. With `forSubmit` the strict fields required by the
- * COMPLETED validation are always included; drafts omit what is still empty.
- */
-export function payloadFromForm(
-  form: ProfileFormValues,
-  { forSubmit = false }: { forSubmit?: boolean } = {}
-): SaveProfileRequest {
+/** Build the profile/address payload accepted by draft and final saves. */
+export function payloadFromForm(form: ProfileFormValues): SaveProfileRequest {
   const registered = getRegisteredUserProfileDefaults()
   const phoneNumber = form.phoneNumber || registered.phoneNumber
   const countryCode = form.countryCode || registered.countryCode
@@ -235,7 +231,7 @@ export function payloadFromForm(
       organizationName: form.organizationName || undefined,
       tradeName: form.tradeName || undefined,
       commercialRegisterNumber: form.commercialRegisterNumber || undefined,
-      // unifiedNumber is a read-only, backend-issued value — never sent back
+      unifiedNumber: form.unifiedNumber || undefined,
       authorizedPersonName: form.authorizedPersonName || registered.authorizedPersonName || undefined,
       email: form.email || registered.email || undefined,
       phoneCountryCode: phoneNumber ? dialCodeFor(countryCode) : undefined,
@@ -245,9 +241,11 @@ export function payloadFromForm(
       employeeCount: form.employeeCount !== '' ? Number(form.employeeCount) : undefined,
       industries: form.industries.length ? form.industries : undefined,
       companySummary: form.companySummary || undefined,
-      // The profile UI has no production-lines question; defaulted to true on
-      // submit so the COMPLETED validation passes
-      allProductionLinesActive: forSubmit ? true : undefined,
+      allProductionLinesActive: form.allProductionLinesActive,
+      inactiveReason:
+        !form.allProductionLinesActive && form.inactiveReason
+          ? form.inactiveReason
+          : undefined,
       nationalAddress: nationalAddressPayloadFrom(form.nationalAddress),
     },
     address: {

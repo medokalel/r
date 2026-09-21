@@ -9,7 +9,11 @@ import * as Checkbox from '@radix-ui/react-checkbox'
 import { CheckIcon } from '@radix-ui/react-icons'
 import { TextField } from '@/components/ui'
 import { AuthLayout } from '@/components/auth/AuthLayout'
-import { isValidLoginIdentifier } from '@/lib/authValidation'
+import {
+  isValidLoginIdentifier,
+  isValidPassword,
+  normalizeLoginIdentifier,
+} from '@/lib/authValidation'
 import { Button } from '@/components/ui/Button'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { AppIcon, EyeIcon, EyeSlashIcon, LockIcon, MailIcon } from '@/components/icons'
@@ -38,7 +42,7 @@ export function LoginPage() {
 
   const canSubmit =
     isValidLoginIdentifier(form.email) &&
-    form.password.trim().length > 0 &&
+    isValidPassword(form.password) &&
     !isSubmitting
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,7 +53,7 @@ export function LoginPage() {
     setSubmitError(null)
 
     try {
-      const data = await login(form.email.trim(), form.password)
+      const data = await login(normalizeLoginIdentifier(form.email), form.password)
       clearPendingRegistration()
       saveAuthSession(data, rememberMe)
       navigate(getPostLoginRedirect(data), { replace: true })

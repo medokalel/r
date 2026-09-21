@@ -1,12 +1,16 @@
-import { apiRequestWithAuth } from '@/lib/api/client'
+import { ApiError, apiRequestWithAuth } from '@/lib/api/client'
 import { getAuthToken } from '@/lib/authStorage'
 import type { ClientRegistrationForm } from '@/lib/clientRegistrationForm'
 import { getCountryCallingCode, getCountries, type CountryCode } from 'libphonenumber-js'
 import type {
   OrganizationProfileData,
-  OrgDocument,
   OrgProfileInput,
   OrgAddressInput,
+  OrgBranch,
+  OrgBranchInput,
+  OrgDocument,
+  OrgDocumentType,
+  SaveProfileRequest,
   SaveProfileResult,
 } from '@/lib/api/organizationProfileApi'
 
@@ -41,45 +45,19 @@ export interface CabClientList {
   totalPages: number
 }
 
-/** Flattened client used by the registration form and details page. */
+/** Fields from POST /cab-clients (and GET profile original + owner data). */
 export interface CabClient {
   id: string
-  legalEntityName: string | null
-  tradingName: string | null
-  organizationType: string | null
-  registrationNumber: string | null
-  incorporationDate: string | null
-  country: string | null
-  state: string | null
+  organizationName: string | null
+  administrationName: string | null
+  facilityOwnerManager: string | null
+  activity: string | null
+  legalCapacity: string | null
   city: string | null
-  addressLine1: string | null
-  addressLine2: string | null
-  landmark: string | null
-  postalCode: string | null
-  addressCountry: string | null
-  addressState: string | null
-  addressCity: string | null
-  contactFullName: string | null
-  contactDesignation: string | null
-  contactEmail: string | null
+  email: string | null
   phoneCountryCode: string | null
   phoneNumber: string | null
-  mobileCountryCode: string | null
-  mobileNumber: string | null
-  industry: string | null
-  employeeCount: string | null
-  annualTurnover: string | null
-  website: string | null
-  activitiesDescription: string | null
-  supportingDocumentUrl: string | null
-  supportingDocumentOriginalName: string | null
-  supportingDocumentMimeType: string | null
-  supportingDocumentSize: number | null
   status: CabClientStatus
-  createdAt?: string
-  updatedAt?: string
-  applicationNumber?: string | null
-  assignedToName?: string | null
 }
 
 interface CreateClientResponse {
@@ -97,26 +75,6 @@ function requireToken(): string {
   const token = getAuthToken()
   if (!token) throw new Error('Authentication required')
   return token
-}
-
-function toIsoDate(value: Date | null): string | undefined {
-  if (!(value instanceof Date) || Number.isNaN(value.getTime())) return undefined
-  const year = value.getFullYear()
-  const month = String(value.getMonth() + 1).padStart(2, '0')
-  const day = String(value.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
-
-function parseEmployeeCount(label: string): number | undefined {
-  const digits = label.match(/\d+/g)
-  if (!digits?.length) return undefined
-  return Number(digits[digits.length - 1])
-}
-
-function formatEmployeeCount(count: number | null | undefined): string {
-  if (count == null || Number.isNaN(count)) return ''
-  const match = EMPLOYEE_COUNT_OPTIONS.find((option) => parseEmployeeCount(option) === count)
-  return match ?? String(count)
 }
 
 function digitsOnly(value: string): string {
@@ -153,121 +111,127 @@ function countryFromDial(dialOrCode: string | null | undefined): CountryCode {
   return 'EG'
 }
 
-function commercialRegister(profile: OrganizationProfileData | null): OrgDocument | undefined {
-  return profile?.documents?.find((doc) => doc.documentType === 'COMMERCIAL_REGISTER')
-    ?? profile?.documents?.[0]
+function formFromValues(clientId: string, form: ClientRegistrationForm, status: CabClientStatus): CabClient {
+  return {
+    id: clientId,
+    organizationName: form.organizationName,
+    administrationName: form.administrationName,
+    facilityOwnerManager: form.facilityOwnerManager,
+    activity: form.activity,
+    legalCapacity: form.legalCapacity,
+    city: form.city,
+    email: form.email,
+    phoneCountryCode: form.phoneCountryCode,
+    phoneNumber: form.phoneNumber,
+    status,
+  }
 }
 
 function profileToClient(clientId: string, data: OrganizationProfileData): CabClient {
   const profile = data.profile ?? {}
   const address = data.address ?? {}
   const original = data.originalRegistrationData ?? {}
-  const document = commercialRegister(data)
   const profileStatus = (data.status || 'DRAFT').toUpperCase()
   const status: CabClientStatus =
     profileStatus === 'COMPLETED' ? 'REGISTERED' : (profileStatus as CabClientStatus)
 
   return {
     id: clientId,
-    legalEntityName: profile.organizationName ?? data.organizationName ?? null,
-    tradingName: profile.tradeName ?? null,
-    organizationType: original.legalCapacity ?? null,
-    registrationNumber: profile.commercialRegisterNumber ?? null,
-    incorporationDate: profile.registrationDate ?? null,
-    country: address.country ?? null,
-    state: address.district ?? null,
+    organizationName: profile.organizationName ?? data.organizationName ?? null,
+    administrationName: original.address ?? address.street ?? null,
+    facilityOwnerManager: profile.authorizedPersonName ?? null,
+    activity: original.activity ?? profile.companySummary ?? null,
+    legalCapacity: original.legalCapacity ?? null,
     city: original.city ?? address.city ?? null,
-    addressLine1: address.street ?? original.address ?? null,
-    addressLine2: address.buildingNumber ?? null,
-    landmark: address.additionalNumber ?? null,
-    postalCode: address.postalCode ?? null,
-    addressCountry: address.country ?? null,
-    addressState: address.district ?? null,
-    addressCity: address.city ?? null,
-    contactFullName: profile.authorizedPersonName ?? null,
-    contactDesignation: null,
-    contactEmail: profile.email ?? null,
+    email: profile.email ?? null,
     phoneCountryCode: countryFromDial(profile.phoneCountryCode),
     phoneNumber: profile.phoneNumber ?? null,
-    mobileCountryCode: 'EG',
-    mobileNumber: null,
-    industry: profile.industries?.[0] ?? null,
-    employeeCount: formatEmployeeCount(profile.employeeCount),
-    annualTurnover: null,
-    website: null,
-    activitiesDescription: profile.companySummary ?? original.activity ?? null,
-    supportingDocumentUrl: document?.fileUrl ?? null,
-    supportingDocumentOriginalName: document?.originalName ?? null,
-    supportingDocumentMimeType: document?.mimeType ?? null,
-    supportingDocumentSize: document?.fileSize ?? null,
     status,
   }
 }
 
 function toCreatePayload(form: ClientRegistrationForm) {
-  const administrationName =
-    [form.addressLine1, form.addressCity || form.city].filter((part) => part.trim()).join(', ')
-    || form.city
-    || form.legalEntityName
-
   return {
-    email: form.contactEmail.trim(),
-    organizationName: form.legalEntityName.trim(),
-    administrationName: administrationName.trim(),
-    facilityOwnerManager: form.contactFullName.trim(),
-    activity: (form.activitiesDescription.trim() || form.industry).trim(),
-    legalCapacity: form.organizationType.trim(),
-    city: (form.city || form.addressCity).trim(),
-    authorizationLetterUrl: null as string | null,
+    email: form.email.trim(),
+    organizationName: form.organizationName.trim(),
+    administrationName: form.administrationName.trim(),
+    facilityOwnerManager: form.facilityOwnerManager.trim(),
+    activity: form.activity.trim(),
+    legalCapacity: form.legalCapacity.trim(),
+    city: form.city.trim(),
     phone: toPhone(form.phoneCountryCode, form.phoneNumber),
   }
 }
 
-function toProfilePayload(form: ClientRegistrationForm, forSubmit: boolean): {
+function toProfilePayload(form: ClientRegistrationForm): {
   profile: OrgProfileInput
   address: OrgAddressInput
 } {
-  const employeeCount = parseEmployeeCount(form.employeeCount)
-  const registrationDate = toIsoDate(form.incorporationDate)
-  const tradeName = form.tradingName.trim() || form.legalEntityName.trim()
-  const district = form.addressState.trim() || form.state.trim() || form.addressCity.trim()
-  const buildingNumber = form.addressLine2.trim() || (forSubmit ? '1' : '')
-
   return {
     profile: {
-      organizationName: form.legalEntityName.trim() || undefined,
-      tradeName: tradeName || undefined,
-      commercialRegisterNumber: form.registrationNumber.trim() || undefined,
-      unifiedNumber: form.registrationNumber.trim() || undefined,
-      authorizedPersonName: form.contactFullName.trim() || undefined,
-      email: form.contactEmail.trim() || undefined,
+      organizationName: form.organizationName.trim() || undefined,
+      authorizedPersonName: form.facilityOwnerManager.trim() || undefined,
+      email: form.email.trim() || undefined,
       phoneCountryCode: toDialCode(form.phoneCountryCode),
       phoneNumber: digitsOnly(form.phoneNumber) || undefined,
-      organizationStatus: 'ACTIVE',
-      registrationDate,
-      employeeCount,
-      industries: form.industry ? [form.industry] : undefined,
-      companySummary: form.activitiesDescription.trim() || undefined,
-      allProductionLinesActive: true,
-      nationalAddress: { hasNationalAddress: false },
+      companySummary: form.activity.trim() || undefined,
     },
     address: {
-      country: form.addressCountry || form.country || undefined,
-      city: form.addressCity.trim() || form.city.trim() || undefined,
-      district: district || undefined,
-      street: form.addressLine1.trim() || undefined,
-      buildingNumber: buildingNumber || undefined,
-      postalCode: form.postalCode.trim() || undefined,
-      additionalNumber: form.landmark.trim() || undefined,
+      city: form.city.trim() || undefined,
+      street: form.administrationName.trim() || undefined,
     },
   }
 }
 
 export function createCabClientAccount(form: ClientRegistrationForm): Promise<CreateClientResponse> {
+  const payload = toCreatePayload(form)
+  const missing: string[] = []
+  if (!payload.email) missing.push('email')
+  if (payload.organizationName.length < 2) missing.push('organizationName')
+  if (payload.administrationName.length < 2) missing.push('administrationName')
+  if (payload.facilityOwnerManager.length < 2) missing.push('facilityOwnerManager')
+  if (payload.activity.length < 2) missing.push('activity')
+  if (payload.legalCapacity.length < 2) missing.push('legalCapacity')
+  if (payload.city.length < 2) missing.push('city')
+  if (payload.phone.length < 7) missing.push('phone')
+
+  if (missing.length > 0) {
+    throw new ApiError(`Please complete these fields before saving: ${missing.join(', ')}.`, 400, missing)
+  }
+
   return apiRequestWithAuth<CreateClientResponse>('/cab-clients', requireToken(), {
     method: 'POST',
-    body: JSON.stringify(toCreatePayload(form)),
+    body: JSON.stringify(payload),
   })
+}
+
+export async function listAllCabAuditClients(): Promise<CabAuditClientListItem[]> {
+  const data = await apiRequestWithAuth<CabAuditClientListItem[]>('/cab-clients', requireToken())
+  return Array.isArray(data) ? data : []
+}
+
+export interface ClientRegisterEntry {
+  id: string
+  code: string
+  name: string
+  countryCode: CountryCode | ''
+  contactName: string
+  contactEmail: string
+  updatedAt: string
+  city: string
+}
+
+export function toClientRegisterEntry(client: CabAuditClientListItem): ClientRegisterEntry {
+  return {
+    id: client.id,
+    code: client.id.replace(/-/g, '').slice(0, 8).toUpperCase(),
+    name: client.name || client.tradeName || '—',
+    countryCode: '',
+    contactName: client.owner?.fullName ?? '',
+    contactEmail: client.owner?.email ?? '',
+    updatedAt: client.createdAt,
+    city: client.city ?? '',
+  }
 }
 
 export function listCabClients(params: {
@@ -279,7 +243,7 @@ export function listCabClients(params: {
   const page = params.page ?? 1
   const limit = params.limit ?? 10
 
-  return apiRequestWithAuth<CabAuditClientListItem[]>('/cab-clients', requireToken()).then((clients) => {
+  return listAllCabAuditClients().then((clients) => {
     const search = params.search?.trim().toLowerCase() ?? ''
     const filtered = clients.filter((client) => {
       if (params.status) {
@@ -318,130 +282,122 @@ export function listCabClients(params: {
 }
 
 export function getCabClientProfile(clientId: string): Promise<OrganizationProfileData> {
-  return apiRequestWithAuth<OrganizationProfileData>(
-    `/cab-clients/${clientId}/profile`,
-    requireToken()
-  )
+  return apiRequestWithAuth<OrganizationProfileData>(`/cab-clients/${clientId}/profile`, requireToken())
 }
 
 export async function getCabClient(clientId: string): Promise<CabClient> {
   const profile = await getCabClientProfile(clientId)
-  return profileToClient(clientId, profile)
+  const client = profileToClient(clientId, profile)
+  if (!client.email || !client.facilityOwnerManager) {
+    const listed = await listAllCabAuditClients()
+    const match = listed.find((item) => item.id === clientId)
+    if (match) {
+      client.email = client.email || match.owner?.email || null
+      client.facilityOwnerManager = client.facilityOwnerManager || match.owner?.fullName || null
+      client.phoneNumber = client.phoneNumber || match.owner?.phone || null
+      client.organizationName = client.organizationName || match.name || null
+      client.city = client.city || match.city || null
+      client.administrationName = client.administrationName || match.address || null
+    }
+  }
+  return client
 }
 
 export function saveCabClientProfile(
   clientId: string,
-  form: ClientRegistrationForm,
-  forSubmit = false
+  form: ClientRegistrationForm
+): Promise<SaveProfileResult> {
+  return saveCabClientCompanyProfile(clientId, toProfilePayload(form))
+}
+
+export function saveCabClientCompanyProfile(
+  clientId: string,
+  payload: SaveProfileRequest
 ): Promise<SaveProfileResult> {
   return apiRequestWithAuth<SaveProfileResult>(`/cab-clients/${clientId}/profile`, requireToken(), {
     method: 'POST',
-    body: JSON.stringify(toProfilePayload(form, forSubmit)),
+    body: JSON.stringify(payload),
+  })
+}
+
+export function createCabClientBranch(
+  clientId: string,
+  payload: OrgBranchInput
+): Promise<OrgBranch> {
+  return apiRequestWithAuth<OrgBranch>(`/cab-clients/${clientId}/branches`, requireToken(), {
+    method: 'POST',
+    body: JSON.stringify(payload),
   })
 }
 
 export function uploadCabClientDocument(
   clientId: string,
-  file: File,
-  documentType: OrgDocument['documentType'] = 'COMMERCIAL_REGISTER'
+  documentType: OrgDocumentType,
+  file: File
 ): Promise<OrgDocument> {
-  const data = new FormData()
-  data.set('file', file)
-  data.set('documentType', documentType)
+  const formData = new FormData()
+  formData.append('documentType', documentType)
+  formData.append('file', file)
   return apiRequestWithAuth<OrgDocument>(`/cab-clients/${clientId}/documents`, requireToken(), {
     method: 'POST',
-    body: data,
+    body: formData,
   })
 }
 
-export function submitCabClientProfile(clientId: string): Promise<{ message: string }> {
-  return apiRequestWithAuth<{ message: string }>(`/cab-clients/${clientId}/submit`, requireToken(), {
-    method: 'POST',
-  })
+export function submitCabClientProfile(
+  clientId: string
+): Promise<{ message: string; grantingAuthoritySerialNumber?: string }> {
+  return apiRequestWithAuth<{ message: string; grantingAuthoritySerialNumber?: string }>(
+    `/cab-clients/${clientId}/submit`,
+    requireToken(),
+    { method: 'POST' }
+  )
 }
 
-export async function createCabClient(
-  form: ClientRegistrationForm,
-  status: 'DRAFT' | 'REGISTERED',
-  supportingDocument?: File | null
-): Promise<SavedClientResponse> {
+export async function createCabClient(form: ClientRegistrationForm): Promise<SavedClientResponse> {
   const created = await createCabClientAccount(form)
-  return persistClient(created.organizationId, form, status, supportingDocument, created.message)
+  try {
+    await saveCabClientProfile(created.organizationId, form)
+    try {
+      return { message: created.message, client: await getCabClient(created.organizationId) }
+    } catch {
+      return { message: created.message, client: formFromValues(created.organizationId, form, 'DRAFT') }
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      Object.assign(error, { organizationId: created.organizationId })
+    }
+    throw error
+  }
 }
 
 export async function updateCabClient(
   clientId: string,
-  form: ClientRegistrationForm,
-  status: 'DRAFT' | 'REGISTERED',
-  supportingDocument?: File | null,
-  _clearSupportingDocument = false
+  form: ClientRegistrationForm
 ): Promise<SavedClientResponse> {
-  return persistClient(clientId, form, status, supportingDocument)
-}
-
-async function persistClient(
-  clientId: string,
-  form: ClientRegistrationForm,
-  status: 'DRAFT' | 'REGISTERED',
-  supportingDocument?: File | null,
-  createMessage?: string
-): Promise<SavedClientResponse> {
-  const forSubmit = status === 'REGISTERED'
-  await saveCabClientProfile(clientId, form, forSubmit)
-
-  if (supportingDocument) {
-    await uploadCabClientDocument(clientId, supportingDocument)
+  await saveCabClientProfile(clientId, form)
+  try {
+    return { message: 'Client draft saved successfully.', client: await getCabClient(clientId) }
+  } catch {
+    return { message: 'Client draft saved successfully.', client: formFromValues(clientId, form, 'DRAFT') }
   }
-
-  let message = createMessage ?? 'Client saved successfully.'
-  if (forSubmit) {
-    const submitted = await submitCabClientProfile(clientId)
-    message = submitted.message
-  }
-
-  const client = await getCabClient(clientId)
-  return { message, client }
-}
-
-export function deleteCabClient(clientId: string): Promise<void> {
-  return apiRequestWithAuth<void>(`/cab-clients/${clientId}`, requireToken(), {
-    method: 'DELETE',
-  })
 }
 
 export function cabClientToForm(client: CabClient): ClientRegistrationForm {
   return {
-    legalEntityName: client.legalEntityName ?? '',
-    tradingName: client.tradingName ?? '',
-    organizationType: client.organizationType ?? '',
-    registrationNumber: client.registrationNumber ?? '',
-    incorporationDate: client.incorporationDate ? new Date(client.incorporationDate) : null,
-    country: (client.country ?? '') as CountryCode | '',
-    state: client.state ?? '',
+    email: client.email ?? '',
+    organizationName: client.organizationName ?? '',
+    administrationName: client.administrationName ?? '',
+    facilityOwnerManager: client.facilityOwnerManager ?? '',
+    activity: client.activity ?? '',
+    legalCapacity: client.legalCapacity ?? '',
     city: client.city ?? '',
-    addressLine1: client.addressLine1 ?? '',
-    addressLine2: client.addressLine2 ?? '',
-    landmark: client.landmark ?? '',
-    postalCode: client.postalCode ?? '',
-    addressCountry: (client.addressCountry ?? '') as CountryCode | '',
-    addressState: client.addressState ?? '',
-    addressCity: client.addressCity ?? '',
-    contactFullName: client.contactFullName ?? '',
-    contactDesignation: client.contactDesignation ?? '',
-    contactEmail: client.contactEmail ?? '',
     phoneCountryCode: (client.phoneCountryCode ?? 'EG') as CountryCode,
     phoneNumber: client.phoneNumber ?? '',
-    mobileCountryCode: (client.mobileCountryCode ?? 'EG') as CountryCode,
-    mobileNumber: client.mobileNumber ?? '',
-    industry: client.industry ?? '',
-    employeeCount: client.employeeCount ?? '',
-    annualTurnover: client.annualTurnover ?? '',
-    website: client.website ?? '',
-    activitiesDescription: client.activitiesDescription ?? '',
   }
 }
 
-export const ORGANIZATION_TYPE_OPTIONS: string[] = [
+export const LEGAL_CAPACITY_OPTIONS: string[] = [
   'Private Limited Company',
   'Public Limited Company',
   'Sole Proprietorship',
@@ -449,26 +405,4 @@ export const ORGANIZATION_TYPE_OPTIONS: string[] = [
   'Government Entity',
   'Non-Profit Organization',
   'Limited Liability Company',
-]
-
-export const INDUSTRY_OPTIONS: string[] = [
-  'Manufacturing',
-  'Construction',
-  'Healthcare',
-  'Food & Beverage',
-  'Oil & Gas',
-  'Textiles',
-  'Retail & Trade',
-  'Information Technology',
-  'Logistics & Transportation',
-]
-
-export const EMPLOYEE_COUNT_OPTIONS: string[] = ['1 - 10', '11 - 50', '51 - 100', '101 - 500', '501 - 1000', '1000+']
-
-export const ANNUAL_TURNOVER_OPTIONS: string[] = [
-  'Less than 1,000,000',
-  '1,000,000 - 10,000,000',
-  '10,000,001 - 100,000,000',
-  '100,000,001 - 500,000,000',
-  'More than 500,000,000',
 ]
