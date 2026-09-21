@@ -6,6 +6,7 @@ import {
   Textarea,
   TextField,
 } from '@/components/ui'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
@@ -106,25 +107,27 @@ export function SpecificationQuestionsStep() {
     .filter((section) => section.questions.length > 0)
 
   return (
-    <div className="flex-1 space-y-5">
-      {sections.length === 0 && (
-        <p className="rounded-[var(--radius-sm)] bg-neutral-50 p-5 text-body-2 text-neutral-600">
-          {t('accreditation.entityData.fields.spec.noQuestions')}
-        </p>
-      )}
+    <DashboardTourStep stepId="specification-questions">
+      <div className="flex-1 space-y-5">
+        {sections.length === 0 && (
+          <p className="rounded-[var(--radius-sm)] bg-neutral-50 p-5 text-body-2 text-neutral-600">
+            {t('accreditation.entityData.fields.spec.noQuestions')}
+          </p>
+        )}
 
-      {sections.map((section) => (
-        <div key={section.title} className="space-y-5">
-          <SectionHeading title={section.title} />
-          <FormSection>
-            <div className="grid gap-5 lg:grid-cols-2">
-              {section.questions.map((question) => (
-                <SpecQuestionField key={question.questionKey} question={question} />
-              ))}
-            </div>
-          </FormSection>
-        </div>
-      ))}
-    </div>
+        {sections.map((section) => (
+          <div key={section.title} className="space-y-5">
+            <SectionHeading title={section.title} />
+            <FormSection>
+              <div className="grid gap-5 lg:grid-cols-2">
+                {section.questions.map((question) => (
+                  <SpecQuestionField key={question.questionKey} question={question} />
+                ))}
+              </div>
+            </FormSection>
+          </div>
+        ))}
+      </div>
+    </DashboardTourStep>
   )
 }

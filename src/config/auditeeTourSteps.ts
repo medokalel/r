@@ -245,10 +245,15 @@ export function useInvoicesTourSteps(): TourStepConfig[] {
  * pattern as the other auditee tours, kept separate since it runs its own
  * tourId/storage key.
  *
- * Steps 3–5 walk through the Entity Data sub-steps the user lands on first:
- * Legal Identity (Main Data, Regulatory Data), then Scope of Activity &
- * Branches. Per-branch cards are user-generated and variable in count, so
- * they aren't given their own fixed tour step.
+ * Steps 3–11 walk through the Entity Data sub-steps in order: Legal Identity
+ * (Main Data, Regulatory Data), Scope of Activity & Branches, Consulting &
+ * Management System Readiness (Consultation, Management System & Site
+ * Readiness), Specification Questions, and Legal Declarations (Declaration
+ * Letter, Confidentiality, Certificate Data). Content that's user-generated
+ * and variable in count — branch cards, and specification-question groups
+ * that depend on which standards were picked — isn't given its own fixed
+ * tour step; those sub-steps get one step covering their fixed container
+ * instead.
  */
 export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
   const { t } = useTranslation()
@@ -257,7 +262,7 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     {
       id: 'form-header',
       step: 1,
-      totalSteps: 8,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.header.title'),
       description: t('certificationRequestForm.tour.header.description'),
       side: 'bottom',
@@ -266,7 +271,7 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     {
       id: 'entity-data-tab',
       step: 2,
-      totalSteps: 8,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.entityData.title'),
       description: t('certificationRequestForm.tour.entityData.description'),
       side: 'right',
@@ -275,7 +280,7 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     {
       id: 'legal-identity-main-data',
       step: 3,
-      totalSteps: 8,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.legalIdentityMainData.title'),
       description: t('certificationRequestForm.tour.legalIdentityMainData.description'),
       side: 'top',
@@ -284,7 +289,7 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     {
       id: 'legal-identity-regulatory-data',
       step: 4,
-      totalSteps: 8,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.legalIdentityRegulatoryData.title'),
       description: t('certificationRequestForm.tour.legalIdentityRegulatoryData.description'),
       side: 'top',
@@ -293,16 +298,70 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     {
       id: 'scope-of-activity',
       step: 5,
-      totalSteps: 8,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.scopeOfActivity.title'),
       description: t('certificationRequestForm.tour.scopeOfActivity.description'),
       side: 'top',
       align: 'start',
     },
     {
-      id: 'field-tab',
+      id: 'consulting-readiness-consultation',
       step: 6,
-      totalSteps: 8,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.consultingReadinessConsultation.title'),
+      description: t('certificationRequestForm.tour.consultingReadinessConsultation.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'consulting-readiness-management-system',
+      step: 7,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.consultingReadinessManagementSystem.title'),
+      description: t('certificationRequestForm.tour.consultingReadinessManagementSystem.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'specification-questions',
+      step: 8,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.specificationQuestions.title'),
+      description: t('certificationRequestForm.tour.specificationQuestions.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'legal-declarations-letter',
+      step: 9,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.legalDeclarationsLetter.title'),
+      description: t('certificationRequestForm.tour.legalDeclarationsLetter.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'legal-declarations-confidentiality',
+      step: 10,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.legalDeclarationsConfidentiality.title'),
+      description: t('certificationRequestForm.tour.legalDeclarationsConfidentiality.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'legal-declarations-certificate-data',
+      step: 11,
+      totalSteps: 14,
+      title: t('certificationRequestForm.tour.legalDeclarationsCertificateData.title'),
+      description: t('certificationRequestForm.tour.legalDeclarationsCertificateData.description'),
+      side: 'top',
+      align: 'start',
+    },
+    {
+      id: 'field-tab',
+      step: 12,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.field.title'),
       description: t('certificationRequestForm.tour.field.description'),
       side: 'right',
@@ -310,8 +369,8 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     },
     {
       id: 'documents-tab',
-      step: 7,
-      totalSteps: 8,
+      step: 13,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.documents.title'),
       description: t('certificationRequestForm.tour.documents.description'),
       side: 'right',
@@ -319,8 +378,8 @@ export function useCertificationRequestFormTourSteps(): TourStepConfig[] {
     },
     {
       id: 'feedback-tab',
-      step: 8,
-      totalSteps: 8,
+      step: 14,
+      totalSteps: 14,
       title: t('certificationRequestForm.tour.feedback.title'),
       description: t('certificationRequestForm.tour.feedback.description'),
       side: 'right',

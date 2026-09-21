@@ -7,6 +7,7 @@ import {
   fieldBodyTextClassName,
   fieldLabelClassName,
 } from '@/components/ui'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -53,7 +54,8 @@ export function LegalDeclarationsStep() {
   return (
     <div className="flex-1 space-y-5">
       {/* Section 1 */}
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <DashboardTourStep stepId="legal-declarations-letter">
+        <SectionHeading title={t('accreditation.entityData.fields.legal.sectionOneTitle')} accordion>
         <FormSection>
           <div className="space-y-5 rounded-[var(--radius-sm)] bg-white p-5 text-neutral-900">
             <p className={cn(fieldBodyTextClassName, 'field-text')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.greeting'), replacements)}</p>
@@ -86,9 +88,11 @@ export function LegalDeclarationsStep() {
           </div>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
 
       {/* Section 2 */}
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <DashboardTourStep stepId="legal-declarations-confidentiality">
+        <SectionHeading title={t('accreditation.entityData.fields.legal.sectionTwoTitle')} accordion>
         <FormSection>
           <div className="rounded-[var(--radius-sm)] bg-white p-5 text-[#3d3d3d]">
             <p className={cn(fieldBodyTextClassName, 'field-text mb-4')}>{boldPlaceholders(t('accreditation.entityData.fields.legal.confidentialityIntro'), replacements)}</p>
@@ -107,9 +111,11 @@ export function LegalDeclarationsStep() {
           </div>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
 
       {/* Certificate Data */}
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <DashboardTourStep stepId="legal-declarations-certificate-data">
+        <SectionHeading title={t('accreditation.entityData.fields.legal.certificateDataTitle')} accordion>
         <FormSection>
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField
@@ -190,6 +196,7 @@ export function LegalDeclarationsStep() {
           </div>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
 
       {/* Acknowledgement */}
       <div className="space-y-4 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-6">

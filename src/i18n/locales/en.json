@@ -1126,6 +1126,30 @@
         "title": "Scope of Activity & Branches",
         "description": "Describe your field of work, economic activity, products and production capacity, and add a branch here for each additional site to be audited."
       },
+      "consultingReadinessConsultation": {
+        "title": "Consultation & Qualification",
+        "description": "Tell us whether you used a consultant to prepare for certification, and attach their CV if so."
+      },
+      "consultingReadinessManagementSystem": {
+        "title": "Management System & Site Readiness",
+        "description": "Cover your system's language, site access, safety procedures, subcontracting, prior certification history, other management systems in use, and any design activities."
+      },
+      "specificationQuestions": {
+        "title": "Specification Questions",
+        "description": "Answer the extra questions specific to each standard you selected earlier in the Field tab."
+      },
+      "legalDeclarationsLetter": {
+        "title": "Declaration Letter",
+        "description": "Review the certification request letter and provide your authorized signatory's name and the declaration date."
+      },
+      "legalDeclarationsConfidentiality": {
+        "title": "Confidentiality Undertaking",
+        "description": "Read and acknowledge the confidentiality commitments that apply to your certification process."
+      },
+      "legalDeclarationsCertificateData": {
+        "title": "Certificate Data",
+        "description": "Enter your certificate's name, address, and scope exactly as they should appear, in both Arabic and English."
+      },
       "field": {
         "title": "Field",
         "description": "Pick the economic sector and standard codes that match your certification scope."

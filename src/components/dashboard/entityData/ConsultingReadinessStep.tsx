@@ -8,6 +8,7 @@ import {
   TextField,
   fieldTextClassName,
 } from '@/components/ui'
+import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { Checkbox } from '@/components/ui/Checkbox'
 import {
@@ -52,7 +53,8 @@ export function ConsultingReadinessStep() {
 
   return (
     <div className="flex-1 space-y-5">
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <DashboardTourStep stepId="consulting-readiness-consultation">
+        <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
         <FormSection>
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField
@@ -150,8 +152,11 @@ export function ConsultingReadinessStep() {
           </FormField>
         </FormSection>
       </SectionHeading>
+      </DashboardTourStep>
 
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <DashboardTourStep stepId="consulting-readiness-management-system">
+      <div className="space-y-5">
+      <SectionHeading title={t('accreditation.entityData.fields.readiness.title')} accordion>
         <FormSection>
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField
@@ -273,7 +278,7 @@ export function ConsultingReadinessStep() {
         </FormSection>
       </SectionHeading>
 
-      <SectionHeading title={t('accreditation.entityData.fields.consulting.title')} accordion>
+      <SectionHeading title={t('accreditation.entityData.fields.readiness.title')} accordion>
         <FormSection>
           <div className="grid gap-5 lg:grid-cols-2">
             <FormField
@@ -305,6 +310,8 @@ export function ConsultingReadinessStep() {
           </div>
         </FormSection>
       </SectionHeading>
+      </div>
+      </DashboardTourStep>
     </div>
   )
 }
