@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { entityDataNavIconComponents } from '@/components/icons/entityDataNavIcons'
+import { useOptionalTour } from '@/context/TourContext'
 import { cn } from '@/lib/utils'
 
 const subSections = [
@@ -31,6 +32,8 @@ const viewTabTourStepIds: Record<NavViewTab, string> = {
   feedback: 'feedback-tab',
 }
 
+const navTourStepIds: string[] = ['entity-data-tab', ...Object.values(viewTabTourStepIds)]
+
 interface EntityDataNavProps {
   activeSubSection?: EntityDataSubSection
   activeViewTab?: EntityDataViewTab
@@ -49,10 +52,16 @@ export function EntityDataNav({
   const activeIndex = subSections.indexOf(activeSubSection)
   const isEntityDataExpanded = activeViewTab === 'entityData'
   const EntityDataIcon = entityDataNavIconComponents.entityData
+  const tour = useOptionalTour()
+  const isOwnStepActive = tour?.isTourActive && navTourStepIds.includes(tour.activeStepId ?? '')
 
   return (
     <nav
-      className="sticky top-0 w-[275px] shrink-0 self-start rounded-[var(--radius-lg)] border border-[#ececec] bg-[#fcfcfc] p-5 shadow-[0_6px_20px_rgba(153,155,168,0.1)]"
+      className={cn(
+        'sticky top-0 w-[275px] shrink-0 self-start rounded-[var(--radius-lg)] border border-[#ececec] bg-[#fcfcfc] p-5 shadow-[0_6px_20px_rgba(153,155,168,0.1)]',
+        // Matches TourTooltip's TOUR_Z_HIGHLIGHT — see comment above.
+        isOwnStepActive && 'z-[1001]'
+      )}
       aria-label={t('accreditation.entityData.title')}
     >
       <div

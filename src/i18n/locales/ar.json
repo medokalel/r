@@ -1,5 +1,7 @@
 {
   "common": {
+    "yes": "نعم",
+    "no": "لا",
     "saveAndContinueLater": "حفظ والمتابعة لاحقًا",
     "appName": "كاسكو",
     "loading": "جاري التحميل...",
@@ -1003,6 +1005,7 @@
       "registryLabel": "رقم سجل الفرع",
       "employeesLabel": "عدد الموظفين",
       "employeeUnit": "موظف",
+      "empty": "لم تتم إضافة فروع. الفروع اختيارية.",
       "view": "عرض",
       "edit": "تعديل"
     },
@@ -3589,6 +3592,11 @@
         "assignedPerson": "الشخص المسؤول",
         "status": "الحالة",
         "dateOfCreation": "تاريخ الإنشاء",
+        "code": "الكود",
+        "client": "العميل",
+        "country": "الدولة",
+        "primaryContact": "جهة الاتصال الرئيسية",
+        "updated": "آخر تحديث",
         "actions": "الإجراءات"
       },
       "rowActions": {

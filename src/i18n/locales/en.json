@@ -1,5 +1,7 @@
 {
   "common": {
+    "yes": "Yes",
+    "no": "No",
     "saveAndContinueLater": "Save & continue later",
     "appName": "CASCO",
     "loading": "Loading...",
@@ -1003,6 +1005,7 @@
       "registryLabel": "Branch Registry No.",
       "employeesLabel": "Employees",
       "employeeUnit": "employee",
+      "empty": "No branches added. Branches are optional.",
       "view": "View",
       "edit": "Edit"
     },
@@ -3549,6 +3552,11 @@
         "assignedPerson": "Assigned person",
         "status": "Status",
         "dateOfCreation": "Date of creation",
+        "code": "Code",
+        "client": "Client",
+        "country": "Country",
+        "primaryContact": "Primary contact",
+        "updated": "Updated",
         "actions": "Actions"
       },
       "rowActions": {
