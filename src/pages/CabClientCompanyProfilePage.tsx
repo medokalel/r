@@ -1,9 +1,21 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { Button } from '@/components/ui/Button'
+import {
+  AppIcon,
+  EyeIcon,
+  DocumentFileIcon,
+  DocumentTextOutlineIcon,
+  TrashIcon,
+} from '@/components/icons'
+import {
+  DocumentUploadField,
+  type UploadedDocumentFile,
+} from '@/components/dashboard/DocumentUploadField'
+import { SectionTitle } from '@/components/dashboard/SectionTitle'
 import { FormField, MultiSelect, RadioGroup, TextField, Textarea } from '@/components/ui'
 import { BasicDataCard } from '@/components/dashboard/companyProfile/BasicDataCard'
 import { AddressStep } from '@/components/dashboard/companyProfile/steps'
@@ -13,10 +25,11 @@ import {
   useProfileForm,
 } from '@/components/dashboard/companyProfile/ProfileFormContext'
 import { ProfileLoadingSkeleton } from '@/components/dashboard/companyProfile/ProfileLoadingSkeleton'
-import { Stepper } from '@/components/dashboard/companyProfile/Primitives'
+import { CardHeader, Stepper } from '@/components/dashboard/companyProfile/Primitives'
 import {
   DOC_ACCEPT,
   DOC_MAX_BYTES,
+  DOC_TYPE_BY_KEY,
   SECTOR_OPTIONS,
   profileCardClassName,
 } from '@/components/dashboard/companyProfile/constants'
@@ -43,6 +56,7 @@ import {
   getCabClientProfile,
   saveCabClientCompanyProfile,
   submitCabClientProfile,
+  deleteCabClientDocument,
   uploadCabClientDocument,
 } from '@/lib/api/clientRegistrationApi'
 import type {
@@ -54,14 +68,6 @@ import { ApiError } from '@/lib/api/client'
 import { ROUTES } from '@/lib/routes'
 import { formatFileSize } from '@/lib/files'
 import type { CountryCode } from '@/components/auth/CountryCodeSelect'
-
-const DOCUMENT_TYPES: Array<{ type: OrgDocumentType; key: string; required?: boolean }> = [
-  { type: 'COMMERCIAL_REGISTER', key: 'commercialRegistry', required: true },
-  { type: 'NATIONAL_ADDRESS_CERTIFICATE', key: 'nationalAddress' },
-  { type: 'ACTIVITY_LICENSE', key: 'activityLicense' },
-  { type: 'TAX_CARD', key: 'taxCard' },
-  { type: 'OTHER', key: 'other' },
-]
 
 function isBasicProfileComplete(form: ProfileFormValues): boolean {
   return Boolean(
@@ -239,6 +245,21 @@ function CabBranchesStep({
   )
 }
 
+function toUploadedFile(doc: OrgDocument, locale: string): UploadedDocumentFile {
+  const uploadedAt = doc.createdAt ?? (doc as OrgDocument & { uploadedAt?: string | null }).uploadedAt
+  return {
+    id: doc.id,
+    name: doc.originalName ?? doc.fileName ?? '',
+    sizeLabel: formatFileSize(doc.fileSize),
+    dateLabel: uploadedAt ? new Date(uploadedAt).toLocaleDateString(locale) : undefined,
+    url: doc.fileUrl,
+  }
+}
+
+function openDocumentUrl(file: UploadedDocumentFile) {
+  if (file.url) window.open(file.url, '_blank')
+}
+
 function CabDocumentsStep({
   clientId,
   documents,
@@ -252,15 +273,19 @@ function CabDocumentsStep({
   notify: (notification: ProfileNotification) => void
   handleError: (error: unknown) => void
 }) {
-  const { t } = useTranslation()
-  const [uploading, setUploading] = useState<OrgDocumentType | null>(null)
+  const { t, i18n } = useTranslation()
+  const addDocRef = useRef<HTMLInputElement>(null)
+  const [busyType, setBusyType] = useState<OrgDocumentType | null>(null)
+
+  const documentsOfType = (type: OrgDocumentType) =>
+    documents.filter((document) => document.documentType === type)
 
   const upload = async (type: OrgDocumentType, file: File) => {
     if (file.size > DOC_MAX_BYTES) {
       notify({ type: 'error', message: t('validation.fileTooLarge', { size: 10 }) })
       return
     }
-    setUploading(type)
+    setBusyType(type)
     try {
       await uploadCabClientDocument(clientId, type, file)
       await refresh()
@@ -268,55 +293,119 @@ function CabDocumentsStep({
     } catch (error) {
       handleError(error)
     } finally {
-      setUploading(null)
+      setBusyType(null)
     }
+  }
+
+  const remove = async (id: string) => {
+    const document = documents.find((item) => item.id === id)
+    setBusyType(document?.documentType ?? 'OTHER')
+    try {
+      await deleteCabClientDocument(clientId, id)
+      await refresh()
+      notify({ type: 'success', message: t('companyProfile.messages.documentDeleted') })
+    } catch (error) {
+      handleError(error)
+    } finally {
+      setBusyType(null)
+    }
+  }
+
+  const onOtherFileSelected = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    event.target.value = ''
+    if (!file) return
+    await upload('OTHER', file)
   }
 
   return (
     <div className={profileCardClassName}>
-      <h3 className="text-[18px] font-semibold text-primary">
-        {t('companyProfile.officialDocs.title')}
-      </h3>
-      <div className="grid gap-4 md:grid-cols-2">
-        {DOCUMENT_TYPES.map(({ type, key, required }) => {
-          const uploaded = documents.filter((document) => document.documentType === type)
+      <CardHeader title={t('companyProfile.officialDocs.title')} />
+      <div className="flex flex-col gap-3 rounded-[12px] border border-dashed border-primary/30 p-3">
+        {Object.keys(DOC_TYPE_BY_KEY).map((docKey) => {
+          const type = DOC_TYPE_BY_KEY[docKey]
+          const files = [...documentsOfType(type)]
+            .reverse()
+            .map((document) => toUploadedFile(document, i18n.language))
           return (
-            <div key={type} className="rounded-[10px] border border-dashed border-primary/30 p-4">
-              <div className="flex items-center justify-between gap-3">
-                <p className="font-medium text-neutral-900">
-                  {key === 'other'
-                    ? t('companyProfile.officialDocs.otherDocsTitle')
-                    : t(`companyProfile.officialDocs.docs.${key}`)}
-                  {required && <span className="ms-1 text-error-500">*</span>}
-                </p>
-                <label className="cursor-pointer rounded-[8px] border border-primary px-3 py-2 text-[13px] font-medium text-primary">
-                  {uploading === type
-                    ? t('common.loading')
-                    : t('companyProfile.officialDocs.selectFile')}
-                  <input
-                    type="file"
-                    accept={DOC_ACCEPT}
-                    className="hidden"
-                    disabled={uploading !== null}
-                    onChange={(event) => {
-                      const file = event.target.files?.[0]
-                      event.target.value = ''
-                      if (file) void upload(type, file)
-                    }}
-                  />
-                </label>
-              </div>
-              <div className="mt-3 space-y-2">
-                {uploaded.map((document) => (
-                  <p key={document.id} className="text-[13px] text-neutral-600">
-                    {document.originalName ?? document.fileName ?? type}
-                    {document.fileSize != null && ` · ${formatFileSize(document.fileSize)}`}
-                  </p>
-                ))}
-              </div>
-            </div>
+            <DocumentUploadField
+              key={docKey}
+              title={t(`companyProfile.officialDocs.docs.${docKey}`)}
+              required
+              files={files}
+              busy={busyType === type}
+              accept={DOC_ACCEPT}
+              onSelectFile={(file) => upload(type, file)}
+              onDeleteFile={remove}
+              onOpenFile={openDocumentUrl}
+            />
           )
         })}
+      </div>
+
+      <SectionTitle
+        title={t('companyProfile.officialDocs.otherDocsTitle')}
+        subtitle={t('companyProfile.officialDocs.otherDocsSubtitle')}
+      />
+      {documentsOfType('OTHER').length > 0 && (
+        <div className="flex flex-col divide-y divide-[#f0f0f0] rounded-[12px] border border-[#ececec] p-3">
+          {documentsOfType('OTHER').map((document) => (
+            <div key={document.id} className="flex items-center justify-between gap-4 p-4">
+              <div className="flex items-center gap-3">
+                <span className="flex size-11 shrink-0 items-center justify-center rounded-[10px] bg-[#eef0fb] text-primary">
+                  <AppIcon icon={DocumentFileIcon} size={20} />
+                </span>
+                <div className="flex flex-col gap-0.5">
+                  <p dir="ltr" className="text-[18px] font-medium leading-[1.6] text-neutral-900">
+                    {document.originalName ?? document.fileName}
+                  </p>
+                  <span dir="ltr" className="text-[12px] font-light text-[#666]">
+                    {formatFileSize(document.fileSize)}
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  aria-label="preview"
+                  onClick={() => document.fileUrl && window.open(document.fileUrl, '_blank')}
+                  className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-primary"
+                >
+                  <AppIcon icon={EyeIcon} size={16} />
+                </button>
+                <button
+                  type="button"
+                  aria-label="delete"
+                  onClick={() => void remove(document.id)}
+                  className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-error-500"
+                >
+                  <AppIcon icon={TrashIcon} size={16} />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-col items-center justify-center gap-4 rounded-[12px] border border-dashed border-primary/30 py-10">
+        <AppIcon icon={DocumentTextOutlineIcon} size={40} className="text-primary" />
+        <p className="text-[18px] font-medium text-neutral-900">
+          {t('companyProfile.officialDocs.addDocLabel')}
+        </p>
+        <Button
+          variant="secondary"
+          className="h-12 min-w-[160px] rounded-[8px] border-neutral-200"
+          onClick={() => addDocRef.current?.click()}
+          disabled={busyType === 'OTHER'}
+        >
+          {busyType === 'OTHER' ? t('common.loading') : t('companyProfile.officialDocs.selectFile')}
+        </Button>
+        <input
+          ref={addDocRef}
+          type="file"
+          className="hidden"
+          accept={DOC_ACCEPT}
+          onChange={(event) => void onOtherFileSelected(event)}
+        />
       </div>
     </div>
   )
