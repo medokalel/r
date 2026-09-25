@@ -19,6 +19,15 @@ export function countryFlag(code: string): string {
     .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)))
 }
 
+export function countryName(code: string, locale: string = 'en'): string {
+  try {
+    const regionNames = new Intl.DisplayNames([locale], { type: 'region' })
+    return regionNames.of(code.toUpperCase()) ?? code
+  } catch {
+    return code
+  }
+}
+
 export function getCountryOptions(locale: string): CountryOption[] {
   const regionNames = new Intl.DisplayNames([locale], { type: 'region' })
 

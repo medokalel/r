@@ -160,7 +160,32 @@ const MOCK: CabApplicationQuotation = {
   ],
 }
 
-export async function getCabApplicationQuotation(_applicationId?: string): Promise<CabApplicationQuotation> {
-  await delay()
-  return MOCK
+export async function getCabApplicationQuotation(
+  applicationId?: string,
+  clientId?: string,
+): Promise<CabApplicationQuotation> {
+  const { loadCabApplicationOverlay } = await import(
+    '@/lib/api/cabCertificationApplicationApi'
+  )
+  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
+  if (!overlay) {
+    await delay()
+    return MOCK
+  }
+
+  const { application, standards, submittedDate, clientName } = overlay
+  const sitesCount = Math.max(1, application.branches?.length ?? 1)
+  return {
+    ...MOCK,
+    applicationId: application.orderNumber || application.id,
+    client: clientName || MOCK.client,
+    applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
+    primaryStandard: standards[0] || MOCK.primaryStandard,
+    sitesCount,
+    requestedOnDate: submittedDate.toLocaleDateString(),
+    requestedOnTime: submittedDate.toLocaleTimeString(),
+    documentCount: application.documents?.length ?? MOCK.documentCount,
+    sitesSummary: `${sitesCount} Site${sitesCount === 1 ? '' : 's'}`,
+    sitesDetail: application.legalInfo?.country || MOCK.sitesDetail,
+  }
 }

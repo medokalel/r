@@ -224,8 +224,56 @@ const MOCK_REVIEW: CabApplicationReview = {
 }
 
 export async function getCabApplicationReview(
-  _applicationId = 'APP-2025-0086'
+  applicationId?: string,
+  clientId?: string,
 ): Promise<CabApplicationReview> {
-  await delay()
-  return MOCK_REVIEW
+  const { loadCabApplicationOverlay } = await import(
+    '@/lib/api/cabCertificationApplicationApi'
+  )
+  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
+  if (!overlay) {
+    await delay()
+    return MOCK_REVIEW
+  }
+
+  const { application, standards, submittedDate, clientName, clientId: resolvedClientId } = overlay
+  const documents = (application.documents ?? []).map((document) => ({
+    name: document.documentType ?? 'Document',
+    fileName: document.originalName || document.fileName || 'document',
+    size: document.fileSize ? `${Math.max(1, Math.round(document.fileSize / 1024))} KB` : '—',
+    status: 'valid' as const,
+  }))
+
+  return {
+    ...MOCK_REVIEW,
+    applicationId: application.orderNumber || application.id,
+    client: clientName || MOCK_REVIEW.client,
+    primaryStandard: standards[0] || MOCK_REVIEW.primaryStandard,
+    receivedOnDate: submittedDate.toLocaleDateString(),
+    receivedOnTime: submittedDate.toLocaleTimeString(),
+    documents: documents.length > 0 ? documents : MOCK_REVIEW.documents,
+    applicationDetails: {
+      ...MOCK_REVIEW.applicationDetails,
+      applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
+      applicationDate: submittedDate.toLocaleDateString(),
+      primaryStandard: standards[0] || MOCK_REVIEW.applicationDetails.primaryStandard,
+      additionalStandards: standards.slice(1),
+      numberOfSites: Math.max(1, application.branches?.length ?? 1),
+      auditLanguage: application.consultantInfo?.systemLanguage === 'AR' ? 'Arabic' : 'English',
+      referenceNo: application.orderNumber || application.id,
+    },
+    scopeSummary:
+      application.declarationInfo?.certificateScopeEn ||
+      application.legalInfo?.mainActivity ||
+      MOCK_REVIEW.scopeSummary,
+    history: [
+      {
+        date: submittedDate.toLocaleDateString(),
+        time: submittedDate.toLocaleTimeString(),
+        by: 'CAB Admin',
+        action: application.status,
+        details: `Application ${application.status.toLowerCase()} for ${resolvedClientId || 'client'}.`,
+      },
+    ],
+  }
 }

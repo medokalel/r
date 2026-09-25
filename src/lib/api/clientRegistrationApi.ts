@@ -344,6 +344,17 @@ export function uploadCabClientDocument(
   })
 }
 
+export function deleteCabClientDocument(
+  clientId: string,
+  documentId: string
+): Promise<{ message: string }> {
+  return apiRequestWithAuth<{ message: string }>(
+    `/cab-clients/${clientId}/documents/${documentId}`,
+    requireToken(),
+    { method: 'DELETE' }
+  )
+}
+
 export function submitCabClientProfile(
   clientId: string
 ): Promise<{ message: string; grantingAuthoritySerialNumber?: string }> {

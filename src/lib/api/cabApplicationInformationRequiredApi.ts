@@ -124,8 +124,27 @@ const MOCK: CabApplicationInformationRequired = {
 }
 
 export async function getCabApplicationInformationRequired(
-  _applicationId?: string
+  applicationId?: string,
+  clientId?: string,
 ): Promise<CabApplicationInformationRequired> {
-  await delay()
-  return MOCK
+  const { loadCabApplicationOverlay } = await import(
+    '@/lib/api/cabCertificationApplicationApi'
+  )
+  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
+  if (!overlay) {
+    await delay()
+    return MOCK
+  }
+
+  const { application, standards, submittedDate, clientName } = overlay
+  return {
+    ...MOCK,
+    applicationId: application.orderNumber || application.id,
+    client: clientName || MOCK.client,
+    applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
+    primaryStandard: standards[0] || MOCK.primaryStandard,
+    requestedOnDate: submittedDate.toLocaleDateString(),
+    requestedOnTime: submittedDate.toLocaleTimeString(),
+    documentCount: application.documents?.length ?? MOCK.documentCount,
+  }
 }

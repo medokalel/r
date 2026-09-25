@@ -111,8 +111,56 @@ const MOCK_RECEIPT: CabApplicationReceipt = {
 const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export async function getCabApplicationReceipt(
-  _applicationId = 'APP-2025-0086'
+  applicationId?: string,
+  clientId?: string,
 ): Promise<CabApplicationReceipt> {
-  await delay()
-  return MOCK_RECEIPT
+  const { loadCabApplicationOverlay } = await import(
+    '@/lib/api/cabCertificationApplicationApi'
+  )
+  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
+  if (!overlay) {
+    await delay()
+    return MOCK_RECEIPT
+  }
+
+  const { application, standards, submittedDate, clientName, clientId: resolvedClientId } = overlay
+  const uploaded = application.documents?.length ?? 0
+  const displayName = clientName || MOCK_RECEIPT.clientName
+
+  return {
+    ...MOCK_RECEIPT,
+    applicationId: application.orderNumber || application.id,
+    clientName: displayName,
+    applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
+    receivedOnDate: submittedDate.toLocaleDateString(),
+    receivedOnTime: submittedDate.toLocaleTimeString(),
+    receivedOn: submittedDate.toLocaleString(),
+    primaryStandards: standards.length > 0 ? standards : MOCK_RECEIPT.primaryStandards,
+    numberOfSites: Math.max(1, application.branches?.length ?? 1),
+    auditLanguage: application.consultantInfo?.systemLanguage === 'AR' ? 'Arabic' : 'English',
+    applicationDate: submittedDate.toLocaleDateString(),
+    applicationReceivedDate: submittedDate.toLocaleString(),
+    referenceNo: application.orderNumber || application.id,
+    client: {
+      ...MOCK_RECEIPT.client,
+      name: displayName,
+      clientId: resolvedClientId.slice(0, 8).toUpperCase() || MOCK_RECEIPT.client.clientId,
+      country: application.legalInfo?.country || MOCK_RECEIPT.client.country,
+      countryCode: application.legalInfo?.country || MOCK_RECEIPT.client.countryCode,
+      legalEntityName: displayName,
+      registrationLicenseNo: application.legalInfo?.commercialRegisterNumber || '—',
+      industry: application.legalInfo?.mainActivity || MOCK_RECEIPT.client.industry,
+    },
+    scopeSummary:
+      application.declarationInfo?.certificateScopeEn ||
+      application.legalInfo?.mainActivity ||
+      MOCK_RECEIPT.scopeSummary,
+    documents: {
+      total: Math.max(uploaded, 1),
+      uploaded,
+      pending: 0,
+      rejected: 0,
+    },
+    confirmationEmails: [application.legalInfo?.email].filter(Boolean) as string[],
+  }
 }

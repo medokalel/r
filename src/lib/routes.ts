@@ -45,6 +45,17 @@ export const ROUTES = {
   cabQuotationApproval: "/cab/quotations/approval",
   cabDecisions: "/cab/decisions",
   cabDecisionDetails: "/cab/decisions/:decisionId",
+  cabCompetence: "/cab/competence",
+  cabCompetenceEvaluation: "/cab/competence/persons/:id/evaluation",
+  portal: "/portal",
+  portalHome: "/portal/home",
+  portalCompanyProfile: "/portal/company-profile",
+  portalApplications: "/portal/applications",
+  portalOffers: "/portal/offers",
+  portalInvoices: "/portal/invoices",
+  portalAudits: "/portal/audits",
+  portalFindings: "/portal/findings",
+  portalCertificates: "/portal/certificates",
   cabCertificationCycles: "/cab/certification",
   cabManageCertificationCycle: "/cab/certification/:cycleId",
   cabNonconformities: "/cab/nonconformities",
@@ -53,42 +64,87 @@ export const ROUTES = {
   cabPrepareCertificate: "/cab/certificates/:certificateId/prepare",
 } as const;
 
-export function cabNonconformityResponsePath(ncId: string): string {
-  return `/cab/nonconformities/${ncId}/response`;
+function withClientQuery(path: string, clientId?: string): string {
+  if (!clientId) return path;
+  const separator = path.includes("?") ? "&" : "?";
+  return `${path}${separator}clientId=${encodeURIComponent(clientId)}`;
 }
 
 export function cabApplicationInformationRequiredPath(
   applicationId?: string,
+  clientId?: string,
 ): string {
-  return applicationId
-    ? `/cab/applications/${applicationId}/information-required`
+  const base = applicationId
+    ? `/cab/applications/${encodeURIComponent(applicationId)}/information-required`
     : ROUTES.cabApplicationInformationRequired;
+  return withClientQuery(base, clientId);
 }
 
 export function cabApplicationTechnicalFeasibilityPath(
   applicationId?: string,
+  clientId?: string,
 ): string {
-  return applicationId
-    ? `/cab/applications/${applicationId}/technical-feasibility`
+  const base = applicationId
+    ? `/cab/applications/${encodeURIComponent(applicationId)}/technical-feasibility`
     : ROUTES.cabApplicationTechnicalFeasibility;
+  return withClientQuery(base, clientId);
 }
 
-export function cabApplicationQuotationPath(applicationId?: string): string {
-  return applicationId
-    ? `/cab/applications/${applicationId}/quotation`
+export function cabApplicationQuotationPath(
+  applicationId?: string,
+  clientId?: string,
+): string {
+  const base = applicationId
+    ? `/cab/applications/${encodeURIComponent(applicationId)}/quotation`
     : ROUTES.cabApplicationQuotation;
+  return withClientQuery(base, clientId);
 }
 
-export function cabManageCertificationCyclePath(cycleId: string): string {
-  return `/cab/certification/${cycleId}`;
+export function cabApplicationSubmissionPath(
+  clientId: string,
+  applicationId?: string,
+  options?: { fill?: boolean },
+): string {
+  const params = new URLSearchParams({ clientId });
+  if (applicationId) params.set("id", applicationId);
+  if (options?.fill) params.set("fill", "1");
+  return `${ROUTES.cabApplicationSubmission}?${params.toString()}`;
 }
 
-export function cabPrepareCertificatePath(certificateId: string): string {
-  return `/cab/certificates/${certificateId}/prepare`;
+export function cabApplicationReviewPath(
+  applicationId: string,
+  clientId?: string,
+): string {
+  const base = `/cab/applications/${encodeURIComponent(applicationId)}/review`;
+  return clientId
+    ? `${base}?clientId=${encodeURIComponent(clientId)}`
+    : base;
+}
+
+export function cabApplicationReceiptPath(
+  applicationId: string,
+  clientId?: string,
+): string {
+  const base = `/cab/applications/${encodeURIComponent(applicationId)}/receipt`;
+  return clientId
+    ? `${base}?clientId=${encodeURIComponent(clientId)}`
+    : base;
 }
 
 export function cabDecisionPath(decisionId?: string): string {
   return decisionId ? `/cab/decisions/${decisionId}` : ROUTES.cabDecisions;
+}
+
+export function cabNonconformityResponsePath(ncId: string): string {
+  return `/cab/nonconformities/${encodeURIComponent(ncId)}/response`;
+}
+
+export function cabManageCertificationCyclePath(cycleId: string): string {
+  return `/cab/certification/${encodeURIComponent(cycleId)}`;
+}
+
+export function cabPrepareCertificatePath(certificateId: string): string {
+  return `/cab/certificates/${encodeURIComponent(certificateId)}/prepare`;
 }
 
 /** CAB breadcrumb / Home link destination (workspace hub). */

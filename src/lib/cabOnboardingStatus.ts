@@ -1,4 +1,4 @@
-import { getAuthSession } from '@/lib/authStorage'
+import { getAuthSession, isAuditClientSession } from '@/lib/authStorage'
 
 /** True when the logged-in CAB admin has finished server-side setup. */
 export function isCabSetupComplete(): boolean {
@@ -11,18 +11,17 @@ export function getCabId(): string | null {
 
 export function isCabAdminSession(): boolean {
   const session = getAuthSession()
-  const roleName = session?.user?.role?.name ?? session?.role?.name
+  if (!session) return false
+  if (isAuditClientSession(session)) return false
+
+  const roleName = session.user?.role?.name ?? session.role?.name
   const normalizedRole = roleName?.toUpperCase()
-  const orgType = session?.organization?.type
+  const orgType = session.organization?.type
   return Boolean(
-    session?.cab?.id ||
+    session.cab?.id ||
     normalizedRole === 'CAB_ADMIN' ||
-    normalizedRole === 'ADMIN' ||
-    normalizedRole === 'OWNER' ||
-    normalizedRole === 'MANAGER' ||
     normalizedRole === 'CAB_MANAGER' ||
-    orgType === 'CERTIFICATION_BODY' ||
-    Boolean(session)
+    orgType === 'CERTIFICATION_BODY',
   )
 }
 

@@ -37,12 +37,20 @@ export function getAuthSession(): LoginResponseData | null {
   }
 }
 
-export function isAuditClientSession(session = getAuthSession()): boolean {
-  const organization = session?.organization
+export function isAuditClientOrganization(
+  organization?: { type?: string | null; legalCapacity?: string | null } | null,
+): boolean {
+  if (!organization?.type) return false
+  const type = organization.type.toUpperCase()
+  if (type === 'AUDIT_CLIENT') return true
   return (
-    organization?.type === 'CONSULTATION_BODY' &&
+    type === 'CONSULTATION_BODY' &&
     organization.legalCapacity?.trim().toLowerCase() === 'audit client'
   )
+}
+
+export function isAuditClientSession(session = getAuthSession()): boolean {
+  return isAuditClientOrganization(session?.organization)
 }
 
 /** After login, unfinished onboarding goes to the shared wizard. Every
@@ -52,10 +60,16 @@ export function getPostLoginRedirect(session: LoginResponseData): string {
     return ROUTES.dashboard
   }
 
-  // CAB admin with completed setup goes straight to the workspace — even when
-  // the generic organization record still reports DRAFT/null.
-  if (session.cab?.setupCompleted || session.organization?.type === 'CERTIFICATION_BODY') {
-    if (session.cab && !session.cab.setupCompleted) {
+  const roleName = (session?.user?.role?.name ?? session?.role?.name)?.toUpperCase()
+  const isOwnerOrCabAdmin =
+    roleName === 'OWNER' ||
+    roleName === 'CAB_ADMIN' ||
+    roleName === 'ADMIN' ||
+    session.organization?.type === 'CERTIFICATION_BODY'
+
+  // CAB admin / OWNER with completed setup goes straight to the workspace
+  if (session.cab?.setupCompleted || isOwnerOrCabAdmin) {
+    if (session.cab && session.cab.setupCompleted === false && !isOwnerOrCabAdmin) {
       return ROUTES.onboarding
     }
     return ROUTES.workspace
@@ -117,5 +131,10 @@ export function patchCabSetupCompleted(setupCompleted: boolean): void {
 }
 
 export function isCabUserOnboarded(): boolean {
-  return getAuthSession()?.cab?.setupCompleted === true
+  const session = getAuthSession()
+  const roleName = (session?.user?.role?.name ?? session?.role?.name)?.toUpperCase()
+  if (roleName === 'OWNER' || roleName === 'CAB_ADMIN' || roleName === 'ADMIN') {
+    return true
+  }
+  return session?.cab?.setupCompleted === true
 }

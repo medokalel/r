@@ -1,4 +1,5 @@
 import { register, login, type LoginResponseData, type OrganizationType } from '@/lib/api/authApi'
+import type { EntityType } from '@/lib/entityTypes'
 import { registerCab } from '@/lib/api/cabApi'
 import { ApiError } from '@/lib/api/client'
 import { saveAuthSession } from '@/lib/authStorage'
@@ -18,7 +19,7 @@ function assertCabAdminSession(session: LoginResponseData): void {
   )
 }
 
-function buildRegisterPayload(pending: PendingRegistration, entityType: OrganizationType) {
+function buildRegisterPayload(pending: PendingRegistration, entityType: EntityType) {
   const registrantName = pending.fullName.trim()
 
   return {
@@ -68,7 +69,9 @@ export async function completePendingRegistration(entityType: OrganizationType):
   const pending = loadPendingRegistration()
   if (!pending) return false
 
-  await register(buildRegisterPayload(pending, entityType))
+  const registerType: EntityType =
+    entityType === 'AUDIT_CLIENT' ? 'CONSULTATION_BODY' : entityType
+  await register(buildRegisterPayload(pending, registerType))
   const session = await login(pending.email, pending.password)
   saveAuthSession(session, true)
   clearPendingRegistration()

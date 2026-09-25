@@ -7,6 +7,7 @@ export type OrganizationType =
   | 'ACCREDITATION_BODY'
   | 'CERTIFICATION_BODY'
   | 'CONSULTATION_BODY'
+  | 'AUDIT_CLIENT'
 
 export interface LoginResponseData {
   token: string
