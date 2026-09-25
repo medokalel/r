@@ -2237,7 +2237,7 @@
         "administration": "Administration"
       },
       "auditClients": "Audit Clients",
-      "reportsAnalytics": "Reports & Analytics",
+      "reportsAnalytics": "Analytics and reports",
       "nonconformities": "Nonconformities",
       "certification": "Certification",
       "competence": "Competence",
@@ -2362,7 +2362,29 @@
         "expired": "Expired"
       },
       "dueIn": "Due in {{count}} days",
-      "overdueBy": "Overdue by {{count}} days"
+      "overdueBy": "Overdue by {{count}} days",
+      "tour": {
+        "header": {
+          "title": "Certification Cycles Overview",
+          "description": "Monitor active multi-year certification lifecycles, surveillance timelines, and standard expiration dates across all clients."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Find client cycles by organization name or certificate code, and filter by due period, country, and lifecycle status."
+        },
+        "list": {
+          "title": "Client Cycles Directory",
+          "description": "Select any client record from the list to view their complete certification history, standard details, and live surveillance progress."
+        },
+        "summaryCard": {
+          "title": "Cycle Details & Milestones",
+          "description": "Inspect standard scopes, application references, start/end validity dates, and countdown days to next required surveillance."
+        },
+        "timeline": {
+          "title": "Lifecycle Timeline & Activities",
+          "description": "Track the 3-year audit timeline across Stage 1/2, Surveillance audits (Surv 1, Surv 2), and scheduled future visits."
+        }
+      }
     },
     "manageCycle": {
       "title": "Manage certification cycle",
@@ -2390,6 +2412,28 @@
       "loadErrorDescription": "Something went wrong while loading the cycle. Please try again.",
       "notFoundTitle": "Certification cycle not found",
       "notFoundDescription": "This cycle may have been removed or the link is no longer valid.",
+      "tour": {
+        "header": {
+          "title": "Cycle Management & Actions",
+          "description": "Execute critical lifecycle actions including scope modification requests, adding multi-site facilities, initiating transfers, or issuing suspensions."
+        },
+        "clientCard": {
+          "title": "Active Certificate Snapshot",
+          "description": "View client organization overview, primary contact person, issued standard reference, active validity period, and quick certificate links."
+        },
+        "tabs": {
+          "title": "Lifecycle Modules & History",
+          "description": "Navigate between complete audit history, linked sites, scope expansion/reduction records, transfer logs, and document repository."
+        },
+        "currentStatus": {
+          "title": "Next Event & Surveillance Window",
+          "description": "Monitor the active 3-year certification range, target audit surveillance window, countdown days, and assigned coordinator."
+        },
+        "accordions": {
+          "title": "Lifecycle Events & Requests",
+          "description": "Manage and approve formal scope changes, addition of new site addresses, CAB transfer documentation, and suspension history."
+        }
+      },
       "tabs": {
         "cycle": "Certification cycle",
         "certificateDetails": "Certificate details",
@@ -2486,6 +2530,28 @@
         "submitted": "Submitted",
         "accepted": "Accepted",
         "rejected": "Rejected"
+      },
+      "tour": {
+        "header": {
+          "title": "Nonconformities Register",
+          "description": "Track and manage client corrective actions and nonconformities raised from audit findings."
+        },
+        "export": {
+          "title": "Export Data",
+          "description": "Export your filtered nonconformity list to Excel or PDF documents for reporting and compliance audits."
+        },
+        "filters": {
+          "title": "Filter & Search",
+          "description": "Search by finding ID or client name, and filter by raised period, country, or resolution status."
+        },
+        "table": {
+          "title": "Nonconformities Table",
+          "description": "Click on any nonconformity record in the table to view its detailed corrective actions, attachments, and history."
+        },
+        "status": {
+          "title": "Status & Resolution Tracking",
+          "description": "Monitor whether corrective actions are open, in progress, submitted for verification, closed, or overdue."
+        }
       }
     },
     "nonconformityResponse": {
@@ -2557,6 +2623,28 @@
       "errors": {
         "required": "This field is required.",
         "evidenceRequired": "Upload at least one evidence file."
+      },
+      "tour": {
+        "header": {
+          "title": "Corrective Action Review",
+          "description": "Inspect the nonconformity details, client identifier, status badge, and jump to related applications."
+        },
+        "tabs": {
+          "title": "Response Navigation",
+          "description": "Switch between the corrective action plan, full audit trail activity log, related records, and attachments."
+        },
+        "form": {
+          "title": "Corrective Action Plan & Evidence",
+          "description": "Review original audit findings, root-cause analysis, proposed preventive actions, and verified evidence files."
+        },
+        "moreDetails": {
+          "title": "Implementation & Effectiveness",
+          "description": "Specify assigned responsible persons, target closure dates, and document formal effectiveness review conclusions."
+        },
+        "actions": {
+          "title": "Reviewer Verification & Actions",
+          "description": "Save working response drafts, submit client responses, request clarification revisions, or close verified nonconformities."
+        }
       }
     },
     "auditPlanning": {
@@ -2570,12 +2658,46 @@
       "calendarView": "Calendar view",
       "auditsFound": "audit found",
       "createPlan": "Create plan",
+      "createNewPlan": "Create new audit plan",
       "noAudits": "No audits found",
+      "noAuditsDesc": "Try adjusting your filters or search term.",
+      "loading": "Loading audits...",
+      "client": "Client",
+      "auditStage": "Audit stage",
+      "leadAuditor": "Lead auditor",
+      "standard": "Standard",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "site": "site",
+      "days": "days",
+      "timezone": "Timezone: Asia/Riyadh (AST)",
+      "actions": {
+        "buildEdit": "Build / Edit Plan",
+        "viewAgenda": "View Agenda",
+        "exportPlan": "Export Plan"
+      },
+      "export": {
+        "csv": "Export as CSV",
+        "excel": "Export as Excel",
+        "json": "Export as JSON"
+      },
+      "daysOfWeek": {
+        "sun": "Sun",
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat"
+      },
       "filters": {
         "search": "Search audit or client",
         "period": "Planned period",
         "country": "Country",
-        "status": "Status"
+        "status": "Status",
+        "allPeriods": "All periods",
+        "allCountries": "All countries",
+        "allStatuses": "All statuses"
       },
       "columns": {
         "audit": "Audit",
@@ -2585,13 +2707,380 @@
         "dates": "Dates",
         "leadAuditor": "Lead auditor",
         "status": "Status"
+      },
+      "tour": {
+        "header": {
+          "title": "Audit Schedule Overview",
+          "description": "Plan and manage audit operations, review schedules, and track stages across clients and certification standards."
+        },
+        "viewToggle": {
+          "title": "List & Calendar Views",
+          "description": "Toggle between a detailed tabular list view and an interactive monthly calendar view."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Search audits by reference or client name, and filter by period, country, and operational status."
+        },
+        "createPlan": {
+          "title": "Create Audit Plan",
+          "description": "Initialize a new audit plan for any client, selecting standard, stage, dates, and lead auditor."
+        },
+        "table": {
+          "title": "Audit Plans Table & Actions",
+          "description": "Access audit plans, configure full schedules & agendas, view site allocations, and export records."
+        }
       }
     },
     "buildAuditPlan": {
       "title": "Build audit plan",
       "subtitle": "Plan the audit, allocate resources and prepare the agenda.",
       "checkReadiness": "Check readiness",
-      "sendToClient": "Send to client"
+      "sendToClient": "Send to client",
+      "tour": {
+        "header": {
+          "title": "Audit Plan Overview",
+          "description": "Review the plan number, version status, save draft changes, check readiness, or send the finalized plan to the client."
+        },
+        "summaryBar": {
+          "title": "Key Audit Indicators",
+          "description": "Quickly inspect the client entity, certification standard, reviewed audit duration in days, audit site, and primary contact."
+        },
+        "auditDetails": {
+          "title": "Audit Schedule & Team",
+          "description": "Configure the audit stage, proposed start and end dates, timezone, lead auditor, and allocate qualified team members."
+        },
+        "objectives": {
+          "title": "Objectives & Scope Summary",
+          "description": "Define explicit audit objectives and confirm the facility scope summary covering processes, products, and standards."
+        },
+        "tabs": {
+          "title": "Planning Sections Navigation",
+          "description": "Switch between detailed agenda timetable, site allocation, remote audit activities, travel notes, and team declarations."
+        },
+        "agenda": {
+          "title": "Audit Agenda Timetable",
+          "description": "Add, edit, or remove agenda activities with exact dates, time blocks, assigned auditors, and total calculated duration."
+        },
+        "sideCards": {
+          "title": "Site, Remote & Declarations",
+          "description": "Manage site addresses, configure remote platforms, record logistics notes, and verify team conflict-of-interest declarations."
+        }
+      }
+    },
+    "auditReporting": {
+      "title": "Audit Reporting",
+      "subtitle": "AUD-0024 · Al Noor Food Industries · Stage 1",
+      "scope": "CAB-client scope",
+      "previewStates": "Preview states:",
+      "exported": "Export prepared from all authorized matching records.",
+      "evidenceRequired": "Description is required.",
+      "evidenceDraft": "Evidence draft added — save the workspace to persist it.",
+      "blocked": "Finalization blocked",
+      "reportFrozen": "Report finalized — version frozen for technical review handoff.",
+      "frozen": "Report v{{version}} frozen — read-only. Technical review is a separate handoff.",
+      "unfrozen": "New draft version opened from frozen report.",
+      "newVersion": "Open new draft version",
+      "deniedTitle": "Permission required",
+      "deniedBody": "Your role can view this workspace but cannot edit it. Contact the lead auditor, signatory authority, or decision authority.",
+      "conflictTitle": "Offline conflict needs reconciliation",
+      "conflictBody": "This workspace changed on the server while you were offline. Choose which version to keep — nothing merges silently.",
+      "keepMine": "Keep my offline draft",
+      "keepServer": "Keep server version",
+      "reconcile": "Reconcile",
+      "conflictResolved": "Conflict reconciled explicitly. Values preserved.",
+      "agendaTitle": "Audit agenda — Stage 1",
+      "agendaSub": "Illustrative schedule for AUD-0024 · Riyadh site.",
+      "simulateOffline": "Simulate offline conflict",
+      "evidenceTitle": "Evidence tasks",
+      "evidenceSub": "Each item is linked to the audit and a requirement.",
+      "exportFiltered": "Export filtered",
+      "addEvidence": "Add evidence",
+      "searchEvidencePlaceholder": "Search ID / description / clause...",
+      "emptyEvidence": "No evidence matches these filters",
+      "clearFilters": "Clear filters",
+      "findingsTitle": "Findings register",
+      "unclassified": "Unclassified — draft only",
+      "addFinding": "Add finding",
+      "finalTitle": "Audit report finalization",
+      "finalNote": "Finalization freezes the version. Technical review is a separate handoff; recommendation is not a decision.",
+      "recommendation": "Auditor recommendation (record only)",
+      "decisionSep": "Recommendations here are not a certification decision. Review is a separate handoff after freeze.",
+      "finalize": "Finalize & freeze version",
+      "toReview": "Go to technical review handoff",
+      "gatesTitle": "Submission gates",
+      "gatesSub": "Draft saves any time. Finalization requires every gate.",
+      "addEvidenceTitle": "Add evidence task (draft)",
+      "desc": "Description",
+      "reqRef": "Requirement ref",
+      "dueDate": "Due date",
+      "nestedDraft": "Stays draft until the workspace is saved. Failed saves preserve values.",
+      "tabs": {
+        "agenda": "Agenda",
+        "evidence": "Evidence",
+        "findings": "Findings",
+        "report": "Report"
+      },
+      "table": {
+        "time": "Time",
+        "session": "Session / Activity",
+        "clauses": "Clauses",
+        "auditor": "Auditor",
+        "status": "Status",
+        "idDesc": "ID & Description",
+        "auditRef": "Audit Reference",
+        "reqRef": "Requirement",
+        "dueDate": "Due Date",
+        "findingIdType": "Finding & Type",
+        "requirement": "Requirement",
+        "statement": "Statement",
+        "classification": "Classification"
+      },
+      "tour": {
+        "header": {
+          "title": "Audit Reporting Workspace",
+          "description": "Manage audit reporting stages, verify client scope, track findings, and finalize the formal audit report."
+        },
+        "scope": {
+          "title": "CAB-Client Audit Scope",
+          "description": "Review the certified entity, standard clauses under assessment, facility location, and active audit stage."
+        },
+        "tabs": {
+          "title": "Reporting Sections & Stages",
+          "description": "Navigate seamlessly across the Agenda timetable, Evidence tasks, Findings register, and Final Report assembly."
+        },
+        "content": {
+          "title": "Execution & Findings Register",
+          "description": "Log objective evidence, record non-conformity findings, classify clauses, and export audit data."
+        },
+        "gates": {
+          "title": "Report Finalization & Gates",
+          "description": "Validate all mandatory submission gates, formulate auditor recommendations, and freeze the version for technical review."
+        }
+      }
+    },
+    "competence": {
+      "title": "Competence Register",
+      "personnelRegister": "Personnel register",
+      "subtitle": "Manage personnel, their roles, scheme authorizations and expiry dates.",
+      "addPerson": "Add person",
+      "addNewPerson": "Add New Person",
+      "fullName": "Full Name",
+      "role": "Role",
+      "scheme": "Scheme",
+      "authorizedScope": "Authorized Scope / Sector",
+      "country": "Country",
+      "expiryPeriod": "Expiry period",
+      "authorizationStatus": "Authorization status",
+      "authStatus": "Status",
+      "allCountries": "All countries",
+      "allStatuses": "All statuses",
+      "allPeriods": "All periods",
+      "allExpiry": "All expiry",
+      "expiry": "Expiry",
+      "statusAuthorized": "Authorized",
+      "statusUnderReview": "Under review",
+      "statusExpired": "Expired",
+      "statusSuspended": "Suspended",
+      "expiring30": "Expiring in 30 days",
+      "expiring60": "Expiring in 60 days",
+      "expiring90": "Expiring in 90 days",
+      "searchPlaceholder": "Search by name or code...",
+      "personnelCount": "{{count}} personnel",
+      "noPersonnel": "No personnel records match the current filters.",
+      "savePerson": "Save Person",
+      "evaluateCompetence": "Evaluate competence",
+      "viewProfile": "View profile",
+      "editAuthorizations": "Edit authorizations",
+      "btnEvaluate": "Evaluate",
+      "btnViewProfile": "View profile",
+      "btnEditAuthorization": "Edit authorization",
+      "btnViewAuditHistory": "View audit history",
+      "tblPerson": "Person",
+      "tblRole": "Role",
+      "tblCountry": "Country",
+      "tblSchemes": "Schemes",
+      "tblAuthorizedScope": "Authorized scope",
+      "tblStatus": "Status",
+      "tblExpiry": "Expiry",
+      "tblActions": "Actions",
+      "columns": {
+        "person": "Person",
+        "role": "Role",
+        "schemes": "Schemes",
+        "scope": "Authorized scope",
+        "expiry": "Expiry",
+        "status": "Status"
+      },
+      "tour": {
+        "header": {
+          "title": "Competence Register Overview",
+          "description": "Manage auditor and technical personnel qualifications, scheme authorizations, and competence evaluations."
+        },
+        "actions": {
+          "title": "Add & Export Personnel",
+          "description": "Enroll new technical resources and auditors, assign initial schemes, or export records to CSV."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Filter staff by name or code, country, authorization status (Authorized, Under review, Expired), and expiry deadlines."
+        },
+        "table": {
+          "title": "Personnel Register Table",
+          "description": "Detailed overview of personnel codes, roles, authorized standards & sectors, expiry dates, and validation badges."
+        },
+        "evalAction": {
+          "title": "Competence Evaluations",
+          "description": "Click on any person to perform formal competence assessments, review CPD certificates, and authorize standards."
+        }
+      },
+      "evaluation": {
+        "pageTitle": "Competence evaluation",
+        "pageSubtitle": "Assess and record competence for personnel",
+        "lastSaved": "Last saved: {{time}}",
+        "btnSave": "Save evaluation",
+        "btnSubmitAuth": "Submit for authorization",
+        "toastDraftSaved": "Evaluation draft saved successfully.",
+        "toastSubmitted": "Evaluation submitted for authorization successfully.",
+        "statusInProg": "In progress",
+        "statusAuthorized": "Authorized",
+        "statusUnderReview": "Under review",
+        "tabs": {
+          "evaluation": "Evaluation",
+          "training": "Training",
+          "auditLog": "Audit log",
+          "witnessing": "Witnessing",
+          "evidence": "Assessment evidence",
+          "restrictions": "Restrictions",
+          "renewal": "Renewal"
+        },
+        "profile": {
+          "status": "Status",
+          "role": "Role",
+          "email": "Email",
+          "phone": "Phone"
+        },
+        "sections": {
+          "generalInfo": "General information",
+          "evalDetails": "Evaluation details",
+          "qualifications": "Qualifications and experience",
+          "training": "Training",
+          "auditLog": "Audit log",
+          "witnessing": "Witnessing",
+          "trainingRecords": "Training Records",
+          "trainingSubtitle": "Accredited training certificates and competence courses for {{name}}.",
+          "auditHistory": "Audit History & Experience",
+          "auditHistorySubtitle": "Logged audit missions, assessments, and client assignments.",
+          "witnessedAudits": "Witnessed Audits",
+          "witnessedSubtitle": "Peer witnessing evaluations and lead auditor supervisory records.",
+          "evidenceTitle": "Assessment Evidence & Files",
+          "evidenceSubtitle": "Documents, certificates, degrees and exam results supporting competence evaluation.",
+          "restrictionsTitle": "Sector & Scheme Restrictions",
+          "restrictionsSubtitle": "Boundaries, limits, and conditional authorizations assigned to this person.",
+          "restrictionsAlertTitle": "Authorized for ISO 9001 Food Sector only.",
+          "restrictionsAlertDesc": "Excluded from high-risk medical device manufacturing until Stage 3 audit witnessing is completed.",
+          "renewalTitle": "Competence Re-evaluation & Renewal",
+          "renewalSubtitle": "Tracks expiration cycles, periodic surveillance reviews, and renewal milestones.",
+          "currentExpiry": "Current Expiration: {{date}}",
+          "nextSurveillance": "Next annual surveillance assessment scheduled for March 2026."
+        },
+        "fields": {
+          "personId": "Person ID",
+          "fullName": "Full name",
+          "role": "Role",
+          "email": "Email",
+          "phone": "Phone",
+          "scheme": "Scheme",
+          "proposedSector": "Proposed sector",
+          "evalDate": "Evaluation date",
+          "evaluator": "Evaluator",
+          "overallResult": "Overall result",
+          "comments": "Comments",
+          "highestQualification": "Highest qualification",
+          "fieldOfStudy": "Field of study",
+          "relevantExp": "Relevant experience (years)",
+          "sectorExp": "Sector experience (years)",
+          "additionalNotes": "Additional notes"
+        },
+        "results": {
+          "competent": "Competent",
+          "notYetCompetent": "Not Yet Competent",
+          "requiresTraining": "Requires Training"
+        },
+        "roles": {
+          "auditor": "Auditor",
+          "leadAuditor": "Lead Auditor",
+          "technicalExpert": "Technical Expert",
+          "decisionMaker": "Decision Maker",
+          "reviewer": "Reviewer"
+        },
+        "qualifications": {
+          "bachelor": "Bachelor's Degree",
+          "master": "Master's Degree",
+          "doctorate": "Doctorate / PhD",
+          "diploma": "Diploma"
+        },
+        "table": {
+          "date": "Date",
+          "course": "Course",
+          "provider": "Provider",
+          "result": "Result",
+          "client": "Client",
+          "activity": "Activity",
+          "role": "Role",
+          "auditType": "Audit type",
+          "witnessedBy": "Witnessed by",
+          "outcome": "Outcome",
+          "courseTitle": "Course Title",
+          "trainingProvider": "Training Provider",
+          "statusResult": "Status / Result",
+          "clientOrg": "Client Organization",
+          "assignedRole": "Assigned Role",
+          "viewAllTraining": "View all training →",
+          "viewAllAuditLog": "View all audit log →"
+        },
+        "modals": {
+          "addTraining": "+ Add training",
+          "addTrainingTitle": "Add Training Record",
+          "saveTraining": "Save Training",
+          "addAuditLog": "+ Add audit log",
+          "addAuditLogTitle": "Add Audit Log Record",
+          "saveAuditLog": "Save Audit Log",
+          "addWitnessing": "+ Add witnessing",
+          "addWitnessingTitle": "Add Witnessing Record",
+          "saveWitnessing": "Save Witnessing",
+          "clientOrgReq": "Client Organization *",
+          "auditActivity": "Audit Activity",
+          "auditDate": "Audit Date",
+          "courseNameReq": "Course Name *",
+          "completionDate": "Completion Date"
+        }
+      },
+      "evalTour": {
+        "header": {
+          "title": "Evaluation Overview",
+          "description": "Review and manage the overall competence assessment status for this personnel record."
+        },
+        "actions": {
+          "title": "Save & Submit Actions",
+          "description": "Save draft modifications or submit completed evaluations to the technical manager for authorization."
+        },
+        "profile": {
+          "title": "Personnel Profile Snapshot",
+          "description": "View key staff credentials including personal code, primary role, email, phone, and active status."
+        },
+        "tabs": {
+          "title": "Assessment Sections & Records",
+          "description": "Navigate between evaluation details, training courses, audit experience logs, witnessing reports, evidence files, and renewals."
+        },
+        "form": {
+          "title": "Competence Criteria & Details",
+          "description": "Record evaluation schemes, sectors, evaluator feedback, highest qualifications, and years of experience."
+        },
+        "records": {
+          "title": "Integrated Audit & Training Logs",
+          "description": "Quickly add or review training completions, witnessed audits, and past client audit histories."
+        }
+      }
     },
     "companyProfile": {
       "title": "Company Profile",
@@ -3057,12 +3546,18 @@
       }
     },
     "workspace": {
+      "appHub": "Application hub",
       "heroTitle": "Your workspace, connected.",
-      "heroSubtitle": "Everything you need to manage your conformity assessment operations.",
+      "heroSubtitle": "Everything you need to manage your conformity assessment work.",
       "searchPlaceholder": "Search applications...",
+      "searchAria": "Search applications",
+      "comingSoon": "Coming soon",
+      "clearSearch": "Clear search",
+      "openApp": "Open {{name}}",
       "customize": "Customize",
-      "allApplications": "ALL APPLICATIONS",
-      "noResults": "No applications found matching your search",
+      "allApplications": "All applications",
+      "noResults": "No applications found",
+      "noResultsHint": "Try searching with a different name.",
       "apps": {
         "applications": "Applications",
         "auditClients": "Audit Clients",
@@ -3076,11 +3571,58 @@
         "certificates": "Certificates",
         "nonconformities": "Nonconformities",
         "certification": "Certification",
-        "reportsAnalytics": "Reports & Analytics",
+        "reportsAnalytics": "Analytics and reports",
         "clientPortal": "Client Portal",
         "competence": "Competence",
         "companyProfile": "Company Profile",
-        "settings": "Settings"
+        "settings": "Settings",
+        "applicationReceipt": "Application Receipt",
+        "informationRequired": "Information Required",
+        "technicalFeasibility": "Technical Feasibility",
+        "quotation": "Quotation",
+        "quotationApproval": "Quotation Approval"
+      },
+      "appDesc": {
+        "applications": "View, create, and manage certification applications.",
+        "auditClients": "View and manage registered audit clients.",
+        "applicationReview": "Review submitted certification applications.",
+        "contacts": "Manage organization contacts and authorized representatives.",
+        "offers": "Create and track commercial offers.",
+        "invoices": "View and manage CAB invoices.",
+        "auditPlanning": "Plan audit schedules, teams, and activities.",
+        "auditReporting": "Prepare and review audit reports.",
+        "decisions": "Review certification decisions and approvals.",
+        "certificates": "Issue and manage certification records.",
+        "nonconformities": "Record and follow up on nonconformities.",
+        "certification": "Manage the full certification lifecycle, surveillance cycles, scope and site changes.",
+        "reportsAnalytics": "Open metrics, reports, tasks, and recent activity.",
+        "clientPortal": "Access client-facing services and communications.",
+        "competence": "Manage auditor qualifications, scheme authorizations, and competence evaluations.",
+        "companyProfile": "Manage your CAB profile, branding, and organization settings.",
+        "settings": "Configure your CAB workspace preferences.",
+        "applicationReceipt": "Receive and register submitted certification applications.",
+        "informationRequired": "Request and track additional information from applicants.",
+        "technicalFeasibility": "Assess scope, resources, competence, and delivery feasibility.",
+        "quotation": "Prepare the commercial quotation for an application.",
+        "quotationApproval": "Review and approve quotations before they are issued."
+      },
+      "orgApps": {
+        "newRequest": "New Certification Request",
+        "requests": "Certification Requests",
+        "companyProfile": "Company Profile",
+        "users": "Users",
+        "wallet": "Digital Wallet",
+        "periodicVisits": "Periodic Visits",
+        "invoices": "Invoices"
+      },
+      "orgAppsDesc": {
+        "newRequest": "Start and submit a new certification request.",
+        "requests": "Review and track all certification requests.",
+        "companyProfile": "Manage organization details and profile information.",
+        "users": "Manage organization users and access.",
+        "wallet": "View wallet activity and payment information.",
+        "periodicVisits": "Review scheduled and completed periodic visits.",
+        "invoices": "View and manage organization invoices."
       }
     },
     "header": {
@@ -3158,7 +3700,7 @@
       }
     },
     "dashboard": {
-      "title": "CAB Dashboard",
+      "title": "Analytics and reports",
       "subtitle": "Overview of certification activities and workload",
       "stats": {
         "newApplications": "New Applications",
@@ -3311,7 +3853,7 @@
     },
     "clientRegistration": {
       "breadcrumbWorkspace": "Workspace",
-      "breadcrumbClientRegister": "Client Register",
+      "breadcrumbClientRegister": "Audit Client Register",
       "title": "Client Registration",
       "editTitle": "Edit Client",
       "subtitle": "Register client information accurately. All fields marked with * are required.",
@@ -3480,6 +4022,99 @@
         "actions": "Actions"
       }
     },
+    "contacts": {
+      "title": "Contacts",
+      "subtitle": "Manage client contacts and authorized representatives",
+      "addContact": "Add contact",
+      "addContactSubtitle": "Create a new contact for an existing client.",
+      "backToContacts": "Back to contacts",
+      "resultsCount": "{{count}} contacts found",
+      "noContactsFound": "No contacts found matching your search.",
+      "loadError": "Contacts could not be loaded.",
+      "filters": {
+        "search": "Search contact, client or email",
+        "searchPlaceholder": "e.g. Sara Ali, Al Noor, Quality Manager...",
+        "client": "Client",
+        "allClients": "All Clients",
+        "status": "Status",
+        "allStatuses": "All Statuses"
+      },
+      "columns": {
+        "contact": "Contact",
+        "client": "Client",
+        "role": "Roles / Designation",
+        "phone": "Phone",
+        "sites": "Linked Site(s)",
+        "status": "Status"
+      },
+      "roles": {
+        "primary": "Primary contact",
+        "signatory": "Signatory"
+      },
+      "status": {
+        "active": "Active",
+        "pending": "Pending",
+        "inactive": "Inactive"
+      },
+      "fields": {
+        "client": "Client",
+        "firstName": "First name",
+        "lastName": "Last name",
+        "email": "Email address",
+        "jobTitle": "Job title",
+        "phoneNumber": "Phone number",
+        "linkedSites": "Linked site(s)"
+      },
+      "sections": {
+        "clientAssociation": "Client association",
+        "contactDetails": "Contact details",
+        "additionalDetails": "Additional details"
+      },
+      "tour": {
+        "header": {
+          "title": "Contacts Directory",
+          "description": "Manage and access all client contacts, authorized signatories, and site personnel in one central place."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Search by contact name, client name, or email, and filter by associated client or contact status."
+        },
+        "addContact": {
+          "title": "Add New Contact",
+          "description": "Quickly register a new contact person and link them to an existing client and facilities."
+        },
+        "table": {
+          "title": "Contacts Table",
+          "description": "Review contact names, designations, roles, direct phone numbers, linked sites, and active statuses."
+        },
+        "status": {
+          "title": "Contact Status & Details",
+          "description": "Track active, pending, or inactive contacts, and click View to inspect or edit their complete details."
+        }
+      },
+      "addTour": {
+        "header": {
+          "title": "Add New Contact",
+          "description": "Create a new contact person record linked to an active client organization."
+        },
+        "clientAssociation": {
+          "title": "Client Association",
+          "description": "Select the client company to associate this contact with and verify client details."
+        },
+        "contactDetails": {
+          "title": "Contact Details",
+          "description": "Provide the personal name, corporate email address, designation, and primary contact number."
+        },
+        "additional": {
+          "title": "Sites, Roles & Portal Access",
+          "description": "Assign linked operating sites, grant primary or signatory roles, and optionally send a portal invitation."
+        },
+        "actions": {
+          "title": "Save & Submit",
+          "description": "Save the new contact to the directory or cancel and return to the contacts register."
+        }
+      }
+    },
     "offersPage": {
       "title": "Offer Register",
       "subtitle": "Create, view and manage offers issued to clients.",
@@ -3524,13 +4159,233 @@
         "primaryContact": "Primary contact",
         "validUntil": "Valid until",
         "amount": "Amount"
+      },
+      "actions": {
+        "revise": "Revise (new version)",
+        "downloadPdf": "Download PDF",
+        "voidOffer": "Void offer"
+      },
+      "tour": {
+        "header": {
+          "title": "Offer Register Overview",
+          "description": "Track, manage, and review all quotation offers issued to clients across different certification schemes."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Quickly find offers by number or client name, and filter by country and offer status."
+        },
+        "newOffer": {
+          "title": "Create New Offer",
+          "description": "Draft a new commercial offer with fee breakdown, validity period, and custom discounts."
+        },
+        "table": {
+          "title": "Offers List Table",
+          "description": "Review offer numbers, clients, total fees, currencies, validity deadlines, and current statuses."
+        },
+        "statusActions": {
+          "title": "Status Badges & Actions",
+          "description": "Monitor offer progress (Issued, Approved, Draft, Void) and use the action menu to view, revise, or download PDFs."
+        }
+      },
+      "createTour": {
+        "header": {
+          "title": "Create Commercial Offer",
+          "description": "Prepare a commercial quotation for the client based on an accepted certification application."
+        },
+        "clientApp": {
+          "title": "Client & Application",
+          "description": "Verify client details, primary contact, audit standard, and select the accepted application."
+        },
+        "offerDetails": {
+          "title": "Offer Parameters",
+          "description": "Set currency, offer validity deadline, payment terms, and optional internal notes."
+        },
+        "fees": {
+          "title": "Fee Breakdown & Totals",
+          "description": "Add and manage audit fee items, administration fees, and review calculated pre-tax and net totals."
+        },
+        "moreDetails": {
+          "title": "Approval Route & Terms",
+          "description": "Configure travel costs, discounts, upload terms & conditions, and select the internal approval workflow."
+        },
+        "actions": {
+          "title": "Save Draft or Submit",
+          "description": "Save the offer as a draft or submit it directly into the approval route for review."
+        }
+      }
+    },
+    "decisions": {
+      "title": "Decision queue",
+      "subtitle": "Manage and track applications awaiting certification decisions.",
+      "results": "results",
+      "searchPlaceholder": "Search ID, client name...",
+      "receivedPeriod": "Received period",
+      "country": "Country",
+      "status": "Status",
+      "client": "Client",
+      "scheme": "Scheme",
+      "received": "Received",
+      "due": "Due",
+      "decisionMaker": "Decision maker",
+      "selectedTitle": "Selected decision",
+      "openDecision": "Open decision",
+      "selectPrompt": "Select a decision from the queue to review its summary.",
+      "empty": "No decisions match the current filters.",
+      "table": {
+        "file": "File",
+        "client": "Client",
+        "scheme": "Scheme",
+        "status": "Review status",
+        "decisionMaker": "Decision maker",
+        "due": "Due"
+      },
+      "statuses": {
+        "awaiting_technical_review": "Awaiting technical review",
+        "ready_for_decision": "Ready for decision",
+        "decided_granted": "Granted",
+        "decided_refused": "Refused"
+      },
+      "tour": {
+        "header": {
+          "title": "Certification Decision Queue",
+          "description": "Review audit reports, technical recommendations, and issue formal certification grant or refusal decisions."
+        },
+        "filters": {
+          "title": "Filters & Criteria",
+          "description": "Filter files by decision ID, client name, audit scheme, country, and review status."
+        },
+        "table": {
+          "title": "Decisions List Table",
+          "description": "Click on any application file in the table to inspect its comprehensive summary and decision audit trail."
+        },
+        "status": {
+          "title": "Review & Decision Status",
+          "description": "Monitor pending stages: Awaiting Technical Review, Ready for Decision, Granted, or Refused."
+        },
+        "summary": {
+          "title": "Selected Decision Summary",
+          "description": "Inspect client information, due dates, assigned decision maker, and click Open Decision to finalize the grant."
+        }
+      }
+    },
+    "decisionDetails": {
+      "header": "Decisions",
+      "queue": "Queue",
+      "openCorrection": "Open controlled correction",
+      "opening": "Opening…",
+      "recordDecision": "Record decision",
+      "recording": "Recording…",
+      "saveDraft": "Save draft",
+      "saving": "Saving…",
+      "readinessTitle": "Readiness to record",
+      "allGatesPassed": "All gates passed",
+      "incomplete": "Incomplete",
+      "blockingGates": "Blocking gates",
+      "gatesInfo": "A certification decision is separate from application acceptance. Certificates are enabled only after an authorized grant decision is recorded — no automated grant is made based on payment.",
+      "recordedDecision": "Recorded decision (immutable)",
+      "decisionRecord": "Decision record",
+      "recordedTag": "recorded",
+      "draftTag": "draft",
+      "immutableInfo": "Recorded outcomes are immutable. Changes are only possible through a controlled correction version that keeps the full decision history.",
+      "draftInfo": "Saving a draft keeps incomplete data. Recording requires all gates above to pass.",
+      "outcome": "Outcome",
+      "selectOutcome": "Select outcome…",
+      "grantNote": "Certificates become available only after this grant is recorded.",
+      "decisionDate": "Decision date",
+      "confirmedScope": "Confirmed scope",
+      "rationale": "Rationale",
+      "rationalePlaceholder": "Explain your decision. Written notes take precedence over any generated microcopy shown to the client.",
+      "decisionMaker": "Decision maker",
+      "selectDecisionMaker": "Select decision maker…",
+      "authorizedMaker": "Authorized decision maker",
+      "notAuthorizedMaker": "Not in decision authority",
+      "independentMaker": "Independent from audit",
+      "notIndependentMaker": "Part of audit team",
+      "makerInfo": "Authorization and audit independence are verified separately from auditor roles and are required before recording a grant.",
+      "applicationSummary": "Application summary",
+      "client": "Client",
+      "application": "Application",
+      "scheme": "Scheme",
+      "country": "Country",
+      "stage": "Stage",
+      "received": "Received",
+      "due": "Due",
+      "technicalRecommendation": "Technical recommendation",
+      "recommendedBy": "Recommended by",
+      "tabs": {
+        "evidence": "Evidence",
+        "findings": "Findings",
+        "activity": "Activity"
+      },
+      "emptyEvidence": "No evidence documents recorded.",
+      "emptyFindings": "No audit findings recorded.",
+      "emptyActivity": "No activity recorded yet.",
+      "gates": {
+        "technicalReview": "Technical review completed",
+        "findingsClosed": "Findings closed or accepted",
+        "makerAuthorized": "Decision maker authorized",
+        "makerIndependent": "Decision maker independent from audit",
+        "scopeOk": "Confirmed scope provided",
+        "rationaleOk": "Rationale provided",
+        "dateOk": "Decision date provided"
+      },
+      "discard": {
+        "title": "Discard unsaved changes?",
+        "message": "You have unsaved changes to this decision draft. Leaving now will discard them.",
+        "keep": "Keep editing",
+        "discardAction": "Discard & leave"
+      },
+      "notFound": {
+        "title": "Decision not available",
+        "message": "This record does not exist or your account cannot access it. Decision records are scoped to a single CAB-client relationship and are never shared across tenants.",
+        "back": "Back to decision queue"
+      },
+      "tour": {
+        "header": {
+          "title": "Decision Record & Scope",
+          "description": "View the decision record ID, review status badge, client profile, and quick actions."
+        },
+        "gates": {
+          "title": "Readiness & Compliance Gates",
+          "description": "Verify all prerequisites including technical review completion, findings closure, and decision-maker independence."
+        },
+        "record": {
+          "title": "Decision Formulation & Recording",
+          "description": "Select the certification outcome (Grant, Refuse, Suspend), define the confirmed scope, provide rationale, and record the immutable decision."
+        },
+        "tabs": {
+          "title": "Audit Evidence & Findings Tabs",
+          "description": "Inspect linked technical documentation, open/closed non-conformity findings, and chronological activity trail."
+        },
+        "sidebar": {
+          "title": "Decision Maker & Context Summary",
+          "description": "Select an authorized independent decision maker and review application lifecycle details and technical recommendations."
+        }
       }
     },
     "clientRegister": {
       "breadcrumbParent": "Workspace",
-      "title": "Client Register",
+      "title": "Audit Client Register",
       "subtitle": "View and manage your audit clients.",
       "newClient": "New client",
+      "import": {
+        "action": "Import",
+        "title": "Import audit clients",
+        "subtitle": "Upload the Excel template to preview rows, then confirm to register them.",
+        "downloadTemplate": "Download template",
+        "chooseFile": "Choose Excel file",
+        "confirm": "Confirm import",
+        "summary": "{{total}} rows · {{valid}} valid · {{invalid}} with issues",
+        "row": "Row",
+        "email": "Email",
+        "branches": "Branches",
+        "status": "Status",
+        "issues": "Issues",
+        "valid": "Valid",
+        "invalid": "Invalid",
+        "emptyPreview": "No rows were found in this file.",
+        "confirmed": "Imported {{created}} client draft(s) ({{failed}} failed)."
+      },
       "export": "Export",
       "exportPdf": "Export as PDF",
       "exportExcel": "Export as Excel",
@@ -3552,7 +4407,7 @@
         "assignedPerson": "Assigned person",
         "status": "Status",
         "dateOfCreation": "Date of creation",
-        "code": "Code",
+        "code": "Client code",
         "client": "Client",
         "country": "Country",
         "primaryContact": "Primary contact",
@@ -3563,6 +4418,28 @@
         "view": "View client",
         "edit": "Edit client",
         "unavailable": "Available once this page is connected to live data"
+      },
+      "tour": {
+        "header": {
+          "title": "Audit Clients Register",
+          "description": "Overview and central directory of all registered audit clients and organizations."
+        },
+        "newClient": {
+          "title": "Register New Client",
+          "description": "Quickly onboard and register a new client company into your CAB certification system."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Search by client code, company name, contact person, or email, and filter by country and added period."
+        },
+        "table": {
+          "title": "Clients Directory Table",
+          "description": "View complete client records with IDs, legal names, country flags, primary contacts, and last update dates."
+        },
+        "actions": {
+          "title": "Client Actions",
+          "description": "Open client profile details, view certification history, or edit company information directly."
+        }
       }
     },
     "clientDetails": {
@@ -3576,6 +4453,10 @@
       "breadcrumbApplicationRegister": "Application register",
       "title": "Application Draft",
       "subtitle": "Create and save the application draft. You can edit and submit later.",
+      "selectApplication": "Select a draft to continue",
+      "selectApplicationHint": "Search and select a draft application to continue.",
+      "continueDraft": "Continue draft",
+      "startNew": "Start new application",
       "saveDraftAndContinue": "Save & Continue",
       "tour": {
         "header": {
@@ -4248,11 +5129,43 @@
         "actions": {
           "openReview": "Open review",
           "requestClarification": "Request clarification"
+        },
+        "statuses": {
+          "ready_for_review": "Ready for review",
+          "in_progress": "In Progress",
+          "clarification_requested": "Clarification requested",
+          "approved": "Approved",
+          "rejected": "Rejected"
+        },
+        "tour": {
+          "header": {
+            "title": "Review Queue Overview",
+            "description": "Manage incoming conformity assessment applications awaiting preliminary review and processing."
+          },
+          "filters": {
+            "title": "Search & Filtering",
+            "description": "Filter applications by application number, client name, received date range, country, and review status."
+          },
+          "table": {
+            "title": "Applications Queue Table",
+            "description": "View all application records with client info, standards, assigned reviewers, and due deadlines."
+          },
+          "status": {
+            "title": "Review Status Badges",
+            "description": "Track the stage of each application: Ready for review, In Progress, Clarification requested, or Approved."
+          },
+          "actions": {
+            "title": "Action Buttons",
+            "description": "Directly open the application review workspace or request further information and clarification from the client."
+          }
         }
       },
       "receipt": {
         "title": "4. Application Receipt",
         "subtitle": "The application has been received successfully and is under preliminary processing.",
+        "selectApplication": "Select an application receipt",
+        "selectApplicationHint": "Search and select a submitted application to view its receipt.",
+        "openSelected": "View receipt",
         "help": "Help",
         "chat": "Chat support",
         "tour": {
@@ -4395,6 +5308,9 @@
       "review": {
         "title": "5. Application Review",
         "subtitle": "Review the application for completeness, accuracy, eligibility and compliance with certification requirements.",
+        "selectApplication": "Select an application to review",
+        "selectApplicationHint": "Search and select a submitted application from the register.",
+        "openSelected": "Open review",
         "help": "Help",
         "chat": "Chat support",
         "tour": {
@@ -5217,13 +6133,36 @@
     "applicationSubmission": {
       "title": "Application Submission",
       "submitted": "Submitted",
-      "backToRegister": "Back to application register"
+      "backToRegister": "Back to application register",
+      "selectClient": "Select an audit client",
+      "viewTitle": "View application",
+      "selectClientHint": "Choose the client this certification application is for.",
+      "clientPlaceholder": "Select client",
+      "clientSearchPlaceholder": "Search by client name or code...",
+      "noClients": "No audit clients found. Register a client first.",
+      "startApplication": "Start application",
+      "reviewApplication": "Review application",
+      "viewReceipt": "View receipt",
+      "dataFilled": "All application fields were filled with sample data.",
+      "fieldErrors": {
+        "title": "These fields still need to be completed:",
+        "line": "{{field}} — {{reason}}",
+        "missing": "is missing",
+        "mustBeNumber": "must be a number",
+        "invalidEmail": "must be a valid email",
+        "invalidUrl": "must be a valid URL",
+        "mustBeAccepted": "must be accepted",
+        "branchField": "Branch {{index}}: {{field}}",
+        "certificateField": "Standard {{index}}: {{field}}",
+        "standardScope": "{{standard}} sector and IAF codes"
+      }
     },
     "applicationRegister": {
       "breadcrumbParent": "Workspace",
       "title": "Application register",
       "subtitle": "View and manage certification applications.",
       "newApplication": "New application",
+      "fillData": "Fill data",
       "export": "Export",
       "exportPdf": "Export as PDF",
       "exportExcel": "Export as Excel",
@@ -5231,11 +6170,24 @@
       "empty": "No applications found.",
       "loadError": "Applications could not be loaded.",
       "showingRange": "Showing {{from}} to {{to}} of {{total}} applications",
+      "singleResult": "result",
+      "multipleResults": "results",
+      "sortBy": "Sort by",
+      "selectPlaceholder": "Select application",
+      "defaultReviewer": "CAB Admin",
+      "daysLeft": "{{count}} days left",
+      "sort": {
+        "newest": "Updated (newest first)",
+        "oldest": "Updated (oldest first)",
+        "dueSoonest": "Due date (soonest first)"
+      },
       "filters": {
         "search": "Search",
         "searchPlaceholder": "Search by application code or client code...",
-        "createdPeriod": "Created period",
-        "createdPeriodPlaceholder": "Select period",
+        "createdPeriod": "Created date",
+        "createdFrom": "From",
+        "createdTo": "To",
+        "createdPeriodPlaceholder": "DD/MM/YYYY",
         "country": "Country",
         "allCountries": "All countries",
         "status": "Status",
@@ -5248,18 +6200,48 @@
         "standards": "Standards",
         "stage": "Stage",
         "updated": "Updated",
+        "reviewer": "Reviewer",
+        "due": "Due",
         "actions": "Actions"
       },
       "status": {
         "draft": "Draft",
+        "submitted": "Submitted",
         "underReview": "Under Review",
         "assessment": "Assessment",
         "approved": "Approved",
+        "rejected": "Rejected",
         "inProgress": "In Progress"
       },
       "rowActions": {
         "view": "View",
-        "continueDraft": "Continue draft"
+        "continueDraft": "Continue draft",
+        "review": "Review",
+        "openReview": "Open review",
+        "requestClarification": "Request clarification",
+        "receipt": "View receipt"
+      },
+      "tour": {
+        "header": {
+          "title": "Applications Register",
+          "description": "Overview and management of all certification applications, their current status, and submission progress."
+        },
+        "newApplication": {
+          "title": "New Application",
+          "description": "Click here to initiate and submit a new conformity assessment application for a client."
+        },
+        "filters": {
+          "title": "Filter & Search",
+          "description": "Quickly search by application code, client name, creation period, country, or processing stage."
+        },
+        "table": {
+          "title": "Applications Table",
+          "description": "View application details, linked standards, current stage badges, and last update timestamps."
+        },
+        "actions": {
+          "title": "Actions & Navigation",
+          "description": "Continue editing draft applications or navigate directly to review details and processing stages."
+        }
       }
     },
     "certificateRegister": {
@@ -5306,6 +6288,28 @@
         "suspend": "Suspend",
         "prepareCertificate": "Prepare certificate",
         "withdraw": "Withdraw"
+      },
+      "tour": {
+        "header": {
+          "title": "Certificates Register",
+          "description": "Search, monitor, and manage all conformity assessment certificates issued by your CAB."
+        },
+        "prepareCertificate": {
+          "title": "Prepare Certificate",
+          "description": "Click here to create and prepare a new certificate draft for approved client decisions."
+        },
+        "filters": {
+          "title": "Filter & Search",
+          "description": "Quickly search by certificate number, client name, issue period, country, or certificate status."
+        },
+        "table": {
+          "title": "Certificates Table",
+          "description": "Review certificate numbers, client details, standards, certification scope, validity dates, and status badges."
+        },
+        "actions": {
+          "title": "Certificate Lifecycle Actions",
+          "description": "Access actions to prepare certificates, edit drafts, issue, reissue, suspend, or withdraw certificates."
+        }
       }
     },
     "certificatePrepare": {
@@ -6362,9 +7366,30 @@
       "cash": "Cash",
       "referenceLabel": "Reference",
       "referencePlaceholder": "e.g. TRX-12345",
-      "paymentInfoNote": "This records a payment against the invoice. It does not charge a card.",
       "save": "Save",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "tour": {
+        "header": {
+          "title": "Invoices Register Overview",
+          "description": "Track and manage billing operations, view balances, and handle payments for all client certification services."
+        },
+        "filters": {
+          "title": "Search & Filtering",
+          "description": "Find invoices by number or client name, and filter by country and payment status (Paid, Unpaid, Partially Paid, Draft)."
+        },
+        "actionsBtn": {
+          "title": "Create & Export Invoices",
+          "description": "Create new invoice drafts and export records in bulk to Excel (.xlsx) or PDF formats."
+        },
+        "table": {
+          "title": "Invoices List Table",
+          "description": "Detailed view of invoice numbers, client names, issue and due dates, amounts, payments, and remaining balances."
+        },
+        "rowActions": {
+          "title": "Payment & Credit Notes",
+          "description": "Record client payments, issue linked credit notes, view full details, and download individual invoice PDFs."
+        }
+      }
     },
     "details": {
       "breadcrumb": "Invoices",
@@ -6411,7 +7436,246 @@
       "paymentSuccessToast": "Payment recorded successfully!",
       "taxSuccessToast": "Tax configured successfully!",
       "issuedToast": "Invoice issued successfully! Invoice is now finalized and immutable.",
-      "draftSavedToast": "Invoice draft saved."
+      "draftSavedToast": "Invoice draft saved.",
+      "tour": {
+        "header": {
+          "title": "Invoice Details Overview",
+          "description": "Review comprehensive invoice details, connected certification orders, client info, and current billing lifecycle status."
+        },
+        "actions": {
+          "title": "Issuance & Tax Configuration",
+          "description": "Configure statutory tax rates (e.g. VAT 15%), save drafts, issue finalized invoices, and record incoming payments."
+        },
+        "infoGrid": {
+          "title": "Client & Billing Snapshot",
+          "description": "Verify issue/due dates, client legal address snapshot, primary contact details, currency, and PO references."
+        },
+        "amounts": {
+          "title": "Financial Totals & Balance",
+          "description": "Track line item subtotals, calculated taxes, total billed amount, client payments, and remaining balance due."
+        },
+        "breakdown": {
+          "title": "Line Items & Installments",
+          "description": "Break down audited services line items, schedule installment due dates, and manage supporting attachments."
+        }
+      }
+    }
+  },
+  "portal": {
+    "title": "Client Portal",
+    "home": {
+      "breadcrumb": "Home",
+      "clientId": "Client ID",
+      "primaryContact": "Primary:",
+      "editProfile": "Edit profile",
+      "status": {
+        "active": "Active",
+        "pending": "Pending",
+        "inactive": "Inactive"
+      },
+      "applicationCard": {
+        "title": "Application APP-0024",
+        "draft": "Draft",
+        "scheme": "Scheme",
+        "foodSafety": "Food Safety Management",
+        "submitted": "Submitted",
+        "lastUpdated": "Last updated",
+        "date": "12 Mar 2025",
+        "continue": "Continue application",
+        "view": "View application"
+      },
+      "clarificationCard": {
+        "title": "Clarification required",
+        "desc": "We need additional information to proceed with your application APP-0024.",
+        "viewBtn": "View requested info",
+        "dueDate": "Due date",
+        "dueDateVal": "20 Mar 2025"
+      },
+      "auditCard": {
+        "title": "Upcoming audit",
+        "stage": "Stage 1 Audit",
+        "date": "28 Apr 2025",
+        "location": "Riyadh, Saudi Arabia",
+        "viewBtn": "View audit details"
+      },
+      "docsCard": {
+        "title": "Documents",
+        "uploadedByYou": "Uploaded by you",
+        "requestedByUs": "Requested by us",
+        "sharedWithYou": "Shared with you",
+        "viewBtn": "View all documents"
+      },
+      "recentActivity": {
+        "title": "Recent activity",
+        "viewAll": "View all activity",
+        "colDate": "Date",
+        "colDetails": "Details",
+        "colRelatedTo": "Related to"
+      },
+      "contacts": {
+        "title": "Your contacts at Example CAB"
+      },
+      "tour": {
+        "header": {
+          "title": "Client Account Overview",
+          "description": "View your registered company details, active certification status, primary contact information, and quick profile management."
+        },
+        "appCard": {
+          "title": "Certification Applications",
+          "description": "Track live progress of your active certification schemes, review draft submissions, and resume incomplete applications."
+        },
+        "clarificationCard": {
+          "title": "Information & Clarification Requests",
+          "description": "Review and respond to technical clarification requests from auditors before stated deadlines to avoid review delays."
+        },
+        "auditCard": {
+          "title": "Upcoming Audits & Visits",
+          "description": "Check upcoming audit stages, dates, and confirmed facilities to ensure site readiness for audit teams."
+        },
+        "activityContacts": {
+          "title": "Activity Log & CAB Team",
+          "description": "Monitor audit trail history, uploaded records, and directly reach your assigned CAB account manager and lead auditors."
+        }
+      }
+    },
+    "companyProfile": {
+      "breadcrumbParent": "Client portal",
+      "breadcrumbClients": "Clients",
+      "breadcrumbUpdate": "Update company profile",
+      "title": "Update company profile",
+      "subtitle": "Client ID: {{clientCode}} | Application: {{appNumber}} | {{country}}",
+      "reviewPending": "Review pending changes",
+      "cancel": "Cancel",
+      "saveChanges": "Save changes",
+      "savedToast": "Company profile changes saved successfully.",
+      "siteDraftToast": "Site draft added — saved to profile.",
+      "contactDraftToast": "Contact draft added — saved to profile.",
+      "docUploadedToast": "Document uploaded successfully.",
+      "logoUpdatedToast": "Logo updated successfully.",
+      "logoRequirementsToast": "Requirements: PNG, JPG, or SVG up to 5MB. Minimum dimensions 200x200px.",
+      "pendingBanner": {
+        "title": "There are pending changes to your legal identity.",
+        "desc": "Your request to update the legal name is under review. You can still update other information.",
+        "viewDetails": "View details"
+      },
+      "tabs": {
+        "essentials": "Essentials",
+        "more": "More details"
+      },
+      "logo": {
+        "title": "Logo",
+        "changeBtn": "Change logo",
+        "requirements": "View upload requirements"
+      },
+      "details": {
+        "title": "Company details",
+        "legalName": "Legal name",
+        "changePending": "Change pending",
+        "countryOfInc": "Country of incorporation",
+        "tradingName": "Trading name (if different)",
+        "industrySector": "Industry sector",
+        "regNumber": "Company registration number",
+        "website": "Website"
+      },
+      "address": {
+        "title": "Main address",
+        "country": "Country",
+        "building": "Building",
+        "city": "City",
+        "postalCode": "Postal code",
+        "street": "Street",
+        "additionalLine": "Additional address line"
+      },
+      "sites": {
+        "title": "Sites & branches",
+        "addSite": "+ Add site",
+        "colSiteId": "Site ID",
+        "colName": "Site name",
+        "colAddress": "Address",
+        "colStatus": "Status",
+        "colActions": "Actions",
+        "edit": "Edit"
+      },
+      "contacts": {
+        "title": "Additional contacts",
+        "addContact": "+ Add contact",
+        "colName": "Name",
+        "colRole": "Role",
+        "colEmail": "Email",
+        "colPhone": "Phone",
+        "colPrimary": "Primary",
+        "primaryBadge": "Primary",
+        "colActions": "Actions",
+        "edit": "Edit"
+      },
+      "docs": {
+        "title": "Official documents",
+        "addDoc": "+ Add document",
+        "colName": "Document name",
+        "colType": "Type",
+        "colLastUpdated": "Last updated",
+        "colActions": "Actions",
+        "view": "View"
+      },
+      "modals": {
+        "pendingTitle": "Pending Legal Identity Change",
+        "pendingDesc": "A change to your legal organization name was submitted for review. Legal identity modifications require CAB verification to preserve audit certificate integrity.",
+        "currentVal": "Current value:",
+        "requestedVal": "Requested value:",
+        "submittedOn": "Submitted on {{date}}",
+        "close": "Close",
+        "addSiteTitle": "Add New Site or Branch",
+        "siteName": "Site Name *",
+        "siteNamePlaceholder": "e.g. Jeddah Warehouse",
+        "siteAddress": "Address *",
+        "siteAddressPlaceholder": "Full street address, city, country",
+        "saveSite": "Save site",
+        "addContactTitle": "Add Additional Contact",
+        "contactName": "Full Name *",
+        "contactNamePlaceholder": "e.g. Ahmed Mansoor",
+        "contactRole": "Role / Job Title",
+        "contactRolePlaceholder": "e.g. Operations Manager",
+        "contactEmail": "Email Address *",
+        "contactEmailPlaceholder": "ahmed@example.com",
+        "contactPhone": "Phone Number",
+        "contactPhonePlaceholder": "+966 50 123 4567",
+        "saveContact": "Save contact",
+        "uploadDocTitle": "Upload Official Document",
+        "docName": "Document Name *",
+        "docNamePlaceholder": "e.g. Environmental Policy 2025",
+        "docType": "Document Type",
+        "selectFile": "Select File",
+        "uploadBtn": "Upload",
+        "changeLogoTitle": "Change Company Logo",
+        "changeLogoDesc": "Upload a clear high-resolution logo (PNG, JPG, or SVG). Maximum 5MB.",
+        "saveLogo": "Save logo",
+        "discardTitle": "Discard unsaved changes?",
+        "discardDesc": "You have unsaved changes to your company profile. Leaving now will discard them.",
+        "keepEditing": "Keep editing",
+        "discardLeave": "Discard & leave"
+      },
+      "tour": {
+        "header": {
+          "title": "Company Profile & Status",
+          "description": "Review your registered organization identifiers, pending legal changes awaiting CAB approval, and manage save operations."
+        },
+        "logo": {
+          "title": "Brand Identity & Logo",
+          "description": "Maintain high-resolution official logos used across your issued audit certificates, client portal, and compliance reports."
+        },
+        "details": {
+          "title": "Legal & Commercial Details",
+          "description": "Update registered trade names, commercial registration number, industry category, and official website."
+        },
+        "address": {
+          "title": "Main Registered Address",
+          "description": "Ensure company headquarters address, postal codes, and city records are accurate for official certification documentation."
+        },
+        "sitesDocs": {
+          "title": "Sites, Contacts & Documents",
+          "description": "Manage secondary operational facilities, authorized contact representatives, and upload official statutory compliance documents."
+        }
+      }
     }
   }
 }
