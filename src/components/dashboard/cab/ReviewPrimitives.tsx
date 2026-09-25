@@ -24,7 +24,7 @@ export function Badge({ tone, children }: { tone: 'green' | 'red' | 'neutral'; c
   return (
     <span
       className={cn(
-        'inline-flex items-center justify-center rounded-[6px] px-2.5 py-1 text-[12px] font-medium',
+        'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
         tone === 'green' && 'bg-[#dcfce7] text-[#16a34a]',
         tone === 'red' && 'bg-[#fde8e8] text-[#dc2626]',
         tone === 'neutral' && 'bg-[#f3f4f6] text-neutral-600'

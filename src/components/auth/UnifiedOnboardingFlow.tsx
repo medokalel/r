@@ -337,10 +337,13 @@ function createInitialForm(): UnifiedOnboardingForm {
   const draftKey = getAuthSession()?.organization?.id ?? getCabId() ?? undefined
   const draft = draftKey ? loadOnboardingDraft(draftKey) : null
   const scopeCategory = draft?.scopeCategory ?? ''
+  const sessionType = getAuthSession()?.organization?.type
   const entityType =
     scopeCategory !== ''
       ? scopeCategoryToEntityType(scopeCategory as OrgScopeCategory)
-      : draft?.entityType || getAuthSession()?.organization?.type || ''
+      : draft?.entityType ||
+        (sessionType && sessionType !== 'AUDIT_CLIENT' ? sessionType : '') ||
+        ''
 
   return {
     ...emptyUnifiedOnboardingForm,

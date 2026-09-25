@@ -19,6 +19,8 @@ function isLegalIdentityComplete(form: ApplicationFormValues): boolean {
     (form.allProductionLinesIncluded !== 'no' || filled(form.excludedReason)) &&
     form.country !== null &&
     filled(form.city) &&
+    filled(form.representativeName) &&
+    filled(form.jobTitle) &&
     filled(form.mainActivity)
   )
 }
@@ -58,7 +60,8 @@ function isScopeComplete(form: ApplicationFormValues): boolean {
 function isConsultingComplete(form: ApplicationFormValues): boolean {
   return (
     (form.usedConsultant !== 'yes' || filled(form.consultantName)) &&
-    form.designActivity !== ''
+    form.designActivity !== '' &&
+    (form.designActivity !== 'no' || filled(form.designException))
   )
 }
 

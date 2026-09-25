@@ -1,5 +1,37 @@
-import { useCallback, useMemo, useRef, useState } from "react";
-import type { ApplicationFormContextValue } from "@/components/dashboard/entityData/ApplicationFormContext";
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ApiError } from '@/lib/api/client'
+import { clearAuthSession } from '@/lib/authStorage'
+import {
+  createCabClientCertificationApplication,
+  getCabClientCertificationApplication,
+  submitCabClientCertificationApplication,
+  updateCabClientCertificationApplicationDraft,
+} from '@/lib/api/cabCertificationApplicationApi'
+import {
+  createCabClientBranch,
+  getCabClientProfile,
+  saveCabClientCompanyProfile,
+} from '@/lib/api/clientRegistrationApi'
+import {
+  deleteApplicationDocument,
+  uploadApplicationDocument,
+  type ApplicationStatus,
+} from '@/lib/api/certificationApplicationApi'
+import type { OrganizationProfileData, OrgBranch } from '@/lib/api/organizationProfileApi'
+import {
+  formatCertificationSubmitError,
+  listMissingApplicationFields,
+} from '@/components/dashboard/entityData/applicationFieldErrors'
+import { fillApplicationForm } from '@/components/dashboard/entityData/applicationSampleFill'
+import {
+  formValuesFromApplication,
+  payloadFromForm,
+  prefillFromOrganization,
+  profilePayloadFromForm,
+} from '@/components/dashboard/entityData/applicationMappers'
+import type { ApplicationFormContextValue } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
   createEmptyBranch,
   DOCUMENT_SLOT_TYPES,
@@ -7,229 +39,461 @@ import {
   type ApplicationFormValues,
   type ApplicationNotification,
   type BranchFormValues,
-} from "@/components/dashboard/entityData/applicationTypes";
+} from '@/components/dashboard/entityData/applicationTypes'
 
-const STORAGE_KEY = "icasco_cab_application_submission_draft";
-
-function loadDraft(): ApplicationFormValues {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return EMPTY_APPLICATION_FORM;
-  try {
-    const stored = JSON.parse(raw) as ApplicationFormValues;
-    return {
-      ...EMPTY_APPLICATION_FORM,
-      ...stored,
-      declarationDate: stored.declarationDate
-        ? new Date(stored.declarationDate)
-        : undefined,
-      branches: (stored.branches ?? []).map((branch) => ({
-        ...branch,
-        phase1ExpectedDate: branch.phase1ExpectedDate
-          ? new Date(branch.phase1ExpectedDate)
-          : undefined,
-      })),
-    };
-  } catch {
-    return EMPTY_APPLICATION_FORM;
-  }
-}
+const NOTIFICATION_TIMEOUT_MS = 5000
 
 export function useCabApplicationSubmissionState() {
-  const [form, setForm] = useState<ApplicationFormValues>(loadDraft);
-  const [status, setStatus] = useState<"DRAFT" | "SUBMITTED">("DRAFT");
-  const [saving, setSaving] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [notification, setNotification] =
-    useState<ApplicationNotification | null>(null);
-  const nextBranchId = useRef(
-    Math.max(1, ...form.branches.map((branch) => branch.localId + 1)),
-  );
+  const { t } = useTranslation()
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId')
+  const applicationParam = searchParams.get('id')
+  const [form, setForm] = useState<ApplicationFormValues>(EMPTY_APPLICATION_FORM)
+  const [applicationId, setApplicationId] = useState<string | null>(applicationParam)
+  const [status, setStatus] = useState<ApplicationStatus>('DRAFT')
+  const [orderNumber, setOrderNumber] = useState<string | null>(null)
+  const [loading, setLoading] = useState(Boolean(searchParams.get('clientId') && searchParams.get('id')))
+  const [saving, setSaving] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [notification, setNotification] = useState<ApplicationNotification | null>(null)
+  const [loadError, setLoadError] = useState<'rateLimit' | 'generic' | null>(null)
+  const [reloadKey, setReloadKey] = useState(0)
+  const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([])
+  const orgProfileRef = useRef<OrganizationProfileData | null>(null)
+  const nextBranchIdRef = useRef(2)
+  const pendingOrgBranchSavesRef = useRef<Map<number, Promise<void>>>(new Map())
 
   const update = useCallback(
-    <K extends keyof ApplicationFormValues>(
-      key: K,
-      value: ApplicationFormValues[K],
-    ) => {
-      setForm((previous) => ({ ...previous, [key]: value }));
+    <K extends keyof ApplicationFormValues>(key: K, value: ApplicationFormValues[K]) => {
+      setForm((previous) => ({ ...previous, [key]: value }))
     },
     [],
-  );
+  )
 
-  const updateBranch = useCallback(
-    (localId: number, patch: Partial<BranchFormValues>) => {
-      setForm((previous) => ({
-        ...previous,
-        branches: previous.branches.map((branch) =>
-          branch.localId === localId ? { ...branch, ...patch } : branch,
-        ),
-      }));
+  const notify = useCallback((value: ApplicationNotification) => setNotification(value), [])
+
+  useEffect(() => {
+    if (!notification) return
+    const timer = setTimeout(() => setNotification(null), NOTIFICATION_TIMEOUT_MS)
+    return () => clearTimeout(timer)
+  }, [notification])
+
+  const handleApiError = useCallback(
+    (error: unknown) => {
+      if (error instanceof ApiError && error.status === 401) {
+        clearAuthSession()
+        navigate('/login', { replace: true })
+        return
+      }
+      const message =
+        error instanceof ApiError
+          ? formatCertificationSubmitError(error, t)
+          : t('errors.generic')
+      setNotification({ type: 'error', message })
     },
-    [],
-  );
+    [navigate, t],
+  )
 
-  const addBranch = useCallback(() => {
-    const localId = nextBranchId.current++;
+  const reload = useCallback(() => setReloadKey((key) => key + 1), [])
+
+  const persistIds = useCallback(
+    (nextClientId: string, nextApplicationId: string) => {
+      setApplicationId(nextApplicationId)
+      const nextParams: Record<string, string> = {
+        clientId: nextClientId,
+        id: nextApplicationId,
+      }
+      if (searchParams.get('fill') === '1') nextParams.fill = '1'
+      setSearchParams(nextParams, { replace: true })
+    },
+    [searchParams, setSearchParams],
+  )
+
+  useEffect(() => {
+    if (!clientId) {
+      setLoading(false)
+      return
+    }
+
+    let cancelled = false
+    setLoading(true)
+    setLoadError(null)
+
+    void (async () => {
+      try {
+        const profile = await getCabClientProfile(clientId)
+        if (cancelled) return
+        orgProfileRef.current = profile
+        setOrgBranches(profile.branches ?? [])
+
+        if (applicationParam) {
+          const application = await getCabClientCertificationApplication(
+            clientId,
+            applicationParam,
+          )
+          if (cancelled) return
+          setApplicationId(application.id)
+          setStatus(application.status)
+          setOrderNumber(application.orderNumber ?? null)
+          const values = formValuesFromApplication(application)
+          nextBranchIdRef.current = Math.max(values.branches.length + 1, 2)
+          let nextForm =
+            application.status === 'DRAFT'
+              ? prefillFromOrganization(values, profile)
+              : values
+          if (searchParams.get('fill') === '1' && application.status === 'DRAFT') {
+            nextForm = fillApplicationForm(nextForm)
+            nextBranchIdRef.current = Math.max(nextForm.branches.length + 1, 2)
+          }
+          setForm(nextForm)
+        } else {
+          setForm((previous) => {
+            const prefills = prefillFromOrganization(previous, profile)
+            return searchParams.get('fill') === '1'
+              ? fillApplicationForm(prefills)
+              : prefills
+          })
+        }
+      } catch (error) {
+        if (cancelled) return
+        if (error instanceof ApiError && error.status === 401) {
+          clearAuthSession()
+          navigate('/login', { replace: true })
+          return
+        }
+        setLoadError(error instanceof ApiError && error.status === 429 ? 'rateLimit' : 'generic')
+      } finally {
+        if (!cancelled) setLoading(false)
+      }
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [applicationParam, clientId, navigate, reloadKey, searchParams])
+
+  const updateBranch = useCallback((localId: number, patch: Partial<BranchFormValues>) => {
+    setForm((previous) => ({
+      ...previous,
+      branches: previous.branches.map((branch) =>
+        branch.localId === localId ? { ...branch, ...patch } : branch,
+      ),
+    }))
+  }, [])
+
+  const addBranch = useCallback((): number => {
+    const localId = nextBranchIdRef.current++
     setForm((previous) => ({
       ...previous,
       branches: [...previous.branches, createEmptyBranch(localId)],
-    }));
-    return localId;
-  }, []);
+    }))
+    return localId
+  }, [])
 
   const removeBranch = useCallback((localId: number) => {
     setForm((previous) => ({
       ...previous,
-      branches: previous.branches.filter(
-        (branch) => branch.localId !== localId,
-      ),
-    }));
-  }, []);
+      branches: previous.branches.filter((branch) => branch.localId !== localId),
+    }))
+  }, [])
+
+  const saveOrgBranch = useCallback(
+    (localId: number, branchName: string, address: string) => {
+      const name = branchName.trim()
+      if (!name || !clientId || pendingOrgBranchSavesRef.current.has(localId)) return
+
+      const promise = (async () => {
+        try {
+          const created = await createCabClientBranch(clientId, {
+            branchName: name,
+            address: address || undefined,
+            branchType: 'PERMANENT',
+            employeeCount: 0,
+          })
+          setOrgBranches((previous) => [...previous, created])
+          updateBranch(localId, { sourceBranchId: created.id })
+        } catch (error) {
+          handleApiError(error)
+        } finally {
+          pendingOrgBranchSavesRef.current.delete(localId)
+        }
+      })()
+
+      pendingOrgBranchSavesRef.current.set(localId, promise)
+    },
+    [clientId, handleApiError, updateBranch],
+  )
+
+  const waitForPendingBranchSaves = useCallback(async () => {
+    await Promise.all(pendingOrgBranchSavesRef.current.values())
+  }, [])
 
   const setSpecAnswer = useCallback((questionKey: string, value: string) => {
     setForm((previous) => ({
       ...previous,
       specAnswers: { ...previous.specAnswers, [questionKey]: value },
-    }));
-  }, []);
+    }))
+  }, [])
 
-  const uploadDocument = useCallback(async (slotId: string, file: File) => {
-    setUploading(true);
-    try {
-      const objectUrl = URL.createObjectURL(file);
+  const uploadDocument = useCallback(
+    async (slotId: string, file: File) => {
+      setUploading(true)
+      try {
+        const result = await uploadApplicationDocument(file)
+        setForm((previous) => ({
+          ...previous,
+          documents: [
+            {
+              localId: crypto.randomUUID(),
+              slotId,
+              documentType: DOCUMENT_SLOT_TYPES[slotId] ?? 'OTHER',
+              fileUrl: result.fileUrl,
+              filePath: result.filePath,
+              fileName: result.fileName,
+              originalName: file.name,
+              mimeType: result.mimeType,
+              fileSize: result.sizeBytes,
+            },
+            ...previous.documents,
+          ],
+        }))
+      } catch (error) {
+        handleApiError(error)
+      } finally {
+        setUploading(false)
+      }
+    },
+    [handleApiError],
+  )
+
+  const removeDocument = useCallback(
+    async (localId: string) => {
+      const document = form.documents.find((entry) => entry.localId === localId)
+      if (!document) return
+      try {
+        if (document.fileName) await deleteApplicationDocument(document.fileName)
+      } catch (error) {
+        if (!(error instanceof ApiError && error.status === 404)) {
+          handleApiError(error)
+          return
+        }
+      }
       setForm((previous) => ({
         ...previous,
-        documents: [
-          {
-            localId: crypto.randomUUID(),
-            slotId,
-            documentType: DOCUMENT_SLOT_TYPES[slotId] ?? "OTHER",
-            fileUrl: objectUrl,
-            filePath: objectUrl,
-            fileName: file.name,
-            originalName: file.name,
-            mimeType: file.type,
-            fileSize: file.size,
-          },
-          ...previous.documents,
-        ],
-      }));
-    } finally {
-      setUploading(false);
-    }
-  }, []);
-
-  const removeDocument = useCallback(async (localId: string) => {
-    setForm((previous) => ({
-      ...previous,
-      documents: previous.documents.filter(
-        (document) => document.localId !== localId,
-      ),
-    }));
-  }, []);
+        documents: previous.documents.filter((entry) => entry.localId !== localId),
+      }))
+    },
+    [form.documents, handleApiError],
+  )
 
   const uploadCommercialRegister = useCallback(
     async (file: File) => {
-      setUploading(true);
+      setUploading(true)
       try {
-        update("commercialRegisterFile", URL.createObjectURL(file));
+        const result = await uploadApplicationDocument(file)
+        setForm((previous) => ({ ...previous, commercialRegisterFile: result.fileUrl }))
+      } catch (error) {
+        handleApiError(error)
       } finally {
-        setUploading(false);
+        setUploading(false)
       }
     },
-    [update],
-  );
+    [handleApiError],
+  )
 
-  const notify = useCallback((value: ApplicationNotification) => {
-    setNotification(value);
-  }, []);
-
-  const saveDraft = useCallback(async () => {
-    setSaving(true);
+  const syncClientProfile = useCallback(async () => {
+    if (!clientId) return
+    const snapshot = orgProfileRef.current
+    if (!snapshot) return
+    const payload = profilePayloadFromForm(form, snapshot)
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
-      setNotification({
-        type: "success",
-        message: "Application draft saved locally.",
-      });
-      return true;
+      const updated = await saveCabClientCompanyProfile(clientId, payload)
+      orgProfileRef.current = {
+        ...snapshot,
+        profile: payload.profile ?? snapshot.profile,
+        address: payload.address ?? snapshot.address,
+        status: updated.status,
+      }
     } catch {
-      setNotification({
-        type: "error",
-        message: "Unable to save the local draft.",
-      });
-      return false;
-    } finally {
-      setSaving(false);
+      // Best-effort — the application draft is the primary save
     }
-  }, [form]);
+  }, [clientId, form])
 
-  const submit = useCallback(async () => {
-    setSubmitting(true);
+  const saveDraft = useCallback(async (): Promise<boolean> => {
+    if (!clientId) {
+      setNotification({
+        type: 'error',
+        message: t('cab.applicationSubmission.selectClientHint'),
+      })
+      return false
+    }
+    if (status !== 'DRAFT') return true
+    setSaving(true)
+    setNotification(null)
     try {
-      const saved = await saveDraft();
-      if (!saved) return false;
-      setStatus("SUBMITTED");
+      await waitForPendingBranchSaves()
+      const payload = payloadFromForm(form, t)
+      let id = applicationId
+      if (id) {
+        await updateCabClientCertificationApplicationDraft(clientId, id, payload)
+      } else {
+        const created = await createCabClientCertificationApplication(clientId, payload)
+        id = created.id
+        persistIds(clientId, id)
+      }
+      await syncClientProfile()
       setNotification({
-        type: "success",
-        message: "Application submitted in this frontend preview.",
-      });
-      return true;
+        type: 'success',
+        message: t('accreditation.messages.draftSaved'),
+      })
+      return true
+    } catch (error) {
+      handleApiError(error)
+      return false
     } finally {
-      setSubmitting(false);
+      setSaving(false)
     }
-  }, [saveDraft]);
+  }, [
+    applicationId,
+    clientId,
+    form,
+    handleApiError,
+    persistIds,
+    status,
+    syncClientProfile,
+    t,
+    waitForPendingBranchSaves,
+  ])
 
-  const contextValue = useMemo<ApplicationFormContextValue>(
-    () => ({
-      form,
-      update,
-      updateBranch,
-      addBranch,
-      removeBranch,
-      saveOrgBranch: () => undefined,
-      setSpecAnswer,
-      uploadDocument,
-      removeDocument,
-      uploadCommercialRegister,
-      orgBranches: [],
-      applicationId: null,
-      status,
-      saving,
-      uploading,
-      notify,
-      handleApiError: () =>
-        setNotification({
-          type: "error",
-          message: "Unable to complete this action.",
+  const fillData = useCallback(() => {
+    if (status !== 'DRAFT') return
+    setForm((previous) => {
+      const filled = fillApplicationForm(previous)
+      nextBranchIdRef.current = Math.max(filled.branches.length + 1, 2)
+      return filled
+    })
+    setNotification({
+      type: 'success',
+      message: t('cab.applicationSubmission.dataFilled'),
+    })
+  }, [status, t])
+
+  const submit = useCallback(async (): Promise<boolean> => {
+    if (!clientId) return false
+    if (status !== 'DRAFT') return true
+    const missing = listMissingApplicationFields(form, t)
+    if (missing.length > 0) {
+      setNotification({
+        type: 'error',
+        message: [
+          t('cab.applicationSubmission.fieldErrors.title'),
+          ...missing.map((field) => `• ${field}`),
+        ].join('\n'),
+      })
+      return false
+    }
+    setSubmitting(true)
+    setNotification(null)
+    try {
+      await waitForPendingBranchSaves()
+      const payload = payloadFromForm(form, t)
+      let id = applicationId
+      if (id) {
+        await updateCabClientCertificationApplicationDraft(clientId, id, payload)
+      } else {
+        const created = await createCabClientCertificationApplication(clientId, payload)
+        id = created.id
+        persistIds(clientId, id)
+      }
+      const result = await submitCabClientCertificationApplication(clientId, id)
+      setStatus(result.status)
+      setOrderNumber(result.orderNumber ?? null)
+      setNotification({
+        type: 'success',
+        message: t('accreditation.messages.submitted', {
+          orderNumber: result.orderNumber ?? '',
         }),
-    }),
-    [
-      addBranch,
+      })
+      return true
+    } catch (error) {
+      handleApiError(error)
+      return false
+    } finally {
+      setSubmitting(false)
+    }
+  }, [
+    applicationId,
+    clientId,
+    form,
+    handleApiError,
+    persistIds,
+    status,
+    t,
+    waitForPendingBranchSaves,
+  ])
+
+  const contextValue = useMemo<ApplicationFormContextValue>(() => {
+    const readOnly = status !== 'DRAFT'
+    return {
       form,
-      notify,
-      removeBranch,
-      removeDocument,
-      saving,
-      setSpecAnswer,
+      update: readOnly ? () => undefined : update,
+      updateBranch: readOnly ? () => undefined : updateBranch,
+      addBranch: readOnly ? () => -1 : addBranch,
+      removeBranch: readOnly ? () => undefined : removeBranch,
+      saveOrgBranch: readOnly ? () => undefined : saveOrgBranch,
+      setSpecAnswer: readOnly ? () => undefined : setSpecAnswer,
+      uploadDocument: readOnly ? async () => undefined : uploadDocument,
+      removeDocument: readOnly ? async () => undefined : removeDocument,
+      uploadCommercialRegister: readOnly
+        ? async () => undefined
+        : uploadCommercialRegister,
+      orgBranches,
+      applicationId,
       status,
-      update,
-      updateBranch,
-      uploadCommercialRegister,
-      uploadDocument,
+      saving,
       uploading,
-    ],
-  );
+      notify,
+      handleApiError,
+      readOnly,
+    }
+  }, [
+    addBranch,
+    applicationId,
+    form,
+    handleApiError,
+    notify,
+    orgBranches,
+    removeBranch,
+    removeDocument,
+    saveOrgBranch,
+    saving,
+    setSpecAnswer,
+    status,
+    update,
+    updateBranch,
+    uploadCommercialRegister,
+    uploadDocument,
+    uploading,
+  ])
 
   return {
     contextValue,
     form,
     update,
-    status,
+    clientId,
+    applicationId,
+    loading,
     saving,
     submitting,
+    status,
+    orderNumber,
     notification,
+    loadError,
+    reload,
     saveDraft,
     submit,
-  };
+    fillData,
+  }
 }

@@ -18,28 +18,14 @@ import { clearAuthSession, getAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
-interface NavItem {
-  icon: typeof DashboardGridIcon
-  labelKey: string
-  href?: string
-}
-
-const navItems: NavItem[] = [
+const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
-  {
-    icon: RequestsListIcon,
-    labelKey: 'accreditation.sidebar.requests',
-    href: ROUTES.certificationRequests,
-  },
+  { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
-  {
-    icon: RenewalsIcon,
-    labelKey: 'accreditation.sidebar.renewals',
-    href: ROUTES.periodicVisits,
-  },
+  { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },
   { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices', href: ROUTES.invoices },
   { icon: SettingsIcon, labelKey: 'nav.settings', href: ROUTES.companyProfile },
 ]
@@ -48,9 +34,8 @@ export function DashboardSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const location = useLocation()
-  // Read per render (not at module load) so it reflects the current session after login/logout.
-  const displayName = getAuthSession()?.organization?.name ?? ''
-
+  const session = getAuthSession()
+  const displayName = session?.organization?.name ?? ''
   const handleLogout = () => {
     clearAuthSession()
     navigate(ROUTES.login, { replace: true })
@@ -110,7 +95,11 @@ export function DashboardSidebar() {
         </button>
       </nav>
 
-      <UserAvatar alt={displayName} className="mt-4 size-[53px] self-center" />
+      <UserAvatar
+        alt={displayName}
+        className="size-[53px] self-center"
+      />
+      
     </aside>
   )
 }

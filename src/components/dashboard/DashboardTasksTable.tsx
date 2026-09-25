@@ -98,7 +98,7 @@ export function DashboardTasksTable({
                   <td className="px-4 py-4">
                     <span
                       className={cn(
-                        'inline-flex w-[126px] items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                        'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
                         statusStyles[task.status]
                       )}
                     >
@@ -142,7 +142,7 @@ export function DashboardTasksTable({
                   </span>
                   <span
                     className={cn(
-                      'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
+                      'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
                       statusStyles[task.status]
                     )}
                   >

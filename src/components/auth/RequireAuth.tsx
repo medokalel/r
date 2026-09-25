@@ -1,5 +1,5 @@
 import { Navigate, useLocation } from 'react-router-dom'
-import { getAuthSession, getAuthToken } from '@/lib/authStorage'
+import { getAuthSession, getAuthToken, isAuditClientSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 
 interface RequireAuthProps {
@@ -15,7 +15,8 @@ export function RequireAuth({ children }: RequireAuthProps) {
 
   const session = getAuthSession()
   const isCab =
-    Boolean(session?.cab) || session?.organization?.type === 'CERTIFICATION_BODY'
+    !isAuditClientSession(session) &&
+    (Boolean(session?.cab) || session?.organization?.type === 'CERTIFICATION_BODY')
   const isCabRoute = location.pathname.startsWith('/cab/')
   const isAuditClientRoute = [
     ROUTES.dashboard,

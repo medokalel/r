@@ -45,7 +45,7 @@ function isSameDay(a: Date, b: Date) {
 }
 
 interface DatePickerProps {
-  value?: Date
+  value?: Date | null
   onChange?: (date: Date) => void
   placeholder?: string
   className?: string
@@ -67,8 +67,7 @@ export function DatePicker({ value, onChange, placeholder, className, disabled }
   const ref = useRef<HTMLDivElement>(null)
   const popoverRef = useRef<HTMLDivElement>(null)
 
-  // Controlled when a value prop is provided, otherwise fall back to internal state
-  const selected = value ?? internalSelected
+  const selected = value === undefined ? internalSelected : value
 
   useEffect(() => {
     function onClickOutside(e: MouseEvent) {

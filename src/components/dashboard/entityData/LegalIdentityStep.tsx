@@ -264,7 +264,7 @@ const { fieldProps } = useFieldValidation(form, {
           </FormField>
 
           <div className="grid gap-5 lg:grid-cols-2">
-            <FormField label={t('accreditation.form.representativeName')}>
+            <FormField label={t('accreditation.form.representativeName')} required>
               <TextField
                 type="text"
                 value={form.representativeName}
@@ -272,7 +272,7 @@ const { fieldProps } = useFieldValidation(form, {
               />
             </FormField>
 
-            <FormField label={t('accreditation.form.representativeTitle')}>
+            <FormField label={t('accreditation.form.representativeTitle')} required>
               <TextField
                 type="text"
                 value={form.jobTitle}

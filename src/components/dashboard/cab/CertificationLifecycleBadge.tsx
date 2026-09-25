@@ -23,7 +23,7 @@ export function CertificationLifecycleBadge({ status, label, className }: Certif
   return (
     <span
       className={cn(
-        'inline-flex rounded-full px-3 py-1 text-[12px] font-medium',
+        'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
         LIFECYCLE_STATUS_STYLES[status],
         className,
       )}

@@ -299,7 +299,10 @@ export function ConsultingReadinessStep() {
             </FormField>
 
             {form.designActivity === 'no' && (
-              <FormField label={t('accreditation.entityData.fields.readiness.designExceptionReason')}>
+              <FormField
+                label={t('accreditation.entityData.fields.readiness.designExceptionReason')}
+                required
+              >
                 <TextField
                   type="text"
                   value={form.designException}

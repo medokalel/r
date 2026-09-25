@@ -30,6 +30,7 @@ export interface ApplicationFormContextValue {
   uploading: boolean
   notify: (notification: ApplicationNotification) => void
   handleApiError: (error: unknown) => void
+  readOnly: boolean
 }
 
 export const ApplicationFormContext = createContext<ApplicationFormContextValue | null>(

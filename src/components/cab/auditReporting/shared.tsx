@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils'
 
-export const CARD = 'rounded-[16px] border border-[#ececec] bg-white'
+export const CARD = 'rounded-[12px] border border-[#e2e2e2] bg-white'
 export const INPUT =
-  'w-full rounded-[10px] border border-[#d8dce5] bg-white px-3 py-2 text-[13px] font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none focus:ring-2 focus:ring-[#1236a3]/20 disabled:bg-neutral-50'
+  'h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] font-medium text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none focus:ring-1 focus:ring-[#1236a3] disabled:bg-neutral-50'
 export const PRIMARY_BTN =
-  'inline-flex items-center justify-center gap-1.5 rounded-[10px] bg-[#1236a3] px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80] disabled:opacity-50'
+  'inline-flex h-11 items-center justify-center gap-1.5 rounded-[8px] bg-[#1236a3] px-5 text-[14px] font-medium text-white transition-colors hover:bg-[#0e2a80] disabled:opacity-50'
 export const GHOST_BTN =
-  'inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-neutral-200 bg-white px-4 py-2 text-[13px] font-semibold text-neutral-700 transition hover:border-[#1236a3] hover:text-[#1236a3] disabled:opacity-50'
+  'inline-flex h-11 items-center justify-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[14px] font-medium text-neutral-700 transition-colors hover:bg-neutral-50 disabled:opacity-50'
 
 export type TabId = 'agenda' | 'evidence' | 'findings' | 'report'
 export type PageState = 'ready' | 'loading' | 'error' | 'denied'

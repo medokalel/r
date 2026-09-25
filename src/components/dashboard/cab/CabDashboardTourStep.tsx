@@ -22,7 +22,7 @@ function useIsXlScreen(): boolean {
 
 interface CabTourStepProps {
   steps: TourStepConfig[]
-  stepId: string
+  stepId?: string
   children: ReactNode
   /** Extra classes for the tour anchor's wrapper div — e.g. to center a
    *  fixed-size child instead of letting it sit at the wrapper's start edge. */
@@ -30,6 +30,7 @@ interface CabTourStepProps {
 }
 
 export function CabTourStep({ steps, stepId, children, className }: CabTourStepProps) {
+  if (!stepId) return <>{children}</>
   return (
     <DashboardTourStep steps={steps} stepId={stepId} className={className}>
       {children}

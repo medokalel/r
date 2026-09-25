@@ -105,7 +105,7 @@ function branchToApi(branch: BranchFormValues): ApplicationBranch | undefined {
     employeesInScope: int(branch.employeesInScope),
     shifts: int(branch.shifts),
     workingHours: text(branch.workingHours),
-    productionLines: int(branch.productionLines),
+    productionLines: int(branch.productionLines) ?? 0,
     weeklyHoliday: text(branch.weeklyHoliday),
     phase1ExpectedDate: branch.phase1ExpectedDate?.toISOString(),
     integratedSystem: boolFromYesNo(branch.integratedSystem),
@@ -240,7 +240,8 @@ export function payloadFromForm(
     consultancyMonths: int(form.consultancyMonths),
     qualificationRate: rateToApi(form.qualificationRate),
     recommendationRate: rateToApi(form.recommendationRate),
-    systemLanguage: form.systemLanguage === 'english' ? ('EN' as const) : ('AR' as const),
+    systemLanguage:
+      form.systemLanguage === 'english' || form.systemLanguage === 'en' ? ('EN' as const) : ('AR' as const),
     easyAccess: boolFromYesNo(form.easyAccess),
     usesSubcontractors: boolFromYesNo(form.usesSubcontractors),
     safetyProcedures: boolFromYesNo(form.safetyProcedures),
@@ -252,7 +253,7 @@ export function payloadFromForm(
         }))
       : undefined,
     designActivity: boolFromYesNo(form.designActivity),
-    designException: text(form.designException),
+    designException: text(form.designException) ?? '',
   })
 
   const declarationInfo = compact({
@@ -440,7 +441,8 @@ export function formValuesFromApplication(
     consultant.consultancyMonths != null ? String(consultant.consultancyMonths) : ''
   form.qualificationRate = rateFromApi(consultant.qualificationRate)
   form.recommendationRate = rateFromApi(consultant.recommendationRate)
-  form.systemLanguage = consultant.systemLanguage === 'EN' ? 'english' : 'arabic'
+  form.systemLanguage =
+    consultant.systemLanguage === 'EN' ? 'en' : consultant.systemLanguage === 'AR' ? 'ar' : form.systemLanguage
   form.easyAccess = yesNoFromBool(consultant.easyAccess)
   form.safetyProcedures = yesNoFromBool(consultant.safetyProcedures)
   form.usesSubcontractors = yesNoFromBool(consultant.usesSubcontractors)

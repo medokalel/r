@@ -22,6 +22,7 @@ interface SearchableSelectProps {
   searchPlaceholder?: string
   label?: string
   required?: boolean
+  disabled?: boolean
   id?: string
   className?: string
 }
@@ -39,6 +40,7 @@ export function SearchableSelect({
   searchPlaceholder,
   label,
   required,
+  disabled,
   id,
   className,
 }: SearchableSelectProps) {
@@ -87,12 +89,17 @@ export function SearchableSelect({
       <button
         type="button"
         id={id}
-        onClick={() => setOpen((prev) => !prev)}
+        disabled={disabled}
+        onClick={() => {
+          if (disabled) return
+          setOpen((prev) => !prev)
+        }}
         className={cn(
           fieldInputClassName,
           fieldHeightClassName,
           'flex w-full items-center justify-between gap-2 font-light text-start',
-          !selected && 'text-neutral-500'
+          !selected && 'text-neutral-500',
+          disabled && 'cursor-not-allowed opacity-60',
         )}
       >
         <span className="truncate">{selected ? selected.label : placeholder}</span>

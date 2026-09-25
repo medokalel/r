@@ -2,17 +2,15 @@ import type { NonconformityStatus } from '@/lib/api/cabNonconformitiesApi'
 import { cn } from '@/lib/utils'
 
 /**
- * Single source of truth for nonconformity status colors. Mirrors
- * `CertificationLifecycleBadge` (same pill shape, same palette tokens) — it is
- * a separate component only because the status vocabulary is a different
- * domain, so the two must not share a status union.
+ * Single source of truth for nonconformity status colors.
+ * Rectangular badge styled to match the standard across CAB tables.
  */
-const STATUS_STYLES: Record<NonconformityStatus, { pill: string; dot: string }> = {
-  open: { pill: 'bg-[#fef3c6] text-[#a58401]', dot: 'bg-[#a58401]' },
-  in_progress: { pill: 'bg-[#e8edfc] text-primary', dot: 'bg-primary' },
-  submitted: { pill: 'bg-[#fff7ed] text-[#ea580c]', dot: 'bg-[#ea580c]' },
-  closed: { pill: 'bg-[#eafaf1] text-[#16a34a]', dot: 'bg-[#16a34a]' },
-  overdue: { pill: 'bg-[#fef2f2] text-[#dc2626]', dot: 'bg-[#dc2626]' },
+const STATUS_STYLES: Record<NonconformityStatus, string> = {
+  open: 'bg-[#fef3c6] text-[#a58401]',
+  in_progress: 'bg-[#e8edfc] text-primary',
+  submitted: 'bg-[#fff7ed] text-[#ea580c]',
+  closed: 'bg-[#eafaf1] text-[#16a34a]',
+  overdue: 'bg-[#fef2f2] text-[#dc2626]',
 }
 
 interface NonconformityStatusBadgeProps {
@@ -26,17 +24,14 @@ export function NonconformityStatusBadge({
   label,
   className,
 }: NonconformityStatusBadgeProps) {
-  const styles = STATUS_STYLES[status]
-
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[12px] font-medium',
-        styles.pill,
+        'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
+        STATUS_STYLES[status],
         className,
       )}
     >
-      <span className={cn('size-1.5 shrink-0 rounded-full', styles.dot)} aria-hidden />
       {label}
     </span>
   )

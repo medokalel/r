@@ -479,6 +479,7 @@ export function useApplicationState(): ApplicationState {
       uploading,
       notify,
       handleApiError,
+      readOnly: status !== 'DRAFT',
     }),
     [
       form,

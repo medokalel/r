@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useCabSidebar } from '@/context/CabSidebarContext'
@@ -57,7 +58,12 @@ const navGroups: CabNavGroup[] = [
     id: 'customer-commercial',
     labelKey: 'cab.sidebar.groups.customerCommercial',
     items: [
-      { icon: UsersIcon, labelKey: 'cab.sidebar.auditClients', href: ROUTES.cabAuditClients },
+      {
+        icon: UsersIcon,
+        labelKey: 'cab.sidebar.auditClients',
+        href: ROUTES.cabAuditClients,
+        stepId: 'sidebar-clients-new',
+      },
       { icon: MailIcon, labelKey: 'cab.sidebar.contacts', href: ROUTES.cabContacts },
       {
         icon: FileTextIcon,
@@ -66,7 +72,7 @@ const navGroups: CabNavGroup[] = [
         children: [
           {
             labelKey: 'cab.sidebar.applicationReview',
-            href: ROUTES.cabApplicationReviewQueue,
+            href: '/cab/applications/review',
             stepId: 'sidebar-app-review',
           },
           {
@@ -140,8 +146,8 @@ const navGroups: CabNavGroup[] = [
     id: 'people-portals',
     labelKey: 'cab.sidebar.groups.peoplePortals',
     items: [
-      { icon: AccreditationFieldIcon, labelKey: 'cab.sidebar.competence', disabled: true },
-      { icon: UserIcon, labelKey: 'cab.sidebar.clientPortal', disabled: true },
+      { icon: AccreditationFieldIcon, labelKey: 'cab.sidebar.competence', href: ROUTES.cabCompetence },
+      { icon: UserIcon, labelKey: 'cab.sidebar.clientPortal', href: ROUTES.portal },
     ],
   },
   {
@@ -203,6 +209,118 @@ function getDisplayName(email: string): string {
     .join(' ')
 }
 
+function CollapsedNavSubmenu({
+  item,
+  isOpen,
+  active,
+  pathname,
+  onToggle,
+  onClose,
+  onNavigate,
+}: {
+  item: CabNavItem
+  isOpen: boolean
+  active: boolean
+  pathname: string
+  onToggle: () => void
+  onClose: () => void
+  onNavigate: (href: string) => void
+}) {
+  const { t } = useTranslation()
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const [flyoutPos, setFlyoutPos] = useState({ top: 0, left: 0 })
+
+  useLayoutEffect(() => {
+    if (!isOpen || !triggerRef.current) return
+    const update = () => {
+      if (!triggerRef.current) return
+      const rect = triggerRef.current.getBoundingClientRect()
+      const isRtl = document.documentElement.dir === 'rtl'
+      const width = 232
+      setFlyoutPos({
+        top: Math.min(Math.max(8, rect.top), window.innerHeight - 280),
+        left: isRtl ? Math.max(8, rect.left - 12 - width) : rect.right + 12,
+      })
+    }
+    update()
+    window.addEventListener('resize', update)
+    window.addEventListener('scroll', update, true)
+    return () => {
+      window.removeEventListener('resize', update)
+      window.removeEventListener('scroll', update, true)
+    }
+  }, [isOpen])
+
+  const menuItems = [
+    ...(item.href ? [{ labelKey: item.labelKey, href: item.href }] : []),
+    ...(item.children ?? []).filter((child) => child.href !== item.href),
+  ]
+
+  return (
+    <div className="relative">
+      <button
+        ref={triggerRef}
+        type="button"
+        title={t(item.labelKey)}
+        aria-label={t(item.labelKey)}
+        aria-expanded={isOpen}
+        aria-haspopup="menu"
+        onClick={onToggle}
+        className={cn(
+          'relative flex items-center transition-colors',
+          active
+            ? 'size-11 justify-center rounded-[14px] bg-[#f3f6fd] text-primary'
+            : 'size-8 justify-center text-neutral-500 hover:text-primary',
+        )}
+      >
+        {item.icon && <AppIcon icon={item.icon} size={22} className="shrink-0" />}
+      </button>
+      {isOpen &&
+        createPortal(
+          <>
+            <button
+              type="button"
+              aria-label={t('common.close')}
+              className="fixed inset-0 z-[2000] cursor-default bg-transparent"
+              onClick={onClose}
+            />
+            <div
+              role="menu"
+              aria-label={t(item.labelKey)}
+              style={{ top: flyoutPos.top, left: flyoutPos.left }}
+              className="fixed z-[2001] min-w-[220px] rounded-[var(--radius-md)] border border-neutral-100 bg-white py-1 shadow-lg"
+            >
+              <p className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
+                {t(item.labelKey)}
+              </p>
+              {menuItems.map((child) => {
+                const childActive = Boolean(child.href && matchesNavHref(pathname, child.href))
+                return (
+                  <button
+                    key={`${child.labelKey}-${child.href}`}
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      if (child.href) onNavigate(child.href)
+                      onClose()
+                    }}
+                    className={cn(
+                      'flex w-full items-center px-3 py-2 text-start text-body-3-medium text-neutral-600 transition-colors hover:bg-primary-subtle hover:text-primary',
+                      childActive && 'bg-primary-subtle text-primary',
+                    )}
+                  >
+                    {t(child.labelKey)}
+                  </button>
+                )
+              })}
+            </div>
+          </>,
+          document.body,
+        )}
+    </div>
+  )
+}
+
 export function CabSidebar() {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -218,9 +336,7 @@ export function CabSidebar() {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(navGroups.map((group) => [group.id, true])),
   )
-  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>(() => ({
-    'cab.sidebar.applications': location.pathname.startsWith('/cab/applications/'),
-  }))
+  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({})
 
   const handleLogout = () => {
     clearAuthSession()
@@ -317,74 +433,16 @@ export function CabSidebar() {
 
     if (!isExpanded) {
       return (
-        <div key={submenuKey} className="relative">
-          <button
-            type="button"
-            title={t(item.labelKey)}
-            aria-label={t(item.labelKey)}
-            aria-expanded={isOpen}
-            aria-haspopup="menu"
-            onClick={() => {
-              if (item.href) {
-                navigate(item.href)
-                return
-              }
-              toggleSubmenu(submenuKey)
-            }}
-            className={cn(
-              'relative flex items-center transition-colors',
-              active
-                ? 'size-11 justify-center rounded-[14px] bg-[#f3f6fd] text-primary'
-                : 'size-8 justify-center text-neutral-500 hover:text-primary',
-            )}
-          >
-            {item.icon && <AppIcon icon={item.icon} size={22} className="shrink-0" />}
-          </button>
-          {isOpen && (
-            <>
-              <button
-                type="button"
-                aria-label={t('common.close')}
-                className="fixed inset-0 z-[1000] cursor-default"
-                onClick={() => closeSubmenu(submenuKey)}
-              />
-              <div
-                role="menu"
-                aria-label={t(item.labelKey)}
-                className="absolute start-full top-0 z-[1001] ms-3 min-w-[220px] rounded-[var(--radius-md)] border border-neutral-100 bg-white py-1 shadow-lg"
-              >
-                <p className="px-3 py-2 text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                  {t(item.labelKey)}
-                </p>
-                {item.children?.map((child) => {
-                  const childActive = Boolean(
-                    child.href && matchesNavHref(location.pathname, child.href),
-                  )
-
-                  return (
-                    <button
-                      key={child.href}
-                      type="button"
-                      role="menuitem"
-                      onClick={() => {
-                        if (child.href) {
-                          navigate(child.href)
-                        }
-                        closeSubmenu(submenuKey)
-                      }}
-                      className={cn(
-                        'flex w-full items-center px-3 py-2 text-start text-body-3-medium text-neutral-600 transition-colors hover:bg-primary-subtle hover:text-primary',
-                        childActive && 'bg-primary-subtle text-primary',
-                      )}
-                    >
-                      {t(child.labelKey)}
-                    </button>
-                  )
-                })}
-              </div>
-            </>
-          )}
-        </div>
+        <CollapsedNavSubmenu
+          key={submenuKey}
+          item={item}
+          isOpen={isOpen}
+          active={active}
+          pathname={location.pathname}
+          onToggle={() => toggleSubmenu(submenuKey)}
+          onClose={() => closeSubmenu(submenuKey)}
+          onNavigate={(href) => navigate(href)}
+        />
       )
     }
 
@@ -450,7 +508,12 @@ export function CabSidebar() {
       <div className="hidden shrink-0 w-full justify-end px-2 lg:flex">
         <button
           type="button"
-          onClick={() => setExpanded((prev) => !prev)}
+          onClick={() =>
+            setExpanded((prev) => {
+              if (prev) setOpenSubmenus({})
+              return !prev
+            })
+          }
           aria-expanded={expanded}
           aria-label={t(expanded ? 'accreditation.sidebar.collapse' : 'accreditation.sidebar.expand')}
           className={cn(
