@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { markTourPending } from '@/context/TourContext'
@@ -24,7 +24,7 @@ import {
   type RequestPriority,
   type WorkflowStepStatus,
 } from '@/lib/api/cabApplicationInformationRequiredApi'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabApplicationTechnicalFeasibilityPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
@@ -439,6 +439,9 @@ export function CabApplicationInformationRequiredPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const scale = useFitScale()
+  const { applicationId } = useParams()
+  const [searchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId') ?? undefined
   const [data, setData] = useState<CabApplicationInformationRequired | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('informationRequired')
@@ -447,7 +450,7 @@ export function CabApplicationInformationRequiredPage() {
 
   useEffect(() => {
     let cancelled = false
-    getCabApplicationInformationRequired().then((result) => {
+    getCabApplicationInformationRequired(applicationId, clientId).then((result) => {
       if (!cancelled) {
         setData(result)
         setLoading(false)
@@ -456,7 +459,7 @@ export function CabApplicationInformationRequiredPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [applicationId, clientId])
 
   if (loading || !data) {
     return (
@@ -475,7 +478,7 @@ export function CabApplicationInformationRequiredPage() {
       tourSteps={tourSteps}
       onTourComplete={() => {
         markTourPending('cab-application-technical-feasibility')
-        navigate('/cab/applications/technical-feasibility')
+        navigate(cabApplicationTechnicalFeasibilityPath(applicationId, clientId))
       }}
     >
         <DashboardTourStep steps={tourSteps} stepId="header">

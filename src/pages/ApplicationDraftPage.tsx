@@ -21,7 +21,8 @@ import {
 import { emptyStandardsScopeForm, isStandardsScopeComplete } from '@/lib/standardsScopeForm'
 import { emptySitesFacilitiesForm, isSitesFacilitiesComplete } from '@/lib/sitesFacilitiesForm'
 import { emptyDocumentsForm, isDocumentsComplete } from '@/lib/documentsForm'
-import { ROUTES } from '@/lib/routes'
+import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
+import { ROUTES, cabApplicationSubmissionPath } from '@/lib/routes'
 import { markTourPending } from '@/context/TourContext'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useApplicationDraftTourSteps } from '@/config/applicationDraftTourSteps'
@@ -144,6 +145,32 @@ export function ApplicationDraftPage() {
     }
     clearApplicationDraftSnapshot()
     navigate('/cab/applications/receipt')
+  }
+
+  const resumingSiteFlow = Boolean(pendingSiteOnLoad || pendingMultiSiteRuleOnLoad)
+
+  if (!resumingSiteFlow) {
+    return (
+      <CabLayout>
+        <CabHeader title={t('cab.applicationDraft.title')} notificationCount={3} />
+        <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+          <ApplicationPicker
+            title={t('cab.applicationDraft.selectApplication')}
+            hint={t('cab.applicationDraft.selectApplicationHint')}
+            actionLabel={t('cab.applicationDraft.continueDraft')}
+            allowedStatuses={['DRAFT']}
+            extraAction={{
+              label: t('cab.applicationDraft.startNew'),
+              onClick: () => navigate(ROUTES.cabApplicationSubmission),
+            }}
+            onSelect={(application) => {
+              if (!application.clientId) return
+              navigate(cabApplicationSubmissionPath(application.clientId, application.id))
+            }}
+          />
+        </div>
+      </CabLayout>
+    )
   }
 
   return (

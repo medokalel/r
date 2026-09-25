@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
-import { DEMO_SCOPE, SCHEME_RULES, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
+import { SCHEME_RULES, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
 import { FIELD_KEYS } from '@/lib/api/cabAuditReportingApi'
 import { CARD, GHOST_BTN, INPUT, PRIMARY_BTN, ScopeBanner, Toast } from '@/components/cab/auditReporting/shared'
 import { cn } from '@/lib/utils'
@@ -70,8 +70,8 @@ export function CabAddFindingPage() {
           notificationCount={0}
         />
 
-        <main className="flex flex-1 flex-col gap-5 overflow-auto bg-[#f9fafc] p-6 lg:p-8">
-          <nav className="flex items-center gap-2 text-[12px] font-medium text-neutral-400" aria-label="Breadcrumb">
+        <main className="flex flex-1 flex-col gap-5 overflow-auto bg-[#f9fafc] p-3 sm:p-5">
+          <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label="Breadcrumb">
             <button type="button" onClick={handleCancel} className="transition-colors hover:text-[#1236a3]">
               {tr('cab.auditReporting.title', 'Audit Reporting')}
             </button>
@@ -82,7 +82,7 @@ export function CabAddFindingPage() {
           <ScopeBanner title={tr('cab.auditReporting.scope', 'CAB-client scope')} />
 
           {errors.length > 0 && (
-            <div className="rounded-[12px] border border-error-200 bg-error-50 p-4" role="alert">
+            <div className="rounded-[8px] border border-error-200 bg-error-50 p-4" role="alert">
               <p className="text-[13px] font-bold text-error-600">{tr('cab.auditReporting.gatesBlockedTitle', 'Submission gates — resolve to submit')}</p>
               <ul className="mt-1.5 list-disc space-y-0.5 ps-5 text-[12px] font-medium text-neutral-700">
                 {errors.map((e) => <li key={e}>{e}</li>)}
@@ -95,7 +95,7 @@ export function CabAddFindingPage() {
             <div className={cn(CARD, 'space-y-4 p-5')}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div>
-                  <label className="mb-1 block text-[13px] font-semibold text-neutral-800">
+                  <label className="mb-1 block text-[13px] font-medium text-neutral-800">
                     {tr('cab.auditReporting.findingType', 'Finding type')} *
                   </label>
                   <select value={findingType} onChange={(e) => { setFindingType(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.findingType}>
@@ -106,7 +106,7 @@ export function CabAddFindingPage() {
                 </div>
 
                 <div>
-                  <label className="mb-1 flex items-center gap-1.5 text-[13px] font-semibold text-neutral-800">
+                  <label className="mb-1 flex items-center gap-1.5 text-[13px] font-medium text-neutral-800">
                     {tr('cab.auditReporting.classification', 'Classification (scheme rules)')} *
                     <button type="button" onClick={() => setShowScheme(true)} aria-label="Scheme rules info"
                       className="flex size-5 items-center justify-center rounded-full bg-[#e8edfc] text-[11px] font-bold text-[#1236a3]">?</button>
@@ -123,9 +123,9 @@ export function CabAddFindingPage() {
                 </div>
               </div>
 
-              {/* Requirement reference field — added here */}
+              {/* Requirement reference field */}
               <div>
-                <label className="mb-1 block text-[13px] font-semibold text-neutral-800">
+                <label className="mb-1 block text-[13px] font-medium text-neutral-800">
                   {tr('cab.auditReporting.reqRefFull', 'Requirement reference')} *
                 </label>
                 <input
@@ -137,14 +137,14 @@ export function CabAddFindingPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-[13px] font-semibold text-neutral-800">
+                <label className="mb-1 block text-[13px] font-medium text-neutral-800">
                   {tr('cab.auditReporting.objectiveEvidence', 'Objective evidence (linked)')} *
                 </label>
-                <textarea rows={3} value={evidenceText} onChange={(e) => { setEvidenceText(e.target.value); markDirty(); }} className={cn(INPUT, 'min-h-20 resize-y')} data-field={FIELD_KEYS.objectiveEvidence} />
+                <textarea rows={3} value={evidenceText} onChange={(e) => { setEvidenceText(e.target.value); markDirty(); }} className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[14px] text-neutral-900 focus:border-[#1236a3] focus:outline-none min-h-20 resize-y" data-field={FIELD_KEYS.objectiveEvidence} />
                 <div className="mt-2 flex flex-wrap gap-2">
                   {['EV-0101', 'EV-0102', 'EV-0103', 'DOC-102'].map((id) => (
-                    <label key={id} className={cn('cursor-pointer rounded-[8px] border px-2.5 py-1.5 text-[12px] font-semibold',
-                      evidenceLinks.includes(id) ? 'border-[#1236a3] bg-[#e8edfc] text-[#1236a3]' : 'border-neutral-200 bg-white text-neutral-500')}>
+                    <label key={id} className={cn('cursor-pointer rounded-[8px] border px-3 py-1.5 text-[12px] font-medium',
+                      evidenceLinks.includes(id) ? 'border-[#1236a3] bg-[#e8edfc] text-[#1236a3]' : 'border-[#e2e2e2] bg-white text-neutral-600')}>
                       <input type="checkbox" className="me-1.5 accent-[#1236a3]" checked={evidenceLinks.includes(id)} onChange={() => toggleLink(id)} />
                       {id}
                     </label>
@@ -156,42 +156,42 @@ export function CabAddFindingPage() {
               </div>
 
               <div>
-                <label className="mb-1 block text-[13px] font-semibold text-neutral-800">
+                <label className="mb-1 block text-[13px] font-medium text-neutral-800">
                   {tr('cab.auditReporting.statement', 'Finding statement')} *
                 </label>
-                <textarea rows={3} value={statement} onChange={(e) => { setStatement(e.target.value); markDirty(); }} className={cn(INPUT, 'min-h-20 resize-y')} data-field={FIELD_KEYS.statement} />
+                <textarea rows={3} value={statement} onChange={(e) => { setStatement(e.target.value); markDirty(); }} className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[14px] text-neutral-900 focus:border-[#1236a3] focus:outline-none min-h-20 resize-y" data-field={FIELD_KEYS.statement} />
               </div>
 
               <div>
                 <button type="button" onClick={() => setDetailsOpen((v) => !v)} aria-expanded={detailsOpen}
-                  className="flex w-full items-center justify-between rounded-[10px] border border-neutral-200 bg-neutral-50 px-4 py-2.5 text-[13px] font-bold text-neutral-800">
+                  className="flex w-full items-center justify-between rounded-[8px] border border-[#e2e2e2] bg-neutral-50 px-4 py-2.5 text-[13px] font-medium text-neutral-800">
                   {tr('cab.auditReporting.moreDetails', 'More details (progressive disclosure)')}
                   <span aria-hidden className={cn(detailsOpen ? 'rotate-180' : '')}>▾</span>
                 </button>
               </div>
 
               {detailsOpen && (
-                <div className="mt-3 grid grid-cols-1 gap-4 rounded-[10px] border border-neutral-100 bg-[#fbfcfd] p-4 sm:grid-cols-2">
+                <div className="mt-3 grid grid-cols-1 gap-4 rounded-[8px] border border-neutral-100 bg-[#fbfcfd] p-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1 block text-[12px] font-semibold text-neutral-700">{tr('cab.auditReporting.process', 'Process / area')}</label>
+                    <label className="mb-1 block text-[12px] font-medium text-neutral-700">{tr('cab.auditReporting.process', 'Process / area')}</label>
                     <input value={process} onChange={(e) => { setProcess(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.process} />
                   </div>
                   <div>
-                    <label className="mb-1 block text-[12px] font-semibold text-neutral-700">
+                    <label className="mb-1 block text-[12px] font-medium text-neutral-700">
                       {tr('cab.auditReporting.dueDate', 'Due date')} · {tr('cab.auditReporting.schemeRuled', 'scheme-ruled')}
                     </label>
                     <input type="date" value={dueDate} onChange={(e) => { setDueDate(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.dueDate} />
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-1 block text-[12px] font-semibold text-neutral-700">{tr('cab.auditReporting.responsible', 'Responsible contact (client contact role)')}</label>
+                    <label className="mb-1 block text-[12px] font-medium text-neutral-700">{tr('cab.auditReporting.responsible', 'Responsible contact (client contact role)')}</label>
                     <input value={contact} onChange={(e) => { setContact(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.contact} />
                     <p className="mt-1 text-[11px] text-neutral-500">
                       {tr('cab.auditReporting.rolesSep', 'Client contact ≠ portal access ≠ signatory authority ≠ competence record ≠ decision authority.')}
                     </p>
                   </div>
                   <div className="sm:col-span-2">
-                    <label className="mb-1 block text-[12px] font-semibold text-neutral-700">{tr('cab.auditReporting.comments', 'Additional comments (optional)')}</label>
-                    <textarea rows={2} value={comments} onChange={(e) => { setComments(e.target.value); markDirty(); }} className={cn(INPUT, 'resize-y')} />
+                    <label className="mb-1 block text-[12px] font-medium text-neutral-700">{tr('cab.auditReporting.comments', 'Additional comments (optional)')}</label>
+                    <textarea rows={2} value={comments} onChange={(e) => { setComments(e.target.value); markDirty(); }} className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[14px] text-neutral-900 focus:border-[#1236a3] focus:outline-none resize-y" />
                   </div>
                 </div>
               )}
@@ -199,8 +199,8 @@ export function CabAddFindingPage() {
             {/* ===== /Left column ===== */}
 
             {/* ===== Right column ===== */}
-            <aside className={cn(CARD, 'h-fit space-y-3 p-5')}>
-              <h3 className="text-[14px] font-bold text-neutral-900">{tr('cab.auditReporting.stageGates', 'Stage gates')}</h3>
+            <aside className={cn(CARD, 'h-fit space-y-3 p-5 shadow-none')}>
+              <h3 className="text-[16px] font-bold text-neutral-900">{tr('cab.auditReporting.stageGates', 'Stage gates')}</h3>
               <p className="text-[12px] text-neutral-500">
                 {tr('cab.auditReporting.stageGatesSub', 'Draft permits incomplete later-stage data. Submission enforces configured gates.')}
               </p>
@@ -239,6 +239,31 @@ export function CabAddFindingPage() {
                 <button type="button" className={GHOST_BTN} onClick={() => setShowCancel(false)}>{tr('common.cancel', 'Cancel')}</button>
                 <button type="button" className={PRIMARY_BTN} onClick={() => { setIsDirty(false); navigate('/cab/audit-reporting'); }}>
                   {tr('cab.auditReporting.discard', 'Discard changes')}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showScheme && (
+          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-neutral-900/50 p-4" role="dialog" aria-modal="true" aria-label="Scheme rules">
+            <div className={cn(CARD, 'w-full max-w-lg space-y-4 p-6 shadow-2xl')}>
+              <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
+                <h3 className="text-[16px] font-bold text-neutral-900">{SCHEME_RULES.scheme}</h3>
+                <span className="text-[12px] text-neutral-500">{SCHEME_RULES.version}</span>
+              </div>
+              <p className="text-[13px] text-neutral-600">Classification rules and due date constraints:</p>
+              <div className="space-y-2">
+                {SCHEME_RULES.classifications.map((c) => (
+                  <div key={c.value} className="rounded-[8px] border border-neutral-200 bg-neutral-50 p-3 text-[13px]">
+                    <p className="font-semibold text-neutral-900">{c.label}</p>
+                    <p className="mt-0.5 text-[12px] text-neutral-600">{c.dueRule}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-end pt-2">
+                <button type="button" className={PRIMARY_BTN} onClick={() => setShowScheme(false)}>
+                  {tr('common.close', 'Close')}
                 </button>
               </div>
             </div>
