@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useNonconformitiesTourSteps } from '@/config/nonconformitiesTourSteps'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
@@ -53,6 +55,7 @@ function Field({ label, children }: { label: string; children: ReactNode }) {
 export function CabNonconformitiesPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = useNonconformitiesTourSteps()
 
   const [nonconformities, setNonconformities] = useState<NonconformityItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -161,7 +164,7 @@ export function CabNonconformitiesPage() {
   }
 
   return (
-    <CabLayout>
+    <CabLayout tourId="cab-nonconformities" tourSteps={tourSteps}>
       <CabHeader title={t('cab.nonconformities.title')} notificationCount={3} />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
@@ -173,202 +176,215 @@ export function CabNonconformitiesPage() {
         </nav>
 
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
-              {t('cab.nonconformities.title')}
-            </h1>
-            <p className="mt-1 text-[14px] text-neutral-500">{t('cab.nonconformities.subtitle')}</p>
-          </div>
-          <ExportMenuButton
-            exporting={exporting}
-            disabled={filtered.length === 0}
-            onExportExcel={handleExportExcel}
-            onExportPdf={handleExportPdf}
-            className="w-full sm:w-auto"
-          />
+          <CabTourStep steps={tourSteps} stepId="nonconformities-header">
+            <div>
+              <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
+                {t('cab.nonconformities.title')}
+              </h1>
+              <p className="mt-1 text-[14px] text-neutral-500">{t('cab.nonconformities.subtitle')}</p>
+            </div>
+          </CabTourStep>
+          <CabTourStep steps={tourSteps} stepId="nonconformities-export">
+            <ExportMenuButton
+              exporting={exporting}
+              disabled={filtered.length === 0}
+              onExportExcel={handleExportExcel}
+              onExportPdf={handleExportPdf}
+              className="w-full sm:w-auto"
+            />
+          </CabTourStep>
         </div>
 
         {/* Filters */}
-        <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.6fr_1fr_1fr_auto] lg:items-end">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="nonconformity-search" className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.nonconformities.filters.search')}
-              </label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
-                  <AppIcon icon={SearchIcon} size={18} />
+        <CabTourStep steps={tourSteps} stepId="nonconformities-filters">
+          <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.6fr_1fr_1fr_auto] lg:items-end">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="nonconformity-search" className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.nonconformities.filters.search')}
+                </label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
+                    <AppIcon icon={SearchIcon} size={18} />
+                  </span>
+                  <input
+                    id="nonconformity-search"
+                    type="text"
+                    value={query}
+                    onChange={(event) => {
+                      setPage(1)
+                      setQuery(event.target.value)
+                    }}
+                    placeholder={t('cab.nonconformities.filters.searchPlaceholder')}
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.nonconformities.filters.raisedPeriod')}
                 </span>
-                <input
-                  id="nonconformity-search"
-                  type="text"
-                  value={query}
-                  onChange={(event) => {
+                <DateRangePicker
+                  value={period}
+                  onChange={(next) => {
                     setPage(1)
-                    setQuery(event.target.value)
+                    setPeriod(next)
                   }}
-                  placeholder={t('cab.nonconformities.filters.searchPlaceholder')}
-                  className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
+                  className="[&_button]:h-11"
                 />
               </div>
-            </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.nonconformities.filters.raisedPeriod')}
-              </span>
-              <DateRangePicker
-                value={period}
-                onChange={(next) => {
-                  setPage(1)
-                  setPeriod(next)
-                }}
-                className="[&_button]:h-11"
-              />
-            </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.nonconformities.fields.country')}
+                </span>
+                <SelectField
+                  value={countryFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setCountryFilter(value)
+                  }}
+                  className="h-11"
+                  options={[
+                    { value: 'all', label: t('cab.nonconformities.filters.allCountries') },
+                    ...countryOptions.map((country) => ({ value: country, label: country })),
+                  ]}
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.nonconformities.fields.country')}
-              </span>
-              <SelectField
-                value={countryFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setCountryFilter(value)
-                }}
-                className="h-11"
-                options={[
-                  { value: 'all', label: t('cab.nonconformities.filters.allCountries') },
-                  ...countryOptions.map((country) => ({ value: country, label: country })),
-                ]}
-              />
-            </div>
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.nonconformities.table.status')}
+                </span>
+                <SelectField
+                  value={statusFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setStatusFilter(value)
+                  }}
+                  className="h-11"
+                  options={[
+                    { value: 'all', label: t('cab.nonconformities.filters.allStatuses') },
+                    ...NONCONFORMITY_STATUSES.map((status) => ({
+                      value: status,
+                      label: statusLabel(status),
+                    })),
+                  ]}
+                />
+              </div>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.nonconformities.table.status')}
-              </span>
-              <SelectField
-                value={statusFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setStatusFilter(value)
-                }}
-                className="h-11"
-                options={[
-                  { value: 'all', label: t('cab.nonconformities.filters.allStatuses') },
-                  ...NONCONFORMITY_STATUSES.map((status) => ({
-                    value: status,
-                    label: statusLabel(status),
-                  })),
-                ]}
-              />
+              <div className="flex items-end justify-start lg:justify-end">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  disabled={!hasActiveFilters}
+                  className="h-11 whitespace-nowrap text-[14px] font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
+                >
+                  {t('cab.nonconformities.filters.clear')}
+                </button>
+              </div>
             </div>
-
-            <div className="flex items-end justify-start lg:justify-end">
-              <button
-                type="button"
-                onClick={clearFilters}
-                disabled={!hasActiveFilters}
-                className="h-11 whitespace-nowrap text-[14px] font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
-              >
-                {t('cab.nonconformities.filters.clear')}
-              </button>
-            </div>
-          </div>
-        </section>
+          </section>
+        </CabTourStep>
 
         <div className={cn('grid grid-cols-1 gap-5', selected && 'xl:grid-cols-[minmax(0,1fr)_400px]')}>
           {/* Register table */}
-          <section className="flex min-w-0 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-            <p className="mb-4 px-5 text-[13px] text-neutral-500">
-              {loading
-                ? t('common.loading')
-                : t('cab.nonconformities.resultCount', { count: filtered.length })}
-            </p>
+          <CabTourStep steps={tourSteps} stepId="nonconformities-table">
+            <section className="flex min-w-0 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
+              <p className="mb-4 px-5 text-[13px] text-neutral-500">
+                {loading
+                  ? t('common.loading')
+                  : t('cab.nonconformities.resultCount', { count: filtered.length })}
+              </p>
 
-            <div className="overflow-x-auto">
-              <table className="w-full min-w-[900px] border-collapse text-center">
-                <thead>
-                  <tr className="bg-[#1236a3] text-white">
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.ncId')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.finding')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.client')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.classification')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.due')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.owner')}</th>
-                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.status')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {loading ? (
-                    <tr>
-                      <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
-                        {t('common.loading')}
-                      </td>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[900px] border-collapse text-center">
+                  <thead>
+                    <tr className="bg-[#1236a3] text-white">
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.ncId')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.finding')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.client')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.classification')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.due')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.owner')}</th>
+                      <th className="px-4 py-4 text-[14px] font-medium">{t('cab.nonconformities.table.status')}</th>
                     </tr>
-                  ) : paginated.length === 0 ? (
-                    <tr>
-                      <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
-                        {t('cab.nonconformities.empty')}
-                      </td>
-                    </tr>
-                  ) : (
-                    paginated.map((row, index) => (
-                      <tr
-                        key={row.id}
-                        onClick={() => {
-                          setSelectedId(row.id)
-                          setTab('details')
-                        }}
-                        className={cn(
-                          'cursor-pointer transition-colors hover:bg-[#e8edfc]/50',
-                          selected?.id === row.id
-                            ? 'bg-[#e8edfc]/50'
-                            : index % 2
-                              ? 'bg-[#f9fafc]'
-                              : '',
-                        )}
-                      >
-                        <td className="px-4 py-4 text-[15px] font-medium text-primary" dir="ltr">
-                          {row.ncId}
-                        </td>
-                        <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
-                          {row.findingId}
-                        </td>
-                        <td className="px-4 py-4">
-                          <div className="text-[15px] font-medium text-neutral-900">{row.clientName}</div>
-                          <div className="text-[12px] text-neutral-500" dir="ltr">{row.clientId}</div>
-                        </td>
-                        <td className="px-4 py-4 text-[15px] text-neutral-700">{row.classificationLabel}</td>
-                        <td
-                          className={cn(
-                            'px-4 py-4 text-[15px]',
-                            row.overdue ? 'font-medium text-[#dc2626]' : 'text-neutral-700',
-                          )}
-                          dir="ltr"
-                        >
-                          {row.dueDate}
-                        </td>
-                        <td className="px-4 py-4 text-[15px] text-neutral-700">{row.ownerName}</td>
-                        <td className="px-4 py-4">
-                          <NonconformityStatusBadge status={row.status} label={statusLabel(row.status)} />
+                  </thead>
+                  <tbody>
+                    {loading ? (
+                      <tr>
+                        <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
+                          {t('common.loading')}
                         </td>
                       </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+                    ) : paginated.length === 0 ? (
+                      <tr>
+                        <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
+                          {t('cab.nonconformities.empty')}
+                        </td>
+                      </tr>
+                    ) : (
+                      paginated.map((row, index) => (
+                        <tr
+                          key={row.id}
+                          onClick={() => {
+                            setSelectedId(row.id)
+                            setTab('details')
+                          }}
+                          className={cn(
+                            'cursor-pointer transition-colors hover:bg-[#e8edfc]/50',
+                            selected?.id === row.id
+                              ? 'bg-[#e8edfc]/50'
+                              : index % 2
+                                ? 'bg-[#f9fafc]'
+                                : '',
+                          )}
+                        >
+                          <td className="px-4 py-4 text-[15px] font-medium text-primary" dir="ltr">
+                            {row.ncId}
+                          </td>
+                          <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
+                            {row.findingId}
+                          </td>
+                          <td className="px-4 py-4">
+                            <div className="text-[15px] font-medium text-neutral-900">{row.clientName}</div>
+                            <div className="text-[12px] text-neutral-500" dir="ltr">{row.clientId}</div>
+                          </td>
+                          <td className="px-4 py-4 text-[15px] text-neutral-700">{row.classificationLabel}</td>
+                          <td
+                            className={cn(
+                              'px-4 py-4 text-[15px]',
+                              row.overdue ? 'font-medium text-[#dc2626]' : 'text-neutral-700',
+                            )}
+                            dir="ltr"
+                          >
+                            {row.dueDate}
+                          </td>
+                          <td className="px-4 py-4 text-[15px] text-neutral-700">{row.ownerName}</td>
+                          <td className="px-4 py-4">
+                            <CabTourStep
+                              steps={tourSteps}
+                              stepId={index === 0 ? 'nonconformities-status' : undefined}
+                            >
+                              <NonconformityStatusBadge status={row.status} label={statusLabel(row.status)} />
+                            </CabTourStep>
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
 
-            <TablePagination
-              page={currentPage}
-              totalPages={totalPages}
-              onPageChange={setPage}
-              className="mt-5 px-5"
-            />
-          </section>
+              <TablePagination
+                page={currentPage}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                className="mt-5 px-5"
+              />
+            </section>
+          </CabTourStep>
 
           {/* Selected nonconformity detail panel */}
           {selected && (

@@ -11,7 +11,6 @@ import { TextField } from '@/components/ui'
 import { AuthLayout } from '@/components/auth/AuthLayout'
 import {
   isValidLoginIdentifier,
-  isValidPassword,
   normalizeLoginIdentifier,
 } from '@/lib/authValidation'
 import { Button } from '@/components/ui/Button'
@@ -42,7 +41,7 @@ export function LoginPage() {
 
   const canSubmit =
     isValidLoginIdentifier(form.email) &&
-    isValidPassword(form.password) &&
+    form.password.length >= 6 &&
     !isSubmitting
 
   const handleSubmit = async (e: React.FormEvent) => {

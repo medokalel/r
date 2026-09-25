@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useNonconformityResponseTourSteps } from '@/config/nonconformityResponseTourSteps'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
 import { EvidenceUploadField } from '@/components/dashboard/cab/EvidenceUploadField'
 import { Button } from '@/components/ui/Button'
@@ -119,6 +121,7 @@ export function CabNonconformityResponsePage() {
   const { ncId } = useParams<{ ncId: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const tourSteps = useNonconformityResponseTourSteps()
 
   const [response, setResponse] = useState<NonconformityResponse | null>(null)
   const [loading, setLoading] = useState(true)
@@ -311,7 +314,7 @@ export function CabNonconformityResponsePage() {
   const { nonconformity } = response
 
   return (
-    <CabLayout>
+    <CabLayout tourId="cab-nonconformity-response" tourSteps={tourSteps}>
       <CabHeader title={t('cab.nonconformityResponse.title')} notificationCount={3} />
 
       <main className="flex flex-1 overflow-auto">
@@ -330,291 +333,299 @@ export function CabNonconformityResponsePage() {
             </nav>
 
             {/* Page header */}
-            <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-start">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-3">
-                  <h1 className="text-[28px] font-bold leading-tight text-neutral-900" dir="ltr">
-                    {nonconformity.ncId}
-                  </h1>
-                  <NonconformityStatusBadge status={status} label={statusLabel(status)} />
+            <CabTourStep steps={tourSteps} stepId="nc-response-header">
+              <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-start">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <h1 className="text-[28px] font-bold leading-tight text-neutral-900" dir="ltr">
+                      {nonconformity.ncId}
+                    </h1>
+                    <NonconformityStatusBadge status={status} label={statusLabel(status)} />
+                  </div>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-neutral-600">
+                    <span className="font-medium text-neutral-900">{nonconformity.clientName}</span>
+                    <span className="text-neutral-200">|</span>
+                    <span>
+                      {t('cab.nonconformities.table.client')}:{' '}
+                      <Link
+                        to={`/cab/clients/${nonconformity.clientId}`}
+                        className="text-primary hover:underline"
+                        dir="ltr"
+                      >
+                        {nonconformity.clientId}
+                      </Link>
+                    </span>
+                    <span className="text-neutral-200">|</span>
+                    <span>{nonconformity.country}</span>
+                    <span className="text-neutral-200">|</span>
+                    <span dir="ltr">
+                      {t('cab.nonconformityResponse.fields.application')}: {response.applicationId}
+                    </span>
+                  </div>
                 </div>
-                <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-neutral-600">
-                  <span className="font-medium text-neutral-900">{nonconformity.clientName}</span>
-                  <span className="text-neutral-200">|</span>
-                  <span>
-                    {t('cab.nonconformities.table.client')}:{' '}
-                    <Link
-                      to={`/cab/clients/${nonconformity.clientId}`}
-                      className="text-primary hover:underline"
-                      dir="ltr"
-                    >
-                      {nonconformity.clientId}
-                    </Link>
-                  </span>
-                  <span className="text-neutral-200">|</span>
-                  <span>{nonconformity.country}</span>
-                  <span className="text-neutral-200">|</span>
-                  <span dir="ltr">
-                    {t('cab.nonconformityResponse.fields.application')}: {response.applicationId}
-                  </span>
-                </div>
-              </div>
 
-              <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
-                <Button
-                  variant="outline"
-                  icon={<AppIcon icon={ExternalLinkIcon} size={18} />}
-                  iconPosition="end"
-                  onClick={() => navigate(ROUTES.cabApplicationRegister)}
-                  className="h-11 flex-1 text-[14px] sm:flex-none"
-                >
-                  {t('cab.nonconformityResponse.viewApplication')}
-                </Button>
-                <div className="relative shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setMenuOpen((open) => !open)}
-                    onBlur={() => window.setTimeout(() => setMenuOpen(false), 120)}
-                    aria-expanded={menuOpen}
-                    aria-label={t('cab.nonconformityResponse.moreActions')}
-                    className="flex size-11 items-center justify-center rounded-[var(--radius-sm)] border border-blue-500 bg-white text-blue-500 transition-colors hover:bg-blue-50"
+                <div className="flex w-full shrink-0 items-center gap-2 sm:w-auto">
+                  <Button
+                    variant="outline"
+                    icon={<AppIcon icon={ExternalLinkIcon} size={18} />}
+                    iconPosition="end"
+                    onClick={() => navigate(ROUTES.cabApplicationRegister)}
+                    className="h-11 flex-1 text-[14px] sm:flex-none"
                   >
-                    <AppIcon icon={MoreIcon} size={20} />
-                  </button>
-                  {menuOpen && (
-                    <div className="absolute end-0 top-[calc(100%+4px)] z-10 min-w-[200px] overflow-hidden rounded-[10px] border border-[#ececec] bg-white py-1 shadow-lg">
-                      <button
-                        type="button"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => {
-                          setMenuOpen(false)
-                          navigate(ROUTES.cabAuditReporting)
-                        }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-start text-[13px] text-neutral-700 transition-colors hover:bg-[#f9fafc]"
-                      >
-                        <AppIcon icon={LinkIcon} size={16} className="text-neutral-400" />
-                        {t('cab.nonconformityResponse.viewFinding')}
-                      </button>
-                      <button
-                        type="button"
-                        onMouseDown={(event) => event.preventDefault()}
-                        onClick={() => {
-                          setMenuOpen(false)
-                          setTab('activity')
-                        }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-start text-[13px] text-neutral-700 transition-colors hover:bg-[#f9fafc]"
-                      >
-                        <AppIcon icon={HistoryIcon} size={16} className="text-neutral-400" />
-                        {t('cab.nonconformityResponse.tabs.activity')}
-                      </button>
-                    </div>
-                  )}
+                    {t('cab.nonconformityResponse.viewApplication')}
+                  </Button>
+                  <div className="relative shrink-0">
+                    <button
+                      type="button"
+                      onClick={() => setMenuOpen((open) => !open)}
+                      onBlur={() => window.setTimeout(() => setMenuOpen(false), 120)}
+                      aria-expanded={menuOpen}
+                      aria-label={t('cab.nonconformityResponse.moreActions')}
+                      className="flex size-11 items-center justify-center rounded-[var(--radius-sm)] border border-blue-500 bg-white text-blue-500 transition-colors hover:bg-blue-50"
+                    >
+                      <AppIcon icon={MoreIcon} size={20} />
+                    </button>
+                    {menuOpen && (
+                      <div className="absolute end-0 top-[calc(100%+4px)] z-10 min-w-[200px] overflow-hidden rounded-[10px] border border-[#ececec] bg-white py-1 shadow-lg">
+                        <button
+                          type="button"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => {
+                            setMenuOpen(false)
+                            navigate(ROUTES.cabAuditReporting)
+                          }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-start text-[13px] text-neutral-700 transition-colors hover:bg-[#f9fafc]"
+                        >
+                          <AppIcon icon={LinkIcon} size={16} className="text-neutral-400" />
+                          {t('cab.nonconformityResponse.viewFinding')}
+                        </button>
+                        <button
+                          type="button"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => {
+                            setMenuOpen(false)
+                            setTab('activity')
+                          }}
+                          className="flex w-full items-center gap-2 px-3 py-2 text-start text-[13px] text-neutral-700 transition-colors hover:bg-[#f9fafc]"
+                        >
+                          <AppIcon icon={HistoryIcon} size={16} className="text-neutral-400" />
+                          {t('cab.nonconformityResponse.tabs.activity')}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            </CabTourStep>
 
             {/* Tabs */}
-            <div
-              className="flex gap-1.5 overflow-x-auto border-b border-[#ececec]"
-              role="tablist"
-              aria-label={t('cab.nonconformityResponse.tabsLabel')}
-            >
-              {RESPONSE_TABS.map((tabId) => (
-                <button
-                  key={tabId}
-                  type="button"
-                  role="tab"
-                  aria-selected={tab === tabId}
-                  onClick={() => setTab(tabId)}
-                  className={cn(
-                    'whitespace-nowrap border-b-2 px-4 py-2.5 text-[14px] font-medium transition-colors',
-                    tab === tabId
-                      ? 'border-primary text-primary'
-                      : 'border-transparent text-neutral-600 hover:text-neutral-900',
-                  )}
-                >
-                  {t(`cab.nonconformityResponse.tabs.${tabId}`)}
-                </button>
-              ))}
-            </div>
+            <CabTourStep steps={tourSteps} stepId="nc-response-tabs">
+              <div
+                className="flex gap-1.5 overflow-x-auto border-b border-[#ececec]"
+                role="tablist"
+                aria-label={t('cab.nonconformityResponse.tabsLabel')}
+              >
+                {RESPONSE_TABS.map((tabId) => (
+                  <button
+                    key={tabId}
+                    type="button"
+                    role="tab"
+                    aria-selected={tab === tabId}
+                    onClick={() => setTab(tabId)}
+                    className={cn(
+                      'whitespace-nowrap border-b-2 px-4 py-2.5 text-[14px] font-medium transition-colors',
+                      tab === tabId
+                        ? 'border-primary text-primary'
+                        : 'border-transparent text-neutral-600 hover:text-neutral-900',
+                    )}
+                  >
+                    {t(`cab.nonconformityResponse.tabs.${tabId}`)}
+                  </button>
+                ))}
+              </div>
+            </CabTourStep>
 
             {/* ---------- Tab content ---------- */}
             <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)]">
                 {tab === 'corrective_action' && (
                   <>
                     {/* Response form */}
-                    <section className={cn(cardClassName, 'min-w-0 space-y-5 p-5')}>
-                      {/* Read-only original finding */}
-                      <div className="flex flex-col gap-3 rounded-[10px] bg-[#f9fafc] p-4 sm:flex-row sm:items-start sm:justify-between">
-                        <div className="min-w-0">
-                          <p className="text-[14px] font-medium text-neutral-900">
-                            {t('cab.nonconformityResponse.fields.originalFinding')}
-                          </p>
-                          <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-600">
-                            {response.originalFinding}
-                          </p>
+                    <CabTourStep steps={tourSteps} stepId="nc-response-form">
+                      <section className={cn(cardClassName, 'min-w-0 space-y-5 p-5')}>
+                        {/* Read-only original finding */}
+                        <div className="flex flex-col gap-3 rounded-[10px] bg-[#f9fafc] p-4 sm:flex-row sm:items-start sm:justify-between">
+                          <div className="min-w-0">
+                            <p className="text-[14px] font-medium text-neutral-900">
+                              {t('cab.nonconformityResponse.fields.originalFinding')}
+                            </p>
+                            <p className="mt-1.5 text-[13px] leading-relaxed text-neutral-600">
+                              {response.originalFinding}
+                            </p>
+                          </div>
+                          <div className="shrink-0 border-[#ececec] sm:border-s sm:ps-4">
+                            <p className="text-[12px] text-neutral-500">
+                              {t('cab.nonconformities.fields.raisedDate')}
+                            </p>
+                            <p className="mt-0.5 text-[14px] font-medium text-neutral-900">
+                              {response.findingRaisedDate}
+                            </p>
+                          </div>
                         </div>
-                        <div className="shrink-0 border-[#ececec] sm:border-s sm:ps-4">
-                          <p className="text-[12px] text-neutral-500">
-                            {t('cab.nonconformities.fields.raisedDate')}
-                          </p>
-                          <p className="mt-0.5 text-[14px] font-medium text-neutral-900">
-                            {response.findingRaisedDate}
-                          </p>
-                        </div>
-                      </div>
 
-                      <CountedTextarea
-                        id="nc-correction"
-                        label={t('cab.nonconformityResponse.fields.correction')}
-                        required
-                        value={draft.correction}
-                        disabled={readOnly || busy}
-                        error={fieldError(draft.correction)}
-                        placeholder={t('cab.nonconformityResponse.placeholders.correction')}
-                        onChange={(value) => patch({ correction: value })}
-                      />
+                        <CountedTextarea
+                          id="nc-correction"
+                          label={t('cab.nonconformityResponse.fields.correction')}
+                          required
+                          value={draft.correction}
+                          disabled={readOnly || busy}
+                          error={fieldError(draft.correction)}
+                          placeholder={t('cab.nonconformityResponse.placeholders.correction')}
+                          onChange={(value) => patch({ correction: value })}
+                        />
 
-                      <CountedTextarea
-                        id="nc-root-cause"
-                        label={t('cab.nonconformityResponse.fields.rootCause')}
-                        required
-                        value={draft.rootCause}
-                        disabled={readOnly || busy}
-                        error={fieldError(draft.rootCause)}
-                        placeholder={t('cab.nonconformityResponse.placeholders.rootCause')}
-                        onChange={(value) => patch({ rootCause: value })}
-                      />
+                        <CountedTextarea
+                          id="nc-root-cause"
+                          label={t('cab.nonconformityResponse.fields.rootCause')}
+                          required
+                          value={draft.rootCause}
+                          disabled={readOnly || busy}
+                          error={fieldError(draft.rootCause)}
+                          placeholder={t('cab.nonconformityResponse.placeholders.rootCause')}
+                          onChange={(value) => patch({ rootCause: value })}
+                        />
 
-                      <CountedTextarea
-                        id="nc-corrective-action"
-                        label={t('cab.nonconformityResponse.fields.correctiveAction')}
-                        required
-                        value={draft.correctiveAction}
-                        disabled={readOnly || busy}
-                        error={fieldError(draft.correctiveAction)}
-                        placeholder={t('cab.nonconformityResponse.placeholders.correctiveAction')}
-                        onChange={(value) => patch({ correctiveAction: value })}
-                      />
+                        <CountedTextarea
+                          id="nc-corrective-action"
+                          label={t('cab.nonconformityResponse.fields.correctiveAction')}
+                          required
+                          value={draft.correctiveAction}
+                          disabled={readOnly || busy}
+                          error={fieldError(draft.correctiveAction)}
+                          placeholder={t('cab.nonconformityResponse.placeholders.correctiveAction')}
+                          onChange={(value) => patch({ correctiveAction: value })}
+                        />
 
-                      <EvidenceUploadField
-                        label={t('cab.nonconformityResponse.fields.evidence')}
-                        required
-                        files={evidence}
-                        accept={EVIDENCE_ACCEPT}
-                        maxSizeBytes={EVIDENCE_MAX_BYTES}
-                        hint={t('cab.nonconformityResponse.evidence.hint')}
-                        disabled={readOnly || busy}
-                        error={
-                          showErrors && evidence.length === 0
-                            ? t('cab.nonconformityResponse.errors.evidenceRequired')
-                            : undefined
-                        }
-                        onSelectFiles={handleAddEvidence}
-                        onDeleteFile={handleDeleteEvidence}
-                        onOpenFile={(file) => file.url && window.open(file.url, '_blank', 'noopener')}
-                      />
-                    </section>
+                        <EvidenceUploadField
+                          label={t('cab.nonconformityResponse.fields.evidence')}
+                          required
+                          files={evidence}
+                          accept={EVIDENCE_ACCEPT}
+                          maxSizeBytes={EVIDENCE_MAX_BYTES}
+                          hint={t('cab.nonconformityResponse.evidence.hint')}
+                          disabled={readOnly || busy}
+                          error={
+                            showErrors && evidence.length === 0
+                              ? t('cab.nonconformityResponse.errors.evidenceRequired')
+                              : undefined
+                          }
+                          onSelectFiles={handleAddEvidence}
+                          onDeleteFile={handleDeleteEvidence}
+                          onOpenFile={(file) => file.url && window.open(file.url, '_blank', 'noopener')}
+                        />
+                      </section>
+                    </CabTourStep>
 
                     {/* More details */}
-                    <section className={cn(cardClassName, 'min-w-0 self-start p-5')}>
-                      <button
-                        type="button"
-                        onClick={() => setDetailsOpen((open) => !open)}
-                        aria-expanded={detailsOpen}
-                        className="flex w-full items-center gap-2 text-start"
-                      >
-                        <AppIcon
-                          icon={ArrowRightIcon}
-                          size={18}
-                          className={cn(
-                            'shrink-0 text-neutral-500 transition-transform rtl-flip',
-                            detailsOpen ? '-rotate-90' : 'rotate-90',
-                          )}
-                        />
-                        <span className="text-[18px] font-medium text-neutral-900">
-                          {t('cab.nonconformityResponse.moreDetails')}
-                        </span>
-                      </button>
-
-                      {detailsOpen && (
-                        <div className="mt-5 space-y-5">
-                          <SelectField
-                            id="nc-responsible"
-                            label={t('cab.nonconformityResponse.fields.responsiblePerson')}
-                            required
-                            value={draft.responsiblePerson}
-                            disabled={readOnly || busy}
-                            options={response.responsibleOptions}
-                            placeholder={t('cab.nonconformityResponse.placeholders.responsiblePerson')}
-                            onChange={(value) => patch({ responsiblePerson: value })}
-                          />
-
-                          <div className="space-y-2">
-                            <FormLabel required>{t('cab.nonconformityResponse.fields.targetDate')}</FormLabel>
-                            <DatePicker
-                              value={parseDate(draft.targetDate)}
-                              disabled={readOnly || busy}
-                              onChange={(date) => patch({ targetDate: toIso(date) })}
-                              placeholder={t('cab.nonconformityResponse.placeholders.date')}
-                            />
-                            {showErrors && !draft.targetDate && (
-                              <p className="text-small-light text-error-500">
-                                {t('cab.nonconformityResponse.errors.required')}
-                              </p>
+                    <CabTourStep steps={tourSteps} stepId="nc-response-more-details">
+                      <section className={cn(cardClassName, 'min-w-0 self-start p-5')}>
+                        <button
+                          type="button"
+                          onClick={() => setDetailsOpen((open) => !open)}
+                          aria-expanded={detailsOpen}
+                          className="flex w-full items-center gap-2 text-start"
+                        >
+                          <AppIcon
+                            icon={ArrowRightIcon}
+                            size={18}
+                            className={cn(
+                              'shrink-0 text-neutral-500 transition-transform rtl-flip',
+                              detailsOpen ? '-rotate-90' : 'rotate-90',
                             )}
-                          </div>
+                          />
+                          <span className="text-[18px] font-medium text-neutral-900">
+                            {t('cab.nonconformityResponse.moreDetails')}
+                          </span>
+                        </button>
 
-                          <div className="space-y-2">
-                            <FormLabel>{t('cab.nonconformities.table.status')}</FormLabel>
-                            <div>
-                              <NonconformityStatusBadge status={status} label={statusLabel(status)} />
-                            </div>
-                          </div>
-
-                          <div className="space-y-5 border-t border-[#ececec] pt-5">
-                            <p className="text-[18px] font-medium text-neutral-900">
-                              {t('cab.nonconformityResponse.effectivenessReview')}
-                            </p>
+                        {detailsOpen && (
+                          <div className="mt-5 space-y-5">
+                            <SelectField
+                              id="nc-responsible"
+                              label={t('cab.nonconformityResponse.fields.responsiblePerson')}
+                              required
+                              value={draft.responsiblePerson}
+                              disabled={readOnly || busy}
+                              options={response.responsibleOptions}
+                              placeholder={t('cab.nonconformityResponse.placeholders.responsiblePerson')}
+                              onChange={(value) => patch({ responsiblePerson: value })}
+                            />
 
                             <div className="space-y-2">
-                              <FormLabel>
-                                {t('cab.nonconformityResponse.fields.effectivenessReviewDate')}
-                              </FormLabel>
+                              <FormLabel required>{t('cab.nonconformityResponse.fields.targetDate')}</FormLabel>
                               <DatePicker
-                                value={parseDate(draft.effectivenessReviewDate)}
+                                value={parseDate(draft.targetDate)}
                                 disabled={readOnly || busy}
-                                onChange={(date) => patch({ effectivenessReviewDate: toIso(date) })}
+                                onChange={(date) => patch({ targetDate: toIso(date) })}
                                 placeholder={t('cab.nonconformityResponse.placeholders.date')}
                               />
+                              {showErrors && !draft.targetDate && (
+                                <p className="text-small-light text-error-500">
+                                  {t('cab.nonconformityResponse.errors.required')}
+                                </p>
+                              )}
                             </div>
 
-                            <SelectField
-                              id="nc-effectiveness"
-                              label={t('cab.nonconformityResponse.fields.effectivenessResult')}
-                              value={draft.effectivenessResult}
-                              disabled={readOnly || busy}
-                              options={EFFECTIVENESS_RESULTS.map((result) => ({
-                                value: result,
-                                label: t(`cab.nonconformityResponse.effectiveness.${result}`),
-                              }))}
-                              onChange={(value) =>
-                                patch({ effectivenessResult: value as EffectivenessResult })
-                              }
-                            />
+                            <div className="space-y-2">
+                              <FormLabel>{t('cab.nonconformities.table.status')}</FormLabel>
+                              <div>
+                                <NonconformityStatusBadge status={status} label={statusLabel(status)} />
+                              </div>
+                            </div>
 
-                            <CountedTextarea
-                              id="nc-comments"
-                              label={t('cab.nonconformityResponse.fields.comments')}
-                              value={draft.reviewerComments}
-                              disabled={readOnly || busy}
-                              placeholder={t('cab.nonconformityResponse.placeholders.comments')}
-                              onChange={(value) => patch({ reviewerComments: value })}
-                            />
+                            <div className="space-y-5 border-t border-[#ececec] pt-5">
+                              <p className="text-[18px] font-medium text-neutral-900">
+                                {t('cab.nonconformityResponse.effectivenessReview')}
+                              </p>
+
+                              <div className="space-y-2">
+                                <FormLabel>
+                                  {t('cab.nonconformityResponse.fields.effectivenessReviewDate')}
+                                </FormLabel>
+                                <DatePicker
+                                  value={parseDate(draft.effectivenessReviewDate)}
+                                  disabled={readOnly || busy}
+                                  onChange={(date) => patch({ effectivenessReviewDate: toIso(date) })}
+                                  placeholder={t('cab.nonconformityResponse.placeholders.date')}
+                                />
+                              </div>
+
+                              <SelectField
+                                id="nc-effectiveness"
+                                label={t('cab.nonconformityResponse.fields.effectivenessResult')}
+                                value={draft.effectivenessResult}
+                                disabled={readOnly || busy}
+                                options={EFFECTIVENESS_RESULTS.map((result) => ({
+                                  value: result,
+                                  label: t(`cab.nonconformityResponse.effectiveness.${result}`),
+                                }))}
+                                onChange={(value) =>
+                                  patch({ effectivenessResult: value as EffectivenessResult })
+                                }
+                              />
+
+                              <CountedTextarea
+                                id="nc-comments"
+                                label={t('cab.nonconformityResponse.fields.comments')}
+                                value={draft.reviewerComments}
+                                disabled={readOnly || busy}
+                                placeholder={t('cab.nonconformityResponse.placeholders.comments')}
+                                onChange={(value) => patch({ reviewerComments: value })}
+                              />
+                            </div>
                           </div>
-                        </div>
-                      )}
-                    </section>
+                        )}
+                      </section>
+                    </CabTourStep>
                   </>
                 )}
 
@@ -731,108 +742,112 @@ export function CabNonconformityResponsePage() {
               </div>
             </section>
 
-            {/* Your response */}
-            <section className={cn(cardClassName, 'p-5')}>
-              <h2 className="text-[16px] font-medium text-neutral-900">
-                {t('cab.nonconformityResponse.yourResponse')}
-              </h2>
+            <CabTourStep steps={tourSteps} stepId="nc-response-actions">
+              <div className="flex flex-col gap-5">
+                {/* Your response */}
+                <section className={cn(cardClassName, 'p-5')}>
+                  <h2 className="text-[16px] font-medium text-neutral-900">
+                    {t('cab.nonconformityResponse.yourResponse')}
+                  </h2>
 
-              <div className="mt-3">
-                <RailRow
-                  label={t('cab.nonconformityResponse.lastSaved')}
-                  value={lastSaved?.at ?? t('cab.nonconformityResponse.neverSaved')}
-                />
-                {lastSaved && (
-                  <RailRow label={t('cab.nonconformityResponse.savedBy')} value={lastSaved.by} />
-                )}
+                  <div className="mt-3">
+                    <RailRow
+                      label={t('cab.nonconformityResponse.lastSaved')}
+                      value={lastSaved?.at ?? t('cab.nonconformityResponse.neverSaved')}
+                    />
+                    {lastSaved && (
+                      <RailRow label={t('cab.nonconformityResponse.savedBy')} value={lastSaved.by} />
+                    )}
+                  </div>
+
+                  <div className="mt-4 flex flex-col gap-3">
+                    <Button
+                      variant="primary"
+                      icon={
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M5 4h10.2L20 8.8V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 1-2Z M8 4v5h7 M8 20v-5h8v5"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      }
+                      disabled={readOnly || busy}
+                      onClick={handleSaveDraft}
+                      className="h-11 w-full text-[14px]"
+                    >
+                      {pendingAction === 'save'
+                        ? t('common.loading')
+                        : t('cab.nonconformityResponse.saveDraft')}
+                    </Button>
+
+                    <Button
+                      variant="outline"
+                      icon={
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+                          <path
+                            d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8 21 3Z"
+                            stroke="currentColor"
+                            strokeWidth="1.7"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      }
+                      disabled={readOnly || busy}
+                      onClick={handleSubmit}
+                      className="h-11 w-full text-[14px]"
+                    >
+                      {pendingAction === 'submit'
+                        ? t('common.loading')
+                        : t('cab.nonconformityResponse.submitResponse')}
+                    </Button>
+                  </div>
+                </section>
+
+                {/* Reviewer action */}
+                <section className={cn(cardClassName, 'p-5')}>
+                  <h2 className="text-[16px] font-medium text-neutral-900">
+                    {t('cab.nonconformityResponse.reviewerAction')}
+                  </h2>
+
+                  <div className="mt-3 flex items-start gap-2.5 rounded-[10px] bg-[#f4f6fb] p-3">
+                    <AppIcon icon={InfoIcon} size={18} className="mt-0.5 shrink-0 text-neutral-500" />
+                    <p className="text-[13px] leading-relaxed text-neutral-600">
+                      {t('cab.nonconformityResponse.reviewerHint')}
+                    </p>
+                  </div>
+
+                  <div className="mt-4 flex flex-col gap-3">
+                    <Button
+                      variant="outline"
+                      icon={<AppIcon icon={RefreshIcon} size={18} />}
+                      disabled={readOnly || busy}
+                      onClick={handleRequestRevision}
+                      className="h-11 w-full text-[14px]"
+                    >
+                      {pendingAction === 'revision'
+                        ? t('common.loading')
+                        : t('cab.nonconformityResponse.requestRevision')}
+                    </Button>
+
+                    <Button
+                      variant="primary"
+                      icon={<AppIcon icon={SuccessCircleIcon} size={18} />}
+                      disabled={readOnly || busy}
+                      onClick={handleClose}
+                      className="h-11 w-full text-[14px]"
+                    >
+                      {pendingAction === 'close'
+                        ? t('common.loading')
+                        : t('cab.nonconformityResponse.closeAfterVerification')}
+                    </Button>
+                  </div>
+                </section>
               </div>
-
-              <div className="mt-4 flex flex-col gap-3">
-                <Button
-                  variant="primary"
-                  icon={
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path
-                        d="M5 4h10.2L20 8.8V18a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 1-2Z M8 4v5h7 M8 20v-5h8v5"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  }
-                  disabled={readOnly || busy}
-                  onClick={handleSaveDraft}
-                  className="h-11 w-full text-[14px]"
-                >
-                  {pendingAction === 'save'
-                    ? t('common.loading')
-                    : t('cab.nonconformityResponse.saveDraft')}
-                </Button>
-
-                <Button
-                  variant="outline"
-                  icon={
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-                      <path
-                        d="M21 3 10.5 13.5M21 3l-6.8 18-3.7-7.5L3 9.8 21 3Z"
-                        stroke="currentColor"
-                        strokeWidth="1.7"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  }
-                  disabled={readOnly || busy}
-                  onClick={handleSubmit}
-                  className="h-11 w-full text-[14px]"
-                >
-                  {pendingAction === 'submit'
-                    ? t('common.loading')
-                    : t('cab.nonconformityResponse.submitResponse')}
-                </Button>
-              </div>
-            </section>
-
-            {/* Reviewer action */}
-            <section className={cn(cardClassName, 'p-5')}>
-              <h2 className="text-[16px] font-medium text-neutral-900">
-                {t('cab.nonconformityResponse.reviewerAction')}
-              </h2>
-
-              <div className="mt-3 flex items-start gap-2.5 rounded-[10px] bg-[#f4f6fb] p-3">
-                <AppIcon icon={InfoIcon} size={18} className="mt-0.5 shrink-0 text-neutral-500" />
-                <p className="text-[13px] leading-relaxed text-neutral-600">
-                  {t('cab.nonconformityResponse.reviewerHint')}
-                </p>
-              </div>
-
-              <div className="mt-4 flex flex-col gap-3">
-                <Button
-                  variant="outline"
-                  icon={<AppIcon icon={RefreshIcon} size={18} />}
-                  disabled={readOnly || busy}
-                  onClick={handleRequestRevision}
-                  className="h-11 w-full text-[14px]"
-                >
-                  {pendingAction === 'revision'
-                    ? t('common.loading')
-                    : t('cab.nonconformityResponse.requestRevision')}
-                </Button>
-
-                <Button
-                  variant="primary"
-                  icon={<AppIcon icon={SuccessCircleIcon} size={18} />}
-                  disabled={readOnly || busy}
-                  onClick={handleClose}
-                  className="h-11 w-full text-[14px]"
-                >
-                  {pendingAction === 'close'
-                    ? t('common.loading')
-                    : t('cab.nonconformityResponse.closeAfterVerification')}
-                </Button>
-              </div>
-            </section>
+            </CabTourStep>
           </aside>
         </div>
       </main>

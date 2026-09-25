@@ -8,12 +8,14 @@ import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import { AddCircleIcon, AppIcon, ChevronDownIcon, ExcelFileIcon, ExportIcon, MoreIcon, PdfFileIcon, SearchIcon } from '@/components/icons'
+import { AddCircleIcon, AppIcon, ChevronDownIcon, DownloadIcon, ExcelFileIcon, ExportIcon, MoreIcon, PdfFileIcon, SearchIcon, UploadOutlineIcon } from '@/components/icons'
+import { ClientImportModal } from '@/components/dashboard/cab/ClientImportModal'
 import {
   listAllCabAuditClients,
   toClientRegisterEntry,
   type ClientRegisterEntry,
 } from '@/lib/api/clientRegistrationApi'
+import { downloadAuditClientImportTemplate } from '@/lib/api/cabClientImportApi'
 import { countryFlag, getCountryOptions, type CountryCode } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES } from '@/lib/routes'
@@ -44,6 +46,7 @@ export function ClientRegisterPage() {
   const [clients, setClients] = useState<ClientRegisterEntry[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [importOpen, setImportOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [period, setPeriod] = useState<DateRange>({ from: null, to: null })
   const [countryFilter, setCountryFilter] = useState('all')
@@ -53,23 +56,19 @@ export function ClientRegisterPage() {
   const countryName = (code: CountryCode) =>
     countryOptions.find((option) => option.code === code)?.name ?? code
 
-  useEffect(() => {
-    let cancelled = false
-    listAllCabAuditClients()
-      .then((items) => {
-        if (!cancelled) setClients(items.map(toClientRegisterEntry))
-      })
+  const loadClients = () => {
+    setLoading(true)
+    setError('')
+    return listAllCabAuditClients()
+      .then((items) => setClients(items.map(toClientRegisterEntry)))
       .catch((loadError: unknown) => {
-        if (!cancelled) {
-          setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
-        }
+        setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
       })
-      .finally(() => {
-        if (!cancelled) setLoading(false)
-      })
-    return () => {
-      cancelled = true
-    }
+      .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    void loadClients()
   }, [t])
 
   const filtered = useMemo(() => {
@@ -135,9 +134,9 @@ export function ClientRegisterPage() {
 
   const columns: { key: string; label: string }[] = [
     { key: 'code', label: t('cab.clientRegister.table.code') },
-    { key: 'client', label: t('cab.clientRegister.table.client') },
+    { key: 'name', label: t('cab.clientRegister.table.client') },
     { key: 'country', label: t('cab.clientRegister.table.country') },
-    { key: 'primaryContact', label: t('cab.clientRegister.table.primaryContact') },
+    { key: 'contact', label: t('cab.clientRegister.table.primaryContact') },
     { key: 'updated', label: t('cab.clientRegister.table.updated') },
   ]
 
@@ -158,7 +157,23 @@ export function ClientRegisterPage() {
             <h1 className="text-[28px] font-bold leading-tight text-neutral-900">{t('cab.clientRegister.title')}</h1>
             <p className="mt-1 text-[14px] text-neutral-500">{t('cab.clientRegister.subtitle')}</p>
           </div>
-          <div className="flex w-full items-center gap-3 sm:w-auto">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+            <Button
+              variant="outline"
+              icon={<AppIcon icon={DownloadIcon} size={20} />}
+              onClick={() => downloadAuditClientImportTemplate()}
+              className="flex-1 sm:flex-none"
+            >
+              {t('cab.clientRegister.import.downloadTemplate')}
+            </Button>
+            <Button
+              variant="outline"
+              icon={<AppIcon icon={UploadOutlineIcon} size={20} />}
+              onClick={() => setImportOpen(true)}
+              className="flex-1 sm:flex-none"
+            >
+              {t('cab.clientRegister.import.action')}
+            </Button>
             <Button
               variant="primary"
               icon={<AppIcon icon={AddCircleIcon} size={20} />}
@@ -313,7 +328,7 @@ export function ClientRegisterPage() {
                 ) : (
                   paginated.map((client, index) => (
                     <tr key={client.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
-                      <td className="px-4 py-4 text-[14px] text-neutral-700" dir="ltr">
+                      <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
                         {client.code}
                       </td>
                       <td className="px-4 py-4 font-medium text-[15px] text-neutral-900">{client.name}</td>
@@ -406,8 +421,11 @@ export function ClientRegisterPage() {
                       )}
                     </span>
                   </div>
-                  <p className="mt-1 text-[14px] font-medium text-neutral-900">{client.name}</p>
-                  <p className="text-[13px] text-neutral-500">{client.contactName || '—'}</p>
+                  <p className="mt-2 text-[14px] font-medium text-neutral-900">{client.name}</p>
+                  <p className="text-[13px] text-neutral-500">{client.contactName}</p>
+                  <p className="text-[13px] text-neutral-500" dir="ltr">
+                    {client.contactEmail}
+                  </p>
                   <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
                     {formatDate(client.updatedAt)}
                   </p>
@@ -426,6 +444,11 @@ export function ClientRegisterPage() {
           )}
         </section>
       </main>
+      <ClientImportModal
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        onImported={() => void loadClients()}
+      />
     </CabLayout>
   )
 }

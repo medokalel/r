@@ -3,6 +3,8 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useInvoiceDetailsTourSteps } from '@/config/invoiceDetailsTourSteps'
 import { ROUTES } from '@/lib/routes'
 import {
   getCabInvoiceById,
@@ -19,6 +21,7 @@ export function CabInvoiceDetailsPage() {
   const { invoiceId } = useParams<{ invoiceId: string }>()
   const navigate = useNavigate()
   const { t } = useTranslation()
+  const tourSteps = useInvoiceDetailsTourSteps()
   const [invoice, setInvoice] = useState<CabInvoiceItem | null>(null)
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -221,22 +224,22 @@ export function CabInvoiceDetailsPage() {
   }
 
   return (
-    <CabLayout sidebarVariant="invoices">
+    <CabLayout sidebarVariant="invoices" tourId="invoice-details-tour" tourSteps={tourSteps}>
       <CabHeader
         title={invoice.invoiceNumber}
         subtitle={`${t('invoices.details.client')} ${invoice.clientCode} – ${invoice.clientName}`}
         notificationCount={3}
       />
 
-      <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+      <main className="flex flex-1 flex-col gap-5 overflow-auto p-3 sm:p-5">
         {actionError && (
-          <div role="alert" className="p-3.5 bg-error-50 border border-error-200 rounded-[12px] text-[13px] font-medium text-error-700">
+          <div role="alert" className="p-3.5 bg-error-50 border border-error-200 rounded-[8px] text-[13px] font-medium text-error-700">
             {actionError}
           </div>
         )}
         {/* Toast Alert */}
         {toastMessage && (
-          <div className="fixed top-5 right-5 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-xl shadow-xl text-sm font-semibold animate-in slide-in-from-top-3">
+          <div className="fixed top-5 right-5 z-50 flex items-center gap-2 bg-emerald-600 text-white px-4 py-3 rounded-[8px] shadow-xl text-[14px] font-semibold animate-in slide-in-from-top-3">
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
             </svg>
@@ -246,99 +249,112 @@ export function CabInvoiceDetailsPage() {
 
         {/* Top Header Bar & Action Buttons */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <nav className="mb-1 flex items-center gap-2 text-[13px] text-neutral-400">
-              <span
-                onClick={() => navigate(ROUTES.cabInvoices)}
-                className="cursor-pointer hover:underline text-neutral-500 font-medium"
-              >
-                {t('invoices.details.breadcrumb')}
-              </span>
-              <span>›</span>
-              <span className="font-semibold text-primary">{invoice.invoiceNumber}</span>
-            </nav>
+          <CabTourStep steps={tourSteps} stepId="inv-details-header">
+            <div>
+              <nav className="mb-1 flex items-center gap-2 text-[13px] text-neutral-400">
+                <span
+                  onClick={() => navigate(ROUTES.cabInvoices)}
+                  className="cursor-pointer hover:underline text-neutral-500 font-medium"
+                >
+                  {t('invoices.details.breadcrumb')}
+                </span>
+                <span>›</span>
+                <span className="font-semibold text-primary">{invoice.invoiceNumber}</span>
+              </nav>
 
-            <div className="flex items-center gap-3">
-              <h1 className="text-2xl font-bold tracking-tight text-neutral-900">
-                {invoice.invoiceNumber}
-              </h1>
-              <span className="inline-flex rounded-full px-3 py-1 text-[12px] font-medium bg-[#e8edfc] text-primary">
-                {invoice.status}
-              </span>
+              <div className="flex items-center gap-3">
+                <h1 className="text-[20px] font-bold tracking-tight text-neutral-900">
+                  {invoice.invoiceNumber}
+                </h1>
+                <span
+                  className={cn(
+                    'inline-flex min-w-[110px] items-center justify-center rounded-full px-3.5 py-1 text-[12px] font-bold',
+                    invoice.status.toLowerCase() === 'paid' && 'bg-[#dcfce7] text-[#15803d] border border-[#bbf7d0]',
+                    invoice.status.toLowerCase() === 'partially paid' && 'bg-primary-subtle text-primary border border-[#c7d7f9]',
+                    invoice.status.toLowerCase() === 'unpaid' && 'bg-[#fee2e2] text-[#dc2626] border border-[#fecaca]',
+                    invoice.status.toLowerCase() === 'draft' && 'bg-[#f1f5f9] text-[#475569] border border-[#e2e8f0]',
+                    invoice.status.toLowerCase() === 'issued' && 'bg-[#e0f2fe] text-[#0369a1] border border-[#bae6fd]'
+                  )}
+                >
+                  {invoice.status}
+                </span>
+              </div>
+
+              <p className="text-[13px] text-neutral-500 mt-1 flex flex-wrap items-center gap-2">
+                <span>{t('invoices.details.fromOrder')}</span>
+                <span className="text-primary font-semibold hover:underline cursor-pointer">
+                  {invoice.relatedOrder}
+                </span>
+                <span className="inline-flex rounded-full bg-[#ecfdf5] px-2.5 py-0.5 text-[11px] font-medium text-[#16a34a]">
+                  {invoice.orderStatus}
+                </span>
+                <span className="text-neutral-300">|</span>
+                <span>{t('invoices.details.client')}</span>
+                <span className="text-primary font-semibold hover:underline cursor-pointer">
+                  {invoice.clientCode} – {invoice.clientName}
+                </span>
+              </p>
             </div>
+          </CabTourStep>
 
-            <p className="text-[13px] text-neutral-500 mt-1 flex flex-wrap items-center gap-2">
-              <span>{t('invoices.details.fromOrder')}</span>
-              <span className="text-primary font-semibold hover:underline cursor-pointer">
-                {invoice.relatedOrder}
-              </span>
-              <span className="inline-flex rounded-full bg-[#ecfdf5] px-2 py-0.5 text-[11px] font-medium text-[#16a34a]">
-                {invoice.orderStatus}
-              </span>
-              <span className="text-neutral-300">|</span>
-              <span>{t('invoices.details.client')}</span>
-              <span className="text-primary font-semibold hover:underline cursor-pointer">
-                {invoice.clientCode} – {invoice.clientName}
-              </span>
-            </p>
-          </div>
+          <CabTourStep steps={tourSteps} stepId="inv-details-actions">
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={handleSaveDraft}
+                disabled={!isDraft || savingDraft}
+                title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
+                className="h-11 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[14px] font-medium text-neutral-700 hover:bg-neutral-50 transition-colors disabled:opacity-50"
+              >
+                {savingDraft ? t('common.saving', 'Saving...') : t('invoices.details.saveDraft')}
+              </button>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              onClick={handleSaveDraft}
-              disabled={!isDraft || savingDraft}
-              title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
-              className="rounded-[var(--radius-sm)] border border-[#d8dce5] bg-white px-4 py-2.5 text-[14px] font-medium text-neutral-700 hover:bg-neutral-50 transition-colors disabled:opacity-50"
-            >
-              {savingDraft ? t('common.saving', 'Saving...') : t('invoices.details.saveDraft')}
-            </button>
+              <button
+                type="button"
+                onClick={() => !isFinalized && setShowTaxModal(true)}
+                disabled={isFinalized}
+                title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
+                className="h-11 rounded-[8px] bg-primary px-4 text-[14px] font-medium text-white hover:bg-primary/90 transition-colors disabled:opacity-50"
+              >
+                {t('invoices.details.configureTax')}
+              </button>
 
-            <button
-              type="button"
-              onClick={() => !isFinalized && setShowTaxModal(true)}
-              disabled={isFinalized}
-              title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
-              className="rounded-[var(--radius-sm)] bg-primary px-4 py-2.5 text-[14px] font-medium text-white hover:bg-primary/90 transition-colors disabled:opacity-50"
-            >
-              {t('invoices.details.configureTax')}
-            </button>
+              <button
+                type="button"
+                onClick={handleIssueInvoice}
+                disabled={isFinalized || issuing}
+                title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
+                className={cn(
+                  'h-11 rounded-[8px] px-4 text-[14px] font-medium transition-colors disabled:cursor-not-allowed',
+                  invoice.taxRate
+                    ? 'bg-primary text-white hover:bg-primary/90 disabled:opacity-50'
+                    : 'bg-neutral-100 text-neutral-400 border border-[#e2e2e2]'
+                )}
+              >
+                {issuing ? t('common.saving', 'Saving...') : t('invoices.details.issueInvoice')}
+              </button>
 
-            <button
-              type="button"
-              onClick={handleIssueInvoice}
-              disabled={isFinalized || issuing}
-              title={isFinalized ? t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.') : undefined}
-              className={cn(
-                'rounded-[var(--radius-sm)] px-4 py-2.5 text-[14px] font-medium transition-colors disabled:cursor-not-allowed',
-                invoice.taxRate
-                  ? 'bg-primary text-white hover:bg-primary/90 disabled:opacity-50'
-                  : 'bg-neutral-100 text-neutral-400 border border-[#d8dce5]'
-              )}
-            >
-              {issuing ? t('common.saving', 'Saving...') : t('invoices.details.issueInvoice')}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setPaymentError(null)
-                setPaymentAmount(invoice.balance > 0 ? (invoice.balance >= 500 ? '500.00' : invoice.balance.toFixed(2)) : '0.00')
-                setShowPaymentModal(true)
-              }}
-              disabled={invoice.balance <= 0}
-              className="p-2.5 rounded-[var(--radius-sm)] border border-[#d8dce5] bg-white text-neutral-600 hover:bg-neutral-50 transition-colors disabled:opacity-40"
-              title={t('invoices.register.recordPayment')}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-              </svg>
-            </button>
-          </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setPaymentError(null)
+                  setPaymentAmount(invoice.balance > 0 ? (invoice.balance >= 500 ? '500.00' : invoice.balance.toFixed(2)) : '0.00')
+                  setShowPaymentModal(true)
+                }}
+                disabled={invoice.balance <= 0}
+                className="h-11 w-11 flex items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-600 hover:bg-neutral-50 transition-colors disabled:opacity-40"
+                title={t('invoices.register.recordPayment')}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+                </svg>
+              </button>
+            </div>
+          </CabTourStep>
         </div>
 
         {taxWarning && (
-          <div className="p-3.5 bg-[#fff7ed] border border-[#ffedd5] rounded-[12px] flex items-center justify-between text-[13px] text-[#ea580c]">
+          <div className="p-3.5 bg-[#fff7ed] border border-[#ffedd5] rounded-[8px] flex items-center justify-between text-[13px] text-[#ea580c]">
             <div className="flex items-center gap-2">
               <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -349,231 +365,236 @@ export function CabInvoiceDetailsPage() {
               type="button"
               onClick={() => !isFinalized && setShowTaxModal(true)}
               disabled={isFinalized}
-              className="px-3 py-1 bg-[#ea580c] text-white rounded-[6px] font-medium text-[12px] hover:bg-[#c2410c] disabled:opacity-50"
+              className="px-3 py-1.5 bg-[#ea580c] text-white rounded-[6px] font-medium text-[12px] hover:bg-[#c2410c] disabled:opacity-50"
             >
               {t('invoices.details.configureNow')}
             </button>
           </div>
         )}
         {isFinalized && (
-          <div className="p-3.5 bg-[#e8edfc] border border-[#c5d7fa] rounded-[12px] text-[13px] font-semibold text-primary">
+          <div className="p-3.5 bg-[#e8edfc] border border-[#c5d7fa] rounded-[8px] text-[13px] font-semibold text-primary">
             {t('invoices.details.immutableHint', 'Finalized invoices cannot be changed.')}
           </div>
         )}
 
         {/* Top 3-Column Info Card */}
-        <div className="rounded-[16px] border border-[#ececec] bg-white p-6 shadow-none grid grid-cols-1 md:grid-cols-3 gap-6 text-[13px]">
-          {/* Column 1: Dates & Numbers */}
-          <div className="space-y-3 md:border-r border-[#ececec] md:pe-6">
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.invoiceNumber')}</span>
-              <span className="font-mono font-bold text-neutral-900">{invoice.invoiceNumber}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.issueDate')}</span>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-50 border border-[#d8dce5] rounded-[8px] text-neutral-800">
-                <span>Mar 8, 2025</span>
-                <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+        <CabTourStep steps={tourSteps} stepId="inv-details-info-grid">
+          <div className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none grid grid-cols-1 md:grid-cols-3 gap-6 text-[13px]">
+            {/* Column 1: Dates & Numbers */}
+            <div className="space-y-3 md:border-r border-[#ececec] md:pe-6">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.invoiceNumber')}</span>
+                <span className="font-bold text-neutral-900">{invoice.invoiceNumber}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.issueDate')}</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-50 border border-[#e2e2e2] rounded-[8px] text-neutral-800">
+                  <span>Mar 8, 2025</span>
+                  <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.dueDate')}</span>
+                <div className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-50 border border-[#e2e2e2] rounded-[8px] text-neutral-800">
+                  <span>Apr 7, 2025</span>
+                  <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.status')}</span>
+                <span className="inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[#e8edfc] text-primary">
+                  {invoice.status}
+                </span>
               </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.dueDate')}</span>
-              <div className="flex items-center gap-1.5 px-2.5 py-1 bg-neutral-50 border border-[#d8dce5] rounded-[8px] text-neutral-800">
-                <span>Apr 7, 2025</span>
-                <svg className="w-3.5 h-3.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.status')}</span>
-              <span className="inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-medium bg-[#e8edfc] text-primary">
-                {invoice.status}
-              </span>
-            </div>
-          </div>
 
-          {/* Column 2: Client Details */}
-          <div className="space-y-3 md:border-r border-[#ececec] md:pe-6">
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.clientLabel')}</span>
-              <span className="font-semibold text-primary hover:underline cursor-pointer">
-                {invoice.clientCode} – {invoice.clientName}
-              </span>
+            {/* Column 2: Client Details */}
+            <div className="space-y-3 md:border-r border-[#ececec] md:pe-6">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.clientLabel')}</span>
+                <span className="font-semibold text-primary hover:underline cursor-pointer">
+                  {invoice.clientCode} – {invoice.clientName}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.country')}</span>
+                <span className="font-medium text-neutral-800">{invoice.country}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.primaryContact')}</span>
+                <span className="font-medium text-neutral-800">{invoice.primaryContact}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.email')}</span>
+                <span className="text-primary hover:underline cursor-pointer">{invoice.contactEmail}</span>
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.country')}</span>
-              <span className="font-medium text-neutral-800">{invoice.country}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.primaryContact')}</span>
-              <span className="font-medium text-neutral-800">{invoice.primaryContact}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.email')}</span>
-              <span className="text-primary hover:underline cursor-pointer">{invoice.contactEmail}</span>
-            </div>
-          </div>
 
-          {/* Column 3: Order, App, Currency */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.relatedOrder')}</span>
-              <span className="font-semibold text-primary hover:underline cursor-pointer">
-                {invoice.relatedOrder}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.application')}</span>
-              <span className="font-semibold text-primary hover:underline cursor-pointer">
-                {invoice.relatedApplication}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.poReference')}</span>
-              <input
-                type="text"
-                defaultValue={invoice.poReference || 'PO-7789'}
-                className="w-28 rounded-[8px] border border-[#d8dce5] bg-neutral-50 px-2.5 py-1 text-[13px] text-neutral-800 focus:outline-none"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-neutral-500 font-medium">{t('invoices.details.currency')}</span>
-              <div className="relative">
-                <select
-                  defaultValue={invoice.currency}
-                  className="appearance-none rounded-[8px] border border-[#d8dce5] bg-white px-2.5 py-1 text-[13px] text-neutral-800 pr-7 focus:outline-none font-semibold"
-                >
-                  <option value="USD">USD</option>
-                  <option value="SAR">SAR</option>
-                  <option value="EUR">EUR</option>
-                  <option value="GBP">GBP</option>
-                </select>
-                <svg className="w-3.5 h-3.5 text-neutral-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-                </svg>
+            {/* Column 3: Order, App, Currency */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.relatedOrder')}</span>
+                <span className="font-semibold text-primary hover:underline cursor-pointer">
+                  {invoice.relatedOrder}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.application')}</span>
+                <span className="font-semibold text-primary hover:underline cursor-pointer">
+                  {invoice.relatedApplication}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.poReference')}</span>
+                <input
+                  type="text"
+                  defaultValue={invoice.poReference || 'PO-7789'}
+                  className="w-28 rounded-[8px] border border-[#e2e2e2] bg-neutral-50 px-2.5 py-1 text-[13px] text-neutral-800 focus:outline-none"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-500 font-medium">{t('invoices.details.currency')}</span>
+                <div className="relative">
+                  <select
+                    defaultValue={invoice.currency}
+                    className="appearance-none rounded-[8px] border border-[#e2e2e2] bg-white px-2.5 py-1 text-[13px] text-neutral-800 pr-7 focus:outline-none font-semibold"
+                  >
+                    <option value="USD">USD</option>
+                    <option value="SAR">SAR</option>
+                    <option value="EUR">EUR</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                  <svg className="w-3.5 h-3.5 text-neutral-400 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </CabTourStep>
 
         {/* Middle Section: Bill-to & Amounts Cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-          {/* Bill-to Card */}
-          <div className="lg:col-span-7 rounded-[16px] border border-[#ececec] bg-white p-6 shadow-none space-y-4">
-            <div className="flex items-center justify-between border-b border-[#ececec] pb-3">
-              <h3 className="text-[16px] font-bold text-neutral-900">Bill-to</h3>
-              <button type="button" className="rounded-[var(--radius-sm)] border border-[#d8dce5] bg-white px-3.5 py-1.5 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50 transition-colors">
-                Use client address
-              </button>
-            </div>
-            <div className="space-y-1 text-[13px] text-neutral-700">
-              <div className="font-bold text-neutral-900">{invoice.billingAddress.name}</div>
-              <div>{invoice.billingAddress.line1}</div>
-              <div>{invoice.billingAddress.cityArea}</div>
-              <div>{invoice.billingAddress.country}</div>
-            </div>
-            <div className="p-3.5 bg-[#e8edfc] border border-[#c5d7fa] rounded-[12px] flex items-start gap-2.5 text-[13px] text-primary font-medium">
-              <svg className="w-4 h-4 text-primary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <span>This invoice uses the client's registered address at the time of invoicing (snapshot).</span>
-            </div>
-          </div>
-
-          {/* Amounts Summary Box */}
-          <div className="lg:col-span-5 rounded-[16px] border border-[#ececec] bg-white p-6 shadow-none space-y-3.5">
-            <h3 className="text-[16px] font-bold text-neutral-900 border-b border-[#ececec] pb-3">
-              Amounts ({invoice.currency})
-            </h3>
-            <div className="flex justify-between items-center text-[13px] text-neutral-600">
-              <span>{t('invoices.details.subtotal')}</span>
-              <span className="font-bold text-neutral-900">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div className="flex justify-between items-center text-[13px] text-neutral-600">
-              <div className="flex items-center gap-1.5">
-                <span>Tax</span>
-                {invoice.taxRate ? (
-                  <span className="inline-flex rounded-full bg-[#ecfdf5] px-2.5 py-0.5 text-[11px] font-semibold text-[#16a34a]">
-                    {invoice.taxRate.label}
-                  </span>
-                ) : (
-                  <span className="inline-flex rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-neutral-500 italic">
-                    {t('invoices.details.noTax')}
-                  </span>
-                )}
+        <CabTourStep steps={tourSteps} stepId="inv-details-amounts">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            {/* Bill-to Card */}
+            <div className="lg:col-span-7 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none space-y-4">
+              <div className="flex items-center justify-between border-b border-[#ececec] pb-3">
+                <h3 className="text-[16px] font-bold text-neutral-900">Bill-to</h3>
+                <button type="button" className="rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 py-1.5 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50 transition-colors">
+                  Use client address
+                </button>
               </div>
-              <span className="font-semibold text-neutral-700">
-                {invoice.taxRate ? `${taxAmount.toFixed(2)}` : '—'}
-              </span>
+              <div className="space-y-1 text-[13px] text-neutral-700">
+                <div className="font-bold text-neutral-900">{invoice.billingAddress.name}</div>
+                <div>{invoice.billingAddress.line1}</div>
+                <div>{invoice.billingAddress.cityArea}</div>
+                <div>{invoice.billingAddress.country}</div>
+              </div>
+              <div className="p-3.5 bg-[#e8edfc] border border-[#c5d7fa] rounded-[8px] flex items-start gap-2.5 text-[13px] text-primary font-medium">
+                <svg className="w-4 h-4 text-primary shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>This invoice uses the client's registered address at the time of invoicing (snapshot).</span>
+              </div>
             </div>
-            <div className="border-t border-[#ececec] pt-3 flex justify-between items-center text-[15px] font-bold text-neutral-900">
-              <span>{t('invoices.details.total')}</span>
-              <span className="text-[16px] text-neutral-900">{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div className="flex justify-between items-center text-[13px] text-neutral-600">
-              <span>{t('invoices.details.amountPaid')}</span>
-              <span className="font-semibold text-neutral-900">{invoice.paidAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
-            </div>
-            <div className="border-t border-[#ececec] pt-2 flex justify-between items-center text-[15px] font-bold text-primary">
-              <span>{t('invoices.details.balanceDue')}</span>
-              <span className="text-[18px] font-bold text-primary">{balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+
+            {/* Amounts Summary Box */}
+            <div className="lg:col-span-5 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none space-y-3.5">
+              <h3 className="text-[16px] font-bold text-neutral-900 border-b border-[#ececec] pb-3">
+                Amounts ({invoice.currency})
+              </h3>
+              <div className="flex justify-between items-center text-[13px] text-neutral-600">
+                <span>{t('invoices.details.subtotal')}</span>
+                <span className="font-bold text-neutral-900">{subtotal.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between items-center text-[13px] text-neutral-600">
+                <div className="flex items-center gap-1.5">
+                  <span>Tax</span>
+                  {invoice.taxRate ? (
+                    <span className="inline-flex rounded-full bg-[#ecfdf5] px-2.5 py-0.5 text-[11px] font-semibold text-[#16a34a]">
+                      {invoice.taxRate.label}
+                    </span>
+                  ) : (
+                    <span className="inline-flex rounded-full bg-neutral-100 px-2 py-0.5 text-[10px] font-medium text-neutral-500 italic">
+                      {t('invoices.details.noTax')}
+                    </span>
+                  )}
+                </div>
+                <span className="font-semibold text-neutral-700">
+                  {invoice.taxRate ? `${taxAmount.toFixed(2)}` : '—'}
+                </span>
+              </div>
+              <div className="border-t border-[#ececec] pt-3 flex justify-between items-center text-[15px] font-bold text-neutral-900">
+                <span>{t('invoices.details.total')}</span>
+                <span className="text-[16px] text-neutral-900">{total.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="flex justify-between items-center text-[13px] text-neutral-600">
+                <span>{t('invoices.details.amountPaid')}</span>
+                <span className="font-semibold text-neutral-900">{invoice.paidAmount.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
+              <div className="border-t border-[#ececec] pt-2 flex justify-between items-center text-[15px] font-bold text-primary">
+                <span>{t('invoices.details.balanceDue')}</span>
+                <span className="text-[18px] font-bold text-primary">{balanceDue.toLocaleString(undefined, { minimumFractionDigits: 2 })}</span>
+              </div>
             </div>
           </div>
-        </div>
+        </CabTourStep>
 
         {/* Tab Navigation Section */}
-        <div className="space-y-4">
-          <div className="border-b border-[#ececec] flex items-center gap-6 text-[14px] font-semibold">
-            {[
-              { key: 'items', label: t('invoices.details.tabItems') },
-              { key: 'installments', label: t('invoices.details.tabInstallments') },
-              { key: 'attachments', label: t('invoices.details.tabAttachments') },
-              { key: 'moreDetails', label: t('invoices.details.tabMoreDetails') },
-            ].map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                onClick={() => setActiveTab(tab.key as typeof activeTab)}
-                className={cn(
-                  'pb-3 transition-colors border-b-2 font-medium',
-                  activeTab === tab.key
-                    ? 'border-primary text-primary font-bold'
-                    : 'border-transparent text-neutral-500 hover:text-neutral-900'
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+        <CabTourStep steps={tourSteps} stepId="inv-details-tabs-breakdown">
+          <div className="space-y-4">
+            <div className="border-b border-[#ececec] flex items-center gap-6 text-[14px]">
+              {[
+                { key: 'items', label: t('invoices.details.tabItems') },
+                { key: 'installments', label: t('invoices.details.tabInstallments') },
+                { key: 'attachments', label: t('invoices.details.tabAttachments') },
+                { key: 'moreDetails', label: t('invoices.details.tabMoreDetails') },
+              ].map((tab) => (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setActiveTab(tab.key as typeof activeTab)}
+                  className={cn(
+                    'pb-3 transition-colors border-b-2 font-medium',
+                    activeTab === tab.key
+                      ? 'border-primary text-primary font-bold'
+                      : 'border-transparent text-neutral-500 hover:text-neutral-900'
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
 
           {/* Tab 1: Invoice items table */}
           {activeTab === 'items' && (
-            <div className="overflow-hidden rounded-[16px] border border-[#ececec] bg-white shadow-none">
+            <div className="overflow-hidden rounded-[8px] border border-[#ececec] bg-white shadow-none">
               <table className="w-full border-collapse text-start text-[14px]">
                 <thead>
                   <tr className="bg-[#1236a3] text-white">
-                    <th className="w-12 px-4 py-3.5 text-center font-medium">#</th>
-                    <th className="px-4 py-3.5 text-start font-medium">Item / Service</th>
-                    <th className="px-4 py-3.5 text-start font-medium">{t('invoices.details.colDescription')}</th>
-                    <th className="px-4 py-3.5 text-center font-medium">{t('invoices.details.colQty')}</th>
-                    <th className="px-4 py-3.5 text-end font-medium">{t('invoices.details.colUnit')} ({invoice.currency})</th>
-                    <th className="px-4 py-3.5 text-end font-medium">{t('invoices.details.colAmount')} ({invoice.currency})</th>
+                    <th className="w-12 p-[18px] text-center text-[14px] font-medium">#</th>
+                    <th className="p-[18px] text-start text-[14px] font-medium">Item / Service</th>
+                    <th className="p-[18px] text-start text-[14px] font-medium">{t('invoices.details.colDescription')}</th>
+                    <th className="p-[18px] text-center text-[14px] font-medium">{t('invoices.details.colQty')}</th>
+                    <th className="p-[18px] text-end text-[14px] font-medium">{t('invoices.details.colUnit')} ({invoice.currency})</th>
+                    <th className="p-[18px] text-end text-[14px] font-medium">{t('invoices.details.colAmount')} ({invoice.currency})</th>
                   </tr>
                 </thead>
                 <tbody>
                   {invoice.items.map((item, index) => (
                     <tr key={item.id} className={cn('hover:bg-[#e8edfc]/50 transition-colors', index % 2 === 1 ? 'bg-[#f9fafc]' : '')}>
-                      <td className="px-4 py-3.5 text-center text-neutral-500 font-medium">{index + 1}</td>
-                      <td className="px-4 py-3.5 font-semibold text-neutral-900">{item.name}</td>
-                      <td className="px-4 py-3.5 text-neutral-600">{item.description}</td>
-                      <td className="px-4 py-3.5 text-center text-neutral-800 font-medium">{item.qty}</td>
-                      <td className="px-4 py-3.5 text-end text-neutral-800 font-medium">
+                      <td className="px-4 py-3.5 text-center text-[13px] text-neutral-500">{index + 1}</td>
+                      <td className="px-4 py-3.5 text-[15px] font-medium text-neutral-900">{item.name}</td>
+                      <td className="px-4 py-3.5 text-[14px] text-neutral-600">{item.description}</td>
+                      <td className="px-4 py-3.5 text-center text-[14px] text-neutral-800 font-medium">{item.qty}</td>
+                      <td className="px-4 py-3.5 text-end text-[14px] text-neutral-800 font-medium">
                         {item.unitPrice.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="px-4 py-3.5 text-end font-bold text-neutral-900">
+                      <td className="px-4 py-3.5 text-end text-[15px] font-bold text-neutral-900">
                         {item.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -590,26 +611,26 @@ export function CabInvoiceDetailsPage() {
           {/* Bottom Side-by-Side Cards: Installments & Attachments */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 pt-2">
             {/* Installments Card */}
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-6 shadow-none space-y-3">
+            <div className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none space-y-3">
               <h3 className="text-[16px] font-bold text-neutral-900 border-b border-[#ececec] pb-3">
                 {t('invoices.details.tabInstallments')}
               </h3>
-              <div className="overflow-hidden rounded-[12px] border border-[#ececec] bg-white">
-                <table className="w-full border-collapse text-start text-[13px]">
+              <div className="overflow-hidden rounded-[8px] border border-[#ececec] bg-white">
+                <table className="w-full border-collapse text-start text-[14px]">
                   <thead>
                     <tr className="bg-[#1236a3] text-white">
-                      <th className="w-10 px-3.5 py-3 text-center font-medium">#</th>
-                      <th className="px-3.5 py-3 text-start font-medium">{t('invoices.details.dueDate')}</th>
-                      <th className="px-3.5 py-3 text-end font-medium">{t('invoices.details.colAmount')} ({invoice.currency})</th>
-                      <th className="px-3.5 py-3 text-center font-medium">{t('invoices.details.status')}</th>
+                      <th className="w-10 p-3.5 text-center text-[13px] font-medium">#</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('invoices.details.dueDate')}</th>
+                      <th className="p-3.5 text-end text-[13px] font-medium">{t('invoices.details.colAmount')} ({invoice.currency})</th>
+                      <th className="p-3.5 text-center text-[13px] font-medium">{t('invoices.details.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {invoice.installments.map((inst, index) => (
                       <tr key={inst.id} className={cn('hover:bg-[#e8edfc]/50 transition-colors', index % 2 === 1 ? 'bg-[#f9fafc]' : '')}>
-                        <td className="px-3.5 py-3 text-center text-neutral-400">{index + 1}</td>
-                        <td className="px-3.5 py-3 font-medium text-neutral-800">{inst.dueDate}</td>
-                        <td className="px-3.5 py-3 text-end font-bold text-neutral-900">
+                        <td className="px-3.5 py-3 text-center text-[13px] text-neutral-400">{index + 1}</td>
+                        <td className="px-3.5 py-3 text-[14px] font-medium text-neutral-800">{inst.dueDate}</td>
+                        <td className="px-3.5 py-3 text-end text-[14px] font-bold text-neutral-900">
                           {inst.amount.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </td>
                         <td className="px-3.5 py-3 text-center">
@@ -625,7 +646,7 @@ export function CabInvoiceDetailsPage() {
             </div>
 
             {/* Attachments Card */}
-            <div className="rounded-[16px] border border-[#ececec] bg-white p-6 shadow-none space-y-3">
+            <div className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none space-y-3">
               <div className="flex items-center justify-between border-b border-[#ececec] pb-3">
                 <h3 className="text-[16px] font-bold text-neutral-900">{t('invoices.details.tabAttachments')}</h3>
                 <button type="button" className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#e8edfc] text-primary hover:bg-primary/20 border border-primary/30 text-[13px] font-semibold rounded-[8px] transition-colors">
@@ -635,29 +656,29 @@ export function CabInvoiceDetailsPage() {
                   <span>Add file</span>
                 </button>
               </div>
-              <div className="overflow-hidden rounded-[12px] border border-[#ececec] bg-white">
-                <table className="w-full border-collapse text-start text-[13px]">
+              <div className="overflow-hidden rounded-[8px] border border-[#ececec] bg-white">
+                <table className="w-full border-collapse text-start text-[14px]">
                   <thead>
                     <tr className="bg-[#1236a3] text-white">
-                      <th className="px-3.5 py-3 text-start font-medium">File name</th>
-                      <th className="px-3.5 py-3 text-start font-medium">Type</th>
-                      <th className="px-3.5 py-3 text-start font-medium">Size</th>
-                      <th className="px-3.5 py-3 text-start font-medium">Uploaded on</th>
-                      <th className="w-8 px-3.5 py-3 text-center font-medium"></th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">File name</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">Type</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">Size</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">Uploaded on</th>
+                      <th className="w-8 p-3.5 text-center text-[13px] font-medium"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {invoice.attachments.map((att, index) => (
                       <tr key={att.id} className={cn('hover:bg-[#e8edfc]/50 transition-colors', index % 2 === 1 ? 'bg-[#f9fafc]' : '')}>
-                        <td className="px-3.5 py-3 font-semibold text-error-600 flex items-center gap-1.5">
+                        <td className="px-3.5 py-3 text-[14px] font-semibold text-error-600 flex items-center gap-1.5">
                           <svg className="w-4 h-4 text-error-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                           </svg>
                           <span>{att.name}</span>
                         </td>
-                        <td className="px-3.5 py-3 text-neutral-600">{att.type}</td>
-                        <td className="px-3.5 py-3 text-neutral-600">{att.size}</td>
-                        <td className="px-3.5 py-3 text-neutral-600">{att.uploadedOn}</td>
+                        <td className="px-3.5 py-3 text-[13px] text-neutral-600">{att.type}</td>
+                        <td className="px-3.5 py-3 text-[13px] text-neutral-600">{att.size}</td>
+                        <td className="px-3.5 py-3 text-[13px] text-neutral-600">{att.uploadedOn}</td>
                         <td className="px-3.5 py-3 text-center text-neutral-400">
                           <button type="button" className="hover:text-neutral-700">
                             ⋮
@@ -670,12 +691,13 @@ export function CabInvoiceDetailsPage() {
               </div>
             </div>
           </div>
-        </div>
+          </div>
+        </CabTourStep>
 
         {/* Configure Tax Modal */}
         {showTaxModal && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-[16px] shadow-2xl border border-[#ececec] w-full max-w-sm overflow-hidden">
+            <div className="bg-white rounded-[12px] shadow-2xl border border-[#ececec] w-full max-w-sm overflow-hidden">
               <div className="p-4 border-b border-[#ececec] flex items-center justify-between">
                 <h3 className="text-[16px] font-bold text-neutral-900">{t('invoices.details.taxModalTitle')}</h3>
                 <button
@@ -688,12 +710,12 @@ export function CabInvoiceDetailsPage() {
               </div>
               <form onSubmit={handleConfigureTax} className="p-4 space-y-4 text-[14px]">
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-neutral-800">{t('invoices.details.taxModalSubtitle')}</label>
+                  <label className="text-[13px] font-medium text-neutral-800">{t('invoices.details.taxModalSubtitle')}</label>
                   <div className="relative">
                     <select
                       value={selectedTax}
                       onChange={(e) => setSelectedTax(e.target.value)}
-                      className="w-full rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] text-neutral-900 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                      className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 pr-8 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                     >
                       <option value="vat15">VAT 15% (Saudi Arabia)</option>
                       <option value="vat5">VAT 5%</option>
@@ -706,13 +728,13 @@ export function CabInvoiceDetailsPage() {
                   <button
                     type="button"
                     onClick={() => setShowTaxModal(false)}
-                    className="rounded-[10px] border border-[#d8dce5] bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50"
+                    className="h-11 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[14px] font-medium text-neutral-700 hover:bg-neutral-50"
                   >
                     {t('invoices.register.cancel')}
                   </button>
                   <button
                     type="submit"
-                    className="rounded-[10px] bg-primary px-5 py-2 text-[13px] font-semibold text-white hover:bg-primary/90"
+                    className="h-11 rounded-[8px] bg-primary px-5 text-[14px] font-semibold text-white hover:bg-primary/90"
                   >
                     {t('invoices.details.applyTax')}
                   </button>
@@ -725,7 +747,7 @@ export function CabInvoiceDetailsPage() {
         {/* Record Payment Modal */}
         {showPaymentModal && (
           <div className="fixed inset-0 bg-black/40 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-[16px] shadow-2xl border border-[#ececec] w-full max-w-md overflow-hidden">
+            <div className="bg-white rounded-[12px] shadow-2xl border border-[#ececec] w-full max-w-md overflow-hidden">
               <div className="p-4 border-b border-[#ececec] flex items-center justify-between">
                 <h3 className="text-[16px] font-bold text-neutral-900">
                   {t('invoices.details.recordPaymentTitle', { invoiceNumber: invoice.invoiceNumber })}
@@ -740,11 +762,11 @@ export function CabInvoiceDetailsPage() {
               </div>
               <form onSubmit={handleSavePayment} className="p-5 space-y-4 text-[14px]">
                 {paymentError && (
-                  <div role="alert" className="p-2.5 bg-error-50 border border-error-200 rounded-[10px] font-medium text-error-700 text-[13px]">
+                  <div role="alert" className="p-2.5 bg-error-50 border border-error-200 rounded-[8px] font-medium text-error-700 text-[13px]">
                     {paymentError}
                   </div>
                 )}
-                <div className="p-3 bg-[#e8edfc] border border-[#c5d7fa] rounded-[10px] text-primary text-[13px] font-medium">
+                <div className="p-3 bg-[#e8edfc] border border-[#c5d7fa] rounded-[8px] text-primary text-[13px] font-medium">
                   <span className="font-bold">
                     {t(
                       'invoices.register.allocationPreview',
@@ -759,7 +781,7 @@ export function CabInvoiceDetailsPage() {
                   {t('invoices.register.paymentInfoNote')}
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-neutral-800">
+                  <label className="text-[13px] font-medium text-neutral-800">
                     {t('invoices.register.amountLabel', { currency: invoice.currency })}
                   </label>
                   <input
@@ -768,25 +790,25 @@ export function CabInvoiceDetailsPage() {
                     required
                     value={paymentAmount}
                     onChange={(e) => setPaymentAmount(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-semibold"
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary font-semibold"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-neutral-800">{t('invoices.register.paymentDateLabel')}</label>
+                  <label className="text-[13px] font-medium text-neutral-800">{t('invoices.register.paymentDateLabel')}</label>
                   <input
                     type="date"
                     required
                     value={paymentDate}
                     onChange={(e) => setPaymentDate(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-neutral-800">{t('invoices.register.paymentMethodLabel')}</label>
+                  <label className="text-[13px] font-medium text-neutral-800">{t('invoices.register.paymentMethodLabel')}</label>
                   <select
                     value={paymentMethod}
                     onChange={(e) => setPaymentMethod(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   >
                     <option value="Bank transfer">{t('invoices.register.bankTransfer')}</option>
                     <option value="Credit Card">{t('invoices.register.creditCard')}</option>
@@ -795,25 +817,25 @@ export function CabInvoiceDetailsPage() {
                   </select>
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-semibold text-neutral-800">{t('invoices.register.referenceLabel')}</label>
+                  <label className="text-[13px] font-medium text-neutral-800">{t('invoices.register.referenceLabel')}</label>
                   <input
                     type="text"
                     value={paymentReference}
                     onChange={(e) => setPaymentReference(e.target.value)}
-                    className="w-full rounded-[10px] border border-[#d8dce5] bg-white px-3.5 py-2.5 text-[14px] text-neutral-900 font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 font-mono focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                   />
                 </div>
                 <div className="flex items-center justify-end gap-2 pt-2 border-t border-neutral-100">
                   <button
                     type="button"
                     onClick={() => setShowPaymentModal(false)}
-                    className="rounded-[10px] border border-[#d8dce5] bg-white px-4 py-2 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50"
+                    className="h-11 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[14px] font-medium text-neutral-700 hover:bg-neutral-50"
                   >
                     {t('invoices.register.cancel')}
                   </button>
                   <button
                     type="submit"
-                    className="rounded-[10px] bg-primary px-5 py-2 text-[13px] font-semibold text-white hover:bg-primary/90"
+                    className="h-11 rounded-[8px] bg-primary px-5 text-[14px] font-semibold text-white hover:bg-primary/90"
                   >
                     {t('invoices.register.save')}
                   </button>
