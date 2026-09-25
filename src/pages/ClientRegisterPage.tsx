@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -56,7 +56,7 @@ export function ClientRegisterPage() {
   const countryName = (code: CountryCode) =>
     countryOptions.find((option) => option.code === code)?.name ?? code
 
-  const loadClients = () => {
+  const loadClients = useCallback(() => {
     setLoading(true)
     setError('')
     return listAllCabAuditClients()
@@ -65,11 +65,11 @@ export function ClientRegisterPage() {
         setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
       })
       .finally(() => setLoading(false))
-  }
+  }, [t])
 
   useEffect(() => {
     void loadClients()
-  }, [t])
+  }, [loadClients])
 
   const filtered = useMemo(() => {
     const periodStart = period.from ? startOfDay(period.from) : null

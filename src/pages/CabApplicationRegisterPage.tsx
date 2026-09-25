@@ -43,22 +43,6 @@ import {
   cabApplicationSubmissionPath,
 } from "@/lib/routes";
 
-const statusStyles: Record<ApplicationRegisterStatus, string> = {
-  DRAFT: "bg-[#f3f4f6] text-[#4b5563]",
-  SUBMITTED: "bg-[#e0e7ff] text-[#1236a3]",
-  UNDER_REVIEW: "bg-[#e0e7ff] text-[#1236a3]",
-  APPROVED: "bg-[#d0fae5] text-[#007a55]",
-  REJECTED: "bg-[#fee2e2] text-[#b42318]",
-};
-
-const STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, string> = {
-  DRAFT: "draft",
-  SUBMITTED: "submitted",
-  UNDER_REVIEW: "underReview",
-  APPROVED: "approved",
-  REJECTED: "rejected",
-};
-
 function startOfDay(date: Date): Date {
   return new Date(date.getFullYear(), date.getMonth(), date.getDate());
 }
