@@ -7,10 +7,7 @@ import { CabHeader } from "@/components/dashboard/cab/CabHeader";
 import { TablePagination } from "@/components/dashboard/TablePagination";
 import { Button } from "@/components/ui/Button";
 import { SelectField } from "@/components/ui/Select";
-import {
-  DateRangePicker,
-  type DateRange,
-} from "@/components/ui/DateRangePicker";
+import { DatePicker } from "@/components/ui/DatePicker";
 import {
   AddCircleIcon,
   AppIcon,
@@ -38,7 +35,37 @@ import {
   type TableColumn,
 } from "@/lib/tableTools";
 import { cn } from "@/lib/utils";
-import { ROUTES } from "@/lib/routes";
+import {
+  ROUTES,
+  cabApplicationInformationRequiredPath,
+  cabApplicationReceiptPath,
+  cabApplicationReviewPath,
+  cabApplicationSubmissionPath,
+} from "@/lib/routes";
+
+const statusStyles: Record<ApplicationRegisterStatus, string> = {
+  DRAFT: "bg-[#f3f4f6] text-[#4b5563]",
+  SUBMITTED: "bg-[#e0e7ff] text-[#1236a3]",
+  UNDER_REVIEW: "bg-[#e0e7ff] text-[#1236a3]",
+  APPROVED: "bg-[#d0fae5] text-[#007a55]",
+  REJECTED: "bg-[#fee2e2] text-[#b42318]",
+};
+
+const STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, string> = {
+  DRAFT: "draft",
+  SUBMITTED: "submitted",
+  UNDER_REVIEW: "underReview",
+  APPROVED: "approved",
+  REJECTED: "rejected",
+};
+
+function startOfDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+}
+
+function endOfDay(date: Date): Date {
+  return new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+}
 
 function Chevron() {
   return (
@@ -61,10 +88,25 @@ function Chevron() {
   );
 }
 
-function applicationRoute(app: ApplicationRegisterItem): string {
-  return app.status === "DRAFT"
-    ? "/cab/applications/draft"
-    : `/cab/applications/${app.id}/review`;
+function applicationViewPath(app: ApplicationRegisterItem): string {
+  if (!app.clientId) return ROUTES.cabApplicationSubmission;
+  return cabApplicationSubmissionPath(app.clientId, app.id);
+}
+
+function applicationPrimaryPath(app: ApplicationRegisterItem): string {
+  if (app.status === "DRAFT") return applicationViewPath(app);
+  if (app.status === "APPROVED" || app.status === "REJECTED") {
+    return cabApplicationReceiptPath(app.id, app.clientId || undefined);
+  }
+  return cabApplicationReviewPath(app.id, app.clientId || undefined);
+}
+
+function dueFromUpdatedAt(iso: string) {
+  const received = new Date(iso);
+  const due = new Date(received);
+  due.setDate(due.getDate() + 14);
+  const daysLeft = Math.ceil((due.getTime() - Date.now()) / 86_400_000);
+  return { due, daysLeft };
 }
 
 export function CabApplicationRegisterPage() {
@@ -75,11 +117,14 @@ export function CabApplicationRegisterPage() {
     [],
   );
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
 
   const [query, setQuery] = useState("");
-  const [period, setPeriod] = useState<DateRange>({ from: null, to: null });
+  const [createdFrom, setCreatedFrom] = useState<Date | null>(null);
+  const [createdTo, setCreatedTo] = useState<Date | null>(null);
   const [countryFilter, setCountryFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("newest");
   const pageSize = 10;
   const [page, setPage] = useState(1);
 
@@ -91,9 +136,16 @@ export function CabApplicationRegisterPage() {
   useEffect(() => {
     let cancelled = false;
     setLoading(true);
+    setLoadError(false);
     listCabApplications()
       .then((data) => {
         if (!cancelled) setApplications(data);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setApplications([]);
+          setLoadError(true);
+        }
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -104,18 +156,18 @@ export function CabApplicationRegisterPage() {
   }, []);
 
   const filtered = useMemo(() => {
-    return applications.filter((app) => {
+    const next = applications.filter((app) => {
       const matchesQuery = matchesSearch(
-        [app.applicationCode, app.clientCode, app.clientName],
+        [app.applicationCode, app.clientCode, app.clientName, app.standards.join(" ")],
         query,
       );
       const matchesCountry =
         countryFilter === "all" || app.countryCode === countryFilter;
       const matchesStatus =
         statusFilter === "all" || app.status === statusFilter;
-      const updatedAt = new Date(app.updatedAt);
-      const matchesFrom = !period.from || updatedAt >= period.from;
-      const matchesTo = !period.to || updatedAt <= period.to;
+      const createdAt = new Date(app.updatedAt);
+      const matchesFrom = !createdFrom || createdAt >= startOfDay(createdFrom);
+      const matchesTo = !createdTo || createdAt <= endOfDay(createdTo);
       return (
         matchesQuery &&
         matchesCountry &&
@@ -124,7 +176,17 @@ export function CabApplicationRegisterPage() {
         matchesTo
       );
     });
-  }, [applications, query, countryFilter, statusFilter, period]);
+
+    return [...next].sort((a, b) => {
+      if (sortBy === "oldest") {
+        return new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime();
+      }
+      if (sortBy === "dueSoonest") {
+        return dueFromUpdatedAt(a.updatedAt).due.getTime() - dueFromUpdatedAt(b.updatedAt).due.getTime();
+      }
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    });
+  }, [applications, query, countryFilter, statusFilter, createdFrom, createdTo, sortBy]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, totalPages);
@@ -138,15 +200,16 @@ export function CabApplicationRegisterPage() {
 
   const hasActiveFilters = Boolean(
     query ||
-    period.from ||
-    period.to ||
+    createdFrom ||
+    createdTo ||
     countryFilter !== "all" ||
     statusFilter !== "all",
   );
 
   const clearFilters = () => {
     setQuery("");
-    setPeriod({ from: null, to: null });
+    setCreatedFrom(null);
+    setCreatedTo(null);
     setCountryFilter("all");
     setStatusFilter("all");
     setPage(1);
@@ -182,6 +245,17 @@ export function CabApplicationRegisterPage() {
       header: t("cab.applicationRegister.table.stage"),
       value: (row) =>
         t(`cab.applicationRegister.status.${STATUS_LABEL_KEYS[row.status]}`),
+    },
+    {
+      header: t("cab.applicationRegister.table.reviewer"),
+      value: () => t("cab.applicationRegister.defaultReviewer"),
+    },
+    {
+      header: t("cab.applicationRegister.table.due"),
+      value: (row) =>
+        row.status === "DRAFT"
+          ? "—"
+          : formatDate(dueFromUpdatedAt(row.updatedAt).due.toISOString()),
     },
     {
       header: t("cab.applicationRegister.table.updated"),
@@ -230,7 +304,7 @@ export function CabApplicationRegisterPage() {
               {t("cab.applicationRegister.subtitle")}
             </p>
           </div>
-          <div className="flex w-full items-center gap-3 sm:w-auto">
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
             <Button
               variant="primary"
               icon={<AppIcon icon={AddCircleIcon} size={20} />}
@@ -278,7 +352,7 @@ export function CabApplicationRegisterPage() {
         </div>
 
         <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.6fr_1fr_1fr_auto] lg:items-end">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] lg:items-end">
             <div className="flex flex-col gap-2">
               <span className="text-[13px] font-semibold text-neutral-700">
                 {t("cab.applicationRegister.filters.search")}
@@ -304,13 +378,29 @@ export function CabApplicationRegisterPage() {
 
             <div className="flex flex-col gap-2">
               <span className="text-[13px] font-semibold text-neutral-700">
-                {t("cab.applicationRegister.filters.createdPeriod")}
+                {t("cab.applicationRegister.filters.createdFrom")}
               </span>
-              <DateRangePicker
-                value={period}
+              <DatePicker
+                value={createdFrom}
                 onChange={(next) => {
                   setPage(1);
-                  setPeriod(next);
+                  setCreatedFrom(next);
+                }}
+                placeholder={t(
+                  "cab.applicationRegister.filters.createdPeriodPlaceholder",
+                )}
+              />
+            </div>
+
+            <div className="flex flex-col gap-2">
+              <span className="text-[13px] font-semibold text-neutral-700">
+                {t("cab.applicationRegister.filters.createdTo")}
+              </span>
+              <DatePicker
+                value={createdTo}
+                onChange={(next) => {
+                  setPage(1);
+                  setCreatedTo(next);
                 }}
                 placeholder={t(
                   "cab.applicationRegister.filters.createdPeriodPlaceholder",
@@ -384,16 +474,37 @@ export function CabApplicationRegisterPage() {
           </div>
         </section>
 
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-[14px] font-semibold text-neutral-900">
+            {filtered.length}{" "}
+            {filtered.length === 1
+              ? t("cab.applicationRegister.singleResult")
+              : t("cab.applicationRegister.multipleResults")}
+          </p>
+          <div className="flex items-center gap-2">
+            <span className="text-[12px] text-neutral-500">{t("cab.applicationRegister.sortBy")}</span>
+            <select
+              value={sortBy}
+              onChange={(event) => {
+                setPage(1);
+                setSortBy(event.target.value);
+              }}
+              className="h-10 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[13px] font-medium text-neutral-800 focus:border-primary focus:outline-none"
+            >
+              <option value="newest">{t("cab.applicationRegister.sort.newest")}</option>
+              <option value="oldest">{t("cab.applicationRegister.sort.oldest")}</option>
+              <option value="dueSoonest">{t("cab.applicationRegister.sort.dueSoonest")}</option>
+            </select>
+          </div>
+        </div>
+
         <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
           <div className="hidden overflow-x-auto md:block">
-            <table className="w-full min-w-[900px] border-collapse text-center">
+            <table className="w-full min-w-[1100px] border-collapse text-center">
               <thead>
                 <tr className="bg-[#1236a3] text-white">
                   <th className="px-4 py-4 text-[14px] font-medium">
                     {t("cab.applicationRegister.table.applicationCode")}
-                  </th>
-                  <th className="px-4 py-4 text-[14px] font-medium">
-                    {t("cab.applicationRegister.table.clientCode")}
                   </th>
                   <th className="px-4 py-4 text-[14px] font-medium">
                     {t("cab.applicationRegister.table.clientName")}
@@ -402,15 +513,19 @@ export function CabApplicationRegisterPage() {
                     {t("cab.applicationRegister.table.standards")}
                   </th>
                   <th className="px-4 py-4 text-[14px] font-medium">
+                    {t("cab.applicationRegister.table.reviewer")}
+                  </th>
+                  <th className="px-4 py-4 text-[14px] font-medium">
+                    {t("cab.applicationRegister.table.due")}
+                  </th>
+                  <th className="px-4 py-4 text-[14px] font-medium">
                     {t("cab.applicationRegister.table.stage")}
                   </th>
                   <th className="px-4 py-4 text-[14px] font-medium">
                     {t("cab.applicationRegister.table.updated")}
                   </th>
                   <th className="px-4 py-4 text-[14px] font-medium">
-                    <span className="sr-only">
-                      {t("cab.applicationRegister.table.actions")}
-                    </span>
+                    {t("cab.applicationRegister.table.actions")}
                   </th>
                 </tr>
               </thead>
@@ -418,7 +533,7 @@ export function CabApplicationRegisterPage() {
                 {loading ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-4 py-8 text-[15px] text-neutral-500"
                     >
                       {t("common.loading")}
@@ -427,17 +542,21 @@ export function CabApplicationRegisterPage() {
                 ) : paginated.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-4 py-8 text-[15px] text-neutral-500"
                     >
-                      {t("cab.applicationRegister.empty")}
+                      {t(
+                        loadError
+                          ? "cab.applicationRegister.loadError"
+                          : "cab.applicationRegister.empty",
+                      )}
                     </td>
                   </tr>
                 ) : (
                   paginated.map((app, index) => (
                     <tr
                       key={app.id}
-                      onClick={() => navigate(applicationRoute(app))}
+                      onClick={() => navigate(applicationPrimaryPath(app))}
                       className={cn(
                         "cursor-pointer",
                         index % 2 ? "bg-[#f9fafc]" : "",
@@ -449,17 +568,37 @@ export function CabApplicationRegisterPage() {
                       >
                         {app.applicationCode}
                       </td>
-                      <td
-                        className="px-4 py-4 font-medium text-[15px] text-primary"
-                        dir="ltr"
-                      >
-                        {app.clientCode}
-                      </td>
-                      <td className="px-4 py-4 font-medium text-[15px] text-neutral-900">
-                        {app.clientName}
+                      <td className="px-4 py-4 text-start">
+                        <p className="font-medium text-[15px] text-neutral-900">
+                          {app.clientName}
+                        </p>
+                        <p className="text-[12px] text-neutral-500" dir="ltr">
+                          {app.clientCode}
+                        </p>
                       </td>
                       <td className="px-4 py-4 text-[15px] text-neutral-700">
-                        {app.standards.join(", ")}
+                        {app.standards.join(", ") || "—"}
+                      </td>
+                      <td className="px-4 py-4 text-[15px] text-neutral-700">
+                        {app.status === "DRAFT"
+                          ? "—"
+                          : t("cab.applicationRegister.defaultReviewer")}
+                      </td>
+                      <td className="px-4 py-4 text-[15px] text-neutral-700">
+                        {app.status === "DRAFT" ? (
+                          "—"
+                        ) : (
+                          <div>
+                            <p>
+                              {formatDate(dueFromUpdatedAt(app.updatedAt).due.toISOString())}
+                            </p>
+                            <p className="text-[12px] text-neutral-400">
+                              {t("cab.applicationRegister.daysLeft", {
+                                count: dueFromUpdatedAt(app.updatedAt).daysLeft,
+                              })}
+                            </p>
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-4">
                         <span
@@ -481,9 +620,41 @@ export function CabApplicationRegisterPage() {
                       </td>
                       <td className="px-4 py-4">
                         <div
-                          className="flex items-center justify-center"
+                          className="flex items-center justify-center gap-2"
                           onClick={(event) => event.stopPropagation()}
                         >
+                          {app.status !== "DRAFT" && (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  navigate(
+                                    cabApplicationReviewPath(
+                                      app.id,
+                                      app.clientId || undefined,
+                                    ),
+                                  )
+                                }
+                                className="rounded-[8px] bg-[#1236a3] px-3 py-1.5 text-[12px] font-semibold text-white hover:bg-[#0f2d88]"
+                              >
+                                {t("cab.applicationRegister.rowActions.openReview")}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  navigate(
+                                    cabApplicationInformationRequiredPath(
+                                      app.id,
+                                      app.clientId || undefined,
+                                    ),
+                                  )
+                                }
+                                className="rounded-[8px] border border-[#d6e2fb] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1236a3] hover:bg-[#f2f6fe]"
+                              >
+                                {t("cab.applicationRegister.rowActions.requestClarification")}
+                              </button>
+                            </>
+                          )}
                           <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
                               <button
@@ -508,7 +679,7 @@ export function CabApplicationRegisterPage() {
                               >
                                 <DropdownMenu.Item
                                   onSelect={() =>
-                                    navigate(applicationRoute(app))
+                                    navigate(applicationViewPath(app))
                                   }
                                   className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                                 >
@@ -520,6 +691,55 @@ export function CabApplicationRegisterPage() {
                                         "cab.applicationRegister.rowActions.view",
                                       )}
                                 </DropdownMenu.Item>
+                                {app.status !== "DRAFT" && (
+                                  <>
+                                    <DropdownMenu.Item
+                                      onSelect={() =>
+                                        navigate(
+                                          cabApplicationReviewPath(
+                                            app.id,
+                                            app.clientId || undefined,
+                                          ),
+                                        )
+                                      }
+                                      className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                                    >
+                                      {t(
+                                        "cab.applicationRegister.rowActions.review",
+                                      )}
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Item
+                                      onSelect={() =>
+                                        navigate(
+                                          cabApplicationInformationRequiredPath(
+                                            app.id,
+                                            app.clientId || undefined,
+                                          ),
+                                        )
+                                      }
+                                      className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                                    >
+                                      {t(
+                                        "cab.applicationRegister.rowActions.requestClarification",
+                                      )}
+                                    </DropdownMenu.Item>
+                                    <DropdownMenu.Item
+                                      onSelect={() =>
+                                        navigate(
+                                          cabApplicationReceiptPath(
+                                            app.id,
+                                            app.clientId || undefined,
+                                          ),
+                                        )
+                                      }
+                                      className="cursor-pointer select-none rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                                    >
+                                      {t(
+                                        "cab.applicationRegister.rowActions.receipt",
+                                      )}
+                                    </DropdownMenu.Item>
+                                  </>
+                                )}
                               </DropdownMenu.Content>
                             </DropdownMenu.Portal>
                           </DropdownMenu.Root>
@@ -539,7 +759,11 @@ export function CabApplicationRegisterPage() {
               </p>
             ) : paginated.length === 0 ? (
               <p className="py-6 text-center text-[14px] text-neutral-500">
-                {t("cab.applicationRegister.empty")}
+                  {t(
+                    loadError
+                      ? "cab.applicationRegister.loadError"
+                      : "cab.applicationRegister.empty",
+                  )}
               </p>
             ) : (
               paginated.map((app) => (
@@ -549,7 +773,7 @@ export function CabApplicationRegisterPage() {
                 >
                   <button
                     type="button"
-                    onClick={() => navigate(applicationRoute(app))}
+                    onClick={() => navigate(applicationPrimaryPath(app))}
                     className="w-full text-start"
                   >
                     <div className="flex items-center justify-between gap-2">

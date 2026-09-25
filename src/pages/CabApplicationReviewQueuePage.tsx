@@ -7,6 +7,7 @@ import {
   getReviewQueueItems,
   type ReviewQueueItem,
 } from '@/lib/api/cabApplicationQueueApi'
+import { ROUTES, cabApplicationInformationRequiredPath, cabApplicationReviewPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 export function CabApplicationReviewQueuePage() {
@@ -17,7 +18,7 @@ export function CabApplicationReviewQueuePage() {
   const [loading, setLoading] = useState(true)
 
   // Filters State
-  const [searchQuery, setSearchQuery] = useState('APP-0024')
+  const [searchQuery, setSearchQuery] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('all')
@@ -99,7 +100,7 @@ export function CabApplicationReviewQueuePage() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => navigate('/cab/clients/new')}
+              onClick={() => navigate(ROUTES.cabApplicationSubmission)}
               className="inline-flex items-center gap-2 rounded-[10px] bg-[#1236a3] px-4 py-2.5 text-[13px] font-semibold text-white shadow-sm transition-all hover:bg-[#0f2d88]"
             >
               <span>+ {t('cab.applications.reviewQueue.newApplication', 'New application')}</span>
@@ -348,14 +349,18 @@ export function CabApplicationReviewQueuePage() {
                       <div className="flex items-center justify-end gap-2">
                         <button
                           type="button"
-                          onClick={() => navigate(`/cab/applications/${item.applicationNumber}/review`)}
+                          onClick={() =>
+                            navigate(cabApplicationReviewPath(item.id, item.clientId))
+                          }
                           className="rounded-[8px] bg-[#1236a3] px-3 py-1.5 text-[12px] font-semibold text-white shadow-sm transition-all hover:bg-[#0f2d88]"
                         >
                           {t('cab.applications.reviewQueue.actions.openReview', 'Open review')}
                         </button>
                         <button
                           type="button"
-                          onClick={() => navigate(`/cab/applications/${item.applicationNumber}/information-required`)}
+                          onClick={() =>
+                            navigate(cabApplicationInformationRequiredPath(item.id, item.clientId))
+                          }
                           className="rounded-[8px] border border-[#d6e2fb] bg-white px-3 py-1.5 text-[12px] font-semibold text-[#1236a3] transition-all hover:bg-[#f2f6fe]"
                         >
                           {t('cab.applications.reviewQueue.actions.requestClarification', 'Request clarification')}

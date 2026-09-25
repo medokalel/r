@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { markTourPending } from '@/context/TourContext'
@@ -593,6 +593,9 @@ export function CabApplicationQuotationPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const scale = useFitScale()
+  const { applicationId } = useParams()
+  const [searchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId') ?? undefined
   const [data, setData] = useState<CabApplicationQuotation | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('quotation')
@@ -601,7 +604,7 @@ export function CabApplicationQuotationPage() {
 
   useEffect(() => {
     let cancelled = false
-    getCabApplicationQuotation().then((result) => {
+    getCabApplicationQuotation(applicationId, clientId).then((result) => {
       if (!cancelled) {
         setData(result)
         setLoading(false)
@@ -610,7 +613,7 @@ export function CabApplicationQuotationPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [applicationId, clientId])
 
   if (loading || !data) {
     return (

@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { markTourPending } from '@/context/TourContext'
 import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard as SharedWorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
@@ -28,7 +29,8 @@ import {
   type CommentTag,
   type DocumentStatus,
 } from '@/lib/api/cabApplicationReviewApi'
-import { ROUTES, cabApplicationInformationRequiredPath } from '@/lib/routes'
+import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
+import { ROUTES, cabApplicationInformationRequiredPath, cabApplicationReviewPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
@@ -716,7 +718,15 @@ function WorkflowProgressCard() {
   )
 }
 
-function ReviewActionsCard({ className, applicationId }: { className?: string; applicationId: string }) {
+function ReviewActionsCard({
+  className,
+  applicationId,
+  clientId,
+}: {
+  className?: string
+  applicationId?: string
+  clientId?: string
+}) {
   const { t } = useTranslation()
   const navigate = useNavigate()
   return (
@@ -724,7 +734,7 @@ function ReviewActionsCard({ className, applicationId }: { className?: string; a
       <h2 className="mb-1 text-[14px] font-bold text-[#000000]">{t('cab.applications.review.reviewActions.title')}</h2>
       <button
         type="button"
-        onClick={() => navigate(cabApplicationInformationRequiredPath(applicationId))}
+        onClick={() => navigate(cabApplicationInformationRequiredPath(applicationId, clientId))}
         className="flex h-9 w-full items-center gap-2 rounded-[8px] border border-[#b6d0ff] bg-[#e8edfc] px-3 text-[12px] font-semibold text-[#1236a3] hover:opacity-90"
       >
         <AppIcon icon={FileTextIcon} size={14} />
@@ -774,15 +784,24 @@ export function CabApplicationReviewPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const scale = useFitScale()
+  const { applicationId } = useParams()
+  const [searchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId') ?? undefined
   const [review, setReview] = useState<CabApplicationReview | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(Boolean(applicationId))
   const [activeTab, setActiveTab] = useState<TabKey>('checklist')
 
   const tourSteps = useApplicationReviewTourSteps()
 
   useEffect(() => {
+    if (!applicationId) {
+      setReview(null)
+      setLoading(false)
+      return
+    }
     let cancelled = false
-    getCabApplicationReview().then((data) => {
+    setLoading(true)
+    getCabApplicationReview(applicationId, clientId).then((data) => {
       if (!cancelled) {
         setReview(data)
         setLoading(false)
@@ -791,7 +810,26 @@ export function CabApplicationReviewPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [applicationId, clientId])
+
+  if (!applicationId) {
+    return (
+      <CabLayout>
+        <CabHeader title={t('cab.applications.review.title')} notificationCount={2} />
+        <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+          <ApplicationPicker
+            title={t('cab.applications.review.selectApplication')}
+            hint={t('cab.applications.review.selectApplicationHint')}
+            actionLabel={t('cab.applications.review.openSelected')}
+            allowedStatuses={['SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'REJECTED']}
+            onSelect={(application) =>
+              navigate(cabApplicationReviewPath(application.id, application.clientId || undefined))
+            }
+          />
+        </div>
+      </CabLayout>
+    )
+  }
 
   if (loading || !review) {
     return (
@@ -811,7 +849,7 @@ export function CabApplicationReviewPage() {
       tourSteps={tourSteps}
       onTourComplete={() => {
         markTourPending('cab-application-information-required')
-        navigate('/cab/applications/information-required')
+        navigate(cabApplicationInformationRequiredPath(applicationId, clientId))
       }}
     >
         <DashboardTourStep steps={tourSteps} stepId="header">
@@ -1005,7 +1043,7 @@ export function CabApplicationReviewPage() {
               <div style={{ zoom: scale }}>
                 <HistoryTable review={review} />
               </div>
-              <ReviewActionsCard applicationId={review.applicationId} />
+              <ReviewActionsCard applicationId={applicationId} clientId={clientId} />
             </div>
           )}
           </div>

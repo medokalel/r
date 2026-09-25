@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
@@ -18,12 +18,14 @@ import {
 import { Button } from '@/components/ui/Button'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { UserAvatar } from '@/components/ui/UserAvatar'
+import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
 import {
   getCabApplicationReceipt,
   type CabApplicationReceipt,
 } from '@/lib/api/cabApplicationReceiptApi'
 import { useCabSidebar } from '@/context/CabSidebarContext'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabApplicationReceiptPath, cabApplicationReviewPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 import { useFitScale } from '@/lib/useFitScale'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
@@ -236,14 +238,23 @@ export function CabApplicationReceiptPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const scale = useFitScale()
+  const { applicationId } = useParams()
+  const [searchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId') ?? undefined
   const [receipt, setReceipt] = useState<CabApplicationReceipt | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(Boolean(applicationId))
 
   const tourSteps = useApplicationReceiptTourSteps()
 
   useEffect(() => {
+    if (!applicationId) {
+      setReceipt(null)
+      setLoading(false)
+      return
+    }
     let cancelled = false
-    getCabApplicationReceipt().then((data) => {
+    setLoading(true)
+    getCabApplicationReceipt(applicationId, clientId).then((data) => {
       if (!cancelled) {
         setReceipt(data)
         setLoading(false)
@@ -252,7 +263,26 @@ export function CabApplicationReceiptPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [applicationId, clientId])
+
+  if (!applicationId) {
+    return (
+      <CabLayout>
+        <CabHeader title={t('cab.applications.receipt.title')} notificationCount={2} />
+        <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+          <ApplicationPicker
+            title={t('cab.applications.receipt.selectApplication')}
+            hint={t('cab.applications.receipt.selectApplicationHint')}
+            actionLabel={t('cab.applications.receipt.openSelected')}
+            allowedStatuses={['SUBMITTED', 'UNDER_REVIEW', 'APPROVED', 'REJECTED']}
+            onSelect={(application) =>
+              navigate(cabApplicationReceiptPath(application.id, application.clientId || undefined))
+            }
+          />
+        </div>
+      </CabLayout>
+    )
+  }
 
   if (loading || !receipt) {
     return (
@@ -271,7 +301,7 @@ export function CabApplicationReceiptPage() {
       tourSteps={tourSteps}
       onTourComplete={() => {
         markTourPending('cab-application-review')
-        navigate('/cab/applications/review')
+        navigate(cabApplicationReviewPath(applicationId ?? receipt.applicationId, clientId))
       }}
     >
         <DashboardTourStep steps={tourSteps} stepId="header">
