@@ -43,7 +43,6 @@ import { ApplyMultiSiteRulePage } from "@/pages/ApplyMultiSiteRulePage";
 import { CabMultiSiteRulePreviewPage } from "@/pages/CabMultiSiteRulePreviewPage";
 import { CabApplicationReceiptPage } from "@/pages/CabApplicationReceiptPage";
 import { CabApplicationReviewPage } from "@/pages/CabApplicationReviewPage";
-import { CabApplicationReviewQueuePage } from "@/pages/CabApplicationReviewQueuePage";
 import { CabContactsListPage } from "@/pages/CabContactsListPage";
 import { CabAddContactPage } from "@/pages/CabAddContactPage";
 import { CabApplicationInformationRequiredPage } from "@/pages/CabApplicationInformationRequiredPage";
@@ -60,6 +59,10 @@ import { CabAuditReportingPage } from "@/pages/CabAuditReportingPage";
 import { CabAddFindingPage } from "@/pages/CabAddFindingPage";
 import { CabDecisionQueuePage } from "@/pages/CabDecisionQueuePage";
 import { CabDecisionDetailsPage } from "@/pages/CabDecisionDetailsPage";
+import { CabPersonnelRegisterPage } from "@/pages/CabPersonnelRegisterPage";
+import { CabCompetenceEvaluationPage } from "@/pages/CabCompetenceEvaluationPage";
+import { PortalHomePage } from "@/pages/portal/PortalHomePage";
+import { PortalCompanyProfilePage } from "@/pages/portal/PortalCompanyProfilePage";
 import { CabCertificationCyclesPage } from "@/pages/CabCertificationCyclesPage";
 import { CabManageCertificationCyclePage } from "@/pages/CabManageCertificationCyclePage";
 import { CabNonconformitiesPage } from "@/pages/CabNonconformitiesPage";
@@ -293,7 +296,7 @@ export default function App() {
                 path="/cab/applications/review-queue"
                 element={
                   <RequireAuth>
-                    <CabApplicationReviewQueuePage />
+                    <Navigate to={ROUTES.cabApplicationRegister} replace />
                   </RequireAuth>
                 }
               />
@@ -574,6 +577,26 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.cabCompetence}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabPersonnelRegisterPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabCompetenceEvaluation}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabCompetenceEvaluationPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
                 path={ROUTES.dashboard}
                 element={
                   <RequireAuth>
@@ -652,6 +675,78 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <InvoicesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portal}
+                element={
+                  <RequireAuth>
+                    <PortalHomePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalHome}
+                element={
+                  <RequireAuth>
+                    <PortalHomePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalCompanyProfile}
+                element={
+                  <RequireAuth>
+                    <PortalCompanyProfilePage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalApplications}
+                element={
+                  <RequireAuth>
+                    <CertificationRequestsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalOffers}
+                element={
+                  <RequireAuth>
+                    <CabOfferRegisterPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalInvoices}
+                element={
+                  <RequireAuth>
+                    <CabInvoiceRegisterPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalAudits}
+                element={
+                  <RequireAuth>
+                    <PeriodicVisitsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalFindings}
+                element={
+                  <RequireAuth>
+                    <DashboardTasksPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalCertificates}
+                element={
+                  <RequireAuth>
+                    <DigitalWalletPage />
                   </RequireAuth>
                 }
               />
