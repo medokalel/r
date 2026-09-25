@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useCertificateRegisterTourSteps } from '@/config/certificateRegisterTourSteps'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
@@ -49,6 +51,7 @@ const PAGE_SIZE = 10
 export function CabCertificateRegisterPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = useCertificateRegisterTourSteps()
 
   const [certificates, setCertificates] = useState<CertificateRegisterItem[]>([])
   const [loading, setLoading] = useState(true)
@@ -170,7 +173,7 @@ export function CabCertificateRegisterPage() {
   } as const
 
   return (
-    <CabLayout>
+    <CabLayout tourId="cab-certificate-register" tourSteps={tourSteps}>
       <CabHeader title={t('cab.certificateRegister.title')} notificationCount={3} />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
@@ -182,21 +185,25 @@ export function CabCertificateRegisterPage() {
         </nav>
 
         <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-          <div>
-            <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
-              {t('cab.certificateRegister.title')}
-            </h1>
-            <p className="mt-1 text-[14px] text-neutral-500">{t('cab.certificateRegister.subtitle')}</p>
-          </div>
+          <CabTourStep steps={tourSteps} stepId="certificate-register-header">
+            <div>
+              <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
+                {t('cab.certificateRegister.title')}
+              </h1>
+              <p className="mt-1 text-[14px] text-neutral-500">{t('cab.certificateRegister.subtitle')}</p>
+            </div>
+          </CabTourStep>
           <div className="flex w-full items-center gap-3 sm:w-auto">
-            <Button
-              variant="primary"
-              icon={<AppIcon icon={AddCircleIcon} size={20} />}
-              onClick={() => navigate(ROUTES.cabCertificates)}
-              className="flex-1 sm:flex-none"
-            >
-              {t('cab.certificateRegister.prepareCertificate')}
-            </Button>
+            <CabTourStep steps={tourSteps} stepId="certificate-register-prepare-btn">
+              <Button
+                variant="primary"
+                icon={<AppIcon icon={AddCircleIcon} size={20} />}
+                onClick={() => navigate(ROUTES.cabCertificates)}
+                className="w-full sm:w-auto whitespace-nowrap"
+              >
+                {t('cab.certificateRegister.prepareCertificate')}
+              </Button>
+            </CabTourStep>
             <ExportMenuButton
               exporting={exporting}
               disabled={filtered.length === 0}
@@ -209,252 +216,260 @@ export function CabCertificateRegisterPage() {
         </div>
 
         {/* Filters */}
-        <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.6fr_1fr_1fr_auto] lg:items-end">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="certificate-search" className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.certificateRegister.filters.search')}
-              </label>
-              <div className="relative">
-                <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
-                  <AppIcon icon={SearchIcon} size={18} />
+        <CabTourStep steps={tourSteps} stepId="certificate-register-filters">
+          <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.6fr_1fr_1fr_auto] lg:items-end">
+              <div className="flex flex-col gap-2">
+                <label htmlFor="certificate-search" className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.certificateRegister.filters.search')}
+                </label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
+                    <AppIcon icon={SearchIcon} size={18} />
+                  </span>
+                  <input
+                    id="certificate-search"
+                    type="text"
+                    value={query}
+                    onChange={(event) => {
+                      setPage(1)
+                      setQuery(event.target.value)
+                    }}
+                    placeholder={t('cab.certificateRegister.filters.searchPlaceholder')}
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.certificateRegister.filters.issuePeriod')}
                 </span>
-                <input
-                  id="certificate-search"
-                  type="text"
-                  value={query}
-                  onChange={(event) => {
+                <DateRangePicker
+                  value={period}
+                  onChange={(next) => {
                     setPage(1)
-                    setQuery(event.target.value)
+                    setPeriod(next)
                   }}
-                  placeholder={t('cab.certificateRegister.filters.searchPlaceholder')}
-                  className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
                 />
               </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.certificateRegister.filters.country')}
+                </span>
+                <SelectField
+                  value={countryFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setCountryFilter(value)
+                  }}
+                  options={[
+                    { value: 'all', label: t('cab.certificateRegister.filters.allCountries') },
+                    ...countryOptions.map((option) => ({
+                      value: option.code,
+                      label: `${option.flag} ${option.name}`,
+                      textValue: option.name,
+                    })),
+                  ]}
+                />
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.certificateRegister.filters.status')}
+                </span>
+                <SelectField
+                  value={statusFilter}
+                  onChange={(value) => {
+                    setPage(1)
+                    setStatusFilter(value)
+                  }}
+                  options={[
+                    { value: 'all', label: t('cab.certificateRegister.filters.allStatuses') },
+                    ...(Object.keys(STATUS_LABEL_KEYS) as CertificateStatus[]).map((status) => ({
+                      value: status,
+                      label: statusLabel(status),
+                    })),
+                  ]}
+                />
+              </div>
+
+              <div className="flex items-end justify-start lg:justify-end">
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  disabled={!hasActiveFilters}
+                  className="h-11 whitespace-nowrap text-[14px] font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
+                >
+                  {t('cab.certificateRegister.clearFilters')}
+                </button>
+              </div>
             </div>
+          </section>
+        </CabTourStep>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.certificateRegister.filters.issuePeriod')}
-              </span>
-              <DateRangePicker
-                value={period}
-                onChange={(next) => {
-                  setPage(1)
-                  setPeriod(next)
-                }}
-              />
-            </div>
+        <CabTourStep steps={tourSteps} stepId="certificate-register-table">
+          <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
+            <p className="mb-4 px-5 text-[13px] text-neutral-500">
+              {loading
+                ? t('common.loading')
+                : t('cab.certificateRegister.resultCount', { count: filtered.length })}
+            </p>
 
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.certificateRegister.filters.country')}
-              </span>
-              <SelectField
-                value={countryFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setCountryFilter(value)
-                }}
-                options={[
-                  { value: 'all', label: t('cab.certificateRegister.filters.allCountries') },
-                  ...countryOptions.map((option) => ({
-                    value: option.code,
-                    label: `${option.flag} ${option.name}`,
-                    textValue: option.name,
-                  })),
-                ]}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <span className="text-[13px] font-semibold text-neutral-700">
-                {t('cab.certificateRegister.filters.status')}
-              </span>
-              <SelectField
-                value={statusFilter}
-                onChange={(value) => {
-                  setPage(1)
-                  setStatusFilter(value)
-                }}
-                options={[
-                  { value: 'all', label: t('cab.certificateRegister.filters.allStatuses') },
-                  ...(Object.keys(STATUS_LABEL_KEYS) as CertificateStatus[]).map((status) => ({
-                    value: status,
-                    label: statusLabel(status),
-                  })),
-                ]}
-              />
-            </div>
-
-            <div className="flex items-end justify-start lg:justify-end">
-              <button
-                type="button"
-                onClick={clearFilters}
-                disabled={!hasActiveFilters}
-                className="h-11 whitespace-nowrap text-[14px] font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
-              >
-                {t('cab.certificateRegister.clearFilters')}
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-          <p className="mb-4 px-5 text-[13px] text-neutral-500">
-            {loading
-              ? t('common.loading')
-              : t('cab.certificateRegister.resultCount', { count: filtered.length })}
-          </p>
-
-          <div className="hidden overflow-x-auto md:block">
-            <table className="w-full min-w-[960px] border-collapse text-center">
-              <thead>
-                <tr className="bg-[#1236a3] text-white">
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.number')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.client')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.standard')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.scope')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.validUntil')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.status')}</th>
-                  <th className="px-4 py-4 text-[14px] font-medium">
-                    <span className="sr-only">{t('cab.certificateRegister.table.actions')}</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
-                      {t('common.loading')}
-                    </td>
+            <div className="hidden overflow-x-auto md:block">
+              <table className="w-full min-w-[960px] border-collapse text-center">
+                <thead>
+                  <tr className="bg-[#1236a3] text-white">
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.number')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.client')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.standard')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.scope')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.validUntil')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">{t('cab.certificateRegister.table.status')}</th>
+                    <th className="px-4 py-4 text-[14px] font-medium">
+                      <span className="sr-only">{t('cab.certificateRegister.table.actions')}</span>
+                    </th>
                   </tr>
-                ) : paginated.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
-                      {t('cab.certificateRegister.empty')}
-                    </td>
-                  </tr>
-                ) : (
-                  paginated.map((cert, index) => (
-                    <tr key={cert.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
-                      <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
-                        {cert.certificateNumber}
-                      </td>
-                      <td className="px-4 py-4 text-start">
-                        <div className="font-medium text-[15px] text-neutral-900">{cert.clientName}</div>
-                        <div className="text-[12px] text-neutral-500">
-                          <span dir="ltr">{cert.clientId}</span>
-                          <span className="mx-1">|</span>
-                          {countryName(cert.countryCode)}
-                        </div>
-                      </td>
-                      <td className="px-4 py-4 text-[15px] text-neutral-700">{cert.standard}</td>
-                      <td className="max-w-[280px] px-4 py-4 text-start text-[14px] text-neutral-600">
-                        {cert.scope}
-                      </td>
-                      <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
-                        {formatDate(cert.validUntil)}
-                      </td>
-                      <td className="px-4 py-4">
-                        <span
-                          className={cn(
-                            'inline-flex items-center justify-center rounded-[10px] px-3 py-1.5 text-[12px] font-medium',
-                            statusStyles[cert.status],
-                          )}
-                        >
-                          {statusLabel(cert.status)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-4">
-                        <div className="flex items-center justify-center">
-                          <DropdownMenu.Root>
-                            <DropdownMenu.Trigger asChild>
-                              <button
-                                type="button"
-                                aria-label={t('cab.certificateRegister.table.actions')}
-                                className="flex size-9 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-50 hover:text-primary"
-                              >
-                                <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
-                              </button>
-                            </DropdownMenu.Trigger>
-                            <DropdownMenu.Portal>
-                              <DropdownMenu.Content
-                                align="end"
-                                sideOffset={4}
-                                className="z-50 min-w-[170px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
-                              >
-                                {availableActions(cert).map((action) => (
-                                  <DropdownMenu.Item
-                                    key={action}
-                                    onSelect={() =>
-                                      navigate(
-                                        action === 'prepareCertificate'
-                                          ? cabPrepareCertificatePath(cert.id)
-                                          : ROUTES.cabCertificates,
-                                      )
-                                    }
-                                    className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
-                                  >
-                                    <AppIcon icon={actionIcon[action]} size={16} />
-                                    {t(`cab.certificateRegister.rowActions.${action}`)}
-                                  </DropdownMenu.Item>
-                                ))}
-                              </DropdownMenu.Content>
-                            </DropdownMenu.Portal>
-                          </DropdownMenu.Root>
-                        </div>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
+                        {t('common.loading')}
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : paginated.length === 0 ? (
+                    <tr>
+                      <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
+                        {t('cab.certificateRegister.empty')}
+                      </td>
+                    </tr>
+                  ) : (
+                    paginated.map((cert, index) => (
+                      <tr key={cert.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
+                        <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
+                          {cert.certificateNumber}
+                        </td>
+                        <td className="px-4 py-4 text-start">
+                          <div className="font-medium text-[15px] text-neutral-900">{cert.clientName}</div>
+                          <div className="text-[12px] text-neutral-500">
+                            <span dir="ltr">{cert.clientId}</span>
+                            <span className="mx-1">|</span>
+                            {countryName(cert.countryCode)}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 text-[15px] text-neutral-700">{cert.standard}</td>
+                        <td className="max-w-[280px] px-4 py-4 text-start text-[14px] text-neutral-600">
+                          {cert.scope}
+                        </td>
+                        <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
+                          {formatDate(cert.validUntil)}
+                        </td>
+                        <td className="px-4 py-4">
+                          <span
+                            className={cn(
+                              'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
+                              statusStyles[cert.status],
+                            )}
+                          >
+                            {statusLabel(cert.status)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="flex items-center justify-center">
+                            <CabTourStep
+                              steps={tourSteps}
+                              stepId={index === 0 ? 'certificate-register-actions' : undefined}
+                            >
+                              <DropdownMenu.Root>
+                                <DropdownMenu.Trigger asChild>
+                                  <button
+                                    type="button"
+                                    aria-label={t('cab.certificateRegister.table.actions')}
+                                    className="flex size-9 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-50 hover:text-primary"
+                                  >
+                                    <AppIcon icon={MoreIcon} size={20} className="rotate-90" />
+                                  </button>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Portal>
+                                  <DropdownMenu.Content
+                                    align="end"
+                                    sideOffset={4}
+                                    className="z-50 min-w-[170px] rounded-[8px] border border-[#e2e2e2] bg-white p-1 shadow-lg"
+                                  >
+                                    {availableActions(cert).map((action) => (
+                                      <DropdownMenu.Item
+                                        key={action}
+                                        onSelect={() =>
+                                          navigate(
+                                            action === 'prepareCertificate'
+                                              ? cabPrepareCertificatePath(cert.id)
+                                              : ROUTES.cabCertificates,
+                                          )
+                                        }
+                                        className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-start text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
+                                      >
+                                        <AppIcon icon={actionIcon[action]} size={16} />
+                                        {t(`cab.certificateRegister.rowActions.${action}`)}
+                                      </DropdownMenu.Item>
+                                    ))}
+                                  </DropdownMenu.Content>
+                                </DropdownMenu.Portal>
+                              </DropdownMenu.Root>
+                            </CabTourStep>
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
 
-          <div className="space-y-3 px-5 md:hidden">
-            {loading ? (
-              <p className="py-6 text-center text-[14px] text-neutral-500">{t('common.loading')}</p>
-            ) : paginated.length === 0 ? (
-              <p className="py-6 text-center text-[14px] text-neutral-500">{t('cab.certificateRegister.empty')}</p>
-            ) : (
-              paginated.map((cert) => (
-                <div key={cert.id} className="w-full rounded-[12px] border border-[#ececec] p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-[14px] text-primary" dir="ltr">
-                      {cert.certificateNumber}
+            <div className="space-y-3 px-5 md:hidden">
+              {loading ? (
+                <p className="py-6 text-center text-[14px] text-neutral-500">{t('common.loading')}</p>
+              ) : paginated.length === 0 ? (
+                <p className="py-6 text-center text-[14px] text-neutral-500">{t('cab.certificateRegister.empty')}</p>
+              ) : (
+                paginated.map((cert) => (
+                  <div key={cert.id} className="w-full rounded-[12px] border border-[#ececec] p-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-semibold text-[14px] text-primary" dir="ltr">
+                        {cert.certificateNumber}
+                      </p>
+                      <span
+                        className={cn(
+                          'inline-flex shrink-0 items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
+                          statusStyles[cert.status],
+                        )}
+                      >
+                        {statusLabel(cert.status)}
+                      </span>
+                    </div>
+                    <p className="mt-2 text-[14px] font-medium text-neutral-900">{cert.clientName}</p>
+                    <p className="text-[13px] text-neutral-500">
+                      <span dir="ltr">{cert.clientId}</span> | {countryName(cert.countryCode)}
                     </p>
-                    <span
-                      className={cn(
-                        'inline-flex shrink-0 items-center justify-center rounded-[10px] px-3 py-1 text-[12px] font-medium',
-                        statusStyles[cert.status],
-                      )}
+                    <p className="mt-2 text-[13px] text-neutral-700">
+                      {cert.standard} — {cert.scope}
+                    </p>
+                    <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
+                      {formatDate(cert.validUntil)}
+                    </p>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="mt-3 w-full"
+                      onClick={() => navigate(cabPrepareCertificatePath(cert.id))}
                     >
-                      {statusLabel(cert.status)}
-                    </span>
+                      {t('cab.certificateRegister.prepareCertificate')}
+                    </Button>
                   </div>
-                  <p className="mt-2 text-[14px] font-medium text-neutral-900">{cert.clientName}</p>
-                  <p className="text-[13px] text-neutral-500">
-                    <span dir="ltr">{cert.clientId}</span> | {countryName(cert.countryCode)}
-                  </p>
-                  <p className="mt-2 text-[13px] text-neutral-700">
-                    {cert.standard} — {cert.scope}
-                  </p>
-                  <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
-                    {formatDate(cert.validUntil)}
-                  </p>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="mt-3 w-full"
-                    onClick={() => navigate(cabPrepareCertificatePath(cert.id))}
-                  >
-                    {t('cab.certificateRegister.prepareCertificate')}
-                  </Button>
-                </div>
-              ))
-            )}
-          </div>
+                ))
+              )}
+            </div>
 
           {!loading && filtered.length > 0 && (
             <div className="mt-5 flex justify-end border-t border-[#ececec] px-5 pt-4">
@@ -462,6 +477,7 @@ export function CabCertificateRegisterPage() {
             </div>
           )}
         </section>
+        </CabTourStep>
       </main>
     </CabLayout>
   )

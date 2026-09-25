@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { markTourPending } from '@/context/TourContext'
@@ -505,13 +505,16 @@ export function CabApplicationTechnicalFeasibilityPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const scale = useFitScale()
+  const { applicationId } = useParams()
+  const [searchParams] = useSearchParams()
+  const clientId = searchParams.get('clientId') ?? undefined
   const [data, setData] = useState<CabApplicationTechnicalFeasibility | null>(null)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<TabKey>('technicalFeasibility')
 
   useEffect(() => {
     let cancelled = false
-    getCabApplicationTechnicalFeasibility().then((result) => {
+    getCabApplicationTechnicalFeasibility(applicationId, clientId).then((result) => {
       if (!cancelled) {
         setData(result)
         setLoading(false)
@@ -520,7 +523,7 @@ export function CabApplicationTechnicalFeasibilityPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [applicationId, clientId])
 
   const tourSteps = useApplicationTechnicalFeasibilityTourSteps()
 
@@ -534,7 +537,8 @@ export function CabApplicationTechnicalFeasibilityPage() {
     )
   }
 
-  const proceedToQuotation = () => navigate(cabApplicationQuotationPath(data.applicationId))
+  const proceedToQuotation = () =>
+    navigate(cabApplicationQuotationPath(applicationId, clientId))
 
   return (
     <CabLayout
@@ -543,7 +547,7 @@ export function CabApplicationTechnicalFeasibilityPage() {
       tourSteps={tourSteps}
       onTourComplete={() => {
         markTourPending('cab-application-quotation')
-        navigate('/cab/applications/quotation')
+        navigate(cabApplicationQuotationPath(applicationId, clientId))
       }}
     >
         <DashboardTourStep steps={tourSteps} stepId="header">
