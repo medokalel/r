@@ -4432,6 +4432,7 @@
       "clearFilters": "مسح الفلاتر",
       "empty": "لا يوجد عملاء.",
       "showingRange": "عرض {{from}} إلى {{to}} من {{total}} عميل",
+      "selectedCount": "{{count}} محدد",
       "filters": {
         "search": "بحث",
         "searchPlaceholder": "ابحث باسم العميل أو الكود...",
@@ -4449,7 +4450,7 @@
         "dateOfCreation": "تاريخ الإنشاء",
         "code": "رمز العميل",
         "client": "العميل",
-        "country": "الدولة",
+        "city": "المدينة",
         "primaryContact": "جهة الاتصال الرئيسية",
         "updated": "آخر تحديث",
         "actions": "الإجراءات"
@@ -4486,7 +4487,10 @@
       "title": "بيانات العميل",
       "backToClients": "العودة إلى العملاء",
       "editClient": "تعديل العميل",
-      "openDocument": "فتح المستند الداعم"
+      "openDocument": "فتح المستند الداعم",
+      "clientNo": "رقم العميل",
+      "registeredOn": "تاريخ التسجيل",
+      "registeredBy": "تم التسجيل بواسطة"
     },
     "applicationDraft": {
       "breadcrumbWorkspace": "مساحة العمل",

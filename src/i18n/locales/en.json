@@ -4392,12 +4392,14 @@
       "clearFilters": "Clear filters",
       "empty": "No clients found.",
       "showingRange": "Showing {{from}} to {{to}} of {{total}} clients",
+      "selectedCount": "{{count}} selected",
       "filters": {
         "search": "Search",
         "searchPlaceholder": "Search by client name or code...",
         "addedPeriod": "Added period",
         "addedPeriodPlaceholder": "All periods",
         "country": "Country",
+        "city": "City",
         "allCountries": "All countries"
       },
       "table": {
@@ -4409,7 +4411,7 @@
         "dateOfCreation": "Date of creation",
         "code": "Client code",
         "client": "Client",
-        "country": "Country",
+        "city": "City",
         "primaryContact": "Primary contact",
         "updated": "Updated",
         "actions": "Actions"
@@ -4446,7 +4448,10 @@
       "title": "Client Details",
       "backToClients": "Back to clients",
       "editClient": "Edit Client",
-      "openDocument": "Open supporting document"
+      "openDocument": "Open supporting document",
+      "clientNo": "Client No.",
+      "registeredOn": "Registered On",
+      "registeredBy": "Registered By"
     },
     "applicationDraft": {
       "breadcrumbWorkspace": "Workspace",

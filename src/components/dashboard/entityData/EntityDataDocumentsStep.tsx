@@ -42,6 +42,7 @@ export function EntityDataDocumentsStep() {
     name: doc.originalName || doc.fileName,
     sizeLabel: formatFileSize(doc.fileSize),
     dateLabel: new Date().toLocaleDateString(i18n.language),
+    url: doc.fileUrl,
   })
 
   const filesForSlot = (slotId: string) =>
@@ -77,6 +78,7 @@ export function EntityDataDocumentsStep() {
               )}
               onSelectFile={(file) => void uploadDocument(doc.id, file)}
               onDeleteFile={(fileId) => void removeDocument(fileId)}
+              onOpenFile={(file) => file.url && window.open(file.url, '_blank', 'noopener')}
             />
           ))}
         </div>

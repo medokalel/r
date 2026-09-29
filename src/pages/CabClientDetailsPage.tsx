@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { AppIcon, BuildingIcon } from '@/components/icons'
 import { getCabClient, type CabClient } from '@/lib/api/clientRegistrationApi'
 import { ROUTES } from '@/lib/routes'
 
@@ -10,7 +11,7 @@ function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
       <dt className="text-[12px] font-medium text-neutral-500">{label}</dt>
-      <dd className="mt-1 break-words text-[15px] text-neutral-900">{children || '—'}</dd>
+      <dd className="mt-1 break-words text-[15px] font-semibold text-neutral-900">{children || '—'}</dd>
     </div>
   )
 }
@@ -25,7 +26,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
 }
 
 export function CabClientDetailsPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const { clientId = '' } = useParams()
   const [client, setClient] = useState<CabClient | null>(null)
@@ -48,6 +49,16 @@ export function CabClientDetailsPage() {
       cancelled = true
     }
   }, [clientId, t])
+
+  const registeredOnLabel = client?.createdAt
+    ? new Intl.DateTimeFormat(i18n.language, {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      }).format(new Date(client.createdAt))
+    : ''
 
   return (
     <CabLayout>
@@ -78,9 +89,18 @@ export function CabClientDetailsPage() {
           <>
             <div className="rounded-[16px] border border-[#ececec] bg-white p-5">
               <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h1 className="text-[24px] font-bold text-neutral-900">{client.organizationName || '—'}</h1>
-                  <p className="text-[14px] text-neutral-500">{client.city || '—'}</p>
+                <div className="flex items-start gap-4">
+                  <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-[12px] border border-[#ececec] bg-neutral-50">
+                    {client.logoUrl ? (
+                      <img src={client.logoUrl} alt="" className="size-full object-cover" />
+                    ) : (
+                      <AppIcon icon={BuildingIcon} size={24} className="text-neutral-400" />
+                    )}
+                  </div>
+                  <div>
+                    <h1 className="text-[24px] font-bold text-neutral-900">{client.organizationName || '—'}</h1>
+                    <p className="text-[14px] text-neutral-500">{client.city || '—'}</p>
+                  </div>
                 </div>
                 <span className="rounded-full bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary">
                   {t(`cab.clientsPage.status.${client.status === 'COMPLETED' ? 'registered' : client.status.toLowerCase()}`)}
@@ -89,6 +109,9 @@ export function CabClientDetailsPage() {
             </div>
 
             <Section title={t('cab.clientRegistration.sections.clientInformation')}>
+              <Detail label={t('cab.clientDetails.clientNo')}>{client.code}</Detail>
+              <Detail label={t('cab.clientDetails.registeredOn')}>{registeredOnLabel}</Detail>
+              <Detail label={t('cab.clientDetails.registeredBy')}>{client.registeredBy}</Detail>
               <Detail label={t('cab.clientRegistration.fields.organizationName')}>{client.organizationName}</Detail>
               <Detail label={t('cab.clientRegistration.fields.legalCapacity')}>{client.legalCapacity}</Detail>
               <Detail label={t('cab.clientRegistration.fields.administrationName')}>{client.administrationName}</Detail>

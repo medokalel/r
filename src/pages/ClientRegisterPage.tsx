@@ -6,7 +6,8 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
-import { SelectField } from '@/components/ui/Select'
+import { Checkbox } from '@/components/ui/Checkbox'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
 import { AddCircleIcon, AppIcon, ChevronDownIcon, DownloadIcon, ExcelFileIcon, ExportIcon, MoreIcon, PdfFileIcon, SearchIcon, UploadOutlineIcon } from '@/components/icons'
 import { ClientImportModal } from '@/components/dashboard/cab/ClientImportModal'
@@ -16,7 +17,7 @@ import {
   type ClientRegisterEntry,
 } from '@/lib/api/clientRegistrationApi'
 import { downloadAuditClientImportTemplate } from '@/lib/api/cabClientImportApi'
-import { countryFlag, getCountryOptions, type CountryCode } from '@/lib/countries'
+import { getCountryOptions } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
@@ -51,10 +52,9 @@ export function ClientRegisterPage() {
   const [period, setPeriod] = useState<DateRange>({ from: null, to: null })
   const [countryFilter, setCountryFilter] = useState('all')
   const [page, setPage] = useState(1)
+  const [selectedIds, setSelectedIds] = useState<string[]>([])
 
   const countryOptions = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const countryName = (code: CountryCode) =>
-    countryOptions.find((option) => option.code === code)?.name ?? code
 
   const loadClients = useCallback(() => {
     setLoading(true)
@@ -96,6 +96,18 @@ export function ClientRegisterPage() {
     })
   }, [clients, query, countryFilter, period])
 
+  // A changed filter can hide previously selected rows, so drop the selection
+  // whenever the filtered set itself changes shape.
+  useEffect(() => {
+    setSelectedIds([])
+  }, [query, countryFilter, period])
+
+  const toggleSelected = (id: string) =>
+    setSelectedIds((previous) => (previous.includes(id) ? previous.filter((selectedId) => selectedId !== id) : [...previous, id]))
+
+  const allFilteredSelected = filtered.length > 0 && filtered.every((client) => selectedIds.includes(client.id))
+  const toggleSelectAll = () => setSelectedIds(allFilteredSelected ? [] : filtered.map((client) => client.id))
+
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
@@ -120,22 +132,24 @@ export function ClientRegisterPage() {
     { header: t('cab.clientRegister.table.code'), value: (row) => row.code },
     { header: t('cab.clientRegister.table.client'), value: (row) => row.name },
     {
-      header: t('cab.clientRegister.table.country'),
-      value: (row) => (row.countryCode ? countryName(row.countryCode) : row.city || '—'),
+      header: t('cab.clientRegister.table.city'),
+      value: (row) => row.city || '—',
     },
     { header: t('cab.clientRegister.table.primaryContact'), value: (row) => row.contactName },
     { header: 'Email', value: (row) => row.contactEmail },
     { header: t('cab.clientRegister.table.updated'), value: (row) => formatDate(row.updatedAt) },
   ]
 
+  const exportRows = selectedIds.length > 0 ? filtered.filter((client) => selectedIds.includes(client.id)) : filtered
+
   const handleExportPdf = () =>
-    downloadPdfFromTable('client-register.pdf', t('cab.clientRegister.title'), exportColumns, filtered)
-  const handleExportExcel = () => downloadExcelCsv('client-register.csv', exportColumns, filtered)
+    downloadPdfFromTable('client-register.pdf', t('cab.clientRegister.title'), exportColumns, exportRows)
+  const handleExportExcel = () => downloadExcelCsv('client-register.csv', exportColumns, exportRows)
 
   const columns: { key: string; label: string }[] = [
     { key: 'code', label: t('cab.clientRegister.table.code') },
     { key: 'name', label: t('cab.clientRegister.table.client') },
-    { key: 'country', label: t('cab.clientRegister.table.country') },
+    { key: 'city', label: t('cab.clientRegister.table.city') },
     { key: 'contact', label: t('cab.clientRegister.table.primaryContact') },
     { key: 'updated', label: t('cab.clientRegister.table.updated') },
   ]
@@ -182,6 +196,11 @@ export function ClientRegisterPage() {
             >
               {t('cab.clientRegister.newClient')}
             </Button>
+            {selectedIds.length > 0 && (
+              <span className="text-[13px] font-medium text-primary">
+                {t('cab.clientRegister.selectedCount', { count: selectedIds.length })}
+              </span>
+            )}
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <Button
@@ -267,7 +286,7 @@ export function ClientRegisterPage() {
               <span className="text-[13px] font-semibold text-neutral-700">
                 {t('cab.clientRegister.filters.country')}
               </span>
-              <SelectField
+              <SearchableSelect
                 value={countryFilter}
                 onChange={(value) => {
                   setPage(1)
@@ -278,9 +297,9 @@ export function ClientRegisterPage() {
                   ...countryOptions.map((option) => ({
                     value: option.code,
                     label: `${option.flag} ${option.name}`,
-                    textValue: option.name,
                   })),
                 ]}
+                searchPlaceholder={t('common.search')}
               />
             </div>
 
@@ -302,6 +321,14 @@ export function ClientRegisterPage() {
             <table className="w-full min-w-[900px] border-collapse text-center">
               <thead>
                 <tr className="bg-[#1236a3] text-white">
+                  <th className="w-10 px-4 py-4">
+                    <Checkbox
+                      checked={allFilteredSelected}
+                      onChange={toggleSelectAll}
+                      aria-label={t('common.selectAll')}
+                      className="[&>span]:border-white/70"
+                    />
+                  </th>
                   {columns.map((column) => (
                     <th key={column.key} className="px-4 py-4 text-[14px] font-medium">
                       {column.label}
@@ -315,33 +342,31 @@ export function ClientRegisterPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={columns.length + 1} className="px-4 py-8 text-[15px] text-neutral-500">
+                    <td colSpan={columns.length + 2} className="px-4 py-8 text-[15px] text-neutral-500">
                       {t('common.loading')}
                     </td>
                   </tr>
                 ) : paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={columns.length + 1} className="px-4 py-8 text-[15px] text-neutral-500">
+                    <td colSpan={columns.length + 2} className="px-4 py-8 text-[15px] text-neutral-500">
                       {t('cab.clientRegister.empty')}
                     </td>
                   </tr>
                 ) : (
                   paginated.map((client, index) => (
                     <tr key={client.id} className={cn(index % 2 ? 'bg-[#f9fafc]' : '')}>
+                      <td className="px-4 py-4">
+                        <Checkbox
+                          checked={selectedIds.includes(client.id)}
+                          onChange={() => toggleSelected(client.id)}
+                          aria-label={client.name}
+                        />
+                      </td>
                       <td className="px-4 py-4 font-medium text-[15px] text-primary" dir="ltr">
                         {client.code}
                       </td>
                       <td className="px-4 py-4 font-medium text-[15px] text-neutral-900">{client.name}</td>
-                      <td className="px-4 py-4 text-[14px] text-neutral-700">
-                        {client.countryCode ? (
-                          <span className="inline-flex items-center justify-center gap-2">
-                            <span aria-hidden>{countryFlag(client.countryCode)}</span>
-                            {countryName(client.countryCode)}
-                          </span>
-                        ) : (
-                          client.city || '—'
-                        )}
-                      </td>
+                      <td className="px-4 py-4 text-[14px] text-neutral-700">{client.city || '—'}</td>
                       <td className="px-4 py-4 text-start">
                         <p className="text-[14px] font-medium text-neutral-900">{client.contactName || '—'}</p>
                         <p className="text-[13px] text-neutral-500" dir="ltr">
@@ -400,25 +425,31 @@ export function ClientRegisterPage() {
               <p className="py-6 text-center text-[14px] text-neutral-500">{t('cab.clientRegister.empty')}</p>
             ) : (
               paginated.map((client) => (
-                <button
+                <div
                   key={client.id}
-                  type="button"
+                  role="button"
+                  tabIndex={0}
                   onClick={() => navigate(`/cab/clients/${client.id}`)}
-                  className="w-full rounded-[12px] border border-[#ececec] p-4 text-start"
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') navigate(`/cab/clients/${client.id}`)
+                  }}
+                  className="w-full cursor-pointer rounded-[12px] border border-[#ececec] p-4 text-start"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <p className="font-semibold text-[14px] text-primary" dir="ltr">
-                      {client.code}
-                    </p>
+                    <div className="flex items-center gap-3">
+                      <div onClick={(event) => event.stopPropagation()}>
+                        <Checkbox
+                          checked={selectedIds.includes(client.id)}
+                          onChange={() => toggleSelected(client.id)}
+                          aria-label={client.name}
+                        />
+                      </div>
+                      <p className="font-semibold text-[14px] text-primary" dir="ltr">
+                        {client.code}
+                      </p>
+                    </div>
                     <span className="inline-flex items-center gap-1.5 text-[13px] text-neutral-600">
-                      {client.countryCode ? (
-                        <>
-                          <span aria-hidden>{countryFlag(client.countryCode)}</span>
-                          {countryName(client.countryCode)}
-                        </>
-                      ) : (
-                        client.city || '—'
-                      )}
+                      {client.city || '—'}
                     </span>
                   </div>
                   <p className="mt-2 text-[14px] font-medium text-neutral-900">{client.name}</p>
@@ -429,7 +460,7 @@ export function ClientRegisterPage() {
                   <p className="mt-2 text-[13px] text-neutral-500" dir="ltr">
                     {formatDate(client.updatedAt)}
                   </p>
-                </button>
+                </div>
               ))
             )}
           </div>

@@ -48,6 +48,7 @@ export interface CabClientList {
 /** Fields from POST /cab-clients (and GET profile original + owner data). */
 export interface CabClient {
   id: string
+  code: string
   organizationName: string | null
   administrationName: string | null
   facilityOwnerManager: string | null
@@ -58,6 +59,10 @@ export interface CabClient {
   phoneCountryCode: string | null
   phoneNumber: string | null
   status: CabClientStatus
+  createdAt: string | null
+  logoUrl: string | null
+  /** Not returned by the API yet — kept null until the backend adds a "registered by" field. */
+  registeredBy: string | null
 }
 
 interface CreateClientResponse {
@@ -75,6 +80,11 @@ function requireToken(): string {
   const token = getAuthToken()
   if (!token) throw new Error('Authentication required')
   return token
+}
+
+/** Single source of truth for the short client code shown across the app (register table, details page). */
+export function deriveClientCode(id: string): string {
+  return id.replace(/-/g, '').slice(0, 8).toUpperCase()
 }
 
 function digitsOnly(value: string): string {
@@ -114,6 +124,7 @@ function countryFromDial(dialOrCode: string | null | undefined): CountryCode {
 function formFromValues(clientId: string, form: ClientRegistrationForm, status: CabClientStatus): CabClient {
   return {
     id: clientId,
+    code: deriveClientCode(clientId),
     organizationName: form.organizationName,
     administrationName: form.administrationName,
     facilityOwnerManager: form.facilityOwnerManager,
@@ -124,6 +135,9 @@ function formFromValues(clientId: string, form: ClientRegistrationForm, status: 
     phoneCountryCode: form.phoneCountryCode,
     phoneNumber: form.phoneNumber,
     status,
+    createdAt: null,
+    logoUrl: null,
+    registeredBy: null,
   }
 }
 
@@ -137,6 +151,7 @@ function profileToClient(clientId: string, data: OrganizationProfileData): CabCl
 
   return {
     id: clientId,
+    code: deriveClientCode(clientId),
     organizationName: profile.organizationName ?? data.organizationName ?? null,
     administrationName: original.address ?? address.street ?? null,
     facilityOwnerManager: profile.authorizedPersonName ?? null,
@@ -147,6 +162,9 @@ function profileToClient(clientId: string, data: OrganizationProfileData): CabCl
     phoneCountryCode: countryFromDial(profile.phoneCountryCode),
     phoneNumber: profile.phoneNumber ?? null,
     status,
+    createdAt: profile.registrationDate ?? null,
+    logoUrl: profile.logoUrl ?? null,
+    registeredBy: null,
   }
 }
 
@@ -224,7 +242,7 @@ export interface ClientRegisterEntry {
 export function toClientRegisterEntry(client: CabAuditClientListItem): ClientRegisterEntry {
   return {
     id: client.id,
-    code: client.id.replace(/-/g, '').slice(0, 8).toUpperCase(),
+    code: deriveClientCode(client.id),
     name: client.name || client.tradeName || '—',
     countryCode: '',
     contactName: client.owner?.fullName ?? '',
@@ -298,6 +316,7 @@ export async function getCabClient(clientId: string): Promise<CabClient> {
       client.organizationName = client.organizationName || match.name || null
       client.city = client.city || match.city || null
       client.administrationName = client.administrationName || match.address || null
+      client.createdAt = client.createdAt || match.createdAt || null
     }
   }
   return client

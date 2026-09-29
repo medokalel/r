@@ -22,7 +22,7 @@ import { Button } from '@/components/ui/Button'
 import { ErrorState } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { startCabClientApplication } from '@/lib/api/cabCertificationApplicationApi'
-import { listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
+import { deriveClientCode, listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
 import {
   ROUTES,
   cabApplicationReceiptPath,
@@ -80,10 +80,13 @@ function ClientPicker() {
 
   const options = useMemo(
     () =>
-      clients.map((client) => ({
-        value: client.id,
-        label: `${client.name}${client.owner?.email ? ` — ${client.owner.email}` : ''}`,
-      })),
+      clients.map((client) => {
+        const location = client.city || client.address
+        return {
+          value: client.id,
+          label: `${deriveClientCode(client.id)} — ${client.name}${location ? ` (${location})` : ''}`,
+        }
+      }),
     [clients],
   )
 

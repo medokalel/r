@@ -6,6 +6,7 @@ import {
   EyeIcon,
   DocumentFileIcon,
   DocumentTextOutlineIcon,
+  DownloadIcon,
   TrashIcon,
 } from '@/components/icons'
 import {
@@ -122,19 +123,27 @@ function OtherDocumentsList({ documents }: { documents: OrgDocument[] }) {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              aria-label="preview"
-              onClick={() => doc.fileUrl && window.open(doc.fileUrl, '_blank')}
-              className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-primary"
-            >
-              <AppIcon icon={EyeIcon} size={16} />
-            </button>
-            <button
-              type="button"
               aria-label="delete"
               onClick={() => remove(doc.id)}
               className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-error-500"
             >
               <AppIcon icon={TrashIcon} size={16} />
+            </button>
+            <button
+              type="button"
+              aria-label="download"
+              onClick={() => doc.fileUrl && window.open(doc.fileUrl, '_blank')}
+              className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-primary"
+            >
+              <AppIcon icon={DownloadIcon} size={16} />
+            </button>
+            <button
+              type="button"
+              aria-label="preview"
+              onClick={() => doc.fileUrl && window.open(doc.fileUrl, '_blank')}
+              className="flex size-9 items-center justify-center rounded-[8px] border border-[#ececec] bg-white text-neutral-600 transition-colors hover:text-primary"
+            >
+              <AppIcon icon={EyeIcon} size={16} />
             </button>
           </div>
         </div>
