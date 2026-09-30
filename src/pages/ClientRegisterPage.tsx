@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useAuditClientsTourSteps } from '@/config/auditClientsTourSteps'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
@@ -43,6 +45,7 @@ function ChevronSeparator() {
 export function ClientRegisterPage() {
   const { t, i18n } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = useAuditClientsTourSteps()
 
   const [clients, setClients] = useState<ClientRegisterEntry[]>([])
   const [loading, setLoading] = useState(true)
@@ -155,8 +158,12 @@ export function ClientRegisterPage() {
   ]
 
   return (
-    <CabLayout>
-      <CabHeader title={t('cab.clientRegister.title')} notificationCount={3} />
+    <CabLayout tourId="audit-clients-register" tourSteps={tourSteps}>
+      <CabTourStep steps={tourSteps} stepId="audit-clients-header">
+        <div>
+          <CabHeader title={t('cab.clientRegister.title')} notificationCount={3} />
+        </div>
+      </CabTourStep>
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
           <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
@@ -171,12 +178,11 @@ export function ClientRegisterPage() {
             <h1 className="text-[28px] font-bold leading-tight text-neutral-900">{t('cab.clientRegister.title')}</h1>
             <p className="mt-1 text-[14px] text-neutral-500">{t('cab.clientRegister.subtitle')}</p>
           </div>
-          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-3">
             <Button
               variant="outline"
               icon={<AppIcon icon={DownloadIcon} size={20} />}
               onClick={() => downloadAuditClientImportTemplate()}
-              className="flex-1 sm:flex-none"
             >
               {t('cab.clientRegister.import.downloadTemplate')}
             </Button>
@@ -184,30 +190,30 @@ export function ClientRegisterPage() {
               variant="outline"
               icon={<AppIcon icon={UploadOutlineIcon} size={20} />}
               onClick={() => setImportOpen(true)}
-              className="flex-1 sm:flex-none"
             >
               {t('cab.clientRegister.import.action')}
             </Button>
-            <Button
-              variant="primary"
-              icon={<AppIcon icon={AddCircleIcon} size={20} />}
-              onClick={() => navigate('/cab/clients/new')}
-              className="flex-1 sm:flex-none"
-            >
-              {t('cab.clientRegister.newClient')}
-            </Button>
-            {selectedIds.length > 0 && (
-              <span className="text-[13px] font-medium text-primary">
-                {t('cab.clientRegister.selectedCount', { count: selectedIds.length })}
-              </span>
-            )}
+            <CabTourStep steps={tourSteps} stepId="audit-clients-new-btn" className="w-auto shrink-0">
+              <Button
+                variant="primary"
+                icon={<AppIcon icon={AddCircleIcon} size={20} />}
+                onClick={() => navigate('/cab/clients/new')}
+                className="flex-1 sm:flex-none"
+              >
+                {t('cab.clientRegister.newClient')}
+              </Button>
+              {selectedIds.length > 0 && (
+                <span className="text-[13px] font-medium text-primary">
+                  {t('cab.clientRegister.selectedCount', { count: selectedIds.length })}
+                </span>
+              )}
+            </CabTourStep>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <Button
                   variant="outline"
                   icon={<AppIcon icon={ExportIcon} size={20} />}
                   disabled={filtered.length === 0}
-                  className="flex-1 sm:flex-none"
                 >
                   {t('cab.clientRegister.export')}
                   <AppIcon icon={ChevronDownIcon} size={16} />
@@ -245,6 +251,7 @@ export function ClientRegisterPage() {
           </p>
         )}
 
+        <CabTourStep steps={tourSteps} stepId="audit-clients-filters">
         <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1.4fr_1.2fr_auto] lg:items-end">
             <div className="flex flex-col gap-2">
@@ -315,7 +322,9 @@ export function ClientRegisterPage() {
             </div>
           </div>
         </section>
+        </CabTourStep>
 
+        <CabTourStep steps={tourSteps} stepId="audit-clients-table">
         <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[900px] border-collapse text-center">
@@ -335,7 +344,13 @@ export function ClientRegisterPage() {
                     </th>
                   ))}
                   <th className="px-4 py-4 text-[14px] font-medium">
-                    <span className="sr-only">{t('cab.clientRegister.table.actions')}</span>
+                    {paginated.length === 0 ? (
+                      <CabTourStep steps={tourSteps} stepId="audit-clients-actions">
+                        <span className="sr-only">{t('cab.clientRegister.table.actions')}</span>
+                      </CabTourStep>
+                    ) : (
+                      <span className="sr-only">{t('cab.clientRegister.table.actions')}</span>
+                    )}
                   </th>
                 </tr>
               </thead>
@@ -377,6 +392,7 @@ export function ClientRegisterPage() {
                         {formatDate(client.updatedAt)}
                       </td>
                       <td className="px-4 py-4">
+                        <CabTourStep steps={tourSteps} stepId={index === 0 ? 'audit-clients-actions' : undefined}>
                         <div className="flex items-center justify-center">
                           <DropdownMenu.Root>
                             <DropdownMenu.Trigger asChild>
@@ -410,6 +426,7 @@ export function ClientRegisterPage() {
                             </DropdownMenu.Portal>
                           </DropdownMenu.Root>
                         </div>
+                        </CabTourStep>
                       </td>
                     </tr>
                   ))
@@ -474,6 +491,7 @@ export function ClientRegisterPage() {
             </div>
           )}
         </section>
+        </CabTourStep>
       </main>
       <ClientImportModal
         open={importOpen}

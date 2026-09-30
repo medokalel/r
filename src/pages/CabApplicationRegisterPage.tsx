@@ -4,6 +4,8 @@ import { Link, useNavigate } from "react-router-dom";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { CabLayout } from "@/components/layout/CabLayout";
 import { CabHeader } from "@/components/dashboard/cab/CabHeader";
+import { CabTourStep } from "@/components/dashboard/cab/CabDashboardTourStep";
+import { useApplicationRegisterTourSteps } from "@/config/applicationRegisterTourSteps";
 import { TablePagination } from "@/components/dashboard/TablePagination";
 import { Button } from "@/components/ui/Button";
 import { SelectField } from "@/components/ui/Select";
@@ -96,6 +98,7 @@ function dueFromUpdatedAt(iso: string) {
 export function CabApplicationRegisterPage() {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const tourSteps = useApplicationRegisterTourSteps();
 
   const [applications, setApplications] = useState<ApplicationRegisterItem[]>(
     [],
@@ -258,11 +261,15 @@ export function CabApplicationRegisterPage() {
     downloadExcelCsv("application-register.csv", exportColumns, filtered);
 
   return (
-    <CabLayout>
-      <CabHeader
-        title={t("cab.applicationRegister.title")}
-        notificationCount={3}
-      />
+    <CabLayout tourId="cab-application-register" tourSteps={tourSteps}>
+      <CabTourStep steps={tourSteps} stepId="application-register-header">
+        <div>
+          <CabHeader
+            title={t("cab.applicationRegister.title")}
+            notificationCount={3}
+          />
+        </div>
+      </CabTourStep>
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <nav
           className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]"
@@ -288,22 +295,26 @@ export function CabApplicationRegisterPage() {
               {t("cab.applicationRegister.subtitle")}
             </p>
           </div>
-          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
-            <Button
-              variant="primary"
-              icon={<AppIcon icon={AddCircleIcon} size={20} />}
-              onClick={() => navigate(ROUTES.cabApplicationSubmission)}
-              className="flex-1 sm:flex-none"
+          <div className="flex shrink-0 flex-wrap items-center justify-end gap-3">
+            <CabTourStep
+              steps={tourSteps}
+              stepId="application-register-new-btn"
+              className="w-auto shrink-0"
             >
-              {t("cab.applicationRegister.newApplication")}
-            </Button>
+              <Button
+                variant="primary"
+                icon={<AppIcon icon={AddCircleIcon} size={20} />}
+                onClick={() => navigate(ROUTES.cabApplicationSubmission)}
+              >
+                {t("cab.applicationRegister.newApplication")}
+              </Button>
+            </CabTourStep>
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <Button
                   variant="outline"
                   icon={<AppIcon icon={ExportIcon} size={20} />}
                   disabled={filtered.length === 0}
-                  className="flex-1 sm:flex-none"
                 >
                   {t("cab.applicationRegister.export")}
                   <AppIcon icon={ChevronDownIcon} size={16} />
@@ -335,6 +346,7 @@ export function CabApplicationRegisterPage() {
           </div>
         </div>
 
+        <CabTourStep steps={tourSteps} stepId="application-register-filters">
         <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_1fr_auto] lg:items-end">
             <div className="flex flex-col gap-2">
@@ -457,6 +469,7 @@ export function CabApplicationRegisterPage() {
             </div>
           </div>
         </section>
+        </CabTourStep>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[14px] font-semibold text-neutral-900">
@@ -482,6 +495,7 @@ export function CabApplicationRegisterPage() {
           </div>
         </div>
 
+        <CabTourStep steps={tourSteps} stepId="application-register-table">
         <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
           <div className="hidden overflow-x-auto md:block">
             <table className="w-full min-w-[1100px] border-collapse text-center">
@@ -509,7 +523,13 @@ export function CabApplicationRegisterPage() {
                     {t("cab.applicationRegister.table.updated")}
                   </th>
                   <th className="px-4 py-4 text-[14px] font-medium">
-                    {t("cab.applicationRegister.table.actions")}
+                    {paginated.length === 0 ? (
+                      <CabTourStep steps={tourSteps} stepId="application-register-actions">
+                        <span>{t("cab.applicationRegister.table.actions")}</span>
+                      </CabTourStep>
+                    ) : (
+                      t("cab.applicationRegister.table.actions")
+                    )}
                   </th>
                 </tr>
               </thead>
@@ -603,6 +623,10 @@ export function CabApplicationRegisterPage() {
                         {formatDate(app.updatedAt)}
                       </td>
                       <td className="px-4 py-4">
+                        <CabTourStep
+                          steps={tourSteps}
+                          stepId={index === 0 ? "application-register-actions" : undefined}
+                        >
                         <div
                           className="flex items-center justify-center gap-2"
                           onClick={(event) => event.stopPropagation()}
@@ -728,6 +752,7 @@ export function CabApplicationRegisterPage() {
                             </DropdownMenu.Portal>
                           </DropdownMenu.Root>
                         </div>
+                        </CabTourStep>
                       </td>
                     </tr>
                   ))
@@ -813,6 +838,7 @@ export function CabApplicationRegisterPage() {
             </div>
           )}
         </section>
+        </CabTourStep>
       </main>
     </CabLayout>
   );

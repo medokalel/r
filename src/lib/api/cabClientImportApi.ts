@@ -91,10 +91,11 @@ function rowValues(record: Record<string, unknown>): Record<string, string> {
 
 export function normalizeClientImportPreview(payload: unknown): CabClientImportPreview {
   const root = asRecord(payload) ?? {}
-  const nested = asRecord(pick(root, ['session', 'import', 'preview', 'meta']))
+  const summary = asRecord(pick(root, ['summary'])) ?? {}
+  const nested = asRecord(pick(root, ['session', 'import', 'preview', 'meta', 'data']))
   const importId = textValue(
-    pick(root, ['importId', 'id', 'previewId', 'jobId', 'batchId', 'sessionId']) ??
-      (nested ? pick(nested, ['importId', 'id', 'previewId', 'jobId', 'batchId', 'sessionId']) : undefined),
+    pick(root, ['importId', 'previewId', 'jobId', 'batchId', 'sessionId']) ??
+      (nested ? pick(nested, ['importId', 'previewId', 'jobId', 'batchId', 'sessionId']) : undefined),
   )
   const rawRows = asArray(pick(root, ['rows', 'items', 'records', 'clients', 'preview', 'results']))
   const rows: CabClientImportRow[] = rawRows.map((item, index) => {
@@ -116,14 +117,32 @@ export function normalizeClientImportPreview(payload: unknown): CabClientImportP
   })
 
   const validRows =
-    Number(pick(root, ['validRows', 'validCount', 'accepted'])) || rows.filter((row) => row.valid).length
+    Number(pick(root, ['validRows', 'validCount', 'accepted']) ?? pick(summary, ['validClients'])) ||
+    rows.filter((row) => row.valid).length
   const invalidRows =
-    Number(pick(root, ['invalidRows', 'invalidCount', 'rejected'])) ||
+    Number(pick(root, ['invalidRows', 'invalidCount', 'rejected']) ?? pick(summary, ['invalidClients'])) ||
     rows.filter((row) => !row.valid).length
+
+  if (rows.length === 0) {
+    const errors = asArray(pick(root, ['errors']))
+    for (const item of errors) {
+      const record = asRecord(item)
+      if (!record) continue
+      rows.push({
+        rowNumber: Number(pick(record, ['rowNumber', 'row']) ?? rows.length + 2) || rows.length + 2,
+        valid: false,
+        errors: errorList(pick(record, ['message', 'errors', 'error'])),
+        values: rowValues(record),
+        branchCount: 0,
+      })
+    }
+  }
 
   return {
     importId,
-    totalRows: Number(pick(root, ['totalRows', 'total', 'count'])) || rows.length,
+    totalRows:
+      Number(pick(root, ['totalRows', 'total', 'count']) ?? pick(summary, ['totalClients'])) ||
+      rows.length,
     validRows,
     invalidRows,
     rows,
@@ -156,13 +175,7 @@ export function previewCabClientImport(file: File): Promise<CabClientImportPrevi
   return apiRequestWithAuth<unknown>('/cab-clients/import/preview', requireToken(), {
     method: 'POST',
     body,
-  }).then((payload) => {
-    const preview = normalizeClientImportPreview(payload)
-    if (!preview.importId) {
-      throw new Error('Import preview did not return an import id.')
-    }
-    return preview
-  })
+  }).then((payload) => normalizeClientImportPreview(payload))
 }
 
 export function confirmCabClientImport(importId: string): Promise<CabClientImportConfirmResult> {
