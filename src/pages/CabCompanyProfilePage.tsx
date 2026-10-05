@@ -11,6 +11,8 @@ import { CabScopeStep } from '@/components/auth/cab/setup/CabScopeStep'
 import { CabMarksStep } from '@/components/auth/cab/setup/CabMarksStep'
 import { CabCertificateStep } from '@/components/auth/cab/setup/CabCertificateStep'
 import { SetupSection } from '@/components/auth/cab/setup/CabSetupPrimitives'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useCabCompanyProfileTourSteps } from '@/config/cabCompanyProfileTourSteps'
 import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui'
 import { ApiError } from '@/lib/api/client'
@@ -38,6 +40,7 @@ const PROFILE_SECTIONS = [
 
 export function CabCompanyProfilePage() {
   const { t } = useTranslation()
+  const tourSteps = useCabCompanyProfileTourSteps()
   const session = getAuthSession()
   const [form, setForm] = useState<UnifiedOnboardingForm | null>(null)
   const [cab, setCab] = useState<CabProfile | null>(null)
@@ -101,14 +104,19 @@ export function CabCompanyProfilePage() {
     ? { form, onPatch, onPatchSetup }
     : null
 
+  const identitySections = PROFILE_SECTIONS.filter((s) => s === 'profile' || s === 'locations')
+  const accreditationSections = PROFILE_SECTIONS.filter((s) => s !== 'profile' && s !== 'locations')
+
   return (
-    <CabLayout>
+    <CabLayout tourId="cab-company-profile" tourSteps={tourSteps}>
       <CabHeader title={t('cab.companyProfile.title')} />
       <main className="cab-setup flex flex-1 flex-col gap-8 overflow-auto bg-[var(--cab-canvas)] p-6">
-        <div>
-          <h1 className="text-[24px] font-bold text-[var(--cab-ink)]">{t('cab.companyProfile.title')}</h1>
-          <p className="mt-1 text-[16px] text-[var(--cab-muted)]">{t('cab.companyProfile.subtitle')}</p>
-        </div>
+        <CabTourStep steps={tourSteps} stepId="cab-company-profile-header">
+          <div>
+            <h1 className="text-[24px] font-bold text-[var(--cab-ink)]">{t('cab.companyProfile.title')}</h1>
+            <p className="mt-1 text-[16px] text-[var(--cab-muted)]">{t('cab.companyProfile.subtitle')}</p>
+          </div>
+        </CabTourStep>
 
         {loading ? (
           <p className="text-[14px] text-[var(--cab-muted)]">{t('common.loading')}</p>
@@ -116,55 +124,82 @@ export function CabCompanyProfilePage() {
           <p className="text-[14px] text-error-500">{error ?? t('errors.generic')}</p>
         ) : (
           <>
-            <SetupSection title={t('cab.companyProfile.sections.account')}>
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-                <TextField
-                  id="cab-profile-email"
-                  label={t('cab.companyProfile.email')}
-                  type="email"
-                  value={session?.user?.email ?? ''}
-                  disabled
-                />
-                <TextField
-                  id="cab-profile-phone"
-                  label={t('cab.companyProfile.phone')}
-                  type="text"
-                  value={session?.user?.phone ?? ''}
-                  disabled
-                />
+            <CabTourStep steps={tourSteps} stepId="cab-company-profile-account">
+              <div>
+                <SetupSection title={t('cab.companyProfile.sections.account')}>
+                  <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                    <TextField
+                      id="cab-profile-email"
+                      label={t('cab.companyProfile.email')}
+                      type="email"
+                      value={session?.user?.email ?? ''}
+                      disabled
+                    />
+                    <TextField
+                      id="cab-profile-phone"
+                      label={t('cab.companyProfile.phone')}
+                      type="text"
+                      value={session?.user?.phone ?? ''}
+                      disabled
+                    />
+                  </div>
+                  <p className="mt-3 text-[12px] text-[var(--cab-muted)]">{t('cab.companyProfile.accountNote')}</p>
+                </SetupSection>
               </div>
-              <p className="mt-3 text-[12px] text-[var(--cab-muted)]">{t('cab.companyProfile.accountNote')}</p>
-            </SetupSection>
+            </CabTourStep>
 
-            {PROFILE_SECTIONS.map((section) => (
-              <section key={section} className="space-y-4">
-                <div>
-                  <h2 className="text-[20px] font-bold text-[var(--cab-ink)]">
-                    {t(`cab.setup.${section}.title`)}
-                  </h2>
-                  <p className="mt-1 text-[14px] text-[var(--cab-muted)]">
-                    {t(`cab.setup.${section}.subtitle`)}
-                  </p>
-                </div>
-                {section === 'profile' && <CabProfileStep {...setupProps} />}
-                {section === 'locations' && <CabLocationsStep {...setupProps} />}
-                {section === 'accreditationStatus' && <CabAccreditationStatusStep {...setupProps} />}
-                {section === 'accreditationRecords' && <CabAccreditationRecordsStep {...setupProps} />}
-                {section === 'schemes' && <CabSchemesServicesStep {...setupProps} />}
-                {section === 'scope' && <CabScopeStep {...setupProps} />}
-                {section === 'marks' && <CabMarksStep {...setupProps} />}
-                {section === 'certificate' && <CabCertificateStep {...setupProps} />}
-              </section>
-            ))}
+            <CabTourStep steps={tourSteps} stepId="cab-company-profile-identity">
+              <div className="space-y-8">
+                {identitySections.map((section) => (
+                  <section key={section} className="space-y-4">
+                    <div>
+                      <h2 className="text-[20px] font-bold text-[var(--cab-ink)]">
+                        {t(`cab.setup.${section}.title`)}
+                      </h2>
+                      <p className="mt-1 text-[14px] text-[var(--cab-muted)]">
+                        {t(`cab.setup.${section}.subtitle`)}
+                      </p>
+                    </div>
+                    {section === 'profile' && <CabProfileStep {...setupProps} />}
+                    {section === 'locations' && <CabLocationsStep {...setupProps} />}
+                  </section>
+                ))}
+              </div>
+            </CabTourStep>
 
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <p className={cn('text-[14px]', error ? 'text-error-500' : 'text-[#26a65b]')}>
-                {error ?? success}
-              </p>
-              <Button variant="primary" size="lg" onClick={() => void save()} disabled={saving} className="min-w-[180px]">
-                {saving ? t('common.saving') : t('cab.companyProfile.save')}
-              </Button>
-            </div>
+            <CabTourStep steps={tourSteps} stepId="cab-company-profile-accreditation">
+              <div className="space-y-8">
+                {accreditationSections.map((section) => (
+                  <section key={section} className="space-y-4">
+                    <div>
+                      <h2 className="text-[20px] font-bold text-[var(--cab-ink)]">
+                        {t(`cab.setup.${section}.title`)}
+                      </h2>
+                      <p className="mt-1 text-[14px] text-[var(--cab-muted)]">
+                        {t(`cab.setup.${section}.subtitle`)}
+                      </p>
+                    </div>
+                    {section === 'accreditationStatus' && <CabAccreditationStatusStep {...setupProps} />}
+                    {section === 'accreditationRecords' && <CabAccreditationRecordsStep {...setupProps} />}
+                    {section === 'schemes' && <CabSchemesServicesStep {...setupProps} />}
+                    {section === 'scope' && <CabScopeStep {...setupProps} />}
+                    {section === 'marks' && <CabMarksStep {...setupProps} />}
+                    {section === 'certificate' && <CabCertificateStep {...setupProps} />}
+                  </section>
+                ))}
+              </div>
+            </CabTourStep>
+
+            <CabTourStep steps={tourSteps} stepId="cab-company-profile-actions">
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className={cn('text-[14px]', error ? 'text-error-500' : 'text-[#26a65b]')}>
+                  {error ?? success}
+                </p>
+                <Button variant="primary" size="lg" onClick={() => void save()} disabled={saving} className="min-w-[180px]">
+                  {saving ? t('common.saving') : t('cab.companyProfile.save')}
+                </Button>
+              </div>
+            </CabTourStep>
           </>
         )}
       </main>

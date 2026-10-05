@@ -1,9 +1,10 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow, type CountryCode } from '@/components/auth/CountryCodeSelect'
 import { FormField, RadioGroup, MultiSelect, TextField } from '@/components/ui'
 import { LocationPicker, type LatLng } from '@/components/maps/LocationPicker'
 import { cn } from '@/lib/utils'
-import { BRANCH_SECTOR_OPTIONS } from './constants'
+import { getLocalizedBranchSectorOptions } from './constants'
 import { GoogleMapUrlField } from './GoogleMapUrlField'
 import { googleMapsUrlFor, parseLatLngFromGoogleMapsUrl } from './mappers'
 import type { BranchFormValues } from './types'
@@ -67,6 +68,7 @@ export function BranchFormFields({
   branchTypeVariant = 'radio',
 }: BranchFormFieldsProps) {
   const { t } = useTranslation()
+  const branchSectorOptions = useMemo(() => getLocalizedBranchSectorOptions(t), [t])
 
   const onGoogleMapUrlChange = (value: string) => {
     set('googleMapUrl', value)
@@ -158,7 +160,7 @@ export function BranchFormFields({
         <FormField label={t('companyProfile.addBranch.sectorLabel')} required>
           <MultiSelect
             tags={form.sectors}
-            options={BRANCH_SECTOR_OPTIONS}
+            options={branchSectorOptions}
             onChange={(tags) => set('sectors', tags)}
           />
         </FormField>

@@ -1,12 +1,14 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { SelectField } from '@/components/ui'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { getCountryOptions, type CountryCode, type CountryOption } from '@/lib/countries'
 
 interface CountrySelectFieldProps {
   value: CountryCode | null
   onChange: (code: CountryCode) => void
   className?: string
+  placeholder?: string
+  searchPlaceholder?: string
 }
 
 function labelFor(country: CountryOption): string {
@@ -14,28 +16,34 @@ function labelFor(country: CountryOption): string {
 }
 
 /**
- * Country dropdown with flag + localized name (same look as the register
- * form), backed by ISO country codes so consumers stay language-agnostic.
+ * Country dropdown with search, flag + localized name, backed by ISO country codes.
  */
-export function CountrySelectField({ value, onChange, className }: CountrySelectFieldProps) {
-  const { i18n } = useTranslation()
+export function CountrySelectField({
+  value,
+  onChange,
+  className,
+  placeholder,
+  searchPlaceholder,
+}: CountrySelectFieldProps) {
+  const { t, i18n } = useTranslation()
   const countries = useMemo(() => getCountryOptions(i18n.language), [i18n.language])
-  const selected = countries.find((country) => country.code === value)
 
-  const onLabelChange = (label: string) => {
-    const country = countries.find((option) => labelFor(option) === label)
-    if (country) onChange(country.code)
-  }
+  const options = useMemo(
+    () =>
+      countries.map((country) => ({
+        value: country.code,
+        label: labelFor(country),
+      })),
+    [countries]
+  )
 
   return (
-    <SelectField
-      value={selected ? labelFor(selected) : ''}
-      options={countries.map((country) => ({
-        value: labelFor(country),
-        label: labelFor(country),
-        textValue: country.name,
-      }))}
-      onChange={onLabelChange}
+    <SearchableSelect
+      value={value ?? ''}
+      options={options}
+      onChange={(code) => onChange(code as CountryCode)}
+      placeholder={placeholder ?? t('common.countryPlaceholder', 'Select country')}
+      searchPlaceholder={searchPlaceholder ?? t('common.search', 'Search...')}
       className={className}
     />
   )

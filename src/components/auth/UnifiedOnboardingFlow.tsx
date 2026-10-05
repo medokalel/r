@@ -73,7 +73,7 @@ import { getAuthSession, getAuthToken, getPostLoginRedirect, patchAuthOrganizati
 import { mergeCabProfileIntoForm, mapFormToCabSetupDraft } from '@/lib/cabSetupMapper'
 import { markCabWorkflowTourPending } from '@/config/cabTourSequence'
 import { getCabId, isCabAdminSession, markCabOnboardingComplete } from '@/lib/cabOnboardingStatus'
-import { loadOnboardingDraft, saveOnboardingDraft } from '@/lib/onboardingDraftStorage'
+import { clearOnboardingDraft, loadOnboardingDraft, saveOnboardingDraft } from '@/lib/onboardingDraftStorage'
 import { mapOrgScopeToBackendType } from '@/lib/orgScopeBackendMapping'
 import { markOnboardingComplete } from '@/lib/onboardingStatus'
 import { ROUTES } from '@/lib/routes'
@@ -333,9 +333,29 @@ function withRegistrationAbContactDefaults(
   return next
 }
 
-function createInitialForm(): UnifiedOnboardingForm {
-  const draftKey = getAuthSession()?.organization?.id ?? getCabId() ?? undefined
-  const draft = draftKey ? loadOnboardingDraft(draftKey) : null
+function getDraftKey(): string {
+  const session = getAuthSession()
+  const orgId = session?.organization?.id
+  if (orgId) return orgId
+
+  const cabId = getCabId()
+  if (cabId) return cabId
+
+  const userEmail = session?.user?.email?.trim()
+  if (userEmail) return `user_${userEmail}`
+
+  const pendingEmail = loadPendingRegistration()?.email?.trim()
+  if (pendingEmail) return `pending_${pendingEmail}`
+
+  return 'anonymous'
+}
+
+function createInitialState(): { form: UnifiedOnboardingForm; step: number } {
+  const draftKey = getDraftKey()
+  const draftResult = loadOnboardingDraft(draftKey)
+  const draft = draftResult?.form ?? null
+  const savedStep = draftResult?.step ?? 0
+
   const scopeCategory = draft?.scopeCategory ?? ''
   const sessionType = getAuthSession()?.organization?.type
   const entityType =
@@ -345,7 +365,7 @@ function createInitialForm(): UnifiedOnboardingForm {
         (sessionType && sessionType !== 'AUDIT_CLIENT' ? sessionType : '') ||
         ''
 
-  return {
+  const initialForm: UnifiedOnboardingForm = {
     ...emptyUnifiedOnboardingForm,
     ...draft,
     entityType,
@@ -365,19 +385,25 @@ function createInitialForm(): UnifiedOnboardingForm {
     soSetup: withRegistrationEmail({ ...emptySoSetupForm, ...draft?.soSetup }),
     saSetup: withRegistrationEmail({ ...emptySaSetupForm, ...draft?.saSetup }),
   }
+
+  return {
+    form: initialForm,
+    step: savedStep,
+  }
 }
 
 export function UnifiedOnboardingFlow() {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [step, setStep] = useState(0)
-  const [form, setForm] = useState<UnifiedOnboardingForm>(createInitialForm)
+  const [initial] = useState(createInitialState)
+  const [step, setStep] = useState(initial.step)
+  const [form, setForm] = useState<UnifiedOnboardingForm>(initial.form)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
   /** True when the user was already logged in before this onboarding session started. */
   const hadAuthAtStartRef = useRef(Boolean(getAuthToken()))
 
-  const draftKey = getAuthSession()?.organization?.id ?? getCabId() ?? undefined
+  const draftKey = getDraftKey()
   const deck = getSetupDeck(form.scopeCategory as OrgScopeCategory | '')
 
   useEffect(() => {
@@ -430,8 +456,8 @@ export function UnifiedOnboardingFlow() {
 
   useEffect(() => {
     if (!draftKey) return
-    saveOnboardingDraft(draftKey, form)
-  }, [form, draftKey])
+    saveOnboardingDraft(draftKey, form, step)
+  }, [form, step, draftKey])
 
   const patch = (fields: Partial<UnifiedOnboardingForm>) => {
     setForm((prev) => {
@@ -490,6 +516,7 @@ export function UnifiedOnboardingFlow() {
     if (cabId) markCabOnboardingComplete(cabId)
     const orgId = getAuthSession()?.organization?.id
     if (orgId) markOnboardingComplete(orgId)
+    clearOnboardingDraft(draftKey)
     setStep(getSuccessStep(activeDeck))
   }
 
@@ -632,7 +659,7 @@ export function UnifiedOnboardingFlow() {
     const setup = form.cabSetup
     switch (currentStep) {
       case 2:
-        return !isProfileStepComplete(setup, form.legalEntityName) || !isSharedWebsiteValid(form)
+        return !isProfileStepComplete(setup, form.legalEntityName, form.registrationNumber) || !isSharedWebsiteValid(form)
       case 3:
         return !isLocationsStepComplete(setup, form.country, form.city, form.address, form.languages)
       case 4:

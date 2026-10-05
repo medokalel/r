@@ -57,6 +57,7 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
         <TextField
           id="cab-setup-registration-number"
           label={t('cab.setup.profile.registrationNumber')}
+          required
           type="text"
           value={form.registrationNumber}
           placeholder={t('cab.setup.profile.registrationNumberPlaceholder')}

@@ -15,6 +15,7 @@ import {
   saveStoredPortalProfile,
   type ClientProfile,
 } from '@/lib/api/portalApi'
+import { getLocalizedSectorOptions } from '@/components/dashboard/companyProfile/constants'
 import { cn } from '@/lib/utils'
 
 export function PortalCompanyProfilePage() {
@@ -389,10 +390,12 @@ export function PortalCompanyProfilePage() {
                       onChange={(e) => { setIndustrySector(e.target.value); markDirty(); }}
                       className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 text-[14px] text-neutral-900 focus:border-primary focus:outline-none"
                     >
-                      <option value="Food Manufacturing">Food Manufacturing</option>
-                      <option value="Quality Assurance">Quality Assurance</option>
-                      <option value="Healthcare Systems">Healthcare Systems</option>
-                      <option value="Packaging & Logistics">Packaging & Logistics</option>
+                      <option value="">{t('companyProfile.profileHeader.industrySectorLabel', 'Select Sector')}</option>
+                      {getLocalizedSectorOptions(t).map((sec) => (
+                        <option key={sec.value} value={sec.value}>
+                          {sec.label}
+                        </option>
+                      ))}
                     </select>
                   </div>
 

@@ -41,7 +41,7 @@ export function CabReviewActivateStep({ form, onGoToStep }: CabReviewActivateSte
   const setup = form.cabSetup
 
   const rows = useMemo<ReviewRow[]>(() => {
-    const profileReady = isProfileStepComplete(setup, form.legalEntityName)
+    const profileReady = isProfileStepComplete(setup, form.legalEntityName, form.registrationNumber)
     const locationsReady = isLocationsStepComplete(
       setup,
       form.country,
@@ -104,31 +104,40 @@ export function CabReviewActivateStep({ form, onGoToStep }: CabReviewActivateSte
         step: 8,
       },
     ]
-  }, [form.address, form.city, form.country, form.languages, form.legalEntityName, setup, t])
+  }, [form.address, form.city, form.country, form.languages, form.legalEntityName, form.registrationNumber, setup, t])
 
   return (
     <div className="w-full space-y-6">
 
-      <div className="overflow-hidden rounded-[var(--radius-sm)] border border-neutral-200 bg-white">
+      <div className="overflow-hidden rounded-[var(--radius-sm)] border border-neutral-200 bg-white shadow-sm">
         {rows.map((row) => (
           <button
             key={row.key}
             type="button"
             onClick={() => onGoToStep(row.step)}
-            className="flex w-full items-center justify-between gap-4 border-b border-neutral-200 px-4 py-4 text-start transition-colors last:border-b-0 hover:bg-neutral-50"
+            className="group flex w-full items-center justify-between gap-4 border-b border-neutral-200 px-5 py-4 text-start transition-all last:border-b-0 hover:bg-neutral-50/80 active:bg-neutral-100"
           >
-            <div className="min-w-0">
-              <p className="text-[15px] font-bold text-[var(--cab-ink)]">{row.label}</p>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <p className="text-[15px] font-bold text-[var(--cab-ink)] group-hover:text-[var(--cab-primary)]">
+                  {row.label}
+                </p>
+                <span className="text-[12px] text-neutral-400 opacity-0 transition-opacity group-hover:opacity-100">
+                  ✎
+                </span>
+              </div>
               <p className="truncate text-[12px] text-[var(--cab-muted)]">{row.detail}</p>
             </div>
-            <span
-              className={cn(
-                'shrink-0 rounded-full px-3 py-1 text-[12px] font-medium',
-                STATUS_STYLES[row.status]
-              )}
-            >
-              {t(`cab.setup.review.status.${row.status}`)}
-            </span>
+            <div className="flex items-center gap-3">
+              <span
+                className={cn(
+                  'shrink-0 rounded-full px-3 py-1 text-[12px] font-semibold',
+                  STATUS_STYLES[row.status]
+                )}
+              >
+                {t(`cab.setup.review.status.${row.status}`)}
+              </span>
+            </div>
           </button>
         ))}
       </div>

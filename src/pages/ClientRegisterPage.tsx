@@ -208,6 +208,11 @@ export function ClientRegisterPage() {
                 </span>
               )}
             </CabTourStep>
+            {selectedIds.length > 0 && (
+              <span className="text-[13px] font-medium text-primary">
+                {t('cab.clientRegister.selectedCount', { count: selectedIds.length })}
+              </span>
+            )}
             <DropdownMenu.Root>
               <DropdownMenu.Trigger asChild>
                 <Button

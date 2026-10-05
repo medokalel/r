@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { FormField, MultiSelect, Textarea } from '@/components/ui'
@@ -7,7 +7,7 @@ import {
   uploadOrganizationLogo,
   deleteOrganizationLogo,
 } from '@/lib/api/organizationProfileApi'
-import { LOGO_ACCEPT, LOGO_MAX_BYTES, SECTOR_OPTIONS } from './constants'
+import { LOGO_ACCEPT, LOGO_MAX_BYTES, getLocalizedSectorOptions } from './constants'
 import { useProfileForm } from './ProfileFormContext'
 import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 
@@ -46,6 +46,8 @@ export function ProfileHeaderCard() {
       handleApiError(error)
     }
   }
+
+  const sectorOptions = useMemo(() => getLocalizedSectorOptions(t), [t])
 
   return (
     <div className="flex flex-col gap-5 rounded-[12px] border border-[#ececec] bg-white p-5 lg:flex-row">
@@ -143,7 +145,7 @@ export function ProfileHeaderCard() {
         <FormField label={t('companyProfile.profileHeader.industrySectorLabel')} required>
           <MultiSelect
             tags={form.industries}
-            options={SECTOR_OPTIONS}
+            options={sectorOptions}
             onChange={(tags) => update('industries', tags)}
           />
         </FormField>

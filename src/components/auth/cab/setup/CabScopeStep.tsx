@@ -10,14 +10,14 @@ import {
   SetupSection,
   SetupToggleRow,
 } from '@/components/auth/cab/setup/CabSetupPrimitives'
-import { SCOPE_CODE_OPTIONS, getSchemeOptions } from '@/lib/api/cabSetupApi'
+import { getIafCodeOptions, getSchemeOptions } from '@/lib/api/cabSetupApi'
 import { createScopeRecord, ensureScopeRecords, type CabScopeRecord } from '@/lib/cabSetupForm'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
 const HEAD_OFFICE_ID = 'HEAD_OFFICE'
 
 export function CabScopeStep({ form, onPatchSetup }: CabSetupStepProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { scopes, schemes, accreditationRecords, locations } = form.cabSetup
 
   /** Only schemes the CAB actually selected on the previous screen. */
@@ -143,7 +143,7 @@ export function CabScopeStep({ form, onPatchSetup }: CabSetupStepProps) {
               <FormLabel>{t('cab.setup.scope.codes')}</FormLabel>
               <MultiSelect
                 tags={scope.codes}
-                options={SCOPE_CODE_OPTIONS}
+                options={getIafCodeOptions(i18n.language)}
                 onChange={(codes) => updateScope(scope.id, { codes })}
                 layout="stacked"
                 searchable

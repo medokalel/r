@@ -143,7 +143,7 @@ export function TourTooltip({
 
   const isLastStep = step === totalSteps
   const resolvedNextLabel =
-    nextLabel ?? (isLastStep ? t('cab.tour.finish', 'الصفحة التالية') : t('cab.tour.next', 'التالي'))
+    nextLabel ?? (isLastStep ? t('cab.tour.nextSection', 'انتقل للقسم التالي') : t('cab.tour.next', 'التالي'))
   const resolvedBackLabel = backLabel ?? t('cab.tour.back', 'السابق')
   const resolvedSkipLabel = skipLabel ?? t('cab.tour.skip', 'تخطي الجولة')
   const resolvedCloseLabel = closeLabel ?? t('cab.tour.close', 'إغلاق')
@@ -218,7 +218,7 @@ export function TourTooltip({
       ref={anchorRef}
       style={open ? { zIndex: TOUR_Z_HIGHLIGHT } : undefined}
       className={cn(
-        'relative w-full transition-all duration-300',
+        'relative transition-all duration-300',
         className
       )}
     >

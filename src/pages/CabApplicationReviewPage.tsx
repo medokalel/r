@@ -814,7 +814,10 @@ export function CabApplicationReviewPage() {
 
   if (!applicationId) {
     return (
-      <CabLayout>
+      <CabLayout
+        tourId="cab-application-review"
+        tourSteps={tourSteps}
+      >
         <CabHeader title={t('cab.applications.review.title')} notificationCount={2} />
         <div className="flex flex-1 flex-col gap-5 overflow-auto p-6">
           <ApplicationPicker

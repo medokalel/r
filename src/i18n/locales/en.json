@@ -491,7 +491,7 @@
           "gas": "Gas supply",
           "water": "Water supply",
           "construction": "Construction",
-          "wholesale": "Wholesale and retail trade; repair of motor vehicles, motorcycles and personal and household goods",
+          "wholesale": "Wholesale and retail trade; Repair of motor vehicles, motorcycles and personal and household goods",
           "hotels": "Hotels and restaurants",
           "transport": "Transport, storage and communication",
           "financial": "Financial intermediation; real estate; renting",
@@ -874,6 +874,52 @@
       "companySummaryLabel": "Company Summary",
       "companySummaryPlaceholder": "Enter main data about your company to start creating the company profile",
       "industrySectorLabel": "Industrial Sector",
+      "sectors": {
+        "agriculture": "Agriculture, forestry and fishing",
+        "mining": "Mining and quarrying",
+        "foodBeverage": "Food products, beverages and tobacco",
+        "textiles": "Textiles and textile products",
+        "leather": "Leather and leather products",
+        "wood": "Wood and wood products",
+        "paper": "Pulp, paper and paper products",
+        "publishing": "Publishing companies",
+        "printing": "Printing companies",
+        "petroleum": "Manufacture of coke and refined petroleum products",
+        "nuclearFuel": "Nuclear fuel",
+        "chemicals": "Chemicals, chemical products and fibres",
+        "pharmaceuticals": "Pharmaceuticals",
+        "rubberPlastic": "Rubber and plastic products",
+        "nonMetallic": "Non-metallic mineral products",
+        "concrete": "Concrete, cement, lime, plaster etc.",
+        "basicMetals": "Basic metals and fabricated metal products",
+        "machinery": "Machinery and equipment",
+        "electrical": "Electrical and optical equipment",
+        "shipbuilding": "Shipbuilding",
+        "aerospace": "Aerospace",
+        "otherTransport": "Other transport equipment",
+        "otherManufacturing": "Manufacturing not elsewhere classified",
+        "recycling": "Recycling",
+        "electricity": "Electricity supply",
+        "gas": "Gas supply",
+        "water": "Water supply",
+        "construction": "Construction",
+        "wholesale": "Wholesale and retail trade; repair of motor vehicles, motorcycles and personal and household goods",
+        "hotels": "Hotels and restaurants",
+        "transport": "Transport, storage and communication",
+        "financial": "Financial intermediation; real estate; renting",
+        "informationTechnology": "Information Technology",
+        "it": "Information Technology",
+        "engineering": "Engineering services",
+        "otherServices": "Other services",
+        "publicAdmin": "Public administration",
+        "education": "Education",
+        "healthcare": "Health and social work",
+        "health": "Health and social work",
+        "otherSocial": "Other social services",
+        "logisticsServices": "Logistics Services",
+        "foodIndustry": "Food Industry",
+        "generalTrading": "General Trading"
+      },
       "companyLogoLabel": "Company Logo",
       "uploadTitle": "Upload Logo",
       "uploadSubtitle": "PNG, JPG, WEBP and SVG formats, up to 5 MB",
@@ -887,7 +933,7 @@
       "changeLocation": "Clear Location"
     },
     "basicDataCard": {
-      "title": "Mian Data",
+      "title": "Main Data",
       "companyNameLabel": "Company Name",
       "companyNamePlaceholder": "Enter company name",
       "tradingNameLabel": "Trading Name",
@@ -1001,6 +1047,7 @@
       }
     },
     "branchesCard": {
+      "hasBranchesTitle": "Does the client have branches?",
       "title": "Company Branches",
       "registryLabel": "Branch Registry No.",
       "employeesLabel": "Employees",
@@ -3115,6 +3162,28 @@
         "marks": "Marks and branding",
         "certificate": "Certificate settings",
         "branches": "Locations and branches"
+      },
+      "tour": {
+        "header": {
+          "title": "CAB Company Profile Overview",
+          "description": "View and manage your certification body’s registered identity, locations, accreditations, and issuance settings."
+        },
+        "account": {
+          "title": "Account & Contact Info",
+          "description": "Inspect your verified registered account email and primary contact telephone number."
+        },
+        "identity": {
+          "title": "Identity & Locations Setup",
+          "description": "Manage legal CAB name, brand trade name, activities, licensing details, headquarters, and branch offices."
+        },
+        "accreditation": {
+          "title": "Accreditation & Scheme Scopes",
+          "description": "Maintain accreditation body records, certificate validity dates, normative standards, authorized scopes, and branding symbols."
+        },
+        "actions": {
+          "title": "Save & Update Profile",
+          "description": "Save all changes and synchronize your updated CAB configuration across your entire workspace."
+        }
       }
     },
     "setup": {
@@ -3558,6 +3627,20 @@
       "allApplications": "All applications",
       "noResults": "No applications found",
       "noResultsHint": "Try searching with a different name.",
+      "tour": {
+        "header": {
+          "title": "Workspace Hub",
+          "description": "Welcome to your central Certification Body workspace hub. Access all operations, applications, and tools from here."
+        },
+        "search": {
+          "title": "Search Applications",
+          "description": "Quickly filter and find specific management modules and workflow apps."
+        },
+        "apps": {
+          "title": "Management Modules & Workflows",
+          "description": "Navigate between Applications, Audit Clients, Review Queue, Offers, Invoices, Planning, Reporting, Decisions, and Certificates."
+        }
+      },
       "apps": {
         "applications": "Applications",
         "auditClients": "Audit Clients",
@@ -3631,7 +3714,8 @@
       "takeTour": "Take a Tour"
     },
     "tour": {
-      "finish": "Next Page",
+      "finish": "Finish Tour",
+      "nextSection": "Go to next section",
       "next": "Next",
       "back": "Back",
       "skip": "Skip Tour",
@@ -3849,7 +3933,25 @@
       "title": "Client Profile",
       "logoUrl": "Logo URL",
       "productionLines": "Are all production lines active?",
-      "inactiveReason": "Inactive reason"
+      "inactiveReason": "Inactive reason",
+      "tour": {
+        "header": {
+          "title": "Client Profile Overview",
+          "description": "Review client organization header, stage titles, and return to the main audit clients directory."
+        },
+        "stepper": {
+          "title": "Profile Stepper Navigation",
+          "description": "Easily switch between Basic Data, Address, Branches, and Official Documents sections."
+        },
+        "form": {
+          "title": "Company Data & Document Management",
+          "description": "Configure sector classifications, production line status, location addresses, branch networks, and upload verification files."
+        },
+        "footer": {
+          "title": "Save Draft & Final Submit",
+          "description": "Save partial progress as a draft, move between steps, or complete the client company profile."
+        }
+      }
     },
     "clientRegistration": {
       "breadcrumbWorkspace": "Workspace",
@@ -4404,6 +4506,11 @@
       },
       "table": {
         "serial": "S.No",
+        "code": "Client Code",
+        "client": "Client Name",
+        "country": "Country",
+        "primaryContact": "Primary Contact",
+        "updated": "Last Updated",
         "auditClient": "Audit client",
         "applicationNumber": "Application number",
         "assignedPerson": "Assigned person",
@@ -4451,7 +4558,25 @@
       "openDocument": "Open supporting document",
       "clientNo": "Client No.",
       "registeredOn": "Registered On",
-      "registeredBy": "Registered By"
+      "registeredBy": "Registered By",
+      "tour": {
+        "header": {
+          "title": "Client Profile Overview",
+          "description": "Review the client’s organization details, active status badge, and navigation controls."
+        },
+        "actions": {
+          "title": "Quick Management Actions",
+          "description": "Edit this client’s profile, register another client, or return back to the main audit clients directory."
+        },
+        "summary": {
+          "title": "Organization & Status Card",
+          "description": "Displays the official legal name of the organization, operating city, and current onboarding/registration status."
+        },
+        "infoSection": {
+          "title": "Detailed Company Information",
+          "description": "Complete breakdown including legal capacity, administration name, country, industrial activity, manager, official email, and phone contact."
+        }
+      }
     },
     "applicationDraft": {
       "breadcrumbWorkspace": "Workspace",
@@ -6418,7 +6543,42 @@
         "visitUs": "Visit us :",
         "callUs": "Call us :",
         "page": "Page {{current}} of {{total}}",
-        "version": "Version No.{{version}}"
+        "version": "Version No.{{version}}",
+        "certificate": "Certificate",
+        "certificationBody": "Certification Body",
+        "assessedAgainst": "has been assessed and found to conform to the requirements of",
+        "forScope": "for the following scope:",
+        "certificateNumber": "Certificate number",
+        "issueDate": "Issue date",
+        "effectiveDate": "Effective date",
+        "expiryDate": "Expiry date",
+        "verifyOnline": "Verify online"
+      },
+      "tour": {
+        "header": {
+          "title": "Prepare Certificate Workspace",
+          "description": "Generate and issue conformity certificates based on authorized certification decisions, with full live preview."
+        },
+        "clientSection": {
+          "title": "Application & Client Information",
+          "description": "Review verified client profile details, legal entity name, country, primary contact, and linked application number."
+        },
+        "decisionSection": {
+          "title": "Authorized Decision & Scope",
+          "description": "Verify the authorized decision number, date, approved scope of certification, and table of certified facility sites."
+        },
+        "detailsSection": {
+          "title": "Certificate Parameters & Configuration",
+          "description": "Set certificate validity dates (issue, effective, expiry), select design template, language, signatory, and configure accreditation marks and verification QR code."
+        },
+        "previewSection": {
+          "title": "Live Certificate Preview",
+          "description": "Real-time visualization of the printed certificate document. You can expand to full screen to inspect formatting before issuance."
+        },
+        "actions": {
+          "title": "Preview & Issue Actions",
+          "description": "Preview the full certificate or finalize and issue the official certificate to the client."
+        }
       }
     }
   },

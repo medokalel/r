@@ -135,23 +135,16 @@ export const AB_LIFECYCLE_OPTIONS: AbSetupOption[] = [
   { value: 'SUSPENSION_WITHDRAWAL', labelKey: 'ab.setup.lifecycle.suspensionWithdrawal' },
 ]
 
-/** Slide 6 — scope classifications (IAF/EA codes). Published identifiers. */
-export const AB_SCOPE_CLASSIFICATION_OPTIONS: { value: string; label: string }[] = [
-  { value: 'IAF_01', label: 'IAF 01 • Agriculture, fishing' },
-  { value: 'IAF_03', label: 'IAF 03 • Food products, beverages and tobacco' },
-  { value: 'IAF_04', label: 'IAF 04 • Textiles and textile products' },
-  { value: 'IAF_12', label: 'IAF 12 • Chemicals, chemical products and fibres' },
-  { value: 'IAF_17', label: 'IAF 17 • Basic metals and fabricated metal products' },
-  { value: 'IAF_18', label: 'IAF 18 • Machinery and equipment' },
-  { value: 'IAF_19', label: 'IAF 19 • Electrical and optical equipment' },
-  { value: 'IAF_28', label: 'IAF 28 • Construction' },
-  { value: 'IAF_29', label: 'IAF 29 • Wholesale and retail trade' },
-  { value: 'IAF_31', label: 'IAF 31 • Transport, storage and communication' },
-  { value: 'IAF_33', label: 'IAF 33 • Information technology' },
-  { value: 'IAF_35', label: 'IAF 35 • Engineering services' },
-  { value: 'IAF_37', label: 'IAF 37 • Education' },
-  { value: 'IAF_38', label: 'IAF 38 • Health and social work' },
-]
+import { IAF_CODES_LIST, getIafCodeOptions } from '@/lib/iafCodes'
+
+/** Slide 6 — scope classifications (IAF/EA codes). */
+export const AB_SCOPE_CLASSIFICATION_OPTIONS: { value: string; label: string }[] = IAF_CODES_LIST.map((item) => ({
+  value: item.value,
+  label: `IAF ${item.code} • ${item.en}`,
+}))
+
+export { getIafCodeOptions }
+
 
 /** Slide 7 — where an accreditation symbol may be used. */
 export const AB_PERMITTED_USE_OPTIONS: AbSetupOption[] = [

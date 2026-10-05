@@ -18,6 +18,8 @@ import { OfficialDocsCard } from './OfficialDocsCard'
 import { CompletedStepRow } from './Primitives'
 import { ProfileHeaderCard } from './ProfileHeaderCard'
 import { useProfileForm } from './ProfileFormContext'
+import { profileCardClassName } from './constants'
+import { cn } from '@/lib/utils'
 import { addressFieldsFromGeocode, googleMapsUrlFor, parseLatLngFromGoogleMapsUrl } from './mappers'
 
 export function BasicDataStep() {
@@ -102,22 +104,71 @@ export function AddressStep() {
 
 export function BranchesStep() {
   const { t } = useTranslation()
+  const { branches } = useProfileForm()
+  const [hasBranches, setHasBranches] = useState<'yes' | 'no'>(
+    branches.length > 0 ? 'yes' : 'no'
+  )
+
   return (
     <>
       <CompletedStepRow label={t('companyProfile.completedSteps.basicData')} />
       <CompletedStepRow label={t('companyProfile.completedSteps.address')} />
       <CompanySummaryBanner />
-      <div className="flex flex-col items-start gap-5 lg:flex-row">
-        <div className="min-w-0 flex-1">
-          <AddBranchForm />
-        </div>
-        <div className="w-full lg:w-[42%] lg:shrink-0">
-          <div className="flex flex-col gap-5">
-            <BranchesListCard />
-            <FileOperationsCard />
-          </div>
+
+      <div className={profileCardClassName}>
+        <h3 className="text-[18px] font-semibold text-primary">
+          {t('companyProfile.branchesCard.hasBranchesTitle', 'Does the client have branches?')}
+        </h3>
+        <div className="flex items-center gap-4">
+          {(['yes', 'no'] as const).map((option) => {
+            const active = hasBranches === option
+            return (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setHasBranches(option)}
+                className={cn(
+                  'flex h-[52px] items-center gap-3 rounded-[50px] px-6 py-3 transition-colors',
+                  active
+                    ? 'border border-primary bg-[#f3f6fd]'
+                    : 'border border-[#f4f4f4] bg-[#fcfcfc] hover:border-primary/40'
+                )}
+              >
+                <span
+                  className={cn(
+                    'text-[16px] leading-[1.6]',
+                    active ? 'text-primary font-medium' : 'text-[#666]'
+                  )}
+                >
+                  {option === 'yes' ? t('common.yes', 'Yes') : t('common.no', 'No')}
+                </span>
+                <span
+                  className={cn(
+                    'flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
+                    active ? 'border-primary bg-primary' : 'border-[#dcdcdc] bg-white'
+                  )}
+                >
+                  {active && <span className="size-2 rounded-full bg-white" />}
+                </span>
+              </button>
+            )
+          })}
         </div>
       </div>
+
+      {hasBranches === 'yes' && (
+        <div className="flex flex-col items-start gap-5 lg:flex-row">
+          <div className="min-w-0 flex-1">
+            <AddBranchForm />
+          </div>
+          <div className="w-full lg:w-[42%] lg:shrink-0">
+            <div className="flex flex-col gap-5">
+              <BranchesListCard />
+              <FileOperationsCard />
+            </div>
+          </div>
+        </div>
+      )}
       <EditBranchModal />
     </>
   )

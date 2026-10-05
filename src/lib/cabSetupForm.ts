@@ -483,7 +483,8 @@ export function isAccreditationRecordComplete(record: CabAccreditationRecord): b
 
 export function isProfileStepComplete(
   form: CabSetupForm,
-  legalEntityName: string
+  legalEntityName: string,
+  registrationNumber?: string
 ): boolean {
   const year = Number(form.yearEstablished)
   const yearValid =
@@ -491,7 +492,8 @@ export function isProfileStepComplete(
     (/^\d{4}$/.test(form.yearEstablished) &&
       year >= 1800 &&
       year <= new Date().getFullYear())
-  return Boolean(legalEntityName.trim() && form.activities.length > 0 && yearValid)
+  const hasRegNumber = registrationNumber !== undefined ? Boolean(registrationNumber.trim()) : true
+  return Boolean(legalEntityName.trim() && hasRegNumber && form.activities.length > 0 && yearValid)
 }
 
 export function isLocationsStepComplete(

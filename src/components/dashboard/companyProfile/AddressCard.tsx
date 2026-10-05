@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
 import { FormField, SelectField, TextField } from '@/components/ui'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import type { CountryCode } from '@/lib/countries'
 import { GoogleMapUrlField } from './GoogleMapUrlField'
@@ -70,10 +71,12 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
           </FormField>
           <FormField label={t('companyProfile.addressCard.cityLabel')} required>
             {cityOptions.length > 0 ? (
-              <SelectField
+              <SearchableSelect
                 value={form.city}
-                options={cityOptions}
+                options={cityOptions.map((name) => ({ value: name, label: name }))}
                 onChange={(value) => update('city', value)}
+                placeholder={t('companyProfile.addressCard.cityPlaceholder')}
+                searchPlaceholder={t('common.search', 'Search...')}
               />
             ) : (
               <TextField

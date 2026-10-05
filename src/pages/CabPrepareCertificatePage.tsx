@@ -14,6 +14,8 @@ import { DatePicker } from '@/components/ui/DatePicker'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { FormField, FormLabel } from '@/components/ui/FormField'
 import { SelectField } from '@/components/ui/Select'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { usePrepareCertificateTourSteps } from '@/config/prepareCertificateTourSteps'
 import {
   AppIcon,
   ArrowRightIcon,
@@ -52,7 +54,13 @@ import { cn } from '@/lib/utils'
 const fieldErrorClassName = 'text-small-light text-error-500'
 const fieldHintClassName = 'text-small-light text-neutral-500'
 
-function PageTitle({ actions }: { actions?: ReactNode }) {
+function PageTitle({
+  actions,
+  tourSteps,
+}: {
+  actions?: ReactNode
+  tourSteps?: ReturnType<typeof usePrepareCertificateTourSteps>
+}) {
   const { t } = useTranslation()
 
   return (
@@ -61,7 +69,17 @@ function PageTitle({ actions }: { actions?: ReactNode }) {
         <h1 className="text-[28px] font-bold leading-tight text-neutral-900">{t('cab.certificatePrepare.title')}</h1>
         <p className="mt-1 text-[14px] text-neutral-500">{t('cab.certificatePrepare.subtitle')}</p>
       </div>
-      {actions && <div className="flex w-full items-center gap-3 sm:w-auto">{actions}</div>}
+      {actions && (
+        <div className="flex w-full items-center gap-3 sm:w-auto">
+          {tourSteps ? (
+            <CabTourStep steps={tourSteps} stepId="prepare-certificate-actions">
+              <div className="flex w-full items-center gap-3 sm:w-auto">{actions}</div>
+            </CabTourStep>
+          ) : (
+            actions
+          )}
+        </div>
+      )}
     </div>
   )
 }
@@ -90,7 +108,13 @@ function LoadingSkeleton() {
   )
 }
 
-function PrepareCertificateWorkspace({ preparation }: { preparation: CertificatePreparation }) {
+function PrepareCertificateWorkspace({
+  preparation,
+  tourSteps,
+}: {
+  preparation: CertificatePreparation
+  tourSteps: ReturnType<typeof usePrepareCertificateTourSteps>
+}) {
   const { t, i18n } = useTranslation()
   const { application, decision, options, content, issuer } = preparation
 
@@ -202,6 +226,7 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
   return (
     <>
       <PageTitle
+        tourSteps={tourSteps}
         actions={
           <>
             <Button
@@ -261,212 +286,219 @@ function PrepareCertificateWorkspace({ preparation }: { preparation: Certificate
 
       <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(360px,480px)]">
         <div className="flex min-w-0 flex-col gap-5">
-          <SectionCard title={t('cab.certificatePrepare.sections.applicationAndClient')}>
-            <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.applicationNumber')}>
-                <span dir="ltr">{application.number}</span>
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.clientNumber')}>
-                <span dir="ltr">{application.clientNumber}</span>
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.legalName')}>{application.legalName}</ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.country')}>
-                {countryName}
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.primaryContact')}>
-                {application.primaryContact}
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.email')} className="sm:col-span-2">
-                <span dir="ltr">{application.email}</span>
-              </ReadOnlyField>
-            </div>
-          </SectionCard>
+          <CabTourStep steps={tourSteps} stepId="prepare-certificate-client-section">
+            <SectionCard title={t('cab.certificatePrepare.sections.applicationAndClient')}>
+              <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.applicationNumber')}>
+                  <span dir="ltr">{application.number}</span>
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.clientNumber')}>
+                  <span dir="ltr">{application.clientNumber}</span>
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.legalName')}>{application.legalName}</ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.country')}>
+                  {countryName}
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.primaryContact')}>
+                  {application.primaryContact}
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.email')} className="sm:col-span-2">
+                  <span dir="ltr">{application.email}</span>
+                </ReadOnlyField>
+              </div>
+            </SectionCard>
+          </CabTourStep>
 
-          <SectionCard title={t('cab.certificatePrepare.sections.authorizedDecision')}>
-            <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.decisionNumber')}>
-                <span dir="ltr">{decision.number}</span>
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.decisionDate')}>
-                {formatCertificateDate(parseIsoDate(decision.date), i18n.language)}
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.decision')}>
-                <Badge tone="green">{t('cab.certificatePrepare.decisionOutcome.granted')}</Badge>
-              </ReadOnlyField>
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.approvedScope')}>
-                {decision.approvedScope}
-                {decision.approvedScopeDescription && (
-                  <span className="mt-0.5 block text-[13px] font-normal text-neutral-500">
-                    {decision.approvedScopeDescription}
-                  </span>
-                )}
-              </ReadOnlyField>
-            </div>
+          <CabTourStep steps={tourSteps} stepId="prepare-certificate-decision-section">
+            <SectionCard title={t('cab.certificatePrepare.sections.authorizedDecision')}>
+              <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.decisionNumber')}>
+                  <span dir="ltr">{decision.number}</span>
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.decisionDate')}>
+                  {formatCertificateDate(parseIsoDate(decision.date), i18n.language)}
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.decision')}>
+                  <Badge tone="green">{t('cab.certificatePrepare.decisionOutcome.granted')}</Badge>
+                </ReadOnlyField>
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.approvedScope')}>
+                  {decision.approvedScope}
+                  {decision.approvedScopeDescription && (
+                    <span className="mt-0.5 block text-[13px] font-normal text-neutral-500">
+                      {decision.approvedScopeDescription}
+                    </span>
+                  )}
+                </ReadOnlyField>
+              </div>
 
-            <div className="mt-6">
-              <p className="mb-2 text-[12px] font-medium text-neutral-500">
-                {t('cab.certificatePrepare.fields.includedSites')}
-              </p>
-              <div className="overflow-x-auto rounded-[var(--radius-sm)] border border-[#ececec]">
-                <table className="w-full min-w-[560px] border-collapse text-start">
-                  <thead>
-                    <tr className="bg-[#1236a3] text-[13px] font-medium text-white">
-                      <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.siteId')}</th>
-                      <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.siteName')}</th>
-                      <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.address')}</th>
-                      <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.scope')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {decision.sites.map((site, index) => (
-                      <tr key={site.id} className={cn('text-[13px] text-neutral-800', index % 2 && 'bg-[#f9fafc]')}>
-                        <td className="px-4 py-3" dir="ltr">
-                          <span className="block text-start">{site.id}</span>
-                        </td>
-                        <td className="px-4 py-3">{site.name}</td>
-                        <td className="px-4 py-3">{site.address}</td>
-                        <td className="px-4 py-3">{site.scope}</td>
+              <div className="mt-6">
+                <p className="mb-2 text-[12px] font-medium text-neutral-500">
+                  {t('cab.certificatePrepare.fields.includedSites')}
+                </p>
+                <div className="overflow-x-auto rounded-[var(--radius-sm)] border border-[#ececec]">
+                  <table className="w-full min-w-[560px] border-collapse text-start">
+                    <thead>
+                      <tr className="bg-[#1236a3] text-[13px] font-medium text-white">
+                        <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.siteId')}</th>
+                        <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.siteName')}</th>
+                        <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.address')}</th>
+                        <th className="px-4 py-3 text-start">{t('cab.certificatePrepare.sites.scope')}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {decision.sites.map((site, index) => (
+                        <tr key={site.id} className={cn('text-[13px] text-neutral-800', index % 2 && 'bg-[#f9fafc]')}>
+                          <td className="px-4 py-3" dir="ltr">
+                            <span className="block text-start">{site.id}</span>
+                          </td>
+                          <td className="px-4 py-3">{site.name}</td>
+                          <td className="px-4 py-3">{site.address}</td>
+                          <td className="px-4 py-3">{site.scope}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          </SectionCard>
+            </SectionCard>
+          </CabTourStep>
 
-          <SectionCard title={t('cab.certificatePrepare.sections.certificateDetails')}>
-            <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
-              <ReadOnlyField label={t('cab.certificatePrepare.fields.certificateNumber')}>
-                <span dir="ltr">{preparation.certificateNumber}</span>
-              </ReadOnlyField>
-              <FormField variant="compact" label={t('cab.certificatePrepare.fields.issueDate')}>
-                <DatePicker value={form.issueDate} onChange={(issueDate) => patch({ issueDate })} disabled={readOnly} />
-              </FormField>
-              <FormField variant="compact" label={t('cab.certificatePrepare.fields.effectiveDate')}>
-                <DatePicker value={form.effectiveDate} onChange={handleEffectiveDateChange} disabled={readOnly} />
-              </FormField>
-              <FormField variant="compact" label={t('cab.certificatePrepare.fields.expiryDate')}>
-                <DatePicker value={form.expiryDate} onChange={handleExpiryDateChange} disabled={readOnly} />
-                {errors.expiryDate && (
-                  <p role="alert" className={fieldErrorClassName}>
-                    {t(`cab.certificatePrepare.errors.${errors.expiryDate}`)}
-                  </p>
-                )}
-              </FormField>
-              <div className="sm:col-span-2">
-                <SelectField
-                  labelVariant="compact"
-                  id="certificate-template"
-                  disabled={readOnly}
-                  label={t('cab.certificatePrepare.fields.template')}
-                  value={form.templateId}
-                  onChange={(templateId) => patch({ templateId })}
-                  options={options.templates.map((template) => ({ value: template.id, label: template.name }))}
-                />
-              </div>
-            </div>
-
-            <div className="mt-5 border-t border-[#ececec] pt-3">
-              <Button
-                variant="tertiary"
-                size="sm"
-                aria-expanded={moreDetailsOpen}
-                aria-controls="certificate-more-details"
-                icon={
-                  <AppIcon
-                    icon={ChevronDownIcon}
-                    size={16}
-                    className={cn('transition-transform', !moreDetailsOpen && '-rotate-90 rtl:rotate-90')}
-                  />
-                }
-                onClick={() => setMoreDetailsOpen((open) => !open)}
-                className="px-0 text-neutral-900 hover:text-primary"
-              >
-                {t('cab.certificatePrepare.fields.moreDetails')}
-              </Button>
-
-              {moreDetailsOpen && (
-                <div id="certificate-more-details" className="mt-4 grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+          <CabTourStep steps={tourSteps} stepId="prepare-certificate-details-section">
+            <SectionCard title={t('cab.certificatePrepare.sections.certificateDetails')}>
+              <div className="grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
+                <ReadOnlyField label={t('cab.certificatePrepare.fields.certificateNumber')}>
+                  <span dir="ltr">{preparation.certificateNumber}</span>
+                </ReadOnlyField>
+                <FormField variant="compact" label={t('cab.certificatePrepare.fields.issueDate')}>
+                  <DatePicker value={form.issueDate} onChange={(issueDate) => patch({ issueDate })} disabled={readOnly} />
+                </FormField>
+                <FormField variant="compact" label={t('cab.certificatePrepare.fields.effectiveDate')}>
+                  <DatePicker value={form.effectiveDate} onChange={handleEffectiveDateChange} disabled={readOnly} />
+                </FormField>
+                <FormField variant="compact" label={t('cab.certificatePrepare.fields.expiryDate')}>
+                  <DatePicker value={form.expiryDate} onChange={handleExpiryDateChange} disabled={readOnly} />
+                  {errors.expiryDate && (
+                    <p role="alert" className={fieldErrorClassName}>
+                      {t(`cab.certificatePrepare.errors.${errors.expiryDate}`)}
+                    </p>
+                  )}
+                </FormField>
+                <div className="sm:col-span-2">
                   <SelectField
                     labelVariant="compact"
-                    id="certificate-language"
+                    id="certificate-template"
                     disabled={readOnly}
-                    label={t('cab.certificatePrepare.fields.language')}
-                    value={form.language}
-                    onChange={(language) => patch({ language: language as CertificatePreparationForm['language'] })}
-                    options={CERTIFICATE_LANGUAGES.map((language) => ({
-                      value: language,
-                      label: t(`cab.certificatePrepare.languages.${language}`),
-                    }))}
+                    label={t('cab.certificatePrepare.fields.template')}
+                    value={form.templateId}
+                    onChange={(templateId) => patch({ templateId })}
+                    options={options.templates.map((template) => ({ value: template.id, label: template.name }))}
                   />
+                </div>
+              </div>
 
-                  <div className="flex flex-col gap-2">
+              <div className="mt-5 border-t border-[#ececec] pt-3">
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  aria-expanded={moreDetailsOpen}
+                  aria-controls="certificate-more-details"
+                  icon={
+                    <AppIcon
+                      icon={ChevronDownIcon}
+                      size={16}
+                      className={cn('transition-transform', !moreDetailsOpen && '-rotate-90 rtl:rotate-90')}
+                    />
+                  }
+                  onClick={() => setMoreDetailsOpen((open) => !open)}
+                  className="px-0 text-neutral-900 hover:text-primary"
+                >
+                  {t('cab.certificatePrepare.fields.moreDetails')}
+                </Button>
+
+                {moreDetailsOpen && (
+                  <div id="certificate-more-details" className="mt-4 grid grid-cols-1 gap-x-5 gap-y-5 sm:grid-cols-2 lg:grid-cols-4">
                     <SelectField
                       labelVariant="compact"
-                      id="certificate-signatory"
+                      id="certificate-language"
                       disabled={readOnly}
-                      label={t('cab.certificatePrepare.fields.signatory')}
-                      value={form.signatoryId}
-                      onChange={(signatoryId) => patch({ signatoryId })}
-                      options={options.signatories.map((option) => ({ value: option.id, label: option.name }))}
+                      label={t('cab.certificatePrepare.fields.language')}
+                      value={form.language}
+                      onChange={(language) => patch({ language: language as CertificatePreparationForm['language'] })}
+                      options={CERTIFICATE_LANGUAGES.map((language) => ({
+                        value: language,
+                        label: t(`cab.certificatePrepare.languages.${language}`),
+                      }))}
                     />
-                    {signatory && <p className={fieldHintClassName}>{signatory.title[uiLanguage]}</p>}
-                  </div>
 
-                  <div className="flex flex-col gap-2">
-                    <FormLabel variant="compact">{t('cab.certificatePrepare.fields.applicableMarks')}</FormLabel>
-                    <p className={cn('text-[14px]', selectedMarks.length ? 'font-medium text-neutral-900' : 'text-neutral-500')}>
-                      {selectedMarks.length
-                        ? selectedMarks.map((mark) => mark.name).join(', ')
-                        : t('cab.certificatePrepare.marks.none')}
-                    </p>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      icon={<AppIcon icon={SettingsIcon} size={16} />}
-                      onClick={() => setMarksOpen(true)}
-                      disabled={readOnly}
-                      className="self-start"
-                    >
-                      {t('cab.certificatePrepare.marks.configure')}
-                    </Button>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <FormLabel variant="compact">{t('cab.certificatePrepare.fields.verificationQr')}</FormLabel>
-                    <label className="flex cursor-pointer items-center gap-3">
-                      <Checkbox
-                        checked={form.includeQrCode}
+                    <div className="flex flex-col gap-2">
+                      <SelectField
+                        labelVariant="compact"
+                        id="certificate-signatory"
                         disabled={readOnly}
-                        onChange={() => patch({ includeQrCode: !form.includeQrCode })}
+                        label={t('cab.certificatePrepare.fields.signatory')}
+                        value={form.signatoryId}
+                        onChange={(signatoryId) => patch({ signatoryId })}
+                        options={options.signatories.map((option) => ({ value: option.id, label: option.name }))}
                       />
-                      <span className="text-[14px] text-neutral-900">{t('cab.certificatePrepare.qr.include')}</span>
-                    </label>
-                    <p className={fieldHintClassName}>{t('cab.certificatePrepare.qr.hint')}</p>
+                      {signatory && <p className={fieldHintClassName}>{signatory.title[uiLanguage]}</p>}
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <FormLabel variant="compact">{t('cab.certificatePrepare.fields.applicableMarks')}</FormLabel>
+                      <p className={cn('text-[14px]', selectedMarks.length ? 'font-medium text-neutral-900' : 'text-neutral-500')}>
+                        {selectedMarks.length
+                          ? selectedMarks.map((mark) => mark.name).join(', ')
+                          : t('cab.certificatePrepare.marks.none')}
+                      </p>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={<AppIcon icon={SettingsIcon} size={16} />}
+                        onClick={() => setMarksOpen(true)}
+                        disabled={readOnly}
+                        className="self-start"
+                      >
+                        {t('cab.certificatePrepare.marks.configure')}
+                      </Button>
+                    </div>
+
+                    <div className="flex flex-col gap-2">
+                      <FormLabel variant="compact">{t('cab.certificatePrepare.fields.verificationQr')}</FormLabel>
+                      <label className="flex cursor-pointer items-center gap-3">
+                        <Checkbox
+                          checked={form.includeQrCode}
+                          disabled={readOnly}
+                          onChange={() => patch({ includeQrCode: !form.includeQrCode })}
+                        />
+                        <span className="text-[14px] text-neutral-900">{t('cab.certificatePrepare.qr.include')}</span>
+                      </label>
+                      <p className={fieldHintClassName}>{t('cab.certificatePrepare.qr.hint')}</p>
+                    </div>
                   </div>
-                </div>
-              )}
-            </div>
-          </SectionCard>
+                )}
+              </div>
+            </SectionCard>
+          </CabTourStep>
         </div>
 
-        <SectionCard
-          title={t('cab.certificatePrepare.preview.title')}
-          className="min-w-0 xl:sticky xl:top-6"
-          action={
-            <Button
-              variant="tertiary"
-              size="icon-sm"
-              aria-label={t('cab.certificatePrepare.actions.expandPreview')}
-              onClick={() => setPreviewOpen(true)}
-              className="bg-primary-subtle text-primary hover:bg-blue-100 hover:text-primary"
-            >
-              <AppIcon icon={ExpandIcon} size={16} />
-            </Button>
-          }
-        >
-          <CertificatePreview data={previewData} />
-        </SectionCard>
+        <CabTourStep steps={tourSteps} stepId="prepare-certificate-preview-section" className="min-w-0 xl:sticky xl:top-6">
+          <SectionCard
+            title={t('cab.certificatePrepare.preview.title')}
+            action={
+              <Button
+                variant="tertiary"
+                size="icon-sm"
+                aria-label={t('cab.certificatePrepare.actions.expandPreview')}
+                onClick={() => setPreviewOpen(true)}
+                className="bg-primary-subtle text-primary hover:bg-blue-100 hover:text-primary"
+              >
+                <AppIcon icon={ExpandIcon} size={16} />
+              </Button>
+            }
+          >
+            <CertificatePreview data={previewData} />
+          </SectionCard>
+        </CabTourStep>
       </div>
 
       <WalletModalShell
@@ -509,6 +541,7 @@ export function CabPrepareCertificatePage() {
   const { certificateId = '' } = useParams<{ certificateId: string }>()
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const tourSteps = usePrepareCertificateTourSteps()
 
   const [reloadCount, setReloadCount] = useState(0)
   const [result, setResult] = useState<LoadResult | null>(null)
@@ -532,22 +565,28 @@ export function CabPrepareCertificatePage() {
   }, [certificateId, requestKey])
 
   return (
-    <CabLayout>
+    <CabLayout
+      sidebarVariant="certificates"
+      tourId="cab-prepare-certificate"
+      tourSteps={tourSteps}
+    >
       <CabHeader title={t('cab.certificatePrepare.title')} />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('cab.certificatePrepare.breadcrumbLabel')}>
-          <Link to={ROUTES.cabCertificates} className="font-light text-neutral-400 hover:text-primary">
-            {t('cab.sidebar.certificates')}
-          </Link>
-          <AppIcon icon={ArrowRightIcon} size={14} className="rtl-flip shrink-0 text-neutral-400" />
-          <span className="font-medium text-neutral-700" aria-current="page">
-            {t('cab.certificatePrepare.title')}
-          </span>
-        </nav>
+        <CabTourStep steps={tourSteps} stepId="prepare-certificate-header">
+          <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('cab.certificatePrepare.breadcrumbLabel')}>
+            <Link to={ROUTES.cabCertificates} className="font-light text-neutral-400 hover:text-primary">
+              {t('cab.sidebar.certificates')}
+            </Link>
+            <AppIcon icon={ArrowRightIcon} size={14} className="rtl-flip shrink-0 text-neutral-400" />
+            <span className="font-medium text-neutral-700" aria-current="page">
+              {t('cab.certificatePrepare.title')}
+            </span>
+          </nav>
+        </CabTourStep>
 
         {state === 'loading' && (
           <>
-            <PageTitle />
+            <PageTitle tourSteps={tourSteps} />
             <LoadingSkeleton />
           </>
         )}
@@ -564,7 +603,11 @@ export function CabPrepareCertificatePage() {
         )}
 
         {state === 'ready' && preparation && (
-          <PrepareCertificateWorkspace key={preparation.certificateId} preparation={preparation} />
+          <PrepareCertificateWorkspace
+            key={preparation.certificateId}
+            preparation={preparation}
+            tourSteps={tourSteps}
+          />
         )}
       </main>
     </CabLayout>

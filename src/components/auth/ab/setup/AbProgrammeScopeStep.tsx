@@ -14,8 +14,8 @@ import {
 import {
   AB_COOPERATION_BODY_OPTIONS,
   AB_PROGRAMME_OPTIONS,
-  AB_SCOPE_CLASSIFICATION_OPTIONS,
   getArrangementOptions,
+  getIafCodeOptions,
 } from '@/lib/api/abSetupApi'
 import { createAbProgrammeScope, type AbProgrammeScope } from '@/lib/abSetupForm'
 import type { AbSetupStepProps } from '@/components/auth/ab/setup/types'
@@ -23,7 +23,7 @@ import type { AbSetupStepProps } from '@/components/auth/ab/setup/types'
 const HEADQUARTERS_ID = 'HEADQUARTERS'
 
 export function AbProgrammeScopeStep({ form, onPatchSetup }: AbSetupStepProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const setup = form.abSetup
 
   /** Only the programmes selected on the previous screen. */
@@ -154,7 +154,7 @@ export function AbProgrammeScopeStep({ form, onPatchSetup }: AbSetupStepProps) {
               <FormLabel>{t('ab.setup.scope.classifications')}</FormLabel>
               <MultiSelect
                 tags={scope.classifications}
-                options={AB_SCOPE_CLASSIFICATION_OPTIONS}
+                options={getIafCodeOptions(i18n.language)}
                 onChange={(classifications) => updateScope(scope.id, { classifications })}
                 layout="stacked"
                 searchable

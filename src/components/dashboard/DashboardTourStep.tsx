@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TourTooltip } from '@/components/ui/TourTooltip'
 import { useOptionalTour, type TourStepConfig } from '@/context/TourContext'
+import { getNextCabTourInfo } from '@/config/cabTourSequence'
 
 interface DashboardTourStepProps {
   /** Ordered steps for the tour this stepId belongs to. Defaults to active tour's steps. */
@@ -22,7 +23,7 @@ export function DashboardTourStep({ steps: stepsProp, stepId, children, classNam
 
   const steps = stepsProp ?? tour.steps
 
-  const { activeStepId, isTourActive, nextStep, prevStep, skipTour } = tour
+  const { tourId, activeStepId, isTourActive, nextStep, prevStep, skipTour } = tour
   const config = steps.find((s) => s.id === stepId)
 
   if (!config) {
@@ -34,6 +35,11 @@ export function DashboardTourStep({ steps: stepsProp, stepId, children, classNam
   // so this stays a plain boolean the whole component tree can rely on.
   const isOpen = isTourActive && activeStepId === stepId
   const isLastStep = config.step === config.totalSteps
+  const hasNextSection = Boolean(tourId && getNextCabTourInfo(tourId))
+
+  const finishLabel = hasNextSection
+    ? t('cab.tour.nextSection', 'انتقل للقسم التالي')
+    : t('cab.tour.finish', 'إنهاء الجولة')
 
   return (
     <TourTooltip
@@ -46,7 +52,7 @@ export function DashboardTourStep({ steps: stepsProp, stepId, children, classNam
       alignOffset={config.alignOffset}
       open={isOpen}
       onNext={nextStep}
-      nextLabel={isLastStep ? t('cab.tour.finish', 'الصفحة التالية') : t('cab.tour.next', 'التالي')}
+      nextLabel={isLastStep ? finishLabel : t('cab.tour.next', 'التالي')}
       backLabel={t('cab.tour.back', 'السابق')}
       skipLabel={t('cab.tour.skip', 'تخطي الجولة')}
       closeLabel={t('cab.tour.close', 'إغلاق')}

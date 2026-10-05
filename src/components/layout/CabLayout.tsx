@@ -1,9 +1,15 @@
+import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/context/DirectionContext'
 import { CabSidebarProvider } from '@/context/CabSidebarContext'
 import { CabSidebar } from '@/components/dashboard/cab/CabSidebar'
 import { TourProvider, type TourStepConfig } from '@/context/TourContext'
 import { useCabDashboardTourSteps } from '@/config/cabTourSteps'
+import {
+  getNextCabTourInfo,
+  markTourPending,
+  skipRemainingCabWorkflowTours,
+} from '@/config/cabTourSequence'
 
 interface CabLayoutProps {
   children: React.ReactNode
@@ -14,7 +20,7 @@ interface CabLayoutProps {
    *  If omitted, falls back to the default CAB-dashboard tour. */
   tourId?: string
   tourSteps?: TourStepConfig[]
-  /** Fired when the user finishes this page's tour (used to chain the next CAB tour). */
+  /** Fired when the user finishes this page's tour. If not passed, defaults to chaining the next workspace section. */
   onTourComplete?: () => void
   /** Bump to remount the tour provider after resetting tour state. */
   tourSessionKey?: number
@@ -43,13 +49,32 @@ function CabLayoutWithDashboardTour({
   onTourComplete?: () => void
   tourSessionKey: number
 }) {
+  const navigate = useNavigate()
   const dashboardTourSteps = useCabDashboardTourSteps()
+
+  const handleComplete = () => {
+    if (onTourComplete) {
+      onTourComplete()
+      return
+    }
+    const chain = getNextCabTourInfo('cab-dashboard')
+    if (chain) {
+      markTourPending(chain.nextTourId)
+      navigate(chain.nextRoute)
+    }
+  }
+
+  const handleSkip = () => {
+    skipRemainingCabWorkflowTours('cab-dashboard')
+  }
+
   return (
     <TourProvider
       key={tourSessionKey}
       tourId="cab-dashboard"
       steps={dashboardTourSteps}
-      onComplete={onTourComplete}
+      onComplete={handleComplete}
+      onSkip={handleSkip}
     >
       <CabShell className={className}>{children}</CabShell>
     </TourProvider>
@@ -64,13 +89,32 @@ export function CabLayout({
   onTourComplete,
   tourSessionKey = 0,
 }: CabLayoutProps) {
+  const navigate = useNavigate()
+
   if (tourId && tourSteps) {
+    const handleComplete = () => {
+      if (onTourComplete) {
+        onTourComplete()
+        return
+      }
+      const chain = getNextCabTourInfo(tourId)
+      if (chain) {
+        markTourPending(chain.nextTourId)
+        navigate(chain.nextRoute)
+      }
+    }
+
+    const handleSkip = () => {
+      skipRemainingCabWorkflowTours(tourId)
+    }
+
     return (
       <TourProvider
         key={tourSessionKey}
         tourId={tourId}
         steps={tourSteps}
-        onComplete={onTourComplete}
+        onComplete={handleComplete}
+        onSkip={handleSkip}
       >
         <CabShell className={className}>{children}</CabShell>
       </TourProvider>

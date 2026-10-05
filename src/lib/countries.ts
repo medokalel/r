@@ -28,6 +28,8 @@ export function countryName(code: string, locale: string = 'en'): string {
   }
 }
 
+export const getCountryName = countryName
+
 export function getCountryOptions(locale: string): CountryOption[] {
   const regionNames = new Intl.DisplayNames([locale], { type: 'region' })
 

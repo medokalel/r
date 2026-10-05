@@ -1,12 +1,15 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormField, SelectField, TextField, Textarea } from '@/components/ui'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { MailIcon, PhoneIcon } from '@/components/icons'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
-import type { CountryCode } from '@/lib/countries'
+import { getCountryOptions, type CountryCode } from '@/lib/countries'
+import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { LEGAL_CAPACITY_OPTIONS } from '@/lib/api/clientRegistrationApi'
 import type { ClientRegistrationForm as ClientRegistrationFormData } from '@/lib/clientRegistrationForm'
 
@@ -16,12 +19,36 @@ interface ClientRegistrationFormProps {
 }
 
 export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationFormProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { fieldProps } = useFieldValidation(form, {
     email: (value) => (!isValidEmailFormat(value) ? t('validation.invalidEmail') : undefined),
     phoneNumber: (value) =>
       !isValidPhoneNumber(value, form.phoneCountryCode) ? t('validation.invalidMobile') : undefined,
   })
+
+  const countries = useMemo(() => {
+    const list = getCountryOptions(i18n.language)
+    return list.map((c) => ({ value: c.code, label: `${c.flag} ${c.name}` }))
+  }, [i18n.language])
+
+  const [governorates, setGovernorates] = useState<GovernorateOption[]>([])
+
+  useEffect(() => {
+    let cancelled = false
+    const load = form.country
+      ? fetchGovernorateOptions(form.country)
+      : Promise.resolve<GovernorateOption[]>([])
+    load.then((options) => {
+      if (!cancelled) setGovernorates(options)
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [form.country])
+
+  const cityOptions = useMemo(() => {
+    return governorates.map((g) => ({ value: g.name, label: g.name }))
+  }, [governorates])
 
   return (
     <div className="flex-1 space-y-5">
@@ -56,24 +83,47 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
             </FormField>
 
             <div className="grid gap-5 lg:grid-cols-2">
-              <FormField label={t('cab.clientRegistration.fields.city')} required>
-                <TextField
-                  type="text"
-                  value={form.city}
-                  onChange={(e) => onPatch({ city: e.target.value })}
-                  placeholder={t('cab.clientRegistration.fields.cityPlaceholder')}
-                />
-              </FormField>
-              <FormField label={t('cab.clientRegistration.fields.activity')} required>
-                <Textarea
-                  value={form.activity}
-                  onChange={(e) => onPatch({ activity: e.target.value })}
-                  placeholder={t('cab.clientRegistration.fields.activityPlaceholder')}
-                  rows={3}
-                  className="min-h-[80px]"
-                />
-              </FormField>
+              <SearchableSelect
+                id="client-registration-country"
+                label={t('cab.clientRegistration.fields.country')}
+                required
+                value={form.country}
+                onChange={(country) =>
+                  onPatch({
+                    country: country as CountryCode,
+                    city: '',
+                    phoneCountryCode: (country as CountryCode) || form.phoneCountryCode,
+                  })
+                }
+                options={countries}
+                placeholder={t('register.countryPlaceholder')}
+                searchPlaceholder={t('common.search')}
+              />
+              <SearchableSelect
+                id="client-registration-city"
+                label={t('cab.clientRegistration.fields.city')}
+                required
+                value={form.city}
+                onChange={(city) => onPatch({ city })}
+                options={cityOptions}
+                placeholder={
+                  form.country
+                    ? t('register.governoratePlaceholder')
+                    : t('register.selectCountryFirst')
+                }
+                searchPlaceholder={t('common.search')}
+              />
             </div>
+
+            <FormField label={t('cab.clientRegistration.fields.activity')} required>
+              <Textarea
+                value={form.activity}
+                onChange={(e) => onPatch({ activity: e.target.value })}
+                placeholder={t('cab.clientRegistration.fields.activityPlaceholder')}
+                rows={3}
+                className="min-h-[80px]"
+              />
+            </FormField>
 
             <div className="grid gap-5 lg:grid-cols-2">
               <FormField label={t('cab.clientRegistration.fields.facilityOwnerManager')} required>

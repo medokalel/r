@@ -86,12 +86,31 @@ export async function getReviewQueueItems(
     )
   }
 
+  if (params?.startDate) {
+    const start = new Date(params.startDate).getTime()
+    list = list.filter((item) => new Date(item.receivedDateRaw).getTime() >= start)
+  }
+
+  if (params?.endDate) {
+    const end = new Date(params.endDate).getTime()
+    list = list.filter((item) => new Date(item.receivedDateRaw).getTime() <= end)
+  }
+
   if (params?.country && params.country !== 'all') {
     list = list.filter((item) => item.country.toLowerCase() === params.country?.toLowerCase())
   }
 
   if (params?.status && params.status !== 'all') {
     list = list.filter((item) => item.status === params.status)
+  }
+
+  if (params?.sortBy === 'oldest') {
+    list.sort((a, b) => new Date(a.receivedDateRaw).getTime() - new Date(b.receivedDateRaw).getTime())
+  } else if (params?.sortBy === 'dueSoonest') {
+    list.sort((a, b) => a.dueDaysLeft - b.dueDaysLeft)
+  } else {
+    // newest default
+    list.sort((a, b) => new Date(b.receivedDateRaw).getTime() - new Date(a.receivedDateRaw).getTime())
   }
 
   return list

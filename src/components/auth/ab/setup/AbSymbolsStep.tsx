@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FormLabel, TextField } from '@/components/ui'
+import { DatePicker } from '@/components/ui/DatePicker'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { OnboardingLogoUpload } from '@/components/auth/OnboardingLogoUpload'
 import {
@@ -10,6 +11,18 @@ import {
 } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { AB_COOPERATION_BODY_OPTIONS, AB_PERMITTED_USE_OPTIONS } from '@/lib/api/abSetupApi'
 import type { AbSetupStepProps } from '@/components/auth/ab/setup/types'
+
+function toIsoDate(date: Date): string {
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${date.getFullYear()}-${month}-${day}`
+}
+
+function fromIsoDate(value: string): Date | undefined {
+  if (!value) return undefined
+  const parsed = new Date(`${value}T00:00:00`)
+  return Number.isNaN(parsed.getTime()) ? undefined : parsed
+}
 
 export function AbSymbolsStep({ form, onPatch, onPatchSetup }: AbSetupStepProps) {
   const { t } = useTranslation()
@@ -58,7 +71,7 @@ export function AbSymbolsStep({ form, onPatch, onPatchSetup }: AbSetupStepProps)
         />
       </div>
 
-      <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+      <div className="grid grid-cols-1 items-end gap-8 sm:grid-cols-3">
         <TextField
           id="ab-setup-symbol-reference"
           label={t('ab.setup.symbols.symbolReference')}
@@ -67,24 +80,20 @@ export function AbSymbolsStep({ form, onPatch, onPatchSetup }: AbSetupStepProps)
           placeholder={t('ab.setup.symbols.symbolReferencePlaceholder')}
           onChange={(event) => onPatchSetup({ symbolReference: event.target.value })}
         />
-        <TextField
-          id="ab-setup-symbol-from"
-          label={t('ab.setup.symbols.validFrom')}
-          type="date"
-          lang="en"
-          dir="ltr"
-          value={setup.symbolValidFrom}
-          onChange={(event) => onPatchSetup({ symbolValidFrom: event.target.value })}
-        />
-        <TextField
-          id="ab-setup-symbol-until"
-          label={t('ab.setup.symbols.validUntil')}
-          type="date"
-          lang="en"
-          dir="ltr"
-          value={setup.symbolValidUntil}
-          onChange={(event) => onPatchSetup({ symbolValidUntil: event.target.value })}
-        />
+        <div className="space-y-2">
+          <FormLabel htmlFor="ab-setup-symbol-from">{t('ab.setup.symbols.validFrom')}</FormLabel>
+          <DatePicker
+            value={fromIsoDate(setup.symbolValidFrom)}
+            onChange={(date) => onPatchSetup({ symbolValidFrom: toIsoDate(date) })}
+          />
+        </div>
+        <div className="space-y-2">
+          <FormLabel htmlFor="ab-setup-symbol-until">{t('ab.setup.symbols.validUntil')}</FormLabel>
+          <DatePicker
+            value={fromIsoDate(setup.symbolValidUntil)}
+            onChange={(date) => onPatchSetup({ symbolValidUntil: toIsoDate(date) })}
+          />
+        </div>
       </div>
 
       <div className="space-y-2">

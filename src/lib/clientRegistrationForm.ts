@@ -9,6 +9,7 @@ export interface ClientRegistrationForm {
   facilityOwnerManager: string
   activity: string
   legalCapacity: string
+  country: CountryCode | ''
   city: string
   phoneCountryCode: CountryCode
   phoneNumber: string
@@ -21,6 +22,7 @@ export const emptyClientRegistrationForm: ClientRegistrationForm = {
   facilityOwnerManager: '',
   activity: '',
   legalCapacity: '',
+  country: 'EG',
   city: '',
   phoneCountryCode: 'EG',
   phoneNumber: '',
@@ -33,6 +35,7 @@ export function isClientRegistrationComplete(form: ClientRegistrationForm): bool
       form.facilityOwnerManager.trim().length >= 2 &&
       form.activity.trim().length >= 2 &&
       form.legalCapacity.trim().length >= 2 &&
+      form.country &&
       form.city.trim().length >= 2 &&
       isValidEmailFormat(form.email) &&
       isValidPhoneNumber(form.phoneNumber, form.phoneCountryCode)

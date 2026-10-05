@@ -54,6 +54,7 @@ export interface CabClient {
   facilityOwnerManager: string | null
   activity: string | null
   legalCapacity: string | null
+  country?: CountryCode | '' | null
   city: string | null
   email: string | null
   phoneCountryCode: string | null
@@ -130,6 +131,7 @@ function formFromValues(clientId: string, form: ClientRegistrationForm, status: 
     facilityOwnerManager: form.facilityOwnerManager,
     activity: form.activity,
     legalCapacity: form.legalCapacity,
+    country: form.country,
     city: form.city,
     email: form.email,
     phoneCountryCode: form.phoneCountryCode,
@@ -157,6 +159,7 @@ function profileToClient(clientId: string, data: OrganizationProfileData): CabCl
     facilityOwnerManager: profile.authorizedPersonName ?? null,
     activity: original.activity ?? profile.companySummary ?? null,
     legalCapacity: original.legalCapacity ?? null,
+    country: (address.country as CountryCode) || null,
     city: original.city ?? address.city ?? null,
     email: profile.email ?? null,
     phoneCountryCode: countryFromDial(profile.phoneCountryCode),
@@ -195,6 +198,7 @@ function toProfilePayload(form: ClientRegistrationForm): {
       companySummary: form.activity.trim() || undefined,
     },
     address: {
+      country: form.country || undefined,
       city: form.city.trim() || undefined,
       street: form.administrationName.trim() || undefined,
     },
@@ -421,6 +425,7 @@ export function cabClientToForm(client: CabClient): ClientRegistrationForm {
     facilityOwnerManager: client.facilityOwnerManager ?? '',
     activity: client.activity ?? '',
     legalCapacity: client.legalCapacity ?? '',
+    country: (client.country as CountryCode) || 'EG',
     city: client.city ?? '',
     phoneCountryCode: (client.phoneCountryCode ?? 'EG') as CountryCode,
     phoneNumber: client.phoneNumber ?? '',

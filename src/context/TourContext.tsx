@@ -47,6 +47,7 @@ export function markTourPending(tourId: string): void {
 }
 
 interface TourContextType {
+  tourId: string
   steps: TourStepConfig[]
   currentStepIndex: number
   activeStepId: string | null
@@ -146,6 +147,7 @@ export function TourProvider({ tourId, steps, children, onComplete, onSkip }: To
   return (
     <TourContext.Provider
       value={{
+        tourId,
         steps,
         currentStepIndex,
         activeStepId,

@@ -18,6 +18,8 @@ import { isSectionComplete } from '@/components/dashboard/entityData/application
 import type { FieldPhase, SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useApplicationDraftTourSteps } from '@/config/applicationDraftTourSteps'
 import { Button } from '@/components/ui/Button'
 import { ErrorState } from '@/components/ui'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
@@ -383,18 +385,28 @@ export function CabApplicationSubmissionPage() {
       </div>
     ) : null
 
+  const tourSteps = useApplicationDraftTourSteps()
+
   return (
-    <CabLayout>
+    <CabLayout
+      sidebarVariant="applicationDraft"
+      tourId="cab-application-draft"
+      tourSteps={tourSteps}
+    >
       <ApplicationFormContext.Provider value={contextValue}>
-        <CabHeader
-          title={
-            isReadOnly
-              ? t('cab.applicationSubmission.viewTitle')
-              : t('cab.applicationSubmission.title')
-          }
-          notificationCount={3}
-        />
-        <ProcessStepper activeStep={isStatusView ? 1 : 0} />
+        <CabTourStep steps={tourSteps} stepId="header">
+          <CabHeader
+            title={
+              isReadOnly
+                ? t('cab.applicationSubmission.viewTitle')
+                : t('cab.applicationSubmission.title')
+            }
+            notificationCount={3}
+          />
+        </CabTourStep>
+        <CabTourStep steps={tourSteps} stepId="stepper">
+          <ProcessStepper activeStep={isStatusView ? 1 : 0} />
+        </CabTourStep>
 
         <div ref={contentRef} className="flex flex-1 flex-col gap-5 overflow-auto p-5">
           <nav className="flex flex-wrap items-center justify-between gap-3 text-[13px]">
@@ -449,69 +461,75 @@ export function CabApplicationSubmissionPage() {
 
               <div className="flex flex-1 gap-5">
                 {!isStatusView && (
-                  <EntityDataNav
-                    activeSubSection={activeSubSection}
-                    activeViewTab={activeViewTab}
-                    onSubSectionChange={handleSubSectionChange}
-                    onViewTabChange={handleViewTabChange}
-                  />
-                )}
-                <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-                  <fieldset
-                    disabled={isReadOnly}
-                    className={cn(
-                      'min-w-0 border-0 p-0',
-                      isReadOnly && 'pointer-events-none opacity-90',
-                    )}
-                  >
-                    <legend className="sr-only">
-                      {isReadOnly
-                        ? t('cab.applicationSubmission.viewTitle')
-                        : t('cab.applicationSubmission.title')}
-                    </legend>
-                    <EntityDataForm
-                      section={activeSubSection}
-                      viewTab={activeViewTab}
-                      fieldPhase={fieldPhase}
-                      selectedSectors={selectedSectors}
-                      onSelectedSectorsChange={isReadOnly ? () => undefined : setSelectedSectors}
-                      selectedStandards={selectedStandards}
-                      onSelectedStandardsChange={isReadOnly ? () => undefined : setSelectedStandards}
-                      selectedCodes={form.selectedCodes}
-                      onSelectedCodesChange={isReadOnly ? () => undefined : setSelectedCodes}
+                  <CabTourStep steps={tourSteps} stepId="workflow-progress">
+                    <EntityDataNav
+                      activeSubSection={activeSubSection}
+                      activeViewTab={activeViewTab}
+                      onSubSectionChange={handleSubSectionChange}
+                      onViewTabChange={handleViewTabChange}
                     />
-                  </fieldset>
-                  {isStatusView && <div className="mt-6">{workflowLinks}</div>}
-                </div>
+                  </CabTourStep>
+                )}
+                <CabTourStep steps={tourSteps} stepId="form-content" className="min-w-0 flex-1">
+                  <div className="min-w-0 flex-1 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
+                    <fieldset
+                      disabled={isReadOnly}
+                      className={cn(
+                        'min-w-0 border-0 p-0',
+                        isReadOnly && 'pointer-events-none opacity-90',
+                      )}
+                    >
+                      <legend className="sr-only">
+                        {isReadOnly
+                          ? t('cab.applicationSubmission.viewTitle')
+                          : t('cab.applicationSubmission.title')}
+                      </legend>
+                      <EntityDataForm
+                        section={activeSubSection}
+                        viewTab={activeViewTab}
+                        fieldPhase={fieldPhase}
+                        selectedSectors={selectedSectors}
+                        onSelectedSectorsChange={isReadOnly ? () => undefined : setSelectedSectors}
+                        selectedStandards={selectedStandards}
+                        onSelectedStandardsChange={isReadOnly ? () => undefined : setSelectedStandards}
+                        selectedCodes={form.selectedCodes}
+                        onSelectedCodesChange={isReadOnly ? () => undefined : setSelectedCodes}
+                      />
+                    </fieldset>
+                    {isStatusView && <div className="mt-6">{workflowLinks}</div>}
+                  </div>
+                </CabTourStep>
               </div>
             </>
           )}
         </div>
 
         {selectedClientId && !isStatusView && (
-          <DashboardFooter
-            backDisabled={
-              busy ||
-              (activeViewTab === 'entityData' && activeIndex === 0) ||
-              (activeViewTab === 'field' && fieldPhase === 'sectors')
-            }
-            nextDisabled={nextDisabled}
-            nextLabel={
-              activeAction === 'next' && busy
-                ? t('common.loading')
-                : activeViewTab === 'documents'
-                  ? isReadOnly
-                    ? t('cab.applicationSubmission.backToRegister')
-                    : t('accreditation.messages.submitRequest')
-                  : undefined
-            }
-            startContent={footerStartContent}
-            onBack={handleBack}
-            onNext={handleNext}
-            onSaveDraft={isReadOnly ? undefined : handleSaveDraft}
-            saveDraftDisabled={busy || loading}
-            saveDraftLoading={saving && activeAction === 'draft'}
-          />
+          <CabTourStep steps={tourSteps} stepId="action-buttons">
+            <DashboardFooter
+              backDisabled={
+                busy ||
+                (activeViewTab === 'entityData' && activeIndex === 0) ||
+                (activeViewTab === 'field' && fieldPhase === 'sectors')
+              }
+              nextDisabled={nextDisabled}
+              nextLabel={
+                activeAction === 'next' && busy
+                  ? t('common.loading')
+                  : activeViewTab === 'documents'
+                    ? isReadOnly
+                      ? t('cab.applicationSubmission.backToRegister')
+                      : t('accreditation.messages.submitRequest')
+                    : undefined
+              }
+              startContent={footerStartContent}
+              onBack={handleBack}
+              onNext={handleNext}
+              onSaveDraft={isReadOnly ? undefined : handleSaveDraft}
+              saveDraftDisabled={busy || loading}
+              saveDraftLoading={saving && activeAction === 'draft'}
+            />
+          </CabTourStep>
         )}
       </ApplicationFormContext.Provider>
     </CabLayout>

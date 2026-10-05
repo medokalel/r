@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
+import { useClientCompanyProfileTourSteps } from '@/config/clientCompanyProfileTourSteps'
 import { Button } from '@/components/ui/Button'
 import {
   AppIcon,
@@ -31,6 +33,7 @@ import {
   DOC_MAX_BYTES,
   DOC_TYPE_BY_KEY,
   SECTOR_OPTIONS,
+  getLocalizedSectorOptions,
   profileCardClassName,
 } from '@/components/dashboard/companyProfile/constants'
 import {
@@ -67,6 +70,7 @@ import type {
 import { ApiError } from '@/lib/api/client'
 import { ROUTES } from '@/lib/routes'
 import { formatFileSize } from '@/lib/files'
+import { cn } from '@/lib/utils'
 import type { CountryCode } from '@/components/auth/CountryCodeSelect'
 
 function isBasicProfileComplete(form: ProfileFormValues): boolean {
@@ -104,6 +108,8 @@ function isNationalAddressComplete(form: ProfileFormValues): boolean {
 function CabBasicDataStep() {
   const { t } = useTranslation()
   const { form, update } = useProfileForm()
+  const sectorOptions = useMemo(() => getLocalizedSectorOptions(t), [t])
+
   return (
     <div className="space-y-5">
       <div className={profileCardClassName}>
@@ -121,7 +127,7 @@ function CabBasicDataStep() {
           <FormField label={t('companyProfile.profileHeader.industrySectorLabel')} required>
             <MultiSelect
               tags={form.industries}
-              options={SECTOR_OPTIONS}
+              options={sectorOptions}
               onChange={(industries) => update('industries', industries)}
             />
           </FormField>
@@ -183,6 +189,9 @@ function CabBranchesStep({
   handleError: (error: unknown) => void
 }) {
   const { t } = useTranslation()
+  const [hasBranches, setHasBranches] = useState<'yes' | 'no'>(
+    branches.length > 0 ? 'yes' : 'no'
+  )
   const [form, setForm] = useState<BranchFormValues>(EMPTY_BRANCH_FORM)
   const [saving, setSaving] = useState(false)
   const set = <K extends keyof BranchFormValues>(key: K, value: BranchFormValues[K]) =>
@@ -204,43 +213,89 @@ function CabBranchesStep({
   }
 
   return (
-    <div className="grid gap-5 xl:grid-cols-2">
+    <div className="flex flex-col gap-5">
+      {/* Question: Does the client have branches? */}
       <div className={profileCardClassName}>
         <h3 className="text-[18px] font-semibold text-primary">
-          {t('companyProfile.addBranch.title')}
+          {t('companyProfile.branchesCard.hasBranchesTitle', 'Does the client have branches?')}
         </h3>
-        <BranchFormFields form={form} set={set} countryCode={countryCode} />
-        <Button
-          variant="primary"
-          size="lg"
-          onClick={saveBranch}
-          disabled={saving || !isBranchFormComplete(form)}
-        >
-          {saving ? t('common.loading') : t('companyProfile.addBranch.saveButton')}
-        </Button>
+        <div className="flex items-center gap-4">
+          {(['yes', 'no'] as const).map((option) => {
+            const active = hasBranches === option
+            return (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setHasBranches(option)}
+                className={cn(
+                  'flex h-[52px] items-center gap-3 rounded-[50px] px-6 py-3 transition-colors',
+                  active
+                    ? 'border border-primary bg-[#f3f6fd]'
+                    : 'border border-[#f4f4f4] bg-[#fcfcfc] hover:border-primary/40'
+                )}
+              >
+                <span
+                  className={cn(
+                    'text-[16px] leading-[1.6]',
+                    active ? 'text-primary font-medium' : 'text-[#666]'
+                  )}
+                >
+                  {option === 'yes' ? t('common.yes', 'Yes') : t('common.no', 'No')}
+                </span>
+                <span
+                  className={cn(
+                    'flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors',
+                    active ? 'border-primary bg-primary' : 'border-[#dcdcdc] bg-white'
+                  )}
+                >
+                  {active && <span className="size-2 rounded-full bg-white" />}
+                </span>
+              </button>
+            )
+          })}
+        </div>
       </div>
-      <div className={profileCardClassName}>
-        <h3 className="text-[18px] font-semibold text-primary">
-          {t('companyProfile.branchesCard.title')}
-        </h3>
-        {branches.length === 0 ? (
-          <p className="text-[14px] text-neutral-500">
-            {t('companyProfile.branchesCard.empty', 'No branches added. Branches are optional.')}
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {branches.map((branch) => (
-              <div key={branch.id} className="rounded-[10px] border border-[#ececec] p-4">
-                <p className="font-semibold text-neutral-900">{branch.branchName}</p>
-                <p className="mt-1 text-[13px] text-neutral-500">{branch.address}</p>
-                <p className="mt-1 text-[13px] text-neutral-500">
-                  {branch.commercialRegisterNumber} · {branch.branchType}
-                </p>
-              </div>
-            ))}
+
+      {hasBranches === 'yes' && (
+        <div className="grid gap-5 xl:grid-cols-2">
+          <div className={profileCardClassName}>
+            <h3 className="text-[18px] font-semibold text-primary">
+              {t('companyProfile.addBranch.title')}
+            </h3>
+            <BranchFormFields form={form} set={set} countryCode={countryCode} />
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={saveBranch}
+              disabled={saving || !isBranchFormComplete(form)}
+            >
+              {saving ? t('common.loading') : t('companyProfile.addBranch.saveButton')}
+            </Button>
           </div>
-        )}
-      </div>
+          <div className={profileCardClassName}>
+            <h3 className="text-[18px] font-semibold text-primary">
+              {t('companyProfile.branchesCard.title')}
+            </h3>
+            {branches.length === 0 ? (
+              <p className="text-[14px] text-neutral-500">
+                {t('companyProfile.branchesCard.empty', 'No branches added. Branches are optional.')}
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {branches.map((branch) => (
+                  <div key={branch.id} className="rounded-[10px] border border-[#ececec] p-4">
+                    <p className="font-semibold text-neutral-900">{branch.branchName}</p>
+                    <p className="mt-1 text-[13px] text-neutral-500">{branch.address}</p>
+                    <p className="mt-1 text-[13px] text-neutral-500">
+                      {branch.commercialRegisterNumber} · {branch.branchType}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
@@ -415,6 +470,7 @@ export function CabClientCompanyProfilePage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { clientId = '' } = useParams()
+  const tourSteps = useClientCompanyProfileTourSteps()
   const [activeStep, setActiveStep] = useState<StepKey>('basicData')
   const [form, setForm] = useState<ProfileFormValues>(EMPTY_PROFILE_FORM)
   const [profileStatus, setProfileStatus] = useState('DRAFT')
@@ -573,28 +629,38 @@ export function CabClientCompanyProfilePage() {
   }
 
   return (
-    <CabLayout>
+    <CabLayout sidebarVariant="clients" tourId="cab-client-company-profile" tourSteps={tourSteps}>
       <CabHeader title={t('cab.clientCompanyProfile.title')} notificationCount={3} />
       <ProfileFormContext.Provider value={contextValue}>
         <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-          <nav className="flex items-center gap-2 text-[13px]">
-            <Link to={ROUTES.cabAuditClients} className="text-neutral-400 hover:text-primary">
-              {t('cab.clientRegistration.breadcrumbClientRegister')}
-            </Link>
-            <span className="text-neutral-400">/</span>
-            <span className="font-medium text-neutral-700">
-              {t('cab.clientCompanyProfile.title')}
-            </span>
-          </nav>
-          <div>
-            <h1 className="text-[26px] font-bold text-neutral-900">
-              {t('cab.clientCompanyProfile.title')}
-            </h1>
-            <p className="mt-1 text-[14px] text-neutral-500">
-              {t('companyProfile.stepSubtitles.' + activeStep)}
-            </p>
-          </div>
-          <Stepper activeStep={activeStep} onStepClick={setActiveStep} />
+          <CabTourStep steps={tourSteps} stepId="client-profile-header">
+            <div className="flex flex-col gap-2">
+              <nav className="flex items-center gap-2 text-[13px]">
+                <Link to={ROUTES.cabAuditClients} className="text-neutral-400 hover:text-primary">
+                  {t('cab.clientRegistration.breadcrumbClientRegister')}
+                </Link>
+                <span className="text-neutral-400">/</span>
+                <span className="font-medium text-neutral-700">
+                  {t('cab.clientCompanyProfile.title')}
+                </span>
+              </nav>
+              <div>
+                <h1 className="text-[26px] font-bold text-neutral-900">
+                  {t('cab.clientCompanyProfile.title')}
+                </h1>
+                <p className="mt-1 text-[14px] text-neutral-500">
+                  {t('companyProfile.stepSubtitles.' + activeStep)}
+                </p>
+              </div>
+            </div>
+          </CabTourStep>
+
+          <CabTourStep steps={tourSteps} stepId="client-profile-stepper">
+            <div>
+              <Stepper activeStep={activeStep} onStepClick={setActiveStep} />
+            </div>
+          </CabTourStep>
+
           {notification && (
             <p
               role={notification.type === 'error' ? 'alert' : 'status'}
@@ -603,57 +669,64 @@ export function CabClientCompanyProfilePage() {
               {notification.message}
             </p>
           )}
-          {loading ? (
-            <ProfileLoadingSkeleton />
-          ) : (
-            <>
-              {activeStep === 'basicData' && <CabBasicDataStep />}
+
+          <CabTourStep steps={tourSteps} stepId="client-profile-form">
+            <div>
+              {loading ? (
+                <ProfileLoadingSkeleton />
+              ) : (
+                <>
+                  {activeStep === 'basicData' && <CabBasicDataStep />}
                   {activeStep === 'address' && <AddressStep />}
-              {activeStep === 'branches' && (
-                <CabBranchesStep
-                  clientId={clientId}
-                  branches={branches}
-                  refresh={refreshBranches}
-                  notify={setNotification}
-                  handleError={handleError}
-                />
+                  {activeStep === 'branches' && (
+                    <CabBranchesStep
+                      clientId={clientId}
+                      branches={branches}
+                      refresh={refreshBranches}
+                      notify={setNotification}
+                      handleError={handleError}
+                    />
+                  )}
+                  {activeStep === 'officialDocs' && (
+                    <CabDocumentsStep
+                      clientId={clientId}
+                      documents={documents}
+                      refresh={refreshDocuments}
+                      notify={setNotification}
+                      handleError={handleError}
+                    />
+                  )}
+                </>
               )}
-              {activeStep === 'officialDocs' && (
-                <CabDocumentsStep
-                  clientId={clientId}
-                  documents={documents}
-                  refresh={refreshDocuments}
-                  notify={setNotification}
-                  handleError={handleError}
-                />
-              )}
-            </>
-          )}
+            </div>
+          </CabTourStep>
         </main>
-        <footer className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-t border-[#ececec] bg-white px-6 py-3">
-          <Button variant="tertiary" size="lg" onClick={() => void saveDraft()} disabled={saving || loading}>
-            {saving ? t('common.loading') : t('companyProfile.footer.saveDraft')}
-          </Button>
-          <Button variant="secondary" size="lg" onClick={goBack} disabled={activeStep === STEPS[0]}>
-            {t('companyProfile.footer.back')}
-          </Button>
-          <Button
-            variant="primary"
-            size="lg"
-            onClick={isLastStep ? submit : goNext}
-            disabled={
-              loading ||
-              submitting ||
-              (isLastStep ? !allRequiredComplete : !stepComplete[activeStep])
-            }
-          >
-            {isLastStep
-              ? submitting
-                ? t('common.loading')
-                : t('companyProfile.footer.submit')
-              : t('companyProfile.footer.next')}
-          </Button>
-        </footer>
+        <CabTourStep steps={tourSteps} stepId="client-profile-footer">
+          <footer className="flex shrink-0 flex-wrap items-center justify-end gap-3 border-t border-[#ececec] bg-white px-6 py-3">
+            <Button variant="tertiary" size="lg" onClick={() => void saveDraft()} disabled={saving || loading}>
+              {saving ? t('common.loading') : t('companyProfile.footer.saveDraft')}
+            </Button>
+            <Button variant="secondary" size="lg" onClick={goBack} disabled={activeStep === STEPS[0]}>
+              {t('companyProfile.footer.back')}
+            </Button>
+            <Button
+              variant="primary"
+              size="lg"
+              onClick={isLastStep ? submit : goNext}
+              disabled={
+                loading ||
+                submitting ||
+                (isLastStep ? !allRequiredComplete : !stepComplete[activeStep])
+              }
+            >
+              {isLastStep
+                ? submitting
+                  ? t('common.loading')
+                  : t('companyProfile.footer.submit')
+                : t('companyProfile.footer.next')}
+            </Button>
+          </footer>
+        </CabTourStep>
       </ProfileFormContext.Provider>
     </CabLayout>
   )

@@ -88,7 +88,7 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
                 type="text"
                 readOnly={identityReadOnly}
                 placeholder={t('companyProfile.basicDataCard.authorizedPersonPlaceholder')}
-                className={identityReadOnly ? 'cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] ps-10 text-neutral-400' : 'ps-10'}
+                className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] ps-10 font-medium text-neutral-800' : 'ps-10'}
                 value={form.authorizedPersonName}
                 onChange={(e) => update('authorizedPersonName', e.target.value)}
               />
@@ -104,11 +104,11 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
                 dir="ltr"
                 readOnly={identityReadOnly}
                 placeholder={t('companyProfile.basicDataCard.emailPlaceholder')}
-                className={identityReadOnly ? 'cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] pl-10 text-neutral-400' : 'pl-10'}
+                className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] ps-10 font-medium text-neutral-800' : 'ps-10'}
                 value={form.email}
                 onChange={(e) => update('email', e.target.value)}
               />
-              <span className="pointer-events-none absolute left-3 text-primary">
+              <span className="pointer-events-none absolute start-3 text-primary">
                 <AppIcon icon={MailIcon} size={18} />
               </span>
             </div>
@@ -125,7 +125,7 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               aria-label={t('companyProfile.basicDataCard.phoneLabel')}
               className={
                 identityReadOnly
-                  ? 'h-12 cursor-not-allowed rounded-[var(--radius-sm)] border border-[#f2f2f2] bg-[#f9fafc] opacity-100'
+                  ? 'h-12 cursor-default rounded-[var(--radius-sm)] border border-[#e2e8f0] bg-[#f8fafc] opacity-100'
                   : 'h-12 rounded-[var(--radius-sm)] border border-neutral-200'
               }
             >
@@ -136,7 +136,7 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
                 placeholder={t('companyProfile.basicDataCard.phonePlaceholder')}
                 className={
                   identityReadOnly
-                    ? 'flex-1 cursor-not-allowed border-[#f2f2f2] bg-[#f9fafc] text-neutral-400'
+                    ? 'flex-1 cursor-default border-[#e2e8f0] bg-[#f8fafc] font-medium text-neutral-800'
                     : 'flex-1'
                 }
                 value={form.phoneNumber}
