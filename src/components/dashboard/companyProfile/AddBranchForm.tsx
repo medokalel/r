@@ -56,7 +56,7 @@ export function AddBranchForm() {
           size="lg"
           className="w-full"
           onClick={onSave}
-          disabled={saving || !isBranchFormComplete(form)}
+          disabled={saving || !isBranchFormComplete(form, countryCode)}
         >
           {saving ? t('common.loading') : t('companyProfile.addBranch.saveButton')}
         </Button>

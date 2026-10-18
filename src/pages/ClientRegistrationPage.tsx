@@ -7,7 +7,8 @@ import { ClientRegistrationForm } from '@/components/dashboard/cab/ClientRegistr
 import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
-import { emptyClientRegistrationForm } from '@/lib/clientRegistrationForm'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
+import { emptyClientRegistrationForm, getClientRegistrationRules } from '@/lib/clientRegistrationForm'
 import {
   cabClientToForm,
   createCabClient,
@@ -66,8 +67,13 @@ export function ClientRegistrationPage() {
 
   const tourSteps = useClientRegistrationTourSteps()
   const patch = (f: Partial<typeof form>) => setForm((prev) => ({ ...prev, ...f }))
+  const { fieldProps, validateAll } = useFieldValidation(form, getClientRegistrationRules(t))
 
   const save = async (options?: { skipEditRedirect?: boolean }) => {
+    if (!validateAll()) {
+      setFeedback({ type: 'error', message: t('validation.fixErrors') })
+      return null
+    }
     setSaving(true)
     setFeedback(null)
     try {
@@ -171,7 +177,7 @@ export function ClientRegistrationPage() {
         ) : (
           <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
             <div className="min-w-0 flex-1 space-y-5">
-              <ClientRegistrationForm form={form} onPatch={patch} />
+              <ClientRegistrationForm form={form} onPatch={patch} fieldProps={fieldProps} />
             </div>
             <DashboardTourStep steps={tourSteps} stepId="workflow-progress" className="w-full shrink-0 lg:w-[340px]">
               <WorkflowProgressCard

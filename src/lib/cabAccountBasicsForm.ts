@@ -1,6 +1,6 @@
 import type { CountryCode } from '@/lib/countries'
 import { isValidRequiredEmail, isValidPassword, passwordsMatch } from '@/lib/authValidation'
-import { isValidPhoneNumber } from '@/lib/validators'
+import { isValidFieldKind, isValidPhoneNumber } from '@/lib/validators'
 
 export interface CabAccountBasicsForm {
   name: string
@@ -27,7 +27,10 @@ export const emptyCabAccountBasicsForm: CabAccountBasicsForm = {
 export function isCabAccountBasicsComplete(form: CabAccountBasicsForm): boolean {
   return Boolean(
     form.name.trim() &&
+      isValidFieldKind(form.name, 'text') &&
       isValidRequiredEmail(form.email) &&
+      form.mobileCountryCode &&
+      form.mobile.trim() &&
       isValidPhoneNumber(form.mobile, form.mobileCountryCode) &&
       form.country &&
       isValidPassword(form.password) &&

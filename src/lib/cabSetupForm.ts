@@ -2,6 +2,7 @@ import type { CountryCode } from '@/lib/countries'
 import { isValidRequiredEmail } from '@/lib/authValidation'
 import { formatPhoneNumber } from '@/lib/api/authApi'
 import { parsePhoneNumberFromString } from 'libphonenumber-js'
+import { isValidFieldKind, isValidWebsite } from '@/lib/validators'
 
 /**
  * State for the 10-screen CAB setup wizard (see the CAB onboarding deck).
@@ -474,7 +475,12 @@ export function getAccreditationRecordMissingFields(
 }
 
 export function isAccreditationRecordComplete(record: CabAccreditationRecord): boolean {
-  return getAccreditationRecordMissingFields(record).length === 0
+  if (getAccreditationRecordMissingFields(record).length > 0) return false
+  return (
+    isValidFieldKind(record.bodyOther, 'text') &&
+    isValidFieldKind(record.number, 'mixed') &&
+    isValidFieldKind(record.applicationReference, 'mixed')
+  )
 }
 
 // ---------------------------------------------------------------------------
@@ -484,7 +490,8 @@ export function isAccreditationRecordComplete(record: CabAccreditationRecord): b
 export function isProfileStepComplete(
   form: CabSetupForm,
   legalEntityName: string,
-  registrationNumber?: string
+  registrationNumber?: string,
+  tradingName?: string
 ): boolean {
   const year = Number(form.yearEstablished)
   const yearValid =
@@ -493,7 +500,15 @@ export function isProfileStepComplete(
       year >= 1800 &&
       year <= new Date().getFullYear())
   const hasRegNumber = registrationNumber !== undefined ? Boolean(registrationNumber.trim()) : true
-  return Boolean(legalEntityName.trim() && hasRegNumber && form.activities.length > 0 && yearValid)
+  return Boolean(
+    legalEntityName.trim() &&
+      isValidFieldKind(legalEntityName, 'text') &&
+      isValidFieldKind(tradingName ?? '', 'text') &&
+      hasRegNumber &&
+      isValidFieldKind(registrationNumber ?? '', 'mixed') &&
+      form.activities.length > 0 &&
+      yearValid
+  )
 }
 
 export function isLocationsStepComplete(
@@ -506,6 +521,7 @@ export function isLocationsStepComplete(
   if (!country || !city.trim() || !address.trim() || !form.timeZone || languages.length === 0) {
     return false
   }
+  if (!isValidFieldKind(address, 'mixed') || !isValidFieldKind(form.timeZone, 'mixed')) return false
 
   if (!form.hasAdditionalLocations) return true
 
@@ -513,6 +529,7 @@ export function isLocationsStepComplete(
   const seen = new Set<string>()
   return form.locations.every((location) => {
     if (!location.name.trim() || !location.address.trim() || !location.type) return false
+    if (!isValidFieldKind(location.name, 'text') || !isValidFieldKind(location.address, 'mixed')) return false
     const key = `${location.name.trim().toLowerCase()}|${location.address.trim().toLowerCase()}`
     if (seen.has(key)) return false
     seen.add(key)
@@ -544,7 +561,14 @@ export function isAccreditationRecordsStepComplete(form: CabSetupForm): boolean 
 export function isSchemesStepComplete(form: CabSetupForm): boolean {
   // At least one scheme/service is required.
   const hasScheme = form.schemes.length > 0 || form.customSchemes.some((scheme) => scheme.name.trim())
-  return hasScheme && form.services.length > 0
+  const customValid = form.customSchemes.every(
+    (scheme) =>
+      isValidFieldKind(scheme.name, 'text') &&
+      isValidFieldKind(scheme.owner, 'text') &&
+      isValidFieldKind(scheme.normativeDocument, 'mixed') &&
+      isValidFieldKind(scheme.version, 'mixed')
+  )
+  return hasScheme && form.services.length > 0 && customValid && isValidFieldKind(form.schemeOwner, 'text')
 }
 
 export function isScopeStepComplete(form: CabSetupForm): boolean {
@@ -556,7 +580,7 @@ export function isMarksStepComplete(form: CabSetupForm): boolean {
   if (form.markValidFrom && form.markValidUntil && form.markValidUntil <= form.markValidFrom) {
     return false
   }
-  return form.allowedDocumentUse.length > 0
+  return form.allowedDocumentUse.length > 0 && isValidFieldKind(form.markReference, 'mixed')
 }
 
 export function isCertificateBasicComplete(record: CabCertificateBasic): boolean {
@@ -572,10 +596,14 @@ export function isCertificateBasicComplete(record: CabCertificateBasic): boolean
   )
 }
 
-/** Certificate setup is optional — never blocks Next during onboarding. */
+/** Certificate setup is optional, but any typed values must be the right type. */
 export function isCertificateStepComplete(form: CabSetupForm): boolean {
-  void form
-  return true
+  return form.certificateBasics.every(
+    (record) =>
+      isValidFieldKind(record.signatoryName, 'text') &&
+      isValidFieldKind(record.signatoryTitle, 'text') &&
+      isValidFieldKind(record.certificateNumberFormat, 'mixed')
+  )
 }
 
 /** Used on the review screen: touched schemes must be fully complete. */
@@ -583,6 +611,208 @@ export function isCertificateConfigurationReady(form: CabSetupForm): boolean {
   const touched = form.certificateBasics.filter(isCertificateBasicStarted)
   if (touched.length === 0) return true
   return touched.every(isCertificateBasicComplete)
+}
+
+export interface CabSetupFieldIssue {
+  fieldId: string
+  kind: 'required' | 'invalid'
+}
+
+export interface CabSetupReviewSectionState {
+  key: 'identity' | 'locations' | 'accreditation' | 'schemes' | 'scope' | 'marks' | 'certificate'
+  step: number
+  issues: CabSetupFieldIssue[]
+  blocking: boolean
+}
+
+export function getCabSetupReviewSections(
+  setup: CabSetupForm,
+  shared: {
+    legalEntityName: string
+    tradingName: string
+    registrationNumber: string
+    website: string
+    country: string
+    city: string
+    address: string
+    languages: string[]
+  },
+): CabSetupReviewSectionState[] {
+  const identity: CabSetupFieldIssue[] = []
+  if (!shared.legalEntityName.trim()) identity.push({ fieldId: 'cab-setup-legal-name', kind: 'required' })
+  else if (!isValidFieldKind(shared.legalEntityName, 'text')) identity.push({ fieldId: 'cab-setup-legal-name', kind: 'invalid' })
+  if (shared.tradingName && !isValidFieldKind(shared.tradingName, 'text')) {
+    identity.push({ fieldId: 'cab-setup-trading-name', kind: 'invalid' })
+  }
+  if (!shared.registrationNumber.trim()) identity.push({ fieldId: 'cab-setup-registration-number', kind: 'required' })
+  else if (!isValidFieldKind(shared.registrationNumber, 'mixed')) {
+    identity.push({ fieldId: 'cab-setup-registration-number', kind: 'invalid' })
+  }
+  if (setup.activities.length === 0) identity.push({ fieldId: 'cab-setup-activities', kind: 'required' })
+  if (shared.website.trim() && !isValidWebsite(shared.website)) {
+    identity.push({ fieldId: 'cab-setup-website', kind: 'invalid' })
+  }
+  if (setup.yearEstablished) {
+    const year = Number(setup.yearEstablished)
+    const yearValid = /^\d{4}$/.test(setup.yearEstablished) && year >= 1800 && year <= new Date().getFullYear()
+    if (!yearValid) identity.push({ fieldId: 'cab-setup-year-established', kind: 'invalid' })
+  }
+
+  const locations: CabSetupFieldIssue[] = []
+  if (!shared.country) locations.push({ fieldId: 'cab-setup-country', kind: 'required' })
+  if (!shared.city.trim()) locations.push({ fieldId: 'cab-setup-city', kind: 'required' })
+  if (!shared.address.trim()) locations.push({ fieldId: 'cab-setup-address', kind: 'required' })
+  else if (!isValidFieldKind(shared.address, 'mixed')) locations.push({ fieldId: 'cab-setup-address', kind: 'invalid' })
+  if (!setup.timeZone.trim()) locations.push({ fieldId: 'cab-setup-timezone', kind: 'required' })
+  else if (!isValidFieldKind(setup.timeZone, 'mixed')) locations.push({ fieldId: 'cab-setup-timezone', kind: 'invalid' })
+  if (shared.languages.length === 0) locations.push({ fieldId: 'cab-setup-languages', kind: 'required' })
+  if (setup.hasAdditionalLocations) {
+    const seen = new Set<string>()
+    for (const location of setup.locations) {
+      if (!location.name.trim() || !isValidFieldKind(location.name, 'text')) {
+        locations.push({
+          fieldId: `cab-setup-location-name-${location.id}`,
+          kind: location.name.trim() ? 'invalid' : 'required',
+        })
+        break
+      }
+      if (!location.address.trim() || !isValidFieldKind(location.address, 'mixed')) {
+        locations.push({
+          fieldId: `cab-setup-location-address-${location.id}`,
+          kind: location.address.trim() ? 'invalid' : 'required',
+        })
+        break
+      }
+      const key = `${location.name.trim().toLowerCase()}|${location.address.trim().toLowerCase()}`
+      if (seen.has(key)) {
+        locations.push({ fieldId: `cab-setup-location-name-${location.id}`, kind: 'invalid' })
+        break
+      }
+      seen.add(key)
+    }
+  }
+
+  const accreditation: CabSetupFieldIssue[] = []
+  if (setup.accreditationStatuses.length === 0) {
+    accreditation.push({ fieldId: 'cab-setup-accreditation-status', kind: 'required' })
+  } else if (requiresAccreditationRecords(setup)) {
+    const expectedCount = Math.max(setup.accreditationRecordCount, 1)
+    if (setup.accreditationRecords.length < expectedCount) {
+      accreditation.push({ fieldId: 'cab-setup-record-count', kind: 'required' })
+    } else {
+      const incomplete = setup.accreditationRecords.slice(0, expectedCount).find((record) => !isAccreditationRecordComplete(record))
+      if (incomplete) {
+        const missing = getAccreditationRecordMissingFields(incomplete)
+        const fieldByMissing: Record<AccreditationRecordMissingField, string> = {
+          body: `cab-setup-acc-body-${incomplete.id}`,
+          bodyOther: `cab-setup-acc-body-other-${incomplete.id}`,
+          standard: `cab-setup-acc-standard-${incomplete.id}`,
+          applicationReference: `cab-setup-acc-application-${incomplete.id}`,
+          number: `cab-setup-acc-number-${incomplete.id}`,
+          issueDate: `cab-setup-acc-issue-${incomplete.id}`,
+          expiryDate: `cab-setup-acc-expiry-${incomplete.id}`,
+          expiryAfterIssue: `cab-setup-acc-expiry-${incomplete.id}`,
+        }
+        const first = missing[0]
+        accreditation.push({
+          fieldId: first ? fieldByMissing[first] : `cab-setup-acc-body-${incomplete.id}`,
+          kind: first === 'expiryAfterIssue' ? 'invalid' : 'required',
+        })
+      }
+    }
+  }
+
+  const schemes: CabSetupFieldIssue[] = []
+  const hasScheme = setup.schemes.length > 0 || setup.customSchemes.some((scheme) => scheme.name.trim())
+  if (!hasScheme) schemes.push({ fieldId: 'cab-setup-schemes', kind: 'required' })
+  if (setup.services.length === 0) schemes.push({ fieldId: 'cab-setup-services', kind: 'required' })
+  const invalidCustom = setup.customSchemes.find(
+    (scheme) =>
+      (scheme.name && !isValidFieldKind(scheme.name, 'text')) ||
+      (scheme.owner && !isValidFieldKind(scheme.owner, 'text')) ||
+      (scheme.normativeDocument && !isValidFieldKind(scheme.normativeDocument, 'mixed')) ||
+      (scheme.version && !isValidFieldKind(scheme.version, 'mixed')),
+  )
+  if (invalidCustom) {
+    const fieldId = !isValidFieldKind(invalidCustom.name, 'text')
+      ? `cab-setup-custom-scheme-name-${invalidCustom.id}`
+      : !isValidFieldKind(invalidCustom.owner, 'text')
+        ? `cab-setup-custom-scheme-owner-${invalidCustom.id}`
+        : `cab-setup-custom-scheme-name-${invalidCustom.id}`
+    schemes.push({ fieldId, kind: 'invalid' })
+  }
+  if (setup.schemeOwner && !isValidFieldKind(setup.schemeOwner, 'text')) {
+    schemes.push({ fieldId: 'cab-setup-scheme-owner', kind: 'invalid' })
+  }
+
+  const scope: CabSetupFieldIssue[] = []
+  if (setup.scopes.length === 0) scope.push({ fieldId: 'cab-setup-scope-file', kind: 'required' })
+  else {
+    const incomplete = setup.scopes.find((item) => !item.scheme || !item.locationId)
+    if (incomplete) {
+      scope.push({
+        fieldId: incomplete.scheme ? `cab-setup-scope-location-${incomplete.id}` : `cab-setup-scope-scheme-${incomplete.id}`,
+        kind: 'required',
+      })
+    }
+  }
+
+  const marks: CabSetupFieldIssue[] = []
+  if (setup.markReference && !isValidFieldKind(setup.markReference, 'mixed')) {
+    marks.push({ fieldId: 'cab-setup-mark-reference', kind: 'invalid' })
+  }
+  if (setup.markValidFrom && setup.markValidUntil && setup.markValidUntil <= setup.markValidFrom) {
+    marks.push({ fieldId: 'cab-setup-mark-valid-until', kind: 'invalid' })
+  }
+  if (setup.allowedDocumentUse.length === 0) marks.push({ fieldId: 'cab-setup-document-use', kind: 'required' })
+
+  const certificate: CabSetupFieldIssue[] = []
+  const invalidCert = setup.certificateBasics.find(
+    (record) =>
+      !isValidFieldKind(record.signatoryName, 'text') ||
+      !isValidFieldKind(record.signatoryTitle, 'text') ||
+      !isValidFieldKind(record.certificateNumberFormat, 'mixed'),
+  )
+  if (invalidCert) {
+    certificate.push({
+      fieldId: !isValidFieldKind(invalidCert.signatoryName, 'text')
+        ? `cab-setup-cert-signatory-name-${invalidCert.schemeId}`
+        : `cab-setup-cert-signatory-title-${invalidCert.schemeId}`,
+      kind: 'invalid',
+    })
+  } else {
+    const started = setup.certificateBasics.find((record) => isCertificateBasicStarted(record) && !isCertificateBasicComplete(record))
+    if (started) {
+      certificate.push({
+        fieldId: started.schemeId
+          ? `cab-setup-cert-signatory-name-${started.schemeId}`
+          : `cab-setup-cert-format-${started.schemeId}`,
+        kind: 'required',
+      })
+    }
+  }
+
+  return [
+    { key: 'identity', step: 2, issues: identity, blocking: identity.length > 0 },
+    { key: 'locations', step: 3, issues: locations, blocking: locations.length > 0 },
+    {
+      key: 'accreditation',
+      step: setup.accreditationStatuses.length === 0 ? 4 : 5,
+      issues: accreditation,
+      blocking: accreditation.length > 0,
+    },
+    { key: 'schemes', step: 6, issues: schemes, blocking: schemes.length > 0 },
+    { key: 'scope', step: 7, issues: scope, blocking: scope.length > 0 },
+    { key: 'marks', step: 8, issues: marks, blocking: marks.length > 0 },
+    { key: 'certificate', step: 9, issues: certificate, blocking: certificate.length > 0 },
+  ]
+}
+
+export function isCabSetupReadyToActivate(
+  setup: CabSetupForm,
+  shared: Parameters<typeof getCabSetupReviewSections>[1],
+): boolean {
+  return getCabSetupReviewSections(setup, shared).every((section) => !section.blocking)
 }
 
 export function isKeyRolesStepComplete(form: CabSetupForm): boolean {

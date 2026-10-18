@@ -8,7 +8,7 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     {
       id: 'sidebar-app-info',
       step: 1,
-      totalSteps: 9,
+      totalSteps: 8,
       title: t('cab.tour.sidebarAppInfo.title', 'Information Required Icon'),
       description: t(
         'cab.tour.sidebarAppInfo.description',
@@ -20,7 +20,7 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     {
       id: 'header',
       step: 2,
-      totalSteps: 9,
+      totalSteps: 8,
       title: t('cab.applications.informationRequired.tour.header.title', 'Header & Control Bar'),
       description: t(
         'cab.applications.informationRequired.tour.header.description',
@@ -32,7 +32,7 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     {
       id: 'page-header',
       step: 3,
-      totalSteps: 9,
+      totalSteps: 8,
       title: t(
         'cab.applications.informationRequired.tour.pageHeader.title',
         'Information Required Title & Actions'
@@ -47,7 +47,7 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     {
       id: 'summary-card',
       step: 4,
-      totalSteps: 9,
+      totalSteps: 8,
       title: t('cab.applications.informationRequired.tour.summaryCard.title', 'Request Summary'),
       description: t(
         'cab.applications.informationRequired.tour.summaryCard.description',
@@ -57,21 +57,9 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
       align: 'start',
     },
     {
-      id: 'tabs',
-      step: 5,
-      totalSteps: 9,
-      title: t('cab.applications.informationRequired.tour.tabs.title', 'Information Sections'),
-      description: t(
-        'cab.applications.informationRequired.tour.tabs.description',
-        'Switch between Requested Information, Documents, Communication Log, and History.'
-      ),
-      side: 'bottom',
-      align: 'start',
-    },
-    {
       id: 'requests-table',
-      step: 6,
-      totalSteps: 9,
+      step: 5,
+      totalSteps: 8,
       title: t('cab.applications.informationRequired.tour.requestsTable.title', 'Requested Items Table'),
       description: t(
         'cab.applications.informationRequired.tour.requestsTable.description',
@@ -82,8 +70,8 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     },
     {
       id: 'client-responses',
-      step: 7,
-      totalSteps: 9,
+      step: 6,
+      totalSteps: 8,
       title: t(
         'cab.applications.informationRequired.tour.clientResponses.title',
         'Client Responses & Attachments'
@@ -97,8 +85,8 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     },
     {
       id: 'internal-comments',
-      step: 8,
-      totalSteps: 9,
+      step: 7,
+      totalSteps: 8,
       title: t(
         'cab.applications.informationRequired.tour.internalComments.title',
         'Internal Team Comments'
@@ -112,8 +100,8 @@ export function useApplicationInformationRequiredTourSteps(): TourStepConfig[] {
     },
     {
       id: 'workflow-progress',
-      step: 9,
-      totalSteps: 9,
+      step: 8,
+      totalSteps: 8,
       title: t('cab.applications.informationRequired.tour.workflowProgress.title', 'Workflow Progress'),
       description: t(
         'cab.applications.informationRequired.tour.workflowProgress.description',

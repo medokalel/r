@@ -40,6 +40,32 @@ function text(value: string): string | undefined {
   return trimmed ? trimmed : undefined
 }
 
+function emailOrUndefined(value: string): string | undefined {
+  const trimmed = text(value)
+  if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) return undefined
+  return trimmed
+}
+
+function httpUrl(value: string): string | undefined {
+  const trimmed = text(value)
+  if (!trimmed) return undefined
+  try {
+    const parsed = new URL(trimmed)
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:' ? trimmed : undefined
+  } catch {
+    return undefined
+  }
+}
+
+function uuidOrUndefined(value?: string): string | undefined {
+  if (!value) return undefined
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(
+    value,
+  )
+    ? value
+    : undefined
+}
+
 function int(value: string): number | undefined {
   const parsed = Number.parseInt(value, 10)
   return Number.isFinite(parsed) ? parsed : undefined
@@ -118,7 +144,7 @@ function branchToApi(branch: BranchFormValues): ApplicationBranch | undefined {
   // the backend requires branchName on every stored branch
   if (!fields) return undefined
   return {
-    sourceBranchId: branch.sourceBranchId,
+    sourceBranchId: uuidOrUndefined(branch.sourceBranchId),
     branchName: fields.branchName ?? '',
     ...fields,
   }
@@ -203,16 +229,16 @@ export function payloadFromForm(
 ): DraftApplicationRequest {
   const legalInfo = compact({
     organizationName: text(form.organizationName),
-    website: text(form.website),
+    website: httpUrl(form.website),
     auditSiteAddress: text(form.auditSiteAddress),
     headOfficeAddress: text(form.headOfficeAddress),
     commercialRegisterNumber: text(form.commercialRegisterNumber),
-    commercialRegisterFile: text(form.commercialRegisterFile),
+    commercialRegisterFile: httpUrl(form.commercialRegisterFile),
     allProductionLinesIncluded: boolFromYesNo(form.allProductionLinesIncluded),
     excludedReason: text(form.excludedReason),
     country: form.country ?? undefined,
     city: text(form.city),
-    email: text(form.email),
+    email: emailOrUndefined(form.email),
     representativeName: text(form.representativeName),
     jobTitle: text(form.jobTitle),
     organizationNature: NATURE_TO_API[form.organizationNature],
@@ -253,7 +279,10 @@ export function payloadFromForm(
         }))
       : undefined,
     designActivity: boolFromYesNo(form.designActivity),
-    designException: text(form.designException) ?? '',
+    designException:
+      form.designActivity === 'yes'
+        ? text(form.designException) ?? 'Design is an organizational activity'
+        : text(form.designException) ?? '',
   })
 
   const declarationInfo = compact({
@@ -343,32 +372,32 @@ export function prefillFromOrganization(
 }
 
 // Maps the shared legal-identity fields into a partial organization-profile
-// update, merged over the current snapshot so untouched fields are preserved.
+// update. Only form-backed fields are sent so leftover profile rows cannot fail validation.
 export function profilePayloadFromForm(
   form: ApplicationFormValues,
-  snapshot: OrganizationProfileData
+  _snapshot: OrganizationProfileData
 ): SaveProfileRequest {
-  const profile = { ...(snapshot.profile ?? {}) }
-  const address = { ...(snapshot.address ?? {}) }
+  const profile = compact({
+    organizationName: text(form.organizationName) ?? null,
+    commercialRegisterNumber: text(form.commercialRegisterNumber) ?? null,
+    email: emailOrUndefined(form.email) ?? null,
+    authorizedPersonName: text(form.representativeName) ?? null,
+    phoneNumber: text(form.mobileNumber) ?? null,
+    phoneCountryCode: text(form.mobileNumber) ? form.mobileCountryCode : undefined,
+    allProductionLinesActive: boolFromYesNo(form.allProductionLinesIncluded),
+    inactiveReason: text(form.excludedReason) ?? null,
+  })
 
-  profile.organizationName = text(form.organizationName) ?? profile.organizationName ?? null
-  profile.commercialRegisterNumber =
-    text(form.commercialRegisterNumber) ?? profile.commercialRegisterNumber ?? null
-  profile.email = text(form.email) ?? profile.email ?? null
-  profile.authorizedPersonName =
-    text(form.representativeName) ?? profile.authorizedPersonName ?? null
-  if (text(form.mobileNumber)) {
-    profile.phoneNumber = form.mobileNumber.trim()
-    profile.phoneCountryCode = form.mobileCountryCode
+  const address = compact({
+    country: form.country ?? undefined,
+    city: text(form.city),
+    street: text(form.headOfficeAddress),
+  })
+
+  return {
+    ...(profile ? { profile } : {}),
+    ...(address ? { address } : {}),
   }
-  const productionLines = boolFromYesNo(form.allProductionLinesIncluded)
-  if (productionLines !== undefined) profile.allProductionLinesActive = productionLines
-  profile.inactiveReason = text(form.excludedReason) ?? profile.inactiveReason ?? null
-
-  if (form.country) address.country = form.country
-  if (text(form.headOfficeAddress)) address.street = form.headOfficeAddress.trim()
-
-  return { profile, address }
 }
 
 function dateFromApi(value?: string | null): Date | undefined {

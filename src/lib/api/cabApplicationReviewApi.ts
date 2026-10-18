@@ -1,279 +1,283 @@
-export type WorkflowStepStatus = 'completed' | 'inProgress' | 'pending'
-export type ChecklistStatus = 'complete' | 'partiallyComplete' | 'incomplete' | 'notApplicable'
-export type DocumentStatus = 'valid' | 'expired' | 'pending'
-export type CommentTag = 'minor' | 'note' | 'major'
+import { authorizedRequest } from '@/lib/api/authorizedClient'
+import { resolveCabCertificationApplication } from '@/lib/api/cabCertificationApplicationApi'
+import { ApiError } from '@/lib/api/client'
+import type { ApplicationResponse, ApplicationStatus } from '@/lib/api/certificationApplicationApi'
 
-export interface CabApplicationReview {
-  applicationId: string
-  status: 'inProgress'
-  client: string
-  applicationType: string
-  certificationBody: string
-  primaryStandard: string
-  receivedOnDate: string
-  receivedOnTime: string
-  assignedReviewer: { name: string; initials: string; role: string }
-  checklist: Array<{
-    id: number
-    area: string
-    description: string
-    status: ChecklistStatus
-    comment: string
-  }>
-  overallReviewPercent: number
-  overallReviewSummary: string
-  reviewDecision: string
-  reviewDecisionOptions: string[]
-  reviewerCommentsWarning: string[]
-  reviewComments: Array<{
-    author: string
-    role: string
-    date: string
-    time: string
-    tag?: CommentTag
-    text: string
-  }>
-  internalComments: Array<{ author: string; role: string; date: string; time: string; text: string }>
-  documents: Array<{ name: string; fileName: string; size: string; status: DocumentStatus }>
-  history: Array<{ date: string; time: string; by: string; action: string; details: string }>
-  applicationDetails: {
-    applicationType: string
-    applicationDate: string
-    primaryStandard: string
-    requestedCertificationDate: string
-    additionalStandards: string[]
-    numberOfSites: number
-    applicableScheme: string
-    auditLanguage: string
-    certificationBody: string
-    referenceNo: string
-  }
-  scopeSummary: string
-  nextSteps: Array<{ key: string; status: WorkflowStepStatus }>
-  workflowSteps: Array<{ key: string; status: WorkflowStepStatus }>
-  notes: string
+export const REVIEW_SECTIONS = [
+  'legalInfo',
+  'operationalInfo',
+  'consultantInfo',
+  'declarationInfo',
+  'branches',
+  'certificates',
+  'documents',
+] as const
+export type ReviewSectionKey = (typeof REVIEW_SECTIONS)[number]
+
+export const SECTION_STATUSES = ['complete', 'partiallyComplete', 'incomplete', 'notApplicable'] as const
+export type SectionStatus = (typeof SECTION_STATUSES)[number]
+
+export type ApiSectionReviewStatus =
+  | 'UNDER_REVIEW'
+  | 'COMPLETED'
+  | 'PARTIALLY_COMPLETED'
+  | 'NOT_APPLICABLE'
+
+export interface ApplicationComment {
+  id: string
+  sectionKey: ReviewSectionKey | null
+  content: string
+  isInternal: boolean
+  createdBy: { id: string; fullName: string }
+  createdAt: string
+  updatedAt: string
 }
 
-const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms))
-
-const MOCK_REVIEW: CabApplicationReview = {
-  applicationId: 'APP-2025-0086',
-  status: 'inProgress',
-  client: 'GreenLeaf Pvt. Ltd.',
-  applicationType: 'Initial Certification',
-  certificationBody: 'CASCO',
-  primaryStandard: 'ISO 9001:2015',
-  receivedOnDate: 'May 18, 2025',
-  receivedOnTime: '11:42 AM (IST)',
-  assignedReviewer: { name: 'Neha Sharma', initials: 'NP', role: 'Lead Auditor' },
-  checklist: [
-    {
-      id: 1,
-      area: 'Completeness',
-      description: 'All required information and documents are provided.',
-      status: 'complete',
-      comment: 'All mandatory fields and documents are complete.',
-    },
-    {
-      id: 2,
-      area: 'Eligibility',
-      description: 'Client meets eligibility criteria for the requested certification.',
-      status: 'complete',
-      comment: 'Client is eligible for certification.',
-    },
-    {
-      id: 3,
-      area: 'Scope & Applicability',
-      description: 'Scope is clear and applicable to the standard.',
-      status: 'complete',
-      comment: 'Scope is clear and meets standard requirements.',
-    },
-    {
-      id: 4,
-      area: 'Management System Info',
-      description: 'Information about management system and processes.',
-      status: 'partiallyComplete',
-      comment: 'Some processes description is brief. Please confirm.',
-    },
-    {
-      id: 5,
-      area: 'Legal & Regulatory',
-      description: 'Compliance with applicable legal and regulatory requirements.',
-      status: 'complete',
-      comment: 'Legal compliance information is adequate.',
-    },
-    {
-      id: 6,
-      area: 'Required Documents',
-      description: 'All required documents are uploaded and valid.',
-      status: 'partiallyComplete',
-      comment: '2 documents are pending / expired. Refer details.',
-    },
-    {
-      id: 7,
-      area: 'Fees & Payment Terms',
-      description: 'Fee structure and payment terms accepted.',
-      status: 'notApplicable',
-      comment: 'To be reviewed during quotation phase.',
-    },
-  ],
-  overallReviewPercent: 80,
-  overallReviewSummary:
-    'Application is substantially complete. Some items require additional information before proceeding to technical feasibility.',
-  reviewDecision: 'Proceed to Technical Feasibility',
-  reviewDecisionOptions: [
-    'Proceed to Technical Feasibility',
-    'Hold for More Information',
-    'Reject Application',
-  ],
-  reviewerCommentsWarning: [
-    'Please provide detail of internal audit process.',
-    'Risk assessment method not clearly described.',
-    '2 documents are expired. Please upload latest versions.',
-  ],
-  reviewComments: [
-    {
-      author: 'Neha Sharma',
-      role: 'Lead Auditor',
-      date: 'May 19, 2025',
-      time: '10:15 AM',
-      tag: 'minor',
-      text: '- Provide more detail for internal audit process.\n- Risk assessment method not clearly described.\n- Please confirm validity of calibration certificates.',
-    },
-    {
-      author: 'Rakesh Kumar',
-      role: 'Technical Reviewer',
-      date: 'May 19, 2025',
-      time: '01:40 PM',
-      tag: 'note',
-      text: 'The management system processes look adequate. Some documents are pending or expired.',
-    },
-    {
-      author: 'Neha Sharma',
-      role: 'Lead Auditor',
-      date: 'May 19, 2025',
-      time: '02:05 PM',
-      tag: 'note',
-      text: 'Initial review completed. Awaiting information from client.',
-    },
-  ],
-  internalComments: [
-    {
-      author: 'Neha Sharma',
-      role: 'Lead Auditor',
-      date: 'May 19, 2025',
-      time: '02:30 PM',
-      text: 'Wait for updated documents from client. After that, proceed to technical feasibility.',
-    },
-    {
-      author: 'Neha Sharma',
-      role: 'Lead Auditor',
-      date: 'May 19, 2025',
-      time: '02:31 PM',
-      text: 'Possible areas of concern:\n- Document control process\n- Corrective action effectiveness',
-    },
-  ],
-  documents: [
-    { name: 'Completed Application Form', fileName: 'Completed_Application_Form.pdf', size: '245 KB', status: 'valid' },
-    { name: 'Legal Entity Certificate', fileName: 'Legal_Entity_Certificate.pdf', size: '512 KB', status: 'valid' },
-    { name: 'Quality Manual V2.1', fileName: 'Quality_Manual_V2.1.pdf', size: '1.2 MB', status: 'valid' },
-    { name: 'Organization Chart', fileName: 'Organization_Chart.pdf', size: '310 KB', status: 'valid' },
-    { name: 'Scope Statement', fileName: 'Scope_Statement.pdf', size: '198 KB', status: 'valid' },
-    { name: 'Supporting Documents (Licenses, etc.)', fileName: 'Supporting_Documents.zip', size: '2.4 MB', status: 'expired' },
-    { name: 'Other Relevant Information', fileName: 'Other_Information.pdf', size: '156 KB', status: 'valid' },
-  ],
-  history: [
-    { date: 'May 18, 2025', time: '11:42 AM', by: 'System', action: 'Application Received', details: 'Application submitted by client.' },
-    { date: 'May 18, 2025', time: '11:45 AM', by: 'System', action: 'Application Logged', details: 'Application number APP-2025-0086 generated.' },
-    { date: 'May 19, 2025', time: '10:10 AM', by: 'Neha Sharma', action: 'Reviewer Assigned', details: 'Assigned to Lead Auditor.' },
-    { date: 'May 19, 2025', time: '10:12 AM', by: 'Neha Sharma', action: 'Review Started', details: 'Application review started.' },
-  ],
-  applicationDetails: {
-    applicationType: 'Initial Certification',
-    applicationDate: 'May 18, 2025',
-    primaryStandard: 'ISO 9001:2015',
-    requestedCertificationDate: 'Aug 18, 2025',
-    additionalStandards: ['ISO 14001:2015', 'ISO 45001:2018'],
-    numberOfSites: 2,
-    applicableScheme: 'N/A',
-    auditLanguage: 'English',
-    certificationBody: 'CASCO',
-    referenceNo: 'RCPT/2025/05/000326',
-  },
-  scopeSummary:
-    'Design, development, manufacturing and supply of industrial valves and flow control solutions for oil & gas, petrochemical and power generation industries.',
-  nextSteps: [
-    { key: 'technicalFeasibility', status: 'inProgress' },
-    { key: 'informationRequired', status: 'pending' },
-    { key: 'quotation', status: 'pending' },
-    { key: 'managementReview', status: 'pending' },
-  ],
-  workflowSteps: [
-    { key: 'application', status: 'completed' },
-    { key: 'applicationReview', status: 'inProgress' },
-    { key: 'quotation', status: 'pending' },
-    { key: 'payment', status: 'pending' },
-    { key: 'invoicing', status: 'pending' },
-    { key: 'contracting', status: 'pending' },
-    { key: 'auditPlanning', status: 'pending' },
-    { key: 'auditExecution', status: 'pending' },
-    { key: 'reporting', status: 'pending' },
-    { key: 'surveillance', status: 'pending' },
-  ],
-  notes: 'Once technical feasibility is approved, the application will move to quotation phase.',
+export interface StartReviewResult {
+  id: string
+  orderNumber?: string | null
+  status: ApplicationStatus
 }
 
-export async function getCabApplicationReview(
-  applicationId?: string,
-  clientId?: string,
-): Promise<CabApplicationReview> {
-  const { loadCabApplicationOverlay } = await import(
-    '@/lib/api/cabCertificationApplicationApi'
-  )
-  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
-  if (!overlay) {
-    await delay()
-    return MOCK_REVIEW
-  }
+export interface SectionReview {
+  id?: string
+  applicationId?: string
+  sectionKey: ReviewSectionKey
+  status: ApiSectionReviewStatus | string
+  reviewStatus?: ApiSectionReviewStatus | string
+  reviewedBy?: string | null
+  reviewedAt?: string | null
+}
 
-  const { application, standards, submittedDate, clientName, clientId: resolvedClientId } = overlay
-  const documents = (application.documents ?? []).map((document) => ({
-    name: document.documentType ?? 'Document',
-    fileName: document.originalName || document.fileName || 'document',
-    size: document.fileSize ? `${Math.max(1, Math.round(document.fileSize / 1024))} KB` : '—',
-    status: 'valid' as const,
-  }))
+export interface ApplicationReviewMetadata {
+  applicationId?: string
+  status?: ApplicationStatus
+  sectionReviewsByKey?: Partial<Record<ReviewSectionKey, SectionReview | null>>
+  commentsBySection?: Partial<Record<ReviewSectionKey | 'general', unknown[]>>
+  comments?: unknown[]
+}
 
+const STATUS_PREFIX = /^\[status:(\w+)\]\s*/
+
+const TO_API: Record<SectionStatus, ApiSectionReviewStatus> = {
+  complete: 'COMPLETED',
+  partiallyComplete: 'PARTIALLY_COMPLETED',
+  incomplete: 'UNDER_REVIEW',
+  notApplicable: 'NOT_APPLICABLE',
+}
+
+const FROM_API: Record<string, SectionStatus> = {
+  COMPLETED: 'complete',
+  PARTIALLY_COMPLETED: 'partiallyComplete',
+  UNDER_REVIEW: 'incomplete',
+  NOT_APPLICABLE: 'notApplicable',
+  complete: 'complete',
+  partiallyComplete: 'partiallyComplete',
+  incomplete: 'incomplete',
+  notApplicable: 'notApplicable',
+}
+
+export function toApiSectionStatus(status: SectionStatus): ApiSectionReviewStatus {
+  return TO_API[status]
+}
+
+export function fromApiSectionStatus(status: string | null | undefined): SectionStatus | null {
+  if (!status) return null
+  return FROM_API[status] ?? FROM_API[status.toUpperCase()] ?? null
+}
+
+export function decodeSectionComment(content: string): { status: SectionStatus | null; text: string } {
+  const match = STATUS_PREFIX.exec(content)
+  const status = match?.[1] as SectionStatus | undefined
+  if (!match || !status || !SECTION_STATUSES.includes(status)) return { status: null, text: content }
+  return { status, text: content.slice(match[0].length) }
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+}
+
+function normalizeComment(raw: unknown): ApplicationComment | null {
+  if (!isRecord(raw) || typeof raw.id !== 'string') return null
+  const createdByRaw = raw.createdBy
+  const createdBy =
+    typeof createdByRaw === 'string'
+      ? { id: createdByRaw, fullName: createdByRaw }
+      : isRecord(createdByRaw)
+        ? {
+            id: String(createdByRaw.id ?? ''),
+            fullName: String(createdByRaw.fullName ?? createdByRaw.id ?? ''),
+          }
+        : { id: '', fullName: '' }
+  const sectionKey = raw.sectionKey
   return {
-    ...MOCK_REVIEW,
-    applicationId: application.orderNumber || application.id,
-    client: clientName || MOCK_REVIEW.client,
-    primaryStandard: standards[0] || MOCK_REVIEW.primaryStandard,
-    receivedOnDate: submittedDate.toLocaleDateString(),
-    receivedOnTime: submittedDate.toLocaleTimeString(),
-    documents: documents.length > 0 ? documents : MOCK_REVIEW.documents,
-    applicationDetails: {
-      ...MOCK_REVIEW.applicationDetails,
-      applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
-      applicationDate: submittedDate.toLocaleDateString(),
-      primaryStandard: standards[0] || MOCK_REVIEW.applicationDetails.primaryStandard,
-      additionalStandards: standards.slice(1),
-      numberOfSites: Math.max(1, application.branches?.length ?? 1),
-      auditLanguage: application.consultantInfo?.systemLanguage === 'AR' ? 'Arabic' : 'English',
-      referenceNo: application.orderNumber || application.id,
-    },
-    scopeSummary:
-      application.declarationInfo?.certificateScopeEn ||
-      application.legalInfo?.mainActivity ||
-      MOCK_REVIEW.scopeSummary,
-    history: [
-      {
-        date: submittedDate.toLocaleDateString(),
-        time: submittedDate.toLocaleTimeString(),
-        by: 'CAB Admin',
-        action: application.status,
-        details: `Application ${application.status.toLowerCase()} for ${resolvedClientId || 'client'}.`,
-      },
-    ],
+    id: raw.id,
+    sectionKey:
+      typeof sectionKey === 'string' && REVIEW_SECTIONS.includes(sectionKey as ReviewSectionKey)
+        ? (sectionKey as ReviewSectionKey)
+        : null,
+    content: String(raw.content ?? ''),
+    isInternal: Boolean(raw.isInternal),
+    createdBy,
+    createdAt: String(raw.createdAt ?? ''),
+    updatedAt: String(raw.updatedAt ?? raw.createdAt ?? ''),
   }
+}
+
+function commentsFromUnknown(data: unknown): ApplicationComment[] {
+  if (Array.isArray(data)) {
+    return data.map(normalizeComment).filter((item): item is ApplicationComment => Boolean(item))
+  }
+  if (!isRecord(data)) return []
+  if (Array.isArray(data.comments)) return commentsFromUnknown(data.comments)
+  if (isRecord(data.commentsBySection)) {
+    return Object.values(data.commentsBySection).flatMap((group) => commentsFromUnknown(group))
+  }
+  return []
+}
+
+export function statusesFromReview(review: ApplicationReviewMetadata): Partial<Record<ReviewSectionKey, SectionStatus>> {
+  const map: Partial<Record<ReviewSectionKey, SectionStatus>> = {}
+  for (const key of REVIEW_SECTIONS) {
+    const entry = review.sectionReviewsByKey?.[key]
+    const status = fromApiSectionStatus(entry?.status ?? entry?.reviewStatus)
+    if (status) map[key] = status
+  }
+  return map
+}
+
+export async function getCabApplication(id: string): Promise<ApplicationResponse> {
+  const application = await resolveCabCertificationApplication(id)
+  if (!application) throw new ApiError('Application not found.', 404)
+  return application
+}
+
+export function startCabApplicationReview(id: string): Promise<StartReviewResult> {
+  return authorizedRequest(`/cab/certification-applications/${encodeURIComponent(id)}/start-review`, {
+    method: 'POST',
+  })
+}
+
+export function updateCabApplicationStatus(
+  id: string,
+  status: Extract<ApplicationStatus, 'APPROVED' | 'REJECTED' | 'UNDER_REVIEW'>,
+  note?: string,
+): Promise<StartReviewResult> {
+  return authorizedRequest(`/cab/certification-applications/${encodeURIComponent(id)}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify(note ? { status, note } : { status }),
+  })
+}
+
+export async function applyAllSectionReviews(
+  id: string,
+  status: SectionStatus,
+  comment: string,
+): Promise<void> {
+  for (const sectionKey of REVIEW_SECTIONS) {
+    await persistSectionReviewStatus(id, sectionKey, status)
+    await createSectionComment(id, sectionKey, comment)
+  }
+}
+
+export function getCabApplicationReview(id: string): Promise<ApplicationReviewMetadata> {
+  return authorizedRequest(`/cab/certification-applications/${encodeURIComponent(id)}/review`)
+}
+
+export function updateSectionReviewStatus(
+  id: string,
+  sectionKey: ReviewSectionKey,
+  status: SectionStatus,
+): Promise<SectionReview> {
+  return authorizedRequest(
+    `/certification-applications/${encodeURIComponent(id)}/sections/${encodeURIComponent(sectionKey)}/review-status`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ reviewStatus: toApiSectionStatus(status) }),
+    },
+  )
+}
+
+export function persistSectionReviewStatus(
+  id: string,
+  sectionKey: ReviewSectionKey,
+  status: SectionStatus,
+): Promise<SectionReview> {
+  return updateSectionReviewStatus(id, sectionKey, status)
+}
+
+export function createSectionComment(
+  id: string,
+  sectionKey: ReviewSectionKey,
+  text: string,
+): Promise<ApplicationComment> {
+  return authorizedRequest(`/certification-applications/${encodeURIComponent(id)}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({
+      sectionKey,
+      content: text.trim(),
+      isInternal: true,
+    }),
+  }).then((data) => normalizeComment(data) ?? (data as ApplicationComment))
+}
+
+export function createInternalComment(id: string, text: string): Promise<ApplicationComment> {
+  return authorizedRequest(`/certification-applications/${encodeURIComponent(id)}/comments`, {
+    method: 'POST',
+    body: JSON.stringify({
+      sectionKey: null,
+      content: text.trim(),
+      isInternal: true,
+    }),
+  }).then((data) => normalizeComment(data) ?? (data as ApplicationComment))
+}
+
+export async function listApplicationComments(id: string): Promise<ApplicationComment[]> {
+  const data = await authorizedRequest<unknown>(`/certification-applications/${encodeURIComponent(id)}/comments`)
+  return commentsFromUnknown(data)
+}
+
+export async function listSectionReviews(
+  id: string,
+): Promise<Partial<Record<ReviewSectionKey, SectionStatus>>> {
+  const review = await getCabApplicationReview(id)
+  const fromKeys = statusesFromReview(review)
+  if (Object.keys(fromKeys).length > 0) return fromKeys
+  const comments = commentsFromUnknown(review)
+  const fromComments: Partial<Record<ReviewSectionKey, SectionStatus>> = {}
+  comments.forEach((comment) => {
+    if (!comment.sectionKey) return
+    const status = decodeSectionComment(comment.content).status
+    if (status) fromComments[comment.sectionKey] = status
+  })
+  return fromComments
+}
+
+export interface PartialReviewRequest {
+  id: string
+  sectionKey: ReviewSectionKey
+  informationItem: string
+  referenceClause: string
+  requestedBy: { id: string; fullName: string } | null
+  requestedOn: string
+}
+
+export function partialRequestsFromReview(review: ApplicationReviewMetadata): PartialReviewRequest[] {
+  const comments = commentsFromUnknown(review)
+  const statuses = statusesFromReview(review)
+  return REVIEW_SECTIONS.flatMap((sectionKey) => {
+    if (statuses[sectionKey] !== 'partiallyComplete') return []
+    const latest = [...comments].reverse().find((comment) => comment.sectionKey === sectionKey)
+    const text = latest ? decodeSectionComment(latest.content).text.trim() : ''
+    return [
+      {
+        id: `review-${sectionKey}`,
+        sectionKey,
+        informationItem: text || `${sectionKey} is partially complete`,
+        referenceClause: sectionKey,
+        requestedBy: latest?.createdBy ?? null,
+        requestedOn: latest?.createdAt || latest?.updatedAt || new Date().toISOString(),
+      },
+    ]
+  })
 }

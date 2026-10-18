@@ -85,35 +85,33 @@ export function AccreditationHeader({
   const dateLabel = `${day} ${month} ${year}`
 
   return (
-    <header className="flex min-w-0 shrink-0 flex-wrap items-center justify-between gap-x-4 gap-y-3 border-b-2 border-[#ececec] bg-white px-3 py-3 sm:gap-x-6 sm:gap-y-4 sm:px-5 sm:py-4">
-      <div className="flex min-w-0 flex-wrap items-center gap-x-4 gap-y-3 sm:gap-x-6 sm:gap-y-4">
+    <header className="grid w-full shrink-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-4 border-b-2 border-[#ececec] bg-white px-3 py-3 sm:px-5 sm:py-4">
+      <div className="flex items-center gap-x-4 sm:gap-x-5">
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
           className="h-14 w-auto sm:h-20 md:hidden"
         />
-        <h1 className="hidden min-w-0 truncate text-h3-semi text-primary md:block">
+        <h1 className="hidden text-h3-semi text-primary whitespace-nowrap md:block">
           {t(titleKey)}
         </h1>
 
-        {orderNumber && <HeaderDivider className="hidden lg:block" />}
+        {orderNumber && <HeaderDivider className="hidden md:block" />}
         {orderNumber && (
-          <div className="hidden min-w-0 flex-col items-start gap-1 lg:flex">
+          <div className="hidden flex-col items-start gap-1 md:flex">
             <span className="w-fit rounded-[6px] bg-[#e8edfc] px-3 py-1 text-[13px] font-medium leading-[1.6] text-[#1236a3]">
               {t('accreditation.orderNumber')}
             </span>
-            <Tooltip label={orderNumber} side="bottom" align="start">
-              <p className="max-w-[220px] truncate text-h3-semi text-neutral-900" dir="ltr">
-                {orderNumber}
-              </p>
-            </Tooltip>
+            <p className="text-h3-semi text-neutral-900 whitespace-nowrap" dir="ltr">
+              {orderNumber}
+            </p>
           </div>
         )}
 
-        {orderNumber && officerName && <HeaderDivider className="hidden lg:block" />}
+        {orderNumber && officerName && <HeaderDivider className="hidden xl:block" />}
 
         {officerName && (
-          <div className="hidden flex-col items-start lg:flex">
+          <div className="hidden flex-col items-start xl:flex">
             <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
               {t('accreditation.assignedOfficer')}
             </span>
@@ -128,15 +126,13 @@ export function AccreditationHeader({
         )}
       </div>
 
-      <div className="flex flex-wrap items-center gap-4">
+      <div aria-hidden />
 
-        {/* Time and date container */}
-        <div className="hidden lg:flex flex-col items-start gap-1">
-          {/* badge */}
+      <div className="flex items-center gap-3 sm:gap-4">
+        <div className="hidden flex-col items-start gap-1 lg:flex">
           <span className="w-fit rounded-[6px] bg-[#e8edfc] px-2 py-0.5 text-[12px] font-medium leading-[1.6] text-[#1236a3]">
             {t('accreditation.timeAndDate')}
           </span>
-          {/* time and date */}
           <p className="text-body-2-medium text-neutral-600 whitespace-nowrap">
             {timeLabel} {periodLabel} <span className="text-neutral-100">|</span> {dateLabel}
           </p>
@@ -183,9 +179,9 @@ export function AccreditationHeader({
         <div className="flex items-center gap-6">
           {/* Name + email — desktop only */}
           <div className="hidden text-end lg:block">
-            <p className="text-body-3-medium text-neutral-900">{displayName}</p>
+            <p className="text-body-3-medium text-neutral-900 whitespace-nowrap">{displayName}</p>
             {secondaryLine && (
-              <p className="text-body-3 text-neutral-600" dir="ltr">{secondaryLine}</p>
+              <p className="text-body-3 text-neutral-600 whitespace-nowrap" dir="ltr">{secondaryLine}</p>
             )}
           </div>
 

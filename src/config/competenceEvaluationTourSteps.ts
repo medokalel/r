@@ -8,7 +8,7 @@ export function useCompetenceEvaluationTourSteps(): TourStepConfig[] {
     {
       id: 'eval-header',
       step: 1,
-      totalSteps: 6,
+      totalSteps: 5,
       title: t('cab.competence.evalTour.header.title', 'Evaluation Overview'),
       description: t(
         'cab.competence.evalTour.header.description',
@@ -20,7 +20,7 @@ export function useCompetenceEvaluationTourSteps(): TourStepConfig[] {
     {
       id: 'eval-actions',
       step: 2,
-      totalSteps: 6,
+      totalSteps: 5,
       title: t('cab.competence.evalTour.actions.title', 'Save & Submit Actions'),
       description: t(
         'cab.competence.evalTour.actions.description',
@@ -32,7 +32,7 @@ export function useCompetenceEvaluationTourSteps(): TourStepConfig[] {
     {
       id: 'eval-profile',
       step: 3,
-      totalSteps: 6,
+      totalSteps: 5,
       title: t('cab.competence.evalTour.profile.title', 'Personnel Profile Snapshot'),
       description: t(
         'cab.competence.evalTour.profile.description',
@@ -42,37 +42,25 @@ export function useCompetenceEvaluationTourSteps(): TourStepConfig[] {
       align: 'start',
     },
     {
-      id: 'eval-tabs',
+      id: 'eval-criteria-form',
       step: 4,
-      totalSteps: 6,
-      title: t('cab.competence.evalTour.tabs.title', 'Assessment Sections & Records'),
+      totalSteps: 5,
+      title: t('cab.competence.evalTour.criteria.title', 'Competence Criteria & Experience'),
       description: t(
-        'cab.competence.evalTour.tabs.description',
-        'Navigate between evaluation details, training courses, audit experience logs, witnessing reports, evidence files, and renewals.'
-      ),
-      side: 'bottom',
-      align: 'start',
-    },
-    {
-      id: 'eval-general-form',
-      step: 5,
-      totalSteps: 6,
-      title: t('cab.competence.evalTour.form.title', 'Competence Criteria & Details'),
-      description: t(
-        'cab.competence.evalTour.form.description',
-        'Record evaluation schemes, sectors, evaluator feedback, highest qualifications, and years of experience.'
+        'cab.competence.evalTour.criteria.description',
+        'Assess scheme standards, proposed sectors, evaluation dates, evaluator decisions, highest qualification, and field of study.'
       ),
       side: 'top',
       align: 'start',
     },
     {
-      id: 'eval-quick-records',
-      step: 6,
-      totalSteps: 6,
-      title: t('cab.competence.evalTour.records.title', 'Integrated Audit & Training Logs'),
+      id: 'eval-documents-section',
+      step: 5,
+      totalSteps: 5,
+      title: t('cab.competence.evalTour.documents.title', 'Qualification Documents & Evidence'),
       description: t(
-        'cab.competence.evalTour.records.description',
-        'Quickly add or review training completions, witnessed audits, and past client audit histories.'
+        'cab.competence.evalTour.documents.description',
+        'Upload official certificates, diplomas, CVs, and evidence files directly to the employee record.'
       ),
       side: 'top',
       align: 'start',

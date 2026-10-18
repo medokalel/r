@@ -198,7 +198,7 @@ export function CabCertificateRegisterPage() {
               <Button
                 variant="primary"
                 icon={<AppIcon icon={AddCircleIcon} size={20} />}
-                onClick={() => navigate(ROUTES.cabCertificates)}
+                onClick={() => navigate(cabPrepareCertificatePath(certificates.find((c) => c.status === 'DRAFT')?.id ?? certificates[0]?.id ?? '24'))}
                 className="w-full sm:w-auto whitespace-nowrap"
               >
                 {t('cab.certificateRegister.prepareCertificate')}

@@ -10,6 +10,39 @@ import {
   type StandardKey,
 } from '@/components/dashboard/entityData/fieldTypes'
 
+const SAMPLE_SPEC_TEXT: Record<string, string> = {
+  'iso9001.productsServicesScope': 'Packaged food products, processing, and distribution',
+  'iso9001.outsourcedProcessesList': 'Laboratory testing and waste collection',
+  'iso9001.notApplicableDetails': 'Clause 8.3 Design and development is excluded; products are manufactured to customer specifications',
+  'iso9001.certifyingBody': 'CASCO Certification Body',
+  'iso50001.energyConsumers': 'Boilers, refrigeration, and compressed air systems',
+  'iso50001.enpi': 'kWh per ton of finished product',
+  'iso50001.monitoringTools': 'Utility meters and monthly energy dashboard',
+  'iso45001.criticalRisks': 'Working at height, forklift traffic, and chemical handling',
+  'iso45001.complianceLaws': 'Occupational Health and Safety Law and factory regulations',
+  'iso45001.certifyingBody': 'CASCO Certification Body',
+  'iso22000.foodCategoriesScope': 'Ready-to-eat packaged foods and dry mixes',
+  'iso22000.allergensList': 'Gluten, milk, and soy',
+  'iso22000.productionSeasonality': 'Year-round production',
+  'iso22301.mtpd': '24 hours',
+  'iso13485.deviceClasses': 'Class I and Class IIa devices',
+  'iso13485.regulatoryMarkets': 'Saudi Arabia, UAE, and Egypt',
+}
+
+export function sampleAnswerForQuestion(questionKey: string, questionType: string): string {
+  if (questionType === 'BOOLEAN') return 'yes'
+  if (questionType === 'DATE') return '2024-01-15'
+  if (questionType === 'NUMBER') return '2'
+  return SAMPLE_SPEC_TEXT[questionKey] ?? 'Documented and available for review'
+}
+
+export function displaySpecAnswer(questionKey: string | undefined, answer: unknown): unknown {
+  if (typeof answer !== 'string') return answer
+  const trimmed = answer.trim()
+  if (trimmed.toLowerCase() !== 'sample response') return answer
+  return questionKey ? SAMPLE_SPEC_TEXT[questionKey] ?? 'Documented and available for review' : 'Documented and available for review'
+}
+
 function fillBranch(branch: BranchFormValues, index: number): BranchFormValues {
   return {
     ...branch,
@@ -54,11 +87,9 @@ export function fillApplicationForm(form: ApplicationFormValues): ApplicationFor
   const selectedCodesUpper = new Set(selectedStandards.map((standard) => standard.toUpperCase()))
   for (const question of SPEC_QUESTIONS) {
     if (!selectedCodesUpper.has(question.certificateCode)) continue
-    if (specAnswers[question.questionKey]) continue
-    if (question.questionType === 'BOOLEAN') specAnswers[question.questionKey] = 'yes'
-    else if (question.questionType === 'DATE') specAnswers[question.questionKey] = '2024-01-15'
-    else if (question.questionType === 'NUMBER') specAnswers[question.questionKey] = '2'
-    else specAnswers[question.questionKey] = 'Sample response'
+    const current = specAnswers[question.questionKey]
+    if (current && current.trim().toLowerCase() !== 'sample response') continue
+    specAnswers[question.questionKey] = sampleAnswerForQuestion(question.questionKey, question.questionType)
   }
 
   const sourceBranches = form.branches.length > 0 ? form.branches : [createEmptyBranch(1)]

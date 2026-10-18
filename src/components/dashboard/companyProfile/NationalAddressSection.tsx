@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { Button } from '@/components/ui/Button'
 import { FormField, TextField } from '@/components/ui'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
 import {
   AppIcon,
   DocumentFileIcon,
@@ -19,6 +20,7 @@ import { useDocumentActions } from './OfficialDocsCard'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
 import type { NationalAddressFormValues } from './types'
+import { nationalAddressRules } from './validation'
 
 export function NationalAddressToggleCard({
   value,
@@ -198,6 +200,12 @@ export function NationalAddressFormCard() {
   const { t, i18n } = useTranslation()
   const { form, update } = useProfileForm()
   const countryName = form.country ? countryDisplayName(form.country, i18n.language) : ''
+  const rules = nationalAddressRules(t, form.nationalAddress.hasNationalAddress)
+  const { fieldProps } = useFieldValidation(form.nationalAddress, rules)
+  const expiryDateError =
+    form.nationalAddress.expiryDate && form.nationalAddress.issueDate
+      ? rules.expiryDate?.(form.nationalAddress.expiryDate, form.nationalAddress)
+      : undefined
 
   const setField = <K extends keyof NationalAddressFormValues>(
     key: K,
@@ -225,13 +233,16 @@ export function NationalAddressFormCard() {
                 value={form.nationalAddress.expiryDate}
                 onChange={(date) => setField('expiryDate', date)}
               />
+              {expiryDateError && <p className="text-small-light text-error-500">{expiryDateError}</p>}
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.addressId')}>
               <TextField
                 type="text"
                 dir="ltr"
                 value={form.nationalAddress.certificateNumber}
+                valueKind="mixed"
                 onChange={(e) => setField('certificateNumber', e.target.value)}
+                {...fieldProps('certificateNumber')}
               />
             </FormField>
           </div>
@@ -240,14 +251,18 @@ export function NationalAddressFormCard() {
               <TextField
                 type="text"
                 value={form.nationalAddress.street}
+                valueKind="mixed"
                 onChange={(e) => setField('street', e.target.value)}
+                {...fieldProps('street')}
               />
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.buildingNo')}>
               <TextField
                 type="text"
                 value={form.nationalAddress.buildingNumber}
+                valueKind="mixed"
                 onChange={(e) => setField('buildingNumber', e.target.value)}
+                {...fieldProps('buildingNumber')}
               />
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.postalCode')}>
@@ -255,7 +270,9 @@ export function NationalAddressFormCard() {
                 type="text"
                 dir="ltr"
                 value={form.nationalAddress.postalCode}
+                valueKind="mixed"
                 onChange={(e) => setField('postalCode', e.target.value)}
+                {...fieldProps('postalCode')}
               />
             </FormField>
           </div>
@@ -265,21 +282,27 @@ export function NationalAddressFormCard() {
                 type="text"
                 dir="ltr"
                 value={form.nationalAddress.additionalNumber}
+                valueKind="mixed"
                 onChange={(e) => setField('additionalNumber', e.target.value)}
+                {...fieldProps('additionalNumber')}
               />
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.neighborhood')}>
               <TextField
                 type="text"
                 value={form.nationalAddress.district}
+                valueKind="mixed"
                 onChange={(e) => setField('district', e.target.value)}
+                {...fieldProps('district')}
               />
             </FormField>
             <FormField label={t('companyProfile.nationalAddress.city')}>
               <TextField
                 type="text"
                 value={form.nationalAddress.city}
+                valueKind="mixed"
                 onChange={(e) => setField('city', e.target.value)}
+                {...fieldProps('city')}
               />
             </FormField>
           </div>

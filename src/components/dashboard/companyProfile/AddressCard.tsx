@@ -2,7 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
-import { FormField, SelectField, TextField } from '@/components/ui'
+import { FormField, TextField } from '@/components/ui'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import type { CountryCode } from '@/lib/countries'
@@ -10,6 +11,7 @@ import { GoogleMapUrlField } from './GoogleMapUrlField'
 import { profileCardClassName } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
+import { addressRules } from './validation'
 
 interface AddressCardProps {
   onGoogleMapUrlChange: (value: string) => void
@@ -18,6 +20,7 @@ interface AddressCardProps {
 export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
   const { t } = useTranslation()
   const { form, update, saveDraft, saving } = useProfileForm()
+  const { fieldProps } = useFieldValidation(form, addressRules(t))
   const [loadedGovernorates, setLoadedGovernorates] = useState<{
     country: CountryCode
     options: GovernorateOption[]
@@ -83,7 +86,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
                 type="text"
                 placeholder={t('companyProfile.addressCard.cityPlaceholder')}
                 value={form.city}
+                valueKind="mixed"
                 onChange={(e) => update('city', e.target.value)}
+                {...fieldProps('city')}
               />
             )}
           </FormField>
@@ -96,7 +101,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
               type="text"
               placeholder={t('companyProfile.addressCard.neighborhoodPlaceholder')}
               value={form.district}
+              valueKind="mixed"
               onChange={(e) => update('district', e.target.value)}
+              {...fieldProps('district')}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.streetLabel')} required>
@@ -104,7 +111,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
               type="text"
               placeholder={t('companyProfile.addressCard.streetPlaceholder')}
               value={form.street}
+              valueKind="mixed"
               onChange={(e) => update('street', e.target.value)}
+              {...fieldProps('street')}
             />
           </FormField>
         </div>
@@ -116,7 +125,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
               type="text"
               placeholder={t('companyProfile.addressCard.buildingPlaceholder')}
               value={form.buildingNumber}
+              valueKind="mixed"
               onChange={(e) => update('buildingNumber', e.target.value)}
+              {...fieldProps('buildingNumber')}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.subNumberLabel')}>
@@ -124,7 +135,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
               type="text"
               placeholder={t('companyProfile.addressCard.subNumberPlaceholder')}
               value={form.additionalNumber}
+              valueKind="mixed"
               onChange={(e) => update('additionalNumber', e.target.value)}
+              {...fieldProps('additionalNumber')}
             />
           </FormField>
           <FormField label={t('companyProfile.addressCard.postalCodeLabel')} required>
@@ -133,7 +146,9 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
               dir="ltr"
               placeholder={t('companyProfile.addressCard.postalCodePlaceholder')}
               value={form.postalCode}
+              valueKind="mixed"
               onChange={(e) => update('postalCode', e.target.value)}
+              {...fieldProps('postalCode')}
             />
           </FormField>
         </div>
@@ -144,6 +159,7 @@ export function AddressCard({ onGoogleMapUrlChange }: AddressCardProps) {
           placeholder={t('companyProfile.addressCard.googleMapPlaceholder')}
           value={form.googleMapUrl}
           onChange={onGoogleMapUrlChange}
+          {...fieldProps('googleMapUrl')}
         />
 
         <Button variant="primary" size="lg" className="w-full" onClick={saveDraft} disabled={saving}>

@@ -8,7 +8,7 @@ import {
   TextField,
 } from '@/components/ui'
 import type { SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
-import { sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'
+import { MAX_FIELD_SELECTIONS, sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'
 import { StandardTabs } from '@/components/dashboard/entityData/StandardTabs'
 import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
@@ -27,19 +27,22 @@ interface SectorCardProps {
   title: string
   description: string
   selected: boolean
+  disabled?: boolean
   onToggle: () => void
 }
 
-function SectorCard({ sectorKey, title, description, selected, onToggle }: SectorCardProps) {
+function SectorCard({ sectorKey, title, description, selected, disabled, onToggle }: SectorCardProps) {
   return (
     <button
       type="button"
       onClick={onToggle}
+      disabled={disabled}
       className={cn(
         'flex w-full flex-col gap-3 rounded-[var(--radius-md)] border px-3 py-4 text-start text-[16px] shadow-[0_6px_20px_rgba(153,155,168,0.1)] transition-colors',
         selected
           ? 'border-[#a3b8f5] bg-[#f3f6fd]'
-          : 'border-[#ececec] bg-[#fcfcfc] hover:border-neutral-300'
+          : 'border-[#ececec] bg-[#fcfcfc] hover:border-neutral-300',
+        disabled && 'cursor-not-allowed opacity-50 hover:border-[#ececec]',
       )}
     >
       <div className="flex items-start justify-between gap-3">
@@ -94,12 +97,15 @@ export function EntityDataFieldSectorsStep({
     })
   }, [activeStandard, searchQuery, t])
 
+  const atLimit = selectedSectors.length >= MAX_FIELD_SELECTIONS
+
   const toggleSector = (key: SectorKey) => {
-    onSelectedSectorsChange(
-      selectedSectors.includes(key)
-        ? selectedSectors.filter((item) => item !== key)
-        : [...selectedSectors, key]
-    )
+    if (selectedSectors.includes(key)) {
+      onSelectedSectorsChange(selectedSectors.filter((item) => item !== key))
+      return
+    }
+    if (atLimit) return
+    onSelectedSectorsChange([...selectedSectors, key].slice(0, MAX_FIELD_SELECTIONS))
   }
 
   return (
@@ -134,17 +140,25 @@ export function EntityDataFieldSectorsStep({
         counts={standardCounts}
       />
 
+      <p className="text-[14px] text-neutral-600">
+        {t('accreditation.entityData.field.maxSectorsHint', { count: MAX_FIELD_SELECTIONS })}
+      </p>
+
       <div className="sectors-grid grid gap-5 sm:grid-cols-2">
-        {filteredSectors.map((key) => (
-          <SectorCard
-            key={key}
-            sectorKey={key}
-            title={sectorTitle(key)}
-            description={sectorDescription(key)}
-            selected={selectedSectors.includes(key)}
-            onToggle={() => toggleSector(key)}
-          />
-        ))}
+        {filteredSectors.map((key) => {
+          const selected = selectedSectors.includes(key)
+          return (
+            <SectorCard
+              key={key}
+              sectorKey={key}
+              title={sectorTitle(key)}
+              description={sectorDescription(key)}
+              selected={selected}
+              disabled={atLimit && !selected}
+              onToggle={() => toggleSector(key)}
+            />
+          )
+        })}
       </div>
     </div>
   )

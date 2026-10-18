@@ -86,6 +86,7 @@ export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps)
           type="text"
           value={setup.markReference}
           placeholder={t('cab.setup.marks.markReferencePlaceholder')}
+          valueKind="mixed"
           onChange={(event) => onPatchSetup({ markReference: event.target.value })}
         />
         <div className="space-y-2">
@@ -95,16 +96,19 @@ export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps)
             onChange={(date) => onPatchSetup({ markValidFrom: toIsoDate(date) })}
           />
         </div>
-        <div className="space-y-2">
+        <div id="cab-setup-mark-valid-until" className="space-y-2">
           <FormLabel htmlFor="cab-setup-mark-valid-until">{t('cab.setup.marks.validUntil')}</FormLabel>
           <DatePicker
             value={fromIsoDate(setup.markValidUntil)}
             onChange={(date) => onPatchSetup({ markValidUntil: toIsoDate(date) })}
           />
+          {setup.markValidFrom && setup.markValidUntil && setup.markValidUntil <= setup.markValidFrom && (
+            <p className="text-small-light text-error-500">{t('validation.untilAfterFrom')}</p>
+          )}
         </div>
       </div>
 
-      <div className="space-y-2">
+      <div id="cab-setup-document-use" className="space-y-2">
         <FormLabel required>{t('cab.setup.marks.allowedUse')}</FormLabel>
         <MultiSelect
           tags={setup.allowedDocumentUse}

@@ -79,6 +79,7 @@ export function CabLocationStep({ form, onPatch }: CabLocationStepProps) {
         type="text"
         value={form.address}
         placeholder={t('cab.onboarding.location.addressPlaceholder')}
+        valueKind="mixed"
         onChange={(e) => onPatch({ address: e.target.value })}
       />
 

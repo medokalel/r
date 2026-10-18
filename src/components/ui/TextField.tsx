@@ -9,6 +9,7 @@ import {
   fieldTextareaClassName,
 } from '@/components/ui/fieldStyles'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
+import { sanitizeFieldKind, type FieldValueKind } from '@/lib/validators'
 import { cn } from '@/lib/utils'
 
 interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -23,6 +24,8 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   /** Trailing control (e.g. a password-visibility toggle) pinned to the end. */
   trailing?: React.ReactNode
   required?: boolean
+  /** Restrict typed characters to numbers, letters, or both. */
+  valueKind?: FieldValueKind
 }
 
 /**
@@ -32,32 +35,36 @@ interface TextFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
  * inputs normalize Arabic digits to Latin so stored values stay consistent.
  */
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(function TextField(
-  { label, labelExtra, icon, error, trailing, required, className, id, type, inputMode, onChange, ...props },
+  { label, labelExtra, icon, error, trailing, required, className, id, type, inputMode, valueKind, onChange, ...props },
   ref
 ) {
+  const resolvedInputMode = inputMode ?? (valueKind === 'number' ? 'numeric' : undefined)
   const usesEnglishDigits =
     type === 'email' ||
     type === 'tel' ||
     type === 'password' ||
     type === 'number' ||
-    inputMode === 'numeric' ||
-    inputMode === 'decimal'
+    resolvedInputMode === 'numeric' ||
+    resolvedInputMode === 'decimal' ||
+    valueKind === 'number'
   const forceLtr =
-    type === 'tel' || type === 'number' || inputMode === 'numeric' || inputMode === 'decimal'
+    type === 'tel' || type === 'number' || resolvedInputMode === 'numeric' || resolvedInputMode === 'decimal'
 
-  const handleChange =
-    usesEnglishDigits && onChange
-      ? (event: React.ChangeEvent<HTMLInputElement>) => {
-          event.target.value = toEnglishDigits(event.target.value)
-          onChange(event)
-        }
-      : onChange
+  const handleChange = onChange
+    ? (event: React.ChangeEvent<HTMLInputElement>) => {
+        let next = event.target.value
+        if (usesEnglishDigits) next = toEnglishDigits(next)
+        if (valueKind) next = sanitizeFieldKind(next, valueKind)
+        event.target.value = next
+        onChange(event)
+      }
+    : onChange
 
   const sharedInputProps = {
     ref,
     id,
     type,
-    inputMode,
+    inputMode: resolvedInputMode,
     lang: usesEnglishDigits ? 'en' : undefined,
     dir: forceLtr ? ('ltr' as const) : undefined,
     onChange: handleChange,

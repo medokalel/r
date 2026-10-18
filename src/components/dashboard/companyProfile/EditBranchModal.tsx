@@ -73,7 +73,7 @@ function EditBranchForm({ branch, onClose }: { branch: OrgBranch; onClose: () =>
             size="lg"
             className="min-w-[200px]"
             onClick={onUpdate}
-            disabled={saving || !isBranchFormComplete(form)}
+            disabled={saving || !isBranchFormComplete(form, countryCode)}
           >
             {saving ? t('common.loading') : t('companyProfile.addBranch.updateButton')}
           </Button>

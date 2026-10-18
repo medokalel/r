@@ -149,6 +149,7 @@ import {
   parsePrimaryContactPhone,
   isAccreditationRecordsStepComplete,
   isAccreditationStatusStepComplete,
+  isCabSetupReadyToActivate,
   isCertificateStepComplete,
   isLocationsStepComplete,
   isMarksStepComplete,
@@ -400,6 +401,7 @@ export function UnifiedOnboardingFlow() {
   const [form, setForm] = useState<UnifiedOnboardingForm>(initial.form)
   const [isSaving, setIsSaving] = useState(false)
   const [saveError, setSaveError] = useState<string | null>(null)
+  const [pendingFocusFieldId, setPendingFocusFieldId] = useState<string | null>(null)
   /** True when the user was already logged in before this onboarding session started. */
   const hadAuthAtStartRef = useRef(Boolean(getAuthToken()))
 
@@ -411,6 +413,22 @@ export function UnifiedOnboardingFlow() {
       clearPendingRegistration()
     }
   }, [])
+
+  useEffect(() => {
+    if (!pendingFocusFieldId) return
+    const timer = window.setTimeout(() => {
+      const root = document.getElementById(pendingFocusFieldId)
+      if (root) {
+        root.scrollIntoView({ behavior: 'smooth', block: 'center' })
+        const focusable = root.matches('input,textarea,select,button,[tabindex]')
+          ? root
+          : root.querySelector<HTMLElement>('input,textarea,select,button,[tabindex]')
+        ;(focusable ?? root).focus?.()
+      }
+      setPendingFocusFieldId(null)
+    }, 200)
+    return () => window.clearTimeout(timer)
+  }, [step, pendingFocusFieldId])
 
   useEffect(() => {
     if (!getAuthToken() || !isCabAdminSession()) return
@@ -557,6 +575,19 @@ export function UnifiedOnboardingFlow() {
           )
           return
         }
+        if (!isCabSetupReadyToActivate(form.cabSetup, {
+          legalEntityName: form.legalEntityName,
+          tradingName: form.tradingName,
+          registrationNumber: form.registrationNumber,
+          website: form.website,
+          country: form.country,
+          city: form.city,
+          address: form.address,
+          languages: form.languages,
+        })) {
+          setSaveError(t('cab.setup.review.issues.cannotActivate'))
+          return
+        }
         await persistCabSetupDraft()
         await completeCabSetup()
         patchCabSetupCompleted(true)
@@ -630,6 +661,7 @@ export function UnifiedOnboardingFlow() {
     }
 
     if (deck === 'cab' && step >= CAB_FIRST_SETUP_STEP && step < CAB_REVIEW_STEP && getAuthToken() && isCabAdminSession()) {
+      if (cabStepBlocked(step)) return
       setIsSaving(true)
       setSaveError(null)
       try {
@@ -659,7 +691,10 @@ export function UnifiedOnboardingFlow() {
     const setup = form.cabSetup
     switch (currentStep) {
       case 2:
-        return !isProfileStepComplete(setup, form.legalEntityName, form.registrationNumber) || !isSharedWebsiteValid(form)
+        return (
+          !isProfileStepComplete(setup, form.legalEntityName, form.registrationNumber, form.tradingName) ||
+          !isSharedWebsiteValid(form)
+        )
       case 3:
         return !isLocationsStepComplete(setup, form.country, form.city, form.address, form.languages)
       case 4:
@@ -675,7 +710,19 @@ export function UnifiedOnboardingFlow() {
       case 9:
         return !isCertificateStepComplete(setup)
       case CAB_REVIEW_STEP:
-        return isSaving
+        return (
+          isSaving ||
+          !isCabSetupReadyToActivate(setup, {
+            legalEntityName: form.legalEntityName,
+            tradingName: form.tradingName,
+            registrationNumber: form.registrationNumber,
+            website: form.website,
+            country: form.country,
+            city: form.city,
+            address: form.address,
+            languages: form.languages,
+          })
+        )
       default:
         return false
     }
@@ -860,7 +907,13 @@ export function UnifiedOnboardingFlow() {
           {step === 8 && <CabMarksStep {...setupProps} />}
           {step === 9 && <CabCertificateStep {...setupProps} />}
           {step === CAB_REVIEW_STEP && (
-            <CabReviewActivateStep form={form} onGoToStep={setStep} />
+            <CabReviewActivateStep
+              form={form}
+              onGoToStep={(targetStep, fieldId) => {
+                setStep(targetStep)
+                if (fieldId) setPendingFocusFieldId(fieldId)
+              }}
+            />
           )}
         </>
       )

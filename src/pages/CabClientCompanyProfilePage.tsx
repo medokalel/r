@@ -32,7 +32,6 @@ import {
   DOC_ACCEPT,
   DOC_MAX_BYTES,
   DOC_TYPE_BY_KEY,
-  SECTOR_OPTIONS,
   getLocalizedSectorOptions,
   profileCardClassName,
 } from '@/components/dashboard/companyProfile/constants'
@@ -51,8 +50,11 @@ import {
   type StepKey,
 } from '@/components/dashboard/companyProfile/types'
 import {
+  areBasicDataFieldsValid,
+  hasProfileFormatErrors,
   isAddressComplete,
   isBranchFormComplete,
+  isNationalAddressComplete,
 } from '@/components/dashboard/companyProfile/validation'
 import {
   createCabClientBranch,
@@ -68,6 +70,7 @@ import type {
   OrgDocumentType,
 } from '@/lib/api/organizationProfileApi'
 import { ApiError } from '@/lib/api/client'
+import { urlRule } from '@/lib/fieldRules'
 import { ROUTES } from '@/lib/routes'
 import { formatFileSize } from '@/lib/files'
 import { cn } from '@/lib/utils'
@@ -75,33 +78,10 @@ import type { CountryCode } from '@/components/auth/CountryCodeSelect'
 
 function isBasicProfileComplete(form: ProfileFormValues): boolean {
   return Boolean(
-    form.organizationName.trim() &&
-      form.tradeName.trim() &&
-      form.commercialRegisterNumber.trim() &&
-      form.unifiedNumber.trim() &&
-      form.authorizedPersonName.trim() &&
-      form.email.trim() &&
-      form.phoneNumber.trim() &&
+    form.unifiedNumber.trim() &&
       form.organizationStatus &&
-      form.registrationDate &&
-      form.employeeCount !== '' &&
       form.industries.length > 0 &&
-      (form.allProductionLinesActive || form.inactiveReason.trim())
-  )
-}
-
-function isNationalAddressComplete(form: ProfileFormValues): boolean {
-  const address = form.nationalAddress
-  if (!address.hasNationalAddress) return true
-  return Boolean(
-    address.certificateNumber.trim() &&
-      address.issueDate &&
-      address.expiryDate &&
-      address.street.trim() &&
-      address.buildingNumber.trim() &&
-      address.district.trim() &&
-      address.postalCode.trim() &&
-      address.city.trim()
+      areBasicDataFieldsValid(form)
   )
 }
 
@@ -136,6 +116,7 @@ function CabBasicDataStep() {
               type="url"
               value={form.logoUrl ?? ''}
               onChange={(event) => update('logoUrl', event.target.value || null)}
+              error={form.logoUrl ? urlRule(t)(form.logoUrl) : undefined}
               placeholder="https://example.com/logo.png"
             />
           </FormField>
@@ -267,7 +248,7 @@ function CabBranchesStep({
               variant="primary"
               size="lg"
               onClick={saveBranch}
-              disabled={saving || !isBranchFormComplete(form)}
+              disabled={saving || !isBranchFormComplete(form, countryCode)}
             >
               {saving ? t('common.loading') : t('companyProfile.addBranch.saveButton')}
             </Button>
@@ -534,6 +515,10 @@ export function CabClientCompanyProfilePage() {
   )
 
   const saveDraft = useCallback(async () => {
+    if (hasProfileFormatErrors(form, false)) {
+      setNotification({ type: 'error', message: t('validation.fixErrors') })
+      return false
+    }
     setSaving(true)
     setNotification(null)
     try {
@@ -549,6 +534,10 @@ export function CabClientCompanyProfilePage() {
   }, [clientId, form, handleError, t])
 
   const submit = async () => {
+    if (hasProfileFormatErrors(form, false)) {
+      setNotification({ type: 'error', message: t('validation.fixErrors') })
+      return
+    }
     setSubmitting(true)
     setNotification(null)
     try {

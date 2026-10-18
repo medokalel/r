@@ -8,69 +8,72 @@ import { RequireAbOnboarded } from "@/components/auth/RequireAbOnboarded";
 import { RedirectAbFromGenericDashboard } from "@/components/auth/RedirectAbFromGenericDashboard";
 import { RequireAuditeeOnboarded } from "@/components/auth/RequireAuditeeOnboarded";
 import { DirectionProvider } from "@/context/DirectionContext";
-import { CertificationRequestFormPage } from "@/pages/CertificationRequestFormPage";
-import { CertificationRequestsPage } from "@/pages/CertificationRequestsPage";
-import { CompanyProfilePage } from "@/pages/CompanyProfilePage";
-import { DashboardPage } from "@/pages/DashboardPage";
-import { DashboardTasksPage } from "@/pages/DashboardTasksPage";
-import { UsersPage } from "@/pages/UsersPage";
-import { DigitalWalletPage } from "@/pages/DigitalWalletPage";
-import { PeriodicVisitsPage } from "@/pages/PeriodicVisitsPage";
-import { InvoicesPage } from "@/pages/InvoicesPage";
-import { LoginPage } from "@/pages/LoginPage";
-import { RegisterPage } from "@/pages/RegisterPage";
-import { ForgotPasswordPage } from "@/pages/ForgotPasswordPage";
-import { PrivacyPolicyPage } from "@/pages/PrivacyPolicyPage";
-import { WorkspacePage } from "@/pages/WorkspacePage";
-
-import { CabDashboardPage } from "@/pages/CabDashboardPage";
-import { CabApplicationRegisterPage } from "@/pages/CabApplicationRegisterPage";
-import { CabApplicationSubmissionPage } from "@/pages/CabApplicationSubmissionPage";
-import { CabCompanyProfilePage } from "@/pages/CabCompanyProfilePage";
-import { AbDashboardPage } from "@/pages/AbDashboardPage";
-import { OnboardingPage } from "@/pages/OnboardingPage";
-import { CabOnboardingPage } from "@/pages/CabOnboardingPage";
-import { AbOnboardingPage } from "@/pages/AbOnboardingPage";
-import { AuditeeOnboardingPage } from "@/pages/AuditeeOnboardingPage";
-import { ClientRegistrationPage } from "@/pages/ClientRegistrationPage";
-import { CabClientCompanyProfilePage } from "@/pages/CabClientCompanyProfilePage";
-import { CabClientsPage } from "@/pages/CabClientsPage";
-import { ClientRegisterPage } from "@/pages/ClientRegisterPage";
-import { CabClientDetailsPage } from "@/pages/CabClientDetailsPage";
-import { ApplicationDraftPage } from "@/pages/ApplicationDraftPage";
-import { AddSitePage } from "@/pages/AddSitePage";
-import { ApplyMultiSiteRulePage } from "@/pages/ApplyMultiSiteRulePage";
-import { CabMultiSiteRulePreviewPage } from "@/pages/CabMultiSiteRulePreviewPage";
-import { CabApplicationReceiptPage } from "@/pages/CabApplicationReceiptPage";
-import { CabApplicationReviewPage } from "@/pages/CabApplicationReviewPage";
-import { CabContactsListPage } from "@/pages/CabContactsListPage";
-import { CabAddContactPage } from "@/pages/CabAddContactPage";
-import { CabApplicationInformationRequiredPage } from "@/pages/CabApplicationInformationRequiredPage";
-import { CabApplicationTechnicalFeasibilityPage } from "@/pages/CabApplicationTechnicalFeasibilityPage";
-import { CabApplicationQuotationPage } from "@/pages/CabApplicationQuotationPage";
-import { CabQuotationApprovalPage } from "@/pages/CabQuotationApprovalPage";
-import { CabOfferRegisterPage } from "@/pages/CabOfferRegisterPage";
-import { CabCreateOfferPage } from "@/pages/CabCreateOfferPage";
-import { CabInvoiceRegisterPage } from "@/pages/CabInvoiceRegisterPage";
-import { CabInvoiceDetailsPage } from "@/pages/CabInvoiceDetailsPage";
-import { CabAuditSchedulePage } from "@/pages/CabAuditSchedulePage";
-import { CabBuildAuditPlanPage } from "@/pages/CabBuildAuditPlanPage";
-import { CabAuditReportingPage } from "@/pages/CabAuditReportingPage";
-import { CabAddFindingPage } from "@/pages/CabAddFindingPage";
-import { CabDecisionQueuePage } from "@/pages/CabDecisionQueuePage";
-import { CabDecisionDetailsPage } from "@/pages/CabDecisionDetailsPage";
-import { CabPersonnelRegisterPage } from "@/pages/CabPersonnelRegisterPage";
-import { CabCompetenceEvaluationPage } from "@/pages/CabCompetenceEvaluationPage";
-import { PortalHomePage } from "@/pages/portal/PortalHomePage";
-import { PortalCompanyProfilePage } from "@/pages/portal/PortalCompanyProfilePage";
-import { CabCertificationCyclesPage } from "@/pages/CabCertificationCyclesPage";
-import { CabManageCertificationCyclePage } from "@/pages/CabManageCertificationCyclePage";
-import { CabNonconformitiesPage } from "@/pages/CabNonconformitiesPage";
-import { CabNonconformityResponsePage } from "@/pages/CabNonconformityResponsePage";
-import { CabCertificateRegisterPage } from "@/pages/CabCertificateRegisterPage";
-import { CabPrepareCertificatePage } from "@/pages/CabPrepareCertificatePage";
 import { CabSidebarProvider } from "@/context/CabSidebarContext";
+import { PageLoadingSkeleton, RouteSkeletonOverlay } from "@/components/routing/PageLoadingSkeleton";
 import { ScrollToTop } from "@/components/routing/ScrollToTop";
+import {
+  LoginPage,
+  RegisterPage,
+  ForgotPasswordPage,
+  PrivacyPolicyPage,
+  WorkspacePage,
+  CabDashboardPage,
+  CabApplicationRegisterPage,
+  CabApplicationSubmissionPage,
+  CabCompanyProfilePage,
+  AbDashboardPage,
+  OnboardingPage,
+  CabOnboardingPage,
+  AbOnboardingPage,
+  AuditeeOnboardingPage,
+  ClientRegistrationPage,
+  CabClientCompanyProfilePage,
+  CabClientsPage,
+  ClientRegisterPage,
+  CabClientDetailsPage,
+  ApplicationDraftPage,
+  AddSitePage,
+  ApplyMultiSiteRulePage,
+  CabMultiSiteRulePreviewPage,
+  CabApplicationReceiptPage,
+  CabApplicationReviewPage,
+  CabContactsListPage,
+  CabAddContactPage,
+  CabApplicationInformationRequiredPage,
+  CabApplicationTechnicalFeasibilityPage,
+  CabApplicationQuotationPage,
+  CabQuotationApprovalPage,
+  CabOfferRegisterPage,
+  CabCreateOfferPage,
+  CabInvoiceRegisterPage,
+  CabInvoiceDetailsPage,
+  CabAuditSchedulePage,
+  CabBuildAuditPlanPage,
+  CabAuditReportingPage,
+  CabAddFindingPage,
+  CabDecisionQueuePage,
+  CabDecisionDetailsPage,
+  CabPersonnelRegisterPage,
+  CabPersonnelProfilePage,
+  CabCompetenceEvaluationPage,
+  PortalHomePage,
+  PortalCompanyProfilePage,
+  CabCertificationCyclesPage,
+  CabManageCertificationCyclePage,
+  CabNonconformitiesPage,
+  CabNonconformityResponsePage,
+  CabCertificateRegisterPage,
+  CabPrepareCertificatePage,
+  CertificationRequestFormPage,
+  CertificationRequestsPage,
+  CompanyProfilePage,
+  DashboardPage,
+  DashboardTasksPage,
+  UsersPage,
+  DigitalWalletPage,
+  PeriodicVisitsPage,
+  InvoicesPage,
+} from "@/pages/lazyPages";
 import {
   getAuthSession,
   getAuthToken,
@@ -87,13 +90,14 @@ function HomeRedirect() {
 
 export default function App() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <DirectionProvider>
         <BrowserRouter>
           <ScrollToTop />
           <CabSidebarProvider>
-            <Routes>
-              <Route path="/" element={<HomeRedirect />} />
+          <RouteSkeletonOverlay>
+          <Suspense fallback={<PageLoadingSkeleton />}>
+          <Routes>
+            <Route path="/" element={<HomeRedirect />} />
               <Route path={ROUTES.login} element={<LoginPage />} />
               <Route path={ROUTES.register} element={<RegisterPage />} />
               <Route
@@ -587,6 +591,26 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.cabPersonnelNew}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabPersonnelProfilePage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabPersonnelEdit}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabPersonnelProfilePage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
                 path={ROUTES.cabCompetenceEvaluation}
                 element={
                   <RequireAuth>
@@ -596,64 +620,64 @@ export default function App() {
                   </RequireAuth>
                 }
               />
-              <Route
+            <Route
                 path={ROUTES.dashboard}
-                element={
-                  <RequireAuth>
+              element={
+                <RequireAuth>
                     <RequireAbOnboarded>
                       <RedirectAbFromGenericDashboard>
                         <RequireAuditeeOnboarded>
-                          <DashboardPage />
+                  <DashboardPage />
                         </RequireAuditeeOnboarded>
                       </RedirectAbFromGenericDashboard>
                     </RequireAbOnboarded>
-                  </RequireAuth>
-                }
-              />
-              <Route
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={LEGACY_DASHBOARD_PATH}
                 element={<Navigate to={ROUTES.dashboard} replace />}
               />
               <Route
                 path={ROUTES.certificationRequestNew}
-                element={
-                  <RequireAuth>
-                    <CertificationRequestFormPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
+              element={
+                <RequireAuth>
+                  <CertificationRequestFormPage />
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={ROUTES.certificationRequests}
-                element={
-                  <RequireAuth>
-                    <CertificationRequestsPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
+              element={
+                <RequireAuth>
+                  <CertificationRequestsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={ROUTES.dashboardTasks}
-                element={
-                  <RequireAuth>
-                    <DashboardTasksPage />
-                  </RequireAuth>
-                }
-              />
-              <Route
+              element={
+                <RequireAuth>
+                  <DashboardTasksPage />
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={ROUTES.companyProfile}
-                element={
-                  <RequireAuth>
-                    <CompanyProfilePage />
-                  </RequireAuth>
-                }
-              />
-              <Route
+              element={
+                <RequireAuth>
+                  <CompanyProfilePage />
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={ROUTES.users}
-                element={
-                  <RequireAuth>
-                    <UsersPage />
-                  </RequireAuth>
-                }
-              />
+              element={
+                <RequireAuth>
+                  <UsersPage />
+                </RequireAuth>
+              }
+            />
               <Route
                 path={ROUTES.wallet}
                 element={
@@ -750,11 +774,12 @@ export default function App() {
                   </RequireAuth>
                 }
               />
-              <Route path="*" element={<HomeRedirect />} />
-            </Routes>
+            <Route path="*" element={<HomeRedirect />} />
+          </Routes>
+          </Suspense>
+          </RouteSkeletonOverlay>
           </CabSidebarProvider>
         </BrowserRouter>
       </DirectionProvider>
-    </Suspense>
   );
 }

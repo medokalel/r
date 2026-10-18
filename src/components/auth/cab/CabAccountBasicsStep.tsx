@@ -10,7 +10,7 @@ import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { useIpLocation } from '@/hooks/useIpLocation'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { englishDigitsClassName, toEnglishDigits } from '@/lib/englishDigits'
-import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
+import { isValidEmailFormat, isValidFieldKind, isValidPhoneNumber } from '@/lib/validators'
 import { isValidPassword, passwordsMatch } from '@/lib/authValidation'
 import { cn } from '@/lib/utils'
 import { type CabAccountBasicsForm } from '@/lib/cabAccountBasicsForm'
@@ -72,7 +72,11 @@ export function CabAccountBasicsStep({ form, onPatch }: CabAccountBasicsStepProp
         required
         placeholder={t('register.cab.contactPersonPlaceholder')}
         value={form.name}
+        valueKind="text"
         onChange={(e) => onPatch({ name: e.target.value })}
+        error={
+          form.name && !isValidFieldKind(form.name, 'text') ? t('validation.textOnly') : undefined
+        }
       />
 
       <TextField
@@ -90,7 +94,7 @@ export function CabAccountBasicsStep({ form, onPatch }: CabAccountBasicsStepProp
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div className="space-y-3 sm:col-span-2">
-          <FormLabel>{t('register.cab.mobileNumber')}</FormLabel>
+          <FormLabel required>{t('register.cab.mobileNumber')}</FormLabel>
           <PhoneInputRow
             rowClassName="gap-3"
             value={form.mobileCountryCode}
@@ -141,6 +145,7 @@ export function CabAccountBasicsStep({ form, onPatch }: CabAccountBasicsStepProp
       <TextField
         id="password"
         label={t('auth.password')}
+        required
         icon={LockIcon}
         type={showPassword ? 'text' : 'password'}
         placeholder={t('auth.password')}
@@ -162,6 +167,7 @@ export function CabAccountBasicsStep({ form, onPatch }: CabAccountBasicsStepProp
       <TextField
         id="confirm-password"
         label={t('register.confirmPassword')}
+        required
         icon={LockIcon}
         type={showConfirm ? 'text' : 'password'}
         placeholder={t('register.confirmPasswordPlaceholder')}

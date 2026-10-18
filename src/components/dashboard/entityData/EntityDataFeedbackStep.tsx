@@ -1,9 +1,17 @@
-import { useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppIcon, AttachIcon, BoldIcon, ExternalLinkIcon, LinkIcon, UserIcon } from '@/components/icons'
-import { fieldTitleClassName } from '@/components/ui'
+import { ErrorState, SelectField, fieldTitleClassName } from '@/components/ui'
 import { Button } from '@/components/ui/Button'
 import { UserAvatar } from '@/components/ui/UserAvatar'
+import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
+import { ApiError } from '@/lib/api/client'
+import {
+  listInformationRequired,
+  submitInformationRequiredResponse,
+  uploadApplicationDocument,
+  type InformationRequiredItem,
+} from '@/lib/api/certificationApplicationApi'
 import { getAuthSession } from '@/lib/authStorage'
 import { cn } from '@/lib/utils'
 
@@ -39,16 +47,21 @@ function renderRichText(text: string): ReactNode[] {
     }
     if (linkAt < boldAt) {
       if (linkAt > 0) nodes.push(rest.slice(0, linkAt))
+      // Message text now comes from the server, so only http(s) links become anchors
       nodes.push(
-        <a
-          key={key++}
-          href={link![2]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary underline"
-        >
-          {link![1]}
-        </a>
+        /^https?:\/\//i.test(link![2]) ? (
+          <a
+            key={key++}
+            href={link![2]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline"
+          >
+            {link![1]}
+          </a>
+        ) : (
+          link![0]
+        )
       )
       rest = rest.slice(linkAt + link![0].length)
     } else {
@@ -152,9 +165,11 @@ function MessageBubble({ message }: { message: FeedbackMessage }) {
           </time>
         </div>
 
-        <p className="whitespace-pre-wrap text-[16px] leading-[1.6] text-neutral-900">
-          {renderRichText(message.text)}
-        </p>
+        {message.text && (
+          <p className="whitespace-pre-wrap text-[16px] leading-[1.6] text-neutral-900">
+            {renderRichText(message.text)}
+          </p>
+        )}
 
         {message.attachments && message.attachments.length > 0 && (
           <AttachmentChips names={message.attachments} />
@@ -178,41 +193,93 @@ function MessageBubble({ message }: { message: FeedbackMessage }) {
 
 export function EntityDataFeedbackStep() {
   const { t, i18n } = useTranslation()
+  const { applicationId, handleApiError } = useApplicationForm()
   const session = getAuthSession()
   const applicantName =
     session?.user?.email ?? t('accreditation.entityData.feedback.applicantName')
   const applicantRole = session?.role?.name ?? t('accreditation.entityData.feedback.applicantRole')
+  const reviewerRole = t('accreditation.entityData.feedback.reviewerRole')
 
   const [reply, setReply] = useState('')
-  const [attachments, setAttachments] = useState<string[]>([])
+  const [files, setFiles] = useState<File[]>([])
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // TODO: backend integration — استبدل الدالة دي بنداء API حقيقي لما الـ endpoint يجهز
-  // Kept as real state (not hardcoded `false` inline) so re-enabling this is
-  // quick: add `setLoading` back here and uncomment the effect below.
-  const [loading] = useState(false)
+  const [requests, setRequests] = useState<InformationRequiredItem[]>([])
+  const [loading, setLoading] = useState(Boolean(applicationId))
+  const [loadError, setLoadError] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
+  const [targetId, setTargetId] = useState('')
+  const [sending, setSending] = useState(false)
 
-  // TODO: backend integration — استبدل الدالة دي بنداء API حقيقي لما الـ endpoint يجهز
+  useEffect(() => {
+    if (!applicationId) return
+    let cancelled = false
+    listInformationRequired(applicationId)
+      .then((items) => {
+        if (cancelled) return
+        setRequests([...items].sort((a, b) => Date.parse(a.requestedOn) - Date.parse(b.requestedOn)))
+      })
+      .catch((error) => {
+        if (cancelled) return
+        if (error instanceof ApiError && error.status === 401) handleApiError(error)
+        else setLoadError(true)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [applicationId, reloadKey, handleApiError])
 
-  // useEffect(() => {
-  //   setLoading(true)
-  //   getApplicationFeedback(applicationId)
-  //     .then(setMessages)
-  //     .finally(() => setLoading(false))
-  // }, [applicationId])
-  const loadFeedbackMessages = (): FeedbackMessage[] => []
+  // Replies go to the chosen request, else the oldest one still unanswered, else the latest
+  const replyTo = requests.some((request) => request.id === targetId)
+    ? targetId
+    : (requests.find((request) => request.responses.length === 0) ?? requests[requests.length - 1])?.id ?? ''
 
-  const [messages, setMessages] = useState<FeedbackMessage[]>(loadFeedbackMessages)
-
-  const formatNow = () =>
+  const formatDate = (iso: string) =>
     new Intl.DateTimeFormat(i18n.language, {
       day: '2-digit',
       month: 'short',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    }).format(new Date())
+    }).format(new Date(iso))
+
+  const messages: FeedbackMessage[] = requests.flatMap((request) => [
+    {
+      id: request.id,
+      author: 'reviewer' as const,
+      name: request.requestedBy?.fullName ?? reviewerRole,
+      role: reviewerRole,
+      timestamp: formatDate(request.requestedOn),
+      text: [
+        request.informationItem,
+        request.referenceClause &&
+          t('accreditation.entityData.feedback.reference', { value: request.referenceClause }),
+        request.dueDate &&
+          t('accreditation.entityData.feedback.dueDate', {
+            value: new Date(request.dueDate).toLocaleDateString(i18n.language, { timeZone: 'UTC' }),
+          }),
+      ]
+        .filter(Boolean)
+        .join('\n'),
+    },
+    ...[...request.responses]
+      .sort((a, b) => Date.parse(a.submittedOn) - Date.parse(b.submittedOn))
+      .map((response) => ({
+        id: response.id,
+        author: 'applicant' as const,
+        name: response.submittedBy?.fullName ?? applicantName,
+        role: applicantRole,
+        timestamp: formatDate(response.submittedOn),
+        text: response.response ?? '',
+        attachments: response.attachments.length
+          ? response.attachments.map((file) => file.originalName || file.fileName || file.fileUrl)
+          : undefined,
+      })),
+  ])
 
   /** Wraps the current selection (or inserts a placeholder) with markers. */
   const surroundSelection = (before: string, after: string, placeholder: string) => {
@@ -244,29 +311,41 @@ export function EntityDataFeedbackStep() {
   }
 
   const onSelectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const names = Array.from(event.target.files ?? []).map((file) => file.name)
-    if (names.length) setAttachments((prev) => [...prev, ...names])
+    const selected = Array.from(event.target.files ?? [])
+    if (selected.length) setFiles((prev) => [...prev, ...selected])
     event.target.value = ''
   }
 
-  const canSend = reply.trim().length > 0 || attachments.length > 0
+  const canSend = !sending && Boolean(applicationId && replyTo) && (reply.trim().length > 0 || files.length > 0)
 
-  const sendReply = () => {
-    if (!canSend) return
-    setMessages((prev) => [
-      ...prev,
-      {
-        id: `local-${Date.now()}`,
-        author: 'applicant',
-        name: applicantName,
-        role: applicantRole,
-        timestamp: formatNow(),
-        text: reply.trim(),
+  const sendReply = async () => {
+    if (!canSend || !applicationId) return
+    setSending(true)
+    try {
+      const attachments = await Promise.all(
+        files.map(async (file) => {
+          const uploaded = await uploadApplicationDocument(file)
+          return {
+            fileUrl: uploaded.fileUrl,
+            fileName: uploaded.fileName,
+            originalName: file.name,
+            mimeType: uploaded.mimeType,
+            fileSize: uploaded.sizeBytes,
+          }
+        })
+      )
+      await submitInformationRequiredResponse(applicationId, replyTo, {
+        response: reply.trim() || null,
         attachments: attachments.length ? attachments : undefined,
-      },
-    ])
-    setReply('')
-    setAttachments([])
+      })
+      setReply('')
+      setFiles([])
+      setReloadKey((key) => key + 1)
+    } catch (error) {
+      handleApiError(error)
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -276,24 +355,78 @@ export function EntityDataFeedbackStep() {
         <p className="text-center text-[14px] text-neutral-500">
           {t('accreditation.entityData.feedback.loading')}
         </p>
-      ) : messages.length === 0 ? (
+      ) : loadError ? (
+        <ErrorState
+          onRetry={() => {
+            setLoadError(false)
+            setLoading(true)
+            setReloadKey((key) => key + 1)
+          }}
+        />
+      ) : requests.length === 0 ? (
         <p className="text-center text-[14px] text-neutral-500">
           {t('accreditation.entityData.feedback.noFeedback')}
         </p>
       ) : (
         <div className="flex flex-col gap-5">
-          {messages.map((message) => (
-            <MessageBubble key={message.id} message={message} />
-          ))}
+          <div>
+            <h3 className="mb-3 text-[16px] font-semibold text-neutral-900">
+              {t('accreditation.entityData.feedback.requestedTitle')}
+            </h3>
+            <ul className="flex flex-col gap-3">
+              {requests.map((request) => (
+                <li
+                  key={`request-${request.id}`}
+                  className="rounded-[12px] border border-[#a3b8f5] bg-[rgba(232,237,252,0.5)] p-4"
+                >
+                  <p className="whitespace-pre-wrap text-[16px] leading-[1.6] text-neutral-900">
+                    {request.informationItem}
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[13px] text-neutral-600">
+                    {request.referenceClause ? (
+                      <span>{t('accreditation.entityData.feedback.reference', { value: request.referenceClause })}</span>
+                    ) : null}
+                    {request.dueDate ? (
+                      <span>
+                        {t('accreditation.entityData.feedback.dueDate', {
+                          value: new Date(request.dueDate).toLocaleDateString(i18n.language, { timeZone: 'UTC' }),
+                        })}
+                      </span>
+                    ) : null}
+                    {request.priority ? <span>{request.priority}</span> : null}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {messages
+            .filter((message) => message.author === 'applicant')
+            .map((message) => (
+              <MessageBubble key={message.id} message={message} />
+            ))}
         </div>
       )}
     </div>
 
       <div className="rounded-[var(--radius-md)] border border-[#e2e8f0] bg-white p-[17px] shadow-[0_6px_20px_rgba(153,155,168,0.1)]">
+        {requests.length > 1 && (
+          <div className="mb-3">
+            <SelectField
+              label={t('accreditation.entityData.feedback.replyTo')}
+              value={replyTo}
+              onChange={setTargetId}
+              options={requests.map((request, index) => ({
+                value: request.id,
+                label: `${index + 1}. ${request.informationItem.slice(0, 80)}`,
+              }))}
+            />
+          </div>
+        )}
         <div className="rounded-[var(--radius-md)] bg-[#f4f4f4] p-2">
           <textarea
             ref={textareaRef}
             value={reply}
+            disabled={!replyTo || sending}
             onChange={(event) => setReply(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
@@ -301,22 +434,22 @@ export function EntityDataFeedbackStep() {
                 sendReply()
               }
             }}
-            className="min-h-24 w-full resize-none rounded-[var(--radius-md)] border-0 bg-transparent p-4 text-[16px] leading-[1.6] text-neutral-900 placeholder:text-[#989898] focus:outline-none focus:ring-0"
+            className="min-h-24 w-full resize-none rounded-[var(--radius-md)] border-0 bg-transparent p-4 text-[16px] leading-[1.6] text-neutral-900 placeholder:text-[#989898] focus:outline-none focus:ring-0 disabled:cursor-not-allowed"
           />
 
-          {attachments.length > 0 && (
+          {files.length > 0 && (
             <div className="px-4 pb-2">
               <div className="flex flex-wrap gap-2">
-                {attachments.map((name, index) => (
+                {files.map((file, index) => (
                   <span
-                    key={`${name}-${index}`}
+                    key={`${file.name}-${index}`}
                     className="flex items-center gap-1.5 rounded-[var(--radius-sm)] border border-[#d1dbfa] bg-white px-2.5 py-1 text-[13px] text-neutral-700"
                   >
                     <AppIcon icon={AttachIcon} size={14} className="text-primary" />
-                    {name}
+                    {file.name}
                     <button
                       type="button"
-                      onClick={() => setAttachments((prev) => prev.filter((_, i) => i !== index))}
+                      onClick={() => setFiles((prev) => prev.filter((_, i) => i !== index))}
                       className="text-neutral-400 hover:text-error-500"
                       aria-label={t('accreditation.entityData.feedback.removeAttachment')}
                     >
@@ -359,7 +492,7 @@ export function EntityDataFeedbackStep() {
               disabled={!canSend}
               className="h-12 rounded-[var(--radius-sm)] px-6 text-[16px] font-semibold"
             >
-              {t('accreditation.entityData.feedback.sendReply')}
+              {sending ? t('accreditation.entityData.feedback.sending') : t('accreditation.entityData.feedback.sendReply')}
             </Button>
           </div>
         </div>

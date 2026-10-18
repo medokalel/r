@@ -77,7 +77,20 @@
     "passwordTooShort": "Password must be at least 8 characters",
     "invalidMobile": "Please enter a valid mobile number (8–15 digits)",
     "invalidDocumentType": "Please upload a PDF, PNG, or JPEG file",
-    "fileTooLarge": "File must be {{size}} MB or smaller"
+    "fileTooLarge": "File must be {{size}} MB or smaller",
+    "numbersOnly": "This field accepts numbers only",
+    "textOnly": "This field accepts letters only",
+    "mixedOnly": "This field accepts letters and numbers only",
+    "required": "This field is required",
+    "minLength": "Must be at least {{count}} characters",
+    "maxLength": "Must be {{count}} characters or fewer",
+    "invalidUrl": "Enter a valid link starting with http:// or https://",
+    "wholeNumber": "Enter a whole number (0 or more)",
+    "futureDate": "The date cannot be in the future",
+    "expiryAfterIssue": "The expiry date must be after the issue date",
+    "fixErrors": "Please correct the highlighted fields before saving.",
+    "untilAfterFrom": "The “valid until” date must be after “valid from”",
+    "duplicateLocation": "Another location already uses this name and address"
   },
   "register": {
     "title": "Create a new account",
@@ -362,12 +375,14 @@
       "field": {
         "pageTitle": "Field",
         "pageSubtitle": "Please select the economic sector",
+        "maxSectorsHint": "You can select a maximum of {{count}} economic sectors.",
         "searchPlaceholder": "Search by activity (e.g. hospital, textile, engineering)...",
         "search": "Search",
         "selectionSummary": "Selection summary",
         "selectedCount": "({{count}}) selected",
         "continueToCodes": "Continue to choose codes",
         "codesTitle": "Select IAF codes",
+        "maxCodesHint": "You can select a maximum of {{count}} IAF codes.",
         "criticalCodeNote": "The red color represents critical code",
         "tabNeedsSelection": "No selections yet for this standard",
         "missingSectorsHint": "Select at least one sector for each standard — still missing: {{standards}}",
@@ -535,7 +550,8 @@
         "pageTitle": "Feedback",
         "pageSubtitle": "You can receive and respond to comments from here",
         "loading": "Loading...",
-        "noFeedback": "No feedback yet on your request.",
+        "noFeedback": "No requested information yet on your application.",
+        "requestedTitle": "Requested Information",
         "applicantName": "Muhammad Al-Manawahli",
         "applicantRole": "applicant",
         "goToCommentReview": "Go to comment review",
@@ -547,7 +563,12 @@
         "boldPlaceholder": "bold text",
         "linkPrompt": "Enter the link URL",
         "linkText": "link",
-        "removeAttachment": "Remove attachment"
+        "removeAttachment": "Remove attachment",
+        "reviewerRole": "Reviewer",
+        "reference": "Reference: {{value}}",
+        "dueDate": "Due date: {{value}}",
+        "replyTo": "Replying to",
+        "sending": "Sending..."
       },
       "fields": {
         "common": {
@@ -2508,12 +2529,26 @@
         "printSummary": "Print cycle summary"
       },
       "records": {
-        "scopeChanges": { "title": "Scope change requests", "description": "View and manage scope change requests for this certificate." },
-        "siteChanges": { "title": "Site changes", "description": "View and manage additions, removals or changes to certified sites." },
-        "transfers": { "title": "Transfer records", "description": "View transfer history related to this certificate." },
-        "suspensions": { "title": "Suspension history", "description": "View suspension and reinstatement records for this certificate." }
+        "scopeChanges": {
+          "title": "Scope change requests",
+          "description": "View and manage scope change requests for this certificate."
+        },
+        "siteChanges": {
+          "title": "Site changes",
+          "description": "View and manage additions, removals or changes to certified sites."
+        },
+        "transfers": {
+          "title": "Transfer records",
+          "description": "View transfer history related to this certificate."
+        },
+        "suspensions": {
+          "title": "Suspension history",
+          "description": "View suspension and reinstatement records for this certificate."
+        }
       },
-      "table": { "record": "Record" }
+      "table": {
+        "record": "Record"
+      }
     },
     "nonconformities": {
       "title": "Nonconformities",
@@ -2906,6 +2941,28 @@
       }
     },
     "competence": {
+      "memberProfile": {
+        "personalDetails": "Personal details",
+        "employmentDetails": "Employment details",
+        "competenceDetails": "Competence and authorizations",
+        "pageDescription": "Add a CAB team member and their contact details, employment dates and qualifications.",
+        "backToRegister": "Back to competence register",
+        "notFound": "This member could not be found.",
+        "editProfile": "Edit profile",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone number",
+        "image": "Profile image / Upload new image",
+        "imageHelp": "JPEG, PNG or WebP, up to 1 MB.",
+        "imageError": "Could not read the image. Please try again.",
+        "startDate": "Employment start date (optional)",
+        "endDate": "Employment end date (optional)",
+        "iafCodes": "IAF Codes",
+        "qualifications": "Qualifications",
+        "dateError": "End date must be on or after the start date.",
+        "nameRequired": "Enter a name.",
+        "saveError": "Could not save the profile. Browser storage may be full; try a smaller image."
+      },
       "title": "Competence Register",
       "personnelRegister": "Personnel register",
       "subtitle": "Manage personnel, their roles, scheme authorizations and expiry dates.",
@@ -2928,6 +2985,17 @@
       "statusUnderReview": "Under review",
       "statusExpired": "Expired",
       "statusSuspended": "Suspended",
+      "statusActive": "Active",
+      "statusNotActive": "Not Active",
+      "statuses": {
+        "active": "Active",
+        "notActive": "Not Active",
+        "authorized": "Authorized",
+        "underReview": "Under review",
+        "pending": "Pending",
+        "expired": "Expired",
+        "suspended": "Suspended"
+      },
       "expiring30": "Expiring in 30 days",
       "expiring60": "Expiring in 60 days",
       "expiring90": "Expiring in 90 days",
@@ -2981,9 +3049,10 @@
         }
       },
       "evaluation": {
-        "pageTitle": "Competence evaluation",
+        "pageTitle": "Competence Profile",
         "pageSubtitle": "Assess and record competence for personnel",
         "lastSaved": "Last saved: {{time}}",
+        "justNow": "Just now",
         "btnSave": "Save evaluation",
         "btnSubmitAuth": "Submit for authorization",
         "toastDraftSaved": "Evaluation draft saved successfully.",
@@ -2992,7 +3061,7 @@
         "statusAuthorized": "Authorized",
         "statusUnderReview": "Under review",
         "tabs": {
-          "evaluation": "Evaluation",
+          "evaluation": "Profile",
           "training": "Training",
           "auditLog": "Audit log",
           "witnessing": "Witnessing",
@@ -3115,17 +3184,35 @@
           "title": "Personnel Profile Snapshot",
           "description": "View key staff credentials including personal code, primary role, email, phone, and active status."
         },
-        "tabs": {
-          "title": "Assessment Sections & Records",
-          "description": "Navigate between evaluation details, training courses, audit experience logs, witnessing reports, evidence files, and renewals."
+        "criteria": {
+          "title": "Competence Criteria & Experience",
+          "description": "Assess scheme standards, proposed sectors, evaluation dates, evaluator decisions, highest qualification, and field of study."
         },
-        "form": {
-          "title": "Competence Criteria & Details",
-          "description": "Record evaluation schemes, sectors, evaluator feedback, highest qualifications, and years of experience."
+        "documents": {
+          "title": "Qualification Documents & Evidence",
+          "description": "Upload official certificates, diplomas, CVs, and evidence files directly to the employee record."
+        }
+      },
+      "profileTour": {
+        "header": {
+          "title": "Member Profile Overview",
+          "description": "Review or update the personnel record, professional role, and contact credentials."
         },
-        "records": {
-          "title": "Integrated Audit & Training Logs",
-          "description": "Quickly add or review training completions, witnessed audits, and past client audit histories."
+        "personal": {
+          "title": "Personal & Contact Information",
+          "description": "Update full name, professional role (Auditor, Lead Auditor, etc.), email, phone, and upload profile photo."
+        },
+        "employment": {
+          "title": "Employment Details",
+          "description": "Record employment start and optional contract end dates for organizational tracking."
+        },
+        "competence": {
+          "title": "Schemes & Sector Authorizations",
+          "description": "Assign accredited IAF sector codes, approved certification schemes, qualifications, and country."
+        },
+        "save": {
+          "title": "Save & Sync",
+          "description": "Save modifications to synchronize them across the CAB personnel register and competence evaluation portal."
         }
       }
     },
@@ -3484,14 +3571,22 @@
           "identity": "CAB identity",
           "locations": "Locations",
           "accreditation": "Accreditation",
-          "schemes": "Schemes & scopes",
+          "schemes": "Schemes & services",
+          "scope": "Scope mapping",
           "marks": "Marks & certificate rules",
+          "certificate": "Certificate rules",
           "roles": "Key roles"
         },
         "status": {
           "READY": "Ready",
           "REVIEW": "Review",
           "MISSING": "Missing"
+        },
+        "issues": {
+          "required": "Required information is missing",
+          "invalid": "Some values are not in the correct format",
+          "fixHint": "Click to open the field and update it",
+          "cannotActivate": "Fix the missing or invalid fields before activating the workspace."
         },
         "notProvided": "Not provided yet",
         "unaccredited": "Operating without accreditation",
@@ -4510,17 +4605,13 @@
         "client": "Client Name",
         "country": "Country",
         "primaryContact": "Primary Contact",
-        "updated": "Last Updated",
+        "updated": " Updated",
         "auditClient": "Audit client",
         "applicationNumber": "Application number",
         "assignedPerson": "Assigned person",
         "status": "Status",
         "dateOfCreation": "Date of creation",
-        "code": "Client code",
-        "client": "Client",
         "city": "City",
-        "primaryContact": "Primary contact",
-        "updated": "Updated",
         "actions": "Actions"
       },
       "rowActions": {
@@ -5441,6 +5532,61 @@
         "selectApplication": "Select an application to review",
         "selectApplicationHint": "Search and select a submitted application from the register.",
         "openSelected": "Open review",
+        "flow": {
+          "steps": {
+            "1": "Select application",
+            "2": "Review sections",
+            "3": "Review checklist"
+          },
+          "sections": {
+            "legalInfo": "Legal Information",
+            "operationalInfo": "Operational Information",
+            "consultantInfo": "Consultant Information",
+            "declarationInfo": "Declaration",
+            "branches": "Branches",
+            "certificates": "Certificates",
+            "documents": "Documents"
+          },
+          "statusLabel": "Section status",
+          "statusPlaceholder": "Select a status",
+          "statusRequired": "Select a status for this section.",
+          "commentLabel": "Reviewer comment",
+          "commentPlaceholder": "Write your comment on this section",
+          "commentRequired": "Write a comment for this section.",
+          "saveContinue": "Save & continue",
+          "saveFinish": "Save & view checklist",
+          "refresh": "Refresh",
+          "notReviewed": "Not reviewed",
+          "noSectionData": "No data for this section.",
+          "fields": {
+            "id": "Record ID",
+            "applicationId": "Application ID",
+            "certificateCode": "Certificate code",
+            "certificateName": "Certificate name",
+            "sectors": "Sectors & IAF codes",
+            "answers": "Specification answers",
+            "sectorName": "Sector",
+            "iafCodes": "IAF codes",
+            "critical": "Critical",
+            "code": "Code",
+            "name": "Name",
+            "certifiedSince": "Certified since",
+            "currentSystems": "Current systems",
+            "question": "Question",
+            "answer": "Answer"
+          },
+          "criticalYes": "Critical",
+          "criticalNo": "Non-critical",
+          "loadError": "Could not load the application.",
+          "saveError": "Could not save the review. Try again.",
+          "commentsError": "Could not load the review comments.",
+          "tour": {
+            "stepper": {
+              "title": "Review Steps",
+              "description": "Select an application, review it section by section, then check the full checklist."
+            }
+          }
+        },
         "help": "Help",
         "chat": "Chat support",
         "tour": {
@@ -5534,13 +5680,28 @@
         },
         "overallReview": {
           "title": "Overall Review Result",
-          "decisionLabel": "Review Decision"
+          "decisionLabel": "Review Decision",
+          "completeSummary": "All reviewed sections are complete. The application can proceed.",
+          "partialSummary": "Application is substantially complete. Some items require additional information before proceeding to technical feasibility.",
+          "incompleteSummary": "Several sections are still incomplete. Continue the review before sending this application forward.",
+          "emptySummary": "No sections have been reviewed yet.",
+          "decisions": {
+            "technicalFeasibility": "Proceed to Technical Feasibility",
+            "informationRequired": "Request Information",
+            "quotation": "Proceed to Quotation",
+            "hold": "Hold Review"
+          }
         },
         "reviewerComments": {
-          "title": "Reviewer Comments"
+          "title": "Reviewer Comments",
+          "addInternal": "+ Add Internal Comment",
+          "alertTitle": "Application is substantially complete.",
+          "empty": "No reviewer comments yet.",
+          "waitingNote": "Initial review completed. Awaiting information from client."
         },
         "documentsOverview": {
           "title": "Documents Overview",
+          "viewAll": "View All",
           "total": "Total Documents",
           "valid": "Valid",
           "expired": "Expired",
@@ -5554,6 +5715,7 @@
           "managementReview": "Management Review"
         },
         "notesTitle": "Notes",
+        "notesBanner": "Once technical feasibility is approved, the application will move to the quotation phase.",
         "applicationDetailsSection": {
           "title": "Application Details",
           "scopeOfCertification": "Scope of Certification",
@@ -5624,7 +5786,11 @@
           "requestInformation": "Request Information",
           "approveCompleteness": "Approve Completeness",
           "holdReview": "Hold Review",
-          "rejectApplication": "Reject Application"
+          "rejectApplication": "Reject Application",
+          "approving": "Approving...",
+          "rejecting": "Rejecting...",
+          "approveComment": "Done",
+          "rejectComment": "Rejected"
         },
         "footer": {
           "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
@@ -5672,7 +5838,10 @@
         },
         "status": {
           "inProgress": "In Progress",
-          "pending": "Pending"
+          "pending": "Pending",
+          "submitted": "Submitted",
+          "accepted": "Accepted",
+          "rejected": "Rejected"
         },
         "breadcrumb": {
           "home": "Home",
@@ -5691,11 +5860,13 @@
           "downloadRequest": "Download Request",
           "moreActions": "More Actions",
           "sendReminder": "Send Reminder to Client",
-          "addInternalComment": "Add Internal Comment"
+          "addInternalComment": "Add Internal Comment",
+          "addRequest": "Add Request"
         },
         "alert": {
           "title": "Information / Clarification Required",
-          "description": "The following information has been requested from the client. Due date for all items: {{date}}."
+          "description": "The following information has been requested from the client.",
+          "dueDate": "Earliest due date: {{date}}."
         },
         "requests": {
           "title": "Requested Information ({{count}})",
@@ -5708,7 +5879,8 @@
             "dueDate": "Due Date",
             "priority": "Priority",
             "status": "Status"
-          }
+          },
+          "empty": "No information requests have been created yet."
         },
         "priority": {
           "high": "High",
@@ -5728,11 +5900,17 @@
             "responseAttachment": "Response / Attachment",
             "submittedOn": "Submitted On",
             "submittedBy": "Submitted By",
-            "status": "Status"
-          }
+            "status": "Status",
+            "approve": "Approve"
+          },
+          "approvePlaceholder": "Select"
         },
         "internalComments": {
-          "title": "Internal Comments"
+          "title": "Internal Comments",
+          "empty": "No internal comments yet.",
+          "placeholder": "Write an internal comment for the assessment team",
+          "required": "Comment is required",
+          "error": "Could not save the internal comment"
         },
         "keyActions": {
           "title": "Key Actions",
@@ -5770,6 +5948,17 @@
           "copyright": "© 2025 CASCO Certification Body. All rights reserved.",
           "privacyPolicy": "Privacy Policy",
           "termsOfUse": "Terms of Use"
+        },
+        "selectApplication": "Select an application",
+        "selectApplicationHint": "Choose the application you want to manage information requests for.",
+        "openSelected": "Open Information Required",
+        "form": {
+          "itemPlaceholder": "Describe the information or clarification the client must provide",
+          "referencePlaceholder": "e.g. ISO 9001:2015 - 4.4",
+          "priorityPlaceholder": "Select priority",
+          "submit": "Send Request",
+          "itemRequired": "Describe the information that is required.",
+          "error": "Could not create the request. Please try again."
         }
       },
       "technicalFeasibility": {

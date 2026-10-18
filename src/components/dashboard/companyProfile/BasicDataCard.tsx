@@ -3,14 +3,20 @@ import { useTranslation } from 'react-i18next'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { DatePicker } from '@/components/ui/DatePicker'
 import { FormField, SelectField, TextField } from '@/components/ui'
-import { AppIcon, MailIcon, UserIcon } from '@/components/icons'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { profileCardClassName, STATUS_OPTIONS } from './constants'
 import { CardHeader } from './Primitives'
 import { useProfileForm } from './ProfileFormContext'
+import { basicDataRules } from './validation'
 
 export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: boolean }) {
   const { t } = useTranslation()
   const { form, update } = useProfileForm()
+  const rules = basicDataRules(t, { identityEditable: !identityReadOnly })
+  const { fieldProps } = useFieldValidation(form, rules)
+  const registrationDateError = form.registrationDate
+    ? rules.registrationDate?.(form.registrationDate, form)
+    : undefined
 
   const statusLabels = useMemo(() => {
     const labels = STATUS_OPTIONS.map((opt) =>
@@ -49,7 +55,9 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               type="text"
               placeholder={t('companyProfile.basicDataCard.companyNamePlaceholder')}
               value={form.organizationName}
+              valueKind="mixed"
               onChange={(e) => update('organizationName', e.target.value)}
+              {...fieldProps('organizationName')}
             />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.tradingNameLabel')} required>
@@ -57,7 +65,9 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               type="text"
               placeholder={t('companyProfile.basicDataCard.tradingNamePlaceholder')}
               value={form.tradeName}
+              valueKind="mixed"
               onChange={(e) => update('tradeName', e.target.value)}
+              {...fieldProps('tradeName')}
             />
           </FormField>
         </div>
@@ -68,7 +78,9 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               type="text"
               placeholder={t('companyProfile.basicDataCard.commercialRegistryPlaceholder')}
               value={form.commercialRegisterNumber}
+              valueKind="mixed"
               onChange={(e) => update('commercialRegisterNumber', e.target.value)}
+              {...fieldProps('commercialRegisterNumber')}
             />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.serialNumberLabel')}>
@@ -76,42 +88,37 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               type="text"
               placeholder={t('companyProfile.basicDataCard.serialNumberPlaceholder')}
               value={form.unifiedNumber}
+              valueKind="mixed"
               onChange={(e) => update('unifiedNumber', e.target.value)}
+              {...fieldProps('unifiedNumber')}
             />
           </FormField>
         </div>
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.authorizedPersonLabel')} required>
-            <div className="relative flex items-center">
-              <TextField
-                type="text"
-                readOnly={identityReadOnly}
-                placeholder={t('companyProfile.basicDataCard.authorizedPersonPlaceholder')}
-                className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] ps-10 font-medium text-neutral-800' : 'ps-10'}
-                value={form.authorizedPersonName}
-                onChange={(e) => update('authorizedPersonName', e.target.value)}
-              />
-              <span className="pointer-events-none absolute start-3 text-primary">
-                <AppIcon icon={UserIcon} size={18} />
-              </span>
-            </div>
+            <TextField
+              type="text"
+              readOnly={identityReadOnly}
+              placeholder={t('companyProfile.basicDataCard.authorizedPersonPlaceholder')}
+              className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] font-medium text-neutral-800' : undefined}
+              value={form.authorizedPersonName}
+              valueKind={identityReadOnly ? undefined : 'text'}
+              onChange={(e) => update('authorizedPersonName', e.target.value)}
+              {...fieldProps('authorizedPersonName')}
+            />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.emailLabel')} required>
-            <div className="relative flex items-center">
-              <TextField
-                type="email"
-                dir="ltr"
-                readOnly={identityReadOnly}
-                placeholder={t('companyProfile.basicDataCard.emailPlaceholder')}
-                className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] ps-10 font-medium text-neutral-800' : 'ps-10'}
-                value={form.email}
-                onChange={(e) => update('email', e.target.value)}
-              />
-              <span className="pointer-events-none absolute start-3 text-primary">
-                <AppIcon icon={MailIcon} size={18} />
-              </span>
-            </div>
+            <TextField
+              type="email"
+              dir="ltr"
+              readOnly={identityReadOnly}
+              placeholder={t('companyProfile.basicDataCard.emailPlaceholder')}
+              className={identityReadOnly ? 'cursor-default border-[#e2e8f0] bg-[#f8fafc] font-medium text-neutral-800' : undefined}
+              value={form.email}
+              onChange={(e) => update('email', e.target.value)}
+              {...fieldProps('email')}
+            />
           </FormField>
         </div>
 
@@ -141,6 +148,7 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
                 }
                 value={form.phoneNumber}
                 onChange={(e) => update('phoneNumber', e.target.value)}
+                {...fieldProps('phoneNumber')}
               />
             </PhoneInputRow>
           </FormField>
@@ -156,11 +164,13 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <FormField label={t('companyProfile.basicDataCard.totalEmployeesLabel')} required>
             <TextField
-              type="number"
-              min={0}
+              type="text"
+              valueKind="number"
+              maxLength={9}
               placeholder={t('companyProfile.basicDataCard.totalEmployeesPlaceholder')}
               value={form.employeeCount}
               onChange={(e) => update('employeeCount', e.target.value)}
+              {...fieldProps('employeeCount')}
             />
           </FormField>
           <FormField label={t('companyProfile.basicDataCard.registrationDateLabel')} required>
@@ -169,6 +179,9 @@ export function BasicDataCard({ identityReadOnly = true }: { identityReadOnly?: 
               onChange={(date) => update('registrationDate', date)}
               placeholder={t('companyProfile.basicDataCard.registrationDatePlaceholder')}
             />
+            {registrationDateError && (
+              <p className="text-small-light text-error-500">{registrationDateError}</p>
+            )}
           </FormField>
         </div>
       </div>

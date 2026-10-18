@@ -132,6 +132,22 @@ export function printFieldsDocument(title: string, fields: { label: string; valu
   openHtmlDocument(buildFieldsHtml(title, fields), true)
 }
 
+export function downloadFieldsDocument(
+  filename: string,
+  title: string,
+  fields: { label: string; value: string }[],
+) {
+  const blob = new Blob([buildFieldsHtml(title, fields)], { type: 'text/html;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.href = url
+  link.download = filename.endsWith('.html') ? filename : `${filename}.html`
+  document.body.appendChild(link)
+  link.click()
+  link.remove()
+  URL.revokeObjectURL(url)
+}
+
 export function matchesSearch(values: Array<string | number | null | undefined>, query: string) {
   const normalized = query.trim().toLowerCase()
   if (!normalized) return true

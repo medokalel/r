@@ -5,7 +5,7 @@ import { MultiSelect } from '@/components/ui/MultiSelect'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SetupNote } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { CAB_ACTIVITY_OPTIONS, getYearEstablishedOptions } from '@/lib/api/cabSetupApi'
-import { isValidWebsite } from '@/lib/validators'
+import { isValidFieldKind, isValidWebsite } from '@/lib/validators'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
 export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProps) {
@@ -27,7 +27,13 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
         type="text"
         value={form.legalEntityName}
         placeholder={t('cab.setup.profile.legalNamePlaceholder')}
+        valueKind="text"
         onChange={(event) => onPatch({ legalEntityName: event.target.value })}
+        error={
+          form.legalEntityName && !isValidFieldKind(form.legalEntityName, 'text')
+            ? t('validation.textOnly')
+            : undefined
+        }
       />
 
       <TextField
@@ -36,20 +42,28 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
         type="text"
         value={form.tradingName}
         placeholder={t('cab.setup.profile.tradingNamePlaceholder')}
+        valueKind="text"
         onChange={(event) => onPatch({ tradingName: event.target.value })}
+        error={
+          form.tradingName && !isValidFieldKind(form.tradingName, 'text')
+            ? t('validation.textOnly')
+            : undefined
+        }
       />
 
       <div className="space-y-2">
         <FormLabel required>{t('cab.setup.profile.activity')}</FormLabel>
-        <MultiSelect
-          tags={form.cabSetup.activities}
-          options={activityOptions}
-          onChange={(activities) => onPatchSetup({ activities })}
-          layout="stacked"
-          searchable
-          placeholder={t('cab.setup.profile.activityPlaceholder')}
-          searchPlaceholder={t('common.search')}
-        />
+        <div id="cab-setup-activities">
+          <MultiSelect
+            tags={form.cabSetup.activities}
+            options={activityOptions}
+            onChange={(activities) => onPatchSetup({ activities })}
+            layout="stacked"
+            searchable
+            placeholder={t('cab.setup.profile.activityPlaceholder')}
+            searchPlaceholder={t('common.search')}
+          />
+        </div>
         <SetupNote>{t('cab.setup.profile.activityNote')}</SetupNote>
       </div>
 
@@ -61,7 +75,13 @@ export function CabProfileStep({ form, onPatch, onPatchSetup }: CabSetupStepProp
           type="text"
           value={form.registrationNumber}
           placeholder={t('cab.setup.profile.registrationNumberPlaceholder')}
+          valueKind="mixed"
           onChange={(event) => onPatch({ registrationNumber: event.target.value })}
+          error={
+            form.registrationNumber && !isValidFieldKind(form.registrationNumber, 'mixed')
+              ? t('validation.mixedOnly')
+              : undefined
+          }
         />
         <TextField
           id="cab-setup-website"

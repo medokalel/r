@@ -1,22 +1,57 @@
+import { authorizedRequest } from '@/lib/api/authorizedClient'
+import {
+  getCabApplicationReview,
+  persistSectionReviewStatus,
+  startCabApplicationReview,
+  statusesFromReview,
+  updateCabApplicationStatus,
+  partialRequestsFromReview,
+  type ReviewSectionKey,
+} from '@/lib/api/cabApplicationReviewApi'
+import {
+  dedupeInformationRequired,
+  dueDateOneWeekFromRequestedOn,
+  isReviewSectionKey,
+  syncReviewSectionsWithInformationRequired,
+  withReviewSectionDueDate,
+} from '@/lib/api/irReviewSectionSync'
+import { resolveCabCertificationApplication } from '@/lib/api/cabCertificationApplicationApi'
+import { ApiError } from '@/lib/api/client'
+import type { ApplicationStatus, InformationRequiredItem } from '@/lib/api/certificationApplicationApi'
+
 export type WorkflowStepStatus = 'completed' | 'inProgress' | 'pending'
 export type RequestPriority = 'high' | 'medium' | 'low'
 export type RequestStatus = 'pending' | 'submitted' | 'accepted' | 'rejected'
 
 export interface InformationRequestItem {
-  id: number
+  id: string
   description: string
-  referenceStandard: string
-  referenceClause: string
-  requestedBy: { name: string; initials: string; role: string }
+  reference: string
+  requestedBy: { name: string; initials: string }
   requestedOnDate: string
   requestedOnTime: string
   dueDate: string
-  priority: RequestPriority
+  priority: RequestPriority | null
   status: RequestStatus
 }
 
+export interface ClientResponseRow {
+  id: string
+  item: string
+  text: string
+  attachments: Array<{ name: string; url: string }>
+  submittedOnDate: string
+  submittedOnTime: string
+  submittedBy: string
+  status: RequestStatus
+  sectionKey: ReviewSectionKey | null
+  approved: boolean | null
+}
+
 export interface CabApplicationInformationRequired {
+  id: string
   applicationId: string
+  applicationStatus: ApplicationStatus
   status: 'inProgress'
   client: string
   applicationType: string
@@ -24,127 +59,274 @@ export interface CabApplicationInformationRequired {
   primaryStandard: string
   requestedOnDate: string
   requestedOnTime: string
-  requestedBy: { name: string; initials: string; role: string }
+  requestedBy: { name: string; initials: string }
   documentCount: number
-  deadlineDate: string
-  deadlineNote: string
+  earliestDueDate: string | null
   requests: InformationRequestItem[]
-  internalComments: Array<{ author: string; initials: string; role: string; date: string; time: string; text: string }>
+  responses: ClientResponseRow[]
   workflowSteps: Array<{ key: string; status: WorkflowStepStatus }>
 }
 
-const delay = (ms = 300) => new Promise((resolve) => setTimeout(resolve, ms))
+export interface CreateInformationRequiredPayload {
+  informationItem: string
+  referenceClause?: string
+  dueDate?: string
+  priority?: string
+}
 
-const MOCK: CabApplicationInformationRequired = {
-  applicationId: 'APP-2025-0086',
-  status: 'inProgress',
-  client: 'GreenLeaf Pvt. Ltd.',
-  applicationType: 'Initial Certification',
-  certificationBody: 'CASCO',
-  primaryStandard: 'ISO 9001:2015',
-  requestedOnDate: 'May 19, 2025',
-  requestedOnTime: '04:15 PM (IST)',
-  requestedBy: { name: 'Neha Sharma', initials: 'NP', role: 'Lead Auditor' },
-  documentCount: 7,
-  deadlineDate: 'May 26, 2025',
-  deadlineNote:
-    'The client has been notified via email. Please ensure all requested information is received before the due date to avoid delays in the certification process.',
-  requests: [
-    {
-      id: 1,
-      description: 'Updated organizational chart reflecting current structure',
-      referenceStandard: 'ISO 9001:2015',
-      referenceClause: '4.4',
-      requestedBy: { name: 'Neha Sharma', initials: 'NP', role: 'Lead Auditor' },
-      requestedOnDate: 'May 19, 2025',
-      requestedOnTime: '02:35 PM',
-      dueDate: 'May 26, 2025',
-      priority: 'high',
-      status: 'pending',
-    },
-    {
-      id: 2,
-      description: "Clarification on scope exclusion for 'Research & Development'",
-      referenceStandard: 'ISO 9001:2015',
-      referenceClause: '8.3',
-      requestedBy: { name: 'Neha Sharma', initials: 'NP', role: 'Lead Auditor' },
-      requestedOnDate: 'May 19, 2025',
-      requestedOnTime: '02:35 PM',
-      dueDate: 'May 26, 2025',
-      priority: 'medium',
-      status: 'pending',
-    },
-    {
-      id: 3,
-      description: 'Evidence of management review meeting minutes (last 6 months)',
-      referenceStandard: 'ISO 9001:2015',
-      referenceClause: '9.3',
-      requestedBy: { name: 'Neha Sharma', initials: 'NP', role: 'Lead Auditor' },
-      requestedOnDate: 'May 19, 2025',
-      requestedOnTime: '02:35 PM',
-      dueDate: 'May 26, 2025',
-      priority: 'high',
-      status: 'pending',
-    },
-    {
-      id: 4,
-      description: 'Internal audit schedule for the current year',
-      referenceStandard: 'ISO 9001:2015',
-      referenceClause: '9.2',
-      requestedBy: { name: 'Arjun Verma', initials: 'AV', role: 'Lead Auditor' },
-      requestedOnDate: 'May 20, 2025',
-      requestedOnTime: '11:10 AM',
-      dueDate: 'May 27, 2025',
-      priority: 'medium',
-      status: 'pending',
-    },
-  ],
-  internalComments: [
-    {
-      author: 'Neha Sharma',
-      initials: 'NP',
-      role: 'Lead Auditor',
-      date: 'May 19, 2025',
-      time: '02:38 PM',
-      text: 'Please request the client to provide the above information at the earliest to avoid delays in the review process.',
-    },
-  ],
-  workflowSteps: [
-    { key: 'application', status: 'completed' },
-    { key: 'applicationReview', status: 'completed' },
-    { key: 'informationRequired', status: 'inProgress' },
-    { key: 'technicalFeasibility', status: 'pending' },
-    { key: 'quotation', status: 'pending' },
-    { key: 'quotationApproval', status: 'pending' },
-    { key: 'payment', status: 'pending' },
-    { key: 'invoicing', status: 'pending' },
-    { key: 'contracting', status: 'pending' },
-    { key: 'auditPlanning', status: 'pending' },
-  ],
+interface CabInformationRequiredList {
+  application: {
+    id: string
+    orderNumber: string | null
+    status: ApplicationStatus
+    organization?: { id: string; name: string }
+  }
+  informationRequired: InformationRequiredItem[]
+}
+
+const PRIORITIES: Record<string, RequestPriority> = { HIGH: 'high', MEDIUM: 'medium', LOW: 'low' }
+const LATER_STAGES = [
+  'technicalFeasibility',
+  'quotation',
+  'quotationApproval',
+  'payment',
+  'invoicing',
+  'contracting',
+  'auditPlanning',
+]
+
+const cabPath = (applicationId: string) =>
+  `/cab/certification-applications/${encodeURIComponent(applicationId)}/information-required`
+
+const formatDate = (iso?: string | null, timeZone?: string) =>
+  iso ? new Date(iso).toLocaleDateString(undefined, { timeZone }) : '—'
+
+const formatTime = (iso?: string | null) =>
+  iso ? new Date(iso).toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' }) : ''
+
+const initialsOf = (name: string) =>
+  name
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word.charAt(0).toUpperCase())
+    .join('') || '—'
+
+function statusOf(status: string | null | undefined, answered: boolean): RequestStatus {
+  const value = (status ?? '').toLowerCase()
+  if (value === 'accepted' || value === 'rejected') return value
+  return answered || value === 'submitted' ? 'submitted' : 'pending'
+}
+
+function itemKey(item: Pick<InformationRequiredItem, 'referenceClause' | 'informationItem'>) {
+  return `${item.referenceClause ?? ''}|${item.informationItem.trim().toLowerCase()}`
+}
+
+function responseApproval(
+  sectionKey: string | null | undefined,
+  sectionStatuses: Partial<Record<ReviewSectionKey, string>>,
+): boolean | null {
+  if (!isReviewSectionKey(sectionKey)) return null
+  if (sectionStatuses[sectionKey] === 'complete') return true
+  if (sectionStatuses[sectionKey] === 'incomplete') return false
+  return null
+}
+
+function responseRowStatus(
+  item: InformationRequiredItem,
+  responseStatus: string | null,
+  sectionStatuses: Partial<Record<ReviewSectionKey, string>>,
+): RequestStatus {
+  const approval = responseApproval(item.referenceClause, sectionStatuses)
+  if (approval === true) return 'accepted'
+  if (approval === false) return 'rejected'
+  return statusOf(responseStatus, true)
+}
+
+function toResponseRows(
+  items: InformationRequiredItem[],
+  sectionStatuses: Partial<Record<ReviewSectionKey, string>>,
+): ClientResponseRow[] {
+  return items.flatMap((item) =>
+    [...item.responses]
+      .sort((a, b) => Date.parse(a.submittedOn) - Date.parse(b.submittedOn))
+      .map((response) => ({
+        id: response.id,
+        item: item.informationItem,
+        text: response.response ?? '',
+        attachments: response.attachments.map((file) => ({
+          name: file.originalName || file.fileName || file.fileUrl,
+          url: file.fileUrl,
+        })),
+        submittedOnDate: formatDate(response.submittedOn),
+        submittedOnTime: formatTime(response.submittedOn),
+        submittedBy: response.submittedBy?.fullName ?? '—',
+        status: responseRowStatus(item, response.status, sectionStatuses),
+        sectionKey: isReviewSectionKey(item.referenceClause) ? item.referenceClause : null,
+        approved: responseApproval(item.referenceClause, sectionStatuses),
+      })),
+  )
+}
+
+export async function approveCabClientResponse(
+  applicationId: string,
+  sectionKey: ReviewSectionKey,
+  approved: boolean,
+  applicationStatus: ApplicationStatus,
+): Promise<void> {
+  if (applicationStatus === 'SUBMITTED') {
+    await startCabApplicationReview(applicationId)
+  } else if (applicationStatus === 'REJECTED' || applicationStatus === 'APPROVED') {
+    await updateCabApplicationStatus(
+      applicationId,
+      'UNDER_REVIEW',
+      'Review resumed after client response approval.',
+    )
+  }
+  await persistSectionReviewStatus(applicationId, sectionKey, approved ? 'complete' : 'partiallyComplete')
+}
+
+export function createCabInformationRequired(
+  applicationId: string,
+  payload: CreateInformationRequiredPayload,
+): Promise<InformationRequiredItem> {
+  return authorizedRequest(cabPath(applicationId), {
+    method: 'POST',
+    body: JSON.stringify({
+      informationItem: payload.informationItem,
+      referenceClause: payload.referenceClause || undefined,
+      dueDate: payload.dueDate || undefined,
+      priority: payload.priority ? payload.priority.toUpperCase() : undefined,
+    }),
+  })
 }
 
 export async function getCabApplicationInformationRequired(
-  applicationId?: string,
+  applicationId: string,
   clientId?: string,
 ): Promise<CabApplicationInformationRequired> {
-  const { loadCabApplicationOverlay } = await import(
-    '@/lib/api/cabCertificationApplicationApi'
+  const detail = await resolveCabCertificationApplication(applicationId, clientId)
+  if (!detail) throw new ApiError('Application not found.', 404)
+  const remote = await authorizedRequest<CabInformationRequiredList | InformationRequiredItem[]>(
+    cabPath(applicationId),
   )
-  const overlay = await loadCabApplicationOverlay(applicationId, clientId)
-  if (!overlay) {
-    await delay()
-    return MOCK
+  const list: CabInformationRequiredList = Array.isArray(remote)
+    ? {
+        application: {
+          id: detail.id,
+          orderNumber: detail.orderNumber ?? null,
+          status: detail.status,
+          organization: detail.organization,
+        },
+        informationRequired: remote,
+      }
+    : {
+        application: remote.application ?? {
+          id: detail.id,
+          orderNumber: detail.orderNumber ?? null,
+          status: detail.status,
+          organization: detail.organization,
+        },
+        informationRequired: remote.informationRequired ?? [],
+      }
+  const { application } = list
+  let reviewPartials: InformationRequiredItem[] = []
+  let sectionStatuses: Partial<Record<ReviewSectionKey, string>> = {}
+  try {
+    const review = await getCabApplicationReview(applicationId)
+    sectionStatuses = statusesFromReview(review)
+    reviewPartials = partialRequestsFromReview(review).map((item) => ({
+      id: item.id,
+      applicationId,
+      informationItem: item.informationItem,
+      referenceClause: item.referenceClause,
+      requestedBy: item.requestedBy,
+      requestedOn: item.requestedOn,
+      dueDate: dueDateOneWeekFromRequestedOn(item.requestedOn),
+      priority: 'MEDIUM',
+      status: 'PENDING',
+      responses: [],
+    }))
+  } catch {
+    reviewPartials = []
   }
+  syncReviewSectionsWithInformationRequired(applicationId, sectionStatuses)
+  const officialAll = list.informationRequired.map(withReviewSectionDueDate)
+  const existingAll = new Set(officialAll.map(itemKey))
+  const history = dedupeInformationRequired([
+    ...officialAll,
+    ...reviewPartials.filter((item) => !existingAll.has(itemKey(item))),
+  ]).map(withReviewSectionDueDate)
+  const requests = history
+  const responses = toResponseRows(
+    history.filter((item) => item.responses.length > 0),
+    sectionStatuses,
+  )
+  const first = requests[0] ?? history[0]
+  const requesterName = first?.requestedBy?.fullName ?? '—'
+  const standards = (detail?.certificates ?? [])
+    .map((certificate) => certificate.certificateName || certificate.certificateCode || '')
+    .filter(Boolean)
+  const openDueDates = requests
+    .filter((request) => {
+      const approval = responseApproval(request.referenceClause, sectionStatuses)
+      return approval !== true && request.dueDate && request.responses.length === 0
+    })
+    .map((request) => request.dueDate as string)
+    .sort()
+  const decided = application.status === 'APPROVED' || application.status === 'REJECTED'
+  const approvable = responses.filter((row) => row.sectionKey)
+  const allResponsesApproved =
+    approvable.length > 0 && approvable.every((row) => row.approved === true)
 
-  const { application, standards, submittedDate, clientName } = overlay
   return {
-    ...MOCK,
+    id: application.id,
     applicationId: application.orderNumber || application.id,
-    client: clientName || MOCK.client,
-    applicationType: application.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
-    primaryStandard: standards[0] || MOCK.primaryStandard,
-    requestedOnDate: submittedDate.toLocaleDateString(),
-    requestedOnTime: submittedDate.toLocaleTimeString(),
-    documentCount: application.documents?.length ?? MOCK.documentCount,
+    applicationStatus: application.status,
+    status: 'inProgress',
+    client: application.organization?.name || detail?.legalInfo?.organizationName || '—',
+    applicationType: detail?.legalInfo?.requestType === 'RENEWAL' ? 'Renewal' : 'Initial Certification',
+    certificationBody: 'CASCO',
+    primaryStandard: standards[0] || '—',
+    requestedOnDate: formatDate(first?.requestedOn),
+    requestedOnTime: formatTime(first?.requestedOn),
+    requestedBy: { name: requesterName, initials: initialsOf(requesterName) },
+    documentCount: detail?.documents?.length ?? 0,
+    earliestDueDate: openDueDates[0] ? formatDate(openDueDates[0], 'UTC') : null,
+    requests: requests.map((item) => {
+      const name = item.requestedBy?.fullName ?? '—'
+      const approval = responseApproval(item.referenceClause, sectionStatuses)
+      return {
+        id: item.id,
+        description: item.informationItem,
+        reference: item.referenceClause ?? '',
+        requestedBy: { name, initials: initialsOf(name) },
+        requestedOnDate: formatDate(item.requestedOn),
+        requestedOnTime: formatTime(item.requestedOn),
+        dueDate: formatDate(item.dueDate, 'UTC'),
+        priority: PRIORITIES[(item.priority ?? '').toUpperCase()] ?? null,
+        status:
+          approval === true
+            ? 'accepted'
+            : approval === false
+              ? 'rejected'
+              : statusOf(item.status, item.responses.length > 0),
+      }
+    }),
+    responses,
+    workflowSteps: [
+      { key: 'application', status: 'completed' },
+      { key: 'applicationReview', status: decided || allResponsesApproved ? 'completed' : 'inProgress' },
+      {
+        key: 'informationRequired',
+        status:
+          requests.length === 0 && responses.length === 0
+            ? 'pending'
+            : allResponsesApproved
+              ? 'completed'
+              : 'inProgress',
+      },
+      ...LATER_STAGES.map((key) => ({ key, status: 'pending' as const })),
+    ],
   }
 }

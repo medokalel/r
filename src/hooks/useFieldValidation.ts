@@ -6,9 +6,22 @@ import { useCallback, useMemo, useState } from 'react'
  * the selected country code). Return an error message to show it, or
  * `undefined`/falsy when the value is valid.
  */
-type ValidationRules<Form> = Partial<{
+export type ValidationRules<Form> = Partial<{
   [K in keyof Form]: (value: Form[K], form: Form) => string | undefined
 }>
+
+/** Every current error for `form`, ignoring touched state — for gating saves/steps. */
+export function collectErrors<Form extends object>(
+  form: Form,
+  rules: ValidationRules<Form>
+): Partial<Record<keyof Form, string>> {
+  const result: Partial<Record<keyof Form, string>> = {}
+  for (const key of Object.keys(rules) as (keyof Form)[]) {
+    const message = rules[key]?.(form[key], form)
+    if (message) result[key] = message
+  }
+  return result
+}
 
 /**
  * Reusable "template" for wiring format validation onto any form field.

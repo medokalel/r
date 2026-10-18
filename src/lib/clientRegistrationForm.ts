@@ -1,5 +1,7 @@
 import type { CountryCode } from '@/lib/countries'
-import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
+import type { TFunction } from 'i18next'
+import type { ValidationRules } from '@/hooks/useFieldValidation'
+import { emailRule, phoneRule, textRule } from '@/lib/fieldRules'
 
 /** Fields accepted by POST /cab-clients. */
 export interface ClientRegistrationForm {
@@ -28,16 +30,19 @@ export const emptyClientRegistrationForm: ClientRegistrationForm = {
   phoneNumber: '',
 }
 
-export function isClientRegistrationComplete(form: ClientRegistrationForm): boolean {
-  return Boolean(
-    form.organizationName.trim().length >= 2 &&
-      form.administrationName.trim().length >= 2 &&
-      form.facilityOwnerManager.trim().length >= 2 &&
-      form.activity.trim().length >= 2 &&
-      form.legalCapacity.trim().length >= 2 &&
-      form.country &&
-      form.city.trim().length >= 2 &&
-      isValidEmailFormat(form.email) &&
-      isValidPhoneNumber(form.phoneNumber, form.phoneCountryCode)
-  )
+/** Mirrors the backend createClientSchema (POST /cab-clients) limits. */
+export function getClientRegistrationRules(
+  t: TFunction
+): ValidationRules<ClientRegistrationForm> {
+  return {
+    organizationName: textRule(t, { kind: 'mixed', min: 2, max: 200 }),
+    legalCapacity: textRule(t, { min: 2, max: 200 }),
+    administrationName: textRule(t, { kind: 'mixed', min: 2, max: 200 }),
+    country: (value) => (value ? undefined : t('validation.required')),
+    city: textRule(t, { min: 2, max: 100 }),
+    activity: textRule(t, { min: 2, max: 300 }),
+    facilityOwnerManager: textRule(t, { kind: 'text', min: 2, max: 200 }),
+    email: emailRule(t),
+    phoneNumber: (value, form) => phoneRule(t, form.phoneCountryCode)(value),
+  }
 }

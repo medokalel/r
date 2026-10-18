@@ -5,6 +5,7 @@ import {
   type AccreditationBodyOption,
 } from '@/lib/api/cabOnboardingApi'
 import { isOrgScopeStepComplete, type OrgScopeFormFields } from '@/lib/onboardingOrgScopeForm'
+import { isValidFieldKind, isValidWebsite } from '@/lib/validators'
 import { type OnboardingModulesFields } from '@/lib/onboardingModulesForm'
 
 export { ACCREDITATION_BODY_OTHER }
@@ -60,11 +61,22 @@ export function isOrgTypeStepComplete(form: CabOnboardingForm): boolean {
 export { isModulesStepComplete } from '@/lib/onboardingModulesForm'
 
 export function isOrgDetailsStepComplete(form: CabOnboardingForm): boolean {
-  return Boolean(form.legalEntityName.trim())
+  return Boolean(
+    form.legalEntityName.trim() &&
+      isValidFieldKind(form.legalEntityName, 'text') &&
+      isValidFieldKind(form.tradingName, 'text') &&
+      isValidFieldKind(form.registrationNumber, 'mixed') &&
+      isValidWebsite(form.website)
+  )
 }
 
 export function isLocationStepComplete(form: CabOnboardingForm): boolean {
-  return Boolean(form.country && form.city.trim() && form.address.trim())
+  return Boolean(
+    form.country &&
+      form.city.trim() &&
+      form.address.trim() &&
+      isValidFieldKind(form.address, 'mixed')
+  )
 }
 
 export function isAccreditationBodyStepComplete(

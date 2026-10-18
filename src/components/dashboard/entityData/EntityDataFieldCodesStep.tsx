@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { fieldTitleClassName } from '@/components/ui'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import type { SectorKey, StandardKey } from '@/components/dashboard/entityData/fieldTypes'
-import { codesForStandardSector, sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'
+import { MAX_FIELD_SELECTIONS, codesForStandardSector, sectorsForStandard } from '@/components/dashboard/entityData/fieldTypes'
 import { StandardTabs } from '@/components/dashboard/entityData/StandardTabs'
 import { SectorIcon } from '@/components/icons/sectorIcons'
 import { WesternDigits } from '@/components/WesternDigits'
@@ -25,21 +25,24 @@ interface IafCodeCardProps {
   code: string
   critical?: boolean
   selected: boolean
+  disabled?: boolean
   onToggle: () => void
 }
 
-function IafCodeCard({ sector, title, code, critical, selected, onToggle }: IafCodeCardProps) {
+function IafCodeCard({ sector, title, code, critical, selected, disabled, onToggle }: IafCodeCardProps) {
   return (
     <button
       type="button"
       onClick={onToggle}
+      disabled={disabled}
       className={cn(
         'flex w-full flex-col rounded-[var(--radius-md)] border-2 p-2 text-start text-[16px] transition-colors',
         critical
           ? 'border-error-500 shadow-[0_1px_10px_rgba(255,59,48,0.3)]'
           : selected
             ? 'border-primary'
-            : 'border-[#ececec]'
+            : 'border-[#ececec]',
+        disabled && 'cursor-not-allowed opacity-50',
       )}
     >
       <div
@@ -101,14 +104,25 @@ export function EntityDataFieldCodesStep({
 
   const selectionKey = (sector: SectorKey) => `${activeStandard}:${sector}`
 
+  const selectedCountForStandard = Object.entries(selectedCodes)
+    .filter(([key]) => key.startsWith(`${activeStandard}:`))
+    .reduce((total, [, codes]) => total + codes.length, 0)
+  const atLimit = selectedCountForStandard >= MAX_FIELD_SELECTIONS
+
   const toggleCode = (sector: SectorKey, code: string) => {
     const key = selectionKey(sector)
     const sectorCodes = selectedCodes[key] ?? []
+    if (sectorCodes.includes(code)) {
+      onSelectedCodesChange({
+        ...selectedCodes,
+        [key]: sectorCodes.filter((item) => item !== code),
+      })
+      return
+    }
+    if (atLimit) return
     onSelectedCodesChange({
       ...selectedCodes,
-      [key]: sectorCodes.includes(code)
-        ? sectorCodes.filter((item) => item !== code)
-        : [...sectorCodes, code],
+      [key]: [...sectorCodes, code],
     })
   }
 
@@ -120,9 +134,14 @@ export function EntityDataFieldCodesStep({
   return (
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
-        <h3 className="text-[28px] font-semibold leading-[1.6] text-neutral-900">
-          {t('accreditation.entityData.field.codesTitle')}
-        </h3>
+        <div className="space-y-1">
+          <h3 className="text-[28px] font-semibold leading-[1.6] text-neutral-900">
+            {t('accreditation.entityData.field.codesTitle')}
+          </h3>
+          <p className="text-[14px] text-neutral-600">
+            {t('accreditation.entityData.field.maxCodesHint', { count: MAX_FIELD_SELECTIONS })}
+          </p>
+        </div>
         <div className="flex items-center gap-2 rounded-[var(--radius-sm)] bg-[rgba(252,234,232,0.5)] px-3 py-3">
           <span className="size-2 shrink-0 rounded-full bg-error-500" aria-hidden />
           <p className="text-[16px] font-medium text-neutral-600">
@@ -146,17 +165,21 @@ export function EntityDataFieldCodesStep({
           <div key={sector} className="space-y-5">
             <SectionHeading title={sectorTitle(sector)} size="compact" />
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {codes.map((item) => (
-                <IafCodeCard
-                  key={item.code}
-                  sector={sector}
-                  title={codeTitle(item.descriptionKey)}
-                  code={item.code}
-                  critical={item.critical}
-                  selected={(selectedCodes[selectionKey(sector)] ?? []).includes(item.code)}
-                  onToggle={() => toggleCode(sector, item.code)}
-                />
-              ))}
+              {codes.map((item) => {
+                const selected = (selectedCodes[selectionKey(sector)] ?? []).includes(item.code)
+                return (
+                  <IafCodeCard
+                    key={item.code}
+                    sector={sector}
+                    title={codeTitle(item.descriptionKey)}
+                    code={item.code}
+                    critical={item.critical}
+                    selected={selected}
+                    disabled={atLimit && !selected}
+                    onToggle={() => toggleCode(sector, item.code)}
+                  />
+                )
+              })}
             </div>
           </div>
         )

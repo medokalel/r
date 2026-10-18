@@ -63,7 +63,16 @@ export function Toggle({
           transition: 'transform 200ms ease, background-color 200ms ease',
         }}
       />
-      {label && <span>{label}</span>}
+      {label && (
+        <span
+          style={{
+            paddingLeft: checked ? knobSize : 0,
+            paddingRight: checked ? 0 : knobSize,
+          }}
+        >
+          {label}
+        </span>
+      )}
     </button>
   )
 }

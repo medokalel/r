@@ -234,6 +234,7 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
               type="text"
               value={activeRecord.bodyOther}
               placeholder={t('cab.setup.accreditationRecords.bodyOtherPlaceholder')}
+              valueKind="text"
               onChange={(event) => updateRecord(activeRecord.id, { bodyOther: event.target.value })}
             />
           )}
@@ -257,6 +258,7 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
               type="text"
               value={activeRecord.applicationReference}
               placeholder={t('cab.setup.accreditationRecords.applicationReferencePlaceholder')}
+              valueKind="mixed"
               onChange={(event) =>
                 updateRecord(activeRecord.id, { applicationReference: event.target.value })
               }
@@ -270,6 +272,7 @@ export function CabAccreditationRecordsStep({ form, onPatchSetup }: CabSetupStep
                 type="text"
                 value={activeRecord.number}
                 placeholder={t('cab.setup.accreditationRecords.numberPlaceholder')}
+                valueKind="mixed"
                 onChange={(event) => updateRecord(activeRecord.id, { number: event.target.value })}
               />
 

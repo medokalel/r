@@ -9,7 +9,7 @@ import {
 } from '@/lib/api/onboardingOrgScopeApi'
 import type { CabOnboardingForm } from '@/lib/cabOnboardingForm'
 import { getOrgScopeNameFieldLabels } from '@/lib/orgScopeNameField'
-import { isValidWebsite } from '@/lib/validators'
+import { isValidFieldKind, isValidWebsite } from '@/lib/validators'
 
 interface CabOrgDetailsStepProps {
   form: CabOnboardingForm
@@ -51,7 +51,13 @@ export function CabOrgDetailsStep({ form, onPatch }: CabOrgDetailsStepProps) {
         type="text"
         value={form.legalEntityName}
         placeholder={orgNameField.placeholder}
+        valueKind="text"
         onChange={(e) => onPatch({ legalEntityName: e.target.value })}
+        error={
+          form.legalEntityName && !isValidFieldKind(form.legalEntityName, 'text')
+            ? t('validation.textOnly')
+            : undefined
+        }
       />
 
       <TextField
@@ -60,7 +66,13 @@ export function CabOrgDetailsStep({ form, onPatch }: CabOrgDetailsStepProps) {
         type="text"
         value={form.tradingName}
         placeholder={t('cab.onboarding.orgDetails.tradingNamePlaceholder')}
+        valueKind="text"
         onChange={(e) => onPatch({ tradingName: e.target.value })}
+        error={
+          form.tradingName && !isValidFieldKind(form.tradingName, 'text')
+            ? t('validation.textOnly')
+            : undefined
+        }
       />
 
       <TextField
@@ -89,7 +101,13 @@ export function CabOrgDetailsStep({ form, onPatch }: CabOrgDetailsStepProps) {
           type="text"
           value={form.registrationNumber}
           placeholder={t('cab.onboarding.orgDetails.registrationNumberPlaceholder')}
+          valueKind="mixed"
           onChange={(e) => onPatch({ registrationNumber: e.target.value })}
+          error={
+            form.registrationNumber && !isValidFieldKind(form.registrationNumber, 'mixed')
+              ? t('validation.mixedOnly')
+              : undefined
+          }
         />
         <TextField
           id="cab-onboarding-website"

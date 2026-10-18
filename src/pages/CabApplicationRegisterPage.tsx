@@ -9,6 +9,7 @@ import { useApplicationRegisterTourSteps } from "@/config/applicationRegisterTou
 import { TablePagination } from "@/components/dashboard/TablePagination";
 import { Button } from "@/components/ui/Button";
 import { SelectField } from "@/components/ui/Select";
+import { SearchableSelect } from "@/components/ui/SearchableSelect";
 import { DatePicker } from "@/components/ui/DatePicker";
 import {
   AddCircleIcon,
@@ -144,8 +145,10 @@ export function CabApplicationRegisterPage() {
 
   const filtered = useMemo(() => {
     const next = applications.filter((app) => {
+      const countryName =
+        countryOptions.find((option) => option.code === app.countryCode)?.name ?? app.countryCode
       const matchesQuery = matchesSearch(
-        [app.applicationCode, app.clientCode, app.clientName, app.standards.join(" ")],
+        [app.applicationCode, app.clientCode, app.clientName, app.standards.join(" "), countryName],
         query,
       );
       const matchesCountry =
@@ -173,7 +176,7 @@ export function CabApplicationRegisterPage() {
       }
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
-  }, [applications, query, countryFilter, statusFilter, createdFrom, createdTo, sortBy]);
+  }, [applications, query, countryFilter, statusFilter, createdFrom, createdTo, sortBy, countryOptions]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
   const currentPage = Math.min(page, totalPages);
@@ -408,7 +411,7 @@ export function CabApplicationRegisterPage() {
               <span className="text-[13px] font-semibold text-neutral-700">
                 {t("cab.applicationRegister.filters.country")}
               </span>
-              <SelectField
+              <SearchableSelect
                 value={countryFilter}
                 onChange={(value) => {
                   setPage(1);
@@ -422,9 +425,9 @@ export function CabApplicationRegisterPage() {
                   ...countryOptions.map((option) => ({
                     value: option.code,
                     label: `${option.flag} ${option.name}`,
-                    textValue: option.name,
                   })),
                 ]}
+                searchPlaceholder={t("common.search")}
               />
             </div>
 

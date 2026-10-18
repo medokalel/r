@@ -12,6 +12,7 @@ import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { getTimezoneForCountry, OPERATING_LANGUAGE_OPTIONS } from '@/lib/api/cabOnboardingApi'
 import { createLocationRecord, type CabLocationRecord } from '@/lib/cabSetupForm'
+import { isValidFieldKind } from '@/lib/validators'
 import { useIpLocation } from '@/hooks/useIpLocation'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
@@ -40,9 +41,11 @@ function LocationRow({
   countries,
   onChange,
   onRemove,
+  duplicate,
 }: {
   index: number
   location: CabLocationRecord
+  duplicate: boolean
   countries: { value: string; label: string }[]
   onChange: (fields: Partial<CabLocationRecord>) => void
   onRemove: () => void
@@ -73,6 +76,7 @@ function LocationRow({
           type="text"
           value={location.name}
           placeholder={t('cab.setup.locations.locationNamePlaceholder')}
+          valueKind="text"
           onChange={(event) => onChange({ name: event.target.value })}
         />
         <SearchableSelect
@@ -115,7 +119,9 @@ function LocationRow({
         type="text"
         value={location.address}
         placeholder={t('cab.setup.locations.addressPlaceholder')}
+        valueKind="mixed"
         onChange={(event) => onChange({ address: event.target.value })}
+        error={duplicate ? t('validation.duplicateLocation') : undefined}
       />
 
       <div className="space-y-2">
@@ -146,6 +152,15 @@ export function CabLocationsStep({ form, onPatch, onPatchSetup }: CabSetupStepPr
   )
   const governorates = useGovernorates(form.country)
   const ipLocation = useIpLocation()
+  // Mirrors isLocationsStepComplete: the same name + address may not repeat
+  const duplicateLocationIds = new Set<string>()
+  const seenLocations = new Set<string>()
+  for (const location of form.cabSetup.locations) {
+    if (!location.name.trim() || !location.address.trim()) continue
+    const key = `${location.name.trim().toLowerCase()}|${location.address.trim().toLowerCase()}`
+    if (seenLocations.has(key)) duplicateLocationIds.add(location.id)
+    seenLocations.add(key)
+  }
 
   // Pre-fill the head office country from the visitor's IP once it resolves,
   // but only if the user hasn't already picked one.
@@ -222,7 +237,13 @@ export function CabLocationsStep({ form, onPatch, onPatchSetup }: CabSetupStepPr
         type="text"
         value={form.address}
         placeholder={t('cab.setup.locations.addressPlaceholder')}
+        valueKind="mixed"
         onChange={(event) => onPatch({ address: event.target.value })}
+        error={
+          form.address && !isValidFieldKind(form.address, 'mixed')
+            ? t('validation.mixedOnly')
+            : undefined
+        }
       />
 
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
@@ -233,10 +254,11 @@ export function CabLocationsStep({ form, onPatch, onPatchSetup }: CabSetupStepPr
           type="text"
           value={form.cabSetup.timeZone}
           placeholder={t('cab.setup.locations.timeZonePlaceholder')}
+          valueKind="mixed"
           onChange={(event) => onPatchSetup({ timeZone: event.target.value })}
         />
 
-        <div className="space-y-2">
+        <div id="cab-setup-languages" className="space-y-2">
           <FormLabel required>{t('cab.setup.locations.languages')}</FormLabel>
           <MultiSelect
             tags={form.languages}
@@ -276,6 +298,7 @@ export function CabLocationsStep({ form, onPatch, onPatchSetup }: CabSetupStepPr
               <LocationRow
                 key={location.id}
                 index={index}
+                duplicate={duplicateLocationIds.has(location.id)}
                 location={location}
                 countries={countries}
                 onChange={(fields) => updateLocation(location.id, fields)}

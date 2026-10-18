@@ -179,7 +179,9 @@ export function formatCertificationSubmitError(error: unknown, t: TFunction): st
   if (!(error instanceof ApiError)) return t('errors.generic')
 
   const raw = [error.message, ...(error.errors ?? [])].filter(Boolean).join(', ')
-  const stripped = raw.replace(/^Cannot submit:\s*/i, '')
+  const stripped = raw
+    .replace(/^Cannot submit:\s*/i, '')
+    .replace(/^Validation Error:\s*/i, '')
   const parts = stripped
     .split(/,(?=\s*")/)
     .map((part) => part.trim())
@@ -189,7 +191,7 @@ export function formatCertificationSubmitError(error: unknown, t: TFunction): st
   if (quoted.length === 0) return raw || t('errors.generic')
 
   const lines = quoted.map((part) => {
-    const match = part.match(/^"?([^"]+)"?\s+(.+)$/)
+    const match = part.match(/^"([^"]+)"\s+(.+)$/)
     if (!match) return part
     const [, path, rule] = match
     return t('cab.applicationSubmission.fieldErrors.line', {

@@ -1,4 +1,9 @@
 import { authorizedRequest } from '@/lib/api/authorizedClient'
+import {
+  filterInformationRequiredLikeCab,
+  sectionStatusesFromUnknown,
+  withReviewSectionDueDate,
+} from '@/lib/api/irReviewSectionSync'
 
 export type ApplicationStatus =
   | 'DRAFT'
@@ -129,6 +134,7 @@ export interface ApplicationDocument {
   originalName?: string | null
   mimeType?: string | null
   fileSize?: number | null
+  uploadedAt?: string | null
 }
 
 export interface DraftApplicationRequest {
@@ -217,5 +223,73 @@ export function deleteApplicationDocument(
   return authorizedRequest(
     `/uploads/application-document/${encodeURIComponent(filename)}`,
     { method: 'DELETE' }
+  )
+}
+
+export interface ClientResponseAttachment {
+  id?: string
+  fileUrl: string
+  fileName?: string | null
+  originalName?: string | null
+  mimeType?: string | null
+  fileSize?: number | null
+}
+
+export interface ClientResponseItem {
+  id: string
+  response: string | null
+  submittedBy: { id: string; fullName: string } | null
+  submittedOn: string
+  status: string | null
+  attachments: ClientResponseAttachment[]
+}
+
+export interface InformationRequiredItem {
+  id: string
+  applicationId: string
+  informationItem: string
+  referenceClause: string | null
+  requestedBy: { id: string; fullName: string } | null
+  requestedOn: string
+  dueDate: string | null
+  priority: string | null
+  status: string
+  responses: ClientResponseItem[]
+}
+
+export interface CreateClientResponsePayload {
+  response?: string | null
+  attachments?: ClientResponseAttachment[]
+}
+
+export async function listInformationRequired(
+  applicationId: string
+): Promise<InformationRequiredItem[]> {
+  const data = await authorizedRequest<unknown>(
+    `/certification-applications/${encodeURIComponent(applicationId)}/information-required`
+  )
+  const items = Array.isArray(data)
+    ? (data as InformationRequiredItem[])
+    : data && typeof data === 'object' && Array.isArray((data as { informationRequired?: unknown }).informationRequired)
+      ? (data as { informationRequired: InformationRequiredItem[] }).informationRequired
+      : []
+  let sectionStatuses: Partial<Record<string, string>> = {}
+  try {
+    const application = await getApplication(applicationId)
+    sectionStatuses = sectionStatusesFromUnknown(application)
+  } catch {
+    sectionStatuses = {}
+  }
+  return filterInformationRequiredLikeCab(applicationId, items, sectionStatuses).map(withReviewSectionDueDate)
+}
+
+export function submitInformationRequiredResponse(
+  applicationId: string,
+  informationRequiredId: string,
+  payload: CreateClientResponsePayload
+): Promise<ClientResponseItem> {
+  return authorizedRequest(
+    `/certification-applications/${encodeURIComponent(applicationId)}/information-required/${encodeURIComponent(informationRequiredId)}/responses`,
+    { method: 'POST', body: JSON.stringify(payload) }
   )
 }

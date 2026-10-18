@@ -16,6 +16,7 @@ import {
   type OrgDocument,
 } from '@/lib/api/organizationProfileApi'
 import { formValuesFromProfile, payloadFromForm } from './mappers'
+import { hasProfileFormatErrors } from './validation'
 import type { ProfileFormContextValue } from './ProfileFormContext'
 import {
   EMPTY_PROFILE_FORM,
@@ -151,6 +152,10 @@ export function useCompanyProfileState(): CompanyProfileState {
   }, [])
 
   const saveDraft = useCallback(async (): Promise<boolean> => {
+    if (hasProfileFormatErrors(form, false)) {
+      setNotification({ type: 'error', message: t('validation.fixErrors') })
+      return false
+    }
     setSaving(true)
     setNotification(null)
     try {
@@ -167,6 +172,10 @@ export function useCompanyProfileState(): CompanyProfileState {
   }, [form, handleApiError, t])
 
   const submitProfile = useCallback(async () => {
+    if (hasProfileFormatErrors(form, false)) {
+      setNotification({ type: 'error', message: t('validation.fixErrors') })
+      return
+    }
     setSubmitting(true)
     setNotification(null)
     try {

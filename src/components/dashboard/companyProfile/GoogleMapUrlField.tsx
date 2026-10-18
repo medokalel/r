@@ -7,6 +7,8 @@ interface GoogleMapUrlFieldProps {
   value: string
   onChange: (value: string) => void
   required?: boolean
+  error?: string
+  onBlur?: () => void
 }
 
 export function GoogleMapUrlField({
@@ -15,6 +17,8 @@ export function GoogleMapUrlField({
   value,
   onChange,
   required,
+  error,
+  onBlur,
 }: GoogleMapUrlFieldProps) {
   return (
     <FormField label={label} required={required}>
@@ -29,6 +33,8 @@ export function GoogleMapUrlField({
           className="ps-10"
           value={value}
           onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          error={error}
         />
       </div>
     </FormField>

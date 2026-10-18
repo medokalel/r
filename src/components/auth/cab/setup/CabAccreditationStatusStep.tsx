@@ -52,7 +52,7 @@ export function CabAccreditationStatusStep({ form, onPatchSetup }: CabSetupStepP
   return (
     <div className="w-full space-y-6">
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div id="cab-setup-accreditation-status" className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         {ACCREDITATION_STATUS_OPTIONS.map((option) => (
           <SetupOptionCard
             key={option.value}
@@ -74,6 +74,7 @@ export function CabAccreditationStatusStep({ form, onPatchSetup }: CabSetupStepP
             lang="en"
             dir="ltr"
             inputMode="numeric"
+            valueKind="number"
             value={String(accreditationRecordCount)}
             onChange={(event) => setRecordCount(event.target.value)}
           />

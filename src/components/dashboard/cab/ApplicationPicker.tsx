@@ -61,7 +61,7 @@ export function ApplicationPicker({
     return () => {
       cancelled = true
     }
-  }, [statusFilter, t])
+  }, [statusFilter])
 
   const options = useMemo(
     () =>

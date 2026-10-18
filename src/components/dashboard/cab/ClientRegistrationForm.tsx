@@ -6,25 +6,25 @@ import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { PhoneInputRow } from '@/components/auth/CountryCodeSelect'
 import { MailIcon, PhoneIcon } from '@/components/icons'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
-import { useFieldValidation } from '@/hooks/useFieldValidation'
-import { isValidEmailFormat, isValidPhoneNumber } from '@/lib/validators'
 import { getCountryOptions, type CountryCode } from '@/lib/countries'
 import { fetchGovernorateOptions, type GovernorateOption } from '@/lib/governorates'
 import { LEGAL_CAPACITY_OPTIONS } from '@/lib/api/clientRegistrationApi'
 import type { ClientRegistrationForm as ClientRegistrationFormData } from '@/lib/clientRegistrationForm'
 
+type FieldProps = (key: keyof ClientRegistrationFormData) => { error?: string; onBlur: () => void }
+
 interface ClientRegistrationFormProps {
   form: ClientRegistrationFormData
   onPatch: (f: Partial<ClientRegistrationFormData>) => void
+  fieldProps: FieldProps
 }
 
-export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationFormProps) {
+function FieldError({ message }: { message?: string }) {
+  return message ? <p className="text-small-light text-error-500">{message}</p> : null
+}
+
+export function ClientRegistrationForm({ form, onPatch, fieldProps }: ClientRegistrationFormProps) {
   const { t, i18n } = useTranslation()
-  const { fieldProps } = useFieldValidation(form, {
-    email: (value) => (!isValidEmailFormat(value) ? t('validation.invalidEmail') : undefined),
-    phoneNumber: (value) =>
-      !isValidPhoneNumber(value, form.phoneCountryCode) ? t('validation.invalidMobile') : undefined,
-  })
 
   const countries = useMemo(() => {
     const list = getCountryOptions(i18n.language)
@@ -60,8 +60,11 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
                 <TextField
                   type="text"
                   value={form.organizationName}
+                  valueKind="mixed"
+                  maxLength={200}
                   onChange={(e) => onPatch({ organizationName: e.target.value })}
                   placeholder={t('cab.clientRegistration.fields.organizationNamePlaceholder')}
+                  {...fieldProps('organizationName')}
                 />
               </FormField>
               <FormField label={t('cab.clientRegistration.fields.legalCapacity')} required>
@@ -70,6 +73,7 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
                   options={LEGAL_CAPACITY_OPTIONS}
                   onChange={(value) => onPatch({ legalCapacity: value })}
                 />
+                <FieldError message={fieldProps('legalCapacity').error} />
               </FormField>
             </div>
 
@@ -77,12 +81,16 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
               <TextField
                 type="text"
                 value={form.administrationName}
+                valueKind="mixed"
+                maxLength={200}
                 onChange={(e) => onPatch({ administrationName: e.target.value })}
                 placeholder={t('cab.clientRegistration.fields.administrationNamePlaceholder')}
+                {...fieldProps('administrationName')}
               />
             </FormField>
 
             <div className="grid gap-5 lg:grid-cols-2">
+              <div className="space-y-2">
               <SearchableSelect
                 id="client-registration-country"
                 label={t('cab.clientRegistration.fields.country')}
@@ -99,6 +107,9 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
                 placeholder={t('register.countryPlaceholder')}
                 searchPlaceholder={t('common.search')}
               />
+              <FieldError message={fieldProps('country').error} />
+              </div>
+              <div className="space-y-2">
               <SearchableSelect
                 id="client-registration-city"
                 label={t('cab.clientRegistration.fields.city')}
@@ -113,16 +124,21 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
                 }
                 searchPlaceholder={t('common.search')}
               />
+              <FieldError message={fieldProps('city').error} />
+              </div>
             </div>
 
             <FormField label={t('cab.clientRegistration.fields.activity')} required>
               <Textarea
                 value={form.activity}
                 onChange={(e) => onPatch({ activity: e.target.value })}
+                onBlur={fieldProps('activity').onBlur}
                 placeholder={t('cab.clientRegistration.fields.activityPlaceholder')}
                 rows={3}
+                maxLength={300}
                 className="min-h-[80px]"
               />
+              <FieldError message={fieldProps('activity').error} />
             </FormField>
 
             <div className="grid gap-5 lg:grid-cols-2">
@@ -130,8 +146,11 @@ export function ClientRegistrationForm({ form, onPatch }: ClientRegistrationForm
                 <TextField
                   type="text"
                   value={form.facilityOwnerManager}
+                  valueKind="text"
+                  maxLength={200}
                   onChange={(e) => onPatch({ facilityOwnerManager: e.target.value })}
                   placeholder={t('cab.clientRegistration.fields.facilityOwnerManagerPlaceholder')}
+                  {...fieldProps('facilityOwnerManager')}
                 />
               </FormField>
               <FormField label={t('cab.clientRegistration.fields.email')} required>

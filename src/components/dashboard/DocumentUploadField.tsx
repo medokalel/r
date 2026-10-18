@@ -162,6 +162,7 @@ export function DocumentUploadField({
                 : t('documentUpload.waiting')}
           </span>
           <Button
+            type="button"
             variant="tertiary"
             className="h-12 min-w-[140px] shrink-0 rounded-[8px] bg-[#F3F6FD]"
             onClick={() => fileInputRef.current?.click()}

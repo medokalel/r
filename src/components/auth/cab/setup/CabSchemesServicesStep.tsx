@@ -60,7 +60,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
     <div className="w-full space-y-6">
 
       <SetupSection title={t('cab.setup.schemes.schemesLabel')}>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div id="cab-setup-schemes" className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {schemeOptions.map((scheme) => (
             <label
               key={scheme.value}
@@ -112,6 +112,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
                     type="text"
                     value={scheme.name}
                     placeholder={t('cab.setup.schemes.customSchemeNamePlaceholder')}
+                    valueKind="text"
                     onChange={(event) => updateCustomScheme(scheme.id, { name: event.target.value })}
                   />
                   <TextField
@@ -120,6 +121,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
                     type="text"
                     value={scheme.owner}
                     placeholder={t('cab.setup.schemes.customSchemeOwnerPlaceholder')}
+                    valueKind="text"
                     onChange={(event) => updateCustomScheme(scheme.id, { owner: event.target.value })}
                   />
                 </div>
@@ -133,6 +135,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
                     onChange={(event) =>
                       updateCustomScheme(scheme.id, { normativeDocument: event.target.value })
                     }
+                    valueKind="mixed"
                   />
                   <TextField
                     id={`cab-setup-custom-scheme-version-${scheme.id}`}
@@ -140,6 +143,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
                     type="text"
                     value={scheme.version}
                     placeholder={t('cab.setup.schemes.customSchemeVersionPlaceholder')}
+                    valueKind="mixed"
                     onChange={(event) => updateCustomScheme(scheme.id, { version: event.target.value })}
                   />
                 </div>
@@ -150,7 +154,9 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
       </SetupSection>
 
       <SetupSection title={t('cab.setup.schemes.servicesLabel')}>
-        <SetupChipGroup options={serviceOptions} selected={services} onToggle={toggleService} />
+        <div id="cab-setup-services">
+          <SetupChipGroup options={serviceOptions} selected={services} onToggle={toggleService} />
+        </div>
       </SetupSection>
 
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
@@ -173,6 +179,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
             type="text"
             value={schemeOwner}
             placeholder={t('cab.setup.schemes.schemeOwnerPlaceholder')}
+            valueKind="text"
             onChange={(event) => onPatchSetup({ schemeOwner: event.target.value })}
           />
         </div>

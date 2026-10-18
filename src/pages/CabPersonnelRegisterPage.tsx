@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
@@ -10,45 +10,90 @@ import { useDirection } from '@/context/DirectionContext'
 import {
   AppIcon,
   SearchIcon,
-  ExportIcon,
   ChevronDownIcon,
   PlusIcon,
   UserIcon,
 } from '@/components/icons'
+import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
+import { Toggle } from '@/components/ui/Toggle'
+import {
+  downloadExcelCsv,
+  downloadPdfFromTable,
+  type TableColumn,
+} from '@/lib/tableTools'
 import {
   getStoredPersonnel,
   savePersonnelList,
   type CompetencePerson,
 } from '@/lib/api/cabCompetenceApi'
+import {
+  listCabEmployees,
+  updateCabEmployeeStatus,
+  getProfessionalRoleLabel,
+  formatEmployeePhone,
+} from '@/lib/api/cabEmployeesApi'
+import { formatIafCodesToSectorNames } from '@/lib/iafCodes'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 export function CabPersonnelRegisterPage() {
   const navigate = useNavigate()
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { dir } = useDirection()
   const tourSteps = usePersonnelTourSteps()
-  const [personnel, setPersonnel] = useState<CompetencePerson[]>(getStoredPersonnel())
+  const [personnel, setPersonnel] = useState<CompetencePerson[]>(getStoredPersonnel)
+
+  useEffect(() => {
+    listCabEmployees()
+      .then((res) => {
+        const rawItems = Array.isArray(res) ? res : res?.items || res?.employees || []
+        if (rawItems.length > 0) {
+          const stored = getStoredPersonnel()
+          const mapped: CompetencePerson[] = rawItems.map((emp, index) => {
+            const existing = stored.find((s) => s.id === emp.id)
+            const role = emp.professionalRole
+              ? getProfessionalRoleLabel(emp.professionalRole)
+              : 'Auditor'
+            const resolvedStatusDot: CompetencePerson['statusDot'] =
+              existing?.statusDot ?? (emp.status === 'INACTIVE' ? 'Inactive' : 'Active')
+
+            return {
+              ...existing,
+              id: emp.id,
+              code: existing?.code || `PER-${String(index + 1).padStart(4, '0')}`,
+              name: existing?.name || emp.user?.fullName || 'Employee',
+              role: role as CompetencePerson['role'],
+              country: existing?.country || 'Saudi Arabia',
+              schemes: emp.schemes?.length ? emp.schemes : existing?.schemes || [],
+              authorizedScope:
+                formatIafCodesToSectorNames(emp.iafCodes, existing?.authorizedScope, i18n.language) ||
+                'Quality management systems',
+              expiryDate: existing?.expiryDate || (emp.employmentStartDate ? emp.employmentStartDate.split('T')[0] : '2026-12-31'),
+              status: resolvedStatusDot === 'Inactive' ? 'Suspended' : (emp.status === 'ACTIVE' ? 'Authorized' : (existing?.status || 'Under review')),
+              avatarUrl: emp.imageUrl || existing?.avatarUrl || undefined,
+              employmentStartDate: emp.employmentStartDate || existing?.employmentStartDate || undefined,
+              iafCodes: emp.iafCodes || existing?.iafCodes || [],
+              email: emp.user?.email || existing?.email || '',
+              phone: formatEmployeePhone(emp.user?.phone, emp.user?.phoneCountryCode) || (existing?.phone || ''),
+              statusDot: resolvedStatusDot,
+            }
+          })
+          setPersonnel(mapped)
+          savePersonnelList(mapped)
+        } else {
+          setPersonnel(getStoredPersonnel())
+        }
+      })
+      .catch(() => {
+        setPersonnel(getStoredPersonnel())
+      })
+  }, [i18n.language])
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('ALL')
   const [selectedStatus, setSelectedStatus] = useState('ALL')
   const [selectedExpiry, setSelectedExpiry] = useState('ALL')
-
-  // Modals
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-
-  // New Person Form State
-  const [newPerson, setNewPerson] = useState({
-    name: '',
-    role: 'Auditor' as CompetencePerson['role'],
-    country: 'Saudi Arabia',
-    scheme: 'ISO 9001',
-    authorizedScope: 'Quality management systems',
-    email: '',
-    phone: '',
-    expiryDate: '2026-12-31',
-  })
 
   // Unique country list
   const countries = useMemo(() => {
@@ -66,20 +111,29 @@ export function CabPersonnelRegisterPage() {
         const q = searchQuery.toLowerCase()
         const matchName = p.name.toLowerCase().includes(q)
         const matchCode = p.code.toLowerCase().includes(q)
-        const matchScope = p.authorizedScope.toLowerCase().includes(q)
+        const scopeText = formatIafCodesToSectorNames(p.iafCodes, p.authorizedScope, i18n.language)
+        const matchScope = scopeText.toLowerCase().includes(q)
         if (!matchName && !matchCode && !matchScope) return false
       }
       if (selectedCountry !== 'ALL' && p.country !== selectedCountry) return false
-      if (selectedStatus !== 'ALL' && p.status !== selectedStatus) return false
+      if (selectedStatus !== 'ALL') {
+        const isActive = p.statusDot !== 'Inactive'
+        if (selectedStatus === 'Active' && !isActive) return false
+        if (selectedStatus === 'Inactive' && isActive) return false
+        if (selectedStatus !== 'Active' && selectedStatus !== 'Inactive' && p.status !== selectedStatus) {
+          return false
+        }
+      }
       if (selectedExpiry !== 'ALL') {
         const exp = new Date(p.expiryDate).getTime()
+        if (!Number.isFinite(exp)) return false
         const now = new Date().getTime()
         if (selectedExpiry === '30' && exp - now > 30 * 86400000) return false
         if (selectedExpiry === '90' && exp - now > 90 * 86400000) return false
       }
       return true
     })
-  }, [personnel, searchQuery, selectedCountry, selectedStatus, selectedExpiry])
+  }, [personnel, searchQuery, selectedCountry, selectedStatus, selectedExpiry, i18n.language])
 
   const handleClearFilters = () => {
     setSearchQuery('')
@@ -88,121 +142,98 @@ export function CabPersonnelRegisterPage() {
     setSelectedExpiry('ALL')
   }
 
-  const handleAddPerson = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!newPerson.name.trim()) return
+  const [exporting, setExporting] = useState(false)
 
-    const newCode = `PER-000${personnel.length + 1}`
-    const created: CompetencePerson = {
-      id: `per-${Date.now()}`,
-      code: newCode,
-      name: newPerson.name.trim(),
-      role: newPerson.role,
-      country: newPerson.country,
-      schemes: [newPerson.scheme],
-      authorizedScope: newPerson.authorizedScope,
-      expiryDate: newPerson.expiryDate,
-      status: 'Under review',
-      email: newPerson.email || `${newPerson.name.toLowerCase().replace(/\s+/g, '.')}@example.com`,
-      phone: newPerson.phone || '+966 50 000 0000',
-      statusDot: 'Active',
-      evaluation: {
-        scheme: newPerson.scheme,
-        proposedSector: newPerson.authorizedScope,
-        evaluationDate: new Date().toISOString().split('T')[0],
-        evaluator: 'Sara Ali',
-        overallResult: 'Competent',
-        comments: 'Initial application submitted for review.',
-        highestQualification: "Bachelor's Degree",
-        fieldOfStudy: 'Engineering',
-        relevantExperienceYears: 3,
-        sectorExperienceYears: 2,
-        additionalNotes: '',
-        status: 'In progress',
-        lastSaved: new Date().toLocaleDateString('en-GB') + ', 10:00',
+  const exportColumns: TableColumn<CompetencePerson>[] = useMemo(
+    () => [
+      { header: t('cab.competence.columns.code', 'Code'), value: (p) => p.code },
+      { header: t('cab.competence.columns.name', 'Name'), value: (p) => p.name },
+      { header: t('cab.competence.columns.role', 'Role'), value: (p) => p.role },
+      { header: t('cab.competence.columns.country', 'Country'), value: (p) => p.country },
+      {
+        header: t('cab.competence.columns.schemes', 'Schemes'),
+        value: (p) => (p.schemes?.length ? p.schemes.join(', ') : '—'),
       },
-      trainings: [],
-      auditLogs: [],
-      witnessings: [],
-      restrictions: [],
-    }
+      {
+        header: t('cab.competence.columns.scope', 'Authorized scope'),
+        value: (p) => formatIafCodesToSectorNames(p.iafCodes, p.authorizedScope, i18n.language) || '—',
+      },
+      {
+        header: t('cab.competence.columns.expiry', 'Expiry date'),
+        value: (p) => p.expiryDate || '—',
+      },
+      {
+        header: t('cab.competence.columns.status', 'Status'),
+        value: (p) =>
+          p.statusDot !== 'Inactive'
+            ? t('cab.competence.statuses.active', 'Active')
+            : t('cab.competence.statuses.notActive', 'Not Active'),
+      },
+    ],
+    [t, i18n.language],
+  )
 
-    const updated = [created, ...personnel]
-    setPersonnel(updated)
-    savePersonnelList(updated)
-    setIsAddModalOpen(false)
-    setNewPerson({
-      name: '',
-      role: 'Auditor',
-      country: 'Saudi Arabia',
-      scheme: 'ISO 9001',
-      authorizedScope: 'Quality management systems',
-      email: '',
-      phone: '',
-      expiryDate: '2026-12-31',
+  const handleExportExcel = async () => {
+    setExporting(true)
+    try {
+      downloadExcelCsv('personnel-register.xlsx', exportColumns, filteredPersonnel)
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleExportPdf = async () => {
+    setExporting(true)
+    try {
+      downloadPdfFromTable(
+        'personnel-register.pdf',
+        t('cab.competence.personnelRegister', 'Personnel register'),
+        exportColumns,
+        filteredPersonnel,
+      )
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const handleToggleStatus = (person: CompetencePerson, e?: React.MouseEvent) => {
+    e?.stopPropagation()
+    const currentlyActive = person.statusDot !== 'Inactive'
+    const nextStatusDot: CompetencePerson['statusDot'] = currentlyActive ? 'Inactive' : 'Active'
+    const nextStatus: CompetencePerson['status'] = currentlyActive ? 'Suspended' : 'Authorized'
+
+    setPersonnel((prev) => {
+      const updated = prev.map((item) =>
+        item.id === person.id
+          ? { ...item, statusDot: nextStatusDot, status: nextStatus }
+          : item,
+      )
+      savePersonnelList(updated)
+      return updated
     })
-  }
 
-  const handleExport = () => {
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      ['Code,Name,Role,Country,Schemes,Authorized Scope,Expiry Date,Status']
-        .concat(
-          filteredPersonnel.map(
-            (p) =>
-              `"${p.code}","${p.name}","${p.role}","${p.country}","${p.schemes.join('; ')}","${p.authorizedScope}","${p.expiryDate}","${p.status}"`
-          )
-        )
-        .join('\n')
-
-    const encodedUri = encodeURI(csvContent)
-    const link = document.createElement('a')
-    link.setAttribute('href', encodedUri)
-    link.setAttribute('download', `personnel_register_${Date.now()}.csv`)
-    document.body.appendChild(link)
-    link.click()
-    document.body.removeChild(link)
-  }
-
-  const getStatusBadge = (status: CompetencePerson['status']) => {
-    switch (status) {
-      case 'Authorized':
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-[#dcfce7] px-3 py-1 text-[12px] font-medium text-[#15803d] whitespace-nowrap">
-            {t('cab.competence.statuses.authorized', 'Authorized')}
-          </span>
-        )
-      case 'Under review':
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-[#fff7ed] px-3 py-1 text-[12px] font-medium text-[#ea580c] whitespace-nowrap">
-            {t('cab.competence.statuses.underReview', 'Under review')}
-          </span>
-        )
-      case 'Pending':
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-[#e8edfc] px-3 py-1 text-[12px] font-medium text-primary whitespace-nowrap">
-            {t('cab.competence.statuses.pending', 'Pending')}
-          </span>
-        )
-      case 'Expired':
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-[#fee2e2] px-3 py-1 text-[12px] font-medium text-[#dc2626] whitespace-nowrap">
-            {t('cab.competence.statuses.expired', 'Expired')}
-          </span>
-        )
-      case 'Suspended':
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-[#f1f5f9] px-3 py-1 text-[12px] font-medium text-[#475569] whitespace-nowrap">
-            {t('cab.competence.statuses.suspended', 'Suspended')}
-          </span>
-        )
-      default:
-        return (
-          <span className="inline-flex items-center justify-center rounded-[4px] bg-neutral-100 px-3 py-1 text-[12px] font-medium text-neutral-700 whitespace-nowrap">
-            {status}
-          </span>
-        )
+    if (person.id && !person.id.startsWith('per-')) {
+      updateCabEmployeeStatus(person.id, currentlyActive ? 'INACTIVE' : 'ACTIVE').catch((err) => {
+        console.warn('Backend updateCabEmployeeStatus error (proceeding with local state):', err)
+      })
     }
+  }
+
+  const renderStatusToggle = (p: CompetencePerson) => {
+    const isActive = p.statusDot !== 'Inactive'
+    return (
+      <div className="flex justify-center" onClick={(e) => e.stopPropagation()}>
+        <Toggle
+          checked={isActive}
+          label={
+            isActive
+              ? t('users.status.active', 'Active')
+              : t('users.status.inactive', 'Inactive')
+          }
+          onChange={() => handleToggleStatus(p)}
+        />
+      </div>
+    )
   }
 
   const getInitials = (name: string) => {
@@ -242,21 +273,22 @@ export function CabPersonnelRegisterPage() {
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <button
                   type="button"
-                  onClick={() => setIsAddModalOpen(true)}
+                  onClick={() => navigate(ROUTES.cabPersonnelNew)}
                   className="flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-[8px] bg-primary px-4 py-2.5 text-[14px] font-semibold text-white shadow-sm hover:bg-primary/90 transition-all active:scale-[0.99] whitespace-nowrap"
                 >
                   <AppIcon icon={PlusIcon} size={16} />
                   <span>+ {t('cab.competence.addPerson', 'Add person')}</span>
                 </button>
 
-                <button
-                  type="button"
-                  onClick={handleExport}
-                  className="flex flex-1 sm:flex-initial items-center justify-center gap-2 rounded-[8px] border border-[#e2e2e2] bg-white px-4 py-2.5 text-[14px] font-semibold text-neutral-700 hover:bg-neutral-50 transition-all shadow-sm active:scale-[0.99] whitespace-nowrap"
-                >
-                  <AppIcon icon={ExportIcon} size={16} />
-                  <span>{t('common.export', 'Export')}</span>
-                </button>
+                <ExportMenuButton
+                  exporting={exporting}
+                  onExportExcel={handleExportExcel}
+                  onExportPdf={handleExportPdf}
+                  label={t('common.export', 'Export')}
+                  excelLabel={t('common.exportExcel', 'Export as Excel')}
+                  pdfLabel={t('common.exportPdf', 'Export as PDF')}
+                  className="rounded-[8px] border border-[#e2e2e2] bg-white px-4 py-2.5 text-[14px] font-semibold text-neutral-700 hover:bg-neutral-50 shadow-sm whitespace-nowrap"
+                />
               </div>
             </CabTourStep>
           </div>
@@ -320,10 +352,8 @@ export function CabPersonnelRegisterPage() {
                       className="h-11 w-full appearance-none rounded-[8px] border border-[#e2e2e2] bg-white px-3.5 pe-9 text-[14px] text-neutral-900 focus:border-primary focus:outline-none"
                     >
                       <option value="ALL">{t('cab.competence.allStatuses', 'All statuses')}</option>
-                      <option value="Authorized">{t('cab.competence.statuses.authorized', 'Authorized')}</option>
-                      <option value="Under review">{t('cab.competence.statuses.underReview', 'Under review')}</option>
-                      <option value="Pending">{t('cab.competence.statuses.pending', 'Pending')}</option>
-                      <option value="Expired">{t('cab.competence.statuses.expired', 'Expired')}</option>
+                      <option value="Active">{t('cab.competence.statuses.active', 'Active')}</option>
+                      <option value="Inactive">{t('cab.competence.statuses.notActive', 'Not Active')}</option>
                     </select>
                     <div className="pointer-events-none absolute inset-y-0 end-0 flex items-center pe-3 text-neutral-400">
                       <AppIcon icon={ChevronDownIcon} size={16} />
@@ -373,69 +403,75 @@ export function CabPersonnelRegisterPage() {
           {/* Personnel Table & Mobile Card View */}
           <CabTourStep steps={tourSteps} stepId="personnel-table">
             {/* Desktop / Tablet Table View (hidden on small mobile screens) */}
-            <div className="hidden md:block overflow-hidden rounded-[12px] border border-[#e5e7eb] bg-white shadow-none">
+            <div className="hidden md:block overflow-hidden rounded-[16px] border border-[#ececec] bg-white py-5">
               <div className="overflow-x-auto">
-                <table className="w-full text-start text-[14px]">
+                <table className="w-full min-w-[960px] border-collapse text-center">
                   <thead>
-                    <tr className="bg-[#1236a3] text-white text-start text-[14px] font-semibold">
-                      <th className="p-[18px] text-start font-medium">{t('cab.competence.columns.person', 'Person')}</th>
-                      <th className="p-[18px] text-start font-medium">{t('cab.competence.columns.role', 'Role')}</th>
-                      <th className="p-[18px] text-start font-medium">{t('cab.competence.columns.schemes', 'Schemes')}</th>
-                      <th className="p-[18px] text-start font-medium">{t('cab.competence.columns.scope', 'Authorized scope')}</th>
-                      <th className="p-[18px] text-center font-medium">{t('cab.competence.columns.expiry', 'Expiry')}</th>
-                      <th className="p-[18px] text-center font-medium">{t('cab.competence.columns.status', 'Status')}</th>
-                      <th className="p-[18px] text-center font-medium">{t('common.actions', 'Actions')}</th>
+                    <tr className="bg-[#1236a3] text-white">
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.person', 'Person')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.role', 'Role')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.schemes', 'Schemes')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.scope', 'Authorized scope')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.expiry', 'Expiry')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.competence.columns.status', 'Status')}</th>
+                      <th className="px-4 py-4 text-center text-[14px] font-medium">{t('common.actions', 'Actions')}</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#ececec]">
+                  <tbody>
                     {filteredPersonnel.length > 0 ? (
                       filteredPersonnel.map((p, idx) => (
                         <tr
                           key={p.id}
-                          className={cn('hover:bg-[#e8edfc]/50 transition-colors cursor-pointer', idx % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-white')}
-                          onClick={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
+                          className={cn(idx % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-white')}
                         >
                           {/* Person Column */}
-                          <td className="px-5 py-4">
+                          <td className="px-5 py-4 text-start">
                             <div className="flex items-center gap-3.5">
                               <div className="flex size-10 items-center justify-center rounded-full bg-primary text-[13px] font-bold text-white shadow-sm shrink-0">
-                                {getInitials(p.name)}
+                                {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} className="size-full rounded-full object-cover" /> : getInitials(p.name)}
                               </div>
                               <div>
-                                <p className="font-bold text-neutral-900 hover:text-primary transition-colors">
+                                <button
+                                  type="button"
+                                  onClick={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
+                                  className="font-bold text-[15px] text-neutral-900 hover:text-primary hover:underline transition-colors cursor-pointer text-start"
+                                >
                                   {p.name}
-                                </p>
-                                <p className="text-[12px] text-neutral-500 font-mono">{p.code}</p>
+                                </button>
+                                <p className="text-[12px] text-neutral-500 font-mono" dir="ltr">{p.code}</p>
                               </div>
                             </div>
                           </td>
 
                           {/* Role Column */}
-                          <td className="px-4 py-4 text-neutral-800 font-medium">{p.role}</td>
+                          <td className="px-4 py-4 text-center text-[15px] text-neutral-700 whitespace-nowrap">
+                            {p.role || '—'}
+                          </td>
 
                           {/* Schemes Column */}
-                          <td className="px-4 py-4 text-neutral-800 font-medium">
-                            {p.schemes.join(', ')}
+                          <td className="px-4 py-4 text-center text-[15px] text-neutral-700 whitespace-nowrap">
+                            {p.schemes.length > 0
+                              ? p.schemes.map((s) => s.split(' — ')[0]).join(', ')
+                              : '—'}
                           </td>
 
                           {/* Scope Column */}
-                          <td className="px-4 py-4 text-neutral-800 font-medium max-w-xs">
-                            {p.authorizedScope}
+                          <td className="px-4 py-4 text-center text-[15px] text-neutral-700 max-w-xs">
+                            {formatIafCodesToSectorNames(p.iafCodes, p.authorizedScope, i18n.language) || '—'}
                           </td>
 
                           {/* Expiry Column */}
-                          <td className="px-4 py-4 text-neutral-800 font-medium text-center whitespace-nowrap">
-                            {p.expiryDate}
+                          <td className="px-4 py-4 text-center text-[15px] text-neutral-700 whitespace-nowrap" dir="ltr">
+                            {p.expiryDate || '—'}
                           </td>
 
                           {/* Status Column */}
-                          <td className="px-4 py-4 text-center whitespace-nowrap">{getStatusBadge(p.status)}</td>
+                          <td className="px-4 py-4 text-center whitespace-nowrap">
+                            {renderStatusToggle(p)}
+                          </td>
 
                           {/* Actions Column (Radix Dropdown with Portal) */}
-                          <td
-                            className="px-4 py-4 text-center"
-                            onClick={(e) => e.stopPropagation()}
-                          >
+                          <td className="px-4 py-4 text-center">
                             <DropdownMenu.Root dir={dir}>
                               <DropdownMenu.Trigger asChild>
                                 {idx === 0 ? (
@@ -468,22 +504,10 @@ export function CabPersonnelRegisterPage() {
                                   className="z-50 min-w-[190px] rounded-[8px] border border-[#e5e7eb] bg-white py-1 shadow-xl animate-in fade-in-50 zoom-in-95"
                                 >
                                   <DropdownMenu.Item
-                                    onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
+                                    onSelect={() => navigate(`/cab/competence/persons/${p.id}/edit`)}
                                     className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50 focus:bg-neutral-50"
                                   >
-                                    {t('cab.competence.evaluateCompetence', 'Evaluate competence')}
-                                  </DropdownMenu.Item>
-                                  <DropdownMenu.Item
-                                    onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
-                                    className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50 focus:bg-neutral-50"
-                                  >
-                                    {t('cab.competence.viewProfile', 'View profile')}
-                                  </DropdownMenu.Item>
-                                  <DropdownMenu.Item
-                                    onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
-                                    className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50 focus:bg-neutral-50"
-                                  >
-                                    {t('cab.competence.editAuthorizations', 'Edit authorizations')}
+                                    {t('cab.competence.memberProfile.editProfile', 'Edit profile')}
                                   </DropdownMenu.Item>
                                 </DropdownMenu.Content>
                               </DropdownMenu.Portal>
@@ -493,7 +517,7 @@ export function CabPersonnelRegisterPage() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={7} className="p-12 text-center text-neutral-500">
+                        <td colSpan={7} className="px-4 py-8 text-center text-[15px] text-neutral-500">
                           {t('cab.competence.noPersonnel', 'No personnel records match the current filters.')}
                         </td>
                       </tr>
@@ -509,23 +533,28 @@ export function CabPersonnelRegisterPage() {
                 filteredPersonnel.map((p) => (
                   <div
                     key={p.id}
-                    onClick={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
-                    className="rounded-[12px] border border-[#e5e7eb] bg-white p-4 shadow-xs space-y-3 cursor-pointer hover:border-primary transition-all active:scale-[0.99]"
+                    className="rounded-[12px] border border-[#ececec] bg-white p-4 shadow-xs space-y-3"
                   >
                     {/* Top Row: Avatar, Name, Code & Dropdown */}
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-center gap-3 min-w-0">
                         <div className="flex size-10 items-center justify-center rounded-full bg-primary text-[13px] font-bold text-white shadow-sm shrink-0">
-                          {getInitials(p.name)}
+                          {p.avatarUrl ? <img src={p.avatarUrl} alt={p.name} className="size-full rounded-full object-cover" /> : getInitials(p.name)}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-bold text-neutral-900 truncate">{p.name}</p>
-                          <p className="text-[12px] text-neutral-500 font-mono">{p.code}</p>
+                          <button
+                            type="button"
+                            onClick={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
+                            className="font-bold text-neutral-900 hover:text-primary hover:underline truncate block text-start cursor-pointer"
+                          >
+                            {p.name}
+                          </button>
+                          <p className="text-[12px] text-neutral-500 font-mono" dir="ltr">{p.code}</p>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0" onClick={(e) => e.stopPropagation()}>
-                        {getStatusBadge(p.status)}
+                      <div className="flex items-center gap-2 shrink-0">
+                        {renderStatusToggle(p)}
                         <DropdownMenu.Root dir={dir}>
                           <DropdownMenu.Trigger asChild>
                             <button
@@ -543,22 +572,10 @@ export function CabPersonnelRegisterPage() {
                               className="z-50 min-w-[190px] rounded-[8px] border border-[#e5e7eb] bg-white py-1 shadow-xl animate-in fade-in-50 zoom-in-95"
                             >
                               <DropdownMenu.Item
-                                onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
+                                onSelect={() => navigate(`/cab/competence/persons/${p.id}/edit`)}
                                 className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50"
                               >
-                                {t('cab.competence.evaluateCompetence', 'Evaluate competence')}
-                              </DropdownMenu.Item>
-                              <DropdownMenu.Item
-                                onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
-                                className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50"
-                              >
-                                {t('cab.competence.viewProfile', 'View profile')}
-                              </DropdownMenu.Item>
-                              <DropdownMenu.Item
-                                onSelect={() => navigate(`/cab/competence/persons/${p.id}/evaluation`)}
-                                className="cursor-pointer px-4 py-2 text-[13px] font-medium text-neutral-700 outline-none hover:bg-neutral-50"
-                              >
-                                {t('cab.competence.editAuthorizations', 'Edit authorizations')}
+                                {t('cab.competence.memberProfile.editProfile', 'Edit profile')}
                               </DropdownMenu.Item>
                             </DropdownMenu.Content>
                           </DropdownMenu.Portal>
@@ -572,13 +589,13 @@ export function CabPersonnelRegisterPage() {
                         <span className="text-neutral-400 block text-[11px] font-medium uppercase tracking-wide">
                           {t('cab.competence.columns.role', 'Role')}
                         </span>
-                        <span className="font-semibold text-neutral-800">{p.role}</span>
+                        <span className="font-semibold text-neutral-800">{p.role || '—'}</span>
                       </div>
                       <div>
                         <span className="text-neutral-400 block text-[11px] font-medium uppercase tracking-wide">
                           {t('cab.competence.columns.expiry', 'Expiry')}
                         </span>
-                        <span className="font-semibold text-neutral-800">{p.expiryDate}</span>
+                        <span className="font-semibold text-neutral-800" dir="ltr">{p.expiryDate || '—'}</span>
                       </div>
                     </div>
 
@@ -588,15 +605,19 @@ export function CabPersonnelRegisterPage() {
                         <span className="text-neutral-400 text-[11px] font-medium uppercase tracking-wide me-1">
                           {t('cab.competence.columns.schemes', 'Schemes')}:
                         </span>
-                        {p.schemes.map((s) => (
-                          <span key={s} className="rounded-[4px] bg-[#e8edfc] px-2 py-0.5 text-[11px] font-medium text-primary">
-                            {s}
-                          </span>
-                        ))}
+                        {p.schemes.length > 0 ? (
+                          p.schemes.map((s) => (
+                            <span key={s} className="rounded-[4px] bg-[#e8edfc] px-2 py-0.5 text-[11px] font-medium text-primary">
+                              {s}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-neutral-500">—</span>
+                        )}
                       </div>
                       <p className="text-[12px] text-neutral-600 line-clamp-2">
                         <span className="font-medium text-neutral-700">{t('cab.competence.columns.scope', 'Scope')}: </span>
-                        {p.authorizedScope}
+                        {formatIafCodesToSectorNames(p.iafCodes, p.authorizedScope, i18n.language) || '—'}
                       </p>
                     </div>
 
@@ -604,14 +625,11 @@ export function CabPersonnelRegisterPage() {
                     <div className="pt-2">
                       <button
                         type="button"
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          navigate(`/cab/competence/persons/${p.id}/evaluation`)
-                        }}
+                        onClick={() => navigate(`/cab/competence/persons/${p.id}/edit`)}
                         className="w-full flex items-center justify-center gap-2 rounded-[8px] bg-[#f0f4fd] hover:bg-[#e8edfc] text-primary text-[13px] font-semibold py-2 transition-colors"
                       >
                         <AppIcon icon={UserIcon} size={14} />
-                        <span>{t('cab.competence.evaluateCompetence', 'Evaluate competence')}</span>
+                        <span>{t('cab.competence.memberProfile.editProfile', 'Edit profile')}</span>
                       </button>
                     </div>
                   </div>
@@ -626,135 +644,6 @@ export function CabPersonnelRegisterPage() {
         </div>
       </main>
 
-      {/* Add Person Modal */}
-      {isAddModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs p-3 sm:p-4">
-          <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-[16px] bg-white p-5 sm:p-6 shadow-2xl space-y-4 animate-in fade-in-50 zoom-in-95">
-            <div className="flex items-center justify-between border-b border-[#ececec] pb-3">
-              <h2 className="text-[16px] sm:text-[18px] font-bold text-neutral-900">{t('cab.competence.addNewPerson', 'Add New Person')}</h2>
-              <button
-                type="button"
-                onClick={() => setIsAddModalOpen(false)}
-                className="flex size-8 items-center justify-center rounded-full hover:bg-neutral-100 text-neutral-400 hover:text-neutral-600 text-[20px] font-bold"
-              >
-                ×
-              </button>
-            </div>
-
-            <form onSubmit={handleAddPerson} className="space-y-4 text-start">
-              <div>
-                <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                  {t('cab.competence.fullName', 'Full Name')} *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={newPerson.name}
-                  onChange={(e) => setNewPerson({ ...newPerson, name: e.target.value })}
-                  placeholder="e.g. John Doe"
-                  className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                    {t('cab.competence.role', 'Role')}
-                  </label>
-                  <select
-                    value={newPerson.role}
-                    onChange={(e) =>
-                      setNewPerson({ ...newPerson, role: e.target.value as any })
-                    }
-                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                  >
-                    <option value="Auditor">Auditor</option>
-                    <option value="Lead Auditor">Lead Auditor</option>
-                    <option value="Technical Expert">Technical Expert</option>
-                    <option value="Decision Maker">Decision Maker</option>
-                    <option value="Reviewer">Reviewer</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                    {t('cab.competence.scheme', 'Scheme')}
-                  </label>
-                  <select
-                    value={newPerson.scheme}
-                    onChange={(e) => setNewPerson({ ...newPerson, scheme: e.target.value })}
-                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                  >
-                    <option value="ISO 9001">ISO 9001 (Quality)</option>
-                    <option value="ISO 14001">ISO 14001 (Environmental)</option>
-                    <option value="ISO 45001">ISO 45001 (Health & Safety)</option>
-                    <option value="ISO 22000">ISO 22000 (Food Safety)</option>
-                    <option value="ISO 27001">ISO 27001 (Information Security)</option>
-                    <option value="HACCP">HACCP</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                  {t('cab.competence.authorizedScope', 'Authorized Scope / Sector')}
-                </label>
-                <input
-                  type="text"
-                  value={newPerson.authorizedScope}
-                  onChange={(e) =>
-                    setNewPerson({ ...newPerson, authorizedScope: e.target.value })
-                  }
-                  placeholder="e.g. Quality management systems"
-                  className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div>
-                  <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                    {t('cab.competence.country', 'Country')}
-                  </label>
-                  <input
-                    type="text"
-                    value={newPerson.country}
-                    onChange={(e) => setNewPerson({ ...newPerson, country: e.target.value })}
-                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[13px] font-semibold text-neutral-700 mb-1">
-                    {t('cab.competence.columns.expiry', 'Expiry Date')}
-                  </label>
-                  <input
-                    type="date"
-                    value={newPerson.expiryDate}
-                    onChange={(e) => setNewPerson({ ...newPerson, expiryDate: e.target.value })}
-                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] px-3 text-[14px] focus:border-primary focus:outline-none"
-                  />
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ececec]">
-                <button
-                  type="button"
-                  onClick={() => setIsAddModalOpen(false)}
-                  className="h-11 rounded-[8px] border border-[#e2e2e2] px-4 text-[14px] font-semibold text-neutral-700 hover:bg-neutral-50 transition-colors"
-                >
-                  {t('common.cancel', 'Cancel')}
-                </button>
-                <button
-                  type="submit"
-                  className="h-11 rounded-[8px] bg-primary px-5 text-[14px] font-semibold text-white hover:bg-primary/90 transition-colors"
-                >
-                  {t('cab.competence.savePerson', 'Save Person')}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </CabLayout>
   )
 }

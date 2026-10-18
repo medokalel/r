@@ -27,6 +27,7 @@ const viewTabs: NavViewTab[] = ['field', 'documents', 'feedback']
 // the ambient TourProvider's steps, so no steps prop needs to be threaded
 // through here — it only lights up when that tour is actually running.
 const viewTabTourStepIds: Record<NavViewTab, string> = {
+  entityData: 'entity-data-tab',
   field: 'field-tab',
   documents: 'documents-tab',
   feedback: 'feedback-tab',

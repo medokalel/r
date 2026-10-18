@@ -17,6 +17,9 @@ export const standards = [
 
 export type StandardKey = (typeof standards)[number]
 
+/** Max economic sectors and IAF codes a user can pick per standard. */
+export const MAX_FIELD_SELECTIONS = 2
+
 export const standardLabels: Record<StandardKey, string> = {
   iso9001: 'ISO 9001',
   iso14001: 'ISO 14001',

@@ -254,3 +254,42 @@ export function getIafCodeOptions(lang?: string): { value: string; label: string
     label: `IAF ${item.code} • ${currentLang === 'ar' ? item.ar : item.en}`,
   }))
 }
+
+export function resolveIafCodeSectorName(rawCode: string, lang?: string): string | null {
+  const currentLang = lang || (i18n.language?.startsWith('ar') ? 'ar' : 'en')
+  const trimmed = rawCode.trim()
+  const match = trimmed.match(/(\d{1,2})/)
+  const digits = match ? match[1].padStart(2, '0') : null
+  const found = IAF_CODES_LIST.find(
+    (item) => item.value === trimmed || (digits && item.code === digits),
+  )
+  if (!found) return null
+  return currentLang === 'ar' ? found.ar : found.en
+}
+
+export function formatIafCodesToSectorNames(
+  codes?: string[] | null,
+  fallbackScope?: string,
+  lang?: string,
+): string {
+  if (codes && codes.length > 0) {
+    const names = codes.map((c) => resolveIafCodeSectorName(c, lang) || c).filter(Boolean)
+    if (names.length > 0) return names.join(', ')
+  }
+
+  if (fallbackScope) {
+    const iafPrefixMatch = fallbackScope.match(/^IAF\s*:\s*(.+)$/i)
+    if (iafPrefixMatch) {
+      const parts = iafPrefixMatch[1]
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean)
+      const names = parts.map((c) => resolveIafCodeSectorName(c, lang) || c)
+      if (names.length > 0) return names.join(', ')
+    }
+    return fallbackScope
+  }
+
+  return ''
+}
+

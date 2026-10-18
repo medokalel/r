@@ -15,16 +15,46 @@ export interface CabCertificationApplication extends ApplicationResponse {
 const clientApplicationsPath = (clientId: string) =>
   `/cab-clients/${encodeURIComponent(clientId)}/certification-applications`
 
+const LIST_TTL_MS = 60_000
+let listInFlight: Promise<CabCertificationApplication[]> | null = null
+let listCached: { at: number; data: CabCertificationApplication[] } | null = null
+
+export function invalidateCabCertificationApplications(): void {
+  listInFlight = null
+  listCached = null
+}
+
 export function listCabCertificationApplications(): Promise<
   CabCertificationApplication[]
 > {
-  return authorizedRequest('/cab/certification-applications')
+  if (listCached && Date.now() - listCached.at < LIST_TTL_MS) {
+    return Promise.resolve(listCached.data)
+  }
+  if (listInFlight) return listInFlight
+
+  listInFlight = authorizedRequest<CabCertificationApplication[]>(
+    '/cab/certification-applications',
+  )
+    .then((data) => {
+      listCached = { at: Date.now(), data }
+      return data
+    })
+    .catch((error) => {
+      if (listCached) return listCached.data
+      throw error
+    })
+    .finally(() => {
+      listInFlight = null
+    })
+
+  return listInFlight
 }
 
 export function createCabClientCertificationApplication(
   clientId: string,
   payload: DraftApplicationRequest,
 ): Promise<CabCertificationApplication> {
+  invalidateCabCertificationApplications()
   return authorizedRequest(clientApplicationsPath(clientId), {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -55,6 +85,7 @@ export function submitCabClientCertificationApplication(
   clientId: string,
   applicationId: string,
 ): Promise<CabCertificationApplication> {
+  invalidateCabCertificationApplications()
   return authorizedRequest(
     `${clientApplicationsPath(clientId)}/${encodeURIComponent(applicationId)}/submit`,
     { method: 'POST' },
@@ -62,11 +93,17 @@ export function submitCabClientCertificationApplication(
 }
 
 export function getCabClientCertificationApplication(
-  clientId: string,
+  _clientId: string,
+  applicationId: string,
+): Promise<CabCertificationApplication> {
+  return getCabCertificationApplication(applicationId)
+}
+
+export function getCabCertificationApplication(
   applicationId: string,
 ): Promise<CabCertificationApplication> {
   return authorizedRequest(
-    `${clientApplicationsPath(clientId)}/${encodeURIComponent(applicationId)}`,
+    `/cab/certification-applications/${encodeURIComponent(applicationId)}`,
   )
 }
 
@@ -87,20 +124,18 @@ export async function startCabClientApplication(
 
 export async function resolveCabCertificationApplication(
   applicationId?: string | null,
-  clientId?: string | null,
+  _clientId?: string | null,
 ): Promise<CabCertificationApplication | null> {
-  if (clientId && applicationId) {
-    return getCabClientCertificationApplication(clientId, applicationId)
-  }
   if (!applicationId) return null
-  const applications = await listCabCertificationApplications()
-  const match = applications.find(
-    (item) => item.id === applicationId || item.orderNumber === applicationId,
-  )
-  if (!match) return null
-  const resolvedClientId = clientIdOf(match)
-  if (!resolvedClientId) return match
-  return getCabClientCertificationApplication(resolvedClientId, match.id)
+  try {
+    return await getCabCertificationApplication(applicationId)
+  } catch {
+    const applications = await listCabCertificationApplications()
+    const match = applications.find(
+      (item) => item.id === applicationId || item.orderNumber === applicationId,
+    )
+    return match ?? null
+  }
 }
 
 export interface CabApplicationOverlay {

@@ -2,12 +2,14 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PhoneInputRow, type CountryCode } from '@/components/auth/CountryCodeSelect'
 import { FormField, RadioGroup, MultiSelect, TextField } from '@/components/ui'
+import { useFieldValidation } from '@/hooks/useFieldValidation'
 import { LocationPicker, type LatLng } from '@/components/maps/LocationPicker'
 import { cn } from '@/lib/utils'
 import { getLocalizedBranchSectorOptions } from './constants'
 import { GoogleMapUrlField } from './GoogleMapUrlField'
 import { googleMapsUrlFor, parseLatLngFromGoogleMapsUrl } from './mappers'
 import type { BranchFormValues } from './types'
+import { branchRules } from './validation'
 
 interface BranchFormFieldsProps {
   form: BranchFormValues
@@ -68,6 +70,7 @@ export function BranchFormFields({
   branchTypeVariant = 'radio',
 }: BranchFormFieldsProps) {
   const { t } = useTranslation()
+  const { fieldProps } = useFieldValidation(form, branchRules(t, countryCode))
   const branchSectorOptions = useMemo(() => getLocalizedBranchSectorOptions(t), [t])
 
   const onGoogleMapUrlChange = (value: string) => {
@@ -90,7 +93,9 @@ export function BranchFormFields({
             type="text"
             placeholder={t('companyProfile.addBranch.branchNamePlaceholder')}
             value={form.branchName}
+            valueKind="mixed"
             onChange={(e) => set('branchName', e.target.value)}
+            {...fieldProps('branchName')}
           />
         </FormField>
         <FormField label={t('companyProfile.addBranch.registryLabel')} required>
@@ -99,7 +104,9 @@ export function BranchFormFields({
             dir="ltr"
             placeholder={t('companyProfile.addBranch.registryPlaceholder')}
             value={form.commercialRegisterNumber}
+            valueKind="mixed"
             onChange={(e) => set('commercialRegisterNumber', e.target.value)}
+            {...fieldProps('commercialRegisterNumber')}
           />
         </FormField>
       </div>
@@ -109,7 +116,9 @@ export function BranchFormFields({
           type="text"
           placeholder={t('companyProfile.addBranch.addressPlaceholder')}
           value={form.address}
+          valueKind="mixed"
           onChange={(e) => set('address', e.target.value)}
+          {...fieldProps('address')}
         />
       </FormField>
 
@@ -119,6 +128,7 @@ export function BranchFormFields({
         value={form.googleMapUrl}
         onChange={onGoogleMapUrlChange}
         required
+        {...fieldProps('googleMapUrl')}
       />
 
       <LocationPicker
@@ -133,7 +143,9 @@ export function BranchFormFields({
             type="text"
             placeholder={t('companyProfile.addBranch.managerPlaceholder')}
             value={form.branchManagerName}
+            valueKind="text"
             onChange={(e) => set('branchManagerName', e.target.value)}
+            {...fieldProps('branchManagerName')}
           />
         </FormField>
         <FormField label={t('companyProfile.addBranch.phoneLabel')} required>
@@ -151,6 +163,7 @@ export function BranchFormFields({
               className="flex-1"
               value={form.phoneNumber}
               onChange={(e) => set('phoneNumber', e.target.value)}
+              {...fieldProps('phoneNumber')}
             />
           </PhoneInputRow>
         </FormField>
@@ -166,12 +179,14 @@ export function BranchFormFields({
         </FormField>
         <FormField label={t('companyProfile.addBranch.employeesLabel')} required>
           <TextField
-            type="number"
+            type="text"
             dir="ltr"
-            min={0}
+            valueKind="number"
+            maxLength={9}
             placeholder={t('companyProfile.addBranch.employeesPlaceholder')}
             value={form.employeeCount}
             onChange={(e) => set('employeeCount', e.target.value)}
+            {...fieldProps('employeeCount')}
           />
         </FormField>
       </div>

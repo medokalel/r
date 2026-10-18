@@ -10,13 +10,6 @@ import {
   type ReviewQueueItem,
 } from '@/lib/api/cabApplicationQueueApi'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import {
-  AppIcon,
-  SearchIcon,
-  ChevronDownIcon,
-  AddCircleIcon,
-  FilterFunnelIcon,
-} from '@/components/icons'
 import { ROUTES, cabApplicationInformationRequiredPath, cabApplicationReviewPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -250,6 +243,7 @@ export function CabApplicationReviewQueuePage() {
             </div>
           </form>
         </div>
+        </CabTourStep>
 
         {/* Results Header */}
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
@@ -479,7 +473,7 @@ export function CabApplicationReviewQueuePage() {
               </div>
             </div>
           </div>
-        </div>
+        </CabTourStep>
       </div>
     </CabLayout>
   )

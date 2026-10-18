@@ -90,6 +90,7 @@ export function CabOnboardingFlow() {
   }
 
   const handleNext = () => {
+    if (nextDisabled) return
     if (step === 6) {
       void handleFinish()
       return

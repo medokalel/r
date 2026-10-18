@@ -36,6 +36,18 @@ export function isValidWebsite(value: string): boolean {
   }
 }
 
+/** Absolute http(s) URL — the API's `uri` format needs a scheme. Empty is valid. */
+export function isValidHttpUrl(value: string): boolean {
+  const trimmed = value.trim()
+  if (!trimmed) return true
+  try {
+    const url = new URL(trimmed)
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.hostname.includes('.')
+  } catch {
+    return false
+  }
+}
+
 /** Prepends https:// if the user typed a bare domain, for storage/display. */
 export function normalizeWebsiteUrl(value: string): string {
   const trimmed = value.trim()
@@ -52,4 +64,26 @@ export function isValidPhoneNumber(value: string, countryCode: CountryCode): boo
   const trimmed = value.replace(INVISIBLE_MARKS, '').trim()
   if (!trimmed) return true
   return isValidPhoneNumberLib(trimmed, countryCode)
+}
+
+export type FieldValueKind = 'number' | 'text' | 'mixed'
+
+const NUMBER_ONLY = /^\d+$/
+const TEXT_ONLY = /^[\p{L}\p{M}\s.'’&\-]+$/u
+const MIXED_VALUE = /^[\p{L}\p{M}\p{N}\s.,/#&()+\-_'’:@{}]+$/u
+
+/** Empty is valid; required-ness is checked separately. */
+export function isValidFieldKind(value: string, kind: FieldValueKind): boolean {
+  const trimmed = value.replace(INVISIBLE_MARKS, '').trim()
+  if (!trimmed) return true
+  if (kind === 'number') return NUMBER_ONLY.test(trimmed)
+  if (kind === 'text') return TEXT_ONLY.test(trimmed)
+  return MIXED_VALUE.test(trimmed)
+}
+
+export function sanitizeFieldKind(value: string, kind: FieldValueKind): string {
+  const cleaned = value.replace(INVISIBLE_MARKS, '')
+  if (kind === 'number') return cleaned.replace(/\D/g, '')
+  if (kind === 'text') return cleaned.replace(/[^\p{L}\p{M}\s.'’&\-]/gu, '')
+  return cleaned.replace(/[^\p{L}\p{M}\p{N}\s.,/#&()+\-_'’:@{}]/gu, '')
 }

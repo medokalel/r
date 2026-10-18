@@ -261,6 +261,7 @@ export function CabCertificateStep({ form, onPatchSetup }: CabSetupStepProps) {
               dir="ltr"
               value={activeRecord.certificateNumberFormat}
               placeholder="{CAB}-{SCHEME}-{YEAR}-{SEQ}"
+              valueKind="mixed"
               onChange={(event) =>
                 updateSchemeRecord(activeRecord.schemeId, activeRecord.schemeName, {
                   certificateNumberFormat: event.target.value,
@@ -342,6 +343,7 @@ export function CabCertificateStep({ form, onPatchSetup }: CabSetupStepProps) {
               type="text"
               value={activeRecord.signatoryName}
               placeholder={t('cab.setup.certificate.signatoryNamePlaceholder')}
+              valueKind="text"
               onChange={(event) =>
                 updateSchemeRecord(activeRecord.schemeId, activeRecord.schemeName, {
                   signatoryName: event.target.value,
@@ -355,6 +357,7 @@ export function CabCertificateStep({ form, onPatchSetup }: CabSetupStepProps) {
               type="text"
               value={activeRecord.signatoryTitle}
               placeholder={t('cab.setup.certificate.signatoryTitlePlaceholder')}
+              valueKind="text"
               onChange={(event) =>
                 updateSchemeRecord(activeRecord.schemeId, activeRecord.schemeName, {
                   signatoryTitle: event.target.value,
