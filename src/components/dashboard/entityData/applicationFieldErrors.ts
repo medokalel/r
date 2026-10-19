@@ -1,5 +1,6 @@
 import type { TFunction } from 'i18next'
 import { ApiError } from '@/lib/api/client'
+import { describeRule, getUserErrorMessage, parseValidationIssues } from '@/lib/errorMessages'
 import {
   subSections,
   type EntityDataSubSection,
@@ -71,6 +72,9 @@ const FIELD_LABELS: Record<string, string> = {
   technicalCommunication: 'accreditation.entityData.fields.scope.technicalCommunication',
   phase1ExpectedDate: 'accreditation.entityData.fields.scope.firstPhaseDate',
   workingHours: 'accreditation.entityData.fields.scope.openingHours',
+  branches: 'cab.applicationSubmission.fieldErrors.branches',
+  certificates: 'cab.applicationSubmission.fieldErrors.certificates',
+  documents: 'cab.applicationSubmission.fieldErrors.documents',
 }
 
 const SECTION_LABELS: Record<EntityDataSubSection, string> = {
@@ -125,7 +129,9 @@ function reasonForRule(rule: string, t: TFunction): string {
   if (normalized.includes('must be [true]') || normalized.includes('must be true')) {
     return t('cab.applicationSubmission.fieldErrors.mustBeAccepted')
   }
-  return rule.trim()
+  const minItems = normalized.match(/must contain at least (\d+)/)
+  if (minItems) return t('errors.reasons.minItems', { count: Number(minItems[1]) })
+  return describeRule(rule, t)
 }
 
 export function listMissingApplicationFields(
@@ -176,32 +182,23 @@ export function listMissingApplicationFields(
 }
 
 export function formatCertificationSubmitError(error: unknown, t: TFunction): string {
-  if (!(error instanceof ApiError)) return t('errors.generic')
+  // Only validation failures (400/422) carry per-field details; everything else gets a plain message.
+  if (!(error instanceof ApiError) || (error.status !== 400 && error.status !== 422)) {
+    return getUserErrorMessage(error, t)
+  }
 
-  const raw = [error.message, ...(error.errors ?? [])].filter(Boolean).join(', ')
-  const stripped = raw
-    .replace(/^Cannot submit:\s*/i, '')
-    .replace(/^Validation Error:\s*/i, '')
-  const parts = stripped
-    .split(/,(?=\s*")/)
-    .map((part) => part.trim())
-    .filter(Boolean)
+  const issues = parseValidationIssues(error)
+  if (issues.length === 0) return getUserErrorMessage(error, t)
 
-  const quoted = parts.filter((part) => part.includes('"'))
-  if (quoted.length === 0) return raw || t('errors.generic')
-
-  const lines = quoted.map((part) => {
-    const match = part.match(/^"([^"]+)"\s+(.+)$/)
-    if (!match) return part
-    const [, path, rule] = match
-    return t('cab.applicationSubmission.fieldErrors.line', {
-      field: labelForPath(path, t),
-      reason: reasonForRule(rule, t),
-    })
-  })
-
-  if (lines.length === 0) return raw || t('errors.generic')
-  return [t('cab.applicationSubmission.fieldErrors.title'), ...lines.map((line) => `• ${line}`)].join(
-    '\n',
-  )
+  const lines = [
+    ...new Set(
+      issues.map(({ path, rule }) =>
+        t('cab.applicationSubmission.fieldErrors.line', {
+          field: labelForPath(path, t),
+          reason: reasonForRule(rule, t),
+        }),
+      ),
+    ),
+  ]
+  return [t('cab.applicationSubmission.fieldErrors.title'), ...lines.map((line) => `• ${line}`)].join('\n')
 }

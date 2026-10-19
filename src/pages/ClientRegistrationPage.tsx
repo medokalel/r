@@ -8,14 +8,19 @@ import { buildClientWorkflowSteps } from '@/lib/workflowSteps'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardFooter } from '@/components/dashboard/DashboardFooter'
 import { useFieldValidation } from '@/hooks/useFieldValidation'
-import { emptyClientRegistrationForm, getClientRegistrationRules } from '@/lib/clientRegistrationForm'
+import {
+  CLIENT_REGISTRATION_FIELD_LABELS,
+  emptyClientRegistrationForm,
+  getClientRegistrationRules,
+} from '@/lib/clientRegistrationForm'
 import {
   cabClientToForm,
   createCabClient,
   getCabClient,
   updateCabClient,
 } from '@/lib/api/clientRegistrationApi'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { ROUTES } from '@/lib/routes'
 
 import { markTourPending } from '@/context/TourContext'
@@ -39,7 +44,6 @@ export function ClientRegistrationPage() {
   const [draftId, setDraftId] = useState<string | null>(clientId ?? null)
   const [loading, setLoading] = useState(editing)
   const [saving, setSaving] = useState(false)
-  const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null)
 
   useEffect(() => {
     if (!clientId) return
@@ -51,10 +55,7 @@ export function ClientRegistrationPage() {
       })
       .catch((error: unknown) => {
         if (!cancelled) {
-          setFeedback({
-            type: 'error',
-            message: error instanceof Error ? error.message : t('cab.clientsPage.loadError'),
-          })
+          toast.error(getUserErrorMessage(error, t, { fallbackKey: 'cab.clientsPage.loadError' }))
         }
       })
       .finally(() => {
@@ -71,18 +72,18 @@ export function ClientRegistrationPage() {
 
   const save = async (options?: { skipEditRedirect?: boolean }) => {
     if (!validateAll()) {
-      setFeedback({ type: 'error', message: t('validation.fixErrors') })
+      toast.error(t('validation.fixErrors'))
       return null
     }
     setSaving(true)
-    setFeedback(null)
+    const isNew = !draftId
     try {
       const result = draftId ? await updateCabClient(draftId, form) : await createCabClient(form)
       setDraftId(result.client.id)
       if (!clientId && !options?.skipEditRedirect) {
         navigate(`/cab/clients/${result.client.id}/edit`, { replace: true })
       }
-      setFeedback({ type: 'success', message: result.message })
+      toast.success(t(isNew ? 'cab.clientRegistration.messages.created' : 'cab.clientRegistration.messages.saved'))
       return result.client
     } catch (error) {
       const organizationId =
@@ -93,13 +94,12 @@ export function ClientRegistrationPage() {
         setDraftId(organizationId)
         navigate(`/cab/clients/${organizationId}/edit`, { replace: true })
       }
-      setFeedback({
-        type: 'error',
-        message:
-          error instanceof ApiError
-            ? [error.message, ...(error.errors ?? [])].filter(Boolean).join(' ')
-            : t('cab.clientRegistration.saveError'),
-      })
+      toast.error(
+        getUserErrorMessage(error, t, {
+          fallbackKey: 'cab.clientRegistration.saveError',
+          fieldLabels: CLIENT_REGISTRATION_FIELD_LABELS,
+        }),
+      )
       return null
     } finally {
       setSaving(false)
@@ -161,14 +161,6 @@ export function ClientRegistrationPage() {
             {t('cab.clientRegistration.viewRegisteredClients')}
           </button>
         </div>
-        {feedback && (
-          <p
-            role={feedback.type === 'error' ? 'alert' : 'status'}
-            className={feedback.type === 'error' ? 'text-body-3 text-error-500' : 'text-body-3 text-success-600'}
-          >
-            {feedback.message}
-          </p>
-        )}
 
         {loading ? (
           <div className="rounded-[var(--radius-md)] border border-[#ececec] bg-white p-8 text-center text-neutral-500">

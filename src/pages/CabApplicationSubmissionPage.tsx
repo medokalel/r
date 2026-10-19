@@ -31,6 +31,8 @@ import {
   cabApplicationReviewPath,
   cabApplicationSubmissionPath,
 } from '@/lib/routes'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 const STATUS_VIEWS: EntityDataViewTab[] = ['approved', 'underReview', 'rejected']
@@ -61,7 +63,6 @@ function ClientPicker() {
   const [loading, setLoading] = useState(true)
   const [starting, setStarting] = useState(false)
   const [selectedClientId, setSelectedClientId] = useState('')
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -69,8 +70,10 @@ function ClientPicker() {
       .then((items) => {
         if (!cancelled) setClients(items)
       })
-      .catch(() => {
-        if (!cancelled) setClients([])
+      .catch((err: unknown) => {
+        if (cancelled) return
+        setClients([])
+        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.clientsPage.loadError' }))
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -78,7 +81,7 @@ function ClientPicker() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [t])
 
   const options = useMemo(
     () =>
@@ -95,7 +98,6 @@ function ClientPicker() {
   const start = async () => {
     if (!selectedClientId) return
     setStarting(true)
-    setError(null)
     try {
       const application = await startCabClientApplication(selectedClientId)
       const fill = searchParams.get('fill') === '1'
@@ -104,7 +106,7 @@ function ClientPicker() {
         { replace: true },
       )
     } catch (caught) {
-      setError(caught instanceof Error ? caught.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(caught, t))
     } finally {
       setStarting(false)
     }
@@ -132,7 +134,6 @@ function ClientPicker() {
         searchPlaceholder={t('cab.applicationSubmission.clientSearchPlaceholder')}
         disabled={loading || starting || clients.length === 0}
       />
-      {error && <p className="mt-3 text-[13px] text-error-500">{error}</p>}
       <Button
         variant="primary"
         className="mt-5 w-full"
@@ -342,16 +343,12 @@ export function CabApplicationSubmissionPage() {
           })
         : null
 
-  const footerStartContent = notification ? (
-    <p
-      className={cn(
-        'min-w-0 whitespace-pre-line text-[14px] font-medium',
-        notification.type === 'success' ? 'text-[#26a65b]' : 'text-error-500',
-      )}
-    >
-      {notification.message}
-    </p>
-  ) : missingHint && !isReadOnly ? (
+  // Save / submit results are shown as toasts instead of inside the footer.
+  useEffect(() => {
+    if (notification) toast[notification.type](notification.message)
+  }, [notification])
+
+  const footerStartContent = missingHint && !isReadOnly ? (
     <p className="rounded-[var(--radius-sm)] bg-[#fef3c6] px-3 py-1.5 text-[14px] font-medium text-[#a58401]">
       {missingHint}
     </p>
@@ -441,6 +438,11 @@ export function CabApplicationSubmissionPage() {
             <div className="flex flex-1 items-center justify-center rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
               <ErrorState
                 variant={loadError === 'rateLimit' ? 'rateLimit' : 'generic'}
+                description={
+                  loadError === 'notFound' || loadError === 'forbidden' || loadError === 'network'
+                    ? t(`errors.${loadError}`)
+                    : undefined
+                }
                 onRetry={reload}
               />
             </div>

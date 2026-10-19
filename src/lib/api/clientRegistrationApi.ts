@@ -79,7 +79,7 @@ interface SavedClientResponse {
 
 function requireToken(): string {
   const token = getAuthToken()
-  if (!token) throw new Error('Authentication required')
+  if (!token) throw new ApiError('Authentication required', 401)
   return token
 }
 
@@ -207,18 +207,25 @@ function toProfilePayload(form: ClientRegistrationForm): {
 
 export function createCabClientAccount(form: ClientRegistrationForm): Promise<CreateClientResponse> {
   const payload = toCreatePayload(form)
-  const missing: string[] = []
-  if (!payload.email) missing.push('email')
-  if (payload.organizationName.length < 2) missing.push('organizationName')
-  if (payload.administrationName.length < 2) missing.push('administrationName')
-  if (payload.facilityOwnerManager.length < 2) missing.push('facilityOwnerManager')
-  if (payload.activity.length < 2) missing.push('activity')
-  if (payload.legalCapacity.length < 2) missing.push('legalCapacity')
-  if (payload.city.length < 2) missing.push('city')
-  if (payload.phone.length < 7) missing.push('phone')
+  // Same shape the backend (Joi) uses, so the page formats local and server errors the same way.
+  const issues: string[] = []
+  const requireText = (field: string, value: string) => {
+    if (!value) issues.push(`"${field}" is not allowed to be empty`)
+    else if (value.length < 2) issues.push(`"${field}" length must be at least 2 characters long`)
+  }
+  requireText('email', payload.email)
+  requireText('organizationName', payload.organizationName)
+  requireText('administrationName', payload.administrationName)
+  requireText('facilityOwnerManager', payload.facilityOwnerManager)
+  requireText('activity', payload.activity)
+  requireText('legalCapacity', payload.legalCapacity)
+  requireText('city', payload.city)
+  const phoneDigits = digitsOnly(form.phoneNumber)
+  if (!phoneDigits) issues.push('"phone" is not allowed to be empty')
+  else if (payload.phone.length < 7) issues.push('"phone" fails to match the required pattern')
 
-  if (missing.length > 0) {
-    throw new ApiError(`Please complete these fields before saving: ${missing.join(', ')}.`, 400, missing)
+  if (issues.length > 0) {
+    throw new ApiError('Validation error', 400, issues)
   }
 
   return apiRequestWithAuth<CreateClientResponse>('/cab-clients', requireToken(), {

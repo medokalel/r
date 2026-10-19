@@ -58,6 +58,35 @@
     "title": "Something went wrong",
     "generic": "We couldn't complete your request. Please try again.",
     "retry": "Try again",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "forbidden": "You don't have permission to do this.",
+    "notFound": "We couldn't find what you were looking for. It may have been moved or deleted.",
+    "conflict": "This action conflicts with the current state of the record. Please refresh the page and try again.",
+    "expired": "This step has expired. Please start again.",
+    "payloadTooLarge": "The file is too large. Please choose a smaller file.",
+    "server": "Something went wrong on our side. Please try again in a few minutes.",
+    "network": "We can't reach the server. Check your internet connection and try again.",
+    "invalidRequest": "Some of the information you entered isn't valid. Please review it and try again.",
+    "emailTaken": "This email address is already registered. Please use a different one.",
+    "profileMissing": "Please save the organization's profile first.",
+    "noFile": "Please choose a file to upload.",
+    "cannotModify": "This application can no longer be edited. Its current status is: {{status}}.",
+    "validationTitle": "Please check the following:",
+    "fieldLine": "{{field}} — {{reason}}",
+    "reasons": {
+      "required": "is required",
+      "invalidEmail": "must be a valid email address",
+      "invalidUrl": "must be a valid link",
+      "invalidDate": "must be a valid date",
+      "mustBeNumber": "must be a number",
+      "mustBeAccepted": "must be accepted",
+      "minLength": "must be at least {{count}} characters",
+      "maxLength": "must be at most {{count}} characters",
+      "minItems": "needs at least {{count}} to be added",
+      "invalidChoice": "has an invalid selection",
+      "invalidFormat": "has an invalid format",
+      "invalidValue": "has an invalid value"
+    },
     "rateLimit": {
       "title": "Too many requests",
       "description": "You've made too many requests in a short time. Please wait a moment and try again."
@@ -4058,6 +4087,10 @@
       "saveChanges": "Save Changes",
       "viewRegisteredClients": "View Registered Clients",
       "saveError": "The client could not be saved. Please try again.",
+      "messages": {
+        "created": "Client registered successfully.",
+        "saved": "Client details saved successfully."
+      },
       "tour": {
         "header": {
           "title": "Client Registration",
@@ -6473,7 +6506,10 @@
         "mustBeAccepted": "must be accepted",
         "branchField": "Branch {{index}}: {{field}}",
         "certificateField": "Standard {{index}}: {{field}}",
-        "standardScope": "{{standard}} sector and IAF codes"
+        "standardScope": "{{standard}} sector and IAF codes",
+        "branches": "Branches",
+        "certificates": "Standards",
+        "documents": "Documents"
       }
     },
     "applicationRegister": {

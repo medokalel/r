@@ -11,6 +11,7 @@ import { DirectionProvider } from "@/context/DirectionContext";
 import { CabSidebarProvider } from "@/context/CabSidebarContext";
 import { PageLoadingSkeleton, RouteSkeletonOverlay } from "@/components/routing/PageLoadingSkeleton";
 import { ScrollToTop } from "@/components/routing/ScrollToTop";
+import { Toaster } from "@/components/ui/Toaster";
 import {
   LoginPage,
   RegisterPage,
@@ -91,6 +92,7 @@ function HomeRedirect() {
 export default function App() {
   return (
       <DirectionProvider>
+        <Toaster />
         <BrowserRouter>
           <ScrollToTop />
           <CabSidebarProvider>

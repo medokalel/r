@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { ApiError } from '@/lib/api/client'
 import { clearAuthSession } from '@/lib/authStorage'
+import { isNetworkError, logTechnicalError } from '@/lib/errorMessages'
 import {
   createCabClientCertificationApplication,
   getCabClientCertificationApplication,
@@ -58,7 +59,9 @@ export function useCabApplicationSubmissionState() {
   const [submitting, setSubmitting] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [notification, setNotification] = useState<ApplicationNotification | null>(null)
-  const [loadError, setLoadError] = useState<'rateLimit' | 'generic' | null>(null)
+  const [loadError, setLoadError] = useState<
+    'rateLimit' | 'generic' | 'notFound' | 'forbidden' | 'network' | null
+  >(null)
   const [reloadKey, setReloadKey] = useState(0)
   const [orgBranches, setOrgBranches] = useState<OrgBranch[]>([])
   const orgProfileRef = useRef<OrganizationProfileData | null>(null)
@@ -87,11 +90,7 @@ export function useCabApplicationSubmissionState() {
         navigate('/login', { replace: true })
         return
       }
-      const message =
-        error instanceof ApiError
-          ? formatCertificationSubmitError(error, t)
-          : t('errors.generic')
-      setNotification({ type: 'error', message })
+      setNotification({ type: 'error', message: formatCertificationSubmitError(error, t) })
     },
     [navigate, t],
   )
@@ -163,7 +162,15 @@ export function useCabApplicationSubmissionState() {
           navigate('/login', { replace: true })
           return
         }
-        setLoadError(error instanceof ApiError && error.status === 429 ? 'rateLimit' : 'generic')
+        logTechnicalError(error)
+        if (error instanceof ApiError) {
+          if (error.status === 429) setLoadError('rateLimit')
+          else if (error.status === 404) setLoadError('notFound')
+          else if (error.status === 403) setLoadError('forbidden')
+          else setLoadError('generic')
+        } else {
+          setLoadError(isNetworkError(error) ? 'network' : 'generic')
+        }
       } finally {
         if (!cancelled) setLoading(false)
       }
