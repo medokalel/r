@@ -9,7 +9,8 @@ import {
 } from '@/lib/api/organizationProfileApi'
 import { deleteCabLogo, getCabProfile, uploadCabLogo } from '@/lib/api/cabApi'
 import { LOGO_ACCEPT, LOGO_MAX_BYTES } from '@/components/dashboard/companyProfile/constants'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 
 interface OnboardingLogoUploadProps {
@@ -27,7 +28,6 @@ export function OnboardingLogoUpload({
   const { t } = useTranslation()
   const logoInputRef = useRef<HTMLInputElement>(null)
   const [uploadingLogo, setUploadingLogo] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -56,26 +56,24 @@ export function OnboardingLogoUpload({
     if (!file) return
 
     if (file.size > LOGO_MAX_BYTES) {
-      setError(t('validation.fileTooLarge', { size: 5 }))
+      toast.error(t('validation.fileTooLarge', { size: 5 }))
       return
     }
 
     setUploadingLogo(true)
-    setError(null)
 
     try {
       const result =
         target === 'cab' ? await uploadCabLogo(file) : await uploadOrganizationLogo(file)
       onLogoUrlChange(result.logoUrl ?? null)
     } catch (uploadError) {
-      setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(uploadError, t))
     } finally {
       setUploadingLogo(false)
     }
   }
 
   const onDeleteLogo = async () => {
-    setError(null)
     try {
       if (target === 'cab') {
         await deleteCabLogo()
@@ -84,7 +82,7 @@ export function OnboardingLogoUpload({
       }
       onLogoUrlChange(null)
     } catch (deleteError) {
-      setError(deleteError instanceof ApiError ? deleteError.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(deleteError, t))
     }
   }
 
@@ -169,7 +167,6 @@ export function OnboardingLogoUpload({
         />
       </div>
 
-      {error && <p className="text-small-light text-error-500">{error}</p>}
     </div>
   )
 }

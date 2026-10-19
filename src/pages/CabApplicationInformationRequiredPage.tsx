@@ -22,7 +22,8 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { SelectField } from '@/components/ui/Select'
 import { TextField, Textarea } from '@/components/ui/TextField'
 import { UserAvatar } from '@/components/ui/UserAvatar'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import {
   approveCabClientResponse,
   createCabInformationRequired,
@@ -236,7 +237,7 @@ function NewRequestForm({
         priority: priority || undefined,
       })
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : t('cab.applications.informationRequired.form.error'))
+      toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.applications.informationRequired.form.error' }))
     } finally {
       setSaving(false)
     }
@@ -423,13 +424,11 @@ function ResponsesSection({
   data,
   awaiting,
   approvingId,
-  approveError,
   onApprove,
 }: {
   data: CabApplicationInformationRequired
   awaiting: boolean
   approvingId: string | null
-  approveError: string | null
   onApprove: (row: ClientResponseRow, approved: boolean) => void
 }) {
   const { t } = useTranslation()
@@ -450,11 +449,6 @@ function ResponsesSection({
             </p>
           </div>
         </div>
-      )}
-      {approveError && (
-        <p role="alert" className="px-4 pt-3 text-[13px] text-error-500 sm:px-5">
-          {approveError}
-        </p>
       )}
       <div className="overflow-x-auto">
         <table className="mt-4 w-full min-w-[860px] border-collapse text-start [&_th:not(:last-child)]:border-r [&_th:not(:last-child)]:border-white/20">
@@ -586,7 +580,7 @@ function InternalCommentsSection({
       setText('')
       onAddingChange(false)
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : t('cab.applications.informationRequired.internalComments.error'))
+      toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.applications.informationRequired.internalComments.error' }))
     } finally {
       setSaving(false)
     }
@@ -709,7 +703,6 @@ function InformationRequiredView({ applicationId }: { applicationId: string }) {
   const [commentsLoading, setCommentsLoading] = useState(true)
   const [addingComment, setAddingComment] = useState(false)
   const [approvingId, setApprovingId] = useState<string | null>(null)
-  const [approveError, setApproveError] = useState<string | null>(null)
 
   const tourSteps = useApplicationInformationRequiredTourSteps()
 
@@ -766,12 +759,11 @@ function InformationRequiredView({ applicationId }: { applicationId: string }) {
   const approveResponse = async (row: ClientResponseRow, approved: boolean) => {
     if (!row.sectionKey || !data) return
     setApprovingId(row.id)
-    setApproveError(null)
     try {
       await approveCabClientResponse(applicationId, row.sectionKey, approved, data.applicationStatus)
       setData(await load())
     } catch (err) {
-      setApproveError(err instanceof ApiError ? err.message : t('cab.applications.review.flow.saveError'))
+      toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.applications.review.flow.saveError' }))
     } finally {
       setApprovingId(null)
     }
@@ -948,7 +940,6 @@ function InformationRequiredView({ applicationId }: { applicationId: string }) {
                     data={data}
                     awaiting={awaiting}
                     approvingId={approvingId}
-                    approveError={approveError}
                     onApprove={approveResponse}
                   />
                 </DashboardTourStep>

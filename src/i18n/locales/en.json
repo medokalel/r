@@ -1695,7 +1695,8 @@
         "emptyValue": "—"
       },
       "errors": {
-        "loginRequired": "Your session expired. Please log in again, then return to onboarding to finish."
+        "loginRequired": "Your session expired. Please log in again, then return to onboarding to finish.",
+        "notCabAdmin": "This account is not a CAB admin. Please register with a different email to set up a Certification Body."
       }
     },
     "orgType": {
@@ -2993,6 +2994,13 @@
         "saveError": "Could not save the profile. Browser storage may be full; try a smaller image."
       },
       "title": "Competence Register",
+      "messages": {
+        "qualificationUploaded": "Qualification uploaded successfully.",
+        "qualificationDeleted": "Qualification deleted.",
+        "uploadFailed": "The file could not be uploaded. Please try again.",
+        "deleteFailed": "The file could not be deleted. Please try again.",
+        "fileTooLarge": "The file is larger than the 20 MB limit."
+      },
       "personnelRegister": "Personnel register",
       "subtitle": "Manage personnel, their roles, scheme authorizations and expiry dates.",
       "addPerson": "Add person",

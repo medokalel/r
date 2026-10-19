@@ -15,7 +15,8 @@ import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useCabCompanyProfileTourSteps } from '@/config/cabCompanyProfileTourSteps'
 import { Button } from '@/components/ui/Button'
 import { TextField } from '@/components/ui'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import {
   getCabProfile,
   saveCabSetupDraft,
@@ -25,7 +26,6 @@ import { mapFormToCabSetupDraft, mergeCabProfileIntoForm } from '@/lib/cabSetupM
 import { getAuthSession } from '@/lib/authStorage'
 import { emptyUnifiedOnboardingForm, type UnifiedOnboardingForm } from '@/lib/unifiedOnboardingForm'
 import type { CabSetupForm } from '@/lib/cabSetupForm'
-import { cn } from '@/lib/utils'
 
 const PROFILE_SECTIONS = [
   'profile',
@@ -47,7 +47,6 @@ export function CabCompanyProfilePage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
 
   const hydrate = (profile: CabProfile) => {
     setCab(profile)
@@ -62,7 +61,7 @@ export function CabCompanyProfilePage() {
       })
       .catch((loadError: unknown) => {
         if (!cancelled) {
-          setError(loadError instanceof ApiError ? loadError.message : t('errors.generic'))
+          setError(getUserErrorMessage(loadError, t))
         }
       })
       .finally(() => {
@@ -75,26 +74,22 @@ export function CabCompanyProfilePage() {
 
   const onPatch = (fields: Partial<UnifiedOnboardingForm>) => {
     setForm((prev) => (prev ? { ...prev, ...fields } : prev))
-    setSuccess(null)
   }
 
   const onPatchSetup = (fields: Partial<CabSetupForm>) => {
     setForm((prev) => (prev ? { ...prev, cabSetup: { ...prev.cabSetup, ...fields } } : prev))
-    setSuccess(null)
   }
 
   const save = async () => {
     if (!form || saving) return
     setSaving(true)
-    setError(null)
-    setSuccess(null)
     try {
       await saveCabSetupDraft(mapFormToCabSetupDraft(form, cab))
       const { cab: profile } = await getCabProfile()
       hydrate(profile)
-      setSuccess(t('cab.companyProfile.saved'))
+      toast.success(t('cab.companyProfile.saved'))
     } catch (saveError) {
-      setError(saveError instanceof ApiError ? saveError.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(saveError, t))
     } finally {
       setSaving(false)
     }
@@ -191,10 +186,7 @@ export function CabCompanyProfilePage() {
             </CabTourStep>
 
             <CabTourStep steps={tourSteps} stepId="cab-company-profile-actions">
-              <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className={cn('text-[14px]', error ? 'text-error-500' : 'text-[#26a65b]')}>
-                  {error ?? success}
-                </p>
+              <div className="flex flex-wrap items-center justify-end gap-3">
                 <Button variant="primary" size="lg" onClick={() => void save()} disabled={saving} className="min-w-[180px]">
                   {saving ? t('common.saving') : t('cab.companyProfile.save')}
                 </Button>

@@ -9,6 +9,7 @@ import { AppIcon, BuildingIcon } from '@/components/icons'
 import { getCabClient, type CabClient } from '@/lib/api/clientRegistrationApi'
 import { getCountryName } from '@/lib/countries'
 import { ROUTES } from '@/lib/routes'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 
 function Detail({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -44,7 +45,7 @@ export function CabClientDetailsPage() {
         if (!cancelled) setClient(data)
       })
       .catch((loadError: unknown) => {
-        if (!cancelled) setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
+        if (!cancelled) setError(getUserErrorMessage(loadError, t, { fallbackKey: 'cab.clientsPage.loadError' }))
       })
       .finally(() => {
         if (!cancelled) setLoading(false)

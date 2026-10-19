@@ -8,6 +8,7 @@ import { useAuditClientsTourSteps } from '@/config/auditClientsTourSteps'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { AddCircleIcon, AppIcon, EyeIcon, SearchIcon } from '@/components/icons'
 import { listCabClients, type CabAuditClientListItem, type CabClientList } from '@/lib/api/clientRegistrationApi'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 
 const EMPTY_RESULT: CabClientList = {
   items: [],
@@ -36,7 +37,7 @@ export function CabClientsPage() {
       })
       .catch((loadError: unknown) => {
         if (!cancelled) {
-          setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
+          setError(getUserErrorMessage(loadError, t, { fallbackKey: 'cab.clientsPage.loadError' }))
         }
       })
       .finally(() => {

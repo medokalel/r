@@ -23,6 +23,7 @@ import { getCountryOptions } from '@/lib/countries'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 
 const PAGE_SIZE = 10
 
@@ -65,7 +66,7 @@ export function ClientRegisterPage() {
     return listAllCabAuditClients()
       .then((items) => setClients(items.map(toClientRegisterEntry)))
       .catch((loadError: unknown) => {
-        setError(loadError instanceof Error ? loadError.message : t('cab.clientsPage.loadError'))
+        setError(getUserErrorMessage(loadError, t, { fallbackKey: 'cab.clientsPage.loadError' }))
       })
       .finally(() => setLoading(false))
   }, [t])

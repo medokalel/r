@@ -69,7 +69,9 @@ import type {
   OrgDocument,
   OrgDocumentType,
 } from '@/lib/api/organizationProfileApi'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
+import { CLIENT_REGISTRATION_FIELD_LABELS } from '@/lib/clientRegistrationForm'
 import { urlRule } from '@/lib/fieldRules'
 import { ROUTES } from '@/lib/routes'
 import { formatFileSize } from '@/lib/files'
@@ -462,6 +464,11 @@ export function CabClientCompanyProfilePage() {
   const [submitting, setSubmitting] = useState(false)
   const [notification, setNotification] = useState<ProfileNotification | null>(null)
 
+  // Save / upload results are shown as toasts.
+  useEffect(() => {
+    if (notification) toast[notification.type](notification.message)
+  }, [notification])
+
   const applyProfile = useCallback((data: Awaited<ReturnType<typeof getCabClientProfile>>) => {
     const values = formValuesFromProfile(data)
     if (!data.profile?.nationalAddress) {
@@ -481,10 +488,7 @@ export function CabClientCompanyProfilePage() {
     (error: unknown) => {
       setNotification({
         type: 'error',
-        message:
-          error instanceof ApiError
-            ? [error.message, ...(error.errors ?? [])].filter(Boolean).join('. ')
-            : t('errors.generic'),
+        message: getUserErrorMessage(error, t, { fieldLabels: CLIENT_REGISTRATION_FIELD_LABELS }),
       })
     },
     [t]
@@ -542,9 +546,9 @@ export function CabClientCompanyProfilePage() {
     setNotification(null)
     try {
       await saveCabClientCompanyProfile(clientId, payloadFromForm(form))
-      const result = await submitCabClientProfile(clientId)
+      await submitCabClientProfile(clientId)
       setProfileStatus('COMPLETED')
-      setNotification({ type: 'success', message: result.message })
+      setNotification({ type: 'success', message: t('companyProfile.messages.submitted') })
       navigate(ROUTES.cabAuditClients)
     } catch (error) {
       handleError(error)
@@ -649,15 +653,6 @@ export function CabClientCompanyProfilePage() {
               <Stepper activeStep={activeStep} onStepClick={setActiveStep} />
             </div>
           </CabTourStep>
-
-          {notification && (
-            <p
-              role={notification.type === 'error' ? 'alert' : 'status'}
-              className={notification.type === 'error' ? 'text-error-500' : 'text-success-600'}
-            >
-              {notification.message}
-            </p>
-          )}
 
           <CabTourStep steps={tourSteps} stepId="client-profile-form">
             <div>

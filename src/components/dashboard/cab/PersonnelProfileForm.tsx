@@ -23,7 +23,8 @@ import {
   CAB_PROFESSIONAL_ROLES,
 } from '@/lib/api/cabEmployeesApi'
 import { getCabProfile } from '@/lib/api/cabApi'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import {
   DocumentUploadField,
   type UploadedDocumentFile,
@@ -111,7 +112,6 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
   })), [form.authorizedScope])
 
   const [error, setError] = useState('')
-  const [errorDetails, setErrorDetails] = useState<string[]>([])
   const [readingImage, setReadingImage] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -142,7 +142,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
 
   const handleSelectQualFile = async (file: File) => {
     if (file.size > 20 * 1024 * 1024) {
-      setError('File size exceeds the 20 MB limit.')
+      setError(t('cab.competence.messages.fileTooLarge'))
       return
     }
     setError('')
@@ -166,11 +166,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
           setForm((curr) => ({ ...curr, qualifications: file.name }))
         }
       } catch (err) {
-        if (err instanceof ApiError) {
-          setError(err.message)
-        } else {
-          setError('Failed to upload qualification document.')
-        }
+        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.uploadFailed' }))
       } finally {
         setUploadingQual(false)
       }
@@ -205,9 +201,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         await deleteCabEmployeeQualification(person.id, docId)
         setQualFiles((prev) => prev.filter((f) => f.id !== docId))
       } catch (err) {
-        if (err instanceof ApiError) {
-          setError(err.message)
-        }
+        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.deleteFailed' }))
       } finally {
         setUploadingQual(false)
       }
@@ -256,7 +250,6 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
     }
 
     setError('')
-    setErrorDetails([])
 
     let employeeId: string | undefined
     let employeeStatus: string | undefined
@@ -309,14 +302,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         }
       } catch (err) {
         setIsSubmitting(false)
-        if (err instanceof ApiError) {
-          setError(err.message)
-          if (err.errors && err.errors.length > 0) {
-            setErrorDetails(err.errors)
-          }
-        } else {
-          setError(label('saveError'))
-        }
+        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.memberProfile.saveError' }))
         return
       }
       setIsSubmitting(false)
@@ -346,14 +332,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         }
       } catch (err) {
         setIsSubmitting(false)
-        if (err instanceof ApiError) {
-          setError(err.message)
-          if (err.errors && err.errors.length > 0) {
-            setErrorDetails(err.errors)
-          }
-        } else {
-          setError(label('saveError'))
-        }
+        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.memberProfile.saveError' }))
         return
       }
       setIsSubmitting(false)
@@ -495,12 +474,9 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         </div>
       </CabTourStep>
 
-      {(error || errorDetails.length > 0) && (
-        <div role="alert" className="rounded-[8px] border border-red-200 bg-red-50 p-4 text-[13px] text-red-700 space-y-1">
-          {error && <p className="font-semibold">{error}</p>}
-          {errorDetails.map((msg, i) => (
-            <p key={i}>• {msg}</p>
-          ))}
+      {error && (
+        <div role="alert" className="rounded-[8px] border border-red-200 bg-red-50 p-4 text-[13px] text-red-700">
+          <p className="font-semibold">{error}</p>
         </div>
       )}
 

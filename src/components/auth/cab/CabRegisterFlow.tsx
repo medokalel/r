@@ -11,7 +11,8 @@ import { sendVerificationCode, verifyEmail, login, formatPhoneNumber } from '@/l
 import { registerCab } from '@/lib/api/cabApi'
 import { saveAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { useAutoVerifyOtp } from '@/hooks/useAutoVerifyOtp'
 
 interface CabRegisterFlowProps {
@@ -26,7 +27,6 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const navigate = useNavigate()
   const [step, setStep] = useState<1 | 2>(1)
   const [isCreatingAccount, setIsCreatingAccount] = useState(false)
-  const [createAccountError, setCreateAccountError] = useState<string | null>(null)
   const [basicsForm, setBasicsForm] = useState<CabAccountBasicsForm>(emptyCabAccountBasicsForm)
 
   // Step 2 ("verification") — same email + OTP pattern as RegisterPage.
@@ -36,7 +36,6 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const [isSendingCode, setIsSendingCode] = useState(false)
   const [isVerifyingEmail, setIsVerifyingEmail] = useState(false)
   const [emailVerified, setEmailVerified] = useState(false)
-  const [verificationError, setVerificationError] = useState<string | null>(null)
 
   const patchBasics = (f: Partial<CabAccountBasicsForm>) =>
     setBasicsForm((prev) => ({ ...prev, ...f }))
@@ -47,14 +46,13 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const handleSendCode = async () => {
     if (!emailValid || isSendingCode) return
     setIsSendingCode(true)
-    setVerificationError(null)
     try {
       await sendVerificationCode(verificationEmail.trim())
       setCodeSent(true)
       setEmailVerified(false)
       setOtp(emptyOtp())
     } catch (error) {
-      setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t))
     } finally {
       setIsSendingCode(false)
     }
@@ -63,12 +61,11 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const handleVerifyAndContinue = useCallback(async () => {
     if (!emailValid || !otpComplete || isVerifyingEmail) return
     setIsVerifyingEmail(true)
-    setVerificationError(null)
     try {
       await verifyEmail(verificationEmail.trim(), otp.join(''))
       setEmailVerified(true)
     } catch (error) {
-      setVerificationError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t))
       setOtp(emptyOtp())
     } finally {
       setIsVerifyingEmail(false)
@@ -96,7 +93,6 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
   const handleCreateAccount = useCallback(async () => {
     if (isCreatingAccount) return
     setIsCreatingAccount(true)
-    setCreateAccountError(null)
     try {
       await registerCab({
         contactPersonName: basicsForm.name.trim(),
@@ -110,7 +106,7 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
       saveAuthSession(session, true)
       navigate(ROUTES.onboarding)
     } catch (error) {
-      setCreateAccountError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t))
     } finally {
       setIsCreatingAccount(false)
     }
@@ -178,14 +174,8 @@ export function CabRegisterFlow({ onBackToEntityType }: CabRegisterFlowProps) {
         />
       )}
 
-      {verificationError && step === 2 && (
-        <p className="text-small-light text-error-500 mt-4">{verificationError}</p>
-      )}
       {step === 2 && isCreatingAccount && (
         <p className="mt-4 text-center text-body-2 text-primary">{t('register.creatingAccount')}</p>
-      )}
-      {createAccountError && step === 2 && (
-        <p className="text-small-light text-error-500 mt-4">{createAccountError}</p>
       )}
 
       <AuthStepActions

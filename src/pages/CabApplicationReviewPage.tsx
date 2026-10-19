@@ -28,7 +28,8 @@ import {
 import { markTourPending } from '@/context/TourContext'
 import { useApplicationReviewTourSteps } from '@/config/applicationReviewTourSteps'
 import { displaySpecAnswer } from '@/components/dashboard/entityData/applicationSampleFill'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import type { ApplicationDocument, ApplicationResponse } from '@/lib/api/certificationApplicationApi'
 import {
   REVIEW_SECTIONS,
@@ -686,7 +687,6 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
   const [submitted, setSubmitted] = useState(false)
   const [saving, setSaving] = useState(false)
   const [deciding, setDeciding] = useState<'approve' | 'reject' | null>(null)
-  const [saveError, setSaveError] = useState<string | null>(null)
   const [reviewDecision, setReviewDecision] = useState('technicalFeasibility')
   const [sectionStatuses, setSectionStatuses] = useState<Partial<Record<ReviewSectionKey, SectionStatus>>>({})
 
@@ -708,7 +708,7 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
     let cancelled = false
     getCabApplication(applicationId)
       .then((data) => !cancelled && setApplication(data))
-      .catch((e) => !cancelled && setLoadError(e instanceof ApiError ? e.message : t('cab.applications.review.flow.loadError')))
+      .catch((e) => !cancelled && setLoadError(getUserErrorMessage(e, t, { fallbackKey: 'cab.applications.review.flow.loadError' })))
       .finally(() => !cancelled && setLoading(false))
     loadComments()
     listSectionReviews(applicationId).then((reviews) => {
@@ -780,14 +780,12 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
     setSectionIndex(index)
     applySectionDraft(index, comments, sectionStatuses)
     setSubmitted(false)
-    setSaveError(null)
   }
 
   const save = async () => {
     setSubmitted(true)
     if (!status || !text.trim()) return
     setSaving(true)
-    setSaveError(null)
     try {
       if (application.status === 'SUBMITTED') {
         const started = await startCabApplicationReview(applicationId)
@@ -827,7 +825,7 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
       }
       setSubmitted(false)
     } catch (e) {
-      setSaveError(e instanceof ApiError ? e.message : t('cab.applications.review.flow.saveError'))
+      toast.error(getUserErrorMessage(e, t, { fallbackKey: 'cab.applications.review.flow.saveError' }))
     } finally {
       setSaving(false)
     }
@@ -859,12 +857,11 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
 
   const approveCompleteness = async () => {
     setDeciding('approve')
-    setSaveError(null)
     try {
       await applyDecisionToAllSections('complete', 'Done')
       navigate(cabApplicationTechnicalFeasibilityPath(applicationId, clientId))
     } catch (e) {
-      setSaveError(e instanceof ApiError ? e.message : t('cab.applications.review.flow.saveError'))
+      toast.error(getUserErrorMessage(e, t, { fallbackKey: 'cab.applications.review.flow.saveError' }))
     } finally {
       setDeciding(null)
     }
@@ -872,13 +869,12 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
 
   const rejectApplication = async () => {
     setDeciding('reject')
-    setSaveError(null)
     try {
       await applyDecisionToAllSections('incomplete', t('cab.applications.review.reviewActions.rejectComment'))
       const rejected = await updateCabApplicationStatus(applicationId, 'REJECTED', 'Application rejected after review.')
       setApplication({ ...application, status: rejected.status })
     } catch (e) {
-      setSaveError(e instanceof ApiError ? e.message : t('cab.applications.review.flow.saveError'))
+      toast.error(getUserErrorMessage(e, t, { fallbackKey: 'cab.applications.review.flow.saveError' }))
     } finally {
       setDeciding(null)
     }
@@ -1081,11 +1077,6 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
                             <p className="text-small-light text-error-500">{t('cab.applications.review.flow.commentRequired')}</p>
                           )}
                         </div>
-                        {saveError && (
-                          <p role="alert" className="text-[13px] text-error-500">
-                            {saveError}
-                          </p>
-                        )}
                         <div className="flex flex-wrap justify-end gap-3">
                           <Button variant="outline" disabled={saving || sectionIndex === 0} onClick={() => selectSection(sectionIndex - 1)}>
                             {t('common.back')}
@@ -1457,11 +1448,6 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
                   />
                   <section className={cn(cardClassName, 'p-4')}>
                     <h3 className="mb-3 text-[15px] font-semibold text-[#000000]">{t('cab.applications.review.reviewActions.title')}</h3>
-                    {saveError && (
-                      <p role="alert" className="mb-2 text-[12px] text-error-500">
-                        {saveError}
-                      </p>
-                    )}
                     <div className="flex flex-col gap-2">
                       <button
                         type="button"

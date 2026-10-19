@@ -65,6 +65,8 @@ import { OnboardingSummaryStep } from '@/components/auth/OnboardingSummaryStep'
 import { saveOrganizationProfile } from '@/lib/api/organizationProfileApi'
 import { completeCabSetup, getCabProfile, saveCabSetupDraft } from '@/lib/api/cabApi'
 import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { completePendingRegistration, completePendingCabRegistration } from '@/lib/completePendingRegistration'
 import { clearPendingRegistration, hasPendingRegistration, loadPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import type { OrgScopeCategory } from '@/lib/api/onboardingOrgScopeApi'
@@ -400,7 +402,6 @@ export function UnifiedOnboardingFlow() {
   const [step, setStep] = useState(initial.step)
   const [form, setForm] = useState<UnifiedOnboardingForm>(initial.form)
   const [isSaving, setIsSaving] = useState(false)
-  const [saveError, setSaveError] = useState<string | null>(null)
   const [pendingFocusFieldId, setPendingFocusFieldId] = useState<string | null>(null)
   /** True when the user was already logged in before this onboarding session started. */
   const hadAuthAtStartRef = useRef(Boolean(getAuthToken()))
@@ -560,19 +561,16 @@ export function UnifiedOnboardingFlow() {
     if (isSaving || !form.entityType || !form.scopeCategory) return
 
     if (!getAuthToken()) {
-      setSaveError(t('onboarding.shared.errors.loginRequired'))
+      toast.error(t('onboarding.shared.errors.loginRequired'))
       return
     }
 
     setIsSaving(true)
-    setSaveError(null)
 
     try {
       if (deck === 'cab') {
         if (!isCabAdminSession()) {
-          setSaveError(
-            'This account is not a CAB admin. Please register with a different email to set up a Certification Body.',
-          )
+          toast.error(t('onboarding.shared.errors.notCabAdmin'))
           return
         }
         if (!isCabSetupReadyToActivate(form.cabSetup, {
@@ -585,7 +583,7 @@ export function UnifiedOnboardingFlow() {
           address: form.address,
           languages: form.languages,
         })) {
-          setSaveError(t('cab.setup.review.issues.cannotActivate'))
+          toast.error(t('cab.setup.review.issues.cannotActivate'))
           return
         }
         await persistCabSetupDraft()
@@ -619,11 +617,11 @@ export function UnifiedOnboardingFlow() {
       }
 
       if (error instanceof ApiError && error.status === 401) {
-        setSaveError(t('onboarding.shared.errors.loginRequired'))
+        toast.error(t('onboarding.shared.errors.loginRequired'))
         return
       }
 
-      setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t))
     } finally {
       setIsSaving(false)
     }
@@ -639,7 +637,6 @@ export function UnifiedOnboardingFlow() {
     if (step === 1 && hasPendingRegistration() && !getAuthToken()) {
       if (isSaving || !isOrgTypeStepComplete(form) || !form.scopeCategory) return
       setIsSaving(true)
-      setSaveError(null)
       try {
         if (form.scopeCategory === 'CONFORMITY_ASSESSMENT_BODY') {
           await completePendingCabRegistration()
@@ -653,7 +650,7 @@ export function UnifiedOnboardingFlow() {
         }
         setStep(2)
       } catch (error) {
-        setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
+        toast.error(getUserErrorMessage(error, t))
       } finally {
         setIsSaving(false)
       }
@@ -663,12 +660,11 @@ export function UnifiedOnboardingFlow() {
     if (deck === 'cab' && step >= CAB_FIRST_SETUP_STEP && step < CAB_REVIEW_STEP && getAuthToken() && isCabAdminSession()) {
       if (cabStepBlocked(step)) return
       setIsSaving(true)
-      setSaveError(null)
       try {
         await persistCabSetupDraft()
         setStep((current) => current + 1)
       } catch (error) {
-        setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
+        toast.error(getUserErrorMessage(error, t))
       } finally {
         setIsSaving(false)
       }
@@ -876,13 +872,12 @@ export function UnifiedOnboardingFlow() {
   const handleSaveAndExit = async () => {
     if (deck === 'cab' && getAuthToken() && isCabAdminSession()) {
       setIsSaving(true)
-      setSaveError(null)
       try {
         await persistCabSetupDraft()
         const session = getAuthSession()
         navigate(session ? getPostLoginRedirect(session) : ROUTES.login)
       } catch (error) {
-        setSaveError(error instanceof ApiError ? error.message : t('errors.generic'))
+        toast.error(getUserErrorMessage(error, t))
       } finally {
         setIsSaving(false)
       }
@@ -1063,9 +1058,6 @@ export function UnifiedOnboardingFlow() {
         }
         nextDisabled={nextDisabled}
         onSaveAndExit={handleSaveAndExit}
-        error={
-          saveError ? <p className="mt-4 text-[12px] text-error-500">{saveError}</p> : null
-        }
       >
         {renderDetailsAndBeyond()}
       </CabSetupShell>
@@ -1114,11 +1106,6 @@ export function UnifiedOnboardingFlow() {
             : ROUTES.dashboard
         )
       }}
-      error={
-        saveError && (step === 1 || step === summaryStep) ? (
-          <p className="text-small-light text-error-500 mt-4">{saveError}</p>
-        ) : null
-      }
       actions={
         step >= 1 && step <= summaryStep ? (
           <AuthStepActions

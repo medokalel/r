@@ -8,7 +8,6 @@ import { useCompetenceEvaluationTourSteps } from '@/config/competenceEvaluationT
 import {
   AppIcon,
   ChevronDownIcon,
-  SuccessCircleIcon,
 } from '@/components/icons'
 import {
   getPersonById,
@@ -27,7 +26,8 @@ import {
   type CabEmployeeQualification,
 } from '@/lib/api/cabEmployeesApi'
 import { formatIafCodesToSectorNames } from '@/lib/iafCodes'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { getAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -88,12 +88,10 @@ export function CabCompetenceEvaluationPage() {
   const [evaluator, setEvaluator] = useState(defaultEvaluator)
 
   const [evalStatus] = useState(person?.evaluation?.status || 'In progress')
-  const [toastMessage, setToastMessage] = useState<string | null>(null)
 
   // Dynamic Qualifications State
   const [qualifications, setQualifications] = useState<CabEmployeeQualification[]>([])
   const [isUploadingQual, setIsUploadingQual] = useState(false)
-  const [qualError, setQualError] = useState<string | null>(null)
 
   // Load employee detail from backend API dynamically
   useEffect(() => {
@@ -190,25 +188,19 @@ export function CabCompetenceEvaluationPage() {
     if (!id) return
 
     if (file.size > 20 * 1024 * 1024) {
-      setQualError('File size exceeds the 20 MB limit.')
+      toast.error(t('cab.competence.messages.fileTooLarge'))
       return
     }
 
     setIsUploadingQual(true)
-    setQualError(null)
     try {
       const res = await uploadCabEmployeeQualification(id, file, 'Qualification Document')
       if (res.qualification) {
         setQualifications((prev) => [res.qualification, ...prev])
-        setToastMessage(res.message || 'Qualification uploaded successfully.')
-        setTimeout(() => setToastMessage(null), 3000)
+        toast.success(t('cab.competence.messages.qualificationUploaded'))
       }
     } catch (err) {
-      if (err instanceof ApiError) {
-        setQualError(err.message)
-      } else {
-        setQualError('Failed to upload qualification.')
-      }
+      toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.uploadFailed' }))
     } finally {
       setIsUploadingQual(false)
     }
@@ -220,14 +212,9 @@ export function CabCompetenceEvaluationPage() {
     try {
       await deleteCabEmployeeQualification(id, docId)
       setQualifications((prev) => prev.filter((q) => q.id !== docId))
-      setToastMessage('Qualification deleted successfully.')
-      setTimeout(() => setToastMessage(null), 3000)
+      toast.success(t('cab.competence.messages.qualificationDeleted'))
     } catch (err) {
-      if (err instanceof ApiError) {
-        setQualError(err.message)
-      } else {
-        setQualError('Failed to delete qualification.')
-      }
+      toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.deleteFailed' }))
     }
   }
 
@@ -293,14 +280,6 @@ export function CabCompetenceEvaluationPage() {
 
       <main className="flex-1 bg-[#f9fafc] p-3 sm:p-5 lg:p-8">
         <div className="mx-auto max-w-7xl space-y-4 sm:space-y-6">
-          {/* Toast Notification */}
-          {toastMessage && (
-            <div className="fixed bottom-6 end-6 z-50 flex items-center gap-3 rounded-[10px] bg-neutral-900 px-4 py-3 text-[14px] font-medium text-white shadow-xl animate-in slide-in-from-bottom-5">
-              <AppIcon icon={SuccessCircleIcon} size={18} className="text-emerald-400" />
-              <span>{toastMessage}</span>
-            </div>
-          )}
-
           {/* Breadcrumbs */}
           <div className="flex items-center gap-2 text-[13px] font-medium text-neutral-500">
             <button
@@ -604,12 +583,6 @@ export function CabCompetenceEvaluationPage() {
           {/* Dynamic Qualifications Documents Upload & List Section */}
           <CabTourStep steps={tourSteps} stepId="eval-documents-section">
             <div className="rounded-[14px] border border-[#e5e7eb] bg-white p-6 shadow-sm space-y-4">
-              {qualError && (
-                <div className="rounded-[8px] border border-red-200 bg-red-50 p-3 text-[13px] text-red-700">
-                  {qualError}
-                </div>
-              )}
-
               <div className="rounded-[12px] border border-dashed border-primary/30 p-3">
                 <DocumentUploadField
                   title={t('cab.competence.qualificationsDocuments', 'Qualification Documents')}

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import * as Dialog from '@radix-ui/react-dialog'
 import { AppIcon, DownloadIcon, ExcelFileIcon, UploadOutlineIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 import {
   confirmCabClientImport,
   downloadAuditClientImportTemplate,
@@ -49,7 +49,7 @@ export function ClientImportModal({ open, onOpenChange, onImported }: ClientImpo
     try {
       setPreview(await previewCabClientImport(nextFile))
     } catch (caught) {
-      setError(caught instanceof ApiError || caught instanceof Error ? caught.message : t('errors.generic'))
+      setError(getUserErrorMessage(caught, t))
     } finally {
       setBusy(false)
     }
@@ -77,7 +77,7 @@ export function ClientImportModal({ open, onOpenChange, onImported }: ClientImpo
       setResult(message)
       onImported()
     } catch (caught) {
-      setError(caught instanceof ApiError || caught instanceof Error ? caught.message : t('errors.generic'))
+      setError(getUserErrorMessage(caught, t))
     } finally {
       setBusy(false)
     }

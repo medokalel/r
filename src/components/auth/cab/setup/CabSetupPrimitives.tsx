@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { AppIcon, TrashIcon, UploadOutlineIcon } from '@/components/icons'
 import { uploadOnboardingAsset } from '@/lib/api/uploadsApi'
 import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
-import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 /** Tinted info panel from the deck (#F5F8FF on a #D9E2F0 hairline). */
@@ -244,7 +245,7 @@ export function SetupFileInput({
       setDisplayName(uploaded.fileName)
       onFileNameChange(uploaded.fileUrl)
     } catch (uploadError) {
-      setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(uploadError, t))
     } finally {
       setUploading(false)
     }
@@ -348,7 +349,7 @@ export function SetupMarkUpload({
       const uploaded = await uploadOnboardingAsset(file)
       onImageUrlChange(uploaded.fileUrl)
     } catch (uploadError) {
-      setError(uploadError instanceof ApiError ? uploadError.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(uploadError, t))
     } finally {
       setUploading(false)
     }
