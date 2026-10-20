@@ -39,6 +39,11 @@
   },
   "auth": {
     "login": "تسجيل الدخول",
+    "errors": {
+      "invalidCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+      "accountInactive": "حسابك غير مفعّل حالياً. يرجى التواصل مع الدعم.",
+      "emailNotFound": "لا يوجد حساب مسجّل بهذا البريد الإلكتروني."
+    },
     "loginTitle": "تسجيل الدخول",
     "loginSubtitle": "أهلاً بك، سعداء برؤيتك!",
     "logout": "تسجيل الخروج",
@@ -73,6 +78,7 @@
     "cannotModify": "لا يمكن تعديل هذا الطلب بعد الآن. حالته الحالية: {{status}}.",
     "validationTitle": "يرجى مراجعة ما يلي:",
     "fieldLine": "{{field}} — {{reason}}",
+    "passwordMismatch": "كلمتا المرور غير متطابقتين.",
     "reasons": {
       "required": "مطلوب",
       "invalidEmail": "يجب أن يكون بريدًا إلكترونيًا صالحًا",
@@ -85,7 +91,8 @@
       "minItems": "يجب إضافة {{count}} على الأقل",
       "invalidChoice": "الاختيار غير صالح",
       "invalidFormat": "الصيغة غير صحيحة",
-      "invalidValue": "القيمة غير صالحة"
+      "invalidValue": "القيمة غير صالحة",
+      "mismatch": "غير مطابق"
     },
     "rateLimit": {
       "title": "طلبات كثيرة جداً",
@@ -345,7 +352,9 @@
     "resendCode": "إعادة إرسال الرمز",
     "verifyEmail": "تحقق من البريد",
     "verifyingEmail": "جاري التحقق...",
-    "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول بدلاً من ذلك."
+    "emailAlreadyRegistered": "هذا البريد الإلكتروني مسجل بالفعل. يرجى تسجيل الدخول بدلاً من ذلك.",
+    "invalidCode": "رمز التحقق غير صحيح أو منتهي الصلاحية. يرجى التأكد منه أو طلب رمز جديد.",
+    "tooManyAttempts": "تجاوزت عدد المحاولات المسموح بها. يرجى طلب رمز جديد."
   },
   "accreditation": {
     "title": "طلب منح",

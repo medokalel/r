@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { login } from '@/lib/api/authApi'
-import { ApiError } from '@/lib/api/client'
+import { LOGIN_STATUS_MESSAGES, AUTH_FIELD_LABELS } from '@/lib/authErrors'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { getAuthSession, getAuthToken, saveAuthSession, getPostLoginRedirect } from '@/lib/authStorage'
 import { clearPendingRegistration } from '@/lib/pendingRegistrationStorage'
 import * as Checkbox from '@radix-ui/react-checkbox'
@@ -25,7 +27,6 @@ export function LoginPage() {
   const [rememberMe, setRememberMe] = useState(false)
   const [form, setForm] = useState({ email: '', password: '' })
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState<string | null>(null)
 
   useEffect(() => {
     const session = getAuthSession()
@@ -49,7 +50,6 @@ export function LoginPage() {
     if (!canSubmit) return
 
     setIsSubmitting(true)
-    setSubmitError(null)
 
     try {
       const data = await login(normalizeLoginIdentifier(form.email), form.password)
@@ -57,11 +57,12 @@ export function LoginPage() {
       saveAuthSession(data, rememberMe)
       navigate(getPostLoginRedirect(data), { replace: true })
     } catch (error) {
-      if (error instanceof ApiError) {
-        setSubmitError(error.message)
-      } else {
-        setSubmitError(t('errors.generic'))
-      }
+      toast.error(
+        getUserErrorMessage(error, t, {
+          statusMessages: LOGIN_STATUS_MESSAGES,
+          fieldLabels: AUTH_FIELD_LABELS,
+        }),
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -135,10 +136,6 @@ export function LoginPage() {
             {t('auth.forgotPassword')}
           </Link>
         </div>
-
-        {submitError && (
-          <p className="text-small-light text-error-500">{submitError}</p>
-        )}
 
         <Button
           type="submit"

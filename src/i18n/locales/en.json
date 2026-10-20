@@ -39,6 +39,11 @@
   },
   "auth": {
     "login": "Log In",
+    "errors": {
+      "invalidCredentials": "The email or password is incorrect.",
+      "accountInactive": "Your account isn't active right now. Please contact support.",
+      "emailNotFound": "No account is registered with this email address."
+    },
     "loginTitle": "Log In",
     "loginSubtitle": "Welcome, nice to see you!",
     "logout": "Logout",
@@ -73,6 +78,7 @@
     "cannotModify": "This application can no longer be edited. Its current status is: {{status}}.",
     "validationTitle": "Please check the following:",
     "fieldLine": "{{field}} — {{reason}}",
+    "passwordMismatch": "The passwords do not match.",
     "reasons": {
       "required": "is required",
       "invalidEmail": "must be a valid email address",
@@ -85,7 +91,8 @@
       "minItems": "needs at least {{count}} to be added",
       "invalidChoice": "has an invalid selection",
       "invalidFormat": "has an invalid format",
-      "invalidValue": "has an invalid value"
+      "invalidValue": "has an invalid value",
+      "mismatch": "does not match"
     },
     "rateLimit": {
       "title": "Too many requests",
@@ -345,7 +352,9 @@
     "resendCode": "Resend code",
     "verifyEmail": "Verify email",
     "verifyingEmail": "Verifying...",
-    "emailAlreadyRegistered": "This email is already registered. Please sign in instead."
+    "emailAlreadyRegistered": "This email is already registered. Please sign in instead.",
+    "invalidCode": "The verification code is incorrect or has expired. Please check it or request a new code.",
+    "tooManyAttempts": "You've exceeded the allowed number of attempts. Please request a new code."
   },
   "accreditation": {
     "title": "Certification Request",

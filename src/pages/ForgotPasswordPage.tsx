@@ -22,6 +22,13 @@ import {
   verifyResetCode,
 } from '@/lib/api/authApi'
 import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
+import {
+  FORGOT_RESET_STATUS_MESSAGES,
+  FORGOT_SEND_STATUS_MESSAGES,
+  VERIFY_CODE_STATUS_MESSAGES,
+} from '@/lib/authErrors'
 import { isValidRequiredEmail, passwordsMatch as doPasswordsMatch } from '@/lib/authValidation'
 
 const OTP_LENGTH = 6
@@ -76,7 +83,6 @@ export function ForgotPasswordPage() {
   const [showConfirm, setShowConfirm] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [resetFeedback, setResetFeedback] = useState<ResetFeedback | null>(null)
-  const [stepError, setStepError] = useState<string | null>(null)
 
   const { countdown, canResend, restart } = useResendTimer(step === 2)
 
@@ -88,14 +94,13 @@ export function ForgotPasswordPage() {
     if (!emailValid || isSubmitting) return
 
     setIsSubmitting(true)
-    setStepError(null)
 
     try {
       await sendResetCode(email.trim())
       setStep(2)
       restart()
     } catch (error) {
-      setStepError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t, { statusMessages: FORGOT_SEND_STATUS_MESSAGES }))
     } finally {
       setIsSubmitting(false)
     }
@@ -105,13 +110,12 @@ export function ForgotPasswordPage() {
     if (!otpComplete || isSubmitting) return
 
     setIsSubmitting(true)
-    setStepError(null)
 
     try {
       await verifyResetCode(email.trim(), otp.join(''))
       setStep(3)
     } catch (error) {
-      setStepError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t, { statusMessages: VERIFY_CODE_STATUS_MESSAGES }))
     } finally {
       setIsSubmitting(false)
     }
@@ -121,14 +125,13 @@ export function ForgotPasswordPage() {
     if (!canResend || isSubmitting) return
 
     setIsSubmitting(true)
-    setStepError(null)
 
     try {
       await resendResetCode(email.trim())
       setOtp(emptyOtp())
       restart()
     } catch (error) {
-      setStepError(error instanceof ApiError ? error.message : t('errors.generic'))
+      toast.error(getUserErrorMessage(error, t, { statusMessages: FORGOT_SEND_STATUS_MESSAGES }))
     } finally {
       setIsSubmitting(false)
     }
@@ -138,7 +141,6 @@ export function ForgotPasswordPage() {
     if (!passwordsMatch || isSubmitting) return
 
     setIsSubmitting(true)
-    setStepError(null)
 
     try {
       await resetPassword({
@@ -149,12 +151,15 @@ export function ForgotPasswordPage() {
       setResetFeedback('success')
       setStep(4)
     } catch (error) {
+      // The server rejected the new password: show the failure screen. A lost connection stays on
+      // this step with a toast so the user can simply try again.
       if (error instanceof ApiError) {
+        toast.error(getUserErrorMessage(error, t, { statusMessages: FORGOT_RESET_STATUS_MESSAGES }))
         setResetFeedback('error')
         setStep(4)
         return
       }
-      throw error
+      toast.error(getUserErrorMessage(error, t))
     } finally {
       setIsSubmitting(false)
     }
@@ -312,8 +317,6 @@ export function ForgotPasswordPage() {
                 />
               </>
             )}
-
-            {stepError && <p className="text-small-light text-error-500">{stepError}</p>}
 
             <Button
               type="button"

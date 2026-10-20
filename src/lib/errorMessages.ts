@@ -23,6 +23,8 @@ export interface UserErrorOptions {
   fallbackKey?: string
   /** Labels for the fields the endpoint validates, so "organizationName" reads as a real field name. */
   fieldLabels?: FieldLabelMap
+  /** Wording for specific HTTP statuses of this endpoint (e.g. 401 on login = wrong password). Wins over the generic status messages. */
+  statusMessages?: Partial<Record<number, string>>
 }
 
 export interface ValidationIssue {
@@ -41,6 +43,7 @@ const KNOWN_MESSAGES: ReadonlyArray<{ pattern: RegExp; key: string }> = [
   },
   { pattern: /already registered|email (is )?already (exists|in use)/i, key: 'errors.emailTaken' },
   { pattern: /organization profile does not exist/i, key: 'errors.profileMissing' },
+  { pattern: /passwords? (do(es)? )?not match/i, key: 'errors.passwordMismatch' },
   { pattern: /no (document |image )?file provided/i, key: 'errors.noFile' },
 ]
 
@@ -113,6 +116,7 @@ export function describeRule(rule: string, t: TFunction): string {
   const minItems = text.match(/must contain at least (\d+)/i)
   if (minItems) return t('errors.reasons.minItems', { count: Number(minItems[1]) })
 
+  if (/\[ref:|must match/i.test(text)) return t('errors.reasons.mismatch')
   if (/must be one of/i.test(text)) return t('errors.reasons.invalidChoice')
   if (/fails to match|pattern/i.test(text)) return t('errors.reasons.invalidFormat')
 
@@ -181,6 +185,9 @@ export function getUserErrorMessage(
   const fallback = t(options.fallbackKey ?? 'errors.generic')
 
   if (error instanceof ApiError) {
+    const statusMessage = options.statusMessages?.[error.status]
+    if (statusMessage) return t(statusMessage)
+
     const known = matchKnownMessage(error.message, t)
     if (known) return known
 

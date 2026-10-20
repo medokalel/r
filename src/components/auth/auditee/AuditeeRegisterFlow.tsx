@@ -13,7 +13,8 @@ import {
 } from '@/lib/auditeeAccountBasicsForm'
 import { isValidRequiredEmail } from '@/lib/authValidation'
 import { sendVerificationCode, verifyEmail, register, formatPhoneNumber } from '@/lib/api/authApi'
-import { getRegistrationAuthError } from '@/lib/authErrors'
+import { getRegistrationAuthError, VERIFY_CODE_STATUS_MESSAGES } from '@/lib/authErrors'
+import { toast } from '@/lib/toast'
 import { ROUTES } from '@/lib/routes'
 import { getCountryOptions } from '@/lib/countries'
 import { useAutoVerifyOtp } from '@/hooks/useAutoVerifyOtp'
@@ -41,7 +42,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
   const [isSendingCode, setIsSendingCode] = useState(false)
   const [isVerifyingEmail, setIsVerifyingEmail] = useState(false)
   const [emailVerified, setEmailVerified] = useState(false)
-  const [verificationError, setVerificationError] = useState<string | null>(null)
   const [emailAlreadyRegistered, setEmailAlreadyRegistered] = useState(false)
 
   const sendInFlightRef = useRef(false)
@@ -59,7 +59,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
 
     sendInFlightRef.current = true
     setIsSendingCode(true)
-    setVerificationError(null)
     setEmailAlreadyRegistered(false)
 
     try {
@@ -70,7 +69,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
       return true
     } catch (error) {
       const authError = getRegistrationAuthError(error, t)
-      setVerificationError(authError.message)
+      toast.error(authError.message)
       setEmailAlreadyRegistered(authError.emailAlreadyRegistered)
       return false
     } finally {
@@ -83,7 +82,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     if (createInFlightRef.current) return
     createInFlightRef.current = true
     setIsCreatingAccount(true)
-    setVerificationError(null)
     try {
       const countryName =
         getCountryOptions(i18n.language).find((c) => c.code === basicsForm.country)?.name ??
@@ -107,7 +105,7 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
       onSubmittedChange?.(true)
     } catch (error) {
       const authError = getRegistrationAuthError(error, t)
-      setVerificationError(authError.message)
+      toast.error(authError.message)
       setEmailAlreadyRegistered(authError.emailAlreadyRegistered)
     } finally {
       createInFlightRef.current = false
@@ -118,15 +116,14 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
   const handleVerifyAndContinue = useCallback(async () => {
     if (!emailValid || !otpComplete || isVerifyingEmail || isCreatingAccount) return
     setIsVerifyingEmail(true)
-    setVerificationError(null)
     setEmailAlreadyRegistered(false)
     try {
       await verifyEmail(verificationEmail.trim(), otp.join(''))
       setEmailVerified(true)
       await handleCreateAccount()
     } catch (error) {
-      const authError = getRegistrationAuthError(error, t)
-      setVerificationError(authError.message)
+      const authError = getRegistrationAuthError(error, t, { statusMessages: VERIFY_CODE_STATUS_MESSAGES })
+      toast.error(authError.message)
       setEmailAlreadyRegistered(authError.emailAlreadyRegistered)
       setOtp(emptyOtp())
     } finally {
@@ -158,7 +155,6 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
     setCodeSent(false)
     setOtp(emptyOtp())
     setEmailVerified(false)
-    setVerificationError(null)
     setEmailAlreadyRegistered(false)
   }
 
@@ -217,17 +213,12 @@ export function AuditeeRegisterFlow({ onBackToEntityType, onSubmittedChange }: A
         />
       )}
 
-      {verificationError && (
-        <div className="mt-4 space-y-2">
-          <p className="text-small-light text-error-500">{verificationError}</p>
-          {emailAlreadyRegistered && (
-            <p className="text-body-2 text-neutral-500">
-              <Link to={ROUTES.login} className="text-body-2-semibold text-primary underline underline-offset-2">
-                {t('auth.signIn')}
-              </Link>
-            </p>
-          )}
-        </div>
+      {emailAlreadyRegistered && (
+        <p className="mt-4 text-body-2 text-neutral-500">
+          <Link to={ROUTES.login} className="text-body-2-semibold text-primary underline underline-offset-2">
+            {t('auth.signIn')}
+          </Link>
+        </p>
       )}
 
       <AuthStepActions
