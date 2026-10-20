@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
 import { cn } from '@/lib/utils'
+import { useDirection } from '@/context/DirectionContext'
 import { getToasts, subscribeToasts, toast, type ToastItem, type ToastType } from '@/lib/toast'
 
 const TONES: Record<ToastType, { accent: string; iconWrap: string; progress: string }> = {
@@ -31,6 +32,7 @@ function ToastIcon({ type }: { type: ToastType }) {
 
 function ToastCard({ item }: { item: ToastItem }) {
   const { t } = useTranslation()
+  const { dir } = useDirection()
   const tone = TONES[item.type]
   const [first, ...rest] = item.message.split('\n')
   const hasDetails = rest.length > 0
@@ -40,7 +42,8 @@ function ToastCard({ item }: { item: ToastItem }) {
       role={item.type === 'success' ? 'status' : 'alert'}
       className={cn(
         'pointer-events-auto relative flex w-full max-w-[440px] items-start gap-3 overflow-hidden',
-        'rounded-[var(--radius-md)] border border-[#ececec] bg-white py-3.5 ps-5 pe-3',
+        // The colored edge (inline-start) stays square; only the opposite side is rounded.
+        'rounded-[var(--radius-md)] rounded-s-none border border-s-0 border-[#ececec] bg-white py-3.5 ps-5 pe-3',
         'shadow-[0_8px_24px_rgba(18,54,163,0.14)] animate-[toastIn_220ms_ease-out]',
       )}
     >
@@ -81,10 +84,14 @@ function ToastCard({ item }: { item: ToastItem }) {
 
       <span
         className={cn(
-          'absolute bottom-0 start-0 h-[3px] w-full origin-left rtl:origin-right',
+          'absolute bottom-0 start-0 h-[3px] w-full',
           tone.progress,
         )}
-        style={{ animation: `toastProgress ${item.duration}ms linear forwards` }}
+        // The bar empties toward the start edge of the active language (left in EN, right in AR).
+        style={{
+          transformOrigin: dir === 'rtl' ? 'right' : 'left',
+          animation: `toastProgress ${item.duration}ms linear forwards`,
+        }}
         aria-hidden
       />
     </div>
