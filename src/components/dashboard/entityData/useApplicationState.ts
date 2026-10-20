@@ -4,6 +4,8 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import type { CountryCode } from "@/lib/countries";
 import { useIpLocation } from "@/hooks/useIpLocation";
 import { ApiError } from "@/lib/api/client";
+import { getUserErrorMessage, isNetworkError, logTechnicalError } from "@/lib/errorMessages";
+import { formatCertificationSubmitError } from "@/components/dashboard/entityData/applicationFieldErrors";
 import { clearAuthSession } from "@/lib/authStorage";
 import {
   createDraftApplication,
@@ -47,7 +49,7 @@ export interface ApplicationState {
   status: ApplicationStatus;
   orderNumber: string | null;
   notification: ApplicationNotification | null;
-  loadError: "rateLimit" | "generic" | null;
+  loadError: "rateLimit" | "generic" | "notFound" | "forbidden" | "network" | null;
   reload: () => void;
   saveDraft: () => Promise<boolean>;
   submit: () => Promise<boolean>;
@@ -71,7 +73,9 @@ export function useApplicationState(): ApplicationState {
   const [uploading, setUploading] = useState(false);
   const [notification, setNotification] =
     useState<ApplicationNotification | null>(null);
-  const [loadError, setLoadError] = useState<"rateLimit" | "generic" | null>(
+  const [loadError, setLoadError] = useState<
+    "rateLimit" | "generic" | "notFound" | "forbidden" | "network" | null
+  >(
     null,
   );
   const [reloadKey, setReloadKey] = useState(0);
@@ -115,12 +119,7 @@ export function useApplicationState(): ApplicationState {
         navigate("/login", { replace: true });
         return;
       }
-      console.error("[handleApiError]", error);
-      const message =
-        error instanceof ApiError
-          ? [error.message, ...(error.errors ?? [])].join(". ")
-          : t("errors.generic");
-      setNotification({ type: "error", message });
+      setNotification({ type: "error", message: formatCertificationSubmitError(error, t) });
     },
     [navigate, t],
   );
@@ -155,11 +154,15 @@ export function useApplicationState(): ApplicationState {
           navigate("/login", { replace: true });
           return;
         }
-        setLoadError(
-          error instanceof ApiError && error.status === 429
-            ? "rateLimit"
-            : "generic",
-        );
+        logTechnicalError(error);
+        if (error instanceof ApiError) {
+          if (error.status === 429) setLoadError("rateLimit");
+          else if (error.status === 404) setLoadError("notFound");
+          else if (error.status === 403) setLoadError("forbidden");
+          else setLoadError("generic");
+        } else {
+          setLoadError(isNetworkError(error) ? "network" : "generic");
+        }
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -263,11 +266,7 @@ export function useApplicationState(): ApplicationState {
           setOrgBranches((prev) => [...prev, created]);
           updateBranch(localId, { sourceBranchId: created.id });
         } catch (error) {
-          const message =
-            error instanceof ApiError
-              ? [error.message, ...(error.errors ?? [])].join(". ")
-              : "We couldn't complete your request. Please try again";
-          notify({ type: "error", message });
+          notify({ type: "error", message: getUserErrorMessage(error, t) });
         } finally {
           pendingOrgBranchSavesRef.current.delete(localId);
         }
@@ -275,7 +274,7 @@ export function useApplicationState(): ApplicationState {
 
       pendingOrgBranchSavesRef.current.set(localId, promise);
     },
-    [notify, updateBranch],
+    [notify, t, updateBranch],
   );
 
   const waitForPendingBranchSaves = useCallback(async () => {

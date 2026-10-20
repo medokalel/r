@@ -1,9 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { Button } from '@/components/ui/Button'
-import { cn } from '@/lib/utils'
+import { toast } from '@/lib/toast'
 import { ProfileFormContext } from '@/components/dashboard/companyProfile/ProfileFormContext'
 import { Breadcrumb, Stepper } from '@/components/dashboard/companyProfile/Primitives'
 import {
@@ -22,6 +22,11 @@ export function CompanyProfilePage() {
   const [activeStep, setActiveStep] = useState<StepKey>('basicData')
   const { contextValue, loading, saving, submitting, notification, saveDraft, submitProfile } =
     useCompanyProfileState()
+
+  // Save / submit results are shown as toasts.
+  useEffect(() => {
+    if (notification) toast[notification.type](notification.message)
+  }, [notification])
 
   const stepData = {
     form: contextValue.form,
@@ -75,18 +80,7 @@ export function CompanyProfilePage() {
         </div>
 
         <footer className="flex shrink-0 flex-col gap-3 border-t border-[#ececec] bg-white px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div className="min-w-0 flex-1">
-            {notification && (
-              <p
-                className={cn(
-                  'truncate text-[14px] font-medium',
-                  notification.type === 'success' ? 'text-[#26a65b]' : 'text-error-500'
-                )}
-              >
-                {notification.message}
-              </p>
-            )}
-          </div>
+          <div className="min-w-0 flex-1" />
           <div className="flex flex-wrap gap-3">
             <Button
               variant="tertiary"

@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom'
 import type { CountryCode } from '@/components/auth/CountryCodeSelect'
 import { useIpLocation } from '@/hooks/useIpLocation'
 import { ApiError } from '@/lib/api/client'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { CLIENT_REGISTRATION_FIELD_LABELS } from '@/lib/clientRegistrationForm'
 import { clearAuthSession } from '@/lib/authStorage'
 import {
   getOrganizationProfile,
@@ -80,11 +82,10 @@ export function useCompanyProfileState(): CompanyProfileState {
         navigate('/login', { replace: true })
         return
       }
-      const message =
-        error instanceof ApiError
-          ? [error.message, ...(error.errors ?? [])].join('. ')
-          : t('errors.generic')
-      setNotification({ type: 'error', message })
+      setNotification({
+        type: 'error',
+        message: getUserErrorMessage(error, t, { fieldLabels: CLIENT_REGISTRATION_FIELD_LABELS }),
+      })
     },
     [navigate, t]
   )

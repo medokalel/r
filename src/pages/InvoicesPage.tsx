@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { toast } from '@/lib/toast'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { InvoicesTable } from '@/components/dashboard/invoices/InvoicesTable'
@@ -15,6 +18,7 @@ import {
 const PAGE_SIZE = 10
 
 export function InvoicesPage() {
+  const { t } = useTranslation()
   const tourSteps = useInvoicesTourSteps()
   const [invoices, setInvoices] = useState<Invoice[]>([])
   const [loading, setLoading] = useState(true)
@@ -37,10 +41,12 @@ export function InvoicesPage() {
       })
       setInvoices(result.items)
       setTotalPages(result.totalPages)
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
     } finally {
       setLoading(false)
     }
-  }, [page, appliedSearch, currencyFilter, statusFilter])
+  }, [page, appliedSearch, currencyFilter, statusFilter, t])
 
   useEffect(() => {
     load()
@@ -62,14 +68,19 @@ export function InvoicesPage() {
   }
 
   const handleExportAll = async () => {
-    const result = await listInvoices({
-      page: 1,
-      limit: 1000,
-      search: appliedSearch || undefined,
-      currency: currencyFilter !== 'all' ? (currencyFilter as InvoiceCurrency) : undefined,
-      status: statusFilter !== 'all' ? (statusFilter as InvoiceStatus) : undefined,
-    })
-    return result.items
+    try {
+      const result = await listInvoices({
+        page: 1,
+        limit: 1000,
+        search: appliedSearch || undefined,
+        currency: currencyFilter !== 'all' ? (currencyFilter as InvoiceCurrency) : undefined,
+        status: statusFilter !== 'all' ? (statusFilter as InvoiceStatus) : undefined,
+      })
+      return result.items
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
+      return []
+    }
   }
 
   return (

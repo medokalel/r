@@ -21,10 +21,10 @@ import { useApplicationState } from '@/components/dashboard/entityData/useApplic
 import { ProcessStepper } from '@/components/dashboard/ProcessStepper'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { ErrorState } from '@/components/ui'
+import { toast } from '@/lib/toast'
 import { useCertificationRequestFormTourSteps } from '@/config/auditeeTourSteps'
 import { TourProvider } from '@/context/TourContext'
 import { ROUTES } from '@/lib/routes'
-import { cn } from '@/lib/utils'
 
 const STATUS_VIEWS: EntityDataViewTab[] = ['approved', 'underReview', 'rejected']
 
@@ -310,16 +310,12 @@ export function CertificationRequestFormPage() {
           })
         : null
 
-  const footerStartContent = notification ? (
-    <p
-      className={cn(
-        'min-w-0 truncate text-[14px] font-medium',
-        notification.type === 'success' ? 'text-[#26a65b]' : 'text-error-500'
-      )}
-    >
-      {notification.message}
-    </p>
-  ) : missingHint ? (
+  // Save / submit results are shown as toasts instead of inside the footer.
+  useEffect(() => {
+    if (notification) toast[notification.type](notification.message)
+  }, [notification])
+
+  const footerStartContent = missingHint ? (
     <div className="flex min-w-0 flex-wrap items-center gap-3">
       {isFieldSectorsView && (
         <FieldSelectionSummary
@@ -352,7 +348,11 @@ export function CertificationRequestFormPage() {
                   variant={loadError === 'rateLimit' ? 'rateLimit' : 'generic'}
                   title={loadError === 'rateLimit' ? t('errors.rateLimit.title') : undefined}
                   description={
-                    loadError === 'rateLimit' ? t('errors.rateLimit.description') : undefined
+                    loadError === 'rateLimit'
+                      ? t('errors.rateLimit.description')
+                      : loadError === 'notFound' || loadError === 'forbidden' || loadError === 'network'
+                        ? t(`errors.${loadError}`)
+                        : undefined
                   }
                   onRetry={reload}
                 />
