@@ -87,10 +87,10 @@ function ToastCard({ item }: { item: ToastItem }) {
           'absolute bottom-0 start-0 h-[3px] w-full',
           tone.progress,
         )}
-        // The bar empties toward the start edge of the active language (left in EN, right in AR).
+        // The bar fills from the start edge of the active language (left in EN, right in AR).
         style={{
           transformOrigin: dir === 'rtl' ? 'right' : 'left',
-          animation: `toastProgress ${item.duration}ms linear forwards`,
+          animation: `toastProgress ${item.duration}ms linear forwards reverse`,
         }}
         aria-hidden
       />
