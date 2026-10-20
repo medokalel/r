@@ -282,7 +282,9 @@ export function payloadFromForm(
     designException:
       form.designActivity === 'yes'
         ? text(form.designException) ?? 'Design is an organizational activity'
-        : text(form.designException) ?? '',
+        : // Never send an empty string: the API rejects it ("not allowed to be empty"),
+          // which also blocked saving steps before this question was answered.
+          text(form.designException),
   })
 
   const declarationInfo = compact({
