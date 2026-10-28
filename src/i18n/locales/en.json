@@ -2996,6 +2996,7 @@
         "imageError": "Could not read the image. Please try again.",
         "startDate": "Employment start date (optional)",
         "endDate": "Employment end date (optional)",
+        "expiryDate": "Expiry (optional)",
         "iafCodes": "IAF Codes",
         "qualifications": "Qualifications",
         "dateError": "End date must be on or after the start date.",
@@ -3069,7 +3070,8 @@
         "role": "Role",
         "schemes": "Schemes",
         "scope": "Authorized scope",
-        "expiry": "Expiry",
+        "startDate": "Start date",
+        "expiry": "Expiry ",
         "status": "Status"
       },
       "tour": {
@@ -6583,7 +6585,11 @@
         "assessment": "Assessment",
         "approved": "Approved",
         "rejected": "Rejected",
-        "inProgress": "In Progress"
+        "inProgress": "In Progress",
+        "quotationCreated": "Quotation drafted",
+        "quotationIssued": "Quotation issued",
+        "quotationAccepted": "Quotation accepted",
+        "quotationRejected": "Quotation rejected"
       },
       "rowActions": {
         "view": "View",
@@ -6822,6 +6828,151 @@
           "description": "Preview the full certificate or finalize and issue the official certificate to the client."
         }
       }
+    },
+    "quotationFlow": {
+      "status": {
+        "CREATED": "Draft (not sent)",
+        "DRAFT": "Draft",
+        "ISSUED": "Issued",
+        "ACCEPTED": "Accepted by client",
+        "REJECTED": "Rejected by client",
+        "CANCELLED": "Cancelled"
+      },
+      "quotationNo": "Quotation",
+      "startDate": "Start date",
+      "offerEnd": "Offer valid until",
+      "offerEndPast": "The offer end date cannot be in the past",
+      "provisional": "Some audit durations use provisional policies and must be reviewed before issuing.",
+      "events": "Audit events (3-year certification cycle)",
+      "col": {
+        "seq": "#",
+        "standard": "Standard",
+        "event": "Audit event",
+        "days": "Audit days",
+        "rate": "Daily rate",
+        "fee": "Fee"
+      },
+      "event": {
+        "STAGE_1": "Stage 1",
+        "STAGE_2": "Stage 2",
+        "SURVEILLANCE_1": "Surveillance 1",
+        "SURVEILLANCE_2": "Surveillance 2",
+        "RECERTIFICATION": "Recertification"
+      },
+      "overridden": "(overridden)",
+      "editTitle": "Edit quotation details",
+      "notes": "Notes for the client",
+      "saveChanges": "Save changes",
+      "actionsTitle": "Quotation status",
+      "hint": {
+        "CREATED": "Review the quotation, then issue it to send it to the audit client. Issued quotations can no longer be edited.",
+        "ISSUED": "The quotation has been issued. It can still be cancelled."
+      },
+      "note": "Note (optional)",
+      "action": {
+        "issue": "Issue to client",
+        "accept": "Client accepted",
+        "reject": "Client rejected",
+        "cancel": "Cancel quotation"
+      },
+      "confirm": {
+        "accept": "Record that the client accepted this quotation?",
+        "reject": "Record that the client rejected this quotation?",
+        "cancel": "Cancel this quotation? This cannot be undone."
+      },
+      "complexity": {
+        "label": "Complexity",
+        "placeholder": "Select complexity",
+        "HIGH": "High",
+        "MEDIUM": "Medium",
+        "LOW": "Low",
+        "LIMITED": "Limited"
+      },
+      "fsms": {
+        "category": "Food chain category",
+        "studies": "Number of HACCP studies",
+        "fte": "FTE employees (optional)"
+      },
+      "autoDaysHint": "Audit days and fees for each audit event are calculated automatically from the application and your pricing settings.",
+      "stepTerms": "Offer terms",
+      "stepReview": "Review & create",
+      "reviewIntro": "Check the details below. Creating the quotation calculates the audit days and fees.",
+      "create": "Create quotation",
+      "allQuotations": "All quotations",
+      "newQuotation": "New quotation",
+      "filterStatus": "Status",
+      "allStatuses": "All statuses",
+      "empty": "No quotations yet.",
+      "refresh": "Refresh",
+      "initialAudit": "Initial audit (Stage 1 + Stage 2)",
+      "includedInitial": "Included in initial audit",
+      "list": {
+        "number": "Quotation",
+        "standards": "Standards",
+        "status": "Status",
+        "total": "Total",
+        "offerEnd": "Offer valid until",
+        "created": "Created"
+      }
+    },
+    "quotationEditor": {
+      "pricingTitle": "Quotation pricing",
+      "pricingHint": "Set your default taxes and currency. The price per day is entered for each quotation.",
+      "auditDays": "Audit days",
+      "dailyRate": "Price per day",
+      "currency": "Currency",
+      "invalidPricing": "Enter positive audit days and a positive daily rate with up to two decimal places.",
+      "subtitle": "Generate an initial quotation from your CAB pricing, then adjust additional costs.",
+      "selectApplication": "Select a reviewed application",
+      "selectHint": "Only applications with every review section complete or marked not applicable are available. Draft and rejected applications are excluded.",
+      "openQuotation": "Open quotation",
+      "changeApplication": "Change application",
+      "loadError": "The application, review or CAB pricing could not be loaded. Please try again.",
+      "retry": "Try again",
+      "reviewIncomplete": "Complete the application review before preparing a quotation. Every section must be complete or not applicable, and the application must not be draft or rejected.",
+      "openReview": "Open application review",
+      "reviewComplete": "Review completed",
+      "missingPricing": "Set and save your taxes and currency in the CAB company profile before generating a quotation.",
+      "openProfile": "CAB pricing settings",
+      "initialQuotation": "Initial quotation",
+      "calculationHint": "Audit fee = audit days × price per day, using your saved CAB profile settings.",
+      "auditFee": "Audit fee",
+      "additionalCosts": "Additional costs",
+      "extrasHint": "Add traveling expenses or other charges. Edit or remove any additional cost; the total updates automatically.",
+      "description": "Charge {{number}} description",
+      "amount": "Amount",
+      "remove": "Remove",
+      "removeCharge": "Remove charge {{number}}",
+      "addCharge": "Add another charge",
+      "travel": "Traveling expenses",
+      "invalidExtras": "Give every charge a description and a non-negative amount with up to two decimal places. Remove unused charges to calculate the total.",
+      "summary": "Quotation summary",
+      "total": "Total",
+      "excludingTaxes": "Excluding taxes",
+      "taxRate": "Taxes (%)",
+      "taxes": "Taxes",
+      "travelExpenses": "Travel expenses",
+      "travelStep": "Travel expenses + additional cost",
+      "savePricing": "Save pricing",
+      "removePricing": "Remove pricing",
+      "pricingSaved": "Pricing saved",
+      "pricingRemoved": "Pricing removed",
+      "previewNotice": "Quotation preview: audit dates, team and additional charges are not saved and will be cleared when you leave this page. Saving and sending quotations are not available yet.",
+      "status": "Quotation",
+      "notSet": "Not set",
+      "prepare": "Prepare quotation",
+      "startDate": "Proposed audit start date",
+      "endDate": "Proposed audit end date",
+      "scheduleHint": "The quotation uses {{days}} audit days from your CAB profile. The proposed date range does not change the priced audit days.",
+      "auditorNames": "Auditor names",
+      "expertNames": "Technical expert names (optional)",
+      "teamHint": "Enter one name per line. Include the lead auditor in the auditor list.",
+      "back": "Back",
+      "next": "Next: audit team",
+      "generate": "Generate quotation",
+      "editPreparation": "Edit audit dates and team",
+      "technicalExperts": "Technical experts",
+      "dateOrderError": "The audit end date must be on or after the start date."
     }
   },
   "ia": {

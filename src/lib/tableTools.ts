@@ -43,12 +43,14 @@ function buildTableHtml<T>(
         <meta charset="utf-8" />
         <title>${pageTitle ?? title}</title>
         <style>
-          body { font-family: Arial, sans-serif; padding: 24px; color: #111; }
-          h1 { font-size: 20px; margin: 0 0 16px; color: #1236a3; }
-          table { width: 100%; border-collapse: collapse; font-size: 12px; }
-          th, td { border: 1px solid #ddd; padding: 8px; text-align: start; }
-          th { background: #1236a3; color: #fff; }
-          tr:nth-child(even) { background: #f9fafc; }
+          @page { size: A4 landscape; margin: 10mm; }
+          * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; box-sizing: border-box; }
+          body { font-family: Arial, sans-serif; padding: 12px; color: #111; margin: 0; }
+          h1 { font-size: 18px; margin: 0 0 12px; color: #1236a3; }
+          table { width: 100%; border-collapse: collapse; font-size: 10.5px; }
+          th, td { border: 1px solid #e2e2e2; padding: 7px 8px; text-align: start; white-space: nowrap; }
+          th { background: #1236a3 !important; color: #fff !important; font-weight: 600; }
+          tr:nth-child(even) { background: #f9fafc !important; }
         </style>
       </head>
       <body>

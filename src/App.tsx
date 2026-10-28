@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { RequireAuthOrPendingRegistration } from "@/components/auth/RequireAuthOrPendingRegistration";
 import { RequireCabOnboarded } from "@/components/auth/RequireCabOnboarded";
@@ -43,7 +43,7 @@ import {
   CabApplicationInformationRequiredPage,
   CabApplicationTechnicalFeasibilityPage,
   CabApplicationQuotationPage,
-  CabQuotationApprovalPage,
+  CabQuotationsPage,
   CabOfferRegisterPage,
   CabCreateOfferPage,
   CabInvoiceRegisterPage,
@@ -80,7 +80,13 @@ import {
   getAuthToken,
   getPostLoginRedirect,
 } from "@/lib/authStorage";
-import { LEGACY_DASHBOARD_PATH, ROUTES } from "@/lib/routes";
+import { LEGACY_DASHBOARD_PATH, ROUTES, cabApplicationQuotationPath } from "@/lib/routes";
+
+// The quotation lifecycle (issue / accept / reject) now lives on the quotation page itself.
+function QuotationApprovalRedirect() {
+  const { applicationId } = useParams();
+  return <Navigate to={cabApplicationQuotationPath(applicationId)} replace />;
+}
 
 function HomeRedirect() {
   const session = getAuthSession();
@@ -406,7 +412,7 @@ export default function App() {
                 path={ROUTES.cabQuotationApproval}
                 element={
                   <RequireAuth>
-                    <CabQuotationApprovalPage />
+                    <CabQuotationsPage />
                   </RequireAuth>
                 }
               />
@@ -414,7 +420,7 @@ export default function App() {
                 path="/cab/quotations/:applicationId/approval"
                 element={
                   <RequireAuth>
-                    <CabQuotationApprovalPage />
+                    <QuotationApprovalRedirect />
                   </RequireAuth>
                 }
               />

@@ -78,6 +78,8 @@ export interface CabEmployee {
   professionalRole: CabProfessionalRole | null
   imageUrl?: string | null
   employmentStartDate?: string | null
+  employmentEndDate?: string | null
+  expiryDate?: string | null
   iafCodes: string[]
   schemes: string[]
   status: string
@@ -133,10 +135,10 @@ export function listCabEmployees(params?: {
 export function uploadCabEmployeeImage(
   id: string,
   imageFile: File,
-): Promise<{ message: string; imageUrl: string }> {
+): Promise<{ message: string; employee: CabEmployee }> {
   const formData = new FormData()
   formData.append('image', imageFile)
-  return authorizedRequest<{ message: string; imageUrl: string }>(
+  return authorizedRequest<{ message: string; employee: CabEmployee }>(
     `/cab-employees/${id}/image`,
     {
       method: 'PATCH',

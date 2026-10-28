@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
+import { APPLICATION_STATUS_LABEL_KEYS as STATUS_LABEL_KEYS } from '@/lib/applicationStatus'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import {
   listCabApplications,
@@ -9,19 +10,14 @@ import {
   type ApplicationRegisterStatus,
 } from '@/lib/api/cabApplicationRegisterApi'
 
-const STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, string> = {
-  DRAFT: 'draft',
-  SUBMITTED: 'submitted',
-  UNDER_REVIEW: 'underReview',
-  APPROVED: 'approved',
-  REJECTED: 'rejected',
-}
 
 interface ApplicationPickerProps {
   title: string
   hint: string
   actionLabel: string
+  statusLabel?: string
   allowedStatuses?: ApplicationRegisterStatus[]
+  loadApplications?: () => Promise<ApplicationRegisterItem[]>
   extraAction?: { label: string; onClick: () => void }
   onSelect: (application: ApplicationRegisterItem) => void
 }
@@ -30,7 +26,9 @@ export function ApplicationPicker({
   title,
   hint,
   actionLabel,
+  statusLabel,
   allowedStatuses,
+  loadApplications = listCabApplications,
   extraAction,
   onSelect,
 }: ApplicationPickerProps) {
@@ -44,13 +42,14 @@ export function ApplicationPicker({
 
   useEffect(() => {
     let cancelled = false
-    listCabApplications()
+    loadApplications()
       .then((items) => {
         if (cancelled) return
-        const filtered = allowedStatuses?.length
-          ? items.filter((item) => allowedStatuses.includes(item.status))
+        const filtered = statusFilter
+          ? items.filter((item) => statusFilter.split(',').includes(item.status))
           : items
         setApplications(filtered)
+        setError(null)
       })
       .catch(() => {
         if (!cancelled) setError(t('cab.applicationRegister.loadError'))
@@ -61,17 +60,17 @@ export function ApplicationPicker({
     return () => {
       cancelled = true
     }
-  }, [statusFilter])
+  }, [statusFilter, loadApplications, t])
 
   const options = useMemo(
     () =>
       applications.map((application) => ({
         value: application.id,
-        label: `${application.applicationCode} — ${application.clientName} (${t(
+        label: `${application.applicationCode} — ${application.clientName} (${statusLabel ?? t(
           `cab.applicationRegister.status.${STATUS_LABEL_KEYS[application.status]}`,
         )})`,
       })),
-    [applications, t],
+    [applications, statusLabel, t],
   )
 
   const selected = applications.find((application) => application.id === selectedId)
@@ -103,7 +102,7 @@ export function ApplicationPicker({
         <Button variant="outline" onClick={() => navigate('/cab/applications')}>
           {t('cab.applicationSubmission.backToRegister')}
         </Button>
-        <Button variant="primary" disabled={!selected} onClick={() => selected && onSelect(selected)}>
+        <Button variant="primary" disabled={loading || !!error || !selected} onClick={() => selected && onSelect(selected)}>
           {actionLabel}
         </Button>
         {extraAction && (

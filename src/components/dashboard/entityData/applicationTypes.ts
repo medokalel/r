@@ -219,20 +219,22 @@ export interface SpecQuestionDef {
   /** i18n key under accreditation.entityData.fields.spec. */
   labelKey: string
   questionType: QuestionType
+  /** Key of the yes/no question this one follows up on; hidden while that answer is "no". */
+  dependsOn?: string
 }
 
 export const SPEC_QUESTIONS: SpecQuestionDef[] = [
   // ISO 9001:2015 — Quality Management Systems
   { questionKey: 'iso9001.qmsSystemInPlace', certificateCode: 'ISO9001', labelKey: 'iso9001.qmsSystemInPlace', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.qmsStartDate', certificateCode: 'ISO9001', labelKey: 'iso9001.qmsStartDate', questionType: 'DATE' },
+  { questionKey: 'iso9001.qmsStartDate', certificateCode: 'ISO9001', labelKey: 'iso9001.qmsStartDate', questionType: 'DATE', dependsOn: 'iso9001.qmsSystemInPlace' },
   { questionKey: 'iso9001.sitesCount', certificateCode: 'ISO9001', labelKey: 'iso9001.sitesCount', questionType: 'NUMBER' },
   { questionKey: 'iso9001.productsServicesScope', certificateCode: 'ISO9001', labelKey: 'iso9001.productsServicesScope', questionType: 'TEXT' },
   { questionKey: 'iso9001.outsourcedKeyProcesses', certificateCode: 'ISO9001', labelKey: 'iso9001.outsourcedKeyProcesses', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.outsourcedProcessesList', certificateCode: 'ISO9001', labelKey: 'iso9001.outsourcedProcessesList', questionType: 'TEXT' },
+  { questionKey: 'iso9001.outsourcedProcessesList', certificateCode: 'ISO9001', labelKey: 'iso9001.outsourcedProcessesList', questionType: 'TEXT', dependsOn: 'iso9001.outsourcedKeyProcesses' },
   { questionKey: 'iso9001.requirementsNotApplicable', certificateCode: 'ISO9001', labelKey: 'iso9001.requirementsNotApplicable', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.notApplicableDetails', certificateCode: 'ISO9001', labelKey: 'iso9001.notApplicableDetails', questionType: 'TEXT' },
+  { questionKey: 'iso9001.notApplicableDetails', certificateCode: 'ISO9001', labelKey: 'iso9001.notApplicableDetails', questionType: 'TEXT', dependsOn: 'iso9001.requirementsNotApplicable' },
   { questionKey: 'iso9001.priorCertification', certificateCode: 'ISO9001', labelKey: 'iso9001.priorCertification', questionType: 'BOOLEAN' },
-  { questionKey: 'iso9001.certifyingBody', certificateCode: 'ISO9001', labelKey: 'iso9001.certifyingBody', questionType: 'TEXT' },
+  { questionKey: 'iso9001.certifyingBody', certificateCode: 'ISO9001', labelKey: 'iso9001.certifyingBody', questionType: 'TEXT', dependsOn: 'iso9001.priorCertification' },
 
   // ISO 14001:2026 — Environmental Management Systems
   { questionKey: 'iso14001.permitsCount', certificateCode: 'ISO14001', labelKey: 'iso14001.permitsCount', questionType: 'NUMBER' },
@@ -244,18 +246,18 @@ export const SPEC_QUESTIONS: SpecQuestionDef[] = [
   { questionKey: 'iso50001.energyConsumers', certificateCode: 'ISO50001', labelKey: 'iso50001.energyConsumers', questionType: 'TEXT' },
   { questionKey: 'iso50001.enpi', certificateCode: 'ISO50001', labelKey: 'iso50001.enpi', questionType: 'TEXT' },
   { questionKey: 'iso50001.energyBaseline', certificateCode: 'ISO50001', labelKey: 'iso50001.energyBaseline', questionType: 'BOOLEAN' },
-  { questionKey: 'iso50001.baselineUpdated', certificateCode: 'ISO50001', labelKey: 'iso50001.baselineUpdated', questionType: 'DATE' },
+  { questionKey: 'iso50001.baselineUpdated', certificateCode: 'ISO50001', labelKey: 'iso50001.baselineUpdated', questionType: 'DATE', dependsOn: 'iso50001.energyBaseline' },
   { questionKey: 'iso50001.monitoringTools', certificateCode: 'ISO50001', labelKey: 'iso50001.monitoringTools', questionType: 'TEXT' },
   { questionKey: 'iso50001.seuCount', certificateCode: 'ISO50001', labelKey: 'iso50001.seuCount', questionType: 'NUMBER' },
   { questionKey: 'iso50001.monitoringAutomated', certificateCode: 'ISO50001', labelKey: 'iso50001.monitoringAutomated', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.ohsSystemInPlace', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsSystemInPlace', questionType: 'BOOLEAN' },
-  { questionKey: 'iso45001.ohsStartDate', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsStartDate', questionType: 'DATE' },
+  { questionKey: 'iso45001.ohsStartDate', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsStartDate', questionType: 'DATE', dependsOn: 'iso45001.ohsSystemInPlace' },
   { questionKey: 'iso45001.risksIdentified', certificateCode: 'ISO45001', labelKey: 'iso45001.risksIdentified', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.criticalRisks', certificateCode: 'ISO45001', labelKey: 'iso45001.criticalRisks', questionType: 'TEXT' },
   { questionKey: 'iso45001.complianceLaws', certificateCode: 'ISO45001', labelKey: 'iso45001.complianceLaws', questionType: 'TEXT' },
   { questionKey: 'iso45001.legalViolations', certificateCode: 'ISO45001', labelKey: 'iso45001.legalViolations', questionType: 'BOOLEAN' },
   { questionKey: 'iso45001.ohsCertification', certificateCode: 'ISO45001', labelKey: 'iso45001.ohsCertification', questionType: 'BOOLEAN' },
-  { questionKey: 'iso45001.certifyingBody', certificateCode: 'ISO45001', labelKey: 'iso45001.certifyingBody', questionType: 'TEXT' },
+  { questionKey: 'iso45001.certifyingBody', certificateCode: 'ISO45001', labelKey: 'iso45001.certifyingBody', questionType: 'TEXT', dependsOn: 'iso45001.ohsCertification' },
   { questionKey: 'iso45001.internalAudits', certificateCode: 'ISO45001', labelKey: 'iso45001.internalAudits', questionType: 'BOOLEAN' },
 
   // ISO 22000:2022 — Food Safety Management
@@ -263,7 +265,7 @@ export const SPEC_QUESTIONS: SpecQuestionDef[] = [
   { questionKey: 'iso22000.ccpCount', certificateCode: 'ISO22000', labelKey: 'iso22000.ccpCount', questionType: 'NUMBER' },
   { questionKey: 'iso22000.foodCategoriesScope', certificateCode: 'ISO22000', labelKey: 'iso22000.foodCategoriesScope', questionType: 'TEXT' },
   { questionKey: 'iso22000.allergensHandled', certificateCode: 'ISO22000', labelKey: 'iso22000.allergensHandled', questionType: 'BOOLEAN' },
-  { questionKey: 'iso22000.allergensList', certificateCode: 'ISO22000', labelKey: 'iso22000.allergensList', questionType: 'TEXT' },
+  { questionKey: 'iso22000.allergensList', certificateCode: 'ISO22000', labelKey: 'iso22000.allergensList', questionType: 'TEXT', dependsOn: 'iso22000.allergensHandled' },
   { questionKey: 'iso22000.outsourcedFoodSafety', certificateCode: 'ISO22000', labelKey: 'iso22000.outsourcedFoodSafety', questionType: 'BOOLEAN' },
   { questionKey: 'iso22000.foodSafetyIncidents', certificateCode: 'ISO22000', labelKey: 'iso22000.foodSafetyIncidents', questionType: 'BOOLEAN' },
   // TEMPORARY: Single Select in the source doc, rendered as free text until the option list is provided
@@ -273,7 +275,7 @@ export const SPEC_QUESTIONS: SpecQuestionDef[] = [
   { questionKey: 'iso22301.criticalActivitiesCount', certificateCode: 'ISO22301', labelKey: 'iso22301.criticalActivitiesCount', questionType: 'NUMBER' },
   { questionKey: 'iso22301.mtpd', certificateCode: 'ISO22301', labelKey: 'iso22301.mtpd', questionType: 'TEXT' },
   { questionKey: 'iso22301.biaCompleted', certificateCode: 'ISO22301', labelKey: 'iso22301.biaCompleted', questionType: 'BOOLEAN' },
-  { questionKey: 'iso22301.biaDate', certificateCode: 'ISO22301', labelKey: 'iso22301.biaDate', questionType: 'DATE' },
+  { questionKey: 'iso22301.biaDate', certificateCode: 'ISO22301', labelKey: 'iso22301.biaDate', questionType: 'DATE', dependsOn: 'iso22301.biaCompleted' },
   { questionKey: 'iso22301.planTested', certificateCode: 'ISO22301', labelKey: 'iso22301.planTested', questionType: 'BOOLEAN' },
   { questionKey: 'iso22301.singleCriticalSupplier', certificateCode: 'ISO22301', labelKey: 'iso22301.singleCriticalSupplier', questionType: 'BOOLEAN' },
   { questionKey: 'iso22301.majorDisruptions', certificateCode: 'ISO22301', labelKey: 'iso22301.majorDisruptions', questionType: 'BOOLEAN' },
@@ -296,6 +298,11 @@ export const SPEC_QUESTIONS: SpecQuestionDef[] = [
   // TEMPORARY: Multi Select in the source doc, rendered as free text until the option list is provided
   { questionKey: 'iso13485.regulatoryMarkets', certificateCode: 'ISO13485', labelKey: 'iso13485.regulatoryMarkets', questionType: 'TEXT' },
 ]
+
+/** A follow-up ("If yes, …") is shown unless its yes/no parent was answered "no". */
+export function isSpecQuestionVisible(question: SpecQuestionDef, answers: Record<string, string>): boolean {
+  return !question.dependsOn || answers[question.dependsOn] !== 'no'
+}
 
 /** Upload slots on the documents step → API document types. */
 export const DOCUMENT_SLOT_TYPES: Record<string, string> = {

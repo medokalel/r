@@ -1,16 +1,22 @@
 import { useState, useEffect, type FormEvent, type ChangeEvent } from 'react'
 import { useTranslation } from 'react-i18next'
+import { getCountries, getCountryCallingCode, parsePhoneNumberFromString } from 'libphonenumber-js'
+import { PhoneInputRow, type CountryCode } from '@/components/auth/CountryCodeSelect'
+import { AppIcon, PhoneIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { SelectField } from '@/components/ui/Select'
 import { fieldInputClassName, fieldHeightClassName, fieldLabelClassName } from '@/components/ui/fieldStyles'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { getCountryOptions } from '@/lib/countries'
+import { isValidPhoneNumber } from '@/lib/validators'
+import { cn } from '@/lib/utils'
 import { CAB_ACTIVITY_OPTIONS, getSchemeOptions } from '@/lib/api/cabSetupApi'
 import { STANDARD_SCHEMA_OPTIONS } from '@/lib/api/applicationDraftApi'
 import { SECTOR_OPTIONS } from '@/components/dashboard/companyProfile/constants'
 import { MultiSelect } from '@/components/ui/MultiSelect'
 import { getIafCodeOptions } from '@/lib/iafCodes'
-import { getStoredPersonnel, savePersonnelList, type CompetencePerson } from '@/lib/api/cabCompetenceApi'
+import type { CompetencePerson } from '@/lib/api/cabCompetenceApi'
 import {
   createCabEmployee,
   updateCabEmployee,
@@ -23,8 +29,7 @@ import {
   CAB_PROFESSIONAL_ROLES,
 } from '@/lib/api/cabEmployeesApi'
 import { getCabProfile } from '@/lib/api/cabApi'
-import { getUserErrorMessage } from '@/lib/errorMessages'
-import { toast } from '@/lib/toast'
+import { ApiError } from '@/lib/api/client'
 import {
   DocumentUploadField,
   type UploadedDocumentFile,
@@ -51,15 +56,55 @@ function toIsoDate(date: Date): string {
 
 function fromIsoDate(value?: string | null): Date | undefined {
   if (!value) return undefined
-  const parsed = new Date(`${value}T00:00:00`)
+  const datePart = value.split('T')[0]
+  const parsed = new Date(`${datePart}T00:00:00`)
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
 function includeSavedOptions(options: { value: string; label: string }[], saved: string[]) {
-  return [...options, ...saved.filter((value) => value && !options.some((option) => option.value === value)).map((value) => ({ value, label: value }))]
+  return [...options, ...[...new Set(saved)].filter((value) => value && !options.some((option) => option.value === value)).map((value) => ({ value, label: value }))]
 }
 
-export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
+function parsePersonPhone(raw?: string | null): { countryCode: CountryCode; phone: string } {
+  const trimmed = (raw ?? '').trim()
+  if (!trimmed) return { countryCode: 'SA', phone: '' }
+
+  const parsed = parsePhoneNumberFromString(trimmed)
+  if (parsed?.country) {
+    return {
+      countryCode: parsed.country as CountryCode,
+      phone: parsed.nationalNumber,
+    }
+  }
+
+  const parts = trimmed.split(/\s+/)
+  if (parts.length > 1 && parts[0].startsWith('+')) {
+    const dialDigits = parts[0].replace(/\D/g, '')
+    const match = getCountries().find((c) => getCountryCallingCode(c) === dialDigits)
+    if (match) {
+      return {
+        countryCode: match as CountryCode,
+        phone: parts.slice(1).join('').replace(/\D/g, ''),
+      }
+    }
+  }
+
+  if (trimmed.startsWith('+')) {
+    for (const c of getCountries()) {
+      const dial = `+${getCountryCallingCode(c)}`
+      if (trimmed.startsWith(dial)) {
+        return {
+          countryCode: c as CountryCode,
+          phone: trimmed.slice(dial.length).replace(/\D/g, ''),
+        }
+      }
+    }
+  }
+
+  return { countryCode: 'SA', phone: trimmed.replace(/\D/g, '') }
+}
+
+export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps = [] }: {
   person?: CompetencePerson
   onCancel: () => void
   onSaved: (person: CompetencePerson) => void
@@ -69,14 +114,41 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
   const label = (key: string) => t(`cab.competence.memberProfile.${key}`)
   const today = new Date()
   const localDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+  const initialPhone = parsePersonPhone(person?.phone)
   const [form, setForm] = useState({
     name: person?.name ?? '', role: person?.role ?? 'Auditor',
-    email: person?.email ?? '', phone: person?.phone ?? '', avatarUrl: person?.avatarUrl ?? '',
-    employmentStartDate: person?.employmentStartDate ?? localDate, employmentEndDate: person?.employmentEndDate ?? '',
+    email: person?.email ?? '',
+    phoneCountryCode: initialPhone.countryCode,
+    phone: initialPhone.phone,
+    avatarUrl: person?.avatarUrl ?? '',
+    employmentStartDate: person?.employmentStartDate ? person.employmentStartDate.split('T')[0] : localDate,
+    employmentEndDate: person?.employmentEndDate ? person.employmentEndDate.split('T')[0] : '',
     iafCodes: person?.iafCodes ?? [], qualifications: person?.qualifications ?? person?.evaluation?.highestQualification ?? '',
     country: person?.country ?? '', schemes: person?.schemes ?? [],
-    authorizedScope: person?.authorizedScope ?? '', expiryDate: person?.expiryDate ?? '',
+    authorizedScope: person?.authorizedScope ?? '', expiryDate: person?.expiryDate ? person.expiryDate.split('T')[0] : '',
   })
+
+  useEffect(() => {
+    if (!person) return
+    const parsedPhone = person.phone ? parsePersonPhone(person.phone) : null
+    setForm((prev) => ({
+      ...prev,
+      name: person.name || prev.name,
+      role: person.role || prev.role,
+      email: person.email || prev.email,
+      phoneCountryCode: parsedPhone ? parsedPhone.countryCode : prev.phoneCountryCode,
+      phone: parsedPhone ? parsedPhone.phone : prev.phone,
+      avatarUrl: person.avatarUrl || prev.avatarUrl,
+      employmentStartDate: person.employmentStartDate ? person.employmentStartDate.split('T')[0] : '',
+      employmentEndDate: person.employmentEndDate ? person.employmentEndDate.split('T')[0] : '',
+      iafCodes: person.iafCodes?.length ? person.iafCodes : prev.iafCodes,
+      qualifications: person.qualifications || person.evaluation?.highestQualification || prev.qualifications,
+      country: person.country || prev.country,
+      schemes: person.schemes?.length ? person.schemes : prev.schemes,
+      authorizedScope: person.authorizedScope || prev.authorizedScope,
+      expiryDate: person.expiryDate ? person.expiryDate.split('T')[0] : '',
+    }))
+  }, [person])
   // Preserve the register's readable string values while reusing the shared catalogs.
   const countryNames = new Intl.DisplayNames(['en'], { type: 'region' })
   const countryOptions = includeSavedOptions(getCountryOptions(i18n.language).map((country) => ({
@@ -91,12 +163,10 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         const names = (cab?.schemes ?? []).map((s) => s.schemeName).filter(Boolean)
         setCabSchemes(Array.from(new Set(names)))
       })
-      .catch(() => setCabSchemes([]))
+      .catch(() => setError('Could not load the CAB schemes. Please reload the page before saving.'))
   }, [])
 
-  const baseSchemeOptions = cabSchemes.length > 0
-    ? cabSchemes.map((name) => ({ value: name, label: name }))
-    : [
+  const baseSchemeOptions = [
         ...getSchemeOptions(CAB_ACTIVITY_OPTIONS.map((activity) => activity.value)).map((scheme) => ({
           value: scheme.label, label: scheme.label,
         })),
@@ -104,7 +174,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
         { value: 'HACCP', label: 'HACCP' },
       ]
 
-  const schemeOptions = includeSavedOptions(baseSchemeOptions, form.schemes)
+  const schemeOptions = includeSavedOptions(baseSchemeOptions, [...cabSchemes, ...form.schemes])
 
   const sectorOptions = includeSavedOptions(SECTOR_OPTIONS.map((sector) => ({
     value: t(`companyProfile.profileHeader.sectors.${sector.key}`, { lng: 'en' }),
@@ -112,6 +182,7 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
   })), [form.authorizedScope])
 
   const [error, setError] = useState('')
+  const [errorDetails, setErrorDetails] = useState<string[]>([])
   const [readingImage, setReadingImage] = useState(false)
   const [imageFile, setImageFile] = useState<File | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -119,7 +190,8 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
   // Qualification documents state (ICASCO DocumentUploadField)
   const [qualFiles, setQualFiles] = useState<UploadedDocumentFile[]>([])
   const [pendingQualFiles, setPendingQualFiles] = useState<{ id: string; file: File }[]>([])
-  const [uploadingQual, setUploadingQual] = useState(false)
+  const [uploadingQual, setUploadingQual] = useState(Boolean(person?.id && !person.id.startsWith('per-')))
+  const [savedEmployeeId, setSavedEmployeeId] = useState(person?.id)
 
   useEffect(() => {
     if (!person?.id || person.id.startsWith('per-')) return
@@ -137,71 +209,43 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
           )
         }
       })
-      .catch(() => {})
+      .catch(() => setError('Could not load saved qualification documents. Please reload the page.'))
+      .finally(() => setUploadingQual(false))
   }, [person?.id])
 
   const handleSelectQualFile = async (file: File) => {
     if (file.size > 20 * 1024 * 1024) {
-      setError(t('cab.competence.messages.fileTooLarge'))
+      setError('File size exceeds the 20 MB limit.')
       return
     }
     setError('')
 
-    if (person?.id && !person.id.startsWith('per-')) {
-      setUploadingQual(true)
-      try {
-        const res = await uploadCabEmployeeQualification(person.id, file, 'Qualification Document')
-        if (res.qualification) {
-          const q = res.qualification
-          setQualFiles((prev) => [
-            {
-              id: q.id,
-              name: q.originalName || q.fileName || file.name,
-              sizeLabel: formatFileSize(q.fileSize ?? file.size),
-              dateLabel: q.uploadedAt ? new Date(q.uploadedAt).toLocaleDateString() : new Date().toLocaleDateString(),
-              url: q.fileUrl,
-            },
-            ...prev,
-          ])
-          setForm((curr) => ({ ...curr, qualifications: file.name }))
-        }
-      } catch (err) {
-        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.uploadFailed' }))
-      } finally {
-        setUploadingQual(false)
-      }
-    } else {
-      const tempId = crypto.randomUUID()
-      const objectUrl = URL.createObjectURL(file)
-      setPendingQualFiles((prev) => [...prev, { id: tempId, file }])
-      setQualFiles((prev) => [
-        {
-          id: tempId,
-          name: file.name,
-          sizeLabel: formatFileSize(file.size),
-          dateLabel: new Date().toLocaleDateString(),
-          url: objectUrl,
-        },
-        ...prev,
-      ])
-      setForm((curr) => ({ ...curr, qualifications: file.name }))
-    }
+    const tempId = crypto.randomUUID()
+    setPendingQualFiles((prev) => [...prev, { id: tempId, file }])
+    setQualFiles((prev) => [{
+      id: tempId, name: file.name, sizeLabel: formatFileSize(file.size),
+      dateLabel: 'Pending save', url: URL.createObjectURL(file),
+    }, ...prev])
   }
 
   const handleDeleteQualFile = async (docId: string) => {
     const isPending = pendingQualFiles.some((p) => p.id === docId)
     if (isPending) {
+      const url = qualFiles.find((file) => file.id === docId)?.url
+      if (url) URL.revokeObjectURL(url)
       setPendingQualFiles((prev) => prev.filter((p) => p.id !== docId))
       setQualFiles((prev) => prev.filter((f) => f.id !== docId))
       return
     }
-    if (person?.id && !person.id.startsWith('per-')) {
+    if (savedEmployeeId) {
       setUploadingQual(true)
       try {
-        await deleteCabEmployeeQualification(person.id, docId)
+        await deleteCabEmployeeQualification(savedEmployeeId, docId)
         setQualFiles((prev) => prev.filter((f) => f.id !== docId))
       } catch (err) {
-        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.messages.deleteFailed' }))
+        if (err instanceof ApiError) {
+          setError(err.message)
+        }
       } finally {
         setUploadingQual(false)
       }
@@ -236,12 +280,21 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
     reader.readAsDataURL(file)
   }
 
+  const phoneError =
+    form.phone.trim() && !isValidPhoneNumber(form.phone, form.phoneCountryCode)
+      ? t('validation.invalidMobile', 'Invalid phone number')
+      : undefined
+
   const save = async (event: FormEvent) => {
     event.preventDefault()
-    if (readingImage || isSubmitting) return
+    if (readingImage || isSubmitting || uploadingQual) return
     if (!form.name.trim()) { setError(label('nameRequired')); return }
     if (!person && !form.email.trim()) {
       setError(t('cab.competence.memberProfile.emailRequired', 'Email is required'))
+      return
+    }
+    if (phoneError) {
+      setError(phoneError)
       return
     }
     if (form.employmentStartDate && form.employmentEndDate && form.employmentEndDate < form.employmentStartDate) {
@@ -250,118 +303,73 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
     }
 
     setError('')
+    setErrorDetails([])
 
-    let employeeId: string | undefined
-    let employeeStatus: string | undefined
-    let uploadedImageUrl: string | undefined
     const resolvedSchemes = form.schemes.map(
       (s) => cabSchemes.find((cs) => cs === s || cs.startsWith(`${s} — `)) ?? s,
     )
-
-    if (!person) {
-      setIsSubmitting(true)
-      try {
-        const rawPhone = form.phone.trim()
-        const cleanPhone = rawPhone.startsWith('+966')
-          ? rawPhone.slice(4).trim()
-          : rawPhone.startsWith('00966')
-            ? rawPhone.slice(5).trim()
-            : rawPhone
-        const formattedStartDate = form.employmentStartDate
-          ? (form.employmentStartDate.includes('T') ? form.employmentStartDate : `${form.employmentStartDate}T00:00:00.000Z`)
-          : undefined
-        const res = await createCabEmployee({
-          fullName: form.name.trim(),
-          email: form.email.trim(),
-          ...(cleanPhone ? { phone: cleanPhone, phoneCountryCode: '+966' } : {}),
-          professionalRole: toBackendRole(form.role),
-          ...(formattedStartDate ? { employmentStartDate: formattedStartDate } : {}),
-          iafCodes: cleanIafCodes(form.iafCodes),
-          schemes: resolvedSchemes,
-        })
-        employeeId = res.employee?.id
-        employeeStatus = res.employee?.status
-
-        if (imageFile && employeeId) {
-          try {
-            const imgRes = await uploadCabEmployeeImage(employeeId, imageFile)
-            uploadedImageUrl = imgRes.imageUrl
-          } catch (imgErr) {
-            console.warn('Image upload failed, employee created:', imgErr)
-          }
-        }
-
-        if (pendingQualFiles.length > 0 && employeeId) {
-          for (const item of pendingQualFiles) {
-            try {
-              await uploadCabEmployeeQualification(employeeId, item.file, 'Qualification Document')
-            } catch (qualErr) {
-              console.warn('Qualification upload failed during creation:', qualErr)
-            }
-          }
-        }
-      } catch (err) {
-        setIsSubmitting(false)
-        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.memberProfile.saveError' }))
-        return
-      }
-      setIsSubmitting(false)
-    } else {
-      // Editing existing employee — call backend update
-      setIsSubmitting(true)
-      try {
-        const formattedStartDate = form.employmentStartDate
-          ? (form.employmentStartDate.includes('T') ? form.employmentStartDate : `${form.employmentStartDate}T00:00:00.000Z`)
-          : undefined
-        const updateRes = await updateCabEmployee(person.id, {
-          professionalRole: toBackendRole(form.role),
-          ...(formattedStartDate ? { employmentStartDate: formattedStartDate } : {}),
-          iafCodes: cleanIafCodes(form.iafCodes),
-          schemes: resolvedSchemes,
-        })
-        employeeId = person.id
-        employeeStatus = updateRes.employee?.status || person.status
-
-        if (imageFile) {
-          try {
-            const imgRes = await uploadCabEmployeeImage(person.id, imageFile)
-            uploadedImageUrl = imgRes.imageUrl
-          } catch (imgErr) {
-            console.warn('Image upload failed during edit:', imgErr)
-          }
-        }
-      } catch (err) {
-        setIsSubmitting(false)
-        toast.error(getUserErrorMessage(err, t, { fallbackKey: 'cab.competence.memberProfile.saveError' }))
-        return
-      }
-      setIsSubmitting(false)
-    }
-
-    let saved: CompetencePerson
-    try {
-      const list = getStoredPersonnel()
-      const existing = person ? list.find((item) => item.id === person.id) ?? person : undefined
-      saved = {
-        id: employeeId ?? (existing ? existing.id : crypto.randomUUID()),
-        code: existing?.code ?? `PER-${String(Math.max(0, ...list.map((item) => Number(item.code.replace('PER-', '')) || 0)) + 1).padStart(4, '0')}`,
-        status: (employeeStatus === 'ACTIVE' ? 'Authorized' : 'Under review'),
-        statusDot: employeeStatus === 'INACTIVE' ? 'Inactive' : 'Active',
-        ...existing,
-        ...form,
-        avatarUrl: uploadedImageUrl ?? form.avatarUrl,
-        name: form.name.trim(),
-        role: (CAB_PROFESSIONAL_ROLES.find((r) => r.value === toBackendRole(form.role))?.label ?? form.role) as CompetencePerson['role'],
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-      }
-      const hasInList = existing ? list.some((item) => item.id === existing.id) : false
-      savePersonnelList(hasInList && existing ? list.map((item) => item.id === existing.id ? saved : item) : [saved, ...list])
-    } catch {
-      setError(label('saveError'))
+    const missingSchemes = resolvedSchemes.filter((scheme) => !cabSchemes.includes(scheme))
+    if (missingSchemes.length) {
+      setError(`Configure these schemes in the CAB company profile before assigning them: ${missingSchemes.join(', ')}`)
       return
     }
-    onSaved(saved)
+    const dialCode = `+${getCountryCallingCode(form.phoneCountryCode)}`
+    const cleanPhone = form.phone.replace(/\D/g, '')
+    setIsSubmitting(true)
+    let employeeId = savedEmployeeId
+    try {
+      const payload = {
+        professionalRole: toBackendRole(form.role),
+        ...(form.employmentStartDate ? { employmentStartDate: `${form.employmentStartDate}T00:00:00.000Z` } : {}),
+        iafCodes: cleanIafCodes(form.iafCodes),
+        schemes: resolvedSchemes,
+      }
+      const { employee } = employeeId
+        ? await updateCabEmployee(employeeId, payload)
+        : await createCabEmployee({
+            ...payload, fullName: form.name.trim(), email: form.email.trim(),
+            ...(cleanPhone ? { phone: cleanPhone, phoneCountryCode: dialCode } : {}),
+          })
+      employeeId = employee.id
+      // Keep the created ID so retrying a failed upload cannot create another employee.
+      setSavedEmployeeId(employeeId)
+      let avatarUrl = employee.imageUrl || person?.avatarUrl
+      if (imageFile) {
+        const result = await uploadCabEmployeeImage(employeeId, imageFile)
+        avatarUrl = result.employee.imageUrl || undefined
+        setImageFile(null)
+      }
+      for (const item of pendingQualFiles) {
+        const { qualification: q } = await uploadCabEmployeeQualification(employeeId, item.file, 'Qualification Document')
+        setPendingQualFiles((prev) => prev.filter((pending) => pending.id !== item.id))
+        setQualFiles((prev) => prev.map((file) => {
+          if (file.id !== item.id) return file
+          if (file.url) URL.revokeObjectURL(file.url)
+          return {
+            id: q.id, name: q.originalName || q.fileName || item.file.name,
+            sizeLabel: formatFileSize(q.fileSize), url: q.fileUrl,
+            dateLabel: new Date(q.uploadedAt).toLocaleDateString(),
+          }
+        }))
+      }
+      onSaved({
+        ...person, ...form, id: employeeId,
+        code: person?.code || `PER-${employeeId.slice(0, 4).toUpperCase()}`,
+        schemes: employee.schemes, avatarUrl: avatarUrl || undefined,
+        name: form.name.trim() || employee.user.fullName,
+        email: form.email.trim() || employee.user.email,
+        role: (CAB_PROFESSIONAL_ROLES.find((r) => r.value === employee.professionalRole)?.label ?? form.role) as CompetencePerson['role'],
+        phone: cleanPhone ? `${dialCode} ${cleanPhone}` : '',
+        status: employee.status === 'ACTIVE' ? 'Authorized' : 'Under review',
+        statusDot: employee.status === 'INACTIVE' ? 'Inactive' : 'Active',
+      })
+    } catch (err) {
+      const message = err instanceof Error ? err.message : label('saveError')
+      setError(employeeId ? `The employee is saved, but saving is incomplete: ${message}. Please retry Save to upload the remaining files.` : message)
+      if (err instanceof ApiError) setErrorDetails(err.errors ?? [])
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -373,32 +381,78 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
                 <label className={`block ${fieldLabelClassName}`}>{label('name')} *
                   <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className={inputClass} />
                 </label>
-                <label className={`block ${fieldLabelClassName}`}>{t('cab.competence.role')}
-                  <select
+                <div>
+                  <span className={`mb-1 block ${fieldLabelClassName}`}>{t('cab.competence.role')}</span>
+                  <SelectField
                     value={toBackendRole(form.role)}
-                    onChange={(e) => setForm({ ...form, role: e.target.value as CompetencePerson['role'] })}
-                    className={inputClass}
-                  >
-                    {CAB_PROFESSIONAL_ROLES.map((r) => (
-                      <option key={r.value} value={r.value}>
-                        {r.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                    onChange={(val) => setForm({ ...form, role: val as CompetencePerson['role'] })}
+                    options={CAB_PROFESSIONAL_ROLES.map((r) => ({
+                      value: r.value,
+                      label: r.label,
+                    }))}
+                  />
+                </div>
                 <div className="grid gap-5 sm:grid-cols-2 md:col-span-2">
                   <label className={`block ${fieldLabelClassName}`}>{label('email')} {!person && '*'}
                     <input type="email" required={!person} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={inputClass} />
                   </label>
-                  <label className={`block ${fieldLabelClassName}`}>{label('phone')}
-                    <input type="tel" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} className={inputClass} />
-                  </label>
+                  <div>
+                    <label htmlFor="personnel-phone" className={`block ${fieldLabelClassName}`}>{label('phone')}</label>
+                    <div className="mt-1">
+                      <PhoneInputRow
+                        rowClassName="gap-3"
+                        value={form.phoneCountryCode}
+                        onChange={(code) => setForm({ ...form, phoneCountryCode: code })}
+                        aria-label={t('register.countryCode', 'Country code')}
+                        className="border border-neutral-200"
+                      >
+                        <div className="relative flex-1">
+                          <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-blue-500">
+                            <AppIcon icon={PhoneIcon} size={20} />
+                          </span>
+                          <input
+                            id="personnel-phone"
+                            type="tel"
+                            lang="en"
+                            dir="ltr"
+                            placeholder="ex: 567XXXXXXXX"
+                            value={form.phone}
+                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            className={cn(
+                              fieldInputClassName,
+                              fieldHeightClassName,
+                              'ps-12',
+                              phoneError && 'border-error-400 focus-within:ring-error-400',
+                            )}
+                          />
+                        </div>
+                      </PhoneInputRow>
+                      {phoneError && <p className="mt-1 text-small-light text-error-500">{phoneError}</p>}
+                    </div>
+                  </div>
                 </div>
-                <label className={`block ${fieldLabelClassName}`}>{label('image')}
-                  {form.avatarUrl && <img src={form.avatarUrl} alt={form.name} className="my-2 size-20 rounded-full object-cover" />}
-                  <input type="file" accept="image/jpeg,image/png,image/webp" disabled={readingImage} onChange={uploadImage} className="mt-2 block w-full rounded-[var(--radius-sm)] border border-dashed border-neutral-300 bg-white p-4 text-sm file:me-4 file:rounded-md file:border-0 file:bg-primary/10 file:px-4 file:py-2 file:text-primary" />
-                  <span className="mt-1 block text-xs font-normal text-neutral-500">{label('imageHelp')}</span>
-                </label>
+                <div className="md:col-span-2">
+                  <span className={`mb-1.5 block ${fieldLabelClassName}`}>{label('image')}</span>
+                  <div className="flex flex-wrap items-center gap-4 rounded-[12px] border border-dashed border-primary/30 bg-white p-4">
+                    {form.avatarUrl ? (
+                      <img src={form.avatarUrl} alt={form.name} className="size-16 shrink-0 rounded-full object-cover shadow-xs" />
+                    ) : (
+                      <div className="flex size-16 shrink-0 items-center justify-center rounded-full bg-primary/10 text-[16px] font-bold text-primary">
+                        {(form.name || 'EM').slice(0, 2).toUpperCase()}
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        disabled={readingImage}
+                        onChange={uploadImage}
+                        className="block w-full text-[13px] text-neutral-600 file:me-4 file:cursor-pointer file:rounded-[8px] file:border-0 file:bg-[#e8edfc] file:px-4 file:py-2 file:text-[13px] file:font-semibold file:text-[#1236a3] hover:file:bg-[#dbe4fb]"
+                      />
+                      <span className="block text-[12px] font-normal text-neutral-500">{label('imageHelp')}</span>
+                    </div>
+                  </div>
+                </div>
             </div>
           </SectionHeading>
         </div>
@@ -442,11 +496,12 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
                 <fieldset>
                   <legend className={`mb-1 ${fieldLabelClassName}`}>{t('cab.competence.columns.schemes')}</legend>
                   <MultiSelect tags={form.schemes} options={schemeOptions} searchable onChange={(schemes) => setForm({ ...form, schemes })} placeholder={t('cab.competence.columns.schemes')} />
+                  <p className="mt-2 text-sm text-neutral-500">Additional schemes must first be configured in the <a className="text-primary underline" href="/cab/company-profile">CAB company profile</a> before they can be assigned.</p>
                 </fieldset>
                 <SearchableSelect id="personnel-sector" label={t('cab.competence.authorizedScope')} value={form.authorizedScope} options={sectorOptions} onChange={(authorizedScope) => setForm({ ...form, authorizedScope })} placeholder={t('cab.competence.authorizedScope')} />
                 <SearchableSelect id="personnel-country" label={t('cab.competence.country')} value={form.country} options={countryOptions} onChange={(country) => setForm({ ...form, country })} placeholder={t('cab.competence.country')} />
                 <div className="md:col-span-2">
-                  <span className={`block ${fieldLabelClassName}`}>{t('cab.competence.columns.expiry')}</span>
+                  <span className={`block ${fieldLabelClassName}`}>{t('cab.competence.memberProfile.expiryDate', 'Expiry (optional)')}</span>
                   <div className="mt-1 sm:max-w-sm">
                     <DatePicker
                       value={fromIsoDate(form.expiryDate)}
@@ -461,29 +516,33 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
                       title={label('qualifications')}
                       note={t('cab.competence.qualificationsDesc', 'PDF, Word, Images (max 20 MB)')}
                       files={qualFiles}
-                      busy={uploadingQual}
+                      busy={uploadingQual || isSubmitting}
                       accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
                       onSelectFile={handleSelectQualFile}
                       onDeleteFile={handleDeleteQualFile}
                       onOpenFile={handleOpenQualFile}
                     />
                   </div>
+                  {pendingQualFiles.length > 0 && <p className="mt-2 text-sm text-neutral-500">Selected documents will upload when you save the profile.</p>}
                 </div>
             </div>
           </SectionHeading>
         </div>
       </CabTourStep>
 
-      {error && (
-        <div role="alert" className="rounded-[8px] border border-red-200 bg-red-50 p-4 text-[13px] text-red-700">
-          <p className="font-semibold">{error}</p>
+      {(error || errorDetails.length > 0) && (
+        <div role="alert" className="rounded-[8px] border border-red-200 bg-red-50 p-4 text-[13px] text-red-700 space-y-1">
+          {error && <p className="font-semibold">{error}</p>}
+          {errorDetails.map((msg, i) => (
+            <p key={i}>• {msg}</p>
+          ))}
         </div>
       )}
 
       <CabTourStep steps={tourSteps} stepId="profile-save-action">
         <div className="flex flex-wrap justify-end gap-3 rounded-[var(--radius-md)] border border-[#ececec] bg-white p-5">
-          <Button variant="outline" type="button" onClick={onCancel}>{t('common.cancel')}</Button>
-          <Button type="submit" disabled={readingImage || isSubmitting}>
+          <Button variant="outline" type="button" disabled={isSubmitting || uploadingQual} onClick={onCancel}>{t('common.cancel')}</Button>
+          <Button type="submit" disabled={readingImage || isSubmitting || uploadingQual}>
             {isSubmitting ? t('common.saving', 'Saving...') : t('cab.competence.savePerson')}
           </Button>
         </div>
@@ -491,4 +550,3 @@ export function PersonnelProfileForm({ person, onCancel, onSaved, tourSteps }: {
     </form>
   )
 }
-

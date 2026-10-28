@@ -36,6 +36,10 @@ const API_STATUS_TO_UI: Record<ApplicationStatus, RequestStatus> = {
   UNDER_REVIEW: 'underReview',
   APPROVED: 'issued',
   REJECTED: 'closedByDirector',
+  QUOTATION_CREATED: 'underReview',
+  QUOTATION_ISSUED: 'underReview',
+  QUOTATION_ACCEPTED: 'underReview',
+  QUOTATION_REJECTED: 'underReview',
 }
 
 const statusConfig: Record<

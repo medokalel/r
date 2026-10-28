@@ -1,6 +1,7 @@
 import type { EntityDataSubSection } from '@/components/dashboard/EntityDataNav'
 import {
   SPEC_QUESTIONS,
+  isSpecQuestionVisible,
   type ApplicationFormValues,
 } from '@/components/dashboard/entityData/applicationTypes'
 
@@ -36,7 +37,10 @@ function isScopeComplete(form: ApplicationFormValues): boolean {
     form.hasBranches !== ''
 
   // No branches to validate when the user said they don't have any
-  if (form.hasBranches === 'no') return operationalComplete
+  if (form.hasBranches === 'no') {
+    const solo = form.branches[0]
+    return operationalComplete && Boolean(solo) && filled(solo.employees) && Number(solo.employeesInScope) >= 1
+  }
 
   const branchesComplete = form.branches.every(
     (branch) =>
@@ -70,7 +74,7 @@ function isSpecQuestionsComplete(form: ApplicationFormValues): boolean {
   const relevant = SPEC_QUESTIONS.filter((question) =>
     form.selectedStandards.some(
       (standard) => standard.toUpperCase() === question.certificateCode
-    )
+    ) && isSpecQuestionVisible(question, form.specAnswers)
   )
   return relevant.every((question) => filled(form.specAnswers[question.questionKey] ?? ''))
 }

@@ -14,23 +14,15 @@ import {
 } from '@/components/ui'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
+import { getIafCodeOptions } from '@/lib/iafCodes'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
+  createEmptyBranch,
   type BranchFormValues,
   type YesNo,
 } from '@/components/dashboard/entityData/applicationTypes'
 
 const NEW_BRANCH_VALUE = '__new__'
-
-const economicFieldOptions = [
-  '01 A Agriculture, hunting, forestry and fishing',
-  '02 B Fishing',
-  '03 C Food, beverage and tobacco products',
-  '10 D Mining and quarrying',
-  '27 E Manufacturing',
-  '41 F Construction',
-  '45 G Wholesale and retail trade',
-]
 
 function BranchForm({
   branch,
@@ -273,7 +265,7 @@ function BranchForm({
 }
 
 export function ScopeOfActivityStep() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { form, update, updateBranch, addBranch, removeBranch, orgBranches } = useApplicationForm()
 
   const yesNoOptions = [
@@ -283,8 +275,13 @@ export function ScopeOfActivityStep() {
 
   const onHasBranchesChange = (value: string) => {
     update('hasBranches', value as YesNo)
-    if (value === 'no') update('branches', [])
+    // Without branches only the head count is asked; it lives on the first branch entry.
+    if (value === 'no') update('branches', [form.branches[0] ?? createEmptyBranch(1)])
   }
+
+  const solo = form.branches[0]
+  const updateSolo = (patch: Partial<BranchFormValues>) =>
+    update('branches', [{ ...(solo ?? createEmptyBranch(1)), ...patch }])
 
   const branchRefs = useRef<Map<number, HTMLDivElement>>(new Map())
 
@@ -337,7 +334,7 @@ export function ScopeOfActivityStep() {
           >
             <MultiSelect
               tags={form.economicFields}
-              options={economicFieldOptions}
+              options={getIafCodeOptions(i18n.language)}
               onChange={(tags) => update('economicFields', tags)}
             />
           </FormField>
@@ -414,6 +411,29 @@ export function ScopeOfActivityStep() {
         </FormSection>
       </SectionHeading>
       </DashboardTourStep>
+
+      {form.hasBranches === 'no' && (
+        <FormSection>
+          <div className="grid gap-5 lg:grid-cols-2">
+            <FormField label={t('accreditation.entityData.fields.scope.branchEmployees')} required variant="question">
+              <TextField
+                type="number"
+                min={0}
+                value={solo?.employees ?? ''}
+                onChange={(e) => updateSolo({ employees: e.target.value })}
+              />
+            </FormField>
+            <FormField label={t('accreditation.entityData.fields.scope.auditScopeEmployees')} required variant="question">
+              <TextField
+                type="number"
+                min={1}
+                value={solo?.employeesInScope ?? ''}
+                onChange={(e) => updateSolo({ employeesInScope: e.target.value })}
+              />
+            </FormField>
+          </div>
+        </FormSection>
+      )}
 
       {form.hasBranches === 'yes' &&
         form.branches.map((branch, index) => (

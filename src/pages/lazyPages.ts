@@ -64,9 +64,9 @@ export const CabApplicationQuotationPage = lazyNamed(
   () => import('@/pages/CabApplicationQuotationPage'),
   'CabApplicationQuotationPage',
 )
-export const CabQuotationApprovalPage = lazyNamed(
-  () => import('@/pages/CabQuotationApprovalPage'),
-  'CabQuotationApprovalPage',
+export const CabQuotationsPage = lazyNamed(
+  () => import('@/pages/CabQuotationsPage'),
+  'CabQuotationsPage',
 )
 export const CabOfferRegisterPage = lazyNamed(() => import('@/pages/CabOfferRegisterPage'), 'CabOfferRegisterPage')
 export const CabCreateOfferPage = lazyNamed(() => import('@/pages/CabCreateOfferPage'), 'CabCreateOfferPage')

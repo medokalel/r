@@ -12,6 +12,7 @@ import { DatePicker } from '@/components/ui/DatePicker'
 import { useApplicationForm } from '@/components/dashboard/entityData/ApplicationFormContext'
 import {
   SPEC_QUESTIONS,
+  isSpecQuestionVisible,
   type SpecQuestionDef,
 } from '@/components/dashboard/entityData/applicationTypes'
 import type { StandardKey } from '@/components/dashboard/entityData/fieldTypes'
@@ -101,7 +102,9 @@ export function SpecificationQuestionsStep() {
     .map(({ standard, title }) => ({
       title,
       questions: SPEC_QUESTIONS.filter(
-        (question) => question.certificateCode === standard.toUpperCase()
+        (question) =>
+          question.certificateCode === standard.toUpperCase() &&
+          isSpecQuestionVisible(question, form.specAnswers)
       ),
     }))
     .filter((section) => section.questions.length > 0)

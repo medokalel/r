@@ -11,6 +11,10 @@ export type ApplicationStatus =
   | 'UNDER_REVIEW'
   | 'APPROVED'
   | 'REJECTED'
+  | 'QUOTATION_CREATED'
+  | 'QUOTATION_ISSUED'
+  | 'QUOTATION_ACCEPTED'
+  | 'QUOTATION_REJECTED'
 
 export type ApplicationRequestType = 'NEW' | 'RENEWAL'
 

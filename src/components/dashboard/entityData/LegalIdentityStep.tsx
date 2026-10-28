@@ -11,10 +11,10 @@ import {
   FormSection,
   RadioGroup,
   MultiSelect,
-  SelectField,
   TextField,
   Textarea,
 } from '@/components/ui'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { CountrySelectField } from '@/components/dashboard/CountrySelectField'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
 import { SectionHeading } from '@/components/dashboard/SectionHeading'
@@ -249,10 +249,11 @@ const { fieldProps } = useFieldValidation(form, {
 
           <FormField label={t('accreditation.form.city')} required>
             {cityOptions.length > 0 ? (
-              <SelectField
+              <SearchableSelect
                 value={form.city}
-                options={cityOptions}
+                options={cityOptions.map((name) => ({ value: name, label: name }))}
                 onChange={(value) => update('city', value)}
+                searchPlaceholder={t('common.search')}
               />
             ) : (
               <TextField

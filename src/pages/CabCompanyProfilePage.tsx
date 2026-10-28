@@ -26,6 +26,7 @@ import { mapFormToCabSetupDraft, mergeCabProfileIntoForm } from '@/lib/cabSetupM
 import { getAuthSession } from '@/lib/authStorage'
 import { emptyUnifiedOnboardingForm, type UnifiedOnboardingForm } from '@/lib/unifiedOnboardingForm'
 import type { CabSetupForm } from '@/lib/cabSetupForm'
+import { PricingConfigSection } from '@/components/dashboard/cab/PricingConfigSection'
 
 const PROFILE_SECTIONS = [
   'profile',
@@ -84,7 +85,8 @@ export function CabCompanyProfilePage() {
     if (!form || saving) return
     setSaving(true)
     try {
-      await saveCabSetupDraft(mapFormToCabSetupDraft(form, cab))
+      const draft = mapFormToCabSetupDraft(form, cab)
+      await saveCabSetupDraft(draft)
       const { cab: profile } = await getCabProfile()
       hydrate(profile)
       toast.success(t('cab.companyProfile.saved'))
@@ -142,6 +144,8 @@ export function CabCompanyProfilePage() {
                 </SetupSection>
               </div>
             </CabTourStep>
+
+            <PricingConfigSection />
 
             <CabTourStep steps={tourSteps} stepId="cab-company-profile-identity">
               <div className="space-y-8">

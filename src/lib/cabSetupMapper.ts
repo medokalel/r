@@ -380,6 +380,7 @@ export function mapFormToCabSetupDraft(
     keepMarkUseAuditTrail: setup.keepMarkAuditTrail,
     marks: buildMarks(form, existing),
     certificateSettings: {
+      ...existing?.certificateSettings,
       certificateNumberFormat: nullIfEmpty(
         setup.certificateBasics.find((basic) => basic.schemeId)?.certificateNumberFormat
       ),

@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { ApplicationSummaryCard } from '@/components/dashboard/cab/ApplicationSummaryCard'
+import { isQuotationReviewComplete } from '@/lib/api/cabApplicationQuotationApi'
 import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
@@ -15,7 +17,6 @@ import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { UserAvatar } from '@/components/ui/UserAvatar'
 import {
   AppIcon,
-  CalendarIcon,
   CommentIcon,
   CorrectiveActionIcon,
   DownloadIcon,
@@ -135,59 +136,6 @@ function Chevron() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="shrink-0 text-neutral-400 rtl-flip">
       <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
-  )
-}
-
-function ClientIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="8" r="3.5" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M4.5 20c1.4-3.6 4.4-5.5 7.5-5.5s6.1 1.9 7.5 5.5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function BoxIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M3.5 7.5L12 3l8.5 4.5V16.5L12 21l-8.5-4.5V7.5Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M3.5 7.5L12 12l8.5-4.5M12 12v9" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function GearIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.8" />
-      <path
-        d="M19.4 13.5a7.5 7.5 0 0 0 0-3l1.9-1.5-2-3.4-2.3.7a7.4 7.4 0 0 0-2.6-1.5L14 2h-4l-.4 2.3a7.4 7.4 0 0 0-2.6 1.5l-2.3-.7-2 3.4L4.6 10.5a7.5 7.5 0 0 0 0 3l-1.9 1.5 2 3.4 2.3-.7c.75.66 1.63 1.17 2.6 1.5L10 22h4l.4-2.3a7.4 7.4 0 0 0 2.6-1.5l2.3.7 2-3.4-1.9-1.5Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function ChecklistDocIcon() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
-      <path d="M6.5 3h8l4 4v13.5a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
-      <path d="M9 12.5l1.8 1.8 3.7-3.9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
-}
-
-function SummaryField({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {
-  return (
-    <div className="flex min-w-0 items-start gap-2">
-      <span className="mt-0.5 shrink-0 text-[#1236a3]">{icon}</span>
-      <div className="min-w-0">
-        <p className="text-[11px] font-semibold text-[#000000]">{label}</p>
-        <div className="text-[13px] font-bold leading-snug text-[#000000]">{value}</div>
-      </div>
-    </div>
   )
 }
 
@@ -771,6 +719,14 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
     'CASCO'
   const primaryStandard =
     application.certificates?.[0]?.certificateName || application.certificates?.[0]?.certificateCode || '—'
+  // The API has no Quotation status; derive the displayed stage from saved reviews.
+  const quotationReady = isQuotationReviewComplete(application.status, sectionStatuses)
+  const statusLabel = quotationReady
+    ? t('cab.quotationEditor.status')
+    : t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[application.status]}`)
+  const statusClassName = quotationReady
+    ? APPLICATION_STATUS_STYLES.UNDER_REVIEW
+    : APPLICATION_STATUS_STYLES[application.status]
   const receivedOn = application.submittedAt || application.createdAt
   const documents = application.documents ?? []
   const publicComments = comments.filter((comment) => !comment.isInternal)
@@ -923,8 +879,8 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
                         <h1 className="text-[18px] font-bold text-[#000000] sm:text-[22px]">
                           {t('cab.applications.review.title')}
                         </h1>
-                        <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', APPLICATION_STATUS_STYLES[application.status])}>
-                          {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[application.status]}`)}
+                        <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', statusClassName)}>
+                          {statusLabel}
                         </span>
                       </div>
                       <p className="mt-1.5 text-[13px] text-[#000000]">{t('cab.applications.review.subtitle')}</p>
@@ -941,9 +897,7 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
                             applicationExportFields(
                               application,
                               {
-                                statusLabel: t(
-                                  `cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[application.status]}`,
-                                ),
+                                statusLabel,
                                 certificationBody,
                                 primaryStandard,
                               },
@@ -967,28 +921,16 @@ function ReviewFlow({ applicationId }: { applicationId: string }) {
                 </DashboardTourStep>
 
                 <DashboardTourStep steps={tourSteps} stepId="summary-card">
-                  <section className={cn(cardClassName, 'min-w-0 overflow-hidden p-4 sm:p-6')}>
-                    <div className="flex flex-wrap items-center gap-3">
-                      <span className="flex size-14 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-[#1236a3]">
-                        <AppIcon icon={FileTextIcon} size={28} />
-                      </span>
-                      <span className="text-[24px] font-bold leading-none text-[#000000] sm:text-[26px]">{applicationNumber}</span>
-                      <span className={cn('rounded-full px-2.5 py-0.5 text-[11px] font-semibold', APPLICATION_STATUS_STYLES[application.status])}>
-                        {t(`cab.applicationRegister.status.${APPLICATION_STATUS_LABEL_KEYS[application.status]}`)}
-                      </span>
-                    </div>
-                    <div className="mt-6 flex min-w-0 flex-wrap items-start justify-between gap-x-8 gap-y-4">
-                      <SummaryField icon={<ClientIcon />} label={t('cab.applications.review.summary.client')} value={clientName} />
-                      <SummaryField icon={<BoxIcon />} label={t('cab.applications.review.summary.applicationType')} value={applicationType} />
-                      <SummaryField icon={<GearIcon />} label={t('cab.applications.review.summary.certificationBody')} value={certificationBody} />
-                      <SummaryField icon={<ChecklistDocIcon />} label={t('cab.applications.review.summary.primaryStandard')} value={primaryStandard} />
-                      <SummaryField
-                        icon={<AppIcon icon={CalendarIcon} size={18} />}
-                        label={t('cab.applications.review.summary.receivedOn')}
-                        value={receivedOn ? new Date(receivedOn).toLocaleString(i18n.language) : '—'}
-                      />
-                    </div>
-                  </section>
+                  <ApplicationSummaryCard
+                    applicationNumber={applicationNumber}
+                    clientName={clientName}
+                    applicationType={applicationType}
+                    certificationBody={certificationBody}
+                    primaryStandard={primaryStandard}
+                    receivedOn={receivedOn}
+                    statusLabel={statusLabel}
+                    statusClassName={statusClassName}
+                  />
                 </DashboardTourStep>
 
                 <DashboardTourStep steps={tourSteps} stepId="tabs">

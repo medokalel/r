@@ -10,6 +10,10 @@ export const APPLICATION_STATUS_STYLES: Record<ApplicationRegisterStatus, string
   UNDER_REVIEW: 'bg-[#e0e7ff] text-[#1236a3]',
   APPROVED: 'bg-[#d0fae5] text-[#007a55]',
   REJECTED: 'bg-[#fee2e2] text-[#b42318]',
+  QUOTATION_CREATED: 'bg-[#e0e7ff] text-[#1236a3]',
+  QUOTATION_ISSUED: 'bg-[#fef3c6] text-[#92400e]',
+  QUOTATION_ACCEPTED: 'bg-[#d0fae5] text-[#007a55]',
+  QUOTATION_REJECTED: 'bg-[#fee2e2] text-[#b42318]',
 }
 
 /** Maps a status to its i18n key under `cab.applicationRegister.status.*`. */
@@ -19,4 +23,8 @@ export const APPLICATION_STATUS_LABEL_KEYS: Record<ApplicationRegisterStatus, st
   UNDER_REVIEW: 'underReview',
   APPROVED: 'approved',
   REJECTED: 'rejected',
+  QUOTATION_CREATED: 'quotationCreated',
+  QUOTATION_ISSUED: 'quotationIssued',
+  QUOTATION_ACCEPTED: 'quotationAccepted',
+  QUOTATION_REJECTED: 'quotationRejected',
 }

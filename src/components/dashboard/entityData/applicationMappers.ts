@@ -29,6 +29,7 @@ import {
   DOCUMENT_SLOT_TYPES,
   EMPTY_APPLICATION_FORM,
   SPEC_QUESTIONS,
+  isSpecQuestionVisible,
   yesNoFromBool,
   type ApplicationDocumentEntry,
   type ApplicationFormValues,
@@ -123,6 +124,24 @@ const CURRENT_SYSTEM_NAMES: Record<string, string> = {
   iso22000: 'ISO 22000',
 }
 
+const NO_BRANCH_NAME = 'No Branch'
+const NO_BRANCH: ApplicationBranch = {
+  // Every field is filled: the stored branch is re-validated on submit and null values are rejected.
+  branchName: NO_BRANCH_NAME,
+  address: 'N/A',
+  employees: 0,
+  employeesInScope: 0,
+  shifts: 1,
+  workingHours: 'N/A',
+  productionLines: 0,
+  weeklyHoliday: 'N/A',
+  integratedSystem: false,
+  centralManagement: false,
+  activities: 'N/A',
+  products: 'N/A',
+  technicalCommunication: 'N/A',
+}
+
 function branchToApi(branch: BranchFormValues): ApplicationBranch | undefined {
   const fields = compact<ApplicationBranch>({
     branchName: text(branch.branchName),
@@ -157,7 +176,7 @@ function specAnswersByCertificate(
   const grouped: Record<string, CertificateAnswer[]> = {}
   for (const def of SPEC_QUESTIONS) {
     const raw = form.specAnswers[def.questionKey]
-    if (raw == null || raw === '') continue
+    if (raw == null || raw === '' || !isSpecQuestionVisible(def, form.specAnswers)) continue
     let answer: boolean | number | string = raw
     if (def.questionType === 'BOOLEAN') answer = raw === 'yes'
     ;(grouped[def.certificateCode] ??= []).push({
@@ -306,7 +325,18 @@ export function payloadFromForm(
   if (operationalInfo) payload.operationalInfo = operationalInfo
   if (consultantInfo) payload.consultantInfo = consultantInfo
   if (declarationInfo) payload.declarationInfo = declarationInfo
-  if (branches.length) payload.branches = branches
+  // The API rejects a submit without a branch, so "no branches" is sent as a single placeholder
+  // (this also replaces any previously saved branches). It carries the head count the quotation uses.
+  if (form.hasBranches === 'no') {
+    const solo = form.branches[0]
+    payload.branches = [
+      {
+        ...NO_BRANCH,
+        employees: (solo && int(solo.employees)) || 0,
+        employeesInScope: (solo && int(solo.employeesInScope)) || 0,
+      },
+    ]
+  } else if (branches.length) payload.branches = branches
   const certificates = certificatesToApi(form, t)
   if (certificates.length) payload.certificates = certificates
   const documents = documentsToApi(form)
@@ -496,7 +526,13 @@ export function formValuesFromApplication(
   form.certificateScopeAr = declaration.certificateScopeAr ?? ''
   form.agreed = declaration.agreed ?? false
 
-  form.branches = (app.branches ?? []).map((branch, index) => ({
+  const savedBranches = (app.branches ?? []).filter((branch) => branch.branchName !== NO_BRANCH_NAME)
+  const noBranch = (app.branches ?? []).find((branch) => branch.branchName === NO_BRANCH_NAME)
+  const noBranchOnly = Boolean(noBranch) && savedBranches.length === 0
+  if (noBranchOnly) form.hasBranches = 'no'
+  form.branches = noBranchOnly
+    ? [{ ...createEmptyBranch(1), employees: String(noBranch?.employees ?? ''), employeesInScope: String(noBranch?.employeesInScope ?? '') }]
+    : savedBranches.map((branch, index) => ({
     ...createEmptyBranch(index + 1),
     sourceBranchId: branch.sourceBranchId,
     branchName: branch.branchName ?? '',

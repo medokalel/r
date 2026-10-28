@@ -27,10 +27,11 @@ interface DocumentUploadFieldProps {
   files: UploadedDocumentFile[]
   busy?: boolean
   accept?: string
+  readOnly?: boolean
   /** Custom badge icon; receives the uploaded state for coloring */
   renderIcon?: (uploaded: boolean) => ReactNode
-  onSelectFile: (file: File) => void
-  onDeleteFile: (id: string) => void
+  onSelectFile?: (file: File) => void
+  onDeleteFile?: (id: string) => void
   /** When provided, files get download/preview actions */
   onOpenFile?: (file: UploadedDocumentFile) => void
 }
@@ -43,7 +44,7 @@ function FileRow({
 }: {
   file: UploadedDocumentFile
   disabled?: boolean
-  onDelete: (id: string) => void
+  onDelete?: (id: string) => void
   onOpen?: (file: UploadedDocumentFile) => void
 }) {
   const meta = [file.sizeLabel, file.dateLabel].filter(Boolean).join(' | ')
@@ -67,7 +68,9 @@ function FileRow({
       </div>
       <div className="flex items-center gap-2">
         {[
-          { icon: TrashIcon, label: 'delete', hover: 'hover:text-error-500', onClick: () => onDelete(file.id) },
+          ...(onDelete
+            ? [{ icon: TrashIcon, label: 'delete', hover: 'hover:text-error-500', onClick: () => onDelete(file.id) }]
+            : []),
           ...(onOpen
             ? [
                 { icon: DownloadIcon, label: 'download', hover: 'hover:text-primary', onClick: () => onOpen(file) },
@@ -105,6 +108,7 @@ export function DocumentUploadField({
   files,
   busy = false,
   accept = '.pdf,.png,.jpg,.jpeg',
+  readOnly = false,
   renderIcon,
   onSelectFile,
   onDeleteFile,
@@ -112,14 +116,14 @@ export function DocumentUploadField({
 }: DocumentUploadFieldProps) {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(readOnly)
 
   const uploaded = files.length > 0
 
   const onFileSelected = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
     event.target.value = ''
-    if (!file) return
+    if (!file || readOnly || !onSelectFile) return
     onSelectFile(file)
     setExpanded(true)
   }
@@ -161,15 +165,17 @@ export function DocumentUploadField({
                 ? t('common.loading')
                 : t('documentUpload.waiting')}
           </span>
-          <Button
-            type="button"
-            variant="tertiary"
-            className="h-12 min-w-[140px] shrink-0 rounded-[8px] bg-[#F3F6FD]"
-            onClick={() => fileInputRef.current?.click()}
-            disabled={busy}
-          >
-            {t('documentUpload.selectFile')}
-          </Button>
+          {!readOnly && onSelectFile && (
+            <Button
+              type="button"
+              variant="tertiary"
+              className="h-12 min-w-[140px] shrink-0 rounded-[8px] bg-[#F3F6FD]"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={busy}
+            >
+              {t('documentUpload.selectFile')}
+            </Button>
+          )}
           {uploaded && (
             <button
               type="button"
@@ -183,13 +189,15 @@ export function DocumentUploadField({
           )}
         </div>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          accept={accept}
-          onChange={onFileSelected}
-        />
+        {!readOnly && onSelectFile && (
+          <input
+            ref={fileInputRef}
+            type="file"
+            className="hidden"
+            accept={accept}
+            onChange={onFileSelected}
+          />
+        )}
       </div>
 
       {/* Expanded file history */}
@@ -200,7 +208,7 @@ export function DocumentUploadField({
               key={file.id}
               file={file}
               disabled={busy}
-              onDelete={onDeleteFile}
+              onDelete={readOnly ? undefined : onDeleteFile}
               onOpen={onOpenFile}
             />
           ))}
