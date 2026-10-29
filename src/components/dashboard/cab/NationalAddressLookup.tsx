@@ -61,7 +61,7 @@ export function NationalAddressLookup({ onFound, className }: NationalAddressLoo
   return (
     <div
       className={cn(
-        'rounded-[var(--radius-md)] border border-primary-100 bg-primary-subtle p-4 sm:p-5',
+        'rounded-[var(--radius-md)] border border-blue-100 bg-primary-subtle p-4 sm:p-5',
         className
       )}
     >
