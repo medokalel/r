@@ -10,6 +10,7 @@ import {
   SetupToggleRow,
 } from '@/components/auth/cab/setup/CabSetupPrimitives'
 import { ALLOWED_DOCUMENT_USE_OPTIONS } from '@/lib/api/cabSetupApi'
+import { hasUploadedMarkFile } from '@/lib/cabSetupForm'
 import type { CabSetupStepProps } from '@/components/auth/cab/setup/types'
 
 function toIsoDate(date: Date): string {
@@ -27,6 +28,7 @@ function fromIsoDate(value: string): Date | undefined {
 export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps) {
   const { t } = useTranslation()
   const setup = form.cabSetup
+  const hasMarkFile = hasUploadedMarkFile(setup, form.logoUrl)
 
   const documentUseOptions = useMemo(
     () =>
@@ -117,7 +119,8 @@ export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps)
       </div>
 
       <div id="cab-setup-document-use" className="space-y-2">
-        <FormLabel required>{t('cab.setup.marks.allowedUse')}</FormLabel>
+        <FormLabel required={hasMarkFile}>{t('cab.setup.marks.allowedUse')}</FormLabel>
+        <p className="text-[12px] text-[var(--cab-muted)]">{t('cab.setup.marks.allowedUseHint')}</p>
         <MultiSelect
           tags={setup.allowedDocumentUse}
           options={documentUseOptions}

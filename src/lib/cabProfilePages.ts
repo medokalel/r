@@ -97,6 +97,7 @@ export function getCabProfilePageIssues(
     city: form.city,
     address: form.address,
     languages: form.languages,
+    logoUrl: form.logoUrl,
   })
   const issuesOf = (key: (typeof sections)[number]['key']) =>
     sections.find((section) => section.key === key)?.issues ?? []
@@ -134,7 +135,7 @@ export function getCabProfileCompletion(
     schemes: isSchemesStepComplete(setup),
     scope: isScopeStepComplete(setup),
     pricing: pricingConfigured,
-    marks: isMarksStepComplete(setup),
+    marks: isMarksStepComplete(setup, form.logoUrl),
     certificate: setup.certificateBasics.some(isCertificateBasicComplete),
   }
 }

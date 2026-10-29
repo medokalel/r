@@ -3599,6 +3599,7 @@
         "validUntil": "Valid until",
         "allowedUse": "Allowed document use",
         "allowedUsePlaceholder": "Select where marks may be used",
+        "allowedUseHint": "The allowed use is saved with your marks. It is required once you upload your logo or a mark.",
         "usageRules": "Usage rules",
         "applyOnlyToAccredited": "Apply accreditation mark only to accredited schemes",
         "blockAfterExpiry": "Block mark use after expiry",

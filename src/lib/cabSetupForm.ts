@@ -576,11 +576,23 @@ export function isScopeStepComplete(form: CabSetupForm): boolean {
   return form.scopes.every((scope) => Boolean(scope.scheme && scope.locationId))
 }
 
-export function isMarksStepComplete(form: CabSetupForm): boolean {
+/**
+ * The allowed document use is stored on each mark, and a mark only exists together with its
+ * file. So it matters (and is required) only once the CAB logo or a mark file is uploaded.
+ */
+export function hasUploadedMarkFile(
+  form: Pick<CabSetupForm, 'accreditationMarkUrl' | 'schemeMarkUrl'>,
+  logoUrl?: string | null,
+): boolean {
+  return Boolean(form.accreditationMarkUrl || form.schemeMarkUrl || logoUrl)
+}
+
+export function isMarksStepComplete(form: CabSetupForm, logoUrl?: string | null): boolean {
   if (form.markValidFrom && form.markValidUntil && form.markValidUntil <= form.markValidFrom) {
     return false
   }
-  return form.allowedDocumentUse.length > 0 && isValidFieldKind(form.markReference, 'mixed')
+  const allowedUseMissing = hasUploadedMarkFile(form, logoUrl) && form.allowedDocumentUse.length === 0
+  return !allowedUseMissing && isValidFieldKind(form.markReference, 'mixed')
 }
 
 export function isCertificateBasicComplete(record: CabCertificateBasic): boolean {
@@ -636,6 +648,7 @@ export function getCabSetupReviewSections(
     city: string
     address: string
     languages: string[]
+    logoUrl?: string | null
   },
 ): CabSetupReviewSectionState[] {
   const identity: CabSetupFieldIssue[] = []
@@ -764,7 +777,9 @@ export function getCabSetupReviewSections(
   if (setup.markValidFrom && setup.markValidUntil && setup.markValidUntil <= setup.markValidFrom) {
     marks.push({ fieldId: 'cab-setup-mark-valid-until', kind: 'invalid' })
   }
-  if (setup.allowedDocumentUse.length === 0) marks.push({ fieldId: 'cab-setup-document-use', kind: 'required' })
+  if (hasUploadedMarkFile(setup, shared.logoUrl) && setup.allowedDocumentUse.length === 0) {
+    marks.push({ fieldId: 'cab-setup-document-use', kind: 'required' })
+  }
 
   const certificate: CabSetupFieldIssue[] = []
   const invalidCert = setup.certificateBasics.find(

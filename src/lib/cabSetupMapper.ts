@@ -686,6 +686,7 @@ export function mergeCabProfileIntoForm(form: UnifiedOnboardingForm, cab: CabPro
       allowedDocumentUse:
         accreditationMark?.allowedDocumentUse ??
         schemeMark?.allowedDocumentUse ??
+        logoMark?.allowedDocumentUse ??
         form.cabSetup.allowedDocumentUse,
       certificateBasics: restoredCertificateBasics,
       showCabLogo: certificate.showCabLogo ?? form.cabSetup.showCabLogo,

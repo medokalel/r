@@ -33,8 +33,9 @@ export function CabReviewActivateStep({ form, onGoToStep }: CabReviewActivateSte
         city: form.city,
         address: form.address,
         languages: form.languages,
+        logoUrl: form.logoUrl,
       }),
-    [form.address, form.city, form.country, form.languages, form.legalEntityName, form.registrationNumber, form.tradingName, form.website, setup],
+    [form.address, form.city, form.country, form.languages, form.legalEntityName, form.logoUrl, form.registrationNumber, form.tradingName, form.website, setup],
   )
 
   const readyDetails: Record<string, string> = {

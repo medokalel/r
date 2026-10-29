@@ -702,7 +702,7 @@ export function UnifiedOnboardingFlow() {
       case 7:
         return !isScopeStepComplete(setup)
       case 8:
-        return !isMarksStepComplete(setup)
+        return !isMarksStepComplete(setup, form.logoUrl)
       case 9:
         return !isCertificateStepComplete(setup)
       case CAB_REVIEW_STEP:
