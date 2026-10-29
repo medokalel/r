@@ -41,9 +41,17 @@ export function CabMarksStep({ form, onPatch, onPatchSetup }: CabSetupStepProps)
   const accreditationCaption = useMemo(() => {
     const record = setup.accreditationRecords.find((item) => item.body)
     if (!record) return t('cab.setup.marks.accreditationMarkUnlinked')
-    return t('cab.setup.marks.linkedTo', {
-      target: record.number.trim() ? `${record.body} / ${record.number}` : record.body,
-    })
+    return (
+      <span className="inline-flex flex-wrap items-center gap-1.5">
+        {t('cab.setup.marks.linkedToLabel')}
+        <span
+          dir="ltr"
+          className="rounded-full bg-primary-subtle px-2 py-0.5 text-[11px] font-bold text-[var(--cab-primary)]"
+        >
+          {record.number.trim() ? `${record.body} · ${record.number}` : record.body}
+        </span>
+      </span>
+    )
   }, [setup.accreditationRecords, t])
 
   return (

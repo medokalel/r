@@ -160,6 +160,13 @@ export interface CabProfile {
   cabActivity?: string[]
   signatoryTitle?: string | null
   signatorySignatureUrl?: string | null
+  /** Tax invoice (ZATCA) details; absent until the backend returns them. */
+  vatNumber?: string | null
+  addressStreet?: string | null
+  addressBuildingNumber?: string | null
+  addressAdditionalNumber?: string | null
+  addressDistrict?: string | null
+  addressPostalCode?: string | null
 }
 
 export interface CabRegisterPayload {
@@ -221,6 +228,13 @@ export type CabProfileUpdatePayload = {
   } | null
   accreditationStatus?: string | null
   numberOfAccreditationRecords?: number | null
+  /** Tax invoice (ZATCA) details. */
+  vatNumber?: string | null
+  addressStreet?: string | null
+  addressBuildingNumber?: string | null
+  addressAdditionalNumber?: string | null
+  addressDistrict?: string | null
+  addressPostalCode?: string | null
 }
 
 export async function updateCabProfile(

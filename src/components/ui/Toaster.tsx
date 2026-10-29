@@ -1,5 +1,6 @@
 import { useSyncExternalStore } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/Button'
 import { cn } from '@/lib/utils'
 import { useDirection } from '@/context/DirectionContext'
 import { getToasts, subscribeToasts, toast, type ToastItem, type ToastType } from '@/lib/toast'
@@ -68,6 +69,20 @@ function ToastCard({ item }: { item: ToastItem }) {
           <p className="mt-1 whitespace-pre-line text-[13px] leading-[1.7] text-neutral-600">
             {rest.join('\n')}
           </p>
+        )}
+        {item.action && (
+          <Button
+            type="button"
+            variant="tertiary"
+            size="sm"
+            className="mt-1.5 -ms-3"
+            onClick={() => {
+              toast.dismiss(item.id)
+              item.action?.onClick()
+            }}
+          >
+            {item.action.label}
+          </Button>
         )}
       </div>
 

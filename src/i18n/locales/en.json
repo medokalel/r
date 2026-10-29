@@ -1085,7 +1085,16 @@
       "viewLarger": "View Larger",
       "notesTitle": "Connection Notes",
       "note1": "Address data was retrieved from the National Address platform and is certified and verified.",
-      "note2": "If any data does not match, you can edit it with justification in the next step."
+      "note2": "If any data does not match, you can edit it with justification in the next step.",
+      "lookup": {
+        "hint": "Enter the short address from your National Address certificate to fill the fields from Saudi Post.",
+        "button": "Look up National Address",
+        "invalid": "Enter 4 letters followed by 4 digits, e.g. RRRD2929.",
+        "filled": "Address found. The fields below were filled; check them before saving.",
+        "notFound": "No national address matches this short address.",
+        "unavailable": "National Address lookup is not available right now. Enter the address by hand.",
+        "failed": "Saudi Post could not be reached. Try again or enter the address by hand."
+      }
     },
     "officialDocs": {
       "title": "Official Documents",
@@ -3266,9 +3275,43 @@
     },
     "companyProfile": {
       "title": "Company Profile",
-      "subtitle": "View and update the CAB details saved during registration and onboarding.",
-      "save": "Save changes",
+      "subtitle": "Your certification body’s identity, accreditation and certificate settings, one page at a time.",
       "saved": "Company profile saved.",
+      "progress": "Profile completed",
+      "pagesLabel": "Profile pages",
+      "pageOf": "Page {{current}} of {{total}}",
+      "nextHint": "Next: {{page}}",
+      "lastPageHint": "Last page: finish to save the whole profile.",
+      "saveNext": "Save and next",
+      "finish": "Save and finish",
+      "issues": {
+        "goToField": "Go to the field",
+        "onPage": "On the “{{page}}” page",
+        "fieldsRequired": "Fill in: {{fields}}",
+        "fieldsInvalid": "Fix: {{fields}}",
+        "andMore": "and {{count}} more",
+        "separator": ", "
+      },
+      "tax": {
+        "title": "Tax invoice details (ZATCA)",
+        "hint": "Printed on your tax invoices. Needed for ZATCA e-invoicing when the CAB is registered in Saudi Arabia.",
+        "hintRequired": "Printed on every tax invoice. The VAT number is required before you can issue invoices in Saudi Arabia.",
+        "vatNumber": "VAT registration number",
+        "street": "Street",
+        "buildingNumber": "Building number",
+        "additionalNumber": "Additional number",
+        "district": "District",
+        "postalCode": "Postal code",
+        "cityNote": "City and country come from the main office on the Locations page.",
+        "fixErrors": "Check the tax invoice details before saving.",
+        "errors": {
+          "vat": "VAT number must be 15 digits starting and ending with 3.",
+          "building": "Building number must be 4 digits.",
+          "additional": "Additional number must be 4 digits.",
+          "postal": "Postal code must be 5 digits.",
+          "tooLong": "This value is too long."
+        }
+      },
       "email": "Email",
       "phone": "Phone",
       "accountNote": "Email and phone come from your account and cannot be changed here.",
@@ -3298,26 +3341,60 @@
         "certificate": "Certificate settings",
         "branches": "Locations and branches"
       },
+      "pages": {
+        "identity": {
+          "title": "Identity",
+          "hint": "Legal name, trade name, registration number and the main contact details of your body."
+        },
+        "locations": {
+          "title": "Locations",
+          "hint": "Your head office and every branch or site where certification work is carried out."
+        },
+        "accreditationStatus": {
+          "title": "Accreditation status",
+          "hint": "Whether your body is accredited, and by which accreditation body."
+        },
+        "accreditationRecords": {
+          "title": "Accreditation records",
+          "hint": "Accreditation certificates with their numbers and validity dates."
+        },
+        "schemes": {
+          "title": "Schemes and services",
+          "hint": "The standards and schemes you certify against and the services you offer."
+        },
+        "scope": {
+          "title": "Accreditation scope",
+          "hint": "The scope codes and technical areas covered by your accreditation."
+        },
+        "pricing": {
+          "title": "Pricing",
+          "hint": "The default tax rate and currency used in every quotation."
+        },
+        "marks": {
+          "title": "Marks and branding",
+          "hint": "Your certification and accreditation marks and how clients may use them."
+        },
+        "certificate": {
+          "title": "Certificate settings",
+          "hint": "Numbering, validity and layout of the certificates you issue."
+        }
+      },
       "tour": {
         "header": {
           "title": "CAB Company Profile Overview",
-          "description": "View and manage your certification body’s registered identity, locations, accreditations, and issuance settings."
+          "description": "Your certification body’s identity, accreditation and certificate settings, one page at a time."
         },
-        "account": {
-          "title": "Account & Contact Info",
-          "description": "Inspect your verified registered account email and primary contact telephone number."
+        "steps": {
+          "title": "The pages",
+          "description": "Nine short pages in a logical order. Jump to any page; a tick shows the pages you have completed."
         },
-        "identity": {
-          "title": "Identity & Locations Setup",
-          "description": "Manage legal CAB name, brand trade name, activities, licensing details, headquarters, and branch offices."
-        },
-        "accreditation": {
-          "title": "Accreditation & Scheme Scopes",
-          "description": "Maintain accreditation body records, certificate validity dates, normative standards, authorized scopes, and branding symbols."
+        "body": {
+          "title": "Current page",
+          "description": "Fill or update this page only. Everything else waits on its own page."
         },
         "actions": {
-          "title": "Save & Update Profile",
-          "description": "Save all changes and synchronize your updated CAB configuration across your entire workspace."
+          "title": "Next saves as you go",
+          "description": "Next saves this page and opens the next one. On the last page, finish to save the whole profile."
         }
       }
     },
@@ -3448,6 +3525,10 @@
         "schemesLabel": "Schemes",
         "customSchemesLabel": "Custom schemes",
         "customSchemesEmpty": "No custom schemes added.",
+        "selectedCount": "{{count}} of {{total}} selected",
+        "customSchemesHint": "Only for schemes that are not in the list above, such as a private or national scheme.",
+        "servicesHint": "The audit types you run for your clients.",
+        "marketTitle": "Market and scheme ownership",
         "addCustomScheme": "+ Add custom scheme",
         "customSchemeTitle": "Custom scheme {{index}}",
         "customSchemeName": "Scheme name",
@@ -3507,6 +3588,7 @@
         "cabLogoCaption": "Used across portal and documents",
         "accreditationMark": "Accreditation mark",
         "accreditationMarkUnlinked": "Add an accreditation record to link this mark",
+        "linkedToLabel": "Linked to",
         "linkedTo": "Linked to {{target}}",
         "schemeMark": "Scheme mark",
         "schemeMarkCaption": "Linked to selected scheme",

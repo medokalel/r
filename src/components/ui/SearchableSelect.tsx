@@ -49,6 +49,7 @@ export function SearchableSelect({
   const [query, setQuery] = useState('')
   const rootRef = useRef<HTMLDivElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const selected = options.find((option) => option.value === value)
   const filtered = options.filter((option) =>
@@ -57,7 +58,9 @@ export function SearchableSelect({
 
   useEffect(() => {
     if (!open) return
-    searchInputRef.current?.focus()
+    // Bring the whole list into view when the field sits near the bottom of the page.
+    listRef.current?.scrollIntoView({ block: 'nearest' })
+    searchInputRef.current?.focus({ preventScroll: true })
     function onOutsideClick(event: MouseEvent) {
       if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
         setOpen(false)
@@ -90,6 +93,8 @@ export function SearchableSelect({
         type="button"
         id={id}
         disabled={disabled}
+        aria-haspopup="listbox"
+        aria-expanded={open}
         onClick={() => {
           if (disabled) return
           setOpen((prev) => !prev)
@@ -107,7 +112,7 @@ export function SearchableSelect({
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1 w-full overflow-hidden rounded-[var(--radius-sm)] border border-neutral-200 bg-white shadow-lg">
+        <div ref={listRef} className="absolute z-50 mt-1 w-full overflow-hidden rounded-[var(--radius-sm)] border border-neutral-200 bg-white shadow-lg">
           <div className="border-b border-neutral-100 p-2">
             <input
               ref={searchInputRef}

@@ -23,6 +23,10 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
     () => getSchemeOptions(form.cabSetup.activities),
     [form.cabSetup.activities]
   )
+  const selectedSchemeCount = useMemo(
+    () => schemeOptions.filter((option) => schemes.includes(option.value)).length,
+    [schemeOptions, schemes]
+  )
   const serviceOptions = useMemo(
     () => SERVICE_OPTIONS.map((option) => ({ value: option.value, label: t(option.labelKey) })),
     [t]
@@ -59,7 +63,14 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
   return (
     <div className="w-full space-y-6">
 
-      <SetupSection title={t('cab.setup.schemes.schemesLabel')}>
+      <SetupSection
+        title={t('cab.setup.schemes.schemesLabel')}
+        action={
+          <span className="rounded-full bg-white px-3 py-1 text-[12px] font-bold tabular-nums text-[var(--cab-primary)] shadow-[inset_0_0_0_1px_var(--cab-border)]">
+            {t('cab.setup.schemes.selectedCount', { count: selectedSchemeCount, total: schemeOptions.length })}
+          </span>
+        }
+      >
         <div id="cab-setup-schemes" className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {schemeOptions.map((scheme) => (
             <label
@@ -89,6 +100,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
           </button>
         }
       >
+        <p className="mb-3 text-[12px] text-[var(--cab-muted)]">{t('cab.setup.schemes.customSchemesHint')}</p>
         {customSchemes.length === 0 ? (
           <p className="text-[12px] text-[var(--cab-muted)]">{t('cab.setup.schemes.customSchemesEmpty')}</p>
         ) : (
@@ -154,11 +166,13 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
       </SetupSection>
 
       <SetupSection title={t('cab.setup.schemes.servicesLabel')}>
+        <p className="mb-3 text-[12px] text-[var(--cab-muted)]">{t('cab.setup.schemes.servicesHint')}</p>
         <div id="cab-setup-services">
           <SetupChipGroup options={serviceOptions} selected={services} onToggle={toggleService} />
         </div>
       </SetupSection>
 
+      <SetupSection title={t('cab.setup.schemes.marketTitle')}>
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
         <SearchableSelect
           id="cab-setup-service-market"
@@ -184,6 +198,7 @@ export function CabSchemesServicesStep({ form, onPatchSetup }: CabSetupStepProps
           />
         </div>
       </div>
+      </SetupSection>
     </div>
   )
 }

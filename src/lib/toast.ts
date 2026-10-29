@@ -3,10 +3,21 @@
  *
  *   toast.success('Saved')
  *   toast.error(getUserErrorMessage(error, t))
+ *   toast.error('Fix this', { action: { label: 'Go to the field', onClick: focusField } })
  *
  * Works from anywhere (components, hooks, plain functions). Render <Toaster /> once at the app root.
  */
 export type ToastType = 'success' | 'error'
+
+/** A quick link rendered under the message, e.g. "Go to the field". */
+export interface ToastAction {
+  label: string
+  onClick: () => void
+}
+
+export interface ToastOptions {
+  action?: ToastAction
+}
 
 export interface ToastItem {
   id: number
@@ -14,12 +25,15 @@ export interface ToastItem {
   message: string
   /** How long the toast stays, in ms (also drives the progress bar). */
   duration: number
+  action?: ToastAction
 }
 
 const SUCCESS_MS = 3500
 const ERROR_MS = 6000
 const EXTRA_MS_PER_LINE = 1500
 const MAX_MS = 12000
+// A toast with an action link stays a little longer so there is time to click it.
+const ACTION_EXTRA_MS = 3000
 const MAX_VISIBLE = 4
 
 let items: ToastItem[] = []
@@ -48,7 +62,7 @@ function dismiss(id: number) {
   emit()
 }
 
-function push(type: ToastType, message: string) {
+function push(type: ToastType, message: string, options?: ToastOptions) {
   const text = message.trim()
   if (!text) return
 
@@ -58,16 +72,17 @@ function push(type: ToastType, message: string) {
 
   const lines = text.split('\n').length
   const base = type === 'success' ? SUCCESS_MS : ERROR_MS
-  const duration = Math.min(base + (lines - 1) * EXTRA_MS_PER_LINE, MAX_MS)
+  const extra = options?.action ? ACTION_EXTRA_MS : 0
+  const duration = Math.min(base + (lines - 1) * EXTRA_MS_PER_LINE + extra, MAX_MS)
 
   const id = nextId++
-  items = [...items, { id, type, message: text, duration }].slice(-MAX_VISIBLE)
+  items = [...items, { id, type, message: text, duration, action: options?.action }].slice(-MAX_VISIBLE)
   emit()
   timers.set(id, setTimeout(() => dismiss(id), duration))
 }
 
 export const toast = {
-  success: (message: string) => push('success', message),
-  error: (message: string) => push('error', message),
+  success: (message: string, options?: ToastOptions) => push('success', message, options),
+  error: (message: string, options?: ToastOptions) => push('error', message, options),
   dismiss,
 }

@@ -322,7 +322,7 @@ export function SetupMarkUpload({
 }: {
   id: string
   label: string
-  caption: string
+  caption: ReactNode
   imageUrl: string | null
   onImageUrlChange: (url: string | null) => void
   uploadLabel: string
