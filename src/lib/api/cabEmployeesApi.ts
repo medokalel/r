@@ -60,26 +60,64 @@ export function formatEmployeePhone(phone?: string | null, countryCode?: string 
   return `${trimmedCode} ${trimmedPhone}`.trim()
 }
 
+export interface CabStandardCompetence {
+  standard: string
+  iafCodes: string[]
+}
+
+export interface StagedQualificationDocumentInput {
+  uploadId: string
+  fileName?: string | null
+}
+
+export interface CreateCabEmployeeQualificationCategoryInput {
+  categoryName: string
+  documents?: StagedQualificationDocumentInput[]
+}
+
 export interface CreateCabEmployeePayload {
   fullName: string
   email: string
-  phone?: string
-  phoneCountryCode?: string
+  phone?: string | null
+  phoneCountryCode?: string | null
   professionalRole: CabProfessionalRole
-  employmentStartDate?: string
+  employmentStartDate?: string | null
+  employmentEndDate?: string | null
+  currentlyWorksHere?: boolean
+  standardsCompetence?: CabStandardCompetence[]
   iafCodes?: string[]
   schemes?: string[]
+  authorizedSectors?: string[]
+  scopeCountry?: string | null
+  scopeExpiryDate?: string | null
+  auditLanguages?: string[]
+  baseCity?: string | null
+  baseCountry?: string | null
+  qualificationCategories?: CreateCabEmployeeQualificationCategoryInput[]
 }
 
 export interface CabEmployee {
   id: string
   userId: string
   cabId: string
+  employeeCode?: string | null
+  fullName?: string | null
+  email?: string | null
+  phone?: string | null
+  phoneCountryCode?: string | null
   professionalRole: CabProfessionalRole | null
   imageUrl?: string | null
   employmentStartDate?: string | null
   employmentEndDate?: string | null
+  currentlyWorksHere?: boolean
+  standardsCompetence?: CabStandardCompetence[]
   expiryDate?: string | null
+  scopeExpiryDate?: string | null
+  scopeCountry?: string | null
+  auditLanguages?: string[]
+  baseCountry?: string | null
+  baseCity?: string | null
+  authorizedSectors?: string[]
   iafCodes: string[]
   schemes: string[]
   status: string
@@ -113,6 +151,9 @@ export interface ListCabEmployeesResponse {
   employees?: CabEmployee[]
   items?: CabEmployee[]
   total?: number
+  page?: number
+  limit?: number
+  totalPages?: number
 }
 
 export function listCabEmployees(params?: {
@@ -149,6 +190,7 @@ export function uploadCabEmployeeImage(
 
 export interface CabEmployeeQualification {
   id: string
+  categoryId?: string | null
   documentType?: string | null
   fileUrl: string
   fileName?: string | null
@@ -158,8 +200,137 @@ export interface CabEmployeeQualification {
   uploadedAt: string
 }
 
+export interface CabQualificationCategory {
+  id: string
+  name: string
+  createdAt: string
+  documents: CabEmployeeQualification[]
+}
+
+// ---------------------------------------------------------------------------
+// CAB Members — Impartiality (Declarations, Relationships & Register)
+// ---------------------------------------------------------------------------
+
+export type CabDeclarationType = 'ANNUAL' | 'AUDIT_SPECIFIC'
+
+export type CabDeclarationAnswer = 'NO_CONFLICT' | 'DECLARES_RELATIONSHIPS'
+
+export const CAB_RELATIONSHIP_TYPES = [
+  { value: 'CONSULTANCY', label: 'Consultancy' },
+  { value: 'INTERNAL_AUDIT', label: 'Internal Audit' },
+  { value: 'EMPLOYMENT', label: 'Employment' },
+  { value: 'FAMILY_FINANCIAL_INTEREST', label: 'Family / Financial Interest' },
+  { value: 'PREVIOUS_CERTIFICATION_DECISION', label: 'Previous Certification Decision' },
+] as const
+
+export type CabRelationshipType = (typeof CAB_RELATIONSHIP_TYPES)[number]['value']
+
+export function getRelationshipTypeLabel(type: string): string {
+  return CAB_RELATIONSHIP_TYPES.find((t) => t.value === type)?.label ?? type
+}
+
+export interface CabImpartialityDeclaration {
+  id: string
+  declarationType: CabDeclarationType
+  auditReference?: string | null
+  answer: CabDeclarationAnswer
+  signedBy: string
+  signedAt: string
+  validUntil?: string | null
+  createdAt: string
+}
+
+export interface CreateImpartialityDeclarationPayload {
+  declarationType: CabDeclarationType
+  answer: CabDeclarationAnswer
+  signedBy: string
+  signedAt: string
+  /** Required when declarationType is AUDIT_SPECIFIC; must be omitted for ANNUAL. */
+  auditReference?: string
+}
+
+export interface CabImpartialityRelationship {
+  id: string
+  employeeProfileId?: string
+  clientId: string
+  client?: {
+    id: string
+    name: string
+  } | null
+  relationshipType: CabRelationshipType
+  description?: string | null
+  startDate: string
+  endDate?: string | null
+  isOngoing?: boolean
+  createdAt?: string
+  updatedAt?: string
+}
+
+export interface CreateImpartialityRelationshipPayload {
+  clientId: string
+  relationshipType: CabRelationshipType
+  description?: string | null
+  startDate: string
+  endDate?: string | null
+}
+
+export interface UpdateImpartialityRelationshipPayload {
+  endDate?: string | null
+  description?: string | null
+}
+
+export interface CabImpartialityRegisterEntry {
+  employeeId: string
+  employeeCode: string
+  fullName: string | null
+  email: string | null
+  professionalRole: CabProfessionalRole | null
+  status: 'ACTIVE' | 'INACTIVE' | string
+  annualDeclaration: {
+    id: string
+    answer: CabDeclarationAnswer
+    signedBy: string
+    signedAt: string
+    validUntil: string | null
+    isActive: boolean
+  } | null
+  declarationsCount: number
+  declarations: CabImpartialityDeclaration[]
+  relationshipsCount: number
+  relationships: CabImpartialityRelationship[]
+}
+
+export interface CabImpartialityRegisterResponse {
+  register: CabImpartialityRegisterEntry[]
+  totalEmployees: number
+}
+
+// ---------------------------------------------------------------------------
+// CAB Members — Availability (Periods)
+// ---------------------------------------------------------------------------
+
+export interface CabAvailabilityPeriod {
+  id: string
+  startDate: string
+  endDate: string
+  reason: string
+  notes?: string | null
+  createdAt: string
+}
+
+export interface CreateAvailabilityPeriodPayload {
+  startDate: string
+  endDate: string
+  reason: string
+  notes?: string | null
+}
+
 export interface CabEmployeeDetail extends CabEmployee {
   qualifications?: CabEmployeeQualification[]
+  qualificationCategories?: CabQualificationCategory[]
+  impartialityDeclarations?: CabImpartialityDeclaration[]
+  declaredRelationships?: CabImpartialityRelationship[]
+  availabilityPeriods?: CabAvailabilityPeriod[]
 }
 
 export function getCabEmployeeDetail(
@@ -170,16 +341,216 @@ export function getCabEmployeeDetail(
   )
 }
 
+/**
+ * POST /cab-employees/{id}/availability
+ * Creates an availability/unavailability period for an employee (startDate <= endDate).
+ */
+export function createCabEmployeeAvailabilityPeriod(
+  employeeId: string,
+  payload: CreateAvailabilityPeriodPayload,
+): Promise<{ message: string; period: CabAvailabilityPeriod }> {
+  const body: CreateAvailabilityPeriodPayload = {
+    startDate: payload.startDate,
+    endDate: payload.endDate,
+    reason: payload.reason.trim(),
+    ...(payload.notes?.trim() ? { notes: payload.notes.trim() } : { notes: null }),
+  }
+  return authorizedRequest<{ message: string; period: CabAvailabilityPeriod }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/availability`,
+    {
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+  )
+}
+
+/**
+ * GET /cab-employees/{id}/availability
+ * Lists all availability periods for an employee, ordered by startDate ascending.
+ */
+export function listCabEmployeeAvailabilityPeriods(
+  employeeId: string,
+): Promise<{ periods: CabAvailabilityPeriod[] }> {
+  return authorizedRequest<{ periods: CabAvailabilityPeriod[] }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/availability`,
+  )
+}
+
+/**
+ * DELETE /cab-employees/{id}/availability/{periodId}
+ * Deletes a single availability period for an employee.
+ */
+export function deleteCabEmployeeAvailabilityPeriod(
+  employeeId: string,
+  periodId: string,
+): Promise<{ message: string }> {
+  return authorizedRequest<{ message: string }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/availability/${periodId}`,
+    {
+      method: 'DELETE',
+    },
+  )
+}
+
+/**
+ * POST /cab-employees/{id}/impartiality/declarations
+ * Creates an impartiality declaration for an employee. Declaration history is preserved.
+ */
+export function createCabEmployeeImpartialityDeclaration(
+  employeeId: string,
+  payload: CreateImpartialityDeclarationPayload,
+): Promise<{ message: string; declaration: CabImpartialityDeclaration }> {
+  const body: CreateImpartialityDeclarationPayload = {
+    declarationType: payload.declarationType,
+    answer: payload.answer,
+    signedBy: payload.signedBy.trim(),
+    signedAt: payload.signedAt,
+    ...(payload.declarationType === 'AUDIT_SPECIFIC' && payload.auditReference?.trim()
+      ? { auditReference: payload.auditReference.trim() }
+      : {}),
+  }
+  return authorizedRequest<{ message: string; declaration: CabImpartialityDeclaration }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/impartiality/declarations`,
+    {
+      method: 'POST',
+      body: JSON.stringify(body),
+    },
+  )
+}
+
+/**
+ * GET /cab-employees/{id}/impartiality/declarations
+ * Lists all impartiality declarations for an employee, ordered by signedAt desc.
+ */
+export function listCabEmployeeImpartialityDeclarations(
+  employeeId: string,
+): Promise<{ declarations: CabImpartialityDeclaration[] }> {
+  return authorizedRequest<{ declarations: CabImpartialityDeclaration[] }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/impartiality/declarations`,
+  )
+}
+
+/**
+ * POST /cab-employees/{id}/impartiality/relationships
+ * Records a declared conflict-of-interest relationship between an employee and a client organisation.
+ */
+export function createCabEmployeeImpartialityRelationship(
+  employeeId: string,
+  payload: CreateImpartialityRelationshipPayload,
+): Promise<{ message: string; relationship: CabImpartialityRelationship }> {
+  return authorizedRequest<{ message: string; relationship: CabImpartialityRelationship }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/impartiality/relationships`,
+    {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    },
+  )
+}
+
+/**
+ * GET /cab-employees/{id}/impartiality/relationships
+ * Lists all declared client relationships for an employee, ordered by startDate desc.
+ */
+export function listCabEmployeeImpartialityRelationships(
+  employeeId: string,
+): Promise<{ relationships: CabImpartialityRelationship[] }> {
+  return authorizedRequest<{ relationships: CabImpartialityRelationship[] }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/impartiality/relationships`,
+  )
+}
+
+/**
+ * PATCH /cab-employees/{id}/impartiality/relationships/{relationshipId}
+ * Patch-style update of a declared relationship (endDate and/or description).
+ */
+export function updateCabEmployeeImpartialityRelationship(
+  employeeId: string,
+  relationshipId: string,
+  payload: UpdateImpartialityRelationshipPayload,
+): Promise<{ message: string; relationship: CabImpartialityRelationship }> {
+  return authorizedRequest<{ message: string; relationship: CabImpartialityRelationship }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/impartiality/relationships/${relationshipId}`,
+    {
+      method: 'PATCH',
+      body: JSON.stringify(payload),
+    },
+  )
+}
+
+/**
+ * GET /cab/impartiality-register
+ * Returns the complete Impartiality Register for the authenticated CAB.
+ */
+export function getCabImpartialityRegister(): Promise<CabImpartialityRegisterResponse> {
+  return authorizedRequest<CabImpartialityRegisterResponse>('/cab/impartiality-register')
+}
+
+export interface StagedQualificationUploadResponse {
+  message: string
+  uploadId: string
+  fileName: string
+  originalName: string
+  mimeType: string
+  fileSize: number
+  filePath: string
+  fileUrl: string
+}
+
+/**
+  * POST /cab-employees/qualifications/upload
+  * Staged upload used BEFORE employee creation (no employee ID required).
+  * Pass the returned `uploadId` in `POST /cab-employees` under `qualificationCategories`.
+  */
+export function uploadStagedCabEmployeeQualification(
+  file: File,
+): Promise<StagedQualificationUploadResponse> {
+  const formData = new FormData()
+  formData.append('document', file)
+  return authorizedRequest<StagedQualificationUploadResponse>(
+    `${CAB_EMPLOYEES_PATH}/qualifications/upload`,
+    {
+      method: 'POST',
+      body: formData,
+    },
+  )
+}
+
+/**
+ * POST /cab-employees/{id}/qualifications/categories
+ * Creates a named qualification category for an employee without requiring a file upload.
+ */
+export function createCabEmployeeQualificationCategory(
+  employeeId: string,
+  categoryName: string,
+): Promise<{ message: string; category: CabQualificationCategory }> {
+  return authorizedRequest<{ message: string; category: CabQualificationCategory }>(
+    `${CAB_EMPLOYEES_PATH}/${employeeId}/qualifications/categories`,
+    {
+      method: 'POST',
+      body: JSON.stringify({ categoryName: categoryName.trim() }),
+    },
+  )
+}
+
+/**
+ * POST /cab-employees/{id}/qualifications
+ * Uploads a qualification document for an employee, optionally linked to an existing categoryId.
+ */
 export function uploadCabEmployeeQualification(
   employeeId: string,
   file: File,
-  documentType?: string,
+  options?: { categoryId?: string; documentType?: string } | string,
 ): Promise<{ message: string; qualification: CabEmployeeQualification }> {
   const formData = new FormData()
   formData.append('document', file)
-  if (documentType) {
-    formData.append('documentType', documentType)
+
+  if (typeof options === 'string') {
+    if (options) formData.append('documentType', options)
+  } else if (options) {
+    if (options.categoryId) formData.append('categoryId', options.categoryId)
+    if (options.documentType) formData.append('documentType', options.documentType)
   }
+
   return authorizedRequest<{ message: string; qualification: CabEmployeeQualification }>(
     `${CAB_EMPLOYEES_PATH}/${employeeId}/qualifications`,
     {
@@ -189,6 +560,10 @@ export function uploadCabEmployeeQualification(
   )
 }
 
+/**
+ * DELETE /cab-employees/{id}/qualifications/{docId}
+ * Deletes a single qualification document record and its underlying file from disk.
+ */
 export function deleteCabEmployeeQualification(
   employeeId: string,
   docId: string,
@@ -202,10 +577,23 @@ export function deleteCabEmployeeQualification(
 }
 
 export interface UpdateCabEmployeePayload {
+  fullName?: string
+  email?: string
+  phone?: string | null
+  phoneCountryCode?: string | null
   professionalRole?: CabProfessionalRole
-  employmentStartDate?: string
+  employmentStartDate?: string | null
+  employmentEndDate?: string | null
+  currentlyWorksHere?: boolean
+  standardsCompetence?: CabStandardCompetence[]
   iafCodes?: string[]
   schemes?: string[]
+  authorizedSectors?: string[]
+  scopeCountry?: string | null
+  scopeExpiryDate?: string | null
+  auditLanguages?: string[]
+  baseCity?: string | null
+  baseCountry?: string | null
 }
 
 export function updateCabEmployee(
@@ -223,7 +611,7 @@ export function updateCabEmployee(
 
 export function updateCabEmployeeStatus(
   id: string,
-  status: 'ACTIVE' | 'INACTIVE' | 'SUSPENDED',
+  status: 'ACTIVE' | 'INACTIVE',
 ): Promise<{ message: string; employee: CabEmployee }> {
   return authorizedRequest<{ message: string; employee: CabEmployee }>(
     `${CAB_EMPLOYEES_PATH}/${id}/status`,
@@ -233,6 +621,3 @@ export function updateCabEmployeeStatus(
     },
   )
 }
-
-
-

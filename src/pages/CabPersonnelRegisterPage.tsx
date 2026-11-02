@@ -34,9 +34,13 @@ import {
   listCabEmployees,
   updateCabEmployeeStatus,
   getProfessionalRoleLabel,
+  getRelationshipTypeLabel,
   formatEmployeePhone,
+  getCabImpartialityRegister,
+  type CabImpartialityRegisterEntry,
 } from '@/lib/api/cabEmployeesApi'
 import { formatIafCodesToSectorNames } from '@/lib/iafCodes'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -57,6 +61,36 @@ export function CabPersonnelRegisterPage() {
   const tourSteps = usePersonnelTourSteps()
   const [personnel, setPersonnel] = useState<CompetencePerson[]>(getStoredPersonnel)
   const [page, setPage] = useState(1)
+  const [activeTab, setActiveTab] = useState<'personnel' | 'impartiality'>('personnel')
+  const [impartialityRegister, setImpartialityRegister] = useState<CabImpartialityRegisterEntry[]>([])
+  const [loadingImpartiality, setLoadingImpartiality] = useState(false)
+  const [impartialitySearch, setImpartialitySearch] = useState('')
+
+  useEffect(() => {
+    if (activeTab !== 'impartiality') return
+    setLoadingImpartiality(true)
+    getCabImpartialityRegister()
+      .then((res) => {
+        setImpartialityRegister(res?.register ?? [])
+      })
+      .catch(() => {
+        setImpartialityRegister([])
+      })
+      .finally(() => {
+        setLoadingImpartiality(false)
+      })
+  }, [activeTab])
+
+  const filteredImpartiality = useMemo(() => {
+    const q = impartialitySearch.trim().toLowerCase()
+    if (!q) return impartialityRegister
+    return impartialityRegister.filter(
+      (entry) =>
+        (entry.fullName ?? '').toLowerCase().includes(q) ||
+        (entry.employeeCode ?? '').toLowerCase().includes(q) ||
+        (entry.email ?? '').toLowerCase().includes(q)
+    )
+  }, [impartialityRegister, impartialitySearch])
 
   const formatDate = (iso?: string | null) => {
     if (!iso) return '—'
@@ -82,7 +116,7 @@ export function CabPersonnelRegisterPage() {
               ? getProfessionalRoleLabel(emp.professionalRole)
               : 'Auditor'
             const resolvedStatusDot: CompetencePerson['statusDot'] =
-              existing?.statusDot ?? (emp.status === 'INACTIVE' ? 'Inactive' : 'Active')
+              emp.status === 'INACTIVE' ? 'Inactive' : 'Active'
 
             const backendStart = emp.employmentStartDate?.split('T')[0]
             const existingExpiry = existing?.expiryDate?.split('T')[0]
@@ -90,29 +124,50 @@ export function CabPersonnelRegisterPage() {
               existingExpiry && existingExpiry !== '2026-12-31' && existingExpiry !== backendStart
                 ? existingExpiry
                 : ''
+            const backendExpiry = (emp.scopeExpiryDate || emp.expiryDate)?.split('T')[0]
 
             return {
               ...existing,
               id: emp.id,
-              code: existing?.code || `PER-${String(index + 1).padStart(4, '0')}`,
-              name: existing?.name || emp.user?.fullName || 'Employee',
+              code:
+                emp.employeeCode ||
+                existing?.code ||
+                `EMP-${String(index + 1).padStart(4, '0')}`,
+              name: emp.fullName || emp.user?.fullName || existing?.name || 'Employee',
               role: role as CompetencePerson['role'],
-              country: existing?.country || 'Saudi Arabia',
+              country:
+                emp.scopeCountry ||
+                emp.baseCountry ||
+                existing?.country ||
+                'Saudi Arabia',
               schemes: emp.schemes?.length ? emp.schemes : existing?.schemes || [],
               authorizedScope:
+                emp.authorizedSectors?.[0] ||
                 formatIafCodesToSectorNames(emp.iafCodes, existing?.authorizedScope, i18n.language) ||
                 'Quality management systems',
-              expiryDate:
-                cleanExistingExpiry ||
-                ((emp as { expiryDate?: string | null }).expiryDate?.split('T')[0]) ||
-                '',
-              status: resolvedStatusDot === 'Inactive' ? 'Suspended' : (emp.status === 'ACTIVE' ? 'Authorized' : (existing?.status || 'Under review')),
-              avatarUrl: emp.imageUrl || existing?.avatarUrl || undefined,
-              employmentStartDate: (existing?.employmentStartDate || emp.employmentStartDate)?.split('T')[0] || undefined,
-              employmentEndDate: (existing?.employmentEndDate || (emp as { employmentEndDate?: string | null }).employmentEndDate)?.split('T')[0] || undefined,
+              expiryDate: backendExpiry || cleanExistingExpiry || '',
+              status:
+                resolvedStatusDot === 'Inactive'
+                  ? 'Suspended'
+                  : emp.status === 'ACTIVE'
+                  ? 'Authorized'
+                  : existing?.status || 'Under review',
+              avatarUrl:
+                resolvePublicAssetUrl(emp.imageUrl) || existing?.avatarUrl || undefined,
+              employmentStartDate: (emp.employmentStartDate || existing?.employmentStartDate)?.split('T')[0] || undefined,
+              employmentEndDate: (emp.employmentEndDate || existing?.employmentEndDate)?.split('T')[0] || undefined,
               iafCodes: emp.iafCodes || existing?.iafCodes || [],
-              email: emp.user?.email || existing?.email || '',
-              phone: existing?.phone || formatEmployeePhone(emp.user?.phone, emp.user?.phoneCountryCode) || '',
+              auditLanguages: emp.auditLanguages || existing?.auditLanguages || [],
+              baseCountry: emp.baseCountry || existing?.baseCountry || '',
+              baseCity: emp.baseCity || existing?.baseCity || '',
+              email: emp.email || emp.user?.email || existing?.email || '',
+              phone:
+                formatEmployeePhone(
+                  emp.phone ?? emp.user?.phone,
+                  emp.phoneCountryCode ?? emp.user?.phoneCountryCode
+                ) ||
+                existing?.phone ||
+                '',
               statusDot: resolvedStatusDot,
             }
           })
@@ -323,10 +378,17 @@ export function CabPersonnelRegisterPage() {
           <CabTourStep steps={tourSteps} stepId="personnel-header">
             <div>
               <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
-                {t('cab.competence.personnelRegister', 'Personnel register')}
+                {activeTab === 'personnel'
+                  ? t('cab.competence.personnelRegister', 'Personnel register')
+                  : t('cab.competence.impartiality.registerTitle', 'Impartiality register')}
               </h1>
               <p className="mt-1 text-[14px] text-neutral-500">
-                {t('cab.competence.subtitle', 'Manage personnel, their roles, scheme authorizations and expiry dates.')}
+                {activeTab === 'personnel'
+                  ? t('cab.competence.subtitle', 'Manage personnel, their roles, scheme authorizations and expiry dates.')
+                  : t(
+                      'cab.competence.impartiality.registerSubtitle',
+                      'Monitor annual impartiality declarations and declared client conflict-of-interest relationships.'
+                    )}
               </p>
             </div>
           </CabTourStep>
@@ -342,19 +404,314 @@ export function CabPersonnelRegisterPage() {
                 {t('cab.competence.addPerson', 'Add person')}
               </Button>
 
-              <ExportMenuButton
-                exporting={exporting}
-                disabled={filteredPersonnel.length === 0}
-                onExportExcel={handleExportExcel}
-                onExportPdf={handleExportPdf}
-                label={t('common.export', 'Export')}
-                excelLabel={t('common.exportExcel', 'Export as Excel')}
-                pdfLabel={t('common.exportPdf', 'Export as PDF')}
-              />
+              {activeTab === 'personnel' && (
+                <ExportMenuButton
+                  exporting={exporting}
+                  disabled={filteredPersonnel.length === 0}
+                  onExportExcel={handleExportExcel}
+                  onExportPdf={handleExportPdf}
+                  label={t('common.export', 'Export')}
+                  excelLabel={t('common.exportExcel', 'Export as Excel')}
+                  pdfLabel={t('common.exportPdf', 'Export as PDF')}
+                />
+              )}
             </div>
           </CabTourStep>
         </div>
 
+        {/* ICASCO Tab Switcher: Personnel Register vs Impartiality Register */}
+        <div className="flex flex-wrap items-center gap-2 border-b border-[#ececec]">
+          <button
+            type="button"
+            onClick={() => setActiveTab('personnel')}
+            className={cn(
+              'cursor-pointer border-b-2 px-5 py-3 text-[14px] font-semibold transition-colors',
+              activeTab === 'personnel'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-800'
+            )}
+          >
+            {t('cab.competence.personnelRegister', 'Personnel register')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('impartiality')}
+            className={cn(
+              'cursor-pointer border-b-2 px-5 py-3 text-[14px] font-semibold transition-colors',
+              activeTab === 'impartiality'
+                ? 'border-primary text-primary'
+                : 'border-transparent text-neutral-500 hover:text-neutral-800'
+            )}
+          >
+            {t('cab.competence.impartiality.registerTitle', 'Impartiality register')}
+          </button>
+        </div>
+
+        {activeTab === 'impartiality' ? (
+          <>
+            {/* Impartiality Search Bar */}
+            <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
+              <div className="max-w-md">
+                <label
+                  htmlFor="impartiality-search"
+                  className="mb-2 block text-[13px] font-semibold text-neutral-700"
+                >
+                  {t('cab.competence.fullName', 'Name / Personnel code')}
+                </label>
+                <div className="relative">
+                  <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-neutral-400">
+                    <AppIcon icon={SearchIcon} size={18} />
+                  </span>
+                  <input
+                    id="impartiality-search"
+                    type="text"
+                    value={impartialitySearch}
+                    onChange={(e) => setImpartialitySearch(e.target.value)}
+                    placeholder={t(
+                      'cab.competence.searchPlaceholder',
+                      'Search by name or code...'
+                    )}
+                    className="h-11 w-full rounded-[8px] border border-[#e2e2e2] bg-white ps-10 pe-3 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-primary focus:outline-none"
+                  />
+                </div>
+              </div>
+            </section>
+
+            {/* Impartiality Register Table */}
+            <section className="flex flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
+              <p className="mb-4 px-5 text-[13px] text-neutral-500">
+                {t('cab.competence.personnelCount', { count: filteredImpartiality.length })}
+              </p>
+
+              {loadingImpartiality ? (
+                <div className="flex items-center justify-center py-12">
+                  <span className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[960px] border-collapse text-center">
+                    <thead>
+                      <tr className="bg-[#1236a3] text-white">
+                        <th className="px-4 py-4 text-start text-[14px] font-medium whitespace-nowrap">
+                          {t('cab.competence.columns.person', 'Person')}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t('cab.competence.columns.role', 'Role')}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t(
+                            'cab.competence.impartiality.annualStatus',
+                            'Annual Declaration'
+                          )}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t('cab.competence.impartiality.validUntil', 'Valid until')}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t(
+                            'cab.competence.impartiality.declarationsCount',
+                            'Declarations'
+                          )}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t(
+                            'cab.competence.impartiality.relationshipsCount',
+                            'Declared Relationships'
+                          )}
+                        </th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium whitespace-nowrap">
+                          {t('common.actions', 'Actions')}
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredImpartiality.length > 0 ? (
+                        filteredImpartiality.map((entry, idx) => {
+                          const annual = entry.annualDeclaration
+                          const roleLabel = entry.professionalRole
+                            ? getProfessionalRoleLabel(entry.professionalRole)
+                            : '—'
+                          const displayName = entry.fullName || 'Employee'
+
+                          return (
+                            <tr
+                              key={entry.employeeId}
+                              className={cn(idx % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-white')}
+                            >
+                              <td className="px-5 py-4 text-start">
+                                <div className="flex items-center gap-3.5">
+                                  <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-[13px] font-bold text-white shadow-sm">
+                                    {getInitials(displayName)}
+                                  </div>
+                                  <div className="min-w-0">
+                                    <button
+                                      type="button"
+                                      onClick={() =>
+                                        navigate(
+                                          `/cab/competence/persons/${entry.employeeId}/evaluation`
+                                        )
+                                      }
+                                      className="cursor-pointer text-start text-[15px] font-semibold text-neutral-900 hover:text-primary hover:underline"
+                                    >
+                                      {displayName}
+                                    </button>
+                                    <div className="text-[12px] text-neutral-500" dir="ltr">
+                                      {entry.employeeCode}
+                                      {entry.email ? ` | ${entry.email}` : ''}
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+
+                              <td className="px-4 py-4 text-center text-[14px] text-neutral-700 whitespace-nowrap">
+                                {roleLabel}
+                              </td>
+
+                              <td className="px-4 py-4 text-center whitespace-nowrap">
+                                {annual ? (
+                                  <div className="flex flex-col items-center gap-1">
+                                    <div className="flex items-center gap-1.5">
+                                      <span
+                                        className={cn(
+                                          'inline-flex items-center rounded-[4px] px-2.5 py-0.5 text-[12px] font-medium',
+                                          annual.isActive
+                                            ? 'bg-emerald-50 text-emerald-700'
+                                            : 'bg-red-50 text-red-700'
+                                        )}
+                                      >
+                                        {annual.isActive
+                                          ? t('cab.competence.statuses.active', 'Active')
+                                          : t(
+                                              'cab.competence.impartiality.expired',
+                                              'Expired'
+                                            )}
+                                      </span>
+                                      <span
+                                        className={cn(
+                                          'inline-flex items-center rounded-[4px] px-2.5 py-0.5 text-[12px] font-medium',
+                                          annual.answer === 'NO_CONFLICT'
+                                            ? 'bg-[#e8edfc] text-[#1236a3]'
+                                            : 'bg-amber-50 text-amber-700'
+                                        )}
+                                      >
+                                        {annual.answer === 'NO_CONFLICT'
+                                          ? t(
+                                              'cab.competence.impartiality.answers.NO_CONFLICT',
+                                              'No Conflict'
+                                            )
+                                          : t(
+                                              'cab.competence.impartiality.answers.DECLARES_RELATIONSHIPS',
+                                              'Declares Relationships'
+                                            )}
+                                      </span>
+                                    </div>
+                                    <span className="text-[11px] text-neutral-500">
+                                      {t('cab.competence.impartiality.signedBy', 'Signed by')}:{' '}
+                                      {annual.signedBy}
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <span className="inline-flex items-center rounded-[4px] bg-neutral-100 px-2.5 py-1 text-[12px] font-medium text-neutral-600">
+                                    {t(
+                                      'cab.competence.impartiality.notRecorded',
+                                      'Not recorded'
+                                    )}
+                                  </span>
+                                )}
+                              </td>
+
+                              <td
+                                className="px-4 py-4 text-center text-[14px] text-neutral-700 whitespace-nowrap"
+                                dir="ltr"
+                              >
+                                {formatDate(annual?.validUntil)}
+                              </td>
+
+                              <td className="px-4 py-4 text-center text-[14px] font-semibold text-neutral-800">
+                                {entry.declarationsCount}
+                              </td>
+
+                              <td className="px-4 py-4 text-center text-[13px] text-neutral-700">
+                                {entry.relationshipsCount > 0 ? (
+                                  <div className="flex flex-col items-center gap-1">
+                                    <span className="inline-flex items-center rounded-[4px] bg-amber-50 px-2.5 py-0.5 text-[12px] font-semibold text-amber-700">
+                                      {entry.relationshipsCount}
+                                    </span>
+                                    <div className="flex flex-wrap justify-center gap-1">
+                                      {(entry.relationships ?? []).slice(0, 2).map((rel) => (
+                                        <span
+                                          key={rel.id}
+                                          className="text-[11px] text-neutral-500"
+                                        >
+                                          {rel.client?.name ||
+                                            getRelationshipTypeLabel(rel.relationshipType)}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <span className="text-neutral-400">0</span>
+                                )}
+                              </td>
+
+                              <td className="px-4 py-4 text-center">
+                                <div className="flex items-center justify-center gap-1">
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      navigate(
+                                        `/cab/competence/persons/${entry.employeeId}/evaluation`
+                                      )
+                                    }
+                                    className="flex size-8 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-100 hover:text-primary"
+                                    title={t(
+                                      'cab.competence.evaluation.pageTitle',
+                                      'Competence Profile'
+                                    )}
+                                  >
+                                    <AppIcon icon={EyeIcon} size={17} />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() =>
+                                      navigate(
+                                        `/cab/competence/persons/${entry.employeeId}/edit`
+                                      )
+                                    }
+                                    className="flex size-8 items-center justify-center rounded-[8px] text-neutral-500 hover:bg-neutral-100 hover:text-primary"
+                                    title={t(
+                                      'cab.competence.memberProfile.editProfile',
+                                      'Edit profile'
+                                    )}
+                                  >
+                                    <AppIcon icon={EditIcon} size={17} />
+                                  </button>
+                                </div>
+                              </td>
+                            </tr>
+                          )
+                        })
+                      ) : (
+                        <tr>
+                          <td
+                            colSpan={7}
+                            className="px-4 py-8 text-center text-[15px] text-neutral-500"
+                          >
+                            {t(
+                              'cab.competence.noPersonnel',
+                              'No personnel records match the current filters.'
+                            )}
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </section>
+          </>
+        ) : (
+          <>
         {/* Filter Bar Card */}
         <CabTourStep steps={tourSteps} stepId="personnel-filters">
           <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
@@ -503,7 +860,7 @@ export function CabPersonnelRegisterPage() {
                           <div className="flex items-center gap-3.5">
                             <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-[13px] font-bold text-white shadow-sm">
                               {p.avatarUrl ? (
-                                <img src={p.avatarUrl} alt={p.name} className="size-full rounded-full object-cover" />
+                                <img src={resolvePublicAssetUrl(p.avatarUrl)} alt={p.name} className="size-full rounded-full object-cover" />
                               ) : (
                                 getInitials(p.name)
                               )}
@@ -642,7 +999,7 @@ export function CabPersonnelRegisterPage() {
                       <div className="flex min-w-0 items-center gap-3">
                         <div className="flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-[13px] font-bold text-white shadow-sm">
                           {p.avatarUrl ? (
-                            <img src={p.avatarUrl} alt={p.name} className="size-full rounded-full object-cover" />
+                            <img src={resolvePublicAssetUrl(p.avatarUrl)} alt={p.name} className="size-full rounded-full object-cover" />
                           ) : (
                             getInitials(p.name)
                           )}
@@ -776,6 +1133,8 @@ export function CabPersonnelRegisterPage() {
             )}
           </section>
         </CabTourStep>
+          </>
+        )}
       </main>
     </CabLayout>
   )

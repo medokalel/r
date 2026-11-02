@@ -3030,7 +3030,29 @@
         "qualifications": "المؤهلات",
         "dateError": "يجب أن يكون تاريخ الانتهاء في تاريخ البدء أو بعده.",
         "nameRequired": "أدخل الاسم.",
-        "saveError": "تعذر حفظ الملف الشخصي. قد تكون مساحة تخزين المتصفح ممتلئة؛ جرّب صورة أصغر."
+        "saveError": "تعذر حفظ الملف الشخصي. قد تكون مساحة تخزين المتصفح ممتلئة؛ جرّب صورة أصغر.",
+        "currentlyWorksHere": "يعمل حالياً (بدون تاريخ انتهاء)",
+        "baseCountry": "دولة الإقامة",
+        "baseCountryPlaceholder": "اختر دولة الإقامة",
+        "baseCity": "مدينة الإقامة",
+        "baseCityPlaceholder": "اختر مدينة الإقامة",
+        "residenceLocation": "مكان الإقامة",
+        "auditLanguages": "لغات التدقيق",
+        "auditLanguagesPlaceholder": "اختر لغات التدقيق"
+      },
+      "languages": {
+        "arabic": "العربية",
+        "english": "الإنجليزية",
+        "french": "الفرنسية",
+        "spanish": "الإسبانية",
+        "german": "الألمانية",
+        "turkish": "التركية",
+        "chinese": "الصينية",
+        "urdu": "الأردية",
+        "hindi": "الهندية",
+        "russian": "الروسية",
+        "italian": "الإيطالية",
+        "portuguese": "البرتغالية"
       },
       "title": "سجل الكفاءات والمؤهلات",
       "messages": {
@@ -3038,7 +3060,8 @@
         "qualificationDeleted": "تم حذف المؤهل.",
         "uploadFailed": "تعذّر رفع الملف. يرجى المحاولة مرة أخرى.",
         "deleteFailed": "تعذّر حذف الملف. يرجى المحاولة مرة أخرى.",
-        "fileTooLarge": "حجم الملف أكبر من الحد المسموح (20 ميجابايت)."
+        "fileTooLarge": "حجم الملف أكبر من الحد المسموح (20 ميجابايت).",
+        "loadQualificationsFailed": "تعذر تحميل وثائق المؤهلات المحفوظة. يرجى إعادة تحميل الصفحة."
       },
       "personnelRegister": "سجل الموظفين والمراجعين",
       "subtitle": "إدارة الكفاءات، وأدوار الموظفين، واعتمادات المعايير وتواريخ الصلاحية.",
@@ -3290,6 +3313,102 @@
         "save": {
           "title": "الحفظ والمزامنة",
           "description": "حفظ التعديلات لمزامنتها مباشرة عبر سجل موظفي جهة التقييم وبوابة تقييم الكفاءة."
+        }
+      },
+      "qualificationsDocuments": "وثائق وفئات المؤهلات",
+      "qualificationsDesc": "رفع الشهادات والدبلومات وسجلات الكفاءة الرسمية (PDF, Word, Excel, صور — بحد أقصى 20 ميجابايت).",
+      "qualifications": {
+        "subtitle": "أنشئ فئات للمؤهلات وارفع الشهادات الداعمة (PDF, Word, Excel, صور — بحد أقصى 20 ميجابايت).",
+        "categoryPlaceholder": "مثال: شهادات المدققين، المؤهلات الأكاديمية...",
+        "addCategory": "إضافة فئة",
+        "suggestedCategories": "إضافة سريعة:",
+        "generalDocuments": "وثائق المؤهلات العامة",
+        "duplicateCategory": "توجد فئة مؤهلات بهذا الاسم بالفعل لهذا الموظف.",
+        "createCategoryFailed": "تعذر إنشاء فئة المؤهلات."
+      },
+      "impartiality": {
+        "sectionTitle": "الحيادية وتضارب المصالح",
+        "registerTitle": "سجل الحيادية",
+        "registerSubtitle": "متابعة إقرارات الحيادية السنوية وعلاقات تضارب المصالح المصرح بها مع المنشآت والعملاء.",
+        "declarationsTitle": "إقرارات الحيادية والاستقلالية",
+        "declarationsDesc": "تسجيل إقرارات الحيادية السنوية أو الخاصة بمهمة تدقيق محددة. يتم حفظ السجل التاريخي بالكامل ولا يتم حذفه.",
+        "declarationType": "نوع الإقرار",
+        "answer": "نتيجة الإقرار",
+        "signedBy": "الموقّع",
+        "signedByPlaceholder": "الاسم الكامل",
+        "signedAt": "تاريخ التوقيع",
+        "validUntil": "صالح حتى",
+        "auditReference": "مرجع التدقيق",
+        "auditRefPlaceholder": "مثال: AUD-0306",
+        "annualValidityNote": "تظل الإقرارات السنوية سارية تلقائياً لمدة سنة تقويمية واحدة من تاريخ التوقيع.",
+        "recordDeclaration": "تسجيل الإقرار",
+        "noDeclarations": "لم يتم تسجيل أي إقرارات حيادية بعد.",
+        "signedByRequired": "يرجى إدخال اسم الشخص الذي وقّع الإقرار.",
+        "signedAtRequired": "يرجى تحديد تاريخ الإقرار.",
+        "auditRefRequired": "مرجع التدقيق مطلوب للإقرارات الخاصة بمهمة تدقيق.",
+        "declarationFailed": "تعذر تسجيل إقرار الحيادية.",
+        "relationshipsTitle": "علاقات العملاء المصرح بها (تضارب المصالح)",
+        "relationshipsDesc": "التصريح عن أي علاقات استشارية أو وظيفية أو تدقيق داخلي أو مصالح مالية مع عملاء جهة التقييم.",
+        "clientOrganisation": "منشأة العميل",
+        "selectClient": "اختر منشأة العميل...",
+        "relationshipType": "نوع العلاقة",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء (اختياري)",
+        "ongoingRelationship": "علاقة مستمرة حالياً (بدون تاريخ انتهاء)",
+        "description": "الوصف والتفاصيل (اختياري)",
+        "descriptionPlaceholder": "مثال: تقديم استشارات ISO 9001 في عام 2023...",
+        "recordRelationship": "تسجيل العلاقة",
+        "updateRelationship": "تحديث / إغلاق",
+        "noRelationships": "لا توجد علاقات تضارب مصالح مصرح بها مع العملاء.",
+        "clientRequired": "يرجى اختيار منشأة العميل.",
+        "startDateRequired": "يرجى تحديد تاريخ بدء العلاقة.",
+        "relationshipFailed": "تعذر تسجيل علاقة تضارب المصالح.",
+        "updateRelationshipFailed": "تعذر تحديث علاقة تضارب المصالح.",
+        "ongoing": "مستمرة",
+        "closed": "منتهية",
+        "stagedBadge": "بانتظار الحفظ",
+        "annualStatus": "الإقرار السنوي",
+        "declarationsCount": "عدد الإقرارات",
+        "relationshipsCount": "العلاقات المصرح بها",
+        "expired": "منتهي الصلاحية",
+        "notRecorded": "غير مسجل",
+        "types": {
+          "ANNUAL": "سنوي (صالح لمدة سنة)",
+          "AUDIT_SPECIFIC": "خاص بمهمة تدقيق"
+        },
+        "answers": {
+          "NO_CONFLICT": "لا يوجد تضارب مصالح",
+          "DECLARES_RELATIONSHIPS": "يصرح بوجود علاقات / تضارب"
+        },
+        "relationshipTypes": {
+          "CONSULTANCY": "استشارات",
+          "INTERNAL_AUDIT": "تدقيق داخلي",
+          "EMPLOYMENT": "توظيف / عمل سابق",
+          "FAMILY_FINANCIAL_INTEREST": "صلة قرابة / مصلحة مالية",
+          "PREVIOUS_CERTIFICATION_DECISION": "قرار منح شهادة سابق"
+        }
+      },
+      "availability": {
+        "sectionTitle": "فترات التفرغ والإجازات",
+        "sectionDesc": "تسجيل فترات إجازات الموظف أو التدريب أو عدم التفرغ (يجب أن يكون تاريخ البدء قبل أو مساوياً لتاريخ الانتهاء).",
+        "startDate": "تاريخ البدء",
+        "endDate": "تاريخ الانتهاء",
+        "reason": "السبب",
+        "reasonPlaceholder": "مثال: إجازة سنوية، تدريب...",
+        "quickReasons": "اختيار سريع:",
+        "notes": "ملاحظات (اختياري)",
+        "notesPlaceholder": "مثال: معتمدة من الموارد البشرية...",
+        "addPeriod": "إضافة فترة",
+        "noPeriods": "لا توجد فترات إجازة أو عدم تفرغ مسجلة بعد.",
+        "datesRequired": "يرجى تحديد تاريخ البدء وتاريخ الانتهاء.",
+        "reasonRequired": "يرجى إدخال سبب فترة الإجازة / التفرغ.",
+        "createFailed": "تعذر إنشاء فترة التفرغ / الإجازة.",
+        "deleteFailed": "تعذر حذف فترة التفرغ / الإجازة.",
+        "reasons": {
+          "Annual Leave": "إجازة سنوية",
+          "Sick Leave": "إجازة مرضية",
+          "Training": "تدريب",
+          "Other": "أخرى"
         }
       }
     },

@@ -3010,7 +3010,29 @@
         "qualifications": "Qualifications",
         "dateError": "End date must be on or after the start date.",
         "nameRequired": "Enter a name.",
-        "saveError": "Could not save the profile. Browser storage may be full; try a smaller image."
+        "saveError": "Could not save the profile. Browser storage may be full; try a smaller image.",
+        "currentlyWorksHere": "Currently works here (no end date)",
+        "baseCountry": "Country of residence",
+        "baseCountryPlaceholder": "Select country of residence",
+        "baseCity": "City of residence",
+        "baseCityPlaceholder": "Select city of residence",
+        "residenceLocation": "Place of residence",
+        "auditLanguages": "Audit languages",
+        "auditLanguagesPlaceholder": "Select audit languages"
+      },
+      "languages": {
+        "arabic": "Arabic",
+        "english": "English",
+        "french": "French",
+        "spanish": "Spanish",
+        "german": "German",
+        "turkish": "Turkish",
+        "chinese": "Chinese",
+        "urdu": "Urdu",
+        "hindi": "Hindi",
+        "russian": "Russian",
+        "italian": "Italian",
+        "portuguese": "Portuguese"
       },
       "title": "Competence Register",
       "messages": {
@@ -3018,7 +3040,8 @@
         "qualificationDeleted": "Qualification deleted.",
         "uploadFailed": "The file could not be uploaded. Please try again.",
         "deleteFailed": "The file could not be deleted. Please try again.",
-        "fileTooLarge": "The file is larger than the 20 MB limit."
+        "fileTooLarge": "The file is larger than the 20 MB limit.",
+        "loadQualificationsFailed": "Could not load saved qualification documents. Please reload the page."
       },
       "personnelRegister": "Personnel register",
       "subtitle": "Manage personnel, their roles, scheme authorizations and expiry dates.",
@@ -3270,6 +3293,102 @@
         "save": {
           "title": "Save & Sync",
           "description": "Save modifications to synchronize them across the CAB personnel register and competence evaluation portal."
+        }
+      },
+      "qualificationsDocuments": "Qualification Documents",
+      "qualificationsDesc": "Upload certificates, diplomas, and official competence records (PDF, Word, Excel, Images — max 20 MB).",
+      "qualifications": {
+        "subtitle": "Create qualification categories and upload supporting certificates (PDF, Word, Excel, Images — max 20 MB).",
+        "categoryPlaceholder": "e.g. Auditor Certificates, Academic Degrees...",
+        "addCategory": "Add category",
+        "suggestedCategories": "Quick add:",
+        "generalDocuments": "General Qualification Documents",
+        "duplicateCategory": "A qualification category with this name already exists for this employee.",
+        "createCategoryFailed": "Could not create qualification category."
+      },
+      "impartiality": {
+        "sectionTitle": "Impartiality & Conflict of Interest",
+        "registerTitle": "Impartiality register",
+        "registerSubtitle": "Monitor annual impartiality declarations and declared client conflict-of-interest relationships.",
+        "declarationsTitle": "Impartiality Declarations",
+        "declarationsDesc": "Record annual or audit-specific impartiality declarations. Declaration history is preserved and never overwritten.",
+        "declarationType": "Declaration type",
+        "answer": "Declaration outcome",
+        "signedBy": "Signed by",
+        "signedByPlaceholder": "Full name",
+        "signedAt": "Signed date",
+        "validUntil": "Valid until",
+        "auditReference": "Audit reference",
+        "auditRefPlaceholder": "e.g. AUD-0306",
+        "annualValidityNote": "Annual declarations automatically remain valid for 1 calendar year from the signed date.",
+        "recordDeclaration": "Record declaration",
+        "noDeclarations": "No impartiality declarations recorded yet.",
+        "signedByRequired": "Please enter the name of the person who signed the declaration.",
+        "signedAtRequired": "Please select the declaration date.",
+        "auditRefRequired": "Audit reference is required for audit-specific declarations.",
+        "declarationFailed": "Could not record impartiality declaration.",
+        "relationshipsTitle": "Declared Client Relationships (Conflict of Interest)",
+        "relationshipsDesc": "Declare any consultancy, employment, internal audit, or financial relationships with CAB client organisations.",
+        "clientOrganisation": "Client organisation",
+        "selectClient": "Select client organisation...",
+        "relationshipType": "Relationship type",
+        "startDate": "Start date",
+        "endDate": "End date (optional)",
+        "ongoingRelationship": "Ongoing relationship (no end date)",
+        "description": "Description (optional)",
+        "descriptionPlaceholder": "e.g. Provided ISO 9001 consultancy in 2023...",
+        "recordRelationship": "Record relationship",
+        "updateRelationship": "Update / Close",
+        "noRelationships": "No client conflict-of-interest relationships declared.",
+        "clientRequired": "Please select a client organisation.",
+        "startDateRequired": "Please select a relationship start date.",
+        "relationshipFailed": "Could not record impartiality relationship.",
+        "updateRelationshipFailed": "Could not update impartiality relationship.",
+        "ongoing": "Ongoing",
+        "closed": "Closed",
+        "stagedBadge": "Pending Save",
+        "annualStatus": "Annual Declaration",
+        "declarationsCount": "Declarations",
+        "relationshipsCount": "Declared Relationships",
+        "expired": "Expired",
+        "notRecorded": "Not recorded",
+        "types": {
+          "ANNUAL": "Annual (Valid 1 Year)",
+          "AUDIT_SPECIFIC": "Audit-Specific"
+        },
+        "answers": {
+          "NO_CONFLICT": "No Conflict of Interest",
+          "DECLARES_RELATIONSHIPS": "Declares Relationships / Conflict"
+        },
+        "relationshipTypes": {
+          "CONSULTANCY": "Consultancy",
+          "INTERNAL_AUDIT": "Internal Audit",
+          "EMPLOYMENT": "Employment",
+          "FAMILY_FINANCIAL_INTEREST": "Family / Financial Interest",
+          "PREVIOUS_CERTIFICATION_DECISION": "Previous Certification Decision"
+        }
+      },
+      "availability": {
+        "sectionTitle": "Availability & Leave Periods",
+        "sectionDesc": "Record employee leave, training, or unavailability periods (startDate must be on or before endDate).",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "reason": "Reason",
+        "reasonPlaceholder": "e.g. Annual Leave, Training...",
+        "quickReasons": "Quick reason:",
+        "notes": "Notes (optional)",
+        "notesPlaceholder": "e.g. Approved by HR / Planned summer holiday...",
+        "addPeriod": "Add period",
+        "noPeriods": "No availability or leave periods recorded yet.",
+        "datesRequired": "Please select both start date and end date.",
+        "reasonRequired": "Please enter a reason for the availability period.",
+        "createFailed": "Could not create availability period.",
+        "deleteFailed": "Could not delete availability period.",
+        "reasons": {
+          "Annual Leave": "Annual Leave",
+          "Sick Leave": "Sick Leave",
+          "Training": "Training",
+          "Other": "Other"
         }
       }
     },

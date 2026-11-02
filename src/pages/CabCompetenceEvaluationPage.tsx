@@ -5,18 +5,7 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useCompetenceEvaluationTourSteps } from '@/config/competenceEvaluationTourSteps'
-import { SectionHeading } from '@/components/dashboard/SectionHeading'
 import { Button } from '@/components/ui/Button'
-import {
-  fieldInputClassName,
-  fieldHeightClassName,
-  fieldLabelClassName,
-} from '@/components/ui/fieldStyles'
-import {
-  AppIcon,
-  ChevronDownIcon,
-  EditIcon,
-} from '@/components/icons'
 import {
   getPersonById,
   getStoredPersonnel,
@@ -28,19 +17,24 @@ import {
   updateCabEmployeeStatus,
   getProfessionalRoleLabel,
   formatEmployeePhone,
-  CAB_PROFESSIONAL_ROLES,
+  listCabEmployeeImpartialityDeclarations,
+  listCabEmployeeImpartialityRelationships,
+  listCabEmployeeAvailabilityPeriods,
   type CabEmployeeQualification,
+  type CabQualificationCategory,
+  type CabImpartialityDeclaration,
+  type CabImpartialityRelationship,
+  type CabAvailabilityPeriod,
 } from '@/lib/api/cabEmployeesApi'
 import { formatIafCodesToSectorNames } from '@/lib/iafCodes'
 import { getAuthSession } from '@/lib/authStorage'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 import { ROUTES } from '@/lib/routes'
-import { DatePicker } from '@/components/ui/DatePicker'
-import { Toggle } from '@/components/ui/Toggle'
-import {
-  DocumentUploadField,
-  type UploadedDocumentFile,
-} from '@/components/dashboard/DocumentUploadField'
-import { cn } from '@/lib/utils'
+import { EvaluationProfileCard } from '@/components/dashboard/cab/evaluation/EvaluationProfileCard'
+import { EvaluationGeneralDetailsSection } from '@/components/dashboard/cab/evaluation/EvaluationGeneralDetailsSection'
+import { EvaluationQualificationsSection } from '@/components/dashboard/cab/evaluation/EvaluationQualificationsSection'
+import { EvaluationImpartialitySection } from '@/components/dashboard/cab/evaluation/EvaluationImpartialitySection'
+import { EvaluationAvailabilitySection } from '@/components/dashboard/cab/evaluation/EvaluationAvailabilitySection'
 
 function Chevron() {
   return (
@@ -49,20 +43,6 @@ function Chevron() {
     </svg>
   )
 }
-
-function fromIsoDate(value?: string | null): Date | undefined {
-  if (!value) return undefined
-  const datePart = value.split('T')[0]
-  const parsed = new Date(`${datePart}T00:00:00`)
-  return Number.isNaN(parsed.getTime()) ? undefined : parsed
-}
-
-const readonlyFieldClass = cn(
-  'mt-1',
-  fieldInputClassName,
-  fieldHeightClassName,
-  'bg-[#f9fafb] text-neutral-500 cursor-not-allowed',
-)
 
 export function CabCompetenceEvaluationPage() {
   const { id } = useParams<{ id: string }>()
@@ -73,6 +53,7 @@ export function CabCompetenceEvaluationPage() {
   const [person, setPerson] = useState<CompetencePerson | undefined>(() =>
     id ? getPersonById(id) : undefined
   )
+  const [loading, setLoading] = useState(Boolean(id))
 
   const session = getAuthSession()
   const currentUserName =
@@ -103,12 +84,20 @@ export function CabCompetenceEvaluationPage() {
 
   const [evalStatus] = useState(person?.evaluation?.status || 'In progress')
 
-  // Dynamic Qualifications State
-  const [qualifications, setQualifications] = useState<CabEmployeeQualification[]>([])
+  // Dynamic Qualifications & Categories State (Read-only view)
+  const [categories, setCategories] = useState<CabQualificationCategory[]>([])
+  const [uncategorizedQualifications, setUncategorizedQualifications] = useState<CabEmployeeQualification[]>([])
+  const [declarations, setDeclarations] = useState<CabImpartialityDeclaration[]>([])
+  const [relationships, setRelationships] = useState<CabImpartialityRelationship[]>([])
+  const [availabilityPeriods, setAvailabilityPeriods] = useState<CabAvailabilityPeriod[]>([])
 
   // Load employee detail from backend API dynamically
   useEffect(() => {
-    if (!id) return
+    if (!id) {
+      setLoading(false)
+      return
+    }
+    setLoading(true)
     getCabEmployeeDetail(id)
       .then(({ employee }) => {
         if (employee) {
@@ -116,60 +105,130 @@ export function CabCompetenceEvaluationPage() {
             ? getProfessionalRoleLabel(employee.professionalRole)
             : 'Auditor'
           const storedPerson = getPersonById(employee.id)
-          const resolvedName = storedPerson?.name || employee.user?.fullName || ''
+          const resolvedName =
+            employee.fullName || employee.user?.fullName || storedPerson?.name || ''
           const resolvedSector =
+            employee.authorizedSectors?.[0] ||
             formatIafCodesToSectorNames(
               employee.iafCodes,
               storedPerson?.authorizedScope,
               i18n.language
-            ) || 'Quality management systems'
+            ) ||
+            'Quality management systems'
+
+          const resolvedEmail =
+            employee.email || employee.user?.email || storedPerson?.email || ''
+          const resolvedPhone =
+            formatEmployeePhone(
+              employee.phone ?? employee.user?.phone,
+              employee.phoneCountryCode ?? employee.user?.phoneCountryCode
+            ) ||
+            storedPerson?.phone ||
+            ''
 
           setFullName(resolvedName)
-          setRole(roleLabel as any)
-          setEmail(employee.user?.email || storedPerson?.email || '')
-          setPhone(
-            storedPerson?.phone || formatEmployeePhone(employee.user?.phone, employee.user?.phoneCountryCode)
-          )
+          setRole(roleLabel as CompetencePerson['role'])
+          setEmail(resolvedEmail)
+          setPhone(resolvedPhone)
           if (employee.schemes?.length) {
             setScheme(employee.schemes[0])
           }
           setProposedSector(resolvedSector)
-          const resolvedStartDate = storedPerson?.employmentStartDate || employee.employmentStartDate
+          const resolvedStartDate =
+            employee.employmentStartDate || storedPerson?.employmentStartDate
           if (resolvedStartDate) {
             setEvaluationDate(resolvedStartDate.split('T')[0])
           }
-          if (employee.qualifications) {
-            setQualifications(employee.qualifications)
+
+          const backendCats = (employee.qualificationCategories ?? []).map((cat) => {
+            const nestedDocs = cat.documents ?? []
+            const linkedFlatDocs = (employee.qualifications ?? []).filter(
+              (q) => q.categoryId === cat.id && !nestedDocs.some((nd) => nd.id === q.id)
+            )
+            return {
+              ...cat,
+              name: cat.name || (cat as { categoryName?: string }).categoryName || 'Qualification Documents',
+              documents: [...nestedDocs, ...linkedFlatDocs],
+            }
+          })
+          setCategories(backendCats)
+          const catDocIds = new Set(
+            backendCats.flatMap((c) => (c.documents ?? []).map((d) => d.id))
+          )
+          const uncatDocs = (employee.qualifications ?? []).filter(
+            (q) => !catDocIds.has(q.id)
+          )
+          setUncategorizedQualifications(uncatDocs)
+
+          if (Array.isArray(employee.impartialityDeclarations)) {
+            setDeclarations(employee.impartialityDeclarations)
+          } else {
+            listCabEmployeeImpartialityDeclarations(id)
+              .then((res) => setDeclarations(res?.declarations ?? []))
+              .catch(() => {})
+          }
+
+          if (Array.isArray(employee.declaredRelationships)) {
+            setRelationships(employee.declaredRelationships)
+          } else {
+            listCabEmployeeImpartialityRelationships(id)
+              .then((res) => setRelationships(res?.relationships ?? []))
+              .catch(() => {})
+          }
+
+          if (Array.isArray(employee.availabilityPeriods)) {
+            setAvailabilityPeriods(employee.availabilityPeriods)
+          } else {
+            listCabEmployeeAvailabilityPeriods(id)
+              .then((res) => setAvailabilityPeriods(res?.periods ?? []))
+              .catch(() => {})
           }
 
           const resolvedStatusDot: CompetencePerson['statusDot'] =
-            storedPerson?.statusDot ?? (employee.status === 'INACTIVE' ? 'Inactive' : 'Active')
+            employee.status === 'INACTIVE' ? 'Inactive' : 'Active'
 
           setPerson((prev) => ({
             id: employee.id,
-            code: prev?.code || storedPerson?.code || `PER-${employee.id.slice(0, 4).toUpperCase()}`,
+            code:
+              employee.employeeCode ||
+              prev?.code ||
+              storedPerson?.code ||
+              `EMP-${employee.id.slice(0, 4).toUpperCase()}`,
             name: resolvedName || prev?.name || 'Employee',
-            role: roleLabel as any,
-            country: prev?.country || 'Saudi Arabia',
+            role: roleLabel as CompetencePerson['role'],
+            country:
+              employee.scopeCountry ||
+              employee.baseCountry ||
+              prev?.country ||
+              'Saudi Arabia',
             schemes: employee.schemes || prev?.schemes || [],
             iafCodes: employee.iafCodes || prev?.iafCodes || [],
+            auditLanguages: employee.auditLanguages || prev?.auditLanguages || [],
+            baseCountry: employee.baseCountry || prev?.baseCountry || '',
+            baseCity: employee.baseCity || prev?.baseCity || '',
             authorizedScope: resolvedSector,
-            expiryDate: prev?.expiryDate || ((employee as { expiryDate?: string | null }).expiryDate?.split('T')[0]) || '',
+            expiryDate:
+              (employee.scopeExpiryDate || employee.expiryDate || prev?.expiryDate || '')
+                .split('T')[0],
             status:
               resolvedStatusDot === 'Inactive'
                 ? 'Suspended'
                 : employee.status === 'ACTIVE'
                 ? 'Authorized'
                 : 'Under review',
-            avatarUrl: employee.imageUrl || prev?.avatarUrl,
-            email: employee.user?.email || prev?.email || '',
-            phone: storedPerson?.phone || prev?.phone || formatEmployeePhone(employee.user?.phone, employee.user?.phoneCountryCode),
+            avatarUrl:
+              resolvePublicAssetUrl(employee.imageUrl) || prev?.avatarUrl,
+            email: resolvedEmail,
+            phone: resolvedPhone,
             statusDot: resolvedStatusDot,
           }))
         }
       })
       .catch((err) => {
         console.warn('Failed to fetch employee from backend:', err)
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }, [id, i18n.language])
 
@@ -197,41 +256,17 @@ export function CabCompetenceEvaluationPage() {
     }
   }
 
-  const formatFileSize = (bytes?: number | null) => {
-    if (!bytes) return ''
-    if (bytes < 1024) return `${bytes} B`
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
-  }
-
-  const uploadedQualFiles: UploadedDocumentFile[] = qualifications.map((q) => ({
-    id: q.id,
-    name: q.originalName || q.fileName || 'document',
-    sizeLabel: formatFileSize(q.fileSize),
-    dateLabel: q.uploadedAt
-      ? new Intl.DateTimeFormat(i18n.language, {
-          month: 'short',
-          day: '2-digit',
-          year: 'numeric',
-        }).format(new Date(q.uploadedAt))
-      : undefined,
-    url: q.fileUrl,
-  }))
-
-  const handleOpenQualFile = (file: UploadedDocumentFile) => {
-    if (file.url) {
-      window.open(file.url, '_blank', 'noopener,noreferrer')
-    }
-  }
-
-  const getInitials = (name?: string) => {
-    if (!name) return 'EM'
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .slice(0, 2)
-      .join('')
-      .toUpperCase()
+  if (loading && !person) {
+    return (
+      <CabLayout sidebarVariant="competence">
+        <CabHeader title={t('cab.competence.title', 'Competence Register')} notificationCount={3} />
+        <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
+          <div className="flex items-center justify-center rounded-[16px] border border-[#ececec] bg-white p-12">
+            <span className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+          </div>
+        </main>
+      </CabLayout>
+    )
   }
 
   if (!person) {
@@ -313,295 +348,50 @@ export function CabCompetenceEvaluationPage() {
           </Button>
         </div>
 
-        {/* Personnel Quick Info Profile Card */}
+        {/* 1. Personnel Quick Info Profile Card */}
         <CabTourStep steps={tourSteps} stepId="eval-profile">
-          <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-            <div className="flex flex-col justify-between gap-6 lg:flex-row lg:items-center">
-              {/* Left Profile Info */}
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary text-[18px] font-bold text-white shadow-sm">
-                  {person.avatarUrl ? (
-                    <img
-                      src={person.avatarUrl}
-                      alt={person.name}
-                      className="size-full object-cover"
-                    />
-                  ) : (
-                    getInitials(person.name)
-                  )}
-                </div>
-                <div>
-                  <h2 className="text-[18px] font-bold leading-tight text-neutral-900 sm:text-[20px]">
-                    {person.name}
-                  </h2>
-                  <p className="mt-0.5 text-[13px] text-neutral-500" dir="ltr">
-                    {person.code}
-                  </p>
-                </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  icon={<AppIcon icon={EditIcon} size={15} />}
-                  onClick={() => navigate(`/cab/competence/persons/${person.id}/edit`)}
-                  className="ms-2"
-                >
-                  {t('cab.competence.memberProfile.editProfile', 'Edit profile')}
-                </Button>
-              </div>
-
-              {/* Right Meta details */}
-              <div className="flex flex-wrap items-center gap-6 border-t border-[#ececec] pt-4 sm:gap-8 lg:border-t-0 lg:pt-0">
-                <div>
-                  <span className="mb-1 block text-[12px] font-medium text-neutral-400">
-                    {t('cab.competence.columns.status', 'Status')}
-                  </span>
-                  <Toggle
-                    checked={person.statusDot !== 'Inactive'}
-                    label={
-                      person.statusDot !== 'Inactive'
-                        ? t('users.status.active', 'Active')
-                        : t('users.status.inactive', 'Inactive')
-                    }
-                    onChange={handleTogglePersonStatus}
-                  />
-                </div>
-
-                <div>
-                  <span className="block text-[12px] font-medium text-neutral-400">
-                    {t('cab.competence.columns.role', 'Role')}
-                  </span>
-                  <span className="mt-0.5 block text-[14px] font-semibold text-neutral-800 whitespace-nowrap">
-                    {person.role}
-                  </span>
-                </div>
-
-                <div>
-                  <span className="block text-[12px] font-medium text-neutral-400">
-                    {t('cab.competence.evaluation.profile.email', 'Email')}
-                  </span>
-                  <a
-                    href={`mailto:${person.email}`}
-                    className="mt-0.5 block break-all text-[14px] font-medium text-primary hover:underline"
-                    dir="ltr"
-                  >
-                    {person.email || '—'}
-                  </a>
-                </div>
-
-                <div>
-                  <span className="block text-[12px] font-medium text-neutral-400">
-                    {t('cab.competence.evaluation.profile.phone', 'Phone')}
-                  </span>
-                  <span
-                    className="mt-0.5 block text-[14px] font-medium text-neutral-800 whitespace-nowrap"
-                    dir="ltr"
-                  >
-                    {person.phone || '—'}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </section>
+          <EvaluationProfileCard
+            person={person}
+            onToggleStatus={handleTogglePersonStatus}
+            onEditProfile={() => navigate(`/cab/competence/persons/${person.id}/edit`)}
+          />
         </CabTourStep>
 
-        {/* Main 2 Columns Form Card */}
+        {/* 2. General Information & Evaluation Details Section */}
         <CabTourStep steps={tourSteps} stepId="eval-criteria-form">
-          <div className="space-y-5">
-            <SectionHeading
-              title={`${t('cab.competence.evaluation.sections.generalInfo', 'General information')} & ${t('cab.competence.evaluation.sections.evalDetails', 'Evaluation details')}`}
-              accordion
-            >
-              <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                {/* Column 1: General information */}
-                <div className="space-y-4">
-                  <h3 className="border-b border-[#ececec] pb-2 text-[15px] font-bold text-neutral-900">
-                    {t('cab.competence.evaluation.sections.generalInfo', 'General information')}
-                  </h3>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.personId', 'Person ID')}
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      dir="ltr"
-                      value={person.code}
-                      className={cn(readonlyFieldClass, 'text-start')}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.fullName', 'Full name')}
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      readOnly
-                      value={fullName}
-                      className={readonlyFieldClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.role', 'Role')}
-                    </label>
-                    <div className="relative">
-                      <select
-                        disabled
-                        value={role}
-                        className={cn(readonlyFieldClass, 'appearance-none pe-8')}
-                      >
-                        {CAB_PROFESSIONAL_ROLES.map((r) => (
-                          <option key={r.value} value={r.label}>
-                            {r.label}
-                          </option>
-                        ))}
-                      </select>
-                      <AppIcon
-                        icon={ChevronDownIcon}
-                        size={14}
-                        className="pointer-events-none absolute inset-y-0 end-3 my-auto text-neutral-400"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.email', 'Email')}
-                    </label>
-                    <input
-                      type="email"
-                      disabled
-                      readOnly
-                      dir="ltr"
-                      value={email}
-                      className={cn(readonlyFieldClass, 'text-start')}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.phone', 'Phone')}
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      readOnly
-                      dir="ltr"
-                      value={phone}
-                      className={cn(readonlyFieldClass, 'text-start')}
-                    />
-                  </div>
-                </div>
-
-                {/* Column 2: Evaluation details */}
-                <div className="space-y-4">
-                  <h3 className="border-b border-[#ececec] pb-2 text-[15px] font-bold text-neutral-900">
-                    {t('cab.competence.evaluation.sections.evalDetails', 'Evaluation details')}
-                  </h3>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.scheme', 'Scheme')}
-                    </label>
-                    <div className="relative">
-                      <select
-                        disabled
-                        value={scheme}
-                        className={cn(readonlyFieldClass, 'appearance-none pe-8')}
-                      >
-                        {person.schemes?.length ? (
-                          person.schemes.map((s) => (
-                            <option key={s} value={s}>
-                              {s}
-                            </option>
-                          ))
-                        ) : (
-                          <>
-                            <option value="ISO 9001">ISO 9001</option>
-                            <option value="ISO 14001">ISO 14001</option>
-                            <option value="ISO 45001">ISO 45001</option>
-                            <option value="ISO 22000">ISO 22000</option>
-                            <option value="ISO 27001">ISO 27001</option>
-                            <option value="HACCP">HACCP</option>
-                          </>
-                        )}
-                      </select>
-                      <AppIcon
-                        icon={ChevronDownIcon}
-                        size={14}
-                        className="pointer-events-none absolute inset-y-0 end-3 my-auto text-neutral-400"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.proposedSector', 'Proposed sector')}
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      readOnly
-                      value={proposedSector}
-                      className={readonlyFieldClass}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={cn('mb-1 block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.evalDate', 'Evaluation date')}
-                    </label>
-                    <DatePicker
-                      disabled
-                      value={fromIsoDate(evaluationDate)}
-                    />
-                  </div>
-
-                  <div>
-                    <label className={cn('block', fieldLabelClassName)}>
-                      {t('cab.competence.evaluation.fields.evaluator', 'Evaluator')}
-                    </label>
-                    <input
-                      type="text"
-                      disabled
-                      readOnly
-                      value={evaluator}
-                      className={readonlyFieldClass}
-                    />
-                  </div>
-                </div>
-              </div>
-            </SectionHeading>
-          </div>
+          <EvaluationGeneralDetailsSection
+            code={person.code}
+            fullName={fullName}
+            role={role}
+            email={email}
+            phone={phone}
+            baseCountry={person.baseCountry}
+            baseCity={person.baseCity}
+            auditLanguages={person.auditLanguages}
+            schemes={person.schemes}
+            scheme={scheme}
+            proposedSector={proposedSector}
+            evaluationDate={evaluationDate}
+            evaluator={evaluator}
+          />
         </CabTourStep>
 
-        {/* Dynamic Qualifications Documents Upload & List Section */}
+        {/* 3. Read-only Qualifications Categories & Documents Section */}
         <CabTourStep steps={tourSteps} stepId="eval-documents-section">
-          <div>
-            <SectionHeading
-              title={t('cab.competence.qualificationsDocuments', 'Qualification Documents')}
-              accordion
-            >
-              <div className="rounded-[12px] border border-dashed border-primary/30 bg-white p-3">
-                <DocumentUploadField
-                  title={t('cab.competence.qualificationsDocuments', 'Qualification Documents')}
-                  note={t(
-                    'cab.competence.qualificationsDesc',
-                    'Upload certificates, diplomas, and official competence records (PDF, Word, Images max 20 MB).'
-                  )}
-                  files={uploadedQualFiles}
-                  readOnly
-                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx,.xls,.xlsx"
-                  onOpenFile={handleOpenQualFile}
-                />
-              </div>
-            </SectionHeading>
-          </div>
+          <EvaluationQualificationsSection
+            categories={categories}
+            uncategorizedQualifications={uncategorizedQualifications}
+          />
         </CabTourStep>
+
+        {/* 4. Read-only Impartiality Declarations & Client Relationships Section */}
+        <EvaluationImpartialitySection
+          declarations={declarations}
+          relationships={relationships}
+        />
+
+        {/* 5. Read-only Availability & Leave Periods Section */}
+        <EvaluationAvailabilitySection availabilityPeriods={availabilityPeriods} />
       </main>
     </CabLayout>
   )

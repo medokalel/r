@@ -14,6 +14,7 @@ import {
   type CompetencePerson,
 } from '@/lib/api/cabCompetenceApi'
 import { getCabEmployeeDetail, getProfessionalRoleLabel, formatEmployeePhone } from '@/lib/api/cabEmployeesApi'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 import { ROUTES } from '@/lib/routes'
 
 function Chevron() {
@@ -48,43 +49,59 @@ export function CabPersonnelProfilePage() {
           const roleLabel = employee.professionalRole
             ? getProfessionalRoleLabel(employee.professionalRole)
             : 'Auditor'
-          const rawStart = stored?.employmentStartDate || employee.employmentStartDate
-          const rawEnd = stored?.employmentEndDate || (employee as { employmentEndDate?: string | null }).employmentEndDate
+          const rawStart = employee.employmentStartDate || stored?.employmentStartDate
+          const rawEnd = employee.employmentEndDate || stored?.employmentEndDate
           const backendStart = employee.employmentStartDate?.split('T')[0]
           const storedExpiry = stored?.expiryDate?.split('T')[0]
           const cleanStoredExpiry =
             storedExpiry && storedExpiry !== '2026-12-31' && storedExpiry !== backendStart
               ? storedExpiry
               : ''
+          const backendExpiry = (employee.scopeExpiryDate || employee.expiryDate)?.split('T')[0]
+
           setPerson({
             ...stored,
             id: employee.id,
-            code: stored?.code || `PER-${employee.id.slice(0, 4).toUpperCase()}`,
-            name: stored?.name || employee.user?.fullName || 'Employee',
-            role: (roleLabel as any) || 'Auditor',
-            country: stored?.country || 'Saudi Arabia',
+            code:
+              employee.employeeCode ||
+              stored?.code ||
+              `EMP-${employee.id.slice(0, 4).toUpperCase()}`,
+            name: employee.fullName || employee.user?.fullName || stored?.name || 'Employee',
+            role: (roleLabel as CompetencePerson['role']) || 'Auditor',
+            country:
+              employee.scopeCountry ||
+              employee.baseCountry ||
+              stored?.country ||
+              'Saudi Arabia',
             schemes: employee.schemes?.length ? employee.schemes : stored?.schemes || [],
             authorizedScope:
-              (employee.iafCodes?.length
-                ? `IAF: ${employee.iafCodes.join(', ')}`
-                : stored?.authorizedScope) || 'Quality management systems',
-            expiryDate:
-              cleanStoredExpiry ||
-              ((employee as { expiryDate?: string | null }).expiryDate?.split('T')[0]) ||
-              '',
+              employee.authorizedSectors?.[0] ||
+              stored?.authorizedScope ||
+              (employee.iafCodes?.length ? `IAF: ${employee.iafCodes.join(', ')}` : '') ||
+              'Quality management systems',
+            expiryDate: backendExpiry || cleanStoredExpiry || '',
             status: employee.status === 'ACTIVE' ? 'Authorized' : 'Under review',
-            avatarUrl: employee.imageUrl || stored?.avatarUrl || undefined,
+            avatarUrl:
+              resolvePublicAssetUrl(employee.imageUrl) || stored?.avatarUrl || undefined,
             employmentStartDate: rawStart ? rawStart.split('T')[0] : undefined,
             employmentEndDate: rawEnd ? rawEnd.split('T')[0] : undefined,
             iafCodes: employee.iafCodes || stored?.iafCodes || [],
-            email: employee.user?.email || stored?.email || '',
-            phone: stored?.phone || formatEmployeePhone(employee.user?.phone, employee.user?.phoneCountryCode) || '',
+            auditLanguages: employee.auditLanguages || stored?.auditLanguages || [],
+            baseCountry: employee.baseCountry || stored?.baseCountry || '',
+            baseCity: employee.baseCity || stored?.baseCity || '',
+            email: employee.email || employee.user?.email || stored?.email || '',
+            phone:
+              formatEmployeePhone(
+                employee.phone ?? employee.user?.phone,
+                employee.phoneCountryCode ?? employee.user?.phoneCountryCode
+              ) ||
+              stored?.phone ||
+              '',
             statusDot: employee.status === 'INACTIVE' ? 'Inactive' : 'Active',
           })
         }
       })
       .catch(() => {
-        // Fallback to local storage if API call fails
         setPerson(getPersonById(id))
       })
       .finally(() => {

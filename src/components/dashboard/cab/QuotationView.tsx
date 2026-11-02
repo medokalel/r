@@ -16,7 +16,7 @@ import {
 } from '@/lib/api/cabQuotationApi'
 import { cn } from '@/lib/utils'
 
-const card = 'rounded-[16px] border border-[#ececec] bg-white p-5 sm:p-6'
+const card = 'rounded-[10px] border border-[#ececec] bg-white p-5'
 
 const STATUS_STYLE: Record<QuotationStatus, string> = {
   CREATED: 'bg-[#e8edfc] text-primary',
@@ -53,7 +53,7 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
 
   const editable = quotation.status === 'CREATED'
   const money = (value: string | number) =>
-    new Intl.NumberFormat(i18n.language, { style: 'currency', currency: quotation.currency }).format(Number(value))
+    new Intl.NumberFormat(i18n.language, { style: 'currency', currency: quotation.currency, currencyDisplay: 'code' }).format(Number(value))
   const date = (value: string | null) =>
     value ? new Date(`${value.slice(0, 10)}T00:00:00`).toLocaleDateString(i18n.language) : '—'
 
@@ -97,7 +97,7 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
     quotation.status === 'CREATED' ? ['issue', 'cancel'] : quotation.status === 'ISSUED' ? ['cancel'] : []
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <section className={card}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
@@ -124,65 +124,65 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
       </section>
 
       <section className="overflow-hidden rounded-[16px] border border-[#ececec] bg-white">
-        <h2 className="border-b border-[#ececec] px-5 py-4 text-[16px] font-bold text-primary">{t('cab.quotationFlow.events')}</h2>
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[640px] border-collapse text-start text-[12px]">
-            <thead className="bg-[#fafafa] text-[11px] uppercase">
-              <tr>
-                {['seq', 'standard', 'event', 'days', 'rate', 'fee'].map((key) => (
-                  <th key={key} scope="col" className="px-4 py-3 text-start">{t(`cab.quotationFlow.col.${key}`)}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {Number(quotation.initialAuditDays) > 0 && (
-                <tr className="border-t border-[#ececec] bg-[#f8faff]">
-                  <td className="px-4 py-3" colSpan={3}>{t('cab.quotationFlow.initialAudit')}</td>
-                  <td className="px-4 py-3">{Number(quotation.initialAuditDays)}</td>
-                  <td className="px-4 py-3">{money(quotation.dailyRate)}</td>
-                  <td className="px-4 py-3 font-semibold">{money(quotation.initialAuditFee ?? 0)}</td>
-                </tr>
-              )}
-              {quotation.events.map((event) => {
-                // Stage 1 + Stage 2 are billed together as the initial audit above; the backend rejects edits on them.
-                const included = Number(quotation.initialAuditDays) > 0 && (event.auditEventType === 'STAGE_1' || event.auditEventType === 'STAGE_2') && Number(event.auditFee) === 0
-                return (
-                <tr key={event.id} className="border-t border-[#ececec]">
-                  <td className="px-4 py-3">{event.sequenceOrder}</td>
-                  <td className="px-4 py-3">{event.standardCode.replace('_', ' ')}</td>
-                  <td className="px-4 py-3">
-                    {t(`cab.quotationFlow.event.${event.auditEventType}`)}
-                    {!included && event.policyVerificationStatus !== 'VERIFIED' && (
-                      <span className="ms-2 text-[#92400e]">({event.policyVerificationStatus})</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    {included ? (
-                      <span className="text-neutral-500">{t('cab.quotationFlow.includedInitial')}</span>
-                    ) : editable ? (
-                      <input
-                        type="number"
-                        min="0"
-                        step="0.5"
-                        disabled={busy}
-                        aria-label={t('cab.quotationFlow.col.days')}
-                        className="h-9 w-24 rounded-[8px] border border-neutral-200 px-2"
-                        value={days[event.id] ?? String(Number(event.auditDays))}
-                        onChange={(e) => setDays((prev) => ({ ...prev, [event.id]: e.target.value }))}
-                        onBlur={() => commitDays(event.id, event.auditDays)}
-                      />
-                    ) : (
-                      Number(event.auditDays)
-                    )}
-                    {event.manualOverride && <span className="ms-2 text-neutral-500">{t('cab.quotationFlow.overridden')}</span>}
-                  </td>
-                  <td className="px-4 py-3">{included ? '—' : money(event.dailyRate)}</td>
-                  <td className="px-4 py-3 font-semibold">{included ? '—' : money(event.auditFee)}</td>
-                </tr>
-                )
-              })}
-            </tbody>
-          </table>
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececec] px-5 py-4">
+          <h2 className="text-[16px] font-bold leading-5 text-primary">{t('cab.quotationFlow.programme', 'Audit programme by standard (3-year certification cycle)')}</h2>
+          <span className="text-[12px] font-normal text-neutral-600">{quotation.standardCodesUsed.length} {t('cab.quotationFlow.standardCount', { count: quotation.standardCodesUsed.length, defaultValue: quotation.standardCodesUsed.length === 1 ? 'standard' : 'standards' })} · {Number(quotation.totalAuditDays)} {t('cab.quotationFlow.dayUnit', 'days')} · {money(quotation.totalAuditFee)}</span>
+        </div>
+        <div className="space-y-5 p-5">
+          {quotation.standardCodesUsed.map((code) => {
+            const events = quotation.events.filter((event) => event.standardCode === code)
+            const breakdown = quotation.standardBreakdown?.find((row) => row.standardCode === code)
+            const initial = events.filter((event) => ['STAGE_1', 'STAGE_2'].includes(event.auditEventType))
+            const initialFee = breakdown?.initialAuditFee ?? (quotation.standardCodesUsed.length === 1 ? quotation.initialAuditFee : null)
+            const phases = [
+              { title: t('cab.quotationFlow.initialCertification', 'Initial certification'), hint: t('cab.quotationFlow.initialHint', 'Stage 1 + Stage 2, before the certificate'), events: initial },
+              { title: t('cab.quotationFlow.event.SURVEILLANCE_1'), hint: t('cab.quotationFlow.surveillance1Hint', 'Year 1, within 12 months of the decision'), events: events.filter((event) => event.auditEventType === 'SURVEILLANCE_1') },
+              { title: t('cab.quotationFlow.event.SURVEILLANCE_2'), hint: t('cab.quotationFlow.surveillance2Hint', 'Year 2'), events: events.filter((event) => event.auditEventType === 'SURVEILLANCE_2') },
+              { title: t('cab.quotationFlow.event.RECERTIFICATION'), hint: t('cab.quotationFlow.recertificationHint', 'Year 3, before the certificate expires'), events: events.filter((event) => event.auditEventType === 'RECERTIFICATION') },
+            ]
+            return (
+              <div key={code} className="overflow-hidden rounded-[16px] border border-[#cbd5ff]">
+                <div className="flex min-h-[48px] flex-wrap items-center justify-between gap-3 bg-[#1636aa] px-4 py-2 text-[14px] leading-5 text-white">
+                  <h3 className="rounded-[8px] border border-[#cbd5ff] bg-[#f5f7ff] px-2.5 py-1 text-[12px] font-medium leading-4 text-black">{code.replaceAll('_', ' ')}</h3>
+                  {breakdown && <span>{Number(breakdown.totalAuditDays)} {t('cab.quotationFlow.dayUnit', 'days')} · <strong>{money(breakdown.totalAuditFee)}</strong></span>}
+                </div>
+                <div className="grid grid-cols-1 divide-y divide-[#ececec] md:grid-cols-2 xl:grid-cols-4 xl:divide-x xl:divide-y-0">
+                  {phases.map((phase, index) => (
+                    <div key={phase.title} className="flex min-w-0 flex-col px-4 py-4 text-[14px] leading-5">
+                      {phase.events.length > 0 && <>
+                      <div className="mb-3 flex items-start gap-3">
+                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-[#e8edfc] font-bold text-primary">{index + 1}</span>
+                        <div><h4 className="text-[14px] font-semibold leading-5">{phase.title}</h4><p className="text-[12px] font-normal leading-4 text-neutral-600">{phase.hint}</p></div>
+                      </div>
+                      <div className="mb-3 flex-1 space-y-2">
+                        {phase.events.map((event) => {
+                          const included = Number(quotation.initialAuditDays) > 0 && index === 0 && Number(event.auditFee) === 0
+                          return (
+                            <div key={event.id}>
+                              <div className="flex items-center justify-between gap-2">
+                                <span className="whitespace-nowrap text-neutral-600">{index === 0 ? t(`cab.quotationFlow.event.${event.auditEventType}`) : t('cab.quotationEditor.auditDays')}</span>
+                                <span className="flex shrink-0 items-center gap-2">
+                                  {editable && !included ? <input type="number" min="0" step="0.5" disabled={busy} aria-label={`${code} ${phase.title} ${t('cab.quotationFlow.dayUnit', 'days')}`} className="h-6 w-12 rounded border border-transparent bg-transparent px-1 text-end font-semibold hover:border-neutral-200 focus:border-primary focus:outline-none" value={days[event.id] ?? String(Number(event.auditDays))} onChange={(e) => setDays((prev) => ({ ...prev, [event.id]: e.target.value }))} onBlur={() => commitDays(event.id, event.auditDays)} /> : <strong>{Number(event.auditDays)}</strong>}
+                                  <span className="text-neutral-500">{t('cab.quotationFlow.dayUnit', 'days')}</span>
+                                </span>
+                              </div>
+                              {!included && event.policyVerificationStatus !== 'VERIFIED' && <p className="text-[10px] text-[#92400e]">{event.policyVerificationStatus}</p>}
+                              {event.manualOverride && <p className="text-[12px] font-normal leading-4 text-neutral-600">{t('cab.quotationFlow.overridden')}</p>}
+                            </div>
+                          )
+                        })}
+                      </div>
+                      <div className="border-t border-dashed border-[#ececec] pt-2">
+                        <p className="text-[16px] font-bold leading-6">{phase.events.length ? money(index === 0 && initialFee != null ? initialFee : phase.events.reduce((sum, event) => sum + Number(event.auditFee), 0)) : '—'}</p>
+                        {phase.events.length > 0 && <p className="text-[12px] font-normal leading-4 text-neutral-600">{money(phase.events[0].dailyRate)} / {t('cab.quotationFlow.singleDay', 'day')}</p>}
+                      </div>
+                      </>}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
 

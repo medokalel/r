@@ -19,6 +19,9 @@ export interface CompetencePerson {
   employmentStartDate?: string
   employmentEndDate?: string
   iafCodes?: string[]
+  auditLanguages?: string[]
+  baseCountry?: string
+  baseCity?: string
   qualifications?: string
   email: string
   phone: string

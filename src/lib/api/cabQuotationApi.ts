@@ -39,6 +39,7 @@ export interface Quotation {
   status: QuotationStatus
   cabName: string | null
   standardCodesUsed: string[]
+  standardBreakdown?: Array<{ standardCode: string; dailyRate: string; initialAuditDays: string; initialAuditFee: string; totalAuditDays: string; totalAuditFee: string }>
   employeeCountUsed: number
   currency: string
   dailyRate: string
@@ -98,13 +99,36 @@ export function listPricingConfigs(): Promise<CabPricingConfig[]> {
 }
 
 /** Global default when standardId is omitted. taxRate is a decimal (0.15 = 15%). */
-export function upsertPricingConfig(payload: {
+export async function upsertPricingConfig(payload: {
   dailyRate: number
   currency: string
   taxRate: number
   standardId?: string | null
 }): Promise<CabPricingConfig> {
+  // The quotation API prefers per-standard pricing. Keep its currency aligned
+  // with the CAB profile without changing each standard's rate or tax.
+  if (payload.standardId == null) {
+    const configs = await listPricingConfigs()
+    for (const config of configs) {
+      if (config.isActive && config.standardId && config.currency !== payload.currency) {
+        await authorizedRequest('/cab/pricing-config', json({
+          standardId: config.standardId,
+          dailyRate: Number(config.dailyRate),
+          taxRate: Number(config.taxRate),
+          currency: payload.currency,
+        }))
+      }
+    }
+  }
   return authorizedRequest('/cab/pricing-config', json(payload))
+}
+
+/** Re-read the saved profile so an open quotation cannot restore an old currency. */
+export async function prepareQuotationPricing(dailyRate: number): Promise<CabPricingConfig> {
+  const configs = await listPricingConfigs()
+  const pricing = configs.find((config) => config.isActive && config.standardId === null)
+  if (!pricing) throw new Error('Save the quotation pricing in the CAB profile first.')
+  return upsertPricingConfig({ dailyRate, currency: pricing.currency, taxRate: Number(pricing.taxRate) })
 }
 
 export function deactivatePricingConfig(configId: string): Promise<{ message: string }> {

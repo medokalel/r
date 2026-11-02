@@ -4,11 +4,11 @@ import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ApplicationSummaryCard } from '@/components/dashboard/cab/ApplicationSummaryCard'
-import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
+import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
+import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
 import { QuotationStatusBadge, QuotationView } from '@/components/dashboard/cab/QuotationView'
 import { AppIcon, DownloadIcon } from '@/components/icons'
-import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
 import { downloadExcelCsv } from '@/lib/tableTools'
 import { Button } from '@/components/ui/Button'
 import { FormField, FormLabel, MultiSelect, SelectField, TextField, Textarea } from '@/components/ui'
@@ -20,7 +20,7 @@ import {
   listQuotationApplications,
   type CabApplicationQuotation,
 } from '@/lib/api/cabApplicationQuotationApi'
-import { createQuotation, upsertPricingConfig, type Quotation } from '@/lib/api/cabQuotationApi'
+import { createQuotation, prepareQuotationPricing, type Quotation } from '@/lib/api/cabQuotationApi'
 import { ApiError } from '@/lib/api/client'
 import { ROUTES, cabApplicationQuotationPath, cabApplicationReviewPath } from '@/lib/routes'
 
@@ -136,10 +136,9 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
     setCreating(true)
     setCreateError(null)
     try {
-      // The API prices a quotation from the saved config, so the rate entered here becomes the saved rate first.
-      if (pricing && Number(rate) !== Number(pricing.dailyRate)) {
-        await upsertPricingConfig({ dailyRate: Number(rate), currency: pricing.currency, taxRate: Number(pricing.taxRate) })
-      }
+      // Resolve the latest profile currency even when the entered rate is unchanged.
+      const savedPricing = await prepareQuotationPricing(Number(rate))
+      setData((current) => current ? { ...current, pricing: savedPricing } : current)
       setQuotation(
         await createQuotation(applicationId, {
           travelExpenses: Number(travel),
@@ -287,8 +286,8 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
   )
 
   return (
-    <div className="grid min-w-0 items-start gap-4 xl:grid-cols-[minmax(0,1fr)_340px]">
-      <div className="min-w-0 space-y-6">
+    <div className="mx-auto grid w-full max-w-[1760px] min-w-0 items-start gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="min-w-0 space-y-5">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-3">
@@ -320,6 +319,12 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
           receivedOn={application.submittedAt || application.createdAt}
           statusLabel={t('cab.quotationEditor.status')}
         />
+        {quotation && (
+          <section className="rounded-[10px] border border-[#ececec] bg-white px-5 py-4">
+            <h2 className="text-[14px] font-semibold">{t('cab.quotationFlow.internalApproval', 'Internal approval')} <span className="ms-2 rounded bg-neutral-100 px-2 py-1 text-[11px] font-normal text-neutral-500">{t('cab.quotationFlow.approvalUnavailable', 'Not available')}</span></h2>
+            <p className="mt-1 text-[12px] text-neutral-500">{t('cab.quotationFlow.approvalNotProvided', 'Internal approval details are not provided for this quotation.')}</p>
+          </section>
+        )}
         {quotation ? (
           <QuotationView key={`${quotation.id}-${quotation.updatedAt}-${quotation.status}`} quotation={quotation} onChange={(next) => setQuotation(next.status === 'CANCELLED' ? null : next)} />
         ) : (
@@ -328,13 +333,15 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
             {preparation}
           </>
         )}
+
+
       </div>
       <WorkflowProgressCard
         steps={buildCabWorkflowSteps(t, 'quotation')}
         title={t('cab.applications.receipt.sections.workflowProgress')}
         viewFullLabel={t('cab.applications.receipt.actions.viewFullWorkflow')}
         statusLabels={{ completed: t('cab.applications.receipt.workflow.completed'), inProgress: t('cab.applications.receipt.workflow.inProgress'), pending: t('cab.applications.receipt.workflow.pending') }}
-        className="xl:sticky xl:top-4"
+        className="lg:w-full xl:sticky xl:top-4"
       />
     </div>
   )

@@ -10,6 +10,7 @@ import {
   DocumentFileIcon,
   TrashIcon,
 } from '@/components/icons'
+import { resolvePublicAssetUrl } from '@/lib/publicAssetUrl'
 import { cn } from '@/lib/utils'
 
 export interface UploadedDocumentFile {
@@ -36,6 +37,55 @@ interface DocumentUploadFieldProps {
   onOpenFile?: (file: UploadedDocumentFile) => void
 }
 
+async function triggerFileDownload(file: UploadedDocumentFile) {
+  const rawUrl = file.url ? resolvePublicAssetUrl(file.url) : ''
+  if (!rawUrl) return
+
+  const fileName = file.name || 'document'
+
+  if (rawUrl.startsWith('blob:') || rawUrl.startsWith('data:')) {
+    const a = document.createElement('a')
+    a.href = rawUrl
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    return
+  }
+
+  try {
+    const response = await fetch(rawUrl)
+    if (!response.ok) throw new Error('Download failed')
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = blobUrl
+    a.download = fileName
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 5000)
+  } catch {
+    const a = document.createElement('a')
+    a.href = rawUrl
+    a.download = fileName
+    a.target = '_blank'
+    a.rel = 'noopener'
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+  }
+}
+
+function triggerFilePreview(file: UploadedDocumentFile, onOpen?: (file: UploadedDocumentFile) => void) {
+  const rawUrl = file.url ? resolvePublicAssetUrl(file.url) : ''
+  if (rawUrl) {
+    window.open(rawUrl, '_blank')
+    return
+  }
+  onOpen?.(file)
+}
+
 function FileRow({
   file,
   disabled,
@@ -48,6 +98,7 @@ function FileRow({
   onOpen?: (file: UploadedDocumentFile) => void
 }) {
   const meta = [file.sizeLabel, file.dateLabel].filter(Boolean).join(' | ')
+  const canOpen = Boolean(onOpen || file.url)
 
   return (
     <div className="flex items-center justify-between gap-4 rounded-[8px] bg-white px-4 py-3">
@@ -69,12 +120,29 @@ function FileRow({
       <div className="flex items-center gap-2">
         {[
           ...(onDelete
-            ? [{ icon: TrashIcon, label: 'delete', hover: 'hover:text-error-500', onClick: () => onDelete(file.id) }]
-            : []),
-          ...(onOpen
             ? [
-                { icon: DownloadIcon, label: 'download', hover: 'hover:text-primary', onClick: () => onOpen(file) },
-                { icon: EyeIcon, label: 'preview', hover: 'hover:text-primary', onClick: () => onOpen(file) },
+                {
+                  icon: TrashIcon,
+                  label: 'delete',
+                  hover: 'hover:text-error-500',
+                  onClick: () => onDelete(file.id),
+                },
+              ]
+            : []),
+          ...(canOpen
+            ? [
+                {
+                  icon: DownloadIcon,
+                  label: 'download',
+                  hover: 'hover:text-primary',
+                  onClick: () => void triggerFileDownload(file),
+                },
+                {
+                  icon: EyeIcon,
+                  label: 'preview',
+                  hover: 'hover:text-primary',
+                  onClick: () => triggerFilePreview(file, onOpen),
+                },
               ]
             : []),
         ].map(({ icon, label, hover, onClick }) => (
@@ -116,7 +184,7 @@ export function DocumentUploadField({
 }: DocumentUploadFieldProps) {
   const { t } = useTranslation()
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const [expanded, setExpanded] = useState(readOnly)
+  const [expanded, setExpanded] = useState(true)
 
   const uploaded = files.length > 0
 
