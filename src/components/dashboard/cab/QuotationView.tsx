@@ -83,7 +83,7 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
 
   const commitDays = (eventId: string, current: string) => {
     const value = days[eventId]
-    if (value === undefined || value.trim() === '' || Number(value) === Number(current) || Number(value) < 0) return
+    if (value === undefined || value.trim() === '' || !Number.isFinite(Number(value)) || Number(value) === Number(current) || Number(value) < 0) return
     void run(() => overrideEventDays(quotation.id, eventId, Number(value)))
   }
 
@@ -129,11 +129,14 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
           <span className="text-[12px] font-normal text-neutral-600">{quotation.standardCodesUsed.length} {t('cab.quotationFlow.standardCount', { count: quotation.standardCodesUsed.length, defaultValue: quotation.standardCodesUsed.length === 1 ? 'standard' : 'standards' })} · {Number(quotation.totalAuditDays)} {t('cab.quotationFlow.dayUnit', 'days')} · {money(quotation.totalAuditFee)}</span>
         </div>
         <div className="space-y-5 p-5">
+          {editable && <p className="text-[12px] text-neutral-500">{t('cab.quotationFlow.daysSaveHint', 'Edit surveillance days, then leave the field to save and recalculate the quotation totals. Stage 1 and Stage 2 use the combined initial-audit duration.')}</p>}
           {quotation.standardCodesUsed.map((code) => {
             const events = quotation.events.filter((event) => event.standardCode === code)
             const breakdown = quotation.standardBreakdown?.find((row) => row.standardCode === code)
             const initial = events.filter((event) => ['STAGE_1', 'STAGE_2'].includes(event.auditEventType))
             const initialFee = breakdown?.initialAuditFee ?? (quotation.standardCodesUsed.length === 1 ? quotation.initialAuditFee : null)
+            const initialDays = breakdown?.initialAuditDays ?? (quotation.standardCodesUsed.length === 1 ? quotation.initialAuditDays : null)
+            const combinedInitial = Number(initialDays) > 0 && initial.length > 0 && initial.every((event) => Number(event.auditDays) === 0 && Number(event.auditFee) === 0)
             const phases = [
               { title: t('cab.quotationFlow.initialCertification', 'Initial certification'), hint: t('cab.quotationFlow.initialHint', 'Stage 1 + Stage 2, before the certificate'), events: initial },
               { title: t('cab.quotationFlow.event.SURVEILLANCE_1'), hint: t('cab.quotationFlow.surveillance1Hint', 'Year 1, within 12 months of the decision'), events: events.filter((event) => event.auditEventType === 'SURVEILLANCE_1') },
@@ -155,7 +158,12 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
                         <div><h4 className="text-[14px] font-semibold leading-5">{phase.title}</h4><p className="text-[12px] font-normal leading-4 text-neutral-600">{phase.hint}</p></div>
                       </div>
                       <div className="mb-3 flex-1 space-y-2">
-                        {phase.events.map((event) => {
+                        {index === 0 && combinedInitial ? (
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-neutral-600">{t('cab.quotationFlow.combinedStages', 'Stage 1 + Stage 2')}</span>
+                            <span className="flex shrink-0 items-center gap-2"><strong>{Number(initialDays)}</strong><span className="text-neutral-500">{t('cab.quotationFlow.dayUnit', 'days')}</span></span>
+                          </div>
+                        ) : phase.events.map((event) => {
                           const included = Number(quotation.initialAuditDays) > 0 && index === 0 && Number(event.auditFee) === 0
                           return (
                             <div key={event.id}>
