@@ -22,6 +22,7 @@ import {
   CabApplicationRegisterPage,
   CabApplicationSubmissionPage,
   CabCompanyProfilePage,
+  CabTravelPolicyPage,
   AbDashboardPage,
   OnboardingPage,
   CabOnboardingPage,
@@ -146,6 +147,16 @@ export default function App() {
                   <RequireAuth>
                     <RequireCabOnboarded>
                       <CabCompanyProfilePage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabTravelPolicy}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabTravelPolicyPage />
                     </RequireCabOnboarded>
                   </RequireAuth>
                 }

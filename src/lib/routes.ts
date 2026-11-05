@@ -20,6 +20,7 @@ export const ROUTES = {
   cabApplicationReview: "/cab/applications/review",
   cabApplicationSubmission: "/cab/applications/submission",
   cabCompanyProfile: "/cab/company-profile",
+  cabTravelPolicy: "/cab/settings/travel-policy",
   cabWorkspace: "/cab/workspace",
   cabApplicationReviewQueue: "/cab/applications/review-queue",
   cabContacts: "/cab/contacts",

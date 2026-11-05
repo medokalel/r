@@ -22,6 +22,7 @@ export const CabApplicationSubmissionPage = lazyNamed(
   'CabApplicationSubmissionPage',
 )
 export const CabCompanyProfilePage = lazyNamed(() => import('@/pages/CabCompanyProfilePage'), 'CabCompanyProfilePage')
+export const CabTravelPolicyPage = lazyNamed(() => import('@/pages/CabTravelPolicyPage'), 'CabTravelPolicyPage')
 export const AbDashboardPage = lazyNamed(() => import('@/pages/AbDashboardPage'), 'AbDashboardPage')
 export const OnboardingPage = lazyNamed(() => import('@/pages/OnboardingPage'), 'OnboardingPage')
 export const CabOnboardingPage = lazyNamed(() => import('@/pages/CabOnboardingPage'), 'CabOnboardingPage')
