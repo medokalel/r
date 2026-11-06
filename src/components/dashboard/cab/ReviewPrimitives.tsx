@@ -20,14 +20,18 @@ export function Card({ title, children, highlight }: { title: string; children: 
   )
 }
 
-export function Badge({ tone, children }: { tone: 'green' | 'red' | 'neutral'; children: ReactNode }) {
+export type BadgeTone = 'green' | 'red' | 'neutral' | 'blue' | 'amber'
+
+export function Badge({ tone, children }: { tone: BadgeTone; children: ReactNode }) {
   return (
     <span
       className={cn(
         'inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap',
         tone === 'green' && 'bg-[#dcfce7] text-[#16a34a]',
         tone === 'red' && 'bg-[#fde8e8] text-[#dc2626]',
-        tone === 'neutral' && 'bg-[#f3f4f6] text-neutral-600'
+        tone === 'neutral' && 'bg-[#f3f4f6] text-neutral-600',
+        tone === 'blue' && 'bg-[#f3f6fd] text-primary',
+        tone === 'amber' && 'bg-[#fef8ee] text-[#a05a00]'
       )}
     >
       {children}

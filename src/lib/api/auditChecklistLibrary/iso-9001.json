@@ -1,0 +1,2457 @@
+{
+  "key": "iso-9001",
+  "standardCode": "ISO_9001",
+  "kind": "STANDARD",
+  "standard": "ISO 9001:2015",
+  "name": {
+    "en": "ISO 9001 Quality management system",
+    "ar": "ISO 9001 نظام إدارة الجودة"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Expanded to every clause and sub-clause on 1 November 2026, pending the product owner's review. Requirement summaries are written in our own words with the clause number; they are not the text of the standard. Check clause numbers against the edition in your accreditation scope.",
+    "ar": "وُسِّعت لتشمل كل بند وبند فرعي في 1 نوفمبر 2026 وهي بانتظار مراجعة مالك المنتج. ملخصات المتطلبات مكتوبة بصياغتنا مع رقم البند وليست نص المعيار. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك."
+  },
+  "items": [
+    {
+      "code": "QMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "The organization has worked out the internal and external issues that bear on its purpose and on the results it expects from its quality management system, and keeps that picture up to date.",
+        "ar": "حددت المنظمة القضايا الداخلية والخارجية المؤثرة في غرضها وفي النتائج المتوقعة من نظام إدارة الجودة، وتحدّث هذه الصورة باستمرار."
+      },
+      "guidance": {
+        "en": "Ask how the issues were identified (strategy meetings, SWOT, PESTLE) and how they feed risk planning. Since the 2024 amendment, check that climate change was considered as a possible relevant issue.",
+        "ar": "اسأل عن طريقة تحديد القضايا (اجتماعات الاستراتيجية أو تحليل SWOT أو PESTLE) وكيف تغذي تخطيط المخاطر. ومنذ تعديل 2024 تحقق من دراسة تغير المناخ بوصفه قضية محتملة ذات صلة."
+      },
+      "evidence": {
+        "en": [
+          "Context or strategy analysis record",
+          "Minutes showing the issues are reviewed periodically",
+          "Conclusion on climate change relevance"
+        ],
+        "ar": [
+          "سجل تحليل السياق أو الاستراتيجية",
+          "محاضر تثبت مراجعة القضايا دورياً",
+          "خلاصة بشأن صلة تغير المناخ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "QMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات الأطراف المعنية وتوقعاتها"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their relevant requirements are known, including which of them the organization has decided to treat as obligations of the quality management system.",
+        "ar": "الأطراف المعنية ذات الصلة ومتطلباتها معروفة، بما في ذلك ما قررت المنظمة معاملته التزاماً ضمن نظام إدارة الجودة."
+      },
+      "guidance": {
+        "en": "Pick two or three parties (customers, regulators, neighbours, workers) and trace their requirements into planning and operations.",
+        "ar": "اختر طرفين أو ثلاثة (العملاء والجهات التنظيمية والجيران والعاملين) وتتبع متطلباتهم حتى التخطيط والعمليات."
+      },
+      "evidence": {
+        "en": [
+          "Register of interested parties and their requirements",
+          "Link from requirements to objectives or controls"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية ومتطلباتها",
+          "ربط المتطلبات بالأهداف أو الضوابط"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "QMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Scope of the management system",
+        "ar": "نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The boundaries and applicability of the quality management system are set, kept as documented information and match the scope requested for certification; any requirement treated as not applicable is justified.",
+        "ar": "حُددت حدود نظام إدارة الجودة ومدى انطباقه ووُثقت، وهي متوافقة مع النطاق المطلوب للشهادة، وأي متطلب غير منطبق مبرر."
+      },
+      "guidance": {
+        "en": "Compare the documented scope with the application, the sites visited and the activities seen. Unjustified exclusions are a finding.",
+        "ar": "قارن النطاق الموثق بطلب الشهادة والمواقع التي زرتها والأنشطة التي شاهدتها. الاستثناءات غير المبررة تُعد ملاحظة تدقيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented scope statement",
+          "Justification of exclusions",
+          "List of sites and activities covered"
+        ],
+        "ar": [
+          "بيان النطاق الموثق",
+          "مبررات الاستثناءات",
+          "قائمة المواقع والأنشطة المشمولة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Confirm at every audit that the scope on the certificate is still accurate.",
+        "ar": "تحقق في كل تدقيق من أن النطاق المدون في الشهادة ما زال دقيقاً."
+      },
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "QMS-04",
+      "clause": "4.4.1",
+      "title": {
+        "en": "Quality management system and its processes",
+        "ar": "نظام إدارة الجودة وعملياته"
+      },
+      "requirement": {
+        "en": "The quality management system is in place and kept working, with the processes it needs, their sequence and interactions, inputs, outputs, owners and criteria defined.",
+        "ar": "يعمل نظام إدارة الجودة ويُحافظ عليه، مع تحديد العمليات اللازمة وتسلسلها وتفاعلاتها ومدخلاتها ومخرجاتها ومالكيها ومعاييرها."
+      },
+      "guidance": {
+        "en": "Look for a process map or equivalent and test that process owners know their criteria and measures.",
+        "ar": "ابحث عن خريطة عمليات أو ما يعادلها، وتحقق من معرفة مالكي العمليات بمعاييرهم ومقاييسهم."
+      },
+      "evidence": {
+        "en": [
+          "Process map or interaction diagram",
+          "Process descriptions with owners and measures"
+        ],
+        "ar": [
+          "خريطة العمليات أو مخطط التفاعل",
+          "أوصاف العمليات مع المالكين والمقاييس"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "QMS-05",
+      "clause": "4.4.2",
+      "title": {
+        "en": "Documented information supporting the processes",
+        "ar": "المعلومات الموثقة الداعمة للعمليات"
+      },
+      "requirement": {
+        "en": "The organization keeps the documented information it needs to run its processes and retains records that give confidence the processes are carried out as planned.",
+        "ar": "تحتفظ المنظمة بالمعلومات الموثقة اللازمة لتشغيل عملياتها، وتحفظ السجلات التي تعطي الثقة بأن العمليات تُنفذ كما خُطط لها."
+      },
+      "guidance": {
+        "en": "For two or three key processes, check that procedures or work instructions exist where needed and that records show the process ran as planned.",
+        "ar": "لعمليتين أو ثلاث عمليات رئيسية تحقق من وجود الإجراءات أو تعليمات العمل حيث يلزم، ومن أن السجلات تثبت تنفيذ العملية كما خُطط لها."
+      },
+      "evidence": {
+        "en": [
+          "Process descriptions or procedures",
+          "Process records for the sampled processes"
+        ],
+        "ar": [
+          "أوصاف العمليات أو الإجراءات",
+          "سجلات العمليات المختارة في العينة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-06",
+      "clause": "5.1.1",
+      "title": {
+        "en": "Leadership and commitment: general",
+        "ar": "القيادة والالتزام: عام"
+      },
+      "requirement": {
+        "en": "Top management takes ownership of the effectiveness of the quality management system: policy and objectives fit the strategy, requirements are built into business processes, resources are provided and people are supported.",
+        "ar": "تتحمل الإدارة العليا مسؤولية فاعلية نظام إدارة الجودة: السياسة والأهداف منسجمة مع الاستراتيجية، والمتطلبات مدمجة في عمليات العمل، والموارد متوفرة، والأفراد يحظون بالدعم."
+      },
+      "guidance": {
+        "en": "Interview top management. Ask for concrete decisions they took about the system in the last period, not general statements.",
+        "ar": "قابل الإدارة العليا واطلب أمثلة على قرارات فعلية اتخذتها بشأن النظام في الفترة الأخيرة، لا عبارات عامة."
+      },
+      "evidence": {
+        "en": [
+          "Interview with top management",
+          "Resource decisions or budget records",
+          "Examples of management communication"
+        ],
+        "ar": [
+          "مقابلة الإدارة العليا",
+          "قرارات الموارد أو سجلات الميزانية",
+          "أمثلة على اتصالات الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "QMS-07",
+      "clause": "5.1.2",
+      "title": {
+        "en": "Customer focus",
+        "ar": "التركيز على العميل"
+      },
+      "requirement": {
+        "en": "Top management makes sure customer and applicable legal requirements are understood and met, risks to customer satisfaction are addressed and satisfaction stays a priority.",
+        "ar": "تحرص الإدارة العليا على فهم متطلبات العميل والمتطلبات القانونية المنطبقة وتلبيتها، ومعالجة المخاطر المؤثرة في رضا العميل، وإبقاء الرضا أولوية."
+      },
+      "guidance": {
+        "en": "Link customer complaints and satisfaction results to management decisions.",
+        "ar": "اربط شكاوى العملاء ونتائج الرضا بقرارات الإدارة."
+      },
+      "evidence": {
+        "en": [
+          "Customer requirements reviews",
+          "Complaint trends discussed by management"
+        ],
+        "ar": [
+          "مراجعات متطلبات العملاء",
+          "اتجاهات الشكاوى التي ناقشتها الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-08",
+      "clause": "5.2.1",
+      "title": {
+        "en": "Establishing the quality policy",
+        "ar": "وضع سياسة الجودة"
+      },
+      "requirement": {
+        "en": "Top management has set a quality policy that suits the purpose and context of the organization, supports its strategic direction, frames the quality objectives and commits to meeting requirements and to continual improvement.",
+        "ar": "وضعت الإدارة العليا سياسة جودة تلائم غرض المنظمة وسياقها، وتدعم توجهها الاستراتيجي، وتوفر إطاراً لأهداف الجودة، وتتضمن الالتزام بتلبية المتطلبات والتحسين المستمر."
+      },
+      "guidance": {
+        "en": "Read the policy against the context analysis: generic copied policies that ignore the business are a weak sign. Check both commitments are present.",
+        "ar": "اقرأ السياسة مقابل تحليل السياق، فالسياسات العامة المنسوخة التي تتجاهل طبيعة العمل مؤشر ضعف. تحقق من وجود الالتزامين كليهما."
+      },
+      "evidence": {
+        "en": [
+          "Approved quality policy",
+          "Record of policy approval and review"
+        ],
+        "ar": [
+          "سياسة الجودة المعتمدة",
+          "سجل اعتماد السياسة ومراجعتها"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "QMS-09",
+      "clause": "5.2.2",
+      "title": {
+        "en": "Communicating the quality policy",
+        "ar": "إبلاغ سياسة الجودة"
+      },
+      "requirement": {
+        "en": "The quality policy is kept as documented information, communicated and understood inside the organization, and available to relevant interested parties as appropriate.",
+        "ar": "سياسة الجودة محفوظة معلومات موثقة، ومبلّغة ومفهومة داخل المنظمة، ومتاحة للأطراف المعنية ذات الصلة حسب الاقتضاء."
+      },
+      "guidance": {
+        "en": "Ask staff at different levels what the policy means for their work, and check where it is published for external parties.",
+        "ar": "اسأل العاملين في مستويات مختلفة عما تعنيه السياسة لعملهم، وتحقق من مكان نشرها للأطراف الخارجية."
+      },
+      "evidence": {
+        "en": [
+          "Policy displayed or published (intranet, notice boards, website)",
+          "Induction or awareness records covering the policy"
+        ],
+        "ar": [
+          "السياسة المعروضة أو المنشورة (الشبكة الداخلية أو لوحات الإعلانات أو الموقع الإلكتروني)",
+          "سجلات التعريف أو التوعية التي تغطي السياسة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "QMS-10",
+      "clause": "5.3",
+      "title": {
+        "en": "Roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned and understood, including who makes sure the quality management system conforms and who reports on its performance.",
+        "ar": "أُسندت مسؤوليات وصلاحيات الأدوار ذات الصلة وهي مفهومة، بما في ذلك المسؤول عن مطابقة نظام إدارة الجودة ومن يرفع التقارير عن أدائه."
+      },
+      "guidance": {
+        "en": "Compare organization chart and job descriptions with what people say they do.",
+        "ar": "قارن الهيكل التنظيمي والأوصاف الوظيفية بما يقوله الأفراد عن مهامهم."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Job descriptions or responsibility matrix",
+          "Appointment of the system representative"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية أو مصفوفة المسؤوليات",
+          "تكليف ممثل النظام"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "QMS-11",
+      "clause": "6.1.1",
+      "title": {
+        "en": "Determining risks and opportunities",
+        "ar": "تحديد المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "When planning the system, the organization uses its context issues and interested party requirements to decide which risks and opportunities must be addressed so the system achieves its results, enhances desirable effects and prevents or reduces undesired ones.",
+        "ar": "عند تخطيط النظام تستخدم المنظمة قضايا السياق ومتطلبات الأطراف المعنية لتحديد المخاطر والفرص الواجب معالجتها كي يحقق النظام نتائجه ويعزز الآثار المرغوبة ويمنع غير المرغوبة أو يقللها."
+      },
+      "guidance": {
+        "en": "Trace two or three issues from 4.1 and 4.2 into the risk register. The method is free, but the link must be visible.",
+        "ar": "تتبع قضيتين أو ثلاثاً من البندين 4.1 و4.2 حتى سجل المخاطر. المنهجية حرة لكن الربط يجب أن يكون واضحاً."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Link between context issues and identified risks"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "الربط بين قضايا السياق والمخاطر المحددة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "QMS-12",
+      "clause": "6.1.2",
+      "title": {
+        "en": "Planning actions for risks and opportunities",
+        "ar": "تخطيط الإجراءات للمخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Actions for the identified risks and opportunities are planned, built into the processes, proportionate to their potential effect on conformity, and evaluated for effectiveness.",
+        "ar": "تُخطط الإجراءات للمخاطر والفرص المحددة، وتُدمج في العمليات، وتتناسب مع أثرها المحتمل في مطابقة المنتجات والخدمات، ويُقيَّم مدى فاعليتها."
+      },
+      "guidance": {
+        "en": "Pick high-rated risks and follow the planned action into a procedure, control or project, then ask how its effectiveness was judged.",
+        "ar": "اختر مخاطر عالية التقييم وتتبع الإجراء المخطط حتى إجراء عمل أو ضابط أو مشروع، ثم اسأل عن طريقة الحكم على فاعليته."
+      },
+      "evidence": {
+        "en": [
+          "Action plans for risks and opportunities",
+          "Evidence the actions were implemented",
+          "Effectiveness review of the actions"
+        ],
+        "ar": [
+          "خطط الإجراءات للمخاطر والفرص",
+          "أدلة تنفيذ الإجراءات",
+          "مراجعة فاعلية الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "QMS-13",
+      "clause": "6.2.1",
+      "title": {
+        "en": "Quality objectives",
+        "ar": "أهداف الجودة"
+      },
+      "requirement": {
+        "en": "Quality objectives are set at relevant functions, levels and processes; they are consistent with the policy, measurable, relevant to product conformity and customer satisfaction, monitored, communicated and updated, and kept as documented information.",
+        "ar": "وُضعت أهداف الجودة على مستوى الوظائف والمستويات والعمليات ذات الصلة، وهي متسقة مع السياسة وقابلة للقياس وذات صلة بمطابقة المنتجات ورضا العميل، وتُراقب وتُبلَّغ وتُحدَّث وتُحفظ معلومات موثقة."
+      },
+      "guidance": {
+        "en": "Check that each objective has a target and a measure, and compare current results with the target.",
+        "ar": "تحقق من أن لكل هدف قيمة مستهدفة ومقياساً، وقارن النتائج الحالية بالمستهدف."
+      },
+      "evidence": {
+        "en": [
+          "Objectives register with targets",
+          "Performance reports against the objectives"
+        ],
+        "ar": [
+          "سجل الأهداف مع القيم المستهدفة",
+          "تقارير الأداء مقابل الأهداف"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "QMS-14",
+      "clause": "6.2.2",
+      "title": {
+        "en": "Planning to achieve quality objectives",
+        "ar": "التخطيط لتحقيق أهداف الجودة"
+      },
+      "requirement": {
+        "en": "For each objective the organization has decided what will be done, the resources needed, who is responsible, when it will be completed and how results will be evaluated.",
+        "ar": "حددت المنظمة لكل هدف ما سيُنفذ والموارد اللازمة والمسؤول عنه وموعد الإنجاز وطريقة تقييم النتائج."
+      },
+      "guidance": {
+        "en": "Sample objectives that are behind target and ask what the plan says and what has been done.",
+        "ar": "اختر أهدافاً متأخرة عن المستهدف واسأل عما تنص عليه الخطة وما الذي نُفذ."
+      },
+      "evidence": {
+        "en": [
+          "Action plans for objectives",
+          "Progress review records"
+        ],
+        "ar": [
+          "خطط العمل للأهداف",
+          "سجلات مراجعة التقدم"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "QMS-15",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the quality management system are made in a planned way, considering their purpose and consequences, the integrity of the system, resources and responsibilities.",
+        "ar": "تُنفذ التغييرات على نظام إدارة الجودة بطريقة مخططة مع مراعاة غرضها وعواقبها وسلامة النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Ask for a recent change (new site, new process, reorganization) and how it was planned and communicated.",
+        "ar": "اطلب مثالاً على تغيير حديث (موقع جديد أو عملية جديدة أو إعادة هيكلة) وكيف خُطط له وعُمم."
+      },
+      "evidence": {
+        "en": [
+          "Change request or change plan",
+          "Risk review of the change"
+        ],
+        "ar": [
+          "طلب التغيير أو خطة التغيير",
+          "مراجعة مخاطر التغيير"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "QMS-16",
+      "clause": "7.1.1",
+      "title": {
+        "en": "Resources: general",
+        "ar": "الموارد: عام"
+      },
+      "requirement": {
+        "en": "The organization has determined and provides the resources needed for the system, considering what its existing internal resources can do and what it must obtain from external providers.",
+        "ar": "حددت المنظمة الموارد اللازمة للنظام وتوفرها، مع مراعاة قدرات مواردها الداخلية الحالية وقيودها وما يلزم الحصول عليه من مزودين خارجيين."
+      },
+      "guidance": {
+        "en": "Ask how resource needs are raised and approved, and look for signs of shortage in the processes you audit.",
+        "ar": "اسأل عن طريقة طلب الاحتياجات من الموارد واعتمادها، وابحث عن مؤشرات نقص الموارد في العمليات التي تدققها."
+      },
+      "evidence": {
+        "en": [
+          "Budget or resource plan",
+          "Management review outputs on resources"
+        ],
+        "ar": [
+          "الميزانية أو خطة الموارد",
+          "مخرجات مراجعة الإدارة بشأن الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "QMS-17",
+      "clause": "7.1.2",
+      "title": {
+        "en": "People",
+        "ar": "الأفراد"
+      },
+      "requirement": {
+        "en": "The organization has the people it needs to run the system and to operate and control its processes effectively.",
+        "ar": "لدى المنظمة الأفراد اللازمون لتطبيق النظام وتشغيل عملياتها والتحكم فيها بفاعلية."
+      },
+      "guidance": {
+        "en": "Compare staffing on the floor with planned staffing and look at overtime, backlog and vacancies in critical roles.",
+        "ar": "قارن عدد العاملين الفعلي بالعدد المخطط، وانظر إلى ساعات العمل الإضافي والأعمال المتراكمة والشواغر في الأدوار الحرجة."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart and headcount",
+          "Shift rosters or manpower plans"
+        ],
+        "ar": [
+          "الهيكل التنظيمي وعدد العاملين",
+          "جداول المناوبات أو خطط القوى العاملة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-18",
+      "clause": "7.1.3",
+      "title": {
+        "en": "Infrastructure",
+        "ar": "البنية التحتية"
+      },
+      "requirement": {
+        "en": "Buildings, equipment, utilities, transport and information technology needed for the processes are determined, provided and maintained.",
+        "ar": "حُددت المباني والمعدات والمرافق ووسائل النقل وتقنية المعلومات اللازمة للعمليات، وهي متوفرة ومصانة."
+      },
+      "guidance": {
+        "en": "Sample critical equipment and check preventive maintenance plans against records and breakdown history.",
+        "ar": "اختر عينة من المعدات الحرجة وقارن خطط الصيانة الوقائية بالسجلات وتاريخ الأعطال."
+      },
+      "evidence": {
+        "en": [
+          "Equipment list and maintenance plan",
+          "Maintenance and breakdown records",
+          "IT backup and support records"
+        ],
+        "ar": [
+          "قائمة المعدات وخطة الصيانة",
+          "سجلات الصيانة والأعطال",
+          "سجلات النسخ الاحتياطي والدعم الفني"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample three to five critical machines or systems.",
+        "ar": "اختر عينة من ثلاث إلى خمس آلات أو أنظمة حرجة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-19",
+      "clause": "7.1.4",
+      "title": {
+        "en": "Environment for the operation of processes",
+        "ar": "بيئة تشغيل العمليات"
+      },
+      "requirement": {
+        "en": "The physical, social and psychological conditions needed for the processes and for product conformity are determined, provided and maintained, such as temperature, cleanliness, lighting or workload.",
+        "ar": "حُددت الظروف المادية والاجتماعية والنفسية اللازمة للعمليات ولمطابقة المنتجات، وهي متوفرة ومحافظ عليها، مثل الحرارة والنظافة والإضاءة وضغط العمل."
+      },
+      "guidance": {
+        "en": "Where conditions affect the product (clean rooms, storage temperature, humidity), check limits are defined and monitored.",
+        "ar": "حيث تؤثر الظروف في المنتج (الغرف النظيفة أو حرارة التخزين أو الرطوبة) تحقق من تحديد الحدود ومراقبتها."
+      },
+      "evidence": {
+        "en": [
+          "Defined environmental limits for processes",
+          "Monitoring logs (temperature, humidity, cleaning)"
+        ],
+        "ar": [
+          "الحدود البيئية المحددة للعمليات",
+          "سجلات المراقبة (الحرارة والرطوبة والتنظيف)"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-20",
+      "clause": "7.1.5.1",
+      "title": {
+        "en": "Monitoring and measuring resources: general",
+        "ar": "موارد المراقبة والقياس: عام"
+      },
+      "requirement": {
+        "en": "Where monitoring or measurement is used to verify conformity, the resources used are suitable for the task and maintained so they keep giving valid and reliable results, and records show this.",
+        "ar": "حيث تُستخدم المراقبة أو القياس للتحقق من المطابقة، تكون الموارد المستخدمة ملائمة للمهمة ومصانة لتبقى نتائجها صحيحة وموثوقة، وتثبت السجلات ذلك."
+      },
+      "guidance": {
+        "en": "Ask how measurement needs were decided (range, resolution, method) and check fitness for purpose of surveys, tests or inspection tools.",
+        "ar": "اسأل عن طريقة تحديد احتياجات القياس (المدى ودقة القراءة والطريقة) وتحقق من ملاءمة الاستبيانات أو الاختبارات أو أدوات الفحص للغرض."
+      },
+      "evidence": {
+        "en": [
+          "List of monitoring and measuring resources",
+          "Records of fitness for purpose"
+        ],
+        "ar": [
+          "قائمة موارد المراقبة والقياس",
+          "سجلات الملاءمة للغرض"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-21",
+      "clause": "7.1.5.2",
+      "title": {
+        "en": "Measurement traceability",
+        "ar": "إمكانية تتبع القياس"
+      },
+      "requirement": {
+        "en": "Where traceability is required or relied on, measuring equipment is calibrated or verified at set intervals against traceable standards, identified for status, protected from invalidating adjustment or damage, and past results are assessed when equipment is found out of tolerance.",
+        "ar": "حيث تكون إمكانية التتبع مطلوبة أو معتمداً عليها، تُعاير معدات القياس أو يُتحقق منها على فترات محددة مقابل معايير قابلة للتتبع، وتُميَّز حالتها، وتُحمى من الضبط أو التلف الذي يبطل نتائجها، وتُقيَّم النتائج السابقة عند اكتشاف خروجها عن التفاوت المسموح."
+      },
+      "guidance": {
+        "en": "Sample instruments on the floor, match labels to the register and certificates, and ask what happened the last time an instrument failed calibration.",
+        "ar": "اختر عينة من الأجهزة في موقع العمل، وطابق ملصقاتها مع السجل والشهادات، واسأل عما حدث آخر مرة فشل فيها جهاز في المعايرة."
+      },
+      "evidence": {
+        "en": [
+          "Calibration register and schedule",
+          "Calibration certificates showing traceability",
+          "Records of action on out of tolerance results"
+        ],
+        "ar": [
+          "سجل المعايرة وجدولها",
+          "شهادات المعايرة التي تبين إمكانية التتبع",
+          "سجلات الإجراءات المتخذة على النتائج الخارجة عن التفاوت"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample three to five instruments used for product or process acceptance.",
+        "ar": "اختر عينة من ثلاثة إلى خمسة أجهزة تُستخدم لقبول المنتج أو العملية."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-22",
+      "clause": "7.1.6",
+      "title": {
+        "en": "Organizational knowledge",
+        "ar": "المعرفة التنظيمية"
+      },
+      "requirement": {
+        "en": "Knowledge needed to run processes and achieve conformity is identified, kept and shared, and new knowledge is obtained when needs change.",
+        "ar": "تُحدد المعرفة اللازمة لتشغيل العمليات وتحقيق المطابقة وتُحفظ وتُشارك، ويُكتسب الجديد منها عند تغير الاحتياجات."
+      },
+      "guidance": {
+        "en": "Ask how know-how is protected when key people leave.",
+        "ar": "اسأل عن طريقة حماية الخبرة عند مغادرة الأشخاص الرئيسيين."
+      },
+      "evidence": {
+        "en": [
+          "Lessons learned or knowledge base",
+          "Handover or mentoring records"
+        ],
+        "ar": [
+          "الدروس المستفادة أو قاعدة المعرفة",
+          "سجلات التسليم أو الإرشاد"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-23",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "The competence needed for work affecting performance is defined, people are competent through education, training or experience, gaps are closed and evidence is kept.",
+        "ar": "حُددت الكفاءة اللازمة للأعمال المؤثرة في الأداء، والأفراد أكفاء بالتعليم أو التدريب أو الخبرة، وتُسد الفجوات وتُحفظ الأدلة."
+      },
+      "guidance": {
+        "en": "Sample people in key roles you met during the audit and check their records against the defined competence.",
+        "ar": "اختر عينة من الأفراد في الأدوار الرئيسية الذين قابلتهم وتحقق من سجلاتهم مقابل الكفاءة المحددة."
+      },
+      "evidence": {
+        "en": [
+          "Competence requirements per role",
+          "Training records and evaluation of effectiveness",
+          "Qualification certificates"
+        ],
+        "ar": [
+          "متطلبات الكفاءة لكل دور",
+          "سجلات التدريب وتقييم فاعليته",
+          "شهادات المؤهلات"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample at least three people in roles that affect conformity.",
+        "ar": "اختر عينة من ثلاثة أفراد على الأقل في أدوار مؤثرة في المطابقة."
+      },
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "QMS-24",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "People doing the work know the policy, the objectives that concern them, how they contribute and what happens if they do not follow the system.",
+        "ar": "يعرف القائمون بالعمل السياسة والأهداف المتعلقة بهم وكيف يسهمون، وما يترتب على عدم الالتزام بالنظام."
+      },
+      "guidance": {
+        "en": "Ask operators, not managers. Short informal questions at the workplace work best.",
+        "ar": "اسأل العاملين في الميدان لا المديرين، والأسئلة القصيرة غير الرسمية في موقع العمل هي الأنسب."
+      },
+      "evidence": {
+        "en": [
+          "Interviews at the workplace",
+          "Induction and awareness records"
+        ],
+        "ar": [
+          "مقابلات في موقع العمل",
+          "سجلات التهيئة والتوعية"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "QMS-25",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "الاتصال"
+      },
+      "requirement": {
+        "en": "The organization has decided what it communicates about the quality management system, when, to whom, how and who does it, internally and externally.",
+        "ar": "حددت المنظمة ما تتواصل بشأنه في نظام إدارة الجودة ومتى ومع من وكيف ومن يتولى ذلك، داخلياً وخارجياً."
+      },
+      "guidance": {
+        "en": "Check one internal and one external communication against the arrangements.",
+        "ar": "تحقق من اتصال داخلي واحد واتصال خارجي واحد مقابل الترتيبات المحددة."
+      },
+      "evidence": {
+        "en": [
+          "Communication plan or matrix",
+          "Examples of internal and external communication"
+        ],
+        "ar": [
+          "خطة الاتصال أو مصفوفته",
+          "أمثلة على الاتصالات الداخلية والخارجية"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "QMS-26",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information: general",
+        "ar": "المعلومات الموثقة: عام"
+      },
+      "requirement": {
+        "en": "The system includes the documented information the standard requires and whatever else the organization has decided it needs for the system to be effective.",
+        "ar": "يتضمن النظام المعلومات الموثقة التي يطلبها المعيار وكل ما قررت المنظمة أنه لازم لفاعلية النظام."
+      },
+      "guidance": {
+        "en": "Use the document master list to confirm the required documented information exists (scope, policy, objectives, records the standard asks to retain).",
+        "ar": "استخدم القائمة الرئيسية للوثائق للتأكد من وجود المعلومات الموثقة المطلوبة (النطاق والسياسة والأهداف والسجلات التي يطلب المعيار الاحتفاظ بها)."
+      },
+      "evidence": {
+        "en": [
+          "Master list of documents and records",
+          "Quality manual or system description, if used"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق والسجلات",
+          "دليل الجودة أو وصف النظام إن وُجد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "QMS-27",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating",
+        "ar": "الإنشاء والتحديث"
+      },
+      "requirement": {
+        "en": "Documents are created and updated with proper identification (title, date, author or reference), a suitable format and media, and are reviewed and approved for suitability before use.",
+        "ar": "تُنشأ الوثائق وتُحدَّث مع تعريف مناسب (العنوان والتاريخ والمُعد أو الرقم المرجعي) وشكل ووسيط ملائمين، وتُراجع وتُعتمد للتأكد من ملاءمتها قبل الاستخدام."
+      },
+      "guidance": {
+        "en": "Pick recently revised documents and check the approval and revision history.",
+        "ar": "اختر وثائق رُوجعت حديثاً وتحقق من اعتمادها وسجل مراجعاتها."
+      },
+      "evidence": {
+        "en": [
+          "Revision history of sampled documents",
+          "Document approval records"
+        ],
+        "ar": [
+          "سجل مراجعات الوثائق المختارة",
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "QMS-28",
+      "clause": "7.5.3.1",
+      "title": {
+        "en": "Control of documented information: availability and protection",
+        "ar": "ضبط المعلومات الموثقة: الإتاحة والحماية"
+      },
+      "requirement": {
+        "en": "Documented information is available and fit for use where and when it is needed, and is protected from loss of confidentiality, improper use or loss of integrity.",
+        "ar": "المعلومات الموثقة متاحة وصالحة للاستخدام في المكان والوقت اللازمين، ومحمية من فقدان السرية أو سوء الاستخدام أو فقدان السلامة."
+      },
+      "guidance": {
+        "en": "At workstations, check the version in use against the master list and ask how electronic records are protected and backed up.",
+        "ar": "في مواقع العمل قارن الإصدار المستخدم بالقائمة الرئيسية، واسأل عن طريقة حماية السجلات الإلكترونية ونسخها احتياطياً."
+      },
+      "evidence": {
+        "en": [
+          "Current documents at points of use",
+          "Access rights and backup records"
+        ],
+        "ar": [
+          "الوثائق السارية في مواقع الاستخدام",
+          "صلاحيات الوصول وسجلات النسخ الاحتياطي"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "QMS-29",
+      "clause": "7.5.3.2",
+      "title": {
+        "en": "Control of documented information: distribution, storage and retention",
+        "ar": "ضبط المعلومات الموثقة: التوزيع والتخزين والاحتفاظ"
+      },
+      "requirement": {
+        "en": "The organization controls distribution, access, retrieval, storage, preservation, change, retention and disposal of documented information, controls relevant external documents, and protects records from unintended changes.",
+        "ar": "تضبط المنظمة توزيع المعلومات الموثقة والوصول إليها واسترجاعها وتخزينها والحفاظ عليها وتغييرها والاحتفاظ بها والتخلص منها، وتضبط الوثائق الخارجية ذات الصلة، وتحمي السجلات من التغيير غير المقصود."
+      },
+      "guidance": {
+        "en": "Ask for an old record within its retention period and see how long it takes to retrieve. Check external documents (standards, customer drawings) are identified and current.",
+        "ar": "اطلب سجلاً قديماً ضمن فترة الاحتفاظ ولاحظ الوقت اللازم لاسترجاعه. وتحقق من تمييز الوثائق الخارجية (المواصفات ورسومات العملاء) وسريانها."
+      },
+      "evidence": {
+        "en": [
+          "Retention schedule",
+          "Register of external documents",
+          "Obsolete document handling records"
+        ],
+        "ar": [
+          "جدول الاحتفاظ بالسجلات",
+          "سجل الوثائق الخارجية",
+          "سجلات التعامل مع الوثائق الملغاة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "QMS-30",
+      "clause": "8.1",
+      "title": {
+        "en": "Operational planning and control",
+        "ar": "تخطيط العمليات وضبطها"
+      },
+      "requirement": {
+        "en": "Processes needed to meet requirements are planned with criteria, carried out under control, outsourced processes are controlled and planned changes are managed.",
+        "ar": "تُخطط العمليات اللازمة لتلبية المتطلبات بمعايير محددة، وتُنفذ تحت السيطرة، وتُضبط العمليات المسندة إلى جهات خارجية، وتُدار التغييرات المخططة."
+      },
+      "guidance": {
+        "en": "Walk the main process on site. Compare what you see with the documented criteria.",
+        "ar": "تجول في العملية الرئيسية ميدانياً وقارن ما تشاهده بالمعايير الموثقة."
+      },
+      "evidence": {
+        "en": [
+          "Operational procedures or work instructions",
+          "Records proving criteria were met",
+          "Controls over outsourced processes"
+        ],
+        "ar": [
+          "إجراءات التشغيل أو تعليمات العمل",
+          "سجلات تثبت تحقق المعايير",
+          "ضوابط العمليات المسندة خارجياً"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Cover every shift and site in the audit programme over the cycle.",
+        "ar": "غطّ جميع الورديات والمواقع ضمن برنامج التدقيق خلال الدورة."
+      },
+      "mandatory": true,
+      "common": true,
+      "key": "hs-8.1"
+    },
+    {
+      "code": "QMS-31",
+      "clause": "8.2.1",
+      "title": {
+        "en": "Customer communication",
+        "ar": "التواصل مع العملاء"
+      },
+      "requirement": {
+        "en": "Communication with customers covers product and service information, enquiries, contracts and orders with their changes, customer feedback including complaints, handling of customer property, and contingency actions where relevant.",
+        "ar": "يشمل التواصل مع العملاء معلومات المنتجات والخدمات، والاستفسارات والعقود والطلبات وتعديلاتها، وملاحظات العملاء بما فيها الشكاوى، والتعامل مع ممتلكات العميل، وإجراءات الطوارئ حيث يلزم."
+      },
+      "guidance": {
+        "en": "Sample complaints and enquiries and trace how they were received, answered and closed.",
+        "ar": "اختر عينة من الشكاوى والاستفسارات وتتبع طريقة استلامها والرد عليها وإغلاقها."
+      },
+      "evidence": {
+        "en": [
+          "Customer complaint log",
+          "Customer correspondence and feedback records"
+        ],
+        "ar": [
+          "سجل شكاوى العملاء",
+          "مراسلات العملاء وسجلات الملاحظات"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample three to five recent complaints or feedback items.",
+        "ar": "اختر عينة من ثلاث إلى خمس شكاوى أو ملاحظات حديثة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-32",
+      "clause": "8.2.2",
+      "title": {
+        "en": "Determining requirements for products and services",
+        "ar": "تحديد متطلبات المنتجات والخدمات"
+      },
+      "requirement": {
+        "en": "When defining what it will offer, the organization identifies the product and service requirements, including applicable legal requirements and those it considers necessary, and makes sure it can meet its claims.",
+        "ar": "عند تحديد ما ستقدمه، تحدد المنظمة متطلبات المنتجات والخدمات بما فيها المتطلبات القانونية المنطبقة وما تراه ضرورياً، وتتأكد من قدرتها على الوفاء بما تعلنه."
+      },
+      "guidance": {
+        "en": "Compare catalogue, website or brochure claims with what the processes can actually deliver.",
+        "ar": "قارن ما يُعلن في الكتالوج أو الموقع الإلكتروني أو النشرات بما تستطيع العمليات تقديمه فعلاً."
+      },
+      "evidence": {
+        "en": [
+          "Product or service specifications",
+          "Register of applicable legal and regulatory requirements"
+        ],
+        "ar": [
+          "مواصفات المنتجات أو الخدمات",
+          "سجل المتطلبات القانونية والتنظيمية المنطبقة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-33",
+      "clause": "8.2.3",
+      "title": {
+        "en": "Review of requirements for products and services",
+        "ar": "مراجعة متطلبات المنتجات والخدمات"
+      },
+      "requirement": {
+        "en": "Before committing to supply, the organization reviews customer stated and implied requirements, delivery and post delivery needs, legal requirements and any differences from earlier offers, confirms requirements not stated in writing, and keeps records of the review and of new requirements.",
+        "ar": "قبل الالتزام بالتوريد تراجع المنظمة متطلبات العميل المعلنة والضمنية واحتياجات التسليم وما بعده والمتطلبات القانونية وأي اختلاف عن العروض السابقة، وتؤكد المتطلبات غير المكتوبة، وتحتفظ بسجلات المراجعة وبأي متطلبات جديدة."
+      },
+      "guidance": {
+        "en": "Sample orders or contracts and check the review was done before acceptance, including verbal or online orders.",
+        "ar": "اختر عينة من الطلبات أو العقود وتحقق من مراجعتها قبل القبول، بما فيها الطلبات الشفهية أو الإلكترونية."
+      },
+      "evidence": {
+        "en": [
+          "Contract or order review records",
+          "Tender or quotation review checklists"
+        ],
+        "ar": [
+          "سجلات مراجعة العقود أو الطلبات",
+          "قوائم مراجعة العطاءات أو عروض الأسعار"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample around five recent orders or contracts.",
+        "ar": "اختر عينة من نحو خمسة طلبات أو عقود حديثة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-34",
+      "clause": "8.2.4",
+      "title": {
+        "en": "Changes to requirements for products and services",
+        "ar": "التغييرات في متطلبات المنتجات والخدمات"
+      },
+      "requirement": {
+        "en": "When requirements change, the related documented information is amended and the people concerned are told about the changed requirements.",
+        "ar": "عند تغير المتطلبات تُعدَّل المعلومات الموثقة ذات الصلة ويُبلَّغ الأفراد المعنيون بالمتطلبات المعدلة."
+      },
+      "guidance": {
+        "en": "Find an amended order and check that production, purchasing or delivery worked to the new version.",
+        "ar": "ابحث عن طلب معدل وتحقق من أن الإنتاج أو المشتريات أو التسليم عملت وفق النسخة الجديدة."
+      },
+      "evidence": {
+        "en": [
+          "Records of amended orders or contracts",
+          "Communication of changes to relevant functions"
+        ],
+        "ar": [
+          "سجلات الطلبات أو العقود المعدلة",
+          "إبلاغ التغييرات للوظائف المعنية"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-35",
+      "clause": "8.3.1",
+      "title": {
+        "en": "Design and development: general",
+        "ar": "التصميم والتطوير: عام"
+      },
+      "requirement": {
+        "en": "Where the organization designs products or services, it has a design and development process suited to ensuring later provision. Where design is excluded, the exclusion is justified in the scope.",
+        "ar": "حيث تصمم المنظمة المنتجات أو الخدمات، لديها عملية تصميم وتطوير ملائمة تضمن إمكانية تقديمها لاحقاً. وحيث يُستثنى التصميم يكون الاستثناء مبرراً في النطاق."
+      },
+      "guidance": {
+        "en": "Confirm whether the organization really designs: customer drawings only, own specifications, or service design. Challenge unjustified exclusions.",
+        "ar": "تأكد مما إذا كانت المنظمة تصمم فعلاً: رسومات العميل فقط أم مواصفات خاصة بها أم تصميم خدمات. وناقش أي استثناء غير مبرر."
+      },
+      "evidence": {
+        "en": [
+          "Design and development procedure",
+          "Justification of exclusion, if any"
+        ],
+        "ar": [
+          "إجراء التصميم والتطوير",
+          "مبرر الاستثناء إن وُجد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-36",
+      "clause": "8.3.2",
+      "title": {
+        "en": "Design and development planning",
+        "ar": "تخطيط التصميم والتطوير"
+      },
+      "requirement": {
+        "en": "Stages and controls of design are planned considering the nature and complexity of the work, required reviews, verification and validation, responsibilities, resources, interfaces, customer and user involvement and the records needed.",
+        "ar": "تُخطط مراحل التصميم وضوابطه مع مراعاة طبيعة العمل وتعقيده والمراجعات والتحقق والمصادقة المطلوبة والمسؤوليات والموارد والتداخلات ومشاركة العملاء والمستخدمين والسجلات اللازمة."
+      },
+      "guidance": {
+        "en": "Sample one or two recent design projects and look for the plan with stages and responsibilities.",
+        "ar": "اختر مشروع تصميم أو مشروعين حديثين وابحث عن الخطة التي تحدد المراحل والمسؤوليات."
+      },
+      "evidence": {
+        "en": [
+          "Design project plan",
+          "Assignment of design responsibilities"
+        ],
+        "ar": [
+          "خطة مشروع التصميم",
+          "تحديد مسؤوليات التصميم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample one or two design projects per audit.",
+        "ar": "اختر مشروع تصميم أو مشروعين في كل تدقيق."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-37",
+      "clause": "8.3.3",
+      "title": {
+        "en": "Design and development inputs",
+        "ar": "مدخلات التصميم والتطوير"
+      },
+      "requirement": {
+        "en": "Inputs essential to the design are determined, including functional and performance requirements, earlier similar designs, legal requirements, standards and the possible consequences of failure; they are adequate, complete, unambiguous and recorded, and conflicts are resolved.",
+        "ar": "حُددت المدخلات الأساسية للتصميم بما فيها متطلبات الوظيفة والأداء والتصاميم السابقة المشابهة والمتطلبات القانونية والمواصفات والعواقب المحتملة للإخفاق، وهي كافية وكاملة وواضحة ومسجلة، وتُحل أي تعارضات بينها."
+      },
+      "guidance": {
+        "en": "Check the input list for the sampled project and whether conflicting inputs were resolved.",
+        "ar": "تحقق من قائمة المدخلات للمشروع المختار ومن حل أي مدخلات متعارضة."
+      },
+      "evidence": {
+        "en": [
+          "Design input specification or brief",
+          "Applicable standards and regulations list"
+        ],
+        "ar": [
+          "مواصفة أو موجز مدخلات التصميم",
+          "قائمة المواصفات واللوائح المنطبقة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-38",
+      "clause": "8.3.4",
+      "title": {
+        "en": "Design and development controls",
+        "ar": "ضوابط التصميم والتطوير"
+      },
+      "requirement": {
+        "en": "Design is controlled so that results to be achieved are defined, reviews assess whether requirements can be met, verification confirms outputs meet inputs, validation confirms the product meets its intended use, problems are acted on and records are kept.",
+        "ar": "يُضبط التصميم بحيث تُحدد النتائج المطلوب تحقيقها، وتقيّم المراجعات القدرة على تلبية المتطلبات، ويؤكد التحقق مطابقة المخرجات للمدخلات، وتؤكد المصادقة ملاءمة المنتج للاستخدام المقصود، وتُعالج المشكلات وتُحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Look for evidence of all three activities (review, verification, validation) and who took part.",
+        "ar": "ابحث عن أدلة الأنشطة الثلاثة (المراجعة والتحقق والمصادقة) ومن شارك فيها."
+      },
+      "evidence": {
+        "en": [
+          "Design review minutes",
+          "Verification test reports",
+          "Validation or trial results"
+        ],
+        "ar": [
+          "محاضر مراجعة التصميم",
+          "تقارير اختبارات التحقق",
+          "نتائج المصادقة أو التجارب"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-39",
+      "clause": "8.3.5",
+      "title": {
+        "en": "Design and development outputs",
+        "ar": "مخرجات التصميم والتطوير"
+      },
+      "requirement": {
+        "en": "Design outputs meet the input requirements, are adequate for purchasing, production and service provision, include or reference monitoring and acceptance criteria, and state the characteristics essential for safe and proper use.",
+        "ar": "تلبي مخرجات التصميم متطلبات المدخلات، وتكفي لأغراض الشراء والإنتاج وتقديم الخدمة، وتتضمن معايير المراقبة والقبول أو تشير إليها، وتحدد الخصائص الأساسية للاستخدام الآمن والسليم."
+      },
+      "guidance": {
+        "en": "Check that drawings or specifications released to production include acceptance criteria and critical characteristics.",
+        "ar": "تحقق من أن الرسومات أو المواصفات المسلمة للإنتاج تتضمن معايير القبول والخصائص الحرجة."
+      },
+      "evidence": {
+        "en": [
+          "Released drawings, specifications or service descriptions",
+          "Acceptance criteria and inspection plans"
+        ],
+        "ar": [
+          "الرسومات أو المواصفات أو أوصاف الخدمات المعتمدة للإصدار",
+          "معايير القبول وخطط الفحص"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-40",
+      "clause": "8.3.6",
+      "title": {
+        "en": "Design and development changes",
+        "ar": "تغييرات التصميم والتطوير"
+      },
+      "requirement": {
+        "en": "Changes made during or after design are identified, reviewed and controlled so they do not harm conformity, with records of the change, reviews, authorization and actions to prevent adverse effects.",
+        "ar": "تُحدد التغييرات التي تُجرى أثناء التصميم أو بعده وتُراجع وتُضبط حتى لا تضر بالمطابقة، مع حفظ سجلات التغيير والمراجعات والتفويض والإجراءات المتخذة لمنع الآثار السلبية."
+      },
+      "guidance": {
+        "en": "Sample a design change and check it was assessed and authorized before release.",
+        "ar": "اختر تغييراً في التصميم وتحقق من تقييمه واعتماده قبل الإصدار."
+      },
+      "evidence": {
+        "en": [
+          "Design change requests and approvals",
+          "Impact assessment of changes"
+        ],
+        "ar": [
+          "طلبات تغيير التصميم واعتماداتها",
+          "تقييم أثر التغييرات"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-41",
+      "clause": "8.4.1",
+      "title": {
+        "en": "Control of external provision: general",
+        "ar": "ضبط ما يقدمه المزودون الخارجيون: عام"
+      },
+      "requirement": {
+        "en": "Externally provided processes, products and services conform to requirements; the organization sets and applies criteria to evaluate, select, monitor and re-evaluate external providers and keeps records of these evaluations and resulting actions.",
+        "ar": "تطابق العمليات والمنتجات والخدمات المقدمة من الخارج المتطلبات، وتضع المنظمة معايير لتقييم المزودين الخارجيين واختيارهم ومراقبة أدائهم وإعادة تقييمهم وتطبقها، وتحتفظ بسجلات هذه التقييمات والإجراءات الناتجة عنها."
+      },
+      "guidance": {
+        "en": "Sample critical suppliers and check initial evaluation, performance monitoring and action on poor performers.",
+        "ar": "اختر عينة من المزودين الحرجين وتحقق من التقييم الأولي ومراقبة الأداء والإجراءات المتخذة مع ضعيفي الأداء."
+      },
+      "evidence": {
+        "en": [
+          "Approved supplier list",
+          "Supplier evaluation and re-evaluation records",
+          "Supplier performance data"
+        ],
+        "ar": [
+          "قائمة المزودين المعتمدين",
+          "سجلات تقييم المزودين وإعادة تقييمهم",
+          "بيانات أداء المزودين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample three to five critical suppliers or outsourced processes.",
+        "ar": "اختر عينة من ثلاثة إلى خمسة مزودين حرجين أو عمليات مسندة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-42",
+      "clause": "8.4.2",
+      "title": {
+        "en": "Type and extent of control",
+        "ar": "نوع الضبط ومداه"
+      },
+      "requirement": {
+        "en": "Controls on external provision are defined according to its potential effect: outsourced processes stay within the system, controls on the provider and on its output are set, and verification such as incoming inspection is carried out.",
+        "ar": "تُحدد ضوابط ما يقدمه المزودون الخارجيون وفق أثره المحتمل، فتبقى العمليات المسندة ضمن النظام، وتُحدد الضوابط على المزود وعلى مخرجاته، ويُنفذ التحقق مثل فحص الاستلام."
+      },
+      "guidance": {
+        "en": "Ask how outsourced processes are controlled in practice and check incoming inspection records against the defined plan.",
+        "ar": "اسأل عن طريقة ضبط العمليات المسندة عملياً، وقارن سجلات فحص الاستلام بالخطة المحددة."
+      },
+      "evidence": {
+        "en": [
+          "Incoming inspection records",
+          "Outsourced process control arrangements"
+        ],
+        "ar": [
+          "سجلات فحص الاستلام",
+          "ترتيبات ضبط العمليات المسندة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-43",
+      "clause": "8.4.3",
+      "title": {
+        "en": "Information for external providers",
+        "ar": "المعلومات المقدمة للمزودين الخارجيين"
+      },
+      "requirement": {
+        "en": "Requirements are checked for adequacy before being sent to providers and cover what is to be supplied, approval of products and release, required competence, how the provider interacts with the organization, control and monitoring, and any verification at the provider premises.",
+        "ar": "يُتحقق من كفاية المتطلبات قبل إرسالها إلى المزودين، وتشمل ما سيُورد واعتماد المنتجات والإفراج عنها والكفاءة المطلوبة وطريقة تعامل المزود مع المنظمة والضبط والمراقبة وأي تحقق في موقع المزود."
+      },
+      "guidance": {
+        "en": "Sample purchase orders and check they state the specification, revision and acceptance requirements.",
+        "ar": "اختر عينة من أوامر الشراء وتحقق من أنها تذكر المواصفة ورقم الإصدار ومتطلبات القبول."
+      },
+      "evidence": {
+        "en": [
+          "Purchase orders or subcontract agreements",
+          "Approval of purchasing documents before issue"
+        ],
+        "ar": [
+          "أوامر الشراء أو اتفاقيات التعاقد من الباطن",
+          "اعتماد وثائق الشراء قبل إصدارها"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-44",
+      "clause": "8.5.1",
+      "title": {
+        "en": "Control of production and service provision",
+        "ar": "ضبط الإنتاج وتقديم الخدمة"
+      },
+      "requirement": {
+        "en": "Production and service delivery run under controlled conditions: documented characteristics and expected results are available, suitable equipment and monitoring resources are used, checks happen at the right stages, infrastructure and competent people are in place, and actions prevent human error.",
+        "ar": "يجري الإنتاج وتقديم الخدمة في ظروف مضبوطة، فخصائص المنتجات والنتائج المتوقعة موثقة ومتاحة، وتُستخدم معدات وموارد مراقبة ملائمة، وتُجرى الفحوص في المراحل المناسبة، وتتوفر البنية التحتية والأفراد الأكفاء، وتُتخذ إجراءات لمنع الخطأ البشري."
+      },
+      "guidance": {
+        "en": "Walk the process: check work instructions, in-process inspection and the people doing the work. Look for error-proofing on critical steps.",
+        "ar": "تجول في العملية وتحقق من تعليمات العمل والفحص أثناء التشغيل والأفراد القائمين بالعمل، وابحث عن وسائل منع الخطأ في الخطوات الحرجة."
+      },
+      "evidence": {
+        "en": [
+          "Work instructions at the point of use",
+          "In-process inspection records",
+          "Production or service plans"
+        ],
+        "ar": [
+          "تعليمات العمل في موقع الاستخدام",
+          "سجلات الفحص أثناء التشغيل",
+          "خطط الإنتاج أو تقديم الخدمة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Cover each product line or service type over the certification cycle.",
+        "ar": "غطِّ كل خط إنتاج أو نوع خدمة خلال دورة الشهادة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-45",
+      "clause": "8.5.1",
+      "title": {
+        "en": "Validation of special processes",
+        "ar": "المصادقة على العمليات الخاصة"
+      },
+      "requirement": {
+        "en": "Where the result of a process cannot be fully checked afterwards (for example welding, heat treatment, sterilization or some services), the process is validated and periodically revalidated to show it can achieve the planned results.",
+        "ar": "حيث لا يمكن التحقق الكامل من نتيجة العملية بعد تنفيذها (مثل اللحام أو المعالجة الحرارية أو التعقيم أو بعض الخدمات) تُجرى المصادقة على العملية وإعادة المصادقة دورياً لإثبات قدرتها على تحقيق النتائج المخطط لها."
+      },
+      "guidance": {
+        "en": "Ask which processes cannot be verified after the event and check validation records, qualified operators and approved parameters.",
+        "ar": "اسأل عن العمليات التي لا يمكن التحقق منها بعد تنفيذها، وتحقق من سجلات المصادقة وتأهيل المشغلين والمعايير التشغيلية المعتمدة."
+      },
+      "evidence": {
+        "en": [
+          "Process validation reports",
+          "Operator qualification records",
+          "Approved process parameters"
+        ],
+        "ar": [
+          "تقارير المصادقة على العمليات",
+          "سجلات تأهيل المشغلين",
+          "المعايير التشغيلية المعتمدة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-46",
+      "clause": "8.5.2",
+      "title": {
+        "en": "Identification and traceability",
+        "ar": "التمييز والتتبع"
+      },
+      "requirement": {
+        "en": "Outputs are identified by suitable means, their status against monitoring and measurement is identified throughout, and where traceability is required the unique identification is controlled and recorded.",
+        "ar": "تُميَّز المخرجات بوسائل ملائمة، وتُميَّز حالتها من حيث المراقبة والقياس طوال مراحل العمل، وحيث يكون التتبع مطلوباً يُضبط التمييز الفريد ويُسجَّل."
+      },
+      "guidance": {
+        "en": "Pick a finished item or delivered service and trace it back to materials, operators and inspection results.",
+        "ar": "اختر منتجاً نهائياً أو خدمة مسلمة وتتبعها رجوعاً إلى المواد والمشغلين ونتائج الفحص."
+      },
+      "evidence": {
+        "en": [
+          "Batch, lot or job records",
+          "Status labels or tags",
+          "Traceability exercise result"
+        ],
+        "ar": [
+          "سجلات الدفعات أو التشغيلات أو أوامر العمل",
+          "ملصقات أو بطاقات الحالة",
+          "نتيجة تمرين التتبع"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-47",
+      "clause": "8.5.3",
+      "title": {
+        "en": "Property belonging to customers or external providers",
+        "ar": "الممتلكات العائدة للعملاء أو المزودين الخارجيين"
+      },
+      "requirement": {
+        "en": "Property owned by customers or providers (materials, tooling, premises, data, intellectual property) is identified, verified, protected and safeguarded, and the owner is told and records kept when it is lost, damaged or unsuitable.",
+        "ar": "تُميَّز الممتلكات العائدة للعملاء أو المزودين (المواد والأدوات والمباني والبيانات والملكية الفكرية) ويُتحقق منها وتُحمى ويُحافظ عليها، ويُبلَّغ مالكها وتُحفظ السجلات عند فقدانها أو تلفها أو عدم صلاحيتها."
+      },
+      "guidance": {
+        "en": "Ask what customer property is held, including personal data, and how loss or damage would be reported.",
+        "ar": "اسأل عن ممتلكات العملاء الموجودة لدى المنظمة بما فيها البيانات الشخصية، وعن طريقة الإبلاغ عن فقدانها أو تلفها."
+      },
+      "evidence": {
+        "en": [
+          "Register of customer property",
+          "Reports to customers on lost or damaged property"
+        ],
+        "ar": [
+          "سجل ممتلكات العملاء",
+          "تقارير للعملاء عن الممتلكات المفقودة أو التالفة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-48",
+      "clause": "8.5.4",
+      "title": {
+        "en": "Preservation",
+        "ar": "الحفاظ على المخرجات"
+      },
+      "requirement": {
+        "en": "Outputs are preserved during production and delivery to keep them conforming, through identification, handling, contamination control, packaging, storage, transport and protection.",
+        "ar": "يُحافظ على المخرجات أثناء الإنتاج والتسليم لتبقى مطابقة، من خلال التمييز والمناولة ومنع التلوث والتغليف والتخزين والنقل والحماية."
+      },
+      "guidance": {
+        "en": "Visit stores and dispatch: check storage conditions, stock rotation, shelf life and packaging.",
+        "ar": "زر المخازن ومنطقة الشحن وتحقق من ظروف التخزين وتدوير المخزون وفترة الصلاحية والتغليف."
+      },
+      "evidence": {
+        "en": [
+          "Storage condition records",
+          "Packaging and handling instructions",
+          "Shelf life or FIFO control records"
+        ],
+        "ar": [
+          "سجلات ظروف التخزين",
+          "تعليمات التغليف والمناولة",
+          "سجلات ضبط فترة الصلاحية أو أولوية الصرف"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-49",
+      "clause": "8.5.5",
+      "title": {
+        "en": "Post-delivery activities",
+        "ar": "أنشطة ما بعد التسليم"
+      },
+      "requirement": {
+        "en": "Activities after delivery such as warranty, maintenance, recycling or final disposal are carried out, considering legal requirements, potential undesired consequences, product life, customer requirements and customer feedback.",
+        "ar": "تُنفذ أنشطة ما بعد التسليم مثل الضمان والصيانة وإعادة التدوير أو التخلص النهائي، مع مراعاة المتطلبات القانونية والعواقب غير المرغوبة المحتملة وعمر المنتج ومتطلبات العملاء وملاحظاتهم."
+      },
+      "guidance": {
+        "en": "Sample warranty claims or service calls and check they were handled to the defined arrangement.",
+        "ar": "اختر عينة من مطالبات الضمان أو طلبات الصيانة وتحقق من معالجتها وفق الترتيبات المحددة."
+      },
+      "evidence": {
+        "en": [
+          "Warranty or service records",
+          "After-sales service agreements"
+        ],
+        "ar": [
+          "سجلات الضمان أو الخدمة",
+          "اتفاقيات خدمة ما بعد البيع"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-50",
+      "clause": "8.5.6",
+      "title": {
+        "en": "Control of changes",
+        "ar": "ضبط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to production or service provision are reviewed and controlled to keep conformity, with records of the review results, who authorized the change and any actions arising.",
+        "ar": "تُراجع التغييرات في الإنتاج أو تقديم الخدمة وتُضبط للحفاظ على المطابقة، مع حفظ سجلات نتائج المراجعة ومن اعتمد التغيير وأي إجراءات ناتجة."
+      },
+      "guidance": {
+        "en": "Ask about recent changes (new machine, supplier, method or shift pattern) and look for the review and authorization.",
+        "ar": "اسأل عن التغييرات الحديثة (آلة أو مزود أو طريقة أو نظام مناوبات جديد) وابحث عن مراجعتها واعتمادها."
+      },
+      "evidence": {
+        "en": [
+          "Change requests and approvals",
+          "First-off or trial results after changes"
+        ],
+        "ar": [
+          "طلبات التغيير واعتماداتها",
+          "نتائج القطعة الأولى أو التجارب بعد التغيير"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-51",
+      "clause": "8.6",
+      "title": {
+        "en": "Release of products and services",
+        "ar": "الإفراج عن المنتجات والخدمات"
+      },
+      "requirement": {
+        "en": "Products and services are released only after planned checks confirm requirements are met, and the person authorizing release is identified.",
+        "ar": "لا يُفرج عن المنتجات والخدمات إلا بعد أن تؤكد الفحوص المخططة استيفاء المتطلبات، مع تحديد الشخص المخول بالإفراج."
+      },
+      "guidance": {
+        "en": "Check release records for the batches you traced.",
+        "ar": "تحقق من سجلات الإفراج للدفعات التي تتبعتها."
+      },
+      "evidence": {
+        "en": [
+          "Inspection and test records",
+          "Release authorizations"
+        ],
+        "ar": [
+          "سجلات الفحص والاختبار",
+          "تفويضات الإفراج"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-52",
+      "clause": "8.7.1",
+      "title": {
+        "en": "Control of nonconforming outputs: handling",
+        "ar": "ضبط المخرجات غير المطابقة: المعالجة"
+      },
+      "requirement": {
+        "en": "Nonconforming outputs are identified and controlled to prevent unintended use or delivery, including those found after delivery, and are dealt with by correction, segregation, return, suspension, informing the customer or authorized concession, with conformity rechecked after correction.",
+        "ar": "تُميَّز المخرجات غير المطابقة وتُضبط لمنع استخدامها أو تسليمها دون قصد، بما فيها ما يُكتشف بعد التسليم، وتُعالج بالتصحيح أو العزل أو الإرجاع أو الإيقاف أو إبلاغ العميل أو قبولها بتنازل معتمد، مع إعادة التحقق من المطابقة بعد التصحيح."
+      },
+      "guidance": {
+        "en": "Visit the quarantine area and check that held items are labelled and recorded. Sample recent nonconforming outputs and their disposition.",
+        "ar": "زر منطقة العزل وتحقق من تمييز المواد المحتجزة وتسجيلها، واختر عينة من المخرجات غير المطابقة الحديثة وطريقة التصرف فيها."
+      },
+      "evidence": {
+        "en": [
+          "Nonconforming product reports",
+          "Quarantine area and hold labels",
+          "Customer concessions"
+        ],
+        "ar": [
+          "تقارير المنتجات غير المطابقة",
+          "منطقة العزل وبطاقات الاحتجاز",
+          "التنازلات المعتمدة من العملاء"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "Sample three to five nonconforming output records.",
+        "ar": "اختر عينة من ثلاثة إلى خمسة سجلات لمخرجات غير مطابقة."
+      },
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-53",
+      "clause": "8.7.2",
+      "title": {
+        "en": "Records of nonconforming outputs",
+        "ar": "سجلات المخرجات غير المطابقة"
+      },
+      "requirement": {
+        "en": "Records describe each nonconformity, the action taken, any concession obtained and who decided the action.",
+        "ar": "تصف السجلات كل حالة عدم مطابقة والإجراء المتخذ وأي تنازل تم الحصول عليه ومن قرر الإجراء."
+      },
+      "guidance": {
+        "en": "Check the sampled records are complete and that the decision authority matches the defined responsibilities.",
+        "ar": "تحقق من اكتمال السجلات المختارة ومن توافق صلاحية القرار مع المسؤوليات المحددة."
+      },
+      "evidence": {
+        "en": [
+          "Completed nonconformity records",
+          "Authority matrix for dispositions"
+        ],
+        "ar": [
+          "سجلات عدم المطابقة المكتملة",
+          "مصفوفة صلاحيات التصرف"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-54",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation: general",
+        "ar": "المراقبة والقياس والتحليل والتقييم: عام"
+      },
+      "requirement": {
+        "en": "The organization decides what to monitor and measure, how and when, analyses the results and evaluates the performance and effectiveness of the quality management system.",
+        "ar": "تحدد المنظمة ما يجب رصده وقياسه وكيف ومتى، وتحلل النتائج وتقيّم أداء نظام إدارة الجودة وفاعليته."
+      },
+      "guidance": {
+        "en": "Check that the data analysed actually leads to decisions. Trends with no action are a weak point.",
+        "ar": "تحقق من أن البيانات المحللة تقود فعلاً إلى قرارات، فالاتجاهات التي لا يتبعها إجراء نقطة ضعف."
+      },
+      "evidence": {
+        "en": [
+          "Monitoring plan and KPIs",
+          "Analysis reports",
+          "Calibration of measuring equipment where relevant"
+        ],
+        "ar": [
+          "خطة الرصد ومؤشرات الأداء",
+          "تقارير التحليل",
+          "معايرة أجهزة القياس عند الحاجة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1"
+    },
+    {
+      "code": "QMS-55",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Customer satisfaction",
+        "ar": "رضا العملاء"
+      },
+      "requirement": {
+        "en": "The organization monitors how customers perceive the degree to which their needs and expectations are met, using defined methods.",
+        "ar": "ترصد المنظمة تصور العملاء لمدى تلبية احتياجاتهم وتوقعاتهم بأساليب محددة."
+      },
+      "guidance": {
+        "en": "Check the method gives usable data and that results are analysed.",
+        "ar": "تحقق من أن الأسلوب يعطي بيانات قابلة للاستخدام وأن النتائج تُحلل."
+      },
+      "evidence": {
+        "en": [
+          "Satisfaction surveys or feedback analysis",
+          "Complaint statistics"
+        ],
+        "ar": [
+          "استبيانات الرضا أو تحليل الآراء",
+          "إحصاءات الشكاوى"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-56",
+      "clause": "9.1.3",
+      "title": {
+        "en": "Analysis and evaluation",
+        "ar": "التحليل والتقييم"
+      },
+      "requirement": {
+        "en": "Data from monitoring and measurement are analysed and used to evaluate product conformity, customer satisfaction, system performance and effectiveness, whether planning worked, how well risk actions worked, supplier performance and the need for improvement.",
+        "ar": "تُحلل بيانات المراقبة والقياس وتُستخدم لتقييم مطابقة المنتجات ورضا العملاء وأداء النظام وفاعليته ونجاح التخطيط وفاعلية إجراءات المخاطر وأداء المزودين والحاجة إلى التحسين."
+      },
+      "guidance": {
+        "en": "Ask to see the analysis that fed the last management review and check each topic is covered, with trends rather than raw data.",
+        "ar": "اطلب التحليل الذي غذّى آخر مراجعة للإدارة، وتحقق من تغطية كل موضوع، مع اتجاهات وليس بيانات خام فقط."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards or trend reports",
+          "Supplier performance analysis",
+          "Data analysis presented to management"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء أو تقارير الاتجاهات",
+          "تحليل أداء المزودين",
+          "تحليل البيانات المقدم للإدارة"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-57",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit: purpose",
+        "ar": "التدقيق الداخلي: الغرض"
+      },
+      "requirement": {
+        "en": "Internal audits at planned intervals show whether the system meets the organization's own requirements and the standard, and whether it is effectively implemented and maintained.",
+        "ar": "تُبين عمليات التدقيق الداخلي على فترات مخططة ما إذا كان النظام يطابق متطلبات المنظمة نفسها ومتطلبات المعيار، وما إذا كان مطبقاً ومحافظاً عليه بفاعلية."
+      },
+      "guidance": {
+        "en": "Check that audits covered all clauses and processes and that findings are evidence based, not just checklists ticked.",
+        "ar": "تحقق من أن عمليات التدقيق غطت كل البنود والعمليات، وأن النتائج مبنية على أدلة وليست مجرد قوائم مؤشر عليها."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Audit checklists with evidence notes"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "قوائم التدقيق مع ملاحظات الأدلة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "QMS-58",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "An audit programme sets frequency, methods, responsibilities and reporting, considering process importance, changes and past results; each audit has criteria and scope, auditors are objective and impartial, results reach management, corrections and corrective actions follow without undue delay, and records are kept.",
+        "ar": "يحدد برنامج التدقيق التكرار والأساليب والمسؤوليات وإعداد التقارير مع مراعاة أهمية العمليات والتغييرات والنتائج السابقة، ولكل تدقيق معايير ونطاق، والمدققون موضوعيون ومحايدون، وتصل النتائج إلى الإدارة، ويُتبع التصحيح والإجراءات التصحيحية دون تأخير غير مبرر، وتُحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Check auditors did not audit their own work, compare the programme with what was done, and trace two findings to closure.",
+        "ar": "تحقق من أن المدققين لم يدققوا أعمالهم بأنفسهم، وقارن البرنامج بما نُفذ، وتتبع ملاحظتين حتى إغلاقهما."
+      },
+      "evidence": {
+        "en": [
+          "Audit programme and schedule",
+          "Auditor competence and independence records",
+          "Follow-up of audit findings"
+        ],
+        "ar": [
+          "برنامج التدقيق وجدوله",
+          "سجلات كفاءة المدققين واستقلاليتهم",
+          "متابعة ملاحظات التدقيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "QMS-59",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review: general",
+        "ar": "مراجعة الإدارة: عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the system at planned intervals to make sure it stays suitable, adequate, effective and aligned with the strategic direction.",
+        "ar": "تراجع الإدارة العليا النظام على فترات مخططة للتأكد من استمرار ملاءمته وكفايته وفاعليته وتوافقه مع التوجه الاستراتيجي."
+      },
+      "guidance": {
+        "en": "Check the planned frequency was kept and that top management, not only the quality manager, attended.",
+        "ar": "تحقق من الالتزام بالتكرار المخطط ومن حضور الإدارة العليا وليس مدير الجودة وحده."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule",
+          "Attendance list of the review"
+        ],
+        "ar": [
+          "جدول مراجعات الإدارة",
+          "قائمة حضور المراجعة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "QMS-60",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs",
+        "ar": "مدخلات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "The review considers status of earlier actions, changes in context, performance information (customer satisfaction, objectives, process performance, nonconformities, monitoring results, audit results, supplier performance), resources, effectiveness of risk actions and improvement opportunities.",
+        "ar": "تتناول المراجعة حالة الإجراءات السابقة، والتغيرات في السياق، ومعلومات الأداء (رضا العملاء والأهداف وأداء العمليات وحالات عدم المطابقة ونتائج المراقبة ونتائج التدقيق وأداء المزودين)، وكفاية الموارد، وفاعلية إجراءات المخاطر، وفرص التحسين."
+      },
+      "guidance": {
+        "en": "Tick each required input against the minutes. Missing inputs are a common finding.",
+        "ar": "طابق كل مدخل مطلوب مع المحضر، فغياب المدخلات من الملاحظات الشائعة."
+      },
+      "evidence": {
+        "en": [
+          "Management review agenda and input pack",
+          "Minutes covering each input"
+        ],
+        "ar": [
+          "جدول أعمال مراجعة الإدارة وحزمة المدخلات",
+          "محضر يغطي كل مدخل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "QMS-61",
+      "clause": "9.3.3",
+      "title": {
+        "en": "Management review outputs",
+        "ar": "مخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "The review results in decisions and actions on improvement opportunities, needed changes to the system and resource needs, and records are kept as evidence.",
+        "ar": "تنتج عن المراجعة قرارات وإجراءات بشأن فرص التحسين والتغييرات اللازمة في النظام واحتياجات الموارد، وتُحفظ السجلات دليلاً على ذلك."
+      },
+      "guidance": {
+        "en": "Trace two or three decisions from the last review and check they were implemented.",
+        "ar": "تتبع قرارين أو ثلاثة من آخر مراجعة وتحقق من تنفيذها."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes with decisions",
+          "Action tracker for review outputs"
+        ],
+        "ar": [
+          "محضر مراجعة الإدارة مع القرارات",
+          "متابعة إجراءات مخرجات المراجعة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.3"
+    },
+    {
+      "code": "QMS-62",
+      "clause": "10.1",
+      "title": {
+        "en": "Improvement: general",
+        "ar": "التحسين: عام"
+      },
+      "requirement": {
+        "en": "The organization identifies and acts on improvement opportunities to meet customer requirements and raise satisfaction, including improving products and services, correcting or reducing undesired effects, and improving system performance.",
+        "ar": "تحدد المنظمة فرص التحسين وتعمل عليها لتلبية متطلبات العملاء وزيادة رضاهم، بما في ذلك تحسين المنتجات والخدمات وتصحيح الآثار غير المرغوبة أو الحد منها وتحسين أداء النظام."
+      },
+      "guidance": {
+        "en": "Ask for examples of improvements made since the last audit and how they were chosen.",
+        "ar": "اطلب أمثلة على التحسينات المنفذة منذ التدقيق السابق وطريقة اختيارها."
+      },
+      "evidence": {
+        "en": [
+          "Improvement projects or suggestion records",
+          "Before and after performance data"
+        ],
+        "ar": [
+          "مشروعات التحسين أو سجلات المقترحات",
+          "بيانات الأداء قبل التحسين وبعده"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "QMS-63",
+      "clause": "10.2.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "When a nonconformity occurs, including from complaints, the organization reacts and corrects it, deals with consequences, finds the cause and whether similar cases exist, takes action to stop recurrence, reviews effectiveness, updates risks and opportunities and changes the system if needed.",
+        "ar": "عند حدوث عدم مطابقة، بما فيها ما ينشأ عن الشكاوى، تتعامل المنظمة معها وتصححها وتعالج عواقبها، وتحدد سببها ووجود حالات مشابهة، وتتخذ إجراء يمنع التكرار، وتراجع الفاعلية، وتحدّث المخاطر والفرص، وتغيّر النظام عند الحاجة."
+      },
+      "guidance": {
+        "en": "Sample closed corrective actions and check that the root cause was real and the action addressed it. Review actions on findings from the previous audit.",
+        "ar": "اختر عينة من الإجراءات التصحيحية المغلقة وتحقق من أن السبب الجذري حقيقي وأن الإجراء عالجه، وراجع الإجراءات المتخذة على ملاحظات التدقيق السابق."
+      },
+      "evidence": {
+        "en": [
+          "Nonconformity and corrective action log",
+          "Root cause analysis records",
+          "Effectiveness verification"
+        ],
+        "ar": [
+          "سجل حالات عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري",
+          "التحقق من الفاعلية"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": {
+        "en": "At surveillance, always verify actions on the previous nonconformities.",
+        "ar": "في تدقيق المراقبة تحقق دائماً من الإجراءات المتخذة على حالات عدم المطابقة السابقة."
+      },
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.nc"
+    },
+    {
+      "code": "QMS-64",
+      "clause": "10.2.2",
+      "title": {
+        "en": "Records of nonconformities and corrective actions",
+        "ar": "سجلات حالات عدم المطابقة والإجراءات التصحيحية"
+      },
+      "requirement": {
+        "en": "Records show the nature of each nonconformity, the actions taken and the results of the corrective action.",
+        "ar": "تبين السجلات طبيعة كل حالة عدم مطابقة والإجراءات المتخذة ونتائج الإجراء التصحيحي."
+      },
+      "guidance": {
+        "en": "Check records are complete and that effectiveness results are recorded, not only closure dates.",
+        "ar": "تحقق من اكتمال السجلات ومن تسجيل نتائج الفاعلية وليس تواريخ الإغلاق فقط."
+      },
+      "evidence": {
+        "en": [
+          "Corrective action reports",
+          "Effectiveness check results"
+        ],
+        "ar": [
+          "تقارير الإجراءات التصحيحية",
+          "نتائج التحقق من الفاعلية"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.nc"
+    },
+    {
+      "code": "QMS-65",
+      "clause": "10.3",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization keeps improving the suitability, adequacy and effectiveness of the quality management system.",
+        "ar": "تواصل المنظمة تحسين ملاءمة نظام إدارة الجودة وكفايته وفاعليته."
+      },
+      "guidance": {
+        "en": "Ask for examples of improvement since the last audit and how they were chosen.",
+        "ar": "اطلب أمثلة على التحسينات منذ التدقيق السابق وكيف جرى اختيارها."
+      },
+      "evidence": {
+        "en": [
+          "Improvement projects or initiatives",
+          "Trend of key indicators over time"
+        ],
+        "ar": [
+          "مشاريع أو مبادرات التحسين",
+          "اتجاه المؤشرات الرئيسية عبر الزمن"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.ci"
+    }
+  ]
+}
