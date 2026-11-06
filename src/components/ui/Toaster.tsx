@@ -11,6 +11,11 @@ const TONES: Record<ToastType, { accent: string; iconWrap: string; progress: str
     iconWrap: 'bg-success-50 text-success-600',
     progress: 'bg-success-500/60',
   },
+  warning: {
+    accent: 'bg-warning-500',
+    iconWrap: 'bg-warning-50 text-warning-700',
+    progress: 'bg-warning-500/60',
+  },
   error: {
     accent: 'bg-error-500',
     iconWrap: 'bg-error-50 text-error-500',
@@ -19,11 +24,24 @@ const TONES: Record<ToastType, { accent: string; iconWrap: string; progress: str
 }
 
 function ToastIcon({ type }: { type: ToastType }) {
-  return type === 'success' ? (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
-      <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  ) : (
+  if (type === 'success') {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+        <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    )
+  }
+
+  if (type === 'warning') {
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
+        <path d="M12 3.5L2.8 19.5h18.4L12 3.5z" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 10v4.5M12 17.5v.01" strokeLinecap="round" />
+      </svg>
+    )
+  }
+
+  return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden>
       <circle cx="12" cy="12" r="9" />
       <path d="M12 7.5v5.5M12 16.5v.01" strokeLinecap="round" />
@@ -113,7 +131,7 @@ function ToastCard({ item }: { item: ToastItem }) {
   )
 }
 
-/** Renders the toasts raised through `toast.success / toast.error`. Mount once at the app root. */
+/** Renders the toasts raised through `toast.success / toast.warning / toast.error`. Mount once at the app root. */
 export function Toaster() {
   const items = useSyncExternalStore(subscribeToasts, getToasts, getToasts)
 

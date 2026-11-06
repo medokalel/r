@@ -21,6 +21,7 @@ export const ROUTES = {
   cabApplicationSubmission: "/cab/applications/submission",
   cabCompanyProfile: "/cab/company-profile",
   cabTravelPolicy: "/cab/settings/travel-policy",
+  cabSso: "/cab/settings/sso",
   cabAuditChecklists: "/cab/audit-checklists",
   cabWorkspace: "/cab/workspace",
   cabApplicationReviewQueue: "/cab/applications/review-queue",

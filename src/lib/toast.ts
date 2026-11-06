@@ -3,11 +3,12 @@
  *
  *   toast.success('Saved')
  *   toast.error(getUserErrorMessage(error, t))
+ *   toast.warning('The domain is not verified yet')
  *   toast.error('Fix this', { action: { label: 'Go to the field', onClick: focusField } })
  *
  * Works from anywhere (components, hooks, plain functions). Render <Toaster /> once at the app root.
  */
-export type ToastType = 'success' | 'error'
+export type ToastType = 'success' | 'warning' | 'error'
 
 /** A quick link rendered under the message, e.g. "Go to the field". */
 export interface ToastAction {
@@ -30,6 +31,8 @@ export interface ToastItem {
 
 const SUCCESS_MS = 3500
 const ERROR_MS = 6000
+// Warnings need to be read, so they stay as long as errors.
+const WARNING_MS = ERROR_MS
 const EXTRA_MS_PER_LINE = 1500
 const MAX_MS = 12000
 // A toast with an action link stays a little longer so there is time to click it.
@@ -71,7 +74,7 @@ function push(type: ToastType, message: string, options?: ToastOptions) {
   if (duplicate) dismiss(duplicate.id)
 
   const lines = text.split('\n').length
-  const base = type === 'success' ? SUCCESS_MS : ERROR_MS
+  const base = type === 'success' ? SUCCESS_MS : type === 'warning' ? WARNING_MS : ERROR_MS
   const extra = options?.action ? ACTION_EXTRA_MS : 0
   const duration = Math.min(base + (lines - 1) * EXTRA_MS_PER_LINE + extra, MAX_MS)
 
@@ -83,6 +86,7 @@ function push(type: ToastType, message: string, options?: ToastOptions) {
 
 export const toast = {
   success: (message: string, options?: ToastOptions) => push('success', message, options),
+  warning: (message: string, options?: ToastOptions) => push('warning', message, options),
   error: (message: string, options?: ToastOptions) => push('error', message, options),
   dismiss,
 }
