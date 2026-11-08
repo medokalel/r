@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { downloadImportTemplate } from '@/components/dashboard/cab/dataMigration/downloadImportTemplate'
+import { ImportWizardDialog } from '@/components/dashboard/cab/dataMigration/ImportWizardDialog'
 import { MigrationEntityCard } from '@/components/dashboard/cab/dataMigration/MigrationEntityCard'
 import { MigrationProgressRing } from '@/components/dashboard/cab/dataMigration/MigrationProgressRing'
 import {
@@ -11,12 +13,11 @@ import { RecentImportsSection } from '@/components/dashboard/cab/dataMigration/R
 import { Card, SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { ErrorState } from '@/components/ui/ErrorState'
-import { getImportLists, loadMigrationHub, resolveIncompleteRecord, type MigrationHubData } from '@/lib/api/dataMigrationMockData'
+import { loadMigrationHub, resolveIncompleteRecord, type MigrationHubData } from '@/lib/api/dataMigrationMockData'
 import { getImportEntity } from '@/lib/dataMigrationEntities'
-import { buildTemplateSheets, templateFileName, type Translate } from '@/lib/dataMigrationForm'
+import type { Translate } from '@/lib/dataMigrationForm'
 import { IMPORT_ENTITY_KEYS, type ImportEntityKey, type IncompleteRecord } from '@/lib/dataMigrationTypes'
 import { toast } from '@/lib/toast'
-import { downloadXlsxWorkbook } from '@/lib/xlsxDownload'
 
 const HOW_IT_WORKS_STEPS = ['step1', 'step2', 'step3', 'step4'] as const
 
@@ -29,6 +30,7 @@ export function CabDataMigrationPage() {
   const [reloadKey, setReloadKey] = useState(0)
   const [filter, setFilter] = useState<'all' | ImportEntityKey>('all')
   const [resolvingId, setResolvingId] = useState<string | null>(null)
+  const [importEntity, setImportEntity] = useState<ImportEntityKey | null>(null)
 
   useEffect(() => {
     let active = true
@@ -56,12 +58,13 @@ export function CabDataMigrationPage() {
   // TODO: replace the mock calls (lib/api/dataMigrationMockData.ts) with the API once the endpoints exist.
   const handleDownloadTemplate = (key: ImportEntityKey) => {
     const translate: Translate = (translationKey, options) => t(translationKey, options)
-    const fileName = templateFileName(key)
-    downloadXlsxWorkbook(
-      fileName,
-      buildTemplateSheets(getImportEntity(key), isArabic ? 'ar' : 'en', getImportLists(), translate)
-    )
-    toast.success(t('cab.dataMigration.template.downloaded', { file: fileName }))
+    toast.success(t('cab.dataMigration.template.downloaded', { file: downloadImportTemplate(key, isArabic ? 'ar' : 'en', translate) }))
+  }
+
+  const refreshHub = () => {
+    loadMigrationHub()
+      .then(setHub)
+      .catch(() => setLoadFailed(true))
   }
 
   const handleShowIncomplete = (key: ImportEntityKey) => {
@@ -151,6 +154,7 @@ export function CabDataMigrationPage() {
                       isArabic={isArabic}
                       onShowIncomplete={() => handleShowIncomplete(key)}
                       onDownloadTemplate={() => handleDownloadTemplate(key)}
+                      onImport={() => setImportEntity(key)}
                     />
                   </li>
                 ))}
@@ -169,6 +173,16 @@ export function CabDataMigrationPage() {
 
             <RecentImportsSection batches={hub?.batches ?? []} loading={loading} isArabic={isArabic} />
           </>
+        )}
+
+        {importEntity && (
+          <ImportWizardDialog
+            key={importEntity}
+            entityKey={importEntity}
+            isArabic={isArabic}
+            onClose={() => setImportEntity(null)}
+            onImported={refreshHub}
+          />
         )}
       </main>
     </CabLayout>
