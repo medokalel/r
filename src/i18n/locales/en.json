@@ -7373,6 +7373,95 @@
         "requirementRequired": "Describe the requirement."
       }
     },
+    "dataMigration": {
+      "title": "Data migration",
+      "subtitle": "Move the records of your previous system into iCASCO, one template at a time. Nothing is saved before you review it, and existing records change only when you choose.",
+      "how": {
+        "title": "How it works",
+        "step1": "Download the template of an area. Each template has instructions and a Lists sheet with the allowed values.",
+        "step2": "Fill it offline with your records, one per row.",
+        "step3": "Upload it: iCASCO shows what it understood, the completeness of each row and what is missing.",
+        "step4": "Import the usable rows, then complete the remaining records from the list below."
+      },
+      "progress": "Migration progress",
+      "progressHint": "Areas imported: {{done}} of {{total}} · records to complete: {{open}}",
+      "order": "Suggested order",
+      "orderHint": "Each step uses the records of the earlier ones: clients before their sites and contacts, certificates before their cycles.",
+      "entity": {
+        "notStarted": "Not started",
+        "imported": "Imported: {{count}}",
+        "toComplete": "To complete: {{count}}",
+        "lastImport": "Last import {{date}}"
+      },
+      "actions": {
+        "import": "Import",
+        "template": "Template",
+        "open": "Open",
+        "markDone": "Mark as done",
+        "markDoneHint": "Use it after you filled the missing values in the register."
+      },
+      "toComplete": {
+        "title": "Records to complete",
+        "hint": "Imported without a field that is needed later. Open the register, fill the missing fields, then mark the record as done.",
+        "empty": "Nothing to complete. Records imported without a needed field appear here.",
+        "filterAll": "All areas",
+        "filterLabel": "Filter by area",
+        "missing": "Missing: {{fields}}",
+        "completeness": "How complete the record is",
+        "done": "The record was removed from the list.",
+        "doneFailed": "The record could not be updated. Try again."
+      },
+      "history": {
+        "title": "Recent imports",
+        "empty": "No imports yet.",
+        "rows": "Rows: {{count}}",
+        "summary": "Created: {{created}} · Updated: {{updated}}"
+      },
+      "template": {
+        "title": "Template for {{entity}}",
+        "howTo": "Fill one record per row on the Data sheet, below the example row. Keep the first two rows (labels and keys) as they are; the example row is ignored when you upload.",
+        "required": "Required (rows without them are not imported): {{columns}}",
+        "later": "Needed later (rows without them are imported and listed as records to complete): {{columns}}",
+        "formats": "Dates as YYYY-MM-DD · phone numbers with the country code · several values separated by commas · yes or no for flags",
+        "lists": "The values allowed for list columns are on the Lists sheet.",
+        "none": "none",
+        "downloaded": "Template downloaded: {{file}}"
+      },
+      "status": {
+        "ready": "Ready",
+        "partial": "Partial",
+        "invalid": "Invalid",
+        "duplicate": "Duplicate"
+      },
+      "issues": {
+        "REQUIRED": "A required value is missing",
+        "TOO_LONG": "The value is too long",
+        "INVALID_EMAIL": "Not a valid e-mail address",
+        "INVALID_PHONE": "Use the country code, e.g. +966 50 123 4567",
+        "INVALID_DATE": "Use a date like 2026-03-18",
+        "INVALID_NUMBER": "Not a valid number",
+        "NEGATIVE_NUMBER": "Cannot be negative",
+        "INVALID_VALUE": "Not one of the allowed values (see the Lists sheet)",
+        "INVALID_COUNTRY": "Unknown country, use the ISO code or the name",
+        "INVALID_BOOLEAN": "Use yes or no",
+        "INVALID_DATE_RANGE": "The dates are not in order",
+        "UNKNOWN_ITEM": "Some values are not in the allowed list",
+        "CLIENT_NOT_FOUND": "No client with this name or code in the Audit Client Register",
+        "PERSON_NOT_FOUND": "No person with this e-mail or name in the competence register",
+        "PERSON_NOT_IN_REGISTER": "Not found in the competence register; kept as written",
+        "CERTIFICATE_NOT_FOUND": "No certificate with this number, import the certificate first",
+        "DUPLICATE_IN_FILE": "The same record appears earlier in this file",
+        "DUPLICATE_EXISTING": "Already in iCASCO"
+      },
+      "report": {
+        "row": "Row",
+        "status": "Status",
+        "column": "Column",
+        "problem": "Problem",
+        "value": "Value in the file",
+        "missingLater": "Needed later: the value is empty"
+      }
+    },
     "sso": {
       "common": {
         "yes": "Yes",

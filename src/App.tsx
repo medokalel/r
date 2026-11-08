@@ -25,6 +25,7 @@ import {
   CabTravelPolicyPage,
   CabSsoSettingsPage,
   CabAuditChecklistsPage,
+  CabDataMigrationPage,
   AbDashboardPage,
   OnboardingPage,
   CabOnboardingPage,
@@ -179,6 +180,17 @@ export default function App() {
                   <RequireAuth>
                     <RequireCabOnboarded>
                       <CabAuditChecklistsPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              {/* NEW: data migration hub */}
+              <Route
+                path={ROUTES.cabDataMigration}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabDataMigrationPage />
                     </RequireCabOnboarded>
                   </RequireAuth>
                 }

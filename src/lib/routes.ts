@@ -23,6 +23,7 @@ export const ROUTES = {
   cabTravelPolicy: "/cab/settings/travel-policy",
   cabSso: "/cab/settings/sso",
   cabAuditChecklists: "/cab/audit-checklists",
+  cabDataMigration: "/cab/data-migration",
   cabWorkspace: "/cab/workspace",
   cabApplicationReviewQueue: "/cab/applications/review-queue",
   cabContacts: "/cab/contacts",
