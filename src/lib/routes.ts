@@ -36,6 +36,8 @@ export const ROUTES = {
   cabAuditSchedule: "/cab/audit-planning/schedule",
   cabBuildAuditPlan: "/cab/audit-planning/build/:planId",
   cabAuditPlanNew: "/cab/audit-planning/new",
+  cabAuditExecutionList: "/cab/audit-execution",
+  cabAuditExecution: "/cab/audit-planning/:planId/execution",
   cabAuditReporting: "/cab/audit-reporting",
   cabAuditWorkspace: "/cab/audit-reporting/workspace",
   cabAddFinding: "/cab/audit-reporting/findings/new",
@@ -69,6 +71,12 @@ export const ROUTES = {
   cabNonconformityResponse: "/cab/nonconformities/:ncId/response",
   cabCertificates: "/cab/certificates",
   cabPrepareCertificate: "/cab/certificates/:certificateId/prepare",
+  cabSalesHub: "/cab/sales-hub",
+  cabSalesHubNew: "/cab/sales-hub/new",
+  cabSalesHubEdit: "/cab/sales-hub/:leadId/edit",
+  cabAgreementTerms: "/cab/agreement-terms",
+  cabCertificationAgreements: "/cab/certification-agreements",
+  cabCertificationAgreementDetails: "/cab/certification-agreements/:agreementId",
 } as const;
 
 function withClientQuery(path: string, clientId?: string): string {
@@ -174,4 +182,15 @@ export function certificationRequestFormPath(
   view: "feedback" | "status",
 ): string {
   return `${ROUTES.certificationRequestNew}?id=${id}&view=${view}`;
+}
+export function cabSalesHubEditPath(leadId: string): string {
+  return `/cab/sales-hub/${encodeURIComponent(leadId)}/edit`;
+}
+export function cabCertificationAgreementDetailsPath(agreementId: string): string {
+  return `/cab/certification-agreements/${encodeURIComponent(agreementId)}`;
+}
+export function cabAuditExecutionPath(planId?: string): string {
+  return planId
+    ? `/cab/audit-planning/${encodeURIComponent(planId)}/execution`
+    : "/cab/audit-planning/AUD-0310/execution";
 }

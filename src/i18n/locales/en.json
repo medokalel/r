@@ -2413,7 +2413,10 @@
       "companyProfile": "Company Profile",
       "auditTeams": "Audit Teams",
       "freelancers": "Freelancers",
-      "help": "Help"
+      "help": "Help",
+      "salesHub": "Sales Hub",
+      "agreementTerms": "Agreement terms",
+      "certificationAgreements": "Certification agreements"
     },
     "certification": {
       "title": "Certification cycles",
@@ -4008,7 +4011,10 @@
         "informationRequired": "Information Required",
         "technicalFeasibility": "Technical Feasibility",
         "quotation": "Quotation",
-        "quotationApproval": "Quotation Approval"
+        "quotationApproval": "Quotation Approval",
+        "salesHub": "Sales Hub",
+        "agreementTerms": "Agreement terms",
+        "certificationAgreements": "Certification agreements"
       },
       "appDesc": {
         "applications": "View, create, and manage certification applications.",
@@ -4032,7 +4038,10 @@
         "informationRequired": "Request and track additional information from applicants.",
         "technicalFeasibility": "Assess scope, resources, competence, and delivery feasibility.",
         "quotation": "Prepare the commercial quotation for an application.",
-        "quotationApproval": "Review and approve quotations before they are issued."
+        "quotationApproval": "Review and approve quotations before they are issued.",
+        "salesHub": "Track every lead from client registration to a signed agreement.",
+        "agreementTerms": "Your agreement template, its variables and the audit plan gate.",
+        "certificationAgreements": "Send the certification agreement, collect e-signatures and keep everything together."
       },
       "orgApps": {
         "newRequest": "New Certification Request",
@@ -7829,7 +7838,152 @@
         "user_provisioned": "User created by SSO",
         "password_login_blocked": "Password sign-in blocked",
         "break_glass_login": "Break-glass password sign-in"
+      },
+    "salesHub": {
+      "title": "Sales Hub",
+      "subtitle": "Every lead in one place, from client registration to a signed certification agreement.",
+      "breadcrumbWorkspace": "Workspace",
+      "resetDemoData": "Reset demo data",
+      "addLead": "Add lead",
+      "portalCallout": "Client portal registrations arrive here automatically as New leads. Work each lead through the stages; a stage closes when its checklist is complete.",
+      "currencySar": "SAR",
+      "workflowTitle": "Business development workflow",
+      "viewLabel": "View",
+      "dragHint": "Drag a card to another stage to move it.",
+      "noLeadsHere": "No leads here",
+      "tasks": "tasks",
+      "sitesLabel": "sites",
+      "employeesLabel": "employees",
+      "stageChecklist": "Stage checklist",
+      "moveStage": "Move to stage",
+      "maintenance": {
+        "title": "Scheduled maintenance",
+        "message": "iCASCO will be unavailable on Friday from 01:00 to 02:00 (KSA time) for planned maintenance."
+      },
+      "views": {
+        "list": "List",
+        "pipeline": "Pipeline"
+      },
+      "kpi": {
+        "openLeads": "Open leads",
+        "everyLeadHasOwner": "Every lead has an owner",
+        "unassignedLeads": "{{count}} unassigned",
+        "viewPipeline": "View pipeline",
+        "pipelineValue": "Pipeline value",
+        "noValuesYet": "No values yet",
+        "activePipelineLeads": "Across {{count}} open leads",
+        "viewList": "View list",
+        "weightedForecast": "Weighted forecast",
+        "weightedSubtitle": "{{pct}}% of pipeline value, weighted by stage",
+        "winRate": "Win rate",
+        "wonLostSummary": "Won {{won}} · Lost {{lost}}",
+        "needsAction": "Needs action",
+        "nothingOverdue": "Nothing overdue",
+        "overdueCount": "{{count}} overdue"
+      },
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "Search leads by company, contact or standard",
+        "owner": "Owner",
+        "allOwners": "All owners",
+        "source": "Source",
+        "allSources": "All sources"
+      },
+      "stages": {
+        "new_lead": {
+          "label": "New lead",
+          "description": "Received from the portal or added by the team."
+        },
+        "qualified": {
+          "label": "Qualified",
+          "description": "Contact made and fit with our scope confirmed."
+        },
+        "needs_analysis": {
+          "label": "Needs analysis",
+          "description": "Scope, sites and headcount collected."
+        },
+        "proposal_sent": {
+          "label": "Proposal sent",
+          "description": "Audit time calculated and quotation sent."
+        },
+        "negotiation": {
+          "label": "Negotiation",
+          "description": "Terms and price being agreed."
+        },
+        "won": {
+          "label": "Won",
+          "description": "Signed certification agreement received."
+        }
+      },
+      "table": {
+        "company": "Company",
+        "contact": "Contact",
+        "standards": "Standards",
+        "stage": "Stage",
+        "estimatedValue": "Estimated value",
+        "owner": "Owner",
+        "source": "Source",
+        "actions": "Actions"
+      },
+      "modal": {
+        "title": "New lead",
+        "companyName": "Company name",
+        "companyNameRequired": "Company name is required",
+        "contactPerson": "Contact person",
+        "email": "Email",
+        "phone": "Phone",
+        "city": "City",
+        "sector": "Sector",
+        "standards": "Standards (comma separated)",
+        "employees": "Employees",
+        "sites": "Sites",
+        "estimatedValue": "Estimated value (SAR)",
+        "source": "Source",
+        "owner": "Owner"
       }
+    },
+    "agreementTerms": {
+      "title": "Agreement terms",
+      "subtitle": "The certification agreement your clients sign: bilingual sections with variables, filled for each client.",
+      "breadcrumbHub": "Application Hub",
+      "breadcrumbSettings": "Settings",
+      "restoreDefault": "Restore default text",
+      "save": "Save",
+      "saved": "Saved",
+      "bannerTitle": "Default text: draft for the product owner's review",
+      "bannerDesc": "The default text covers the obligations of ISO/IEC 17021-1 clause 5.1.2 in our own words. Have it reviewed by your legal adviser and adapt it to your rules before using it with clients.",
+      "versionMeta": "Version {{version}}, saved by {{savedBy}} on {{savedAt}}",
+      "gate": {
+        "title": "Audit plan gate",
+        "subtitle": "What happens when a Stage 1, Stage 2 or recertification plan is sent and the client has no active agreement.",
+        "blockTitle": "Block (recommended)",
+        "blockDesc": "The plan cannot be sent until the agreement is active.",
+        "warnTitle": "Warn",
+        "warnDesc": "The plan is sent and a warning is shown."
+      },
+      "sectionsTitle": "Sections",
+      "addSection": "Add section",
+      "untitledSection": "Untitled section",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "deleteSection": "Delete section",
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "textEn": "Text (English)",
+      "textAr": "Text (Arabic)",
+      "variables": {
+        "title": "Variables",
+        "subtitle": "Click a variable to insert it where your cursor is. Each agreement fills it with the client's value.",
+        "fillWith": "Fill the variables with",
+        "sampleValues": "Sample values",
+        "showPreview": "Show preview",
+        "hidePreview": "Hide preview",
+        "previewTitle": "Live agreement preview",
+        "previewSubtitle": "Interpolated with the selected client preset"
+      }
+    },
+    "certificationAgreements": {
+      "title": "Certification agreements"
     }
   },
   "ia": {

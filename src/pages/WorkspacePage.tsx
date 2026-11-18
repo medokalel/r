@@ -142,6 +142,16 @@ export function WorkspacePage() {
         icon: TaskSquareIcon,
       },
       {
+        key: 'auditExecution',
+        title: t('cab.workspace.apps.auditExecution', 'Audit Execution'),
+        description: t(
+          'cab.workspace.appDesc.auditExecution',
+          'Run the audit on site: checklists, evidence, meetings and findings.',
+        ),
+        route: ROUTES.cabAuditExecutionList,
+        icon: FileReviewIcon,
+      },
+      {
         key: 'auditReporting',
         title: t('cab.workspace.apps.auditReporting'),
         description: t('cab.workspace.appDesc.auditReporting'),
@@ -246,6 +256,39 @@ export function WorkspacePage() {
         route: ROUTES.cabQuotationApproval,
         icon: SuccessCircleIcon,
       },
+      {
+        key: 'salesHub',
+        title: t('cab.workspace.apps.salesHub', 'Sales Hub'),
+        description: t(
+          'cab.workspace.appDesc.salesHub',
+          'Track every lead from client registration to a signed agreement.',
+        ),
+        route: ROUTES.cabSalesHub,
+        icon: ReportIcon,
+      },
+      {
+        key: 'agreementTerms',
+        title: t('cab.workspace.apps.agreementTerms', 'Agreement terms'),
+        description: t(
+          'cab.workspace.appDesc.agreementTerms',
+          'Your agreement template, its variables and the audit plan gate.',
+        ),
+        route: ROUTES.cabAgreementTerms,
+        icon: SettingsIcon,
+      },
+      {
+        key: 'certificationAgreements',
+        title: t(
+          'cab.workspace.apps.certificationAgreements',
+          'Certification agreements',
+        ),
+        description: t(
+          'cab.workspace.appDesc.certificationAgreements',
+          'Send the certification agreement, collect e-signatures and keep everything together.',
+        ),
+        route: ROUTES.cabCertificationAgreements,
+        icon: FileTextIcon,
+      },
     ],
     [t],
   )
@@ -265,17 +308,14 @@ export function WorkspacePage() {
     { key: 'clients', title: 'Clients', description: 'Register the organisations you certify and their contacts.', apps: ['auditClients', 'contacts', 'clientPortal'] },
     { key: 'application', title: 'Application', description: 'Receive the application and confirm you can certify it.', apps: ['applications', 'applicationReceipt', 'applicationReview', 'informationRequired', 'technicalFeasibility'] },
     { key: 'quotation', title: 'Quotation & contract', description: 'Price the audit, approve it and send the offer.', apps: ['quotation', 'quotationApproval', 'offers', 'certificationAgreements'] },
-    { key: 'audit', title: 'Audit', description: 'Plan the audit, report findings and close nonconformities.', apps: ['auditPlanning', 'auditChecklists', 'auditReporting', 'nonconformities'] },
+    { key: 'audit', title: 'Audit', description: 'Plan the audit, report findings and close nonconformities.', apps: ['auditPlanning', 'auditExecution', 'auditChecklists', 'auditReporting', 'nonconformities'] },
     { key: 'certification', title: 'Decision & certification', description: 'Decide, issue the certificate and run the cycle.', apps: ['decisions', 'certificates', 'certification'] },
     { key: 'finance', title: 'Finance & insight', description: 'Invoice the work and follow performance.', apps: ['invoices', 'reportsAnalytics'] },
   ]
   const upcomingApps: WorkspaceApp[] = [
     { key: 'dataMigration', title: 'Data migration', description: 'Import your existing clients, people, certificates, audits and more.', icon: ExportIcon },
     { key: 'singleSignOn', title: 'Single sign-on', description: 'Let your staff sign in with Microsoft Entra ID, Google Workspace, Okta.', icon: ShieldIcon },
-    { key: 'agreementTerms', title: 'Agreement terms', description: 'Your agreement template, its variables and the audit plan gate.', icon: SettingsIcon },
     { key: 'travelPolicy', title: 'Travel policy', description: 'Rules, rates and providers of the travel cost calculator.', icon: ExportIcon },
-    { key: 'salesHub', title: 'Sales Hub', description: 'Track every lead from client registration to a signed agreement.', icon: ReportIcon },
-    { key: 'certificationAgreements', title: 'Certification agreements', description: 'Send the certification agreement, collect e-signatures and keep everything together.', icon: FileTextIcon },
     { key: 'auditChecklists', title: 'Audit checklists', description: 'A checklist for every standard, clause by clause, ready for the audit.', icon: TaskSquareIcon },
   ].map((app) => ({ ...app, comingSoon: true, title: t(`cab.workspace.apps.${app.key}`, app.title), description: t(`cab.workspace.appDesc.${app.key}`, app.description) }))
   const appsByKey = new Map([...cabApps, ...upcomingApps].map((app) => [app.key, app]))

@@ -53,7 +53,10 @@ import {
   CabInvoiceRegisterPage,
   CabInvoiceDetailsPage,
   CabAuditSchedulePage,
+  CabNewAuditPlanPage,
   CabBuildAuditPlanPage,
+  CabAuditExecutionListPage,
+  CabAuditExecutionPage,
   CabAuditReportingPage,
   CabAddFindingPage,
   CabDecisionQueuePage,
@@ -69,6 +72,11 @@ import {
   CabNonconformityResponsePage,
   CabCertificateRegisterPage,
   CabPrepareCertificatePage,
+  CabSalesHubPage,
+  CabAddLeadPage,
+  CabAgreementTermsPage,
+  CabCertificationAgreementsPage,
+  CabCertificationAgreementDetailsPage,
   CertificationRequestFormPage,
   CertificationRequestsPage,
   CompanyProfilePage,
@@ -529,7 +537,23 @@ export default function App() {
                 path={ROUTES.cabAuditPlanNew}
                 element={
                   <RequireAuth>
-                    <CabBuildAuditPlanPage />
+                    <CabNewAuditPlanPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabAuditExecutionList}
+                element={
+                  <RequireAuth>
+                    <CabAuditExecutionListPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabAuditExecution}
+                element={
+                  <RequireAuth>
+                    <CabAuditExecutionPage />
                   </RequireAuth>
                 }
               />
@@ -593,6 +617,66 @@ export default function App() {
                   <RequireAuth>
                     <RequireCabOnboarded>
                       <CabPrepareCertificatePage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabSalesHub}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabSalesHubPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabSalesHubNew}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabAddLeadPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabSalesHubEdit}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabAddLeadPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabAgreementTerms}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabAgreementTermsPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabCertificationAgreements}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabCertificationAgreementsPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabCertificationAgreementDetails}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabCertificationAgreementDetailsPage />
                     </RequireCabOnboarded>
                   </RequireAuth>
                 }

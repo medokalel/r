@@ -1,0 +1,177 @@
+import { useTranslation } from 'react-i18next'
+import { AppIcon, EyeIcon, FileTextIcon } from '@/components/icons'
+import { Button } from '@/components/ui/Button'
+import { SelectField } from '@/components/ui/Select'
+import {
+  AGREEMENT_VARIABLES,
+  interpolateAgreementText,
+  type AgreementSection,
+  type AgreementVariable,
+} from '@/lib/api/cabAgreementTermsApi'
+
+interface AgreementVariablesPanelProps {
+  presetKey: string
+  onPresetChange: (presetKey: string) => void
+  showPreview: boolean
+  onTogglePreview: () => void
+  onInsertVariable: (variable: AgreementVariable) => void
+  sections: AgreementSection[]
+}
+
+export function AgreementVariablesPanel({
+  presetKey,
+  onPresetChange,
+  showPreview,
+  onTogglePreview,
+  onInsertVariable,
+  sections,
+}: AgreementVariablesPanelProps) {
+  const { t, i18n } = useTranslation()
+  const isAr = i18n.language?.startsWith('ar')
+
+  return (
+    <div className="flex flex-col gap-5 xl:sticky xl:top-6">
+      {/* iCASCO Variables & Preset Card */}
+      <aside className="rounded-[16px] border border-[#ececec] bg-white p-5">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
+            <span className="flex size-9 items-center justify-center rounded-[10px] bg-[#e8edfc] text-primary">
+              <AppIcon icon={FileTextIcon} size={18} />
+            </span>
+            <div>
+              <h2 className="text-[16px] font-bold text-neutral-900">
+                {t('cab.agreementTerms.variables.title', 'Variables')}
+              </h2>
+              <p className="text-[12px] text-neutral-500">
+                {AGREEMENT_VARIABLES.length}{' '}
+                {isAr ? 'متغير ديناميكي جاهز' : 'dynamic placeholders'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p className="mt-3 text-[13px] leading-relaxed text-neutral-500">
+          {t(
+            'cab.agreementTerms.variables.subtitle',
+            "Click a variable to insert it where your cursor is. Each agreement fills it with the client's value.",
+          )}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2">
+          {AGREEMENT_VARIABLES.map((v) => (
+            <button
+              key={v.key}
+              type="button"
+              onClick={() => onInsertVariable(v)}
+              className="inline-flex items-center gap-1.5 rounded-[8px] border border-[#d6e2ff] bg-[#f4f7ff] px-3 py-1.5 text-[12px] font-semibold text-primary transition-all hover:border-primary hover:bg-primary hover:text-white"
+            >
+              <span>+</span>
+              <span>{isAr ? v.labelAr : v.labelEn}</span>
+            </button>
+          ))}
+        </div>
+
+        <div className="mt-5 space-y-3 border-t border-[#f0f0f0] pt-4">
+          <div className="space-y-1.5">
+            <label className="block text-[13px] font-semibold text-neutral-700">
+              {t(
+                'cab.agreementTerms.variables.fillWith',
+                'Fill the variables with',
+              )}
+            </label>
+            <SelectField
+              value={presetKey}
+              onChange={onPresetChange}
+              className="h-11"
+              options={[
+                {
+                  value: 'sample',
+                  label: isAr
+                    ? 'بيانات نموذجية — شركة النور للصناعات الغذائية'
+                    : 'Sample values — Al Noor Food Industries',
+                },
+                {
+                  value: 'gulfHorizon',
+                  label: isAr
+                    ? 'شركة آفاق الخليج للخدمات اللوجستية'
+                    : 'Gulf Horizon Logistics',
+                },
+              ]}
+            />
+          </div>
+
+          <Button
+            type="button"
+            variant={showPreview ? 'primary' : 'outline'}
+            onClick={onTogglePreview}
+            icon={<AppIcon icon={EyeIcon} size={18} />}
+            className="h-11 w-full rounded-[10px] text-[14px]"
+          >
+            {showPreview
+              ? t('cab.agreementTerms.variables.hidePreview', 'Hide preview')
+              : t('cab.agreementTerms.variables.showPreview', 'Show preview')}
+          </Button>
+        </div>
+      </aside>
+
+      {/* Inline iCASCO Document Preview */}
+      {showPreview && (
+        <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
+          <div className="flex items-center justify-between border-b border-[#f0f0f0] pb-3.5">
+            <div>
+              <h3 className="text-[15px] font-bold text-neutral-900">
+                {t(
+                  'cab.agreementTerms.variables.previewTitle',
+                  'Live agreement preview',
+                )}
+              </h3>
+              <p className="mt-0.5 text-[12px] text-neutral-500">
+                {t(
+                  'cab.agreementTerms.variables.previewSubtitle',
+                  'Interpolated with the selected client preset',
+                )}
+              </p>
+            </div>
+            <span className="rounded-full bg-[#eafaf1] px-2.5 py-1 text-[11px] font-bold text-[#16a34a]">
+              ISO/IEC 17021-1
+            </span>
+          </div>
+
+          <div className="mt-4 max-h-[520px] space-y-3 overflow-y-auto pe-1">
+            {sections.map((sec, idx) => {
+              const title = isAr
+                ? sec.titleAr || sec.titleEn
+                : sec.titleEn || sec.titleAr
+              const rawBody = isAr
+                ? sec.textAr || sec.textEn
+                : sec.textEn || sec.textAr
+              const body = interpolateAgreementText(rawBody, presetKey)
+              return (
+                <div
+                  key={sec.id}
+                  className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3.5"
+                >
+                  <div className="flex items-center gap-2 text-[13px] font-bold text-neutral-900">
+                    <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-[6px] bg-[#e8edfc] text-[11px] font-bold text-primary">
+                      {idx + 1}
+                    </span>
+                    <span>
+                      {title ||
+                        t(
+                          'cab.agreementTerms.untitledSection',
+                          'Untitled section',
+                        )}
+                    </span>
+                  </div>
+                  <p className="mt-2 text-[13px] leading-relaxed text-neutral-700">
+                    {body || '—'}
+                  </p>
+                </div>
+              )
+            })}
+          </div>
+        </section>
+      )}
+    </div>
+  )
+}

@@ -77,7 +77,10 @@ export const CabCreateOfferPage = lazyNamed(() => import('@/pages/CabCreateOffer
 export const CabInvoiceRegisterPage = lazyNamed(() => import('@/pages/CabInvoiceRegisterPage'), 'CabInvoiceRegisterPage')
 export const CabInvoiceDetailsPage = lazyNamed(() => import('@/pages/CabInvoiceDetailsPage'), 'CabInvoiceDetailsPage')
 export const CabAuditSchedulePage = lazyNamed(() => import('@/pages/CabAuditSchedulePage'), 'CabAuditSchedulePage')
+export const CabNewAuditPlanPage = lazyNamed(() => import('@/pages/CabNewAuditPlanPage'), 'CabNewAuditPlanPage')
 export const CabBuildAuditPlanPage = lazyNamed(() => import('@/pages/CabBuildAuditPlanPage'), 'CabBuildAuditPlanPage')
+export const CabAuditExecutionListPage = lazyNamed(() => import('@/pages/CabAuditExecutionListPage'), 'CabAuditExecutionListPage')
+export const CabAuditExecutionPage = lazyNamed(() => import('@/pages/CabAuditExecutionPage'), 'CabAuditExecutionPage')
 export const CabAuditReportingPage = lazyNamed(() => import('@/pages/CabAuditReportingPage'), 'CabAuditReportingPage')
 export const CabAddFindingPage = lazyNamed(() => import('@/pages/CabAddFindingPage'), 'CabAddFindingPage')
 export const CabDecisionQueuePage = lazyNamed(() => import('@/pages/CabDecisionQueuePage'), 'CabDecisionQueuePage')
@@ -133,3 +136,9 @@ export const PeriodicVisitsPage = lazyNamed(() => import('@/pages/PeriodicVisits
 export const InvoicesPage = lazyNamed(() => import('@/pages/InvoicesPage'), 'InvoicesPage')
 
 export const CabPersonnelProfilePage = lazyNamed(() => import('@/pages/CabPersonnelProfilePage'), 'CabPersonnelProfilePage')
+export const CabSalesHubPage = lazyNamed(() => import('@/pages/CabSalesHubPage'), 'CabSalesHubPage')
+
+export const CabAddLeadPage = lazyNamed(() => import('@/pages/CabAddLeadPage'), 'CabAddLeadPage')
+export const CabAgreementTermsPage = lazyNamed(() => import('@/pages/CabAgreementTermsPage'), 'CabAgreementTermsPage')
+export const CabCertificationAgreementsPage = lazyNamed(() => import('@/pages/CabCertificationAgreementsPage'), 'CabCertificationAgreementsPage')
+export const CabCertificationAgreementDetailsPage = lazyNamed(() => import('@/pages/CabCertificationAgreementDetailsPage'), 'CabCertificationAgreementDetailsPage')

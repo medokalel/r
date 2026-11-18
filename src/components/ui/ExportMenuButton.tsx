@@ -47,7 +47,7 @@ export function ExportMenuButton({
   const { t } = useTranslation()
 
   return (
-    <DropdownMenu.Root>
+    <DropdownMenu.Root modal={false}>
       <DropdownMenu.Trigger asChild>
         <Button
           type="button"
@@ -68,7 +68,11 @@ export function ExportMenuButton({
         >
           {onExportPdf && (
             <DropdownMenu.Item
-              onSelect={onExportPdf}
+              onSelect={() => {
+                window.setTimeout(() => {
+                  void onExportPdf()
+                }, 30)
+              }}
               className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
             >
               <AppIcon icon={PdfFileIcon} size={18} />
@@ -77,7 +81,11 @@ export function ExportMenuButton({
           )}
           {onExportExcel && (
             <DropdownMenu.Item
-              onSelect={onExportExcel}
+              onSelect={() => {
+                window.setTimeout(() => {
+                  void onExportExcel()
+                }, 30)
+              }}
               className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
             >
               <AppIcon icon={ExcelFileIcon} size={18} />

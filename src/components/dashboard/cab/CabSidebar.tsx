@@ -59,6 +59,11 @@ const navGroups: CabNavGroup[] = [
     labelKey: 'cab.sidebar.groups.customerCommercial',
     items: [
       {
+        icon: ReportIcon,
+        labelKey: 'cab.sidebar.salesHub',
+        href: ROUTES.cabSalesHub,
+      },
+      {
         icon: UsersIcon,
         labelKey: 'cab.sidebar.auditClients',
         href: ROUTES.cabAuditClients,
@@ -117,6 +122,7 @@ const navGroups: CabNavGroup[] = [
         stepId: 'sidebar-quotation-approval',
       },
       { icon: ExportIcon, labelKey: 'cab.sidebar.offers', href: ROUTES.cabOffers },
+      { icon: FileTextIcon, labelKey: 'cab.sidebar.certificationAgreements', href: ROUTES.cabCertificationAgreements },
       { icon: ReceiptIcon, labelKey: 'cab.sidebar.invoices', href: ROUTES.cabInvoices },
     ],
   },
@@ -125,6 +131,7 @@ const navGroups: CabNavGroup[] = [
     labelKey: 'cab.sidebar.groups.auditOperations',
     items: [
       { icon: TaskSquareIcon, labelKey: 'cab.sidebar.auditPlanning', href: ROUTES.cabAuditPlanning },
+      { icon: FileTextIcon, labelKey: 'cab.sidebar.auditExecution', href: ROUTES.cabAuditExecutionList },
       { icon: ReportIcon, labelKey: 'cab.sidebar.auditReporting', href: ROUTES.cabAuditReporting },
       {
         icon: CorrectiveActionIcon,
@@ -166,6 +173,7 @@ const navGroups: CabNavGroup[] = [
     labelKey: 'cab.sidebar.groups.administration',
     items: [
       { icon: BuildingsIcon, labelKey: 'cab.sidebar.companyProfile', href: ROUTES.cabCompanyProfile },
+      { icon: SettingsIcon, labelKey: 'cab.sidebar.agreementTerms', href: ROUTES.cabAgreementTerms },
       { icon: SettingsIcon, labelKey: 'cab.sidebar.settings', href: ROUTES.cabCompanyProfile },
     ],
   },
