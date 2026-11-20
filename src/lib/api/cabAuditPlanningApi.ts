@@ -208,16 +208,14 @@ export interface AuditPlan {
   remoteActivities: RemoteActivities
   travelNotes: TravelNotes
   teamDeclarations: TeamDeclarations
-<<<<<<< HEAD
   teamExceptions?: TeamException[]
   /** Plan history: lifecycle steps, team confirmation, exception requests. */
   events?: AuditPlanEvent[]
   /** Names of the team members whose competence log received this audit on completion. */
   competenceLoggedFor?: string[]
-  execution: AuditExecutionData
-=======
+  /** Audit checklists attached to this plan (library or custom checklist ids). */
   checklistIds?: string[]
->>>>>>> origin/main
+  execution: AuditExecutionData
   version: number
   createdAt: string
   updatedAt: string

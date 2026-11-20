@@ -2867,6 +2867,19 @@
         "justification": "التبرير",
         "justificationHint": "اشرح لماذا يمكن استخدام هذا العضو رغم ذلك ({{min}} أحرف على الأقل).",
         "exceptionRequested": "تم تقديم طلب الاستثناء وهو بانتظار الموافقة."
+      },
+      "checklists": {
+        "matched": "تمت مطابقة {{count}} من قوائم التحقق لـ {{standard}} ({{stage}})."
+      },
+      "create": {
+        "created": "تم إنشاء خطة التدقيق {{number}}.",
+        "error": "تعذّر إنشاء خطة التدقيق. حاول مرة أخرى.",
+        "errors": {
+          "startRequired": "اختر تاريخ البداية.",
+          "endRequired": "اختر تاريخ النهاية.",
+          "startInPast": "تاريخ البداية في الماضي.",
+          "endBeforeStart": "يجب أن يكون تاريخ النهاية في نفس يوم البداية أو بعده."
+        }
       }
     },
     "auditSchedule": {
@@ -8081,112 +8094,6 @@
         "owner": "المسؤول"
       }
     },
-<<<<<<< HEAD
-=======
-    "salesHub": {
-      "title": "مركز المبيعات",
-      "subtitle": "كل عميل محتمل في مكان واحد، من تسجيل العميل إلى توقيع اتفاقية منح الشهادة.",
-      "breadcrumbWorkspace": "مساحة العمل",
-      "resetDemoData": "إعادة تعيين البيانات التجريبية",
-      "addLead": "إضافة عميل محتمل",
-      "portalCallout": "تصل تسجيلات بوابة العملاء هنا تلقائياً كعملاء محتملين جدد. اعمل على كل عميل عبر المراحل؛ تُغلق المرحلة عند اكتمال قائمة التحقق الخاصة بها.",
-      "currencySar": "ر.س",
-      "workflowTitle": "سير عمل تطوير الأعمال",
-      "viewLabel": "العرض",
-      "dragHint": "اسحب البطاقة إلى مرحلة أخرى لنقلها.",
-      "noLeadsHere": "لا يوجد عملاء محتملون هنا",
-      "tasks": "مهام",
-      "sitesLabel": "مواقع",
-      "employeesLabel": "موظفين",
-      "stageChecklist": "قائمة تحقق المرحلة",
-      "moveStage": "نقل إلى مرحلة",
-      "maintenance": {
-        "title": "صيانة مجدولة",
-        "message": "لن يكون نظام iCASCO متاحاً يوم الجمعة من الساعة 01:00 إلى 02:00 (بتوقيت السعودية) لأعمال الصيانة المجدولة."
-      },
-      "views": {
-        "list": "قائمة",
-        "pipeline": "مسار المبيعات"
-      },
-      "kpi": {
-        "openLeads": "العملاء المحتملون المفتوحون",
-        "everyLeadHasOwner": "لكل عميل محتمل مسؤول مخصص",
-        "unassignedLeads": "{{count}} غير معين",
-        "viewPipeline": "عرض المسار",
-        "pipelineValue": "قيمة المسار",
-        "noValuesYet": "لا توجد قيم بعد",
-        "activePipelineLeads": "عبر {{count}} عملاء مفتوحين",
-        "viewList": "عرض القائمة",
-        "weightedForecast": "التوقعات المرجحة",
-        "weightedSubtitle": "{{pct}}% من قيمة المسار، مرجحة حسب المرحلة",
-        "winRate": "معدل الفوز",
-        "wonLostSummary": "فاز {{won}} · خسر {{lost}}",
-        "needsAction": "يتطلب إجراء",
-        "nothingOverdue": "لا توجد متأخرات",
-        "overdueCount": "{{count}} متأخر"
-      },
-      "filters": {
-        "search": "بحث",
-        "searchPlaceholder": "ابحث عن العملاء حسب الشركة أو جهة الاتصال أو المواصفة",
-        "owner": "المسؤول",
-        "allOwners": "كل المسؤولين",
-        "source": "المصدر",
-        "allSources": "كل المصادر"
-      },
-      "stages": {
-        "new_lead": {
-          "label": "عميل محتمل جديد",
-          "description": "تم استلامه من البوابة أو إضافته بواسطة الفريق."
-        },
-        "qualified": {
-          "label": "مؤهل",
-          "description": "تم التواصل وتأكيد التوافق مع نطاقنا."
-        },
-        "needs_analysis": {
-          "label": "تحليل الاحتياجات",
-          "description": "تم جمع النطاق والمواقع وعدد الموظفين."
-        },
-        "proposal_sent": {
-          "label": "تم إرسال العرض",
-          "description": "تم احتساب وقت التدقيق وإرسال عرض السعر."
-        },
-        "negotiation": {
-          "label": "تفاوض",
-          "description": "جارٍ الاتفاق على الشروط والسعر."
-        },
-        "won": {
-          "label": "تم الفوز",
-          "description": "تم استلام اتفاقية الشهادة الموقعة."
-        }
-      },
-      "table": {
-        "company": "الشركة",
-        "contact": "جهة الاتصال",
-        "standards": "المواصفات",
-        "stage": "المرحلة",
-        "estimatedValue": "القيمة التقديرية",
-        "owner": "المسؤول",
-        "source": "المصدر",
-        "actions": "الإجراءات"
-      },
-      "modal": {
-        "title": "عميل محتمل جديد",
-        "companyName": "اسم الشركة",
-        "companyNameRequired": "اسم الشركة مطلوب",
-        "contactPerson": "شخص الاتصال",
-        "email": "البريد الإلكتروني",
-        "phone": "الهاتف",
-        "city": "المدينة",
-        "sector": "القطاع",
-        "standards": "المواصفات (مفصولة بفواصل)",
-        "employees": "الموظفون",
-        "sites": "المواقع",
-        "estimatedValue": "القيمة التقديرية (ر.س)",
-        "source": "المصدر",
-        "owner": "المسؤول"
-      }
-    },
->>>>>>> origin/main
     "agreementTerms": {
       "title": "شروط الاتفاقية",
       "subtitle": "اتفاقية منح الشهادة التي يوقعها عملاؤك: بنود ثنائية اللغة مع متغيرات تُعبأ تلقائياً لكل عميل.",

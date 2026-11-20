@@ -10,8 +10,22 @@ import {
 } from '@/lib/api/cabAuditPlanningApi'
 import { BreadcrumbChevron, IsoDateField } from '@/components/cab/auditPlanning/shared'
 import { SelectField } from '@/components/ui/Select'
+import {
+  auditDateErrorField,
+  todayIsoDate,
+  validateAuditDates,
+  type AuditDateError,
+} from '@/lib/auditPlanDates'
 import { ROUTES } from '@/lib/routes'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
+
+const DATE_ERROR_DEFAULTS: Record<AuditDateError, string> = {
+  startRequired: 'Choose the start date.',
+  endRequired: 'Choose the end date.',
+  startInPast: 'The start date is in the past.',
+  endBeforeStart: 'The end date must be on or after the start date.',
+}
 
 export function CabNewAuditPlanPage() {
   const { t } = useTranslation()
@@ -20,8 +34,9 @@ export function CabNewAuditPlanPage() {
   const [selectedClientCode, setSelectedClientCode] = useState('')
   const [selectedOptionId, setSelectedOptionId] = useState('')
   const [specialReason, setSpecialReason] = useState('')
-  const [startDate, setStartDate] = useState('2026-11-18')
-  const [endDate, setEndDate] = useState('2026-11-30')
+  const [today] = useState(() => todayIsoDate())
+  const [startDate, setStartDate] = useState(today)
+  const [endDate, setEndDate] = useState(today)
   const [leadAuditor, setLeadAuditor] = useState('Omar Hassan')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -37,11 +52,16 @@ export function CabNewAuditPlanPage() {
 
   const isSpecialAudit = selectedOption?.type === 'special'
 
-  const datesValid = Boolean(startDate && endDate && startDate <= endDate)
+  const dateError = validateAuditDates(startDate, endDate, today)
+  const dateErrorMessage = dateError
+    ? t(`cab.auditPlanning.create.errors.${dateError}`, DATE_ERROR_DEFAULTS[dateError])
+    : null
+  const startError = dateError && auditDateErrorField(dateError) === 'start' ? dateErrorMessage : null
+  const endError = dateError && auditDateErrorField(dateError) === 'end' ? dateErrorMessage : null
   const canSubmit = Boolean(
     selectedClient &&
       selectedOption &&
-      datesValid &&
+      !dateError &&
       leadAuditor &&
       (!isSpecialAudit || specialReason.trim().length > 0),
   )
@@ -84,6 +104,15 @@ export function CabNewAuditPlanPage() {
       })
 
       navigate(`/cab/audit-planning/build/${created.planNumber}`)
+      toast.success(
+        t('cab.auditPlanning.create.created', 'Audit plan {{number}} created.', {
+          number: created.planNumber,
+        }),
+      )
+    } catch {
+      toast.error(
+        t('cab.auditPlanning.create.error', 'The audit plan could not be created. Try again.'),
+      )
     } finally {
       setIsSubmitting(false)
     }
@@ -247,6 +276,11 @@ export function CabNewAuditPlanPage() {
                     Start date <span className="text-error-500">*</span>
                   </label>
                   <IsoDateField value={startDate} onChange={setStartDate} />
+                  {startError && (
+                    <p role="alert" className="text-small-light text-error-500">
+                      {startError}
+                    </p>
+                  )}
                 </div>
 
                 <div className="space-y-1.5">
@@ -254,6 +288,11 @@ export function CabNewAuditPlanPage() {
                     End date <span className="text-error-500">*</span>
                   </label>
                   <IsoDateField value={endDate} onChange={setEndDate} />
+                  {endError && (
+                    <p role="alert" className="text-small-light text-error-500">
+                      {endError}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -275,8 +314,8 @@ export function CabNewAuditPlanPage() {
 
               <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f0f0] pt-4">
                 <span className="text-[12px] text-neutral-400">
-                  {!datesValid
-                    ? 'Choose valid dates.'
+                  {dateErrorMessage
+                    ? dateErrorMessage
                     : isSpecialAudit && !specialReason.trim()
                       ? 'Provide the reason for the special audit.'
                       : 'All pre-checks ready. Proceed to build the full plan.'}

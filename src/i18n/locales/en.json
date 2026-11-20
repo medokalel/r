@@ -2847,6 +2847,19 @@
         "justification": "Justification",
         "justificationHint": "Explain why this team member can still be used (at least {{min}} characters).",
         "exceptionRequested": "Exception requested. It is pending approval."
+      },
+      "checklists": {
+        "matched": "Matched {{count}} checklist(s) for {{standard}} ({{stage}})."
+      },
+      "create": {
+        "created": "Audit plan {{number}} created.",
+        "error": "The audit plan could not be created. Try again.",
+        "errors": {
+          "startRequired": "Choose the start date.",
+          "endRequired": "Choose the end date.",
+          "startInPast": "The start date is in the past.",
+          "endBeforeStart": "The end date must be on or after the start date."
+        }
       }
     },
     "auditSchedule": {
@@ -8042,112 +8055,6 @@
         "owner": "Owner"
       }
     },
-<<<<<<< HEAD
-=======
-    "salesHub": {
-      "title": "Sales Hub",
-      "subtitle": "Every lead in one place, from client registration to a signed certification agreement.",
-      "breadcrumbWorkspace": "Workspace",
-      "resetDemoData": "Reset demo data",
-      "addLead": "Add lead",
-      "portalCallout": "Client portal registrations arrive here automatically as New leads. Work each lead through the stages; a stage closes when its checklist is complete.",
-      "currencySar": "SAR",
-      "workflowTitle": "Business development workflow",
-      "viewLabel": "View",
-      "dragHint": "Drag a card to another stage to move it.",
-      "noLeadsHere": "No leads here",
-      "tasks": "tasks",
-      "sitesLabel": "sites",
-      "employeesLabel": "employees",
-      "stageChecklist": "Stage checklist",
-      "moveStage": "Move to stage",
-      "maintenance": {
-        "title": "Scheduled maintenance",
-        "message": "iCASCO will be unavailable on Friday from 01:00 to 02:00 (KSA time) for planned maintenance."
-      },
-      "views": {
-        "list": "List",
-        "pipeline": "Pipeline"
-      },
-      "kpi": {
-        "openLeads": "Open leads",
-        "everyLeadHasOwner": "Every lead has an owner",
-        "unassignedLeads": "{{count}} unassigned",
-        "viewPipeline": "View pipeline",
-        "pipelineValue": "Pipeline value",
-        "noValuesYet": "No values yet",
-        "activePipelineLeads": "Across {{count}} open leads",
-        "viewList": "View list",
-        "weightedForecast": "Weighted forecast",
-        "weightedSubtitle": "{{pct}}% of pipeline value, weighted by stage",
-        "winRate": "Win rate",
-        "wonLostSummary": "Won {{won}} · Lost {{lost}}",
-        "needsAction": "Needs action",
-        "nothingOverdue": "Nothing overdue",
-        "overdueCount": "{{count}} overdue"
-      },
-      "filters": {
-        "search": "Search",
-        "searchPlaceholder": "Search leads by company, contact or standard",
-        "owner": "Owner",
-        "allOwners": "All owners",
-        "source": "Source",
-        "allSources": "All sources"
-      },
-      "stages": {
-        "new_lead": {
-          "label": "New lead",
-          "description": "Received from the portal or added by the team."
-        },
-        "qualified": {
-          "label": "Qualified",
-          "description": "Contact made and fit with our scope confirmed."
-        },
-        "needs_analysis": {
-          "label": "Needs analysis",
-          "description": "Scope, sites and headcount collected."
-        },
-        "proposal_sent": {
-          "label": "Proposal sent",
-          "description": "Audit time calculated and quotation sent."
-        },
-        "negotiation": {
-          "label": "Negotiation",
-          "description": "Terms and price being agreed."
-        },
-        "won": {
-          "label": "Won",
-          "description": "Signed certification agreement received."
-        }
-      },
-      "table": {
-        "company": "Company",
-        "contact": "Contact",
-        "standards": "Standards",
-        "stage": "Stage",
-        "estimatedValue": "Estimated value",
-        "owner": "Owner",
-        "source": "Source",
-        "actions": "Actions"
-      },
-      "modal": {
-        "title": "New lead",
-        "companyName": "Company name",
-        "companyNameRequired": "Company name is required",
-        "contactPerson": "Contact person",
-        "email": "Email",
-        "phone": "Phone",
-        "city": "City",
-        "sector": "Sector",
-        "standards": "Standards (comma separated)",
-        "employees": "Employees",
-        "sites": "Sites",
-        "estimatedValue": "Estimated value (SAR)",
-        "source": "Source",
-        "owner": "Owner"
-      }
-    },
->>>>>>> origin/main
     "agreementTerms": {
       "title": "Agreement terms",
       "subtitle": "The certification agreement your clients sign: bilingual sections with variables, filled for each client.",

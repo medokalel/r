@@ -3,7 +3,7 @@ import type {
   TeamException,
   TeamIssueCode,
 } from '@/lib/api/cabAuditPlanningApi'
-import { AUDITOR_BUSY_PERIODS, AUDITOR_IMPARTIALITY_RECORDS } from '@/lib/api/auditTeamMockData'
+import { AUDITOR_BUSY_PERIODS, AUDITOR_IMPARTIALITY_RECORDS } from '@/lib/auditTeamMockData'
 
 /**
  * Pure rules that decide whether an audit team member can be used on a plan.
