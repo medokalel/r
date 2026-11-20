@@ -1,13 +1,11 @@
 import { useDeferredValue, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Badge, CalloutCard, SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
+import { Badge, SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import { ChecklistItemAccordion } from '@/components/dashboard/cab/auditChecklists/ChecklistItemAccordion'
-import { AddCircleIcon, AppIcon, CorrectiveActionIcon, InfoIcon, SearchIcon } from '@/components/icons'
+import { AddCircleIcon, AppIcon, SearchIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { Textarea, TextField } from '@/components/ui/TextField'
-import { FormLabel } from '@/components/ui/FormField'
+import { TextField } from '@/components/ui/TextField'
 import {
-  CHECKLIST_DESCRIPTION_MAX_LENGTH,
   CHECKLIST_LARGE_ITEM_COUNT,
   CHECKLIST_NAME_MAX_LENGTH,
   CHECKLIST_STANDARD_CODE_MAX_LENGTH,
@@ -160,32 +158,18 @@ export function ChecklistDetailPanel({ checklist, isArabic, onSave, onCopy, onCl
       }
     >
       <div className="flex flex-col gap-4">
-        <p className="text-[13px] text-neutral-500">
-          <span dir="ltr">{checklist.standardLabel || checklist.standardCode}</span>
-          {' · '}
-          {t('cab.auditChecklists.itemCount', { count: draft.items.length })}
-          {' · '}
+        <div className="flex flex-wrap items-center gap-2 border-b border-[#ececec] pb-3 text-[13px] text-neutral-600">
+          <span className="rounded-[6px] bg-[#e8edfc] px-2.5 py-0.5 font-semibold text-[#1236a3]" dir="ltr">
+            {checklist.standardLabel || checklist.standardCode}
+          </span>
+          <span>·</span>
+          <span>{t('cab.auditChecklists.itemCount', { count: draft.items.length })}</span>
+          <span>·</span>
           <span dir="ltr">v{checklist.version}</span>
-        </p>
-
-        {checklist.reviewNote && (
-          <CalloutCard
-            tone={checklist.reviewStatus === 'approved' ? 'blue' : 'amber'}
-            icon={
-              <AppIcon
-                icon={checklist.reviewStatus === 'approved' ? InfoIcon : CorrectiveActionIcon}
-                size={20}
-                className={checklist.reviewStatus === 'approved' ? 'text-primary' : 'text-[#d97706]'}
-              />
-            }
-            title={t('cab.auditChecklists.reviewNoteTitle')}
-          >
-            {pickLocalized(isArabic, checklist.reviewNote.en, checklist.reviewNote.ar)}
-          </CalloutCard>
-        )}
+        </div>
 
         {!readOnly && (
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 rounded-[8px] border border-[#e2e2e2] bg-[#f9fafc] p-4 md:grid-cols-3">
             <TextField
               id="checklist-name"
               label={t('cab.auditChecklists.name')}
@@ -203,36 +187,16 @@ export function ChecklistDetailPanel({ checklist, isArabic, onSave, onCopy, onCl
               value={draft.nameAr}
               onChange={(event) => patchDraft({ nameAr: event.target.value })}
             />
-            <div className="space-y-2">
-              <TextField
-                id="checklist-standardCode"
-                label={t('cab.auditChecklists.standardCode')}
-                required
-                dir="ltr"
-                maxLength={CHECKLIST_STANDARD_CODE_MAX_LENGTH}
-                value={draft.standardCode}
-                error={getFieldError('standardCode')}
-                onChange={(event) => patchDraft({ standardCode: normalizeStandardCode(event.target.value) })}
-              />
-              <p className="text-[12px] text-[var(--cab-muted)]">{t('cab.auditChecklists.standardCodeHint')}</p>
-            </div>
             <TextField
-              id="checklist-standardLabel"
-              label={t('cab.auditChecklists.standardLabel')}
-              maxLength={CHECKLIST_NAME_MAX_LENGTH}
-              value={draft.standardLabel}
-              onChange={(event) => patchDraft({ standardLabel: event.target.value })}
+              id="checklist-standardCode"
+              label={t('cab.auditChecklists.standardCode')}
+              required
+              dir="ltr"
+              maxLength={CHECKLIST_STANDARD_CODE_MAX_LENGTH}
+              value={draft.standardCode}
+              error={getFieldError('standardCode')}
+              onChange={(event) => patchDraft({ standardCode: normalizeStandardCode(event.target.value) })}
             />
-            <div className="space-y-2 md:col-span-2">
-              <FormLabel htmlFor="checklist-description">{t('cab.auditChecklists.description')}</FormLabel>
-              <Textarea
-                id="checklist-description"
-                maxLength={CHECKLIST_DESCRIPTION_MAX_LENGTH}
-                className="min-h-[96px]"
-                value={draft.description}
-                onChange={(event) => patchDraft({ description: event.target.value })}
-              />
-            </div>
           </div>
         )}
 
@@ -258,9 +222,11 @@ export function ChecklistDetailPanel({ checklist, isArabic, onSave, onCopy, onCl
           {groups.map(({ group, items }) =>
             showGroups ? (
               <li key={group} className="flex flex-col gap-2">
-                <p className="mt-2 flex items-center gap-2 text-[12px] font-semibold uppercase tracking-wide text-neutral-500">
+                <p className="mt-2 flex items-center gap-2 text-[12px] font-bold uppercase tracking-wide text-[#1236a3]">
                   <span dir="auto">{groupLabel(group)}</span>
-                  <span className="rounded-full bg-neutral-50 px-2 py-0.5 tabular-nums">{items.length}</span>
+                  <span className="rounded-full bg-[#e8edfc] px-2 py-0.5 text-[11px] font-semibold text-[#1236a3] tabular-nums">
+                    {items.length}
+                  </span>
                 </p>
                 <ol className="flex flex-col gap-2">{items.map(renderItem)}</ol>
               </li>

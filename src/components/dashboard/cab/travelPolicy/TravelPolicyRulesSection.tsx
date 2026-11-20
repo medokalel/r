@@ -1,6 +1,8 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import { Checkbox } from '@/components/ui/Checkbox'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SelectField } from '@/components/ui/Select'
 import { TextField } from '@/components/ui/TextField'
 import { TRAVEL_CABINS } from '@/lib/travelPolicyTypes'
@@ -8,7 +10,7 @@ import {
   settingErrorKey,
   settingFieldId,
   TRAVEL_CURRENCY_FIELD_ID,
-  TRAVEL_CURRENCY_LENGTH,
+  getCurrencyOptions,
   TRAVEL_SETTING_GROUPS,
   type TravelNumericSetting,
   type TravelPolicyDraft,
@@ -28,20 +30,31 @@ export function TravelPolicyRulesSection({
   onDraftChange,
   onSettingChange,
 }: TravelPolicyRulesSectionProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const currencyOptions = useMemo(
+    () => getCurrencyOptions(i18n.language, draft.currency),
+    [i18n.language, draft.currency]
+  )
 
   return (
     <SectionCard title={t('cab.travelPolicy.rules')}>
       <div className="space-y-6">
         <div className="grid gap-4 sm:grid-cols-3">
-          <TextField
-            id={TRAVEL_CURRENCY_FIELD_ID}
-            label={t('cab.travelPolicy.currency')}
-            maxLength={TRAVEL_CURRENCY_LENGTH}
-            value={draft.currency}
-            onChange={(event) => onDraftChange({ currency: event.target.value.toUpperCase() })}
-            error={getError('currency')}
-          />
+          <div>
+            <SearchableSelect
+              id={TRAVEL_CURRENCY_FIELD_ID}
+              label={t('cab.travelPolicy.currency')}
+              value={draft.currency}
+              onChange={(currency) => onDraftChange({ currency })}
+              options={currencyOptions}
+              searchPlaceholder={t('common.search')}
+            />
+            {getError('currency') && (
+              <p role="alert" className="mt-2 text-small-light text-error-500">
+                {getError('currency')}
+              </p>
+            )}
+          </div>
           <SelectField
             id="travel-long-cabin"
             label={t('cab.travelPolicy.settings.longFlightCabin')}

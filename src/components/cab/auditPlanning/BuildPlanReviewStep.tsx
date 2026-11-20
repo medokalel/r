@@ -11,6 +11,7 @@ import {
 } from '@/components/icons'
 import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { Checkbox } from '@/components/ui/Checkbox'
+import { AuditPlanLifecycleBar } from '@/components/cab/auditPlanning/AuditPlanLifecycleBar'
 import type { TourStepConfig } from '@/context/TourContext'
 import type { AuditPlan, AuditStageType, AuditTeamMember } from '@/lib/api/cabAuditPlanningApi'
 import { cn } from '@/lib/utils'
@@ -33,7 +34,7 @@ interface BuildPlanReviewStepProps {
   siteReady: boolean
   declarationsReady: boolean
   onGoToStep: (step: 1 | 2 | 3 | 4) => void
-  onUpdateStatus: (status: AuditPlan['status'], toast: string) => void
+  onPlanChanged: (plan: AuditPlan) => void
   onStartExecution: () => void
   onOpenChangeModal: () => void
   onChangeObjectives: (val: string) => void
@@ -72,7 +73,7 @@ export function BuildPlanReviewStep({
   siteReady,
   declarationsReady,
   onGoToStep,
-  onUpdateStatus,
+  onPlanChanged,
   onStartExecution,
   onOpenChangeModal,
   onChangeObjectives,
@@ -92,8 +93,6 @@ export function BuildPlanReviewStep({
     { label: 'Site & logistics', done: siteReady, fixStep: 3 as const },
     { label: 'Team declarations', done: declarationsReady },
   ]
-
-  const isNotStarted = plan.status === 'Draft' || plan.status === 'Planned'
 
   return (
     <div className="space-y-5">
@@ -131,66 +130,12 @@ export function BuildPlanReviewStep({
       </section>
 
       {/* Audit lifecycle */}
-      <section className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none lg:flex-row lg:items-center">
-        <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Audit lifecycle</h3>
-          <p className="mt-0.5 text-[13px] text-neutral-500">
-            Current status: <span className="font-semibold text-neutral-800">{plan.status}</span>
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-start gap-2.5">
-          {plan.status === 'Draft' && (
-            <button
-              type="button"
-              onClick={() => onUpdateStatus('Planned', 'Audit plan confirmed and marked as Planned.')}
-              className="h-11 rounded-[8px] border border-[#1236a3] bg-white px-4 text-[13px] font-semibold text-[#1236a3] transition hover:bg-[#f3f6fd]"
-            >
-              Confirm plan (Mark Planned)
-            </button>
-          )}
-
-          <button
-            type="button"
-            onClick={() => onUpdateStatus('In progress', 'Audit started. Status updated to In progress.')}
-            className="h-11 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-          >
-            Start audit
-          </button>
-
-          <div className="flex flex-col items-center">
-            <button
-              type="button"
-              disabled={isNotStarted}
-              onClick={() => onUpdateStatus('Under review', 'Audit sent for technical review.')}
-              className="h-11 rounded-[8px] border border-[#d6dff2] bg-white px-4 text-[13px] font-semibold text-[#1236a3] transition hover:bg-[#f3f6fd] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Send for review
-            </button>
-            {isNotStarted && <span className="mt-1 text-[11px] text-neutral-400">Start the audit first.</span>}
-          </div>
-
-          <div className="flex flex-col items-center">
-            <button
-              type="button"
-              disabled={isNotStarted}
-              onClick={() => onUpdateStatus('Completed', 'Audit marked as Completed.')}
-              className="h-11 rounded-[8px] border border-[#d6dff2] bg-white px-4 text-[13px] font-semibold text-[#1236a3] transition hover:bg-[#f3f6fd] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Mark completed
-            </button>
-            {isNotStarted && <span className="mt-1 text-[11px] text-neutral-400">Start the audit first.</span>}
-          </div>
-
-          <button
-            type="button"
-            onClick={onStartExecution}
-            className="h-11 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-          >
-            Start / continue execution
-          </button>
-        </div>
-      </section>
+      <AuditPlanLifecycleBar
+        plan={plan}
+        planReady={teamReady && agendaReady && siteReady && declarationsReady}
+        onChanged={onPlanChanged}
+        onStartExecution={onStartExecution}
+      />
 
       {/* 6-Column Summary Strip */}
       <CabTourStep steps={tourSteps} stepId="build-plan-summary-bar">

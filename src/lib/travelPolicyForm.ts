@@ -133,8 +133,14 @@ export type TravelPolicyErrorCode =
 
 export type TravelPolicyErrors = Record<string, TravelPolicyErrorCode>
 
-export const TRAVEL_CURRENCY_LENGTH = 3
-export const TRAVEL_COUNTRY_LENGTH = 2
+
+/** Every ISO 4217 currency the browser knows, as searchable "CODE - Name" options. */
+export function getCurrencyOptions(locale: string, selected = ''): { value: string; label: string }[] {
+  const names = new Intl.DisplayNames([locale], { type: 'currency' })
+  const codes = new Set(Intl.supportedValuesOf('currency'))
+  if (selected) codes.add(selected)
+  return [...codes].sort().map((code) => ({ value: code, label: `${code} - ${names.of(code) ?? code}` }))
+}
 export const TRAVEL_NOTE_MAX_LENGTH = 300
 export const TRAVEL_OPERATOR_MAX_LENGTH = 120
 

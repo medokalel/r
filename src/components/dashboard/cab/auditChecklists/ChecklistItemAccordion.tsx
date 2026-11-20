@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { AppIcon, ChevronDownIcon } from '@/components/icons'
 import { ChecklistItemEditor } from '@/components/dashboard/cab/auditChecklists/ChecklistItemEditor'
 import { pickLocalized } from '@/lib/auditChecklistForm'
-import type { ChecklistItem } from '@/lib/auditChecklistTypes'
+import { AUDIT_STAGES, type ChecklistItem } from '@/lib/auditChecklistTypes'
 import { cn } from '@/lib/utils'
 
 interface ChecklistItemAccordionProps {
@@ -39,26 +39,37 @@ export function ChecklistItemAccordion({
   const sampling = pickLocalized(isArabic, item.samplingHint, item.samplingHintAr)
   const guidance = pickLocalized(isArabic, item.guidance, item.guidanceAr)
 
+  const allStagesSelected =
+    item.stages.length === 0 || item.stages.length >= AUDIT_STAGES.length
+  const stagesText = allStagesSelected
+    ? t('cab.auditChecklists.allStages')
+    : item.stages.map((stage) => t(`cab.auditChecklists.stages.${stage}`)).join(', ')
+
   const meta = [
-    item.stages.length
-      ? item.stages.map((stage) => t(`cab.auditChecklists.stages.${stage}`)).join(', ')
-      : t('cab.auditChecklists.allStages'),
+    stagesText,
     item.mandatory ? t('cab.auditChecklists.mandatory') : null,
-    item.common ? t('cab.auditChecklists.common') : null,
   ]
     .filter(Boolean)
     .join(' · ')
 
   return (
-    <div className={cn('rounded-[var(--radius-sm)] border', expanded ? 'border-primary' : 'border-[#ececec]')}>
+    <div
+      className={cn(
+        'rounded-[8px] border bg-white transition-colors',
+        expanded ? 'border-[#1236a3] shadow-xs' : 'border-[#e2e2e2] hover:border-[#c7d2fe]'
+      )}
+    >
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={expanded}
         aria-controls={bodyId}
-        className="flex min-h-11 w-full items-start gap-3 px-3 py-2.5 text-start"
+        className="flex min-h-11 w-full items-center gap-3 px-3.5 py-2.5 text-start"
       >
-        <span className="shrink-0 rounded-[4px] bg-[#f3f6fd] px-2 py-0.5 text-[12px] font-bold text-primary" dir="ltr">
+        <span
+          className="shrink-0 rounded-[6px] bg-[#e8edfc] px-2.5 py-0.5 text-[12px] font-bold text-[#1236a3]"
+          dir="ltr"
+        >
           {item.clause || '·'}
         </span>
         <span className="min-w-0 flex-1">
@@ -70,25 +81,27 @@ export function ChecklistItemAccordion({
         <AppIcon
           icon={ChevronDownIcon}
           size={16}
-          className={cn('mt-1 shrink-0 transition-transform', expanded && 'rotate-180')}
+          className={cn('shrink-0 text-neutral-400 transition-transform', expanded && 'rotate-180 text-[#1236a3]')}
         />
       </button>
 
       {expanded && (
-        <div id={bodyId} className="border-t border-[#ececec] p-3">
+        <div id={bodyId} className="border-t border-[#ececec] bg-[#f9fafc] p-4">
           {readOnly ? (
-            <div className="flex flex-col gap-3 text-[14px] text-neutral-900">
-              <p className="leading-relaxed">{pickLocalized(isArabic, item.requirement, item.requirementAr)}</p>
+            <div className="flex flex-col gap-3 text-[13px] text-neutral-800">
+              <p className="text-[14px] leading-relaxed text-neutral-900">
+                {pickLocalized(isArabic, item.requirement, item.requirementAr)}
+              </p>
               {guidance && (
-                <p className="text-neutral-600">
-                  <span className="font-semibold">{t('cab.auditChecklists.guidanceLabel')}: </span>
-                  {guidance}
-                </p>
+                <div className="rounded-[6px] border border-[#e2e2e2] bg-white p-3">
+                  <span className="font-semibold text-neutral-900">{t('cab.auditChecklists.guidanceLabel')}: </span>
+                  <span className="text-neutral-600">{guidance}</span>
+                </div>
               )}
               {evidence.length > 0 && (
-                <div>
-                  <p className="font-semibold">{t('cab.auditChecklists.evidenceLabel')}</p>
-                  <ul className="mt-1 list-disc ps-5 text-neutral-600">
+                <div className="rounded-[6px] border border-[#e2e2e2] bg-white p-3">
+                  <p className="font-semibold text-neutral-900">{t('cab.auditChecklists.evidenceLabel')}</p>
+                  <ul className="mt-1.5 list-disc space-y-1 ps-5 text-neutral-600">
                     {evidence.map((entry) => (
                       <li key={entry}>{entry}</li>
                     ))}
@@ -97,7 +110,7 @@ export function ChecklistItemAccordion({
               )}
               {sampling && (
                 <p className="text-neutral-600">
-                  <span className="font-semibold">{t('cab.auditChecklists.samplingLabel')}: </span>
+                  <span className="font-semibold text-neutral-900">{t('cab.auditChecklists.samplingLabel')}: </span>
                   {sampling}
                 </p>
               )}

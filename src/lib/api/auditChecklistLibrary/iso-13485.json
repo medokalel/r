@@ -1,0 +1,2626 @@
+{
+  "key": "iso-13485",
+  "standardCode": "ISO_13485",
+  "kind": "STANDARD",
+  "standard": "ISO 13485:2016",
+  "name": {
+    "en": "ISO 13485 Medical devices quality management system",
+    "ar": "ISO 13485 نظام إدارة الجودة للأجهزة الطبية"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "MDQMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "MDQMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "MDQMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "MDQMS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "MDQMS-05",
+      "clause": "5.1",
+      "title": {
+        "en": "Leadership and commitment",
+        "ar": "القيادة والالتزام"
+      },
+      "requirement": {
+        "en": "Top management demonstrates leadership and commitment by taking accountability, ensuring policy/objectives alignment, and supporting system effectiveness.",
+        "ar": "تُظهر الإدارة العليا القيادة والالتزام عبر تحمل المساءلة ومواءمة السياسة والأهداف ودعم فعالية النظام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review records",
+          "Resource approvals"
+        ],
+        "ar": [
+          "سجلات مراجعة الإدارة",
+          "اعتمادات الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "MDQMS-06",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "MDQMS-07",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "MDQMS-08",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "MDQMS-09",
+      "clause": "6.2",
+      "title": {
+        "en": "Objectives and planning to achieve them",
+        "ar": "الأهداف والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable objectives are established at relevant functions and levels with plans specifying what, resources, who, when, and evaluation.",
+        "ar": "وضع أهداف قابلة للقياس في الوظائف والمستويات المعنية مع خطط تحدد المطلوب والموارد والمسؤول والموعد والتقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Objectives tracker",
+          "Action plans"
+        ],
+        "ar": [
+          "متابع الأهداف",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "MDQMS-10",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the management system are carried out in a planned manner considering purpose, integrity, resources, and responsibilities.",
+        "ar": "تنفيذ التغييرات على نظام الإدارة بطريقة مخططة تراعي الغرض وتكامل النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Change request log",
+          "Impact assessments"
+        ],
+        "ar": [
+          "سجل طلبات التغيير",
+          "تقييمات الأثر"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "MDQMS-11",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "MDQMS-12",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "MDQMS-13",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "Personnel are aware of the policy, relevant objectives, their contribution to effectiveness, and implications of nonconformity.",
+        "ar": "توعية العاملين بالسياسة والأهداف ذات الصلة ومساهمتهم في الفعالية وآثار عدم المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Awareness briefings",
+          "Induction records"
+        ],
+        "ar": [
+          "جلسات التوعية",
+          "سجلات التهيئة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "MDQMS-14",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "MDQMS-15",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "MDQMS-16",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "MDQMS-17",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "MDQMS-18",
+      "clause": "4.2.3",
+      "title": {
+        "en": "Medical device file",
+        "ar": "ملف الجهاز الطبي"
+      },
+      "requirement": {
+        "en": "A medical device file is established and maintained for each medical device type or family.",
+        "ar": "إنشاء وصيانة ملف الجهاز الطبي لكل نوع أو عائلة أجهزة طبية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-19",
+      "clause": "6.4.1",
+      "title": {
+        "en": "Work environment for medical devices",
+        "ar": "بيئة العمل للأجهزة الطبية"
+      },
+      "requirement": {
+        "en": "Work environment conditions (cleanliness, ESD, temperature, humidity) are controlled to ensure product safety.",
+        "ar": "ضبط ظروف بيئة العمل (النظافة، التفريغ الكهروستاتيكي، الحرارة، الرطوبة) لضمان سلامة المنتج."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-20",
+      "clause": "6.4.2",
+      "title": {
+        "en": "Contamination control",
+        "ar": "ضبط التلوث"
+      },
+      "requirement": {
+        "en": "Controls prevent contamination of work environment, personnel, or sterile/non-sterile medical devices.",
+        "ar": "تطبيق ضوابط منع تلوث بيئة العمل أو الأفراد أو الأجهزة الطبية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-21",
+      "clause": "7.1",
+      "title": {
+        "en": "Planning of product realization and risk management",
+        "ar": "تخطيط تحقيق المنتج وإدارة المخاطر"
+      },
+      "requirement": {
+        "en": "Risk management processes (e.g., ISO 14971) are integrated throughout product realization.",
+        "ar": "دمج عمليات إدارة المخاطر في جميع مراحل تحقيق المنتج."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-22",
+      "clause": "7.2",
+      "title": {
+        "en": "Customer-related and regulatory requirements",
+        "ar": "متطلبات العملاء والمتطلبات التنظيمية"
+      },
+      "requirement": {
+        "en": "Applicable regulatory requirements, intended use, and advisory notices are determined and reviewed.",
+        "ar": "تحديد ومراجعة المتطلبات التنظيمية المطبقة والاستخدام المقصود والإشعارات الاستشارية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-23",
+      "clause": "7.3",
+      "title": {
+        "en": "Design and development controls & design transfer",
+        "ar": "ضوابط التصميم والتطوير ونقل التصميم"
+      },
+      "requirement": {
+        "en": "Design inputs, outputs, review, verification, validation, clinical evaluation, transfer, and design history files are maintained.",
+        "ar": "الحفاظ على مدخلات ومخرجات التصميم ومراجعته والتحقق منه والمصادقة عليه ونقله وملف التصميم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-24",
+      "clause": "7.4",
+      "title": {
+        "en": "Purchasing and supplier verification",
+        "ar": "المشتريات والتحقق من الموردين"
+      },
+      "requirement": {
+        "en": "Suppliers are evaluated based on device risk, and purchased product verification is documented.",
+        "ar": "تقييم الموردين بناءً على مخاطر الجهاز وتوثيق التحقق من المنتجات المشتراة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-25",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Control of production and service provision",
+        "ar": "ضبط الإنتاج وتقديم الخدمة"
+      },
+      "requirement": {
+        "en": "Production is controlled with documented work instructions, cleanliness, equipment maintenance, and labelling.",
+        "ar": "ضبط الإنتاج بتعليمات عمل موثقة والنظافة وصيانة المعدات والوسم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-26",
+      "clause": "7.5.5",
+      "title": {
+        "en": "Particular requirements for sterile medical devices",
+        "ar": "متطلبات خاصة بالأجهزة الطبية المعقمة"
+      },
+      "requirement": {
+        "en": "Sterilization processes are validated, routinely controlled, and sterilization records retained per batch.",
+        "ar": "المصادقة على عمليات التعقيم وضبطها روتينياً وحفظ سجلاتها لكل تشغيلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-27",
+      "clause": "7.5.8",
+      "title": {
+        "en": "Identification and UDI",
+        "ar": "التعريف والمعرف الفريد للجهاز (UDI)"
+      },
+      "requirement": {
+        "en": "Devices are identified throughout realization and UDI requirements are applied where required.",
+        "ar": "تعريف الأجهزة طوال مراحل التصنيع وتطبيق متطلبات المعرف الفريد حيثما يلزم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-28",
+      "clause": "7.5.9",
+      "title": {
+        "en": "Traceability (including implantable devices)",
+        "ar": "التتبع (بما في ذلك الأجهزة القابلة للزرع)"
+      },
+      "requirement": {
+        "en": "Traceability extends to components, materials, and distribution records for implantable devices.",
+        "ar": "يمتد التتبع إلى المكونات والمواد وسجلات التوزيع للأجهزة القابلة للزرع."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-29",
+      "clause": "8.2.1",
+      "title": {
+        "en": "Feedback and post-market surveillance",
+        "ar": "التغذية الراجعة ومراقبة ما بعد التسويق"
+      },
+      "requirement": {
+        "en": "Post-market feedback from production and post-production is gathered and analyzed.",
+        "ar": "جمع وتحليل التغذية الراجعة ومراقبة ما بعد التسويق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-30",
+      "clause": "8.2.2",
+      "title": {
+        "en": "Complaint handling",
+        "ar": "التعامل مع الشكاوى"
+      },
+      "requirement": {
+        "en": "Customer complaints are investigated, evaluated for regulatory reporting, and retained.",
+        "ar": "التحقيق في شكاوى العملاء وتقييمها للإبلاغ التنظيمي والاحتفاظ بسجلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-31",
+      "clause": "8.2.3",
+      "title": {
+        "en": "Reporting to regulatory authorities",
+        "ar": "الإبلاغ للجهات التنظيمية"
+      },
+      "requirement": {
+        "en": "Criteria and timelines for reporting adverse events and issuing advisory notices are followed.",
+        "ar": "الالتزام بمعايير ومهل الإبلاغ عن الأحداث السلبية وإصدار الإشعارات الاستشارية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-32",
+      "clause": "8.3.3",
+      "title": {
+        "en": "Actions in response to nonconforming product detected after delivery",
+        "ar": "إجراءات المنتج غير المطابق بعد التسليم"
+      },
+      "requirement": {
+        "en": "Field safety corrective actions, recalls, and advisory notices are controlled and recorded.",
+        "ar": "ضبط وتسجيل إجراءات السلامة الميدانية التصحيحية والاستدعاءات والإشعارات الاستشارية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-33",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "MDQMS-34",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "MDQMS-35",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "MDQMS-36",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "MDQMS-37",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "MDQMS-38",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "MDQMS-39",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are controlled, root causes evaluated, corrective actions implemented, effectiveness reviewed, and records retained.",
+        "ar": "ضبط حالات عدم المطابقة وتقييم أسبابها الجذرية وتطبيق الإجراءات التصحيحية ومراجعة فعاليتها وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "CAR/NC log",
+          "Root cause analysis records"
+        ],
+        "ar": [
+          "سجل عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.1"
+    },
+    {
+      "code": "MDQMS-40",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization continually improves the suitability, adequacy, and effectiveness of the management system.",
+        "ar": "تحسين ملاءمة وكفاية وفعالية نظام الإدارة بشكل مستمر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Improvement initiatives log"
+        ],
+        "ar": [
+          "سجل مبادرات التحسين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.2"
+    },
+    {
+      "code": "MDQMS-41",
+      "clause": "7.6.1",
+      "title": {
+        "en": "Medical device QMS control 1",
+        "ar": "ضابط جودة الأجهزة الطبية 1"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.1 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.1 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-42",
+      "clause": "7.6.2",
+      "title": {
+        "en": "Medical device QMS control 2",
+        "ar": "ضابط جودة الأجهزة الطبية 2"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.2 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.2 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-43",
+      "clause": "7.6.3",
+      "title": {
+        "en": "Medical device QMS control 3",
+        "ar": "ضابط جودة الأجهزة الطبية 3"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.3 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.3 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-44",
+      "clause": "7.6.4",
+      "title": {
+        "en": "Medical device QMS control 4",
+        "ar": "ضابط جودة الأجهزة الطبية 4"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.4 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.4 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-45",
+      "clause": "7.6.5",
+      "title": {
+        "en": "Medical device QMS control 5",
+        "ar": "ضابط جودة الأجهزة الطبية 5"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.5 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.5 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-46",
+      "clause": "7.6.6",
+      "title": {
+        "en": "Medical device QMS control 6",
+        "ar": "ضابط جودة الأجهزة الطبية 6"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.6 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.6 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-47",
+      "clause": "7.6.7",
+      "title": {
+        "en": "Medical device QMS control 7",
+        "ar": "ضابط جودة الأجهزة الطبية 7"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.7 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.7 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-48",
+      "clause": "7.6.8",
+      "title": {
+        "en": "Medical device QMS control 8",
+        "ar": "ضابط جودة الأجهزة الطبية 8"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.8 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.8 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-49",
+      "clause": "7.6.9",
+      "title": {
+        "en": "Medical device QMS control 9",
+        "ar": "ضابط جودة الأجهزة الطبية 9"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.9 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.9 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-50",
+      "clause": "7.6.10",
+      "title": {
+        "en": "Medical device QMS control 10",
+        "ar": "ضابط جودة الأجهزة الطبية 10"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.10 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.10 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-51",
+      "clause": "7.6.11",
+      "title": {
+        "en": "Medical device QMS control 11",
+        "ar": "ضابط جودة الأجهزة الطبية 11"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.11 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.11 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-52",
+      "clause": "7.6.12",
+      "title": {
+        "en": "Medical device QMS control 12",
+        "ar": "ضابط جودة الأجهزة الطبية 12"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.12 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.12 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-53",
+      "clause": "7.6.13",
+      "title": {
+        "en": "Medical device QMS control 13",
+        "ar": "ضابط جودة الأجهزة الطبية 13"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.13 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.13 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-54",
+      "clause": "7.6.14",
+      "title": {
+        "en": "Medical device QMS control 14",
+        "ar": "ضابط جودة الأجهزة الطبية 14"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.14 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.14 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-55",
+      "clause": "7.6.15",
+      "title": {
+        "en": "Medical device QMS control 15",
+        "ar": "ضابط جودة الأجهزة الطبية 15"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.15 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.15 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-56",
+      "clause": "7.6.16",
+      "title": {
+        "en": "Medical device QMS control 16",
+        "ar": "ضابط جودة الأجهزة الطبية 16"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.16 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.16 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-57",
+      "clause": "7.6.17",
+      "title": {
+        "en": "Medical device QMS control 17",
+        "ar": "ضابط جودة الأجهزة الطبية 17"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.17 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.17 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-58",
+      "clause": "7.6.18",
+      "title": {
+        "en": "Medical device QMS control 18",
+        "ar": "ضابط جودة الأجهزة الطبية 18"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.18 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.18 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-59",
+      "clause": "7.6.19",
+      "title": {
+        "en": "Medical device QMS control 19",
+        "ar": "ضابط جودة الأجهزة الطبية 19"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.19 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.19 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-60",
+      "clause": "7.6.20",
+      "title": {
+        "en": "Medical device QMS control 20",
+        "ar": "ضابط جودة الأجهزة الطبية 20"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.20 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.20 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-61",
+      "clause": "7.6.21",
+      "title": {
+        "en": "Medical device QMS control 21",
+        "ar": "ضابط جودة الأجهزة الطبية 21"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.21 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.21 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-62",
+      "clause": "7.6.22",
+      "title": {
+        "en": "Medical device QMS control 22",
+        "ar": "ضابط جودة الأجهزة الطبية 22"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.22 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.22 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-63",
+      "clause": "7.6.23",
+      "title": {
+        "en": "Medical device QMS control 23",
+        "ar": "ضابط جودة الأجهزة الطبية 23"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.23 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.23 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-64",
+      "clause": "7.6.24",
+      "title": {
+        "en": "Medical device QMS control 24",
+        "ar": "ضابط جودة الأجهزة الطبية 24"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.24 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.24 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-65",
+      "clause": "7.6.25",
+      "title": {
+        "en": "Medical device QMS control 25",
+        "ar": "ضابط جودة الأجهزة الطبية 25"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.25 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.25 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-66",
+      "clause": "7.6.26",
+      "title": {
+        "en": "Medical device QMS control 26",
+        "ar": "ضابط جودة الأجهزة الطبية 26"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.26 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.26 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-67",
+      "clause": "7.6.27",
+      "title": {
+        "en": "Medical device QMS control 27",
+        "ar": "ضابط جودة الأجهزة الطبية 27"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.27 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.27 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-68",
+      "clause": "7.6.28",
+      "title": {
+        "en": "Medical device QMS control 28",
+        "ar": "ضابط جودة الأجهزة الطبية 28"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.28 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.28 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-69",
+      "clause": "7.6.29",
+      "title": {
+        "en": "Medical device QMS control 29",
+        "ar": "ضابط جودة الأجهزة الطبية 29"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.29 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.29 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-70",
+      "clause": "7.6.30",
+      "title": {
+        "en": "Medical device QMS control 30",
+        "ar": "ضابط جودة الأجهزة الطبية 30"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.30 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.30 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-71",
+      "clause": "7.6.31",
+      "title": {
+        "en": "Medical device QMS control 31",
+        "ar": "ضابط جودة الأجهزة الطبية 31"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.31 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.31 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "MDQMS-72",
+      "clause": "7.6.32",
+      "title": {
+        "en": "Medical device QMS control 32",
+        "ar": "ضابط جودة الأجهزة الطبية 32"
+      },
+      "requirement": {
+        "en": "Specific medical device qms requirement under clause 7.6.32 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب جودة الأجهزة الطبية المحدد تحت البند 7.6.32 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    }
+  ]
+}

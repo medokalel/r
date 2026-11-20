@@ -1,0 +1,1104 @@
+{
+  "key": "iso-39001",
+  "standardCode": "ISO_39001",
+  "kind": "STANDARD",
+  "standard": "ISO 39001:2012",
+  "name": {
+    "en": "ISO 39001 Road traffic safety management system",
+    "ar": "ISO 39001 نظام إدارة السلامة المرورية على الطرق"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "RTS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "RTS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "RTS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "RTS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "RTS-05",
+      "clause": "5.1",
+      "title": {
+        "en": "Leadership and commitment",
+        "ar": "القيادة والالتزام"
+      },
+      "requirement": {
+        "en": "Top management demonstrates leadership and commitment by taking accountability, ensuring policy/objectives alignment, and supporting system effectiveness.",
+        "ar": "تُظهر الإدارة العليا القيادة والالتزام عبر تحمل المساءلة ومواءمة السياسة والأهداف ودعم فعالية النظام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review records",
+          "Resource approvals"
+        ],
+        "ar": [
+          "سجلات مراجعة الإدارة",
+          "اعتمادات الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "RTS-06",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "RTS-07",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "RTS-08",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "RTS-09",
+      "clause": "6.2",
+      "title": {
+        "en": "Actions to address risks and opportunities (RTS)",
+        "ar": "إجراءات المخاطر والفرص (السلامة المرورية)"
+      },
+      "requirement": {
+        "en": "Road traffic safety risks and opportunities are determined and addressed.",
+        "ar": "تحديد ومعالجة مخاطر وفرص السلامة المرورية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-10",
+      "clause": "6.3",
+      "title": {
+        "en": "RTS performance factors",
+        "ar": "عوامل أداء السلامة المرورية"
+      },
+      "requirement": {
+        "en": "Risk exposure, final safety outcome, and intermediate safety outcome factors are identified for the organization.",
+        "ar": "تحديد عوامل التعرض للمخاطر ونتائج السلامة النهائية والوسيطة للمنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-11",
+      "clause": "6.4",
+      "title": {
+        "en": "RTS objectives and planning to achieve them",
+        "ar": "أهداف السلامة المرورية والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable RTS objectives and targets are established and planned.",
+        "ar": "وضع أهداف ومستهدفات قابلة للقياس للسلامة المرورية والتخطيط لتحقيقها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-12",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "RTS-13",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "RTS-14",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "Personnel are aware of the policy, relevant objectives, their contribution to effectiveness, and implications of nonconformity.",
+        "ar": "توعية العاملين بالسياسة والأهداف ذات الصلة ومساهمتهم في الفعالية وآثار عدم المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Awareness briefings",
+          "Induction records"
+        ],
+        "ar": [
+          "جلسات التوعية",
+          "سجلات التهيئة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "RTS-15",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "RTS-16",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "RTS-17",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "RTS-18",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "RTS-19",
+      "clause": "7.1.b",
+      "title": {
+        "en": "Coordination for RTS",
+        "ar": "التنسيق للسلامة المرورية"
+      },
+      "requirement": {
+        "en": "Coordination with internal functions and external road safety stakeholders is established.",
+        "ar": "إرساء التنسيق مع الوظائف الداخلية وأطراف السلامة المرورية الخارجية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-20",
+      "clause": "8.1",
+      "title": {
+        "en": "Operational planning and control",
+        "ar": "التخطيط التشغيلي والضبط"
+      },
+      "requirement": {
+        "en": "Processes needed to meet requirements are planned, implemented, and controlled, including outsourced processes.",
+        "ar": "تخطيط وتطبيق وضبط العمليات اللازمة لتلبية المتطلبات، بما في ذلك العمليات المسندة خارجياً."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational procedures",
+          "Control records"
+        ],
+        "ar": [
+          "الإجراءات التشغيلية",
+          "سجلات الضبط"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-8.1"
+    },
+    {
+      "code": "RTS-21",
+      "clause": "8.2",
+      "title": {
+        "en": "Emergency preparedness and response (RTS)",
+        "ar": "الاستعداد والاستجابة للطوارئ المرورية"
+      },
+      "requirement": {
+        "en": "Emergency response plans for road traffic crashes and incidents are established and tested.",
+        "ar": "وضع خطط الاستجابة لحوادث وطوارئ الطرق واختبارها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-22",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "RTS-23",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "RTS-24",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "RTS-25",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "RTS-26",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "RTS-27",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "RTS-28",
+      "clause": "9.2",
+      "title": {
+        "en": "Road traffic crash and incident investigation",
+        "ar": "التحقيق في الحوادث والوقائع المرورية"
+      },
+      "requirement": {
+        "en": "Road traffic crashes and incidents are investigated to identify root causes and prevent recurrence.",
+        "ar": "التحقيق في حوادث الطرق لتحديد الأسباب الجذرية ومنع تكرارها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-29",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action (RTS)",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are addressed with root cause analysis and corrective action.",
+        "ar": "معالجة عدم المطابقة بتحليل السبب الجذري والإجراء التصحيحي."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "RTS-30",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement (RTS)",
+        "ar": "التحسين المستمر (السلامة المرورية)"
+      },
+      "requirement": {
+        "en": "RTS performance and system effectiveness are continually improved.",
+        "ar": "تحسين أداء السلامة المرورية وفعالية النظام باستمرار."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    }
+  ]
+}

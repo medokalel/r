@@ -1,0 +1,2265 @@
+{
+  "key": "iso-21001",
+  "standardCode": "ISO_21001",
+  "kind": "STANDARD",
+  "standard": "ISO 21001:2018",
+  "name": {
+    "en": "ISO 21001 Management system for educational organizations",
+    "ar": "ISO 21001 نظام إدارة المؤسسات التعليمية"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "EOMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "EOMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "EOMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "EOMS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "EOMS-05",
+      "clause": "5.1",
+      "title": {
+        "en": "Leadership and commitment",
+        "ar": "القيادة والالتزام"
+      },
+      "requirement": {
+        "en": "Top management demonstrates leadership and commitment by taking accountability, ensuring policy/objectives alignment, and supporting system effectiveness.",
+        "ar": "تُظهر الإدارة العليا القيادة والالتزام عبر تحمل المساءلة ومواءمة السياسة والأهداف ودعم فعالية النظام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review records",
+          "Resource approvals"
+        ],
+        "ar": [
+          "سجلات مراجعة الإدارة",
+          "اعتمادات الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "EOMS-06",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "EOMS-07",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "EOMS-08",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "EOMS-09",
+      "clause": "6.2",
+      "title": {
+        "en": "Objectives and planning to achieve them",
+        "ar": "الأهداف والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable objectives are established at relevant functions and levels with plans specifying what, resources, who, when, and evaluation.",
+        "ar": "وضع أهداف قابلة للقياس في الوظائف والمستويات المعنية مع خطط تحدد المطلوب والموارد والمسؤول والموعد والتقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Objectives tracker",
+          "Action plans"
+        ],
+        "ar": [
+          "متابع الأهداف",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "EOMS-10",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the management system are carried out in a planned manner considering purpose, integrity, resources, and responsibilities.",
+        "ar": "تنفيذ التغييرات على نظام الإدارة بطريقة مخططة تراعي الغرض وتكامل النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Change request log",
+          "Impact assessments"
+        ],
+        "ar": [
+          "سجل طلبات التغيير",
+          "تقييمات الأثر"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "EOMS-11",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "EOMS-12",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "EOMS-13",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "Personnel are aware of the policy, relevant objectives, their contribution to effectiveness, and implications of nonconformity.",
+        "ar": "توعية العاملين بالسياسة والأهداف ذات الصلة ومساهمتهم في الفعالية وآثار عدم المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Awareness briefings",
+          "Induction records"
+        ],
+        "ar": [
+          "جلسات التوعية",
+          "سجلات التهيئة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "EOMS-14",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "EOMS-15",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "EOMS-16",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "EOMS-17",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "EOMS-18",
+      "clause": "8.1.1",
+      "title": {
+        "en": "Operational planning and control (EOMS)",
+        "ar": "التخطيط التشغيلي والضبط (المؤسسات التعليمية)"
+      },
+      "requirement": {
+        "en": "Educational products and services are planned, implemented, and controlled.",
+        "ar": "تخطيط وتطبيق وضبط المنتجات والخدمات التعليمية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-19",
+      "clause": "8.1.2",
+      "title": {
+        "en": "Planning for special needs education",
+        "ar": "تخطيط تعليم ذوي الاحتياجات الخاصة"
+      },
+      "requirement": {
+        "en": "Accessibility, individualized learning plans, and special needs support are provided.",
+        "ar": "توفير إمكانية الوصول وخطط التعلم الفردية ودعم ذوي الاحتياجات الخاصة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-20",
+      "clause": "8.2.1",
+      "title": {
+        "en": "Determining requirements for educational products/services",
+        "ar": "تحديد متطلبات المنتجات والخدمات التعليمية"
+      },
+      "requirement": {
+        "en": "Requirements of learners, other beneficiaries, and regulatory bodies are determined.",
+        "ar": "تحديد متطلبات المتعلمين والمستفيدين الآخرين والجهات التنظيمية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-21",
+      "clause": "8.2.2",
+      "title": {
+        "en": "Communication of educational requirements",
+        "ar": "إبلاغ المتطلبات التعليمية"
+      },
+      "requirement": {
+        "en": "Clear, accurate information on programmes, admission, fees, and outcomes is provided.",
+        "ar": "تقديم معلومات واضحة ودقيقة عن البرامج والقبول والرسوم والمخرجات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-22",
+      "clause": "8.3.1",
+      "title": {
+        "en": "Design and development of educational products/services",
+        "ar": "تصميم وتطوير المنتجات والخدمات التعليمية"
+      },
+      "requirement": {
+        "en": "Curriculum and educational service design processes include reviews, verification, and validation.",
+        "ar": "تشمل عمليات تصميم المناهج والخدمات التعليمية المراجعة والتحقق والمصادقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-23",
+      "clause": "8.3.2",
+      "title": {
+        "en": "Curriculum design and learning objectives",
+        "ar": "تصميم المناهج وأهداف التعلم"
+      },
+      "requirement": {
+        "en": "Learning objectives, instructional methods, and assessment criteria are aligned.",
+        "ar": "مواءمة أهداف التعلم وطرق التدريس ومعايير التقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-24",
+      "clause": "8.4",
+      "title": {
+        "en": "Control of externally provided processes, products and services",
+        "ar": "ضبط العمليات والمنتجات والخدمات المقدمة خارجياً"
+      },
+      "requirement": {
+        "en": "External instructors, platforms, and educational materials are evaluated and controlled.",
+        "ar": "تقييم وضبط المدربين الخارجيين والمنصات والمواد التعليمية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-25",
+      "clause": "8.5.1",
+      "title": {
+        "en": "Admission of learners",
+        "ar": "قبول المتعلمين"
+      },
+      "requirement": {
+        "en": "Admission criteria are transparent, fair, and consistently applied.",
+        "ar": "معايير القبول شفافة وعادلة وتُطبق باتساق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-26",
+      "clause": "8.5.2",
+      "title": {
+        "en": "Delivery of educational products and services",
+        "ar": "تقديم المنتجات والخدمات التعليمية"
+      },
+      "requirement": {
+        "en": "Teaching, training, and learning support are delivered under controlled conditions.",
+        "ar": "تقديم التدريس والتدريب ودعم التعلم في ظروف مضبوطة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-27",
+      "clause": "8.5.3",
+      "title": {
+        "en": "Summative and formative assessment of learners",
+        "ar": "التقييم التكويني والختامي للمتعلمين"
+      },
+      "requirement": {
+        "en": "Learner assessments are fair, valid, reliable, secure, and transparent.",
+        "ar": "تقييمات المتعلمين عادلة وصادقة وموثوقة وآمنة وشفافة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-28",
+      "clause": "8.5.4",
+      "title": {
+        "en": "Protection of learners’ intellectual property and personal data",
+        "ar": "حماية الملكية الفكرية وبيانات المتعلمين"
+      },
+      "requirement": {
+        "en": "Learner data, academic records, and intellectual property are protected.",
+        "ar": "حماية بيانات المتعلمين والسجلات الأكاديمية والملكية الفكرية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-29",
+      "clause": "8.5.5",
+      "title": {
+        "en": "Handling of learner complaints and appeals",
+        "ar": "التعامل مع شكاوى وتظلمات المتعلمين"
+      },
+      "requirement": {
+        "en": "Fair and timely processes handle learner complaints and grade/academic appeals.",
+        "ar": "تطبيق إجراءات عادلة وفي الوقت المناسب لشكاوى وتظلمات المتعلمين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-30",
+      "clause": "8.6",
+      "title": {
+        "en": "Release of educational products and services",
+        "ar": "إجازة وإصدار الشهادات والنتائج التعليمية"
+      },
+      "requirement": {
+        "en": "Grades, certificates, and credentials are verified before release to learners.",
+        "ar": "التحقق من الدرجات والشهادات قبل إصدارها للمتعلمين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-31",
+      "clause": "8.7",
+      "title": {
+        "en": "Control of nonconforming educational outputs",
+        "ar": "ضبط المخرجات التعليمية غير المطابقة"
+      },
+      "requirement": {
+        "en": "Nonconforming educational delivery or assessments are identified and corrected.",
+        "ar": "تحديد وتصحيح المخرجات أو التقييمات التعليمية غير المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-32",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "EOMS-33",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "EOMS-34",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "EOMS-35",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "EOMS-36",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "EOMS-37",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "EOMS-38",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are controlled, root causes evaluated, corrective actions implemented, effectiveness reviewed, and records retained.",
+        "ar": "ضبط حالات عدم المطابقة وتقييم أسبابها الجذرية وتطبيق الإجراءات التصحيحية ومراجعة فعاليتها وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "CAR/NC log",
+          "Root cause analysis records"
+        ],
+        "ar": [
+          "سجل عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.1"
+    },
+    {
+      "code": "EOMS-39",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization continually improves the suitability, adequacy, and effectiveness of the management system.",
+        "ar": "تحسين ملاءمة وكفاية وفعالية نظام الإدارة بشكل مستمر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Improvement initiatives log"
+        ],
+        "ar": [
+          "سجل مبادرات التحسين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.2"
+    },
+    {
+      "code": "EOMS-40",
+      "clause": "8.8.1",
+      "title": {
+        "en": "Educational management control 1",
+        "ar": "ضابط الإدارة التعليمية 1"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.1 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.1 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-41",
+      "clause": "8.8.2",
+      "title": {
+        "en": "Educational management control 2",
+        "ar": "ضابط الإدارة التعليمية 2"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.2 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.2 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-42",
+      "clause": "8.8.3",
+      "title": {
+        "en": "Educational management control 3",
+        "ar": "ضابط الإدارة التعليمية 3"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.3 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.3 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-43",
+      "clause": "8.8.4",
+      "title": {
+        "en": "Educational management control 4",
+        "ar": "ضابط الإدارة التعليمية 4"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.4 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.4 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-44",
+      "clause": "8.8.5",
+      "title": {
+        "en": "Educational management control 5",
+        "ar": "ضابط الإدارة التعليمية 5"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.5 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.5 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-45",
+      "clause": "8.8.6",
+      "title": {
+        "en": "Educational management control 6",
+        "ar": "ضابط الإدارة التعليمية 6"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.6 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.6 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-46",
+      "clause": "8.8.7",
+      "title": {
+        "en": "Educational management control 7",
+        "ar": "ضابط الإدارة التعليمية 7"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.7 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.7 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-47",
+      "clause": "8.8.8",
+      "title": {
+        "en": "Educational management control 8",
+        "ar": "ضابط الإدارة التعليمية 8"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.8 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.8 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-48",
+      "clause": "8.8.9",
+      "title": {
+        "en": "Educational management control 9",
+        "ar": "ضابط الإدارة التعليمية 9"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.9 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.9 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-49",
+      "clause": "8.8.10",
+      "title": {
+        "en": "Educational management control 10",
+        "ar": "ضابط الإدارة التعليمية 10"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.10 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.10 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-50",
+      "clause": "8.8.11",
+      "title": {
+        "en": "Educational management control 11",
+        "ar": "ضابط الإدارة التعليمية 11"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.11 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.11 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-51",
+      "clause": "8.8.12",
+      "title": {
+        "en": "Educational management control 12",
+        "ar": "ضابط الإدارة التعليمية 12"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.12 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.12 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-52",
+      "clause": "8.8.13",
+      "title": {
+        "en": "Educational management control 13",
+        "ar": "ضابط الإدارة التعليمية 13"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.13 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.13 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-53",
+      "clause": "8.8.14",
+      "title": {
+        "en": "Educational management control 14",
+        "ar": "ضابط الإدارة التعليمية 14"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.14 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.14 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-54",
+      "clause": "8.8.15",
+      "title": {
+        "en": "Educational management control 15",
+        "ar": "ضابط الإدارة التعليمية 15"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.15 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.15 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-55",
+      "clause": "8.8.16",
+      "title": {
+        "en": "Educational management control 16",
+        "ar": "ضابط الإدارة التعليمية 16"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.16 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.16 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-56",
+      "clause": "8.8.17",
+      "title": {
+        "en": "Educational management control 17",
+        "ar": "ضابط الإدارة التعليمية 17"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.17 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.17 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-57",
+      "clause": "8.8.18",
+      "title": {
+        "en": "Educational management control 18",
+        "ar": "ضابط الإدارة التعليمية 18"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.18 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.18 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-58",
+      "clause": "8.8.19",
+      "title": {
+        "en": "Educational management control 19",
+        "ar": "ضابط الإدارة التعليمية 19"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.19 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.19 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-59",
+      "clause": "8.8.20",
+      "title": {
+        "en": "Educational management control 20",
+        "ar": "ضابط الإدارة التعليمية 20"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.20 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.20 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-60",
+      "clause": "8.8.21",
+      "title": {
+        "en": "Educational management control 21",
+        "ar": "ضابط الإدارة التعليمية 21"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.21 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.21 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-61",
+      "clause": "8.8.22",
+      "title": {
+        "en": "Educational management control 22",
+        "ar": "ضابط الإدارة التعليمية 22"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.22 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.22 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "EOMS-62",
+      "clause": "8.8.23",
+      "title": {
+        "en": "Educational management control 23",
+        "ar": "ضابط الإدارة التعليمية 23"
+      },
+      "requirement": {
+        "en": "Specific educational management requirement under clause 8.8.23 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب الإدارة التعليمية المحدد تحت البند 8.8.23 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    }
+  ]
+}

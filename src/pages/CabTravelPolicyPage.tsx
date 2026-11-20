@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CalloutCard } from '@/components/dashboard/cab/ReviewPrimitives'
@@ -7,6 +7,7 @@ import {
   type TravelCityOption,
 } from '@/components/dashboard/cab/travelPolicy/TravelCityCapsSection'
 import { TravelCountryRatesSection } from '@/components/dashboard/cab/travelPolicy/TravelCountryRatesSection'
+import { TravelPricingProvidersSection } from '@/components/dashboard/cab/travelPolicy/TravelPricingProvidersSection'
 import { TravelPolicyRulesSection } from '@/components/dashboard/cab/travelPolicy/TravelPolicyRulesSection'
 import { TravelRailRoutesSection } from '@/components/dashboard/cab/travelPolicy/TravelRailRoutesSection'
 import { AppIcon, CorrectiveActionIcon } from '@/components/icons'
@@ -14,6 +15,7 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
 import { TRAVEL_CITIES_MOCK, TRAVEL_POLICY_MOCK } from '@/lib/api/travelPolicyMockData'
 import { toast } from '@/lib/toast'
+import { fetchAllTravelCityOptions } from '@/lib/travelCities'
 import {
   countSampleRows,
   fieldIdForError,
@@ -45,9 +47,24 @@ export function CabTravelPolicyPage() {
   const dirty = serializeDraft(draft) !== baseline
   const sampleCount = countSampleRows(draft)
 
+  // Curated cities first (with Arabic names), then every other city once the dataset has loaded.
+  const [moreCities, setMoreCities] = useState<TravelCityOption[]>([])
+  useEffect(() => {
+    let active = true
+    fetchAllTravelCityOptions(TRAVEL_CITIES_MOCK).then((options) => active && setMoreCities(options))
+    return () => {
+      active = false
+    }
+  }, [])
   const cityOptions: TravelCityOption[] = useMemo(
-    () => TRAVEL_CITIES_MOCK.map((city) => ({ value: city.key, label: isArabic ? city.nameAr : city.name })),
-    [isArabic]
+    () => [
+      ...TRAVEL_CITIES_MOCK.map((city) => ({
+        value: city.key,
+        label: `${isArabic ? city.nameAr : city.name} (${city.country})`,
+      })),
+      ...moreCities,
+    ],
+    [isArabic, moreCities]
   )
 
   const getError = (key: string) => {
@@ -106,6 +123,7 @@ export function CabTravelPolicyPage() {
           </p>
         )}
 
+        <TravelPricingProvidersSection />
         <TravelPolicyRulesSection
           draft={draft}
           getError={getError}

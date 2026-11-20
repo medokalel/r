@@ -1,0 +1,2093 @@
+{
+  "key": "iso-20000-1",
+  "standardCode": "ISO_20000_1",
+  "kind": "STANDARD",
+  "standard": "ISO/IEC 20000-1:2018",
+  "name": {
+    "en": "ISO/IEC 20000-1 Service management system",
+    "ar": "ISO/IEC 20000-1 نظام إدارة خدمات تقنية المعلومات"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "SMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "SMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "SMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "SMS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "SMS-05",
+      "clause": "5.1",
+      "title": {
+        "en": "Leadership and commitment",
+        "ar": "القيادة والالتزام"
+      },
+      "requirement": {
+        "en": "Top management demonstrates leadership and commitment by taking accountability, ensuring policy/objectives alignment, and supporting system effectiveness.",
+        "ar": "تُظهر الإدارة العليا القيادة والالتزام عبر تحمل المساءلة ومواءمة السياسة والأهداف ودعم فعالية النظام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review records",
+          "Resource approvals"
+        ],
+        "ar": [
+          "سجلات مراجعة الإدارة",
+          "اعتمادات الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "SMS-06",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "SMS-07",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "SMS-08",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "SMS-09",
+      "clause": "6.2",
+      "title": {
+        "en": "Objectives and planning to achieve them",
+        "ar": "الأهداف والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable objectives are established at relevant functions and levels with plans specifying what, resources, who, when, and evaluation.",
+        "ar": "وضع أهداف قابلة للقياس في الوظائف والمستويات المعنية مع خطط تحدد المطلوب والموارد والمسؤول والموعد والتقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Objectives tracker",
+          "Action plans"
+        ],
+        "ar": [
+          "متابع الأهداف",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "SMS-10",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the management system are carried out in a planned manner considering purpose, integrity, resources, and responsibilities.",
+        "ar": "تنفيذ التغييرات على نظام الإدارة بطريقة مخططة تراعي الغرض وتكامل النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Change request log",
+          "Impact assessments"
+        ],
+        "ar": [
+          "سجل طلبات التغيير",
+          "تقييمات الأثر"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "SMS-11",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "SMS-12",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "SMS-13",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "Personnel are aware of the policy, relevant objectives, their contribution to effectiveness, and implications of nonconformity.",
+        "ar": "توعية العاملين بالسياسة والأهداف ذات الصلة ومساهمتهم في الفعالية وآثار عدم المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Awareness briefings",
+          "Induction records"
+        ],
+        "ar": [
+          "جلسات التوعية",
+          "سجلات التهيئة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "SMS-14",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "SMS-15",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "SMS-16",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "SMS-17",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "SMS-18",
+      "clause": "8.1",
+      "title": {
+        "en": "Operational planning and control (SMS)",
+        "ar": "التخطيط التشغيلي والضبط (إدارة الخدمات)"
+      },
+      "requirement": {
+        "en": "Service management processes and service delivery are planned and controlled.",
+        "ar": "تخطيط وضبط عمليات إدارة الخدمات وتقديمها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-19",
+      "clause": "8.2.1",
+      "title": {
+        "en": "Service portfolio — Planning the services",
+        "ar": "محفظة الخدمات — تخطيط الخدمات"
+      },
+      "requirement": {
+        "en": "Service requirements, portfolio, and service lifecycle are planned.",
+        "ar": "تخطيط متطلبات الخدمات ومحفظتها ودورة حياتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-20",
+      "clause": "8.2.2",
+      "title": {
+        "en": "Control of parties involved in the service lifecycle",
+        "ar": "ضبط الأطراف المشاركة في دورة حياة الخدمة"
+      },
+      "requirement": {
+        "en": "External suppliers, internal groups, and customers involved in service delivery are controlled.",
+        "ar": "ضبط الموردين الخارجيين والفرق الداخلية والعملاء المشاركين في تقديم الخدمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-21",
+      "clause": "8.2.3",
+      "title": {
+        "en": "Service catalogue management",
+        "ar": "إدارة كتالوج الخدمات"
+      },
+      "requirement": {
+        "en": "A service catalogue is created, maintained, and made available to customers.",
+        "ar": "إنشاء وصيانة كتالوج الخدمات وإتاحته للعملاء."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-22",
+      "clause": "8.2.4",
+      "title": {
+        "en": "Asset management",
+        "ar": "إدارة الأصول"
+      },
+      "requirement": {
+        "en": "Assets used to deliver services are classified, recorded, tracked, and controlled.",
+        "ar": "تصنيف وتسجيل وتتبع وضبط الأصول المستخدمة في تقديم الخدمات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-23",
+      "clause": "8.2.5",
+      "title": {
+        "en": "Configuration management",
+        "ar": "إدارة التهيئة"
+      },
+      "requirement": {
+        "en": "Configuration items (CIs) and their relationships are defined, recorded in a CMDB, and verified.",
+        "ar": "تحديد عناصر التهيئة وعلاقاتها وتسجيلها والتحقق منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-24",
+      "clause": "8.3.1",
+      "title": {
+        "en": "Relationship and agreement — General",
+        "ar": "العلاقات والاتفاقيات — عام"
+      },
+      "requirement": {
+        "en": "Business relationship and supplier management processes are established.",
+        "ar": "إنشاء عمليات إدارة علاقات الأعمال والموردين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-25",
+      "clause": "8.3.2",
+      "title": {
+        "en": "Business relationship management",
+        "ar": "إدارة علاقات الأعمال"
+      },
+      "requirement": {
+        "en": "Customer satisfaction, complaints, and changing requirements are actively managed.",
+        "ar": "إدارة رضا العملاء والشكاوى وتغير المتطلبات بفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-26",
+      "clause": "8.3.3",
+      "title": {
+        "en": "Service level management (SLAs)",
+        "ar": "إدارة مستوى الخدمة"
+      },
+      "requirement": {
+        "en": "SLAs and service targets are agreed, monitored, reviewed, and reported.",
+        "ar": "الاتفاق على اتفاقيات ومستهدفات مستوى الخدمة ومراقبتها ومراجعتها وإعداد تقاريرها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-27",
+      "clause": "8.3.4",
+      "title": {
+        "en": "Supplier management",
+        "ar": "إدارة الموردين"
+      },
+      "requirement": {
+        "en": "Contracts, performance, and disputes with external and internal suppliers are managed.",
+        "ar": "إدارة العقود والأداء والنزاعات مع الموردين الخارجيين والداخليين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-28",
+      "clause": "8.4.1",
+      "title": {
+        "en": "Budgeting and accounting for services",
+        "ar": "إعداد الميزانية والمحاسبة للخدمات"
+      },
+      "requirement": {
+        "en": "Costs of services are budgeted, accounted for, and reviewed.",
+        "ar": "إعداد ميزانيات تكاليف الخدمات ومحاسبتها ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-29",
+      "clause": "8.4.2",
+      "title": {
+        "en": "Demand management",
+        "ar": "إدارة الطلب"
+      },
+      "requirement": {
+        "en": "Current and future demand for services is monitored and forecast.",
+        "ar": "مراقبة وتوقع الطلب الحالي والمستقبلي على الخدمات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-30",
+      "clause": "8.4.3",
+      "title": {
+        "en": "Capacity management",
+        "ar": "إدارة السعة"
+      },
+      "requirement": {
+        "en": "Capacity plans ensure agreed service capacity and performance requirements are met.",
+        "ar": "تضمن خطط السعة تلبية متطلبات السعة والأداء المتفق عليها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-31",
+      "clause": "8.5.1",
+      "title": {
+        "en": "Change management",
+        "ar": "إدارة التغيير"
+      },
+      "requirement": {
+        "en": "Requests for change are assessed, authorized, implemented, and reviewed to minimize service risk.",
+        "ar": "تقييم واعتماد وتنفيذ ومراجعة طلبات التغيير لتقليل مخاطر الخدمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-32",
+      "clause": "8.5.2",
+      "title": {
+        "en": "Service design and transition",
+        "ar": "تصميم الخدمات والانتقال إليها"
+      },
+      "requirement": {
+        "en": "New or changed services are designed, built, tested, and transitioned into live operation.",
+        "ar": "تصميم وبناء واختبار ونقل الخدمات الجديدة أو المعدلة إلى التشغيل الفعلي."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-33",
+      "clause": "8.5.3",
+      "title": {
+        "en": "Release and deployment management",
+        "ar": "إدارة الإصدار والنشر"
+      },
+      "requirement": {
+        "en": "Releases are planned, built, tested, and deployed to live environments.",
+        "ar": "تخطيط وبناء واختبار ونشر الإصدارات في بيئة الإنتاج."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-34",
+      "clause": "8.6.1",
+      "title": {
+        "en": "Incident management",
+        "ar": "إدارة الحوادث"
+      },
+      "requirement": {
+        "en": "Incidents are recorded, prioritized, resolved, and closed within agreed targets.",
+        "ar": "تسجيل الحوادث وتحديد أولوياتها وحلها وإغلاقها ضمن الأهداف المتفق عليها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-35",
+      "clause": "8.6.2",
+      "title": {
+        "en": "Service request management",
+        "ar": "إدارة طلبات الخدمة"
+      },
+      "requirement": {
+        "en": "Service requests are recorded, fulfilled, and closed according to defined procedures.",
+        "ar": "تسجيل طلبات الخدمة وتنفيذها وإغلاقها وفق إجراءات محددة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-36",
+      "clause": "8.6.3",
+      "title": {
+        "en": "Problem management",
+        "ar": "إدارة المشكلات"
+      },
+      "requirement": {
+        "en": "Recurring or major incidents are investigated for root causes, known errors recorded, and permanent fixes tracked.",
+        "ar": "التحقيق في الأسباب الجذرية للحوادث المتكررة أو الكبرى وتسجيل الأخطاء المعروفة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-37",
+      "clause": "8.7.1",
+      "title": {
+        "en": "Service availability management",
+        "ar": "إدارة توفر الخدمة"
+      },
+      "requirement": {
+        "en": "Service availability targets are planned, monitored, and reviewed.",
+        "ar": "تخطيط ومراقبة ومراجعة أهداف توفر الخدمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-38",
+      "clause": "8.7.2",
+      "title": {
+        "en": "Service continuity management",
+        "ar": "إدارة استمرارية الخدمة"
+      },
+      "requirement": {
+        "en": "Service continuity plans are maintained and tested against agreed recovery objectives.",
+        "ar": "صيانة واختبار خطط استمرارية الخدمة مقابل أهداف الاستعادة المتفق عليها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-39",
+      "clause": "8.7.3",
+      "title": {
+        "en": "Information security management in SMS",
+        "ar": "إدارة أمن المعلومات في نظام الخدمات"
+      },
+      "requirement": {
+        "en": "Information security policies, risks, and controls are applied to all services.",
+        "ar": "تطبيق سياسات وضوابط أمن المعلومات ومخاطره على جميع الخدمات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-40",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "SMS-41",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "SMS-42",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "SMS-43",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "SMS-44",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "SMS-45",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "SMS-46",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are controlled, root causes evaluated, corrective actions implemented, effectiveness reviewed, and records retained.",
+        "ar": "ضبط حالات عدم المطابقة وتقييم أسبابها الجذرية وتطبيق الإجراءات التصحيحية ومراجعة فعاليتها وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "CAR/NC log",
+          "Root cause analysis records"
+        ],
+        "ar": [
+          "سجل عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.1"
+    },
+    {
+      "code": "SMS-47",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization continually improves the suitability, adequacy, and effectiveness of the management system.",
+        "ar": "تحسين ملاءمة وكفاية وفعالية نظام الإدارة بشكل مستمر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Improvement initiatives log"
+        ],
+        "ar": [
+          "سجل مبادرات التحسين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.2"
+    },
+    {
+      "code": "SMS-48",
+      "clause": "8.8.1",
+      "title": {
+        "en": "Service management control 1",
+        "ar": "ضابط إدارة الخدمات 1"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.1 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.1 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-49",
+      "clause": "8.8.2",
+      "title": {
+        "en": "Service management control 2",
+        "ar": "ضابط إدارة الخدمات 2"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.2 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.2 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-50",
+      "clause": "8.8.3",
+      "title": {
+        "en": "Service management control 3",
+        "ar": "ضابط إدارة الخدمات 3"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.3 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.3 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-51",
+      "clause": "8.8.4",
+      "title": {
+        "en": "Service management control 4",
+        "ar": "ضابط إدارة الخدمات 4"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.4 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.4 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-52",
+      "clause": "8.8.5",
+      "title": {
+        "en": "Service management control 5",
+        "ar": "ضابط إدارة الخدمات 5"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.5 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.5 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-53",
+      "clause": "8.8.6",
+      "title": {
+        "en": "Service management control 6",
+        "ar": "ضابط إدارة الخدمات 6"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.6 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.6 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-54",
+      "clause": "8.8.7",
+      "title": {
+        "en": "Service management control 7",
+        "ar": "ضابط إدارة الخدمات 7"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.7 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.7 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-55",
+      "clause": "8.8.8",
+      "title": {
+        "en": "Service management control 8",
+        "ar": "ضابط إدارة الخدمات 8"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.8 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.8 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-56",
+      "clause": "8.8.9",
+      "title": {
+        "en": "Service management control 9",
+        "ar": "ضابط إدارة الخدمات 9"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.9 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.9 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "SMS-57",
+      "clause": "8.8.10",
+      "title": {
+        "en": "Service management control 10",
+        "ar": "ضابط إدارة الخدمات 10"
+      },
+      "requirement": {
+        "en": "Specific service management requirement under clause 8.8.10 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب إدارة الخدمات المحدد تحت البند 8.8.10 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    }
+  ]
+}

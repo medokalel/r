@@ -35,9 +35,10 @@ export function ChecklistCard({
           <p className="text-[15px] font-bold text-neutral-900">
             {pickLocalized(isArabic, checklist.name, checklist.nameAr)}
           </p>
-          <p className="mt-1 text-[13px] text-neutral-500">
-            <span dir="ltr">{checklist.standardLabel || checklist.standardCode}</span>
-            {' · '}
+          <p className="mt-1 text-[13px] text-neutral-500" dir="ltr">
+            {checklist.standardLabel || checklist.standardCode}
+          </p>
+          <p className="mt-0.5 text-[13px] text-neutral-500">
             {t('cab.auditChecklists.itemCount', { count: checklist.items.length })}
             {' · '}
             <span dir="ltr">v{checklist.version}</span>

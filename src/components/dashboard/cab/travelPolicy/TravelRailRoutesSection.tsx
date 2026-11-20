@@ -4,7 +4,7 @@ import { TravelPolicyRowActions } from '@/components/dashboard/cab/travelPolicy/
 import type { TravelCityOption } from '@/components/dashboard/cab/travelPolicy/TravelCityCapsSection'
 import { AddCircleIcon, AppIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { SelectField } from '@/components/ui/Select'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { TextField } from '@/components/ui/TextField'
 import {
   createRailRow,
@@ -61,20 +61,22 @@ export function TravelRailRoutesSection({ rows, cityOptions, getError, onChange 
                 key={row.id}
                 className="grid gap-3 rounded-[var(--radius-sm)] border border-[var(--cab-border)] p-3 sm:grid-cols-2 sm:items-start"
               >
-                <SelectField
+                <SearchableSelect
                   id={rowFieldId('railRoutes', row.id, 'from')}
                   label={t('cab.travelPolicy.from')}
                   value={row.from}
                   onChange={(from) => update({ from })}
                   options={withSaved(row.from)}
+                  searchPlaceholder={t('common.search')}
                 />
                 <div>
-                  <SelectField
+                  <SearchableSelect
                     id={rowFieldId('railRoutes', row.id, 'to')}
                     label={t('cab.travelPolicy.to')}
                     value={row.to}
                     onChange={(to) => update({ to })}
                     options={withSaved(row.to)}
+                    searchPlaceholder={t('common.search')}
                   />
                   {toError && (
                     <p role="alert" className="mt-2 text-small-light text-error-500">

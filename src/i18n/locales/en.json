@@ -2781,9 +2781,73 @@
       }
     },
     "auditPlanning": {
-      "title": "Audit Planning",
-      "subtitle": "Plan and manage audits across clients and sites.",
-      "draftSaved": "Draft saved successfully."
+      "lifecycle": {
+        "title": "Audit lifecycle",
+        "currentStatus": "Current status",
+        "start": "Start audit",
+        "review": "Send for review",
+        "complete": "Mark completed",
+        "started": "Audit started.",
+        "reviewed": "Audit sent for review.",
+        "completed": "Audit completed and added to the competence log of {{count}} team member(s).",
+        "error": "The audit status could not be updated. Try again.",
+        "openExecution": "Start / continue execution",
+        "openReport": "Open audit report",
+        "block": {
+          "notSent": "Send the plan to the client first.",
+          "notStarted": "Start the audit first.",
+          "done": "Already done for this plan.",
+          "completed": "The audit is completed.",
+          "notReady": "Complete the team, agenda, site and declarations first."
+        },
+        "confirm": {
+          "start": "Start audit {{number}}? Its status becomes \"In progress\" and the audit report opens for the team.",
+          "review": "Send audit {{number}} for review? The status becomes \"Under review\" while the report is finalised.",
+          "complete": "Mark audit {{number}} as completed? The plan becomes read-only and the audit is added to the competence log of the team."
+        }
+      },
+      "history": {
+        "title": "Plan history",
+        "events": {
+          "lifecycle": {
+            "start": "Audit started",
+            "review": "Sent for review",
+            "complete": "Audit completed"
+          },
+          "team": {
+            "confirmed": "Team confirmed",
+            "exception": "Exception requested"
+          },
+          "plan": {
+            "sent": "Plan sent to the client"
+          }
+        }
+      },
+      "team": {
+        "passes": "Passes the checks",
+        "issues": {
+          "COMPETENCE": "Not competent for: {{standards}}",
+          "TEAM_COVERAGE": "The team does not cover: {{standards}}",
+          "AVAILABILITY": "Not available ({{reason}}): {{start}} to {{end}}",
+          "IMPARTIALITY": "Impartiality conflict: {{reason}}"
+        },
+        "exceptionApproved": "Exception approved",
+        "exceptionPending": "Exception pending approval",
+        "requestException": "Request exception",
+        "remove": "Remove from team",
+        "coverageGap": "No team member is competent for: {{standards}}. Add a qualified auditor or technical expert.",
+        "eligible": "Eligible",
+        "hasIssues": "Needs attention",
+        "confirm": "Confirm team",
+        "resolveIssues": "Resolve {{count}} team issue(s)",
+        "exceptionsSummary": "Exceptions ({{approved}} approved, {{pending}} pending)",
+        "history": "Team history ({{count}})",
+        "exceptionTitle": "Request an exception",
+        "exceptionSubmit": "Submit request",
+        "justification": "Justification",
+        "justificationHint": "Explain why this team member can still be used (at least {{min}} characters).",
+        "exceptionRequested": "Exception requested. It is pending approval."
+      }
     },
     "auditSchedule": {
       "subtitle": "Plan and manage audits across clients and sites.",
@@ -7193,6 +7257,41 @@
       "lastSaved": "Last saved {{date}}",
       "samplesTitle": "Sample values to confirm: {{count}}",
       "samplesText": "The seeded rates are examples, not official figures. Check each row, change it if needed and tick Confirmed.",
+      "providers": {
+        "title": "Pricing providers",
+        "check": "Check connection",
+        "intro": "Live prices need a connected provider. Without one, every price is a labelled benchmark from this policy.",
+        "phase2": "Phase 2: provider integration (flight, hotel and FX APIs) and the CAB's own confirmed rates. Until then, estimates use the configurable sample rates of this policy.",
+        "flights": {
+          "name": "Flights",
+          "detail": "Amadeus Self-Service · Sample data: shown as Demo, never as live prices."
+        },
+        "hotels": {
+          "name": "Hotels",
+          "detail": "Amadeus Self-Service · Sample data: shown as Demo, never as live prices."
+        },
+        "transfers": {
+          "name": "Airport transfers",
+          "detail": "Amadeus Self-Service · Sample data: shown as Demo, never as live prices."
+        },
+        "trains": {
+          "name": "Trains",
+          "detail": "Not connected · No provider: the benchmark rates of this policy are used."
+        },
+        "fx": {
+          "name": "Exchange rates",
+          "detail": "Official USD peg · No provider: the benchmark rates of this policy are used."
+        },
+        "distances": {
+          "name": "Distances",
+          "detail": "Great-circle distance · Connected: used to estimate, not a market price."
+        },
+        "status": {
+          "demo": "Demo data",
+          "benchmark": "Benchmark only",
+          "connected": "Connected"
+        }
+      },
       "rules": "Rules",
       "currency": "Policy currency",
       "group": {
@@ -7278,28 +7377,29 @@
     "auditChecklists": {
       "title": "Audit checklists",
       "subtitle": "A checklist for every standard, clause by clause, ready for the audit.",
-      "draftTitle": "Part of the library is still under review",
-      "draftBody": "Checklists marked Draft are waiting for the product owner's review. Requirement summaries are written in our own words with the clause number; they are not the text of the standard. Check clause numbers against the edition in your accreditation scope.",
-      "listTitle": "Checklists",
+      "draftTitle": "Draft for the product owner's review",
+      "draftBody": "The iCASCO library summarises each requirement in our own words with its clause number; it is not the text of the standard. Check it against the edition in your accreditation scope, then copy and adapt it.",
+      "listTitle": "Checklist library",
+      "import": "Import",
       "tabsLabel": "Checklist source",
       "tabs": {
-        "library": "Library",
-        "cab": "My checklists"
+        "library": "iCASCO library",
+        "cab": "Our checklists"
       },
-      "search": "Search by name or standard",
+      "search": "Search name or standard",
       "showArchived": "Show archived",
       "emptySearch": "No checklists match your search.",
       "emptyCab": "You have no checklists yet. Copy one from the library or create a new one below.",
-      "itemCount": "{{count}} items",
+      "itemCount": "Items: {{count}}",
       "kinds": {
         "STANDARD": "Standard",
-        "IMS": "Integrated system",
+        "IMS": "Integrated",
         "STAGE1_READINESS": "Stage 1 readiness",
         "CUSTOM": "Custom"
       },
       "reviewStatus": {
-        "draft": "Draft",
-        "approved": "Approved"
+        "draft": "Draft for the product owner's review",
+        "approved": "iCASCO library, approved"
       },
       "default": "Default",
       "archived": "Archived",
@@ -7371,8 +7471,8 @@
         "recertification": "Recertification",
         "special": "Special"
       },
-      "newTitle": "New checklist",
-      "newHint": "Start an empty checklist for a scheme the library does not cover.",
+      "newTitle": "Create a checklist",
+      "newHint": "For a scheme the library does not cover, or start from a copy of a library checklist.",
       "create": "Create",
       "validation": {
         "nameRequired": "Enter a name.",
@@ -7942,6 +8042,112 @@
         "owner": "Owner"
       }
     },
+<<<<<<< HEAD
+=======
+    "salesHub": {
+      "title": "Sales Hub",
+      "subtitle": "Every lead in one place, from client registration to a signed certification agreement.",
+      "breadcrumbWorkspace": "Workspace",
+      "resetDemoData": "Reset demo data",
+      "addLead": "Add lead",
+      "portalCallout": "Client portal registrations arrive here automatically as New leads. Work each lead through the stages; a stage closes when its checklist is complete.",
+      "currencySar": "SAR",
+      "workflowTitle": "Business development workflow",
+      "viewLabel": "View",
+      "dragHint": "Drag a card to another stage to move it.",
+      "noLeadsHere": "No leads here",
+      "tasks": "tasks",
+      "sitesLabel": "sites",
+      "employeesLabel": "employees",
+      "stageChecklist": "Stage checklist",
+      "moveStage": "Move to stage",
+      "maintenance": {
+        "title": "Scheduled maintenance",
+        "message": "iCASCO will be unavailable on Friday from 01:00 to 02:00 (KSA time) for planned maintenance."
+      },
+      "views": {
+        "list": "List",
+        "pipeline": "Pipeline"
+      },
+      "kpi": {
+        "openLeads": "Open leads",
+        "everyLeadHasOwner": "Every lead has an owner",
+        "unassignedLeads": "{{count}} unassigned",
+        "viewPipeline": "View pipeline",
+        "pipelineValue": "Pipeline value",
+        "noValuesYet": "No values yet",
+        "activePipelineLeads": "Across {{count}} open leads",
+        "viewList": "View list",
+        "weightedForecast": "Weighted forecast",
+        "weightedSubtitle": "{{pct}}% of pipeline value, weighted by stage",
+        "winRate": "Win rate",
+        "wonLostSummary": "Won {{won}} · Lost {{lost}}",
+        "needsAction": "Needs action",
+        "nothingOverdue": "Nothing overdue",
+        "overdueCount": "{{count}} overdue"
+      },
+      "filters": {
+        "search": "Search",
+        "searchPlaceholder": "Search leads by company, contact or standard",
+        "owner": "Owner",
+        "allOwners": "All owners",
+        "source": "Source",
+        "allSources": "All sources"
+      },
+      "stages": {
+        "new_lead": {
+          "label": "New lead",
+          "description": "Received from the portal or added by the team."
+        },
+        "qualified": {
+          "label": "Qualified",
+          "description": "Contact made and fit with our scope confirmed."
+        },
+        "needs_analysis": {
+          "label": "Needs analysis",
+          "description": "Scope, sites and headcount collected."
+        },
+        "proposal_sent": {
+          "label": "Proposal sent",
+          "description": "Audit time calculated and quotation sent."
+        },
+        "negotiation": {
+          "label": "Negotiation",
+          "description": "Terms and price being agreed."
+        },
+        "won": {
+          "label": "Won",
+          "description": "Signed certification agreement received."
+        }
+      },
+      "table": {
+        "company": "Company",
+        "contact": "Contact",
+        "standards": "Standards",
+        "stage": "Stage",
+        "estimatedValue": "Estimated value",
+        "owner": "Owner",
+        "source": "Source",
+        "actions": "Actions"
+      },
+      "modal": {
+        "title": "New lead",
+        "companyName": "Company name",
+        "companyNameRequired": "Company name is required",
+        "contactPerson": "Contact person",
+        "email": "Email",
+        "phone": "Phone",
+        "city": "City",
+        "sector": "Sector",
+        "standards": "Standards (comma separated)",
+        "employees": "Employees",
+        "sites": "Sites",
+        "estimatedValue": "Estimated value (SAR)",
+        "source": "Source",
+        "owner": "Owner"
+      }
+    },
+>>>>>>> origin/main
     "agreementTerms": {
       "title": "Agreement terms",
       "subtitle": "The certification agreement your clients sign: bilingual sections with variables, filled for each client.",

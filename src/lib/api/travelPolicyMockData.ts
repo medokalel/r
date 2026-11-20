@@ -58,13 +58,17 @@ export const TRAVEL_POLICY_MOCK: TravelPolicyInput = {
     { country: 'SA', perDiem: 300, hotelCap: 650, visaFee: 535, note: 'Visit e-visa incl. medical insurance (sample)', sample: true },
     { country: 'AE', perDiem: 350, hotelCap: 750, visaFee: 350, note: '30-day visit visa (sample)', sample: true },
     { country: 'EG', perDiem: 220, hotelCap: 500, visaFee: 95, note: 'Visa on arrival / e-visa (sample)', sample: true },
+    { country: 'TR', perDiem: 280, hotelCap: 600, visaFee: 0, note: 'Depends on nationality (sample)', sample: true },
   ],
   cities: [
     { cityKey: 'riyadh', hotelCap: 700, sample: true },
     { cityKey: 'jeddah', hotelCap: 650, sample: true },
+    { cityKey: 'dubai', hotelCap: 850, sample: true },
   ],
   railRoutes: [
     { from: 'jeddah', to: 'makkah', fare: 60, hours: 0.6, operator: 'Haramain High Speed Railway', sample: true },
+    { from: 'jeddah', to: 'madinah', fare: 175, hours: 2, operator: 'Haramain High Speed Railway', sample: true },
+    { from: 'makkah', to: 'madinah', fare: 200, hours: 2.3, operator: 'Haramain High Speed Railway', sample: true },
     { from: 'riyadh', to: 'dammam', fare: 140, hours: 4.3, operator: 'Saudi Arabia Railways (SAR)', sample: true },
     { from: 'cairo', to: 'alexandria', fare: 25, hours: 2.5, operator: 'Egyptian National Railways', sample: true },
   ],

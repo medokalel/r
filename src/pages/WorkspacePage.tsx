@@ -257,6 +257,36 @@ export function WorkspacePage() {
         icon: SuccessCircleIcon,
       },
       {
+        key: 'singleSignOn',
+        title: t('cab.workspace.apps.singleSignOn', 'Single sign-on'),
+        description: t(
+          'cab.workspace.appDesc.singleSignOn',
+          'Let your staff sign in with Microsoft Entra ID, Google Workspace, Okta.',
+        ),
+        route: ROUTES.cabSso,
+        icon: ShieldIcon,
+      },
+      {
+        key: 'travelPolicy',
+        title: t('cab.workspace.apps.travelPolicy', 'Travel policy'),
+        description: t(
+          'cab.workspace.appDesc.travelPolicy',
+          'Rules, rates and providers of the travel cost calculator.',
+        ),
+        route: ROUTES.cabTravelPolicy,
+        icon: ExportIcon,
+      },
+      {
+        key: 'auditChecklists',
+        title: t('cab.workspace.apps.auditChecklists', 'Audit checklists'),
+        description: t(
+          'cab.workspace.appDesc.auditChecklists',
+          'A checklist for every standard, clause by clause, ready for the audit.',
+        ),
+        route: ROUTES.cabAuditChecklists,
+        icon: TaskSquareIcon,
+      },
+      {
         key: 'salesHub',
         title: t('cab.workspace.apps.salesHub', 'Sales Hub'),
         description: t(
@@ -314,9 +344,6 @@ export function WorkspacePage() {
   ]
   const upcomingApps: WorkspaceApp[] = [
     { key: 'dataMigration', title: 'Data migration', description: 'Import your existing clients, people, certificates, audits and more.', icon: ExportIcon },
-    { key: 'singleSignOn', title: 'Single sign-on', description: 'Let your staff sign in with Microsoft Entra ID, Google Workspace, Okta.', icon: ShieldIcon },
-    { key: 'travelPolicy', title: 'Travel policy', description: 'Rules, rates and providers of the travel cost calculator.', icon: ExportIcon },
-    { key: 'auditChecklists', title: 'Audit checklists', description: 'A checklist for every standard, clause by clause, ready for the audit.', icon: TaskSquareIcon },
   ].map((app) => ({ ...app, comingSoon: true, title: t(`cab.workspace.apps.${app.key}`, app.title), description: t(`cab.workspace.appDesc.${app.key}`, app.description) }))
   const appsByKey = new Map([...cabApps, ...upcomingApps].map((app) => [app.key, app]))
   const allApps = groups.flatMap((group) => group.apps.flatMap((key) => {

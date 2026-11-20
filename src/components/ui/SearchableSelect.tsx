@@ -52,9 +52,10 @@ export function SearchableSelect({
   const listRef = useRef<HTMLDivElement>(null)
 
   const selected = options.find((option) => option.value === value)
-  const filtered = options.filter((option) =>
-    option.label.toLowerCase().includes(query.trim().toLowerCase())
-  )
+  // Cap rendering so very long lists (all cities) stay fast; typing narrows the matches.
+  const filtered = options
+    .filter((option) => option.label.toLowerCase().includes(query.trim().toLowerCase()))
+    .slice(0, 300)
 
   useEffect(() => {
     if (!open) return

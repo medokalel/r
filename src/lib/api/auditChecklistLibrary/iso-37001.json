@@ -1,0 +1,1538 @@
+{
+  "key": "iso-37001",
+  "standardCode": "ISO_37001",
+  "kind": "STANDARD",
+  "standard": "ISO 37001:2016",
+  "name": {
+    "en": "ISO 37001 Anti-bribery management system",
+    "ar": "ISO 37001 نظام إدارة مكافحة الرشوة"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "ABMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "ABMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "ABMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "ABMS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "ABMS-05",
+      "clause": "4.5",
+      "title": {
+        "en": "Bribery risk assessment",
+        "ar": "تقييم مخاطر الرشوة"
+      },
+      "requirement": {
+        "en": "Bribery risks are regularly assessed considering size, locations, sectors, business associates, and public officials.",
+        "ar": "تقييم مخاطر الرشوة بانتظام مع مراعاة الحجم والمواقع والقطاعات وشركاء العمل والمسؤولين العموميين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-06",
+      "clause": "5.1.1",
+      "title": {
+        "en": "Governing body leadership",
+        "ar": "قيادة الهيئة الحاكمة"
+      },
+      "requirement": {
+        "en": "The governing body oversees anti-bribery policy, strategy, and compliance function independence.",
+        "ar": "إشراف الهيئة الحاكمة على سياسة مكافحة الرشوة واستقلالية وظيفة الامتثال."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-07",
+      "clause": "5.1.2",
+      "title": {
+        "en": "Top management commitment",
+        "ar": "التزام الإدارة العليا"
+      },
+      "requirement": {
+        "en": "Top management ensures anti-bribery controls are implemented, resourced, and integrated.",
+        "ar": "تضمن الإدارة العليا تطبيق ضوابط مكافحة الرشوة وتوفير مواردها ودمجها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-08",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "ABMS-09",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "ABMS-10",
+      "clause": "5.3.2",
+      "title": {
+        "en": "Anti-bribery compliance function",
+        "ar": "وظيفة الامتثال لمكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "A competent person/function with direct access to the governing body oversees anti-bribery compliance.",
+        "ar": "تعيين شخص أو وظيفة مختصة ذات صلاحية وصول مباشر للهيئة الحاكمة للإشراف على الامتثال."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-11",
+      "clause": "5.3.3",
+      "title": {
+        "en": "Delegated decision-making controls",
+        "ar": "ضوابط تفويض اتخاذ القرار"
+      },
+      "requirement": {
+        "en": "Delegated authority for transactions with more than low bribery risk is controlled and reviewed.",
+        "ar": "ضبط ومراجعة الصلاحيات المفوضة للمعاملات ذات مخاطر الرشوة المرتفعة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-12",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "ABMS-13",
+      "clause": "6.2",
+      "title": {
+        "en": "Objectives and planning to achieve them",
+        "ar": "الأهداف والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable objectives are established at relevant functions and levels with plans specifying what, resources, who, when, and evaluation.",
+        "ar": "وضع أهداف قابلة للقياس في الوظائف والمستويات المعنية مع خطط تحدد المطلوب والموارد والمسؤول والموعد والتقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Objectives tracker",
+          "Action plans"
+        ],
+        "ar": [
+          "متابع الأهداف",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "ABMS-14",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the management system are carried out in a planned manner considering purpose, integrity, resources, and responsibilities.",
+        "ar": "تنفيذ التغييرات على نظام الإدارة بطريقة مخططة تراعي الغرض وتكامل النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Change request log",
+          "Impact assessments"
+        ],
+        "ar": [
+          "سجل طلبات التغيير",
+          "تقييمات الأثر"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "ABMS-15",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "ABMS-16",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "ABMS-17",
+      "clause": "7.2.2",
+      "title": {
+        "en": "Employment process and vetting",
+        "ar": "عملية التوظيف والتحري"
+      },
+      "requirement": {
+        "en": "Personnel vetting, conflict-of-interest declarations, and anti-bribery compliance terms are applied.",
+        "ar": "تطبيق التحري عن الموظفين وإقرارات تعارض المصالح وشروط الامتثال لمكافحة الرشوة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-18",
+      "clause": "7.3",
+      "title": {
+        "en": "Anti-bribery awareness and training",
+        "ar": "التوعية والتدريب على مكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "Role-appropriate anti-bribery training is delivered regularly to personnel and relevant business associates.",
+        "ar": "تقديم تدريب دوري مناسب للأدوار حول مكافحة الرشوة للعاملين وشركاء العمل المعنيين."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-19",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "ABMS-20",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "ABMS-21",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "ABMS-22",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "ABMS-23",
+      "clause": "8.1",
+      "title": {
+        "en": "Operational planning and control",
+        "ar": "التخطيط التشغيلي والضبط"
+      },
+      "requirement": {
+        "en": "Processes needed to meet requirements are planned, implemented, and controlled, including outsourced processes.",
+        "ar": "تخطيط وتطبيق وضبط العمليات اللازمة لتلبية المتطلبات، بما في ذلك العمليات المسندة خارجياً."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational procedures",
+          "Control records"
+        ],
+        "ar": [
+          "الإجراءات التشغيلية",
+          "سجلات الضبط"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-8.1"
+    },
+    {
+      "code": "ABMS-24",
+      "clause": "8.2",
+      "title": {
+        "en": "Due diligence",
+        "ar": "العناية الواجبة"
+      },
+      "requirement": {
+        "en": "Due diligence is conducted on transactions, projects, activities, business associates, and personnel with more than low bribery risk.",
+        "ar": "إجراء العناية الواجبة على المعاملات والمشاريع وشركاء العمل والأفراد ذوي مخاطر الرشوة فوق المنخفضة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-25",
+      "clause": "8.3",
+      "title": {
+        "en": "Financial controls",
+        "ar": "الضوابط المالية"
+      },
+      "requirement": {
+        "en": "Financial controls prevent bribery (segregation of duties, approval thresholds, payment verification, cash limits).",
+        "ar": "تمنع الضوابط المالية الرشوة عبر فصل المهام وحدود الاعتماد والتحقق من المدفوعات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-26",
+      "clause": "8.4",
+      "title": {
+        "en": "Non-financial controls",
+        "ar": "الضوابط غير المالية"
+      },
+      "requirement": {
+        "en": "Procurement, operational, sales, and contracting controls mitigate bribery risk.",
+        "ar": "تحد ضوابط المشتريات والعمليات والمبيعات والتعاقد من مخاطر الرشوة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-27",
+      "clause": "8.5",
+      "title": {
+        "en": "Anti-bribery controls by controlled organizations and associates",
+        "ar": "ضوابط مكافحة الرشوة لدى الجهات التابعة والشركاء"
+      },
+      "requirement": {
+        "en": "Controlled organizations implement anti-bribery controls and associates commit to equivalent measures.",
+        "ar": "تطبق الجهات التابعة ضوابط مكافحة الرشوة ويلتزم الشركاء بتدابير مكافئة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-28",
+      "clause": "8.6",
+      "title": {
+        "en": "Anti-bribery commitments",
+        "ar": "التزامات مكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "Contractual anti-bribery commitments and termination rights are obtained from business associates.",
+        "ar": "الحصول على التزامات تعاقدية لمكافحة الرشوة وحقوق الإنهاء من شركاء العمل."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-29",
+      "clause": "8.7",
+      "title": {
+        "en": "Gifts, hospitality, donations and similar benefits",
+        "ar": "الهدايا والضيافة والتبرعات والمزايا المماثلة"
+      },
+      "requirement": {
+        "en": "Procedures control giving and receiving gifts, hospitality, donations, and sponsorships.",
+        "ar": "ضبط تقديم وتلقي الهدايا والضيافة والتبرعات والرعايات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-30",
+      "clause": "8.8",
+      "title": {
+        "en": "Managing inadequacy of anti-bribery controls",
+        "ar": "معالجة قصور ضوابط مكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "Transactions are postponed, suspended, or terminated when bribery risk cannot be mitigated.",
+        "ar": "تأجيل أو تعليق أو إنهاء المعاملات عند تعذر تخفيف مخاطر الرشوة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-31",
+      "clause": "8.9",
+      "title": {
+        "en": "Raising concerns (whistleblowing)",
+        "ar": "الإبلاغ عن المخاوف"
+      },
+      "requirement": {
+        "en": "Confidential channels encourage reporting suspected bribery in good faith without retaliation.",
+        "ar": "توفير قنوات سرية تشجع الإبلاغ بحسن نية دون انتقام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-32",
+      "clause": "8.10",
+      "title": {
+        "en": "Investigating and dealing with bribery",
+        "ar": "التحقيق في الرشوة والتعامل معها"
+      },
+      "requirement": {
+        "en": "Reported or suspected bribery is investigated independently and appropriate action is taken.",
+        "ar": "التحقيق باستقلالية في حالات الرشوة المشتبه بها واتخاذ الإجراءات المناسبة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-33",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "ABMS-34",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "ABMS-35",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "ABMS-36",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "ABMS-37",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "ABMS-38",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "ABMS-39",
+      "clause": "9.3.2.b",
+      "title": {
+        "en": "Governing body review of ABMS",
+        "ar": "مراجعة الهيئة الحاكمة لنظام مكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "The governing body periodically reviews ABMS performance and compliance function reports.",
+        "ar": "تراجع الهيئة الحاكمة دورياً أداء النظام وتقارير وظيفة الامتثال."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-40",
+      "clause": "9.4",
+      "title": {
+        "en": "Review by anti-bribery compliance function",
+        "ar": "مراجعة وظيفة الامتثال لمكافحة الرشوة"
+      },
+      "requirement": {
+        "en": "The compliance function continually assesses ABMS adequacy and reports to management and governing body.",
+        "ar": "تقوم وظيفة الامتثال بتقييم كفاية النظام باستمرار ورفع التقارير للإدارة والهيئة الحاكمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "ABMS-41",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are controlled, root causes evaluated, corrective actions implemented, effectiveness reviewed, and records retained.",
+        "ar": "ضبط حالات عدم المطابقة وتقييم أسبابها الجذرية وتطبيق الإجراءات التصحيحية ومراجعة فعاليتها وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "CAR/NC log",
+          "Root cause analysis records"
+        ],
+        "ar": [
+          "سجل عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.1"
+    },
+    {
+      "code": "ABMS-42",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization continually improves the suitability, adequacy, and effectiveness of the management system.",
+        "ar": "تحسين ملاءمة وكفاية وفعالية نظام الإدارة بشكل مستمر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Improvement initiatives log"
+        ],
+        "ar": [
+          "سجل مبادرات التحسين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.2"
+    }
+  ]
+}

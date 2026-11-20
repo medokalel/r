@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type ReactNode } from 'react'
 import * as Dialog from '@radix-ui/react-dialog'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
@@ -12,6 +12,10 @@ interface ConfirmDialogProps {
   cancelLabel?: string
   /** Use for actions that delete or cannot be undone. */
   destructive?: boolean
+  /** Extra content under the description, e.g. a reason field. */
+  children?: ReactNode
+  /** Keeps the confirm button disabled until the extra content is valid. */
+  confirmDisabled?: boolean
   /**
    * Runs when the person confirms. The dialog stays open (buttons disabled) until it settles —
    * the caller closes it and handles any error itself.
@@ -28,6 +32,8 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel,
   destructive = false,
+  children,
+  confirmDisabled = false,
   onConfirm,
   onClose,
 }: ConfirmDialogProps) {
@@ -56,6 +62,7 @@ export function ConfirmDialog({
               {description}
             </Dialog.Description>
           ) : null}
+          {children ? <div className="mt-4">{children}</div> : null}
 
           <div className="mt-6 flex flex-wrap justify-end gap-3">
             <Button type="button" variant="outline" size="sm" disabled={busy} onClick={onClose}>
@@ -65,7 +72,7 @@ export function ConfirmDialog({
               type="button"
               variant={destructive ? 'destructive' : 'primary'}
               size="sm"
-              disabled={busy}
+              disabled={busy || confirmDisabled}
               onClick={() => void handleConfirm()}
             >
               {confirmLabel}

@@ -7,7 +7,6 @@ import { FormLabel } from '@/components/ui/FormField'
 import { Textarea, TextField } from '@/components/ui/TextField'
 import {
   CHECKLIST_CLAUSE_MAX_LENGTH,
-  CHECKLIST_ITEM_CODE_MAX_LENGTH,
   CHECKLIST_ITEM_TEXT_MAX_LENGTH,
   CHECKLIST_ITEM_TITLE_MAX_LENGTH,
   itemFieldId,
@@ -83,45 +82,40 @@ export function ChecklistItemEditor({
 
   return (
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <TextField
-        id={fieldId('clause')}
-        label={t('cab.auditChecklists.clause')}
-        required
-        dir="ltr"
-        maxLength={CHECKLIST_CLAUSE_MAX_LENGTH}
-        value={item.clause}
-        error={getError('clause')}
-        onChange={(event) => onChange({ clause: event.target.value })}
-      />
-      <TextField
-        id={fieldId('code')}
-        label={t('cab.auditChecklists.itemCode')}
-        dir="ltr"
-        maxLength={CHECKLIST_ITEM_CODE_MAX_LENGTH}
-        value={item.code}
-        onChange={(event) => onChange({ code: event.target.value })}
-      />
-      <TextField
-        id={fieldId('title')}
-        label={t('cab.auditChecklists.itemTitle')}
-        required
-        maxLength={CHECKLIST_ITEM_TITLE_MAX_LENGTH}
-        value={item.title}
-        error={getError('title')}
-        onChange={(event) => onChange({ title: event.target.value })}
-      />
-      <TextField
-        id={fieldId('titleAr')}
-        label={t('cab.auditChecklists.itemTitleAr')}
-        dir="rtl"
-        maxLength={CHECKLIST_ITEM_TITLE_MAX_LENGTH}
-        value={item.titleAr}
-        onChange={(event) => onChange({ titleAr: event.target.value })}
-      />
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-[140px_minmax(0,1fr)] md:col-span-2">
+        <TextField
+          id={fieldId('clause')}
+          label={t('cab.auditChecklists.clause')}
+          required
+          dir="ltr"
+          maxLength={CHECKLIST_CLAUSE_MAX_LENGTH}
+          value={item.clause}
+          error={getError('clause')}
+          onChange={(event) => onChange({ clause: event.target.value })}
+        />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <TextField
+            id={fieldId('title')}
+            label={t('cab.auditChecklists.itemTitle')}
+            required
+            maxLength={CHECKLIST_ITEM_TITLE_MAX_LENGTH}
+            value={item.title}
+            error={getError('title')}
+            onChange={(event) => onChange({ title: event.target.value })}
+          />
+          <TextField
+            id={fieldId('titleAr')}
+            label={t('cab.auditChecklists.itemTitleAr')}
+            dir="rtl"
+            maxLength={CHECKLIST_ITEM_TITLE_MAX_LENGTH}
+            value={item.titleAr}
+            onChange={(event) => onChange({ titleAr: event.target.value })}
+          />
+        </div>
+      </div>
       <LabeledTextarea
         id={fieldId('requirement')}
         label={t('cab.auditChecklists.requirement')}
-        hint={t('cab.auditChecklists.ownWords')}
         required
         value={item.requirement}
         error={getError('requirement')}
@@ -168,27 +162,14 @@ export function ChecklistItemEditor({
           onChange({ evidencePromptsAr: linesToList(text) })
         }}
       />
-      <TextField
-        id={fieldId('samplingHint')}
-        label={t('cab.auditChecklists.sampling')}
-        value={item.samplingHint}
-        onChange={(event) => onChange({ samplingHint: event.target.value })}
-      />
-      <TextField
-        id={fieldId('samplingHintAr')}
-        label={t('cab.auditChecklists.samplingAr')}
-        dir="rtl"
-        value={item.samplingHintAr}
-        onChange={(event) => onChange({ samplingHintAr: event.target.value })}
-      />
 
       <fieldset className="flex flex-col gap-2 md:col-span-2">
-        <legend className="mb-2 text-[14px] font-medium text-neutral-900">{t('cab.auditChecklists.stagesLabel')}</legend>
+        <legend className="mb-1 text-[13px] font-semibold text-neutral-900">{t('cab.auditChecklists.stagesLabel')}</legend>
         <div className="flex flex-wrap gap-2">
           {AUDIT_STAGES.map((stage) => (
             <label
               key={stage}
-              className="flex min-h-11 items-center gap-2 rounded-[var(--radius-sm)] border border-[#ececec] px-3 text-[14px] text-neutral-900"
+              className="flex min-h-9 items-center gap-2 rounded-[6px] border border-[#e2e2e2] bg-white px-3 text-[13px] text-neutral-900"
             >
               <Checkbox checked={item.stages.includes(stage)} onChange={() => toggleStage(stage)} />
               {t(`cab.auditChecklists.stages.${stage}`)}
@@ -197,47 +178,43 @@ export function ChecklistItemEditor({
         </div>
       </fieldset>
 
-      <div className="flex flex-wrap gap-x-6 gap-y-2 md:col-span-2">
-        <label className="flex min-h-11 items-center gap-2 text-[14px] text-neutral-900">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#ececec] pt-3 md:col-span-2">
+        <label className="flex min-h-9 items-center gap-2 text-[13px] font-medium text-neutral-900">
           <Checkbox checked={item.mandatory} onChange={() => onChange({ mandatory: !item.mandatory })} />
           {t('cab.auditChecklists.mandatoryLabel')}
         </label>
-        <label className="flex min-h-11 items-center gap-2 text-[14px] text-neutral-900">
-          <Checkbox checked={item.common} onChange={() => onChange({ common: !item.common })} />
-          {t('cab.auditChecklists.commonLabel')}
-        </label>
-      </div>
 
-      <div className="flex flex-wrap gap-2 md:col-span-2">
-        <Button
-          type="button"
-          size="sm"
-          variant="secondary"
-          disabled={isFirst}
-          icon={<AppIcon icon={ChevronDownIcon} size={16} className="rotate-180" />}
-          onClick={() => onMove(-1)}
-        >
-          {t('cab.auditChecklists.moveUp')}
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="secondary"
-          disabled={isLast}
-          icon={<AppIcon icon={ChevronDownIcon} size={16} />}
-          onClick={() => onMove(1)}
-        >
-          {t('cab.auditChecklists.moveDown')}
-        </Button>
-        <Button
-          type="button"
-          size="sm"
-          variant="destructive"
-          icon={<AppIcon icon={TrashIcon} size={16} />}
-          onClick={onRemove}
-        >
-          {t('cab.auditChecklists.removeItem')}
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            disabled={isFirst}
+            icon={<AppIcon icon={ChevronDownIcon} size={16} className="rotate-180" />}
+            onClick={() => onMove(-1)}
+          >
+            {t('cab.auditChecklists.moveUp')}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="secondary"
+            disabled={isLast}
+            icon={<AppIcon icon={ChevronDownIcon} size={16} />}
+            onClick={() => onMove(1)}
+          >
+            {t('cab.auditChecklists.moveDown')}
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            variant="destructive"
+            icon={<AppIcon icon={TrashIcon} size={16} />}
+            onClick={onRemove}
+          >
+            {t('cab.auditChecklists.removeItem')}
+          </Button>
+        </div>
       </div>
     </div>
   )

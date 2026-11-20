@@ -7,12 +7,18 @@ import { ChecklistCard } from '@/components/dashboard/cab/auditChecklists/Checkl
 import { ChecklistDetailPanel } from '@/components/dashboard/cab/auditChecklists/ChecklistDetailPanel'
 import { ChecklistTabs } from '@/components/dashboard/cab/auditChecklists/ChecklistTabs'
 import { NewChecklistSection } from '@/components/dashboard/cab/auditChecklists/NewChecklistSection'
+import { ImportWizardDialog } from '@/components/dashboard/cab/dataMigration/ImportWizardDialog'
 import { AppIcon, CorrectiveActionIcon, SearchIcon } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
+import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { ErrorState } from '@/components/ui/ErrorState'
 import { TextField } from '@/components/ui/TextField'
-import { loadAuditChecklistsMock, type AuditChecklistsData } from '@/lib/api/auditChecklistMockData'
+import {
+  loadAuditChecklistsMock,
+  saveCabChecklistsMock,
+  type AuditChecklistsData,
+} from '@/lib/api/auditChecklistMockData'
 import {
   applyDraft,
   copyChecklist,
@@ -44,6 +50,7 @@ export function CabAuditChecklistsPage() {
   const [includeArchived, setIncludeArchived] = useState(false)
   // Bumped after a save so the detail panel starts again from the saved checklist.
   const [panelRevision, setPanelRevision] = useState(0)
+  const [importOpen, setImportOpen] = useState(false)
 
   const selectedId = searchParams.get(CHECKLIST_PARAM)
 
@@ -72,7 +79,8 @@ export function CabAuditChecklistsPage() {
 
   const visibleChecklists = useMemo(() => {
     const source = tab === 'library' ? library : mine
-    return sortChecklists(filterChecklists(source ?? [], { search: deferredSearch, includeArchived }))
+    const filtered = filterChecklists(source ?? [], { search: deferredSearch, includeArchived })
+    return tab === 'library' ? filtered : sortChecklists(filtered)
   }, [tab, library, mine, deferredSearch, includeArchived])
 
   const hasDraftLibrary = Boolean(library?.some((checklist) => checklist.reviewStatus === 'draft'))
@@ -90,7 +98,12 @@ export function CabAuditChecklistsPage() {
     )
 
   const updateMine = (update: (list: AuditChecklist[]) => AuditChecklist[]) =>
-    setData((current) => (current ? { ...current, mine: update(current.mine) } : current))
+    setData((current) => {
+      if (!current) return current
+      const nextMine = update(current.mine)
+      saveCabChecklistsMock(nextMine)
+      return { ...current, mine: nextMine }
+    })
 
   const openChecklist = (checklist: AuditChecklist) => {
     setSelectedId(checklist.id)
@@ -169,17 +182,7 @@ export function CabAuditChecklistsPage() {
           />
         ) : (
           <>
-            {hasDraftLibrary && (
-              <CalloutCard
-                tone="amber"
-                icon={<AppIcon icon={CorrectiveActionIcon} size={20} className="text-[#d97706]" />}
-                title={t('cab.auditChecklists.draftTitle')}
-              >
-                {t('cab.auditChecklists.draftBody')}
-              </CalloutCard>
-            )}
-
-            {selected && (
+            {selected ? (
               <ChecklistDetailPanel
                 key={`${selected.id}:${panelRevision}`}
                 checklist={selected}
@@ -188,67 +191,96 @@ export function CabAuditChecklistsPage() {
                 onCopy={() => handleCopy(selected)}
                 onClose={() => setSelectedId(null)}
               />
+            ) : (
+              <>
+                {hasDraftLibrary && (
+                  <CalloutCard
+                    tone="amber"
+                    icon={<AppIcon icon={CorrectiveActionIcon} size={20} className="text-[#d97706]" />}
+                    title={t('cab.auditChecklists.draftTitle')}
+                  >
+                    {t('cab.auditChecklists.draftBody')}
+                  </CalloutCard>
+                )}
+
+                <SectionCard
+                  title={t('cab.auditChecklists.listTitle')}
+                  action={
+                    <Button type="button" size="sm" variant="secondary" onClick={() => setImportOpen(true)}>
+                      {t('cab.auditChecklists.import', 'Import')}
+                    </Button>
+                  }
+                >
+                  <div className="flex flex-col gap-4">
+                    <ChecklistTabs
+                      ariaLabel={t('cab.auditChecklists.tabsLabel')}
+                      value={tab}
+                      onChange={handleTabChange}
+                      tabs={[
+                        { id: 'library', label: t('cab.auditChecklists.tabs.library') },
+                        { id: 'cab', label: t('cab.auditChecklists.tabs.cab') },
+                      ]}
+                    />
+
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                      <div className="sm:w-full sm:max-w-sm">
+                        <TextField
+                          icon={SearchIcon}
+                          type="search"
+                          aria-label={t('cab.auditChecklists.search')}
+                          placeholder={t('cab.auditChecklists.search')}
+                          value={search}
+                          onChange={(event) => setSearch(event.target.value)}
+                        />
+                      </div>
+                      {tab === 'cab' && (
+                        <label className="flex min-h-11 items-center gap-2 text-[14px] text-neutral-900">
+                          <Checkbox checked={includeArchived} onChange={() => setIncludeArchived((value) => !value)} />
+                          {t('cab.auditChecklists.showArchived')}
+                        </label>
+                      )}
+                    </div>
+
+                    {loading ? (
+                      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2" aria-busy="true">
+                        <div className="h-28 animate-pulse rounded-[var(--radius-md)] border border-[#ececec] bg-white" />
+                        <div className="h-28 animate-pulse rounded-[var(--radius-md)] border border-[#ececec] bg-white" />
+                      </div>
+                    ) : visibleChecklists.length === 0 ? (
+                      <p className="text-[13px] text-[var(--cab-muted)]">{emptyMessage}</p>
+                    ) : (
+                      <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+                        {visibleChecklists.map((checklist) => (
+                          <li key={checklist.id}>
+                            <ChecklistCard
+                              checklist={checklist}
+                              isArabic={isArabic}
+                              onOpen={() => openChecklist(checklist)}
+                              onCopy={() => handleCopy(checklist)}
+                              onMakeDefault={() => handleMakeDefault(checklist)}
+                              onToggleArchive={() => handleToggleArchive(checklist)}
+                              onDelete={() => handleDelete(checklist)}
+                            />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </SectionCard>
+
+                <NewChecklistSection onCreate={handleCreate} />
+              </>
             )}
 
-            <SectionCard title={t('cab.auditChecklists.listTitle')}>
-              <div className="flex flex-col gap-4">
-                <ChecklistTabs
-                  ariaLabel={t('cab.auditChecklists.tabsLabel')}
-                  value={tab}
-                  onChange={handleTabChange}
-                  tabs={[
-                    { id: 'library', label: t('cab.auditChecklists.tabs.library') },
-                    { id: 'cab', label: t('cab.auditChecklists.tabs.cab') },
-                  ]}
-                />
-
-                <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-                  <div className="sm:w-full sm:max-w-sm">
-                    <TextField
-                      icon={SearchIcon}
-                      type="search"
-                      aria-label={t('cab.auditChecklists.search')}
-                      placeholder={t('cab.auditChecklists.search')}
-                      value={search}
-                      onChange={(event) => setSearch(event.target.value)}
-                    />
-                  </div>
-                  {tab === 'cab' && (
-                    <label className="flex min-h-11 items-center gap-2 text-[14px] text-neutral-900">
-                      <Checkbox checked={includeArchived} onChange={() => setIncludeArchived((value) => !value)} />
-                      {t('cab.auditChecklists.showArchived')}
-                    </label>
-                  )}
-                </div>
-
-                {loading ? (
-                  <div className="grid grid-cols-1 gap-3 lg:grid-cols-2" aria-busy="true">
-                    <div className="h-28 animate-pulse rounded-[var(--radius-md)] border border-[#ececec] bg-white" />
-                    <div className="h-28 animate-pulse rounded-[var(--radius-md)] border border-[#ececec] bg-white" />
-                  </div>
-                ) : visibleChecklists.length === 0 ? (
-                  <p className="text-[13px] text-[var(--cab-muted)]">{emptyMessage}</p>
-                ) : (
-                  <ul className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-                    {visibleChecklists.map((checklist) => (
-                      <li key={checklist.id}>
-                        <ChecklistCard
-                          checklist={checklist}
-                          isArabic={isArabic}
-                          onOpen={() => openChecklist(checklist)}
-                          onCopy={() => handleCopy(checklist)}
-                          onMakeDefault={() => handleMakeDefault(checklist)}
-                          onToggleArchive={() => handleToggleArchive(checklist)}
-                          onDelete={() => handleDelete(checklist)}
-                        />
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </SectionCard>
-
-            <NewChecklistSection onCreate={handleCreate} />
+            {importOpen && (
+              <ImportWizardDialog
+                key="checklists"
+                entityKey="checklists"
+                isArabic={isArabic}
+                onClose={() => setImportOpen(false)}
+                onImported={() => setReloadKey((k) => k + 1)}
+              />
+            )}
           </>
         )}
       </main>

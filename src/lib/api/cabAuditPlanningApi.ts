@@ -152,6 +152,26 @@ export interface AuditExecutionData {
   }
 }
 
+export type TeamIssueCode = 'COMPETENCE' | 'TEAM_COVERAGE' | 'AVAILABILITY' | 'IMPARTIALITY'
+
+export interface TeamException {
+  id: string
+  personId: string
+  personName: string
+  issueCode: TeamIssueCode
+  justification: string
+  status: 'Pending' | 'Approved' | 'Rejected'
+  requestedAt: string
+}
+
+export interface AuditPlanEvent {
+  id: string
+  at: string
+  /** Machine-readable action, e.g. `lifecycle.start`, `team.confirmed`, `team.exception`. */
+  action: string
+  detail?: string
+}
+
 export interface AuditPlan {
   id: string
   planNumber: string
@@ -188,7 +208,16 @@ export interface AuditPlan {
   remoteActivities: RemoteActivities
   travelNotes: TravelNotes
   teamDeclarations: TeamDeclarations
+<<<<<<< HEAD
+  teamExceptions?: TeamException[]
+  /** Plan history: lifecycle steps, team confirmation, exception requests. */
+  events?: AuditPlanEvent[]
+  /** Names of the team members whose competence log received this audit on completion. */
+  competenceLoggedFor?: string[]
   execution: AuditExecutionData
+=======
+  checklistIds?: string[]
+>>>>>>> origin/main
   version: number
   createdAt: string
   updatedAt: string

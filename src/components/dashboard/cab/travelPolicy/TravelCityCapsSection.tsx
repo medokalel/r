@@ -3,7 +3,7 @@ import { SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import { TravelPolicyRowActions } from '@/components/dashboard/cab/travelPolicy/TravelPolicyRowActions'
 import { AddCircleIcon, AppIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
-import { SelectField } from '@/components/ui/Select'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { TextField } from '@/components/ui/TextField'
 import {
   createCityRow,
@@ -65,12 +65,13 @@ export function TravelCityCapsSection({ rows, cityOptions, getError, onChange }:
                 className="grid gap-3 rounded-[var(--radius-sm)] border border-[var(--cab-border)] p-3 sm:grid-cols-[minmax(0,1fr)_minmax(0,140px)_auto] sm:items-start"
               >
                 <div>
-                  <SelectField
+                  <SearchableSelect
                     id={rowFieldId('cities', row.id, 'cityKey')}
                     label={t('cab.travelPolicy.city')}
                     value={row.cityKey}
                     onChange={(cityKey) => update({ cityKey })}
                     options={options}
+                    searchPlaceholder={t('common.search')}
                   />
                   {cityError && (
                     <p role="alert" className="mt-2 text-small-light text-error-500">

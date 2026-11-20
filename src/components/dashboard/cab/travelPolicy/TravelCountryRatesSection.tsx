@@ -1,15 +1,17 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import { TravelPolicyRowActions } from '@/components/dashboard/cab/travelPolicy/TravelPolicyRowActions'
 import { AddCircleIcon, AppIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { TextField } from '@/components/ui/TextField'
+import { getCountryOptions } from '@/lib/countries'
 import {
   createCountryRow,
   removeRow,
   rowErrorKey,
   rowFieldId,
-  TRAVEL_COUNTRY_LENGTH,
   TRAVEL_NOTE_MAX_LENGTH,
   updateRow,
   type TravelCountryRow,
@@ -23,7 +25,12 @@ interface TravelCountryRatesSectionProps {
 
 /** Per diem, hotel cap and visa fee per country (ISO code). */
 export function TravelCountryRatesSection({ rows, getError, onChange }: TravelCountryRatesSectionProps) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
+  const countryOptions = useMemo(
+    () =>
+      getCountryOptions(i18n.language).map((c) => ({ value: c.code, label: `${c.flag} ${c.name} (${c.code})` })),
+    [i18n.language]
+  )
 
   return (
     <SectionCard
@@ -50,16 +57,23 @@ export function TravelCountryRatesSection({ rows, getError, onChange }: TravelCo
             return (
               <div
                 key={row.id}
-                className="grid gap-3 rounded-[var(--radius-sm)] border border-[var(--cab-border)] p-3 sm:grid-cols-2 lg:grid-cols-[90px_repeat(3,minmax(0,1fr))_minmax(0,1.5fr)_auto] lg:items-start"
+                className="grid gap-3 rounded-[var(--radius-sm)] border border-[var(--cab-border)] p-3 sm:grid-cols-2 lg:grid-cols-[minmax(0,1.6fr)_repeat(3,minmax(0,1fr))_minmax(0,1.5fr)_auto] lg:items-start"
               >
-                <TextField
-                  id={rowFieldId('countries', row.id, 'country')}
-                  label={t('cab.travelPolicy.country')}
-                  maxLength={TRAVEL_COUNTRY_LENGTH}
-                  value={row.country}
-                  onChange={(event) => update({ country: event.target.value.toUpperCase() })}
-                  error={getError(rowErrorKey('countries', row.id, 'country'))}
-                />
+                <div>
+                  <SearchableSelect
+                    id={rowFieldId('countries', row.id, 'country')}
+                    label={t('cab.travelPolicy.country')}
+                    value={row.country}
+                    onChange={(country) => update({ country })}
+                    options={countryOptions}
+                    searchPlaceholder={t('common.search')}
+                  />
+                  {getError(rowErrorKey('countries', row.id, 'country')) && (
+                    <p role="alert" className="mt-2 text-small-light text-error-500">
+                      {getError(rowErrorKey('countries', row.id, 'country'))}
+                    </p>
+                  )}
+                </div>
                 <TextField
                   id={rowFieldId('countries', row.id, 'perDiem')}
                   label={t('cab.travelPolicy.perDiem')}

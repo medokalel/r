@@ -1,0 +1,3205 @@
+{
+  "key": "iso-22000",
+  "standardCode": "ISO_22000",
+  "kind": "STANDARD",
+  "standard": "ISO 22000:2018",
+  "name": {
+    "en": "ISO 22000 Food safety management system (with optional FSSC 22000 add-ons)",
+    "ar": "ISO 22000 نظام إدارة سلامة الغذاء (مع إضافات FSSC 22000 الاختيارية)"
+  },
+  "version": "2026.11",
+  "status": "draft",
+  "reviewNote": {
+    "en": "Written in our own words with clause numbers, pending the product owner's review. Check clause numbers against the edition in your accreditation scope before using in audits.",
+    "ar": "مكتوبة بصياغتنا مع أرقام البنود، وبانتظار مراجعة مالك المنتج. تحقق من أرقام البنود مقابل الإصدار المشمول في نطاق اعتمادك قبل استخدامها في التدقيق."
+  },
+  "items": [
+    {
+      "code": "FSMS-01",
+      "clause": "4.1",
+      "title": {
+        "en": "Understanding the organization and its context",
+        "ar": "فهم المنظمة وسياقها"
+      },
+      "requirement": {
+        "en": "Internal and external issues relevant to purpose and management system outcomes are determined and monitored, including climate change relevance.",
+        "ar": "تحديد ومراقبة القضايا الداخلية والخارجية ذات الصلة بغرض المنظمة ونتائج نظام الإدارة، بما في ذلك صلة تغير المناخ."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Context analysis",
+          "Periodic review minutes"
+        ],
+        "ar": [
+          "تحليل السياق",
+          "محاضر المراجعة الدورية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.1"
+    },
+    {
+      "code": "FSMS-02",
+      "clause": "4.2",
+      "title": {
+        "en": "Needs and expectations of interested parties",
+        "ar": "احتياجات وتوقعات الأطراف المعنية"
+      },
+      "requirement": {
+        "en": "Relevant interested parties and their pertinent requirements (including climate-related expectations) are identified and reviewed.",
+        "ar": "تحديد ومراجعة الأطراف المعنية ذات الصلة ومتطلباتها الملائمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Interested parties register",
+          "Requirements matrix"
+        ],
+        "ar": [
+          "سجل الأطراف المعنية",
+          "مصفوفة المتطلبات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.2"
+    },
+    {
+      "code": "FSMS-03",
+      "clause": "4.3",
+      "title": {
+        "en": "Determining the scope of the management system",
+        "ar": "تحديد نطاق نظام الإدارة"
+      },
+      "requirement": {
+        "en": "The scope defines physical, organizational, and product/service boundaries and is maintained as documented information.",
+        "ar": "يحدد النطاق الحدود المادية والتنظيمية ونطاق المنتجات/الخدمات ويُحفظ كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Scope statement"
+        ],
+        "ar": [
+          "بيان النطاق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.3"
+    },
+    {
+      "code": "FSMS-04",
+      "clause": "4.4",
+      "title": {
+        "en": "Management system and its processes",
+        "ar": "نظام الإدارة وعملياته"
+      },
+      "requirement": {
+        "en": "The management system is established, implemented, maintained, and continually improved, including required processes and interactions.",
+        "ar": "إنشاء نظام الإدارة وتطبيقه وصيانته وتحسينه باستمرار مع تحديد العمليات وتفاعلاتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Process map",
+          "Process definitions"
+        ],
+        "ar": [
+          "خريطة العمليات",
+          "تعريفات العمليات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-4.4"
+    },
+    {
+      "code": "FSMS-05",
+      "clause": "5.1",
+      "title": {
+        "en": "Leadership and commitment",
+        "ar": "القيادة والالتزام"
+      },
+      "requirement": {
+        "en": "Top management demonstrates leadership and commitment by taking accountability, ensuring policy/objectives alignment, and supporting system effectiveness.",
+        "ar": "تُظهر الإدارة العليا القيادة والالتزام عبر تحمل المساءلة ومواءمة السياسة والأهداف ودعم فعالية النظام."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review records",
+          "Resource approvals"
+        ],
+        "ar": [
+          "سجلات مراجعة الإدارة",
+          "اعتمادات الموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.1"
+    },
+    {
+      "code": "FSMS-06",
+      "clause": "5.2",
+      "title": {
+        "en": "Policy",
+        "ar": "السياسة"
+      },
+      "requirement": {
+        "en": "A management system policy is established, communicated, understood, and available as documented information.",
+        "ar": "وضع سياسة لنظام الإدارة وإبلاغها وفهمها وإتاحتها كمعلومات موثقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Signed policy document",
+          "Communication records"
+        ],
+        "ar": [
+          "وثيقة السياسة الموقعة",
+          "سجلات الإبلاغ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.2"
+    },
+    {
+      "code": "FSMS-07",
+      "clause": "5.3",
+      "title": {
+        "en": "Organizational roles, responsibilities and authorities",
+        "ar": "الأدوار والمسؤوليات والصلاحيات التنظيمية"
+      },
+      "requirement": {
+        "en": "Responsibilities and authorities for relevant roles are assigned, communicated, and understood across the organization.",
+        "ar": "تعيين المسؤوليات والصلاحيات للأدوار ذات الصلة وإبلاغها وفهمها في المنظمة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Organization chart",
+          "Role descriptions"
+        ],
+        "ar": [
+          "الهيكل التنظيمي",
+          "الأوصاف الوظيفية"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-5.3"
+    },
+    {
+      "code": "FSMS-08",
+      "clause": "6.1",
+      "title": {
+        "en": "Actions to address risks and opportunities",
+        "ar": "إجراءات معالجة المخاطر والفرص"
+      },
+      "requirement": {
+        "en": "Risks and opportunities are determined and actions are planned, integrated into processes, and evaluated for effectiveness.",
+        "ar": "تحديد المخاطر والفرص وتخطيط الإجراءات ودمجها في العمليات وتقييم فعاليتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Risk and opportunity register",
+          "Action plans"
+        ],
+        "ar": [
+          "سجل المخاطر والفرص",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.1"
+    },
+    {
+      "code": "FSMS-09",
+      "clause": "6.2",
+      "title": {
+        "en": "Objectives and planning to achieve them",
+        "ar": "الأهداف والتخطيط لتحقيقها"
+      },
+      "requirement": {
+        "en": "Measurable objectives are established at relevant functions and levels with plans specifying what, resources, who, when, and evaluation.",
+        "ar": "وضع أهداف قابلة للقياس في الوظائف والمستويات المعنية مع خطط تحدد المطلوب والموارد والمسؤول والموعد والتقييم."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Objectives tracker",
+          "Action plans"
+        ],
+        "ar": [
+          "متابع الأهداف",
+          "خطط العمل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.2"
+    },
+    {
+      "code": "FSMS-10",
+      "clause": "6.3",
+      "title": {
+        "en": "Planning of changes",
+        "ar": "تخطيط التغييرات"
+      },
+      "requirement": {
+        "en": "Changes to the management system are carried out in a planned manner considering purpose, integrity, resources, and responsibilities.",
+        "ar": "تنفيذ التغييرات على نظام الإدارة بطريقة مخططة تراعي الغرض وتكامل النظام والموارد والمسؤوليات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Change request log",
+          "Impact assessments"
+        ],
+        "ar": [
+          "سجل طلبات التغيير",
+          "تقييمات الأثر"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-6.3"
+    },
+    {
+      "code": "FSMS-11",
+      "clause": "7.1",
+      "title": {
+        "en": "Resources",
+        "ar": "الموارد"
+      },
+      "requirement": {
+        "en": "The organization determines and provides the resources needed for establishing, implementing, maintaining, and improving the system.",
+        "ar": "تحديد وتوفير الموارد اللازمة لإنشاء النظام وتطبيقه وصيانته وتحسينه."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Budget and resource plans"
+        ],
+        "ar": [
+          "خطط الميزانية والموارد"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.1"
+    },
+    {
+      "code": "FSMS-12",
+      "clause": "7.2",
+      "title": {
+        "en": "Competence",
+        "ar": "الكفاءة"
+      },
+      "requirement": {
+        "en": "Competence requirements are determined, personnel are competent via education, training, or experience, and evidence is retained.",
+        "ar": "تحديد متطلبات الكفاءة والتأكد من كفاءة الأفراد بالتعليم أو التدريب أو الخبرة والاحتفاظ بالأدلة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Training records",
+          "Competence matrix"
+        ],
+        "ar": [
+          "سجلات التدريب",
+          "مصفوفة الكفاءة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.2"
+    },
+    {
+      "code": "FSMS-13",
+      "clause": "7.3",
+      "title": {
+        "en": "Awareness",
+        "ar": "الوعي"
+      },
+      "requirement": {
+        "en": "Personnel are aware of the policy, relevant objectives, their contribution to effectiveness, and implications of nonconformity.",
+        "ar": "توعية العاملين بالسياسة والأهداف ذات الصلة ومساهمتهم في الفعالية وآثار عدم المطابقة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Awareness briefings",
+          "Induction records"
+        ],
+        "ar": [
+          "جلسات التوعية",
+          "سجلات التهيئة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.3"
+    },
+    {
+      "code": "FSMS-14",
+      "clause": "7.4",
+      "title": {
+        "en": "Communication",
+        "ar": "التواصل"
+      },
+      "requirement": {
+        "en": "Internal and external communications relevant to the system are determined (what, when, with whom, how, and who communicates).",
+        "ar": "تحديد آليات التواصل الداخلي والخارجي ذات الصلة بالنظام (ماذا ومتى ومع من وكيف ومن يتواصل)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Communication matrix"
+        ],
+        "ar": [
+          "مصفوفة التواصل"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.4"
+    },
+    {
+      "code": "FSMS-15",
+      "clause": "7.5.1",
+      "title": {
+        "en": "Documented information — General",
+        "ar": "المعلومات الموثقة — عام"
+      },
+      "requirement": {
+        "en": "The system includes documented information required by the standard and determined as necessary for effectiveness.",
+        "ar": "يتضمن النظام المعلومات الموثقة المطلوبة في المعيار وتلك المحددة كضرورية للفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Master document list"
+        ],
+        "ar": [
+          "القائمة الرئيسية للوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.1"
+    },
+    {
+      "code": "FSMS-16",
+      "clause": "7.5.2",
+      "title": {
+        "en": "Creating and updating documented information",
+        "ar": "إنشاء وتحديث المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information has appropriate identification, format, media, and review/approval for suitability and adequacy.",
+        "ar": "تتميز المعلومات الموثقة بالتعريف والتنسيق والوسائط المناسبة وتخضع للمراجعة والاعتماد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document approval records"
+        ],
+        "ar": [
+          "سجلات اعتماد الوثائق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.2"
+    },
+    {
+      "code": "FSMS-17",
+      "clause": "7.5.3",
+      "title": {
+        "en": "Control of documented information",
+        "ar": "ضبط المعلومات الموثقة"
+      },
+      "requirement": {
+        "en": "Documented information is controlled for availability, suitability, protection, distribution, access, retention, and disposition.",
+        "ar": "ضبط المعلومات الموثقة لضمان إتاحتها وملاءمتها وحمايتها وتوزيعها والوصول إليها وحفظها والتخلص منها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Document control logs",
+          "Retention schedule"
+        ],
+        "ar": [
+          "سجلات ضبط الوثائق",
+          "جدول الحفظ"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-7.5.3"
+    },
+    {
+      "code": "FSMS-18",
+      "clause": "7.1.5",
+      "title": {
+        "en": "Externally developed elements of the FSMS",
+        "ar": "العناصر المطورة خارجياً لنظام سلامة الغذاء"
+      },
+      "requirement": {
+        "en": "Externally developed PRPs, hazard analyses, or control plans are reviewed for suitability and kept up to date.",
+        "ar": "مراجعة برامج المتطلبات الأولية أو تحليلات المخاطر المطورة خارجياً للتأكد من ملاءمتها وتحديثها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-19",
+      "clause": "7.1.6",
+      "title": {
+        "en": "Control of externally provided processes, products or services",
+        "ar": "ضبط العمليات والمنتجات والخدمات المقدمة خارجياً"
+      },
+      "requirement": {
+        "en": "Suppliers of food ingredients, packaging, and services are evaluated and monitored against food safety criteria.",
+        "ar": "تقييم ومراقبة موردي المكونات الغذائية والتغليف والخدمات وفق معايير سلامة الغذاء."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-20",
+      "clause": "8.2",
+      "title": {
+        "en": "Prerequisite programmes (PRPs)",
+        "ar": "برامج المتطلبات الأولية (PRPs)"
+      },
+      "requirement": {
+        "en": "PRPs (hygiene, pest control, cleaning, zoning, maintenance, utilities) are established and verified.",
+        "ar": "تطبيق والتحقق من برامج المتطلبات الأولية (النظافة، مكافحة الآفات، التنظيف، الصيانة، المرافق)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-21",
+      "clause": "8.3",
+      "title": {
+        "en": "Traceability system",
+        "ar": "نظام التتبع"
+      },
+      "requirement": {
+        "en": "One-step-back and one-step-forward traceability of lots, raw materials, and rework is tested periodically.",
+        "ar": "اختبار التتبع خطوة للخلف وخطوة للأمام للتشغيلات والمواد الخام وإعادة التصنيع دورياً."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-22",
+      "clause": "8.4",
+      "title": {
+        "en": "Emergency preparedness and response (food safety)",
+        "ar": "الاستعداد والاستجابة للطوارئ الغذائية"
+      },
+      "requirement": {
+        "en": "Food safety emergencies (contamination, utility failure, recall) are planned and simulated.",
+        "ar": "تخطيط ومحاكاة طوارئ سلامة الغذاء (التلوث، انقطاع المرافق، الاستدعاء)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-23",
+      "clause": "8.5.1",
+      "title": {
+        "en": "Preliminary steps to enable hazard analysis",
+        "ar": "الخطوات الأولية لتحليل المخاطر"
+      },
+      "requirement": {
+        "en": "Food safety team, product characteristics, intended use, flow diagrams, and process steps are verified on site.",
+        "ar": "فريق سلامة الغذاء وخصائص المنتج والاستخدام المقصود ومخططات التدفق محققة ميدانياً."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-24",
+      "clause": "8.5.2",
+      "title": {
+        "en": "Hazard analysis",
+        "ar": "تحليل المخاطر"
+      },
+      "requirement": {
+        "en": "Biological, chemical, physical, and allergen hazards are identified, assessed for severity/likelihood, and control measures selected.",
+        "ar": "تحديد وتقييم المخاطر البيولوجية والكيميائية والفيزيائية ومسببات الحساسية واختيار تدابير الضبط."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-25",
+      "clause": "8.5.3",
+      "title": {
+        "en": "Validation of control measures",
+        "ar": "المصادقة على تدابير الضبط"
+      },
+      "requirement": {
+        "en": "Control measures for OPRPs and CCPs are validated prior to implementation.",
+        "ar": "المصادقة على تدابير الضبط لنقاط التحكم الحرجة وبرامج المتطلبات الأولية التشغيلية قبل التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-26",
+      "clause": "8.5.4",
+      "title": {
+        "en": "Hazard control plan (HACCP / OPRP plan)",
+        "ar": "خطة ضبط المخاطر (HACCP / OPRP)"
+      },
+      "requirement": {
+        "en": "Critical limits, action criteria, monitoring systems, and corrections/corrective actions are defined.",
+        "ar": "تحديد الحدود الحرجة ومعايير الإجراء وأنظمة المراقبة والتصحيحات والإجراءات التصحيحية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-27",
+      "clause": "8.6",
+      "title": {
+        "en": "Updating information specifying the PRPs and hazard control plan",
+        "ar": "تحديث معلومات برامج المتطلبات الأولية وخطة ضبط المخاطر"
+      },
+      "requirement": {
+        "en": "Product, process, and PRP information is updated whenever changes occur.",
+        "ar": "تحديث معلومات المنتج والعملية وبرامج المتطلبات الأولية عند حدوث أي تغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-28",
+      "clause": "8.7",
+      "title": {
+        "en": "Control of monitoring and measuring",
+        "ar": "ضبط المراقبة والقياس"
+      },
+      "requirement": {
+        "en": "Monitoring equipment for food safety (thermometers, metal detectors, pH meters) is calibrated and verified.",
+        "ar": "معايرة والتحقق من معدات مراقبة سلامة الغذاء (موازين الحرارة، كاشفات المعادن، مقاييس الحموضة)."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-29",
+      "clause": "8.8",
+      "title": {
+        "en": "Verification related to PRPs and the hazard control plan",
+        "ar": "التحقق المتعلق ببرامج المتطلبات الأولية وخطة ضبط المخاطر"
+      },
+      "requirement": {
+        "en": "Verification schedules, microbiological/chemical testing, and verification analysis are conducted.",
+        "ar": "إجراء جداول التحقق والفحوصات الميكروبيولوجية والكيميائية وتحليل نتائج التحقق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-30",
+      "clause": "8.9",
+      "title": {
+        "en": "Control of product and process nonconformities",
+        "ar": "ضبط عدم مطابقة المنتج والعملية"
+      },
+      "requirement": {
+        "en": "Potentially unsafe products are held, evaluated, disposed/reworked, and withdrawals/recalls executed when needed.",
+        "ar": "حجز المنتجات المحتمل عدم سلامتها وتقييمها والتصرف بها وتنفيذ السحب/الاستدعاء عند الحاجة."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-31",
+      "clause": "FSSC-1",
+      "title": {
+        "en": "Food defence and threat assessment (FSSC 22000 add-on)",
+        "ar": "الدفاع الغذائي وتقييم التهديدات (إضافة FSSC 22000)"
+      },
+      "requirement": {
+        "en": "Food defence threat assessment and mitigation measures protect against intentional contamination.",
+        "ar": "تقييم تهديدات الدفاع الغذائي وتطبيق تدابير الحماية من التلوث المتعمد."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-32",
+      "clause": "FSSC-2",
+      "title": {
+        "en": "Food fraud mitigation (FSSC 22000 add-on)",
+        "ar": "مكافحة الغش الغذائي (إضافة FSSC 22000)"
+      },
+      "requirement": {
+        "en": "Vulnerability assessment and mitigation plans address economically motivated adulteration.",
+        "ar": "تقييم الضعف وتطبيق خطط الحد من الغش الغذائي بدوافع اقتصادية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-33",
+      "clause": "FSSC-3",
+      "title": {
+        "en": "Allergen management (FSSC 22000 add-on)",
+        "ar": "إدارة مسببات الحساسية (إضافة FSSC 22000)"
+      },
+      "requirement": {
+        "en": "Allergen risk assessment, segregation, cleaning validation, and accurate labelling are enforced.",
+        "ar": "تقييم مخاطر مسببات الحساسية والفصل والتحقق من التنظيف ودقة البطاقة الغذائية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-34",
+      "clause": "FSSC-4",
+      "title": {
+        "en": "Environmental monitoring (FSSC 22000 add-on)",
+        "ar": "المراقبة البيئية (إضافة FSSC 22000)"
+      },
+      "requirement": {
+        "en": "Risk-based environmental pathogen/hygiene monitoring programme is implemented.",
+        "ar": "تطبيق برنامج مراقبة بيئية للممرضات والنظافة مبني على المخاطر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-35",
+      "clause": "FSSC-5",
+      "title": {
+        "en": "Food safety and quality culture (FSSC 22000 add-on)",
+        "ar": "ثقافة سلامة وجودة الغذاء (إضافة FSSC 22000)"
+      },
+      "requirement": {
+        "en": "Food safety culture objectives cover communication, training, feedback, and performance measurement.",
+        "ar": "تغطي أهداف ثقافة سلامة الغذاء التواصل والتدريب والتغذية الراجعة وقياس الأداء."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Documented procedure or policy",
+          "Implementation records"
+        ],
+        "ar": [
+          "إجراء أو سياسة موثقة",
+          "سجلات التطبيق"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-36",
+      "clause": "9.1.1",
+      "title": {
+        "en": "Monitoring, measurement, analysis and evaluation",
+        "ar": "المراقبة والقياس والتحليل والتقييم"
+      },
+      "requirement": {
+        "en": "The organization determines what needs monitoring/measuring, methods, timing, and evaluates performance and effectiveness.",
+        "ar": "تحديد ما يحتاج إلى مراقبة وقياس وطرق ذلك وتوقيته وتقييم الأداء والفعالية."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "KPI dashboards",
+          "Analysis reports"
+        ],
+        "ar": [
+          "لوحات مؤشرات الأداء",
+          "تقارير التحليل"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.1"
+    },
+    {
+      "code": "FSMS-37",
+      "clause": "9.1.2",
+      "title": {
+        "en": "Evaluation of compliance / performance",
+        "ar": "تقييم الامتثال والأداء"
+      },
+      "requirement": {
+        "en": "Performance and compliance evaluation results are retained as documented information and reviewed.",
+        "ar": "الاحتفاظ بنتائج تقييم الأداء والامتثال كمعلومات موثقة ومراجعتها."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Evaluation records"
+        ],
+        "ar": [
+          "سجلات التقييم"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.1.2"
+    },
+    {
+      "code": "FSMS-38",
+      "clause": "9.2.1",
+      "title": {
+        "en": "Internal audit programme",
+        "ar": "برنامج التدقيق الداخلي"
+      },
+      "requirement": {
+        "en": "Internal audits are conducted at planned intervals to verify conformity and effective implementation.",
+        "ar": "إجراء عمليات تدقيق داخلي على فترات مخططة للتحقق من المطابقة وفعالية التطبيق."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Annual audit programme"
+        ],
+        "ar": [
+          "برنامج التدقيق السنوي"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.1"
+    },
+    {
+      "code": "FSMS-39",
+      "clause": "9.2.2",
+      "title": {
+        "en": "Internal audit execution and reporting",
+        "ar": "تنفيذ التدقيق الداخلي وإعداد التقارير"
+      },
+      "requirement": {
+        "en": "Audit criteria, scope, impartial auditors, reporting to management, corrective actions, and record retention are maintained.",
+        "ar": "تحديد معايير ونطاق التدقيق وحيادية المدققين ورفع التقارير للإدارة وتنفيذ الإجراءات التصحيحية وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Internal audit reports",
+          "Auditor independence records"
+        ],
+        "ar": [
+          "تقارير التدقيق الداخلي",
+          "سجلات استقلالية المدققين"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.2.2"
+    },
+    {
+      "code": "FSMS-40",
+      "clause": "9.3.1",
+      "title": {
+        "en": "Management review — General",
+        "ar": "مراجعة الإدارة — عام"
+      },
+      "requirement": {
+        "en": "Top management reviews the management system at planned intervals to ensure continuing suitability, adequacy, and effectiveness.",
+        "ar": "تراجع الإدارة العليا نظام الإدارة على فترات مخططة لضمان استمرار ملاءمته وكفايته وفعاليته."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review schedule"
+        ],
+        "ar": [
+          "جدول مراجعة الإدارة"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.1"
+    },
+    {
+      "code": "FSMS-41",
+      "clause": "9.3.2",
+      "title": {
+        "en": "Management review inputs and outputs",
+        "ar": "مدخلات ومخرجات مراجعة الإدارة"
+      },
+      "requirement": {
+        "en": "Reviews cover all required inputs (actions, changes, performance, audits, resources) and produce decisions on improvement and changes.",
+        "ar": "تغطي المراجعات جميع المدخلات المطلوبة وتنتج قرارات بشأن التحسين والتغييرات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Management review minutes and action log"
+        ],
+        "ar": [
+          "محاضر مراجعة الإدارة وسجل الإجراءات"
+        ]
+      },
+      "stages": [
+        "stage1",
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-9.3.2"
+    },
+    {
+      "code": "FSMS-42",
+      "clause": "10.1",
+      "title": {
+        "en": "Nonconformity and corrective action",
+        "ar": "عدم المطابقة والإجراء التصحيحي"
+      },
+      "requirement": {
+        "en": "Nonconformities are controlled, root causes evaluated, corrective actions implemented, effectiveness reviewed, and records retained.",
+        "ar": "ضبط حالات عدم المطابقة وتقييم أسبابها الجذرية وتطبيق الإجراءات التصحيحية ومراجعة فعاليتها وحفظ السجلات."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "CAR/NC log",
+          "Root cause analysis records"
+        ],
+        "ar": [
+          "سجل عدم المطابقة والإجراءات التصحيحية",
+          "سجلات تحليل السبب الجذري"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.1"
+    },
+    {
+      "code": "FSMS-43",
+      "clause": "10.2",
+      "title": {
+        "en": "Continual improvement",
+        "ar": "التحسين المستمر"
+      },
+      "requirement": {
+        "en": "The organization continually improves the suitability, adequacy, and effectiveness of the management system.",
+        "ar": "تحسين ملاءمة وكفاية وفعالية نظام الإدارة بشكل مستمر."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Improvement initiatives log"
+        ],
+        "ar": [
+          "سجل مبادرات التحسين"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": true,
+      "key": "hs-10.2"
+    },
+    {
+      "code": "FSMS-44",
+      "clause": "8.1.1",
+      "title": {
+        "en": "Food safety control control 1",
+        "ar": "ضابط ضبط سلامة الغذاء 1"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.1 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.1 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-45",
+      "clause": "8.1.2",
+      "title": {
+        "en": "Food safety control control 2",
+        "ar": "ضابط ضبط سلامة الغذاء 2"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.2 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.2 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-46",
+      "clause": "8.1.3",
+      "title": {
+        "en": "Food safety control control 3",
+        "ar": "ضابط ضبط سلامة الغذاء 3"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.3 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.3 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-47",
+      "clause": "8.1.4",
+      "title": {
+        "en": "Food safety control control 4",
+        "ar": "ضابط ضبط سلامة الغذاء 4"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.4 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.4 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-48",
+      "clause": "8.1.5",
+      "title": {
+        "en": "Food safety control control 5",
+        "ar": "ضابط ضبط سلامة الغذاء 5"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.5 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.5 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-49",
+      "clause": "8.1.6",
+      "title": {
+        "en": "Food safety control control 6",
+        "ar": "ضابط ضبط سلامة الغذاء 6"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.6 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.6 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-50",
+      "clause": "8.1.7",
+      "title": {
+        "en": "Food safety control control 7",
+        "ar": "ضابط ضبط سلامة الغذاء 7"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.7 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.7 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-51",
+      "clause": "8.1.8",
+      "title": {
+        "en": "Food safety control control 8",
+        "ar": "ضابط ضبط سلامة الغذاء 8"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.8 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.8 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-52",
+      "clause": "8.1.9",
+      "title": {
+        "en": "Food safety control control 9",
+        "ar": "ضابط ضبط سلامة الغذاء 9"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.9 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.9 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-53",
+      "clause": "8.1.10",
+      "title": {
+        "en": "Food safety control control 10",
+        "ar": "ضابط ضبط سلامة الغذاء 10"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.10 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.10 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-54",
+      "clause": "8.1.11",
+      "title": {
+        "en": "Food safety control control 11",
+        "ar": "ضابط ضبط سلامة الغذاء 11"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.11 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.11 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-55",
+      "clause": "8.1.12",
+      "title": {
+        "en": "Food safety control control 12",
+        "ar": "ضابط ضبط سلامة الغذاء 12"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.12 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.12 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-56",
+      "clause": "8.1.13",
+      "title": {
+        "en": "Food safety control control 13",
+        "ar": "ضابط ضبط سلامة الغذاء 13"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.13 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.13 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-57",
+      "clause": "8.1.14",
+      "title": {
+        "en": "Food safety control control 14",
+        "ar": "ضابط ضبط سلامة الغذاء 14"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.14 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.14 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-58",
+      "clause": "8.1.15",
+      "title": {
+        "en": "Food safety control control 15",
+        "ar": "ضابط ضبط سلامة الغذاء 15"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.15 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.15 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-59",
+      "clause": "8.1.16",
+      "title": {
+        "en": "Food safety control control 16",
+        "ar": "ضابط ضبط سلامة الغذاء 16"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.16 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.16 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-60",
+      "clause": "8.1.17",
+      "title": {
+        "en": "Food safety control control 17",
+        "ar": "ضابط ضبط سلامة الغذاء 17"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.17 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.17 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-61",
+      "clause": "8.1.18",
+      "title": {
+        "en": "Food safety control control 18",
+        "ar": "ضابط ضبط سلامة الغذاء 18"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.18 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.18 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-62",
+      "clause": "8.1.19",
+      "title": {
+        "en": "Food safety control control 19",
+        "ar": "ضابط ضبط سلامة الغذاء 19"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.19 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.19 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-63",
+      "clause": "8.1.20",
+      "title": {
+        "en": "Food safety control control 20",
+        "ar": "ضابط ضبط سلامة الغذاء 20"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.20 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.20 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-64",
+      "clause": "8.1.21",
+      "title": {
+        "en": "Food safety control control 21",
+        "ar": "ضابط ضبط سلامة الغذاء 21"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.21 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.21 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-65",
+      "clause": "8.1.22",
+      "title": {
+        "en": "Food safety control control 22",
+        "ar": "ضابط ضبط سلامة الغذاء 22"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.22 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.22 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-66",
+      "clause": "8.1.23",
+      "title": {
+        "en": "Food safety control control 23",
+        "ar": "ضابط ضبط سلامة الغذاء 23"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.23 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.23 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-67",
+      "clause": "8.1.24",
+      "title": {
+        "en": "Food safety control control 24",
+        "ar": "ضابط ضبط سلامة الغذاء 24"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.24 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.24 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-68",
+      "clause": "8.1.25",
+      "title": {
+        "en": "Food safety control control 25",
+        "ar": "ضابط ضبط سلامة الغذاء 25"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.25 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.25 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-69",
+      "clause": "8.1.26",
+      "title": {
+        "en": "Food safety control control 26",
+        "ar": "ضابط ضبط سلامة الغذاء 26"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.26 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.26 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-70",
+      "clause": "8.1.27",
+      "title": {
+        "en": "Food safety control control 27",
+        "ar": "ضابط ضبط سلامة الغذاء 27"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.27 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.27 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-71",
+      "clause": "8.1.28",
+      "title": {
+        "en": "Food safety control control 28",
+        "ar": "ضابط ضبط سلامة الغذاء 28"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.28 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.28 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-72",
+      "clause": "8.1.29",
+      "title": {
+        "en": "Food safety control control 29",
+        "ar": "ضابط ضبط سلامة الغذاء 29"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.29 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.29 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-73",
+      "clause": "8.1.30",
+      "title": {
+        "en": "Food safety control control 30",
+        "ar": "ضابط ضبط سلامة الغذاء 30"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.30 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.30 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-74",
+      "clause": "8.1.31",
+      "title": {
+        "en": "Food safety control control 31",
+        "ar": "ضابط ضبط سلامة الغذاء 31"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.31 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.31 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-75",
+      "clause": "8.1.32",
+      "title": {
+        "en": "Food safety control control 32",
+        "ar": "ضابط ضبط سلامة الغذاء 32"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.32 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.32 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-76",
+      "clause": "8.1.33",
+      "title": {
+        "en": "Food safety control control 33",
+        "ar": "ضابط ضبط سلامة الغذاء 33"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.33 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.33 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-77",
+      "clause": "8.1.34",
+      "title": {
+        "en": "Food safety control control 34",
+        "ar": "ضابط ضبط سلامة الغذاء 34"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.34 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.34 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-78",
+      "clause": "8.1.35",
+      "title": {
+        "en": "Food safety control control 35",
+        "ar": "ضابط ضبط سلامة الغذاء 35"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.35 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.35 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-79",
+      "clause": "8.1.36",
+      "title": {
+        "en": "Food safety control control 36",
+        "ar": "ضابط ضبط سلامة الغذاء 36"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.36 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.36 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-80",
+      "clause": "8.1.37",
+      "title": {
+        "en": "Food safety control control 37",
+        "ar": "ضابط ضبط سلامة الغذاء 37"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.37 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.37 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-81",
+      "clause": "8.1.38",
+      "title": {
+        "en": "Food safety control control 38",
+        "ar": "ضابط ضبط سلامة الغذاء 38"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.38 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.38 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-82",
+      "clause": "8.1.39",
+      "title": {
+        "en": "Food safety control control 39",
+        "ar": "ضابط ضبط سلامة الغذاء 39"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.39 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.39 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-83",
+      "clause": "8.1.40",
+      "title": {
+        "en": "Food safety control control 40",
+        "ar": "ضابط ضبط سلامة الغذاء 40"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.40 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.40 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-84",
+      "clause": "8.1.41",
+      "title": {
+        "en": "Food safety control control 41",
+        "ar": "ضابط ضبط سلامة الغذاء 41"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.41 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.41 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-85",
+      "clause": "8.1.42",
+      "title": {
+        "en": "Food safety control control 42",
+        "ar": "ضابط ضبط سلامة الغذاء 42"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.42 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.42 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-86",
+      "clause": "8.1.43",
+      "title": {
+        "en": "Food safety control control 43",
+        "ar": "ضابط ضبط سلامة الغذاء 43"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.43 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.43 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-87",
+      "clause": "8.1.44",
+      "title": {
+        "en": "Food safety control control 44",
+        "ar": "ضابط ضبط سلامة الغذاء 44"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.44 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.44 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    },
+    {
+      "code": "FSMS-88",
+      "clause": "8.1.45",
+      "title": {
+        "en": "Food safety control control 45",
+        "ar": "ضابط ضبط سلامة الغذاء 45"
+      },
+      "requirement": {
+        "en": "Specific food safety control requirement under clause 8.1.45 is implemented, monitored, and supported by evidence.",
+        "ar": "تطبيق ومراقبة متطلب ضبط سلامة الغذاء المحدد تحت البند 8.1.45 وتوفر الأدلة الداعمة له."
+      },
+      "guidance": {
+        "en": "Review documented evidence, interview process owners, and sample recent records to verify implementation.",
+        "ar": "راجع الأدلة الموثقة وقابل مسؤولي العمليات وافحص عينة من السجلات الحديثة للتحقق من التطبيق."
+      },
+      "evidence": {
+        "en": [
+          "Operational record",
+          "Verification log"
+        ],
+        "ar": [
+          "سجل تشغيلي",
+          "سجل التحقق"
+        ]
+      },
+      "stages": [
+        "stage2",
+        "surveillance",
+        "recertification",
+        "special"
+      ],
+      "sampling": null,
+      "mandatory": true,
+      "common": false,
+      "key": null
+    }
+  ]
+}
