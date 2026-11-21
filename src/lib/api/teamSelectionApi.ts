@@ -20,6 +20,7 @@ import {
   type PlanAssignment,
 } from '@/lib/teamSelection/personnel'
 import { rankCandidates, suggestRole, toIsoDate, validateTeam, isCriticalCode } from '@/lib/teamSelection/rules'
+import { assignmentToTeamMember } from '@/lib/teamSelection/teamMember'
 import type {
   Candidate,
   ExceptionStatus,
@@ -419,6 +420,7 @@ export async function confirmPlanTeam(
     planNumber: plan.planNumber,
     leadAuditor: nextTeam.find((member) => member.role === 'TEAM_LEADER')?.name ?? plan.leadAuditor,
     auditTeam: onSiteNames,
+    teamMembers: nextTeam.map(assignmentToTeamMember),
     teamConfirmed: true,
     teamDeclarations: { ...plan.teamDeclarations, availabilityConfirmed: true, noConflictsDeclared: true },
     siteAllocation: plan.siteAllocation ? { ...plan.siteAllocation, onSitePersonnel: onSiteNames } : plan.siteAllocation,
@@ -453,6 +455,8 @@ export async function requestTeamException(request: {
   personId?: string | null
   issueCode: IssueCode
   justification: string
+  /** The message the user saw for the issue; without it the generic catalog text is used. */
+  issueText?: LocalizedText
 }): Promise<TeamSelectionException> {
   if (!OVERRIDABLE_ISSUE_CODES.includes(request.issueCode)) {
     throw new TeamSelectionError(
@@ -482,9 +486,9 @@ export async function requestTeamException(request: {
     auditPlanId: plan.id,
     personId,
     issueCode: request.issueCode,
-    issueText: {
-      en: definition.en.replace(/\{\{name\}\}/g, 'The person'),
-      ar: definition.ar.replace(/\{\{name\}\}/g, 'الشخص'),
+    issueText: request.issueText ?? {
+      en: definition.en.replace(/\{\{name\}\}/g, 'The person').replace(/\{\{\w+\}\}/g, '…'),
+      ar: definition.ar.replace(/\{\{name\}\}/g, 'الشخص').replace(/\{\{\w+\}\}/g, '…'),
     },
     justification: request.justification,
     status: 'PENDING',

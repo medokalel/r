@@ -1,3 +1,5 @@
+import { AUDITOR_REGISTER } from '@/lib/teamSelection/teamMember'
+
 export type AuditStageType =
   | 'Stage 1'
   | 'Stage 2'
@@ -152,18 +154,6 @@ export interface AuditExecutionData {
   }
 }
 
-export type TeamIssueCode = 'COMPETENCE' | 'TEAM_COVERAGE' | 'AVAILABILITY' | 'IMPARTIALITY'
-
-export interface TeamException {
-  id: string
-  personId: string
-  personName: string
-  issueCode: TeamIssueCode
-  justification: string
-  status: 'Pending' | 'Approved' | 'Rejected'
-  requestedAt: string
-}
-
 export interface AuditPlanEvent {
   id: string
   at: string
@@ -208,7 +198,6 @@ export interface AuditPlan {
   remoteActivities: RemoteActivities
   travelNotes: TravelNotes
   teamDeclarations: TeamDeclarations
-  teamExceptions?: TeamException[]
   /** Plan history: lifecycle steps, team confirmation, exception requests. */
   events?: AuditPlanEvent[]
   /** Names of the team members whose competence log received this audit on completion. */
@@ -339,74 +328,8 @@ export const AUDIT_PLANNING_CLIENTS: AuditPlanningClient[] = [
   },
 ]
 
-export const AVAILABLE_AUDITORS_POOL: AuditTeamMember[] = [
-  {
-    id: 'aud-omar',
-    name: 'Omar Hassan',
-    initials: 'OH',
-    role: 'Lead Auditor',
-    passesChecks: true,
-    schemes: ['ISO 9001:2015', 'ISO 14001:2015', 'ISO 45001:2018'],
-    iafCodes: ['EA 18', 'EA 28', 'EA 35'],
-    country: 'Egypt',
-    reason: 'Lead auditor authorized for ISO 9001, ISO 14001 & ISO 45001; available on all planned dates; no impartiality conflicts.',
-  },
-  {
-    id: 'aud-mostafa',
-    name: 'Mostafa Adel',
-    initials: 'MA',
-    role: 'Auditor',
-    passesChecks: true,
-    schemes: ['ISO 9001:2015', 'ISO 14001:2015', 'ISO 45001:2018'],
-    iafCodes: ['EA 18', 'EA 29'],
-    country: 'Egypt',
-    reason: 'Approved auditor for IMS standards; zero scheduling conflicts and active competence log.',
-  },
-  {
-    id: 'aud-layla',
-    name: 'Layla Al-Khatib',
-    initials: 'LK',
-    role: 'Lead Auditor',
-    passesChecks: true,
-    schemes: ['ISO 9001:2015', 'ISO 22000:2018'],
-    iafCodes: ['EA 03', 'EA 18'],
-    country: 'Saudi Arabia',
-    reason: 'Authorized Lead Auditor for QMS & FSMS; passes competence and impartiality checks.',
-  },
-  {
-    id: 'aud-tarek',
-    name: 'Dr. Tarek Mansour',
-    initials: 'TM',
-    role: 'Technical Expert',
-    passesChecks: true,
-    schemes: ['ISO 14001:2015', 'ISO 45001:2018'],
-    iafCodes: ['EA 28'],
-    country: 'Egypt',
-    reason: 'Technical specialist in HSE & environmental permitting.',
-  },
-  {
-    id: 'aud-nadia',
-    name: 'Nadia El-Sayed',
-    initials: 'NE',
-    role: 'Trainee Auditor',
-    passesChecks: true,
-    schemes: ['ISO 9001:2015'],
-    iafCodes: ['EA 35'],
-    country: 'Egypt',
-    reason: 'Registered trainee auditor completing witnessed Stage 1 / Stage 2 logs.',
-  },
-  {
-    id: 'aud-karim',
-    name: 'Karim Zaki',
-    initials: 'KZ',
-    role: 'Observer',
-    passesChecks: true,
-    schemes: ['ISO 9001:2015'],
-    iafCodes: ['EA 35'],
-    country: 'Egypt',
-    reason: 'Accreditation / internal witness observer.',
-  },
-]
+/** Everyone who can audit, taken from the personnel register. */
+export const AVAILABLE_AUDITORS_POOL: AuditTeamMember[] = AUDITOR_REGISTER
 
 export function buildDefaultChecklists(leadAuditor = 'Omar Hassan'): AuditChecklistSection[] {
   const stage1Items: ChecklistItem[] = [

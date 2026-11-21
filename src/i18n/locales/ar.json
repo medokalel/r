@@ -2844,29 +2844,69 @@
         }
       },
       "team": {
-        "passes": "يجتاز الفحوصات",
-        "issues": {
-          "COMPETENCE": "غير مؤهل للمعايير: {{standards}}",
-          "TEAM_COVERAGE": "الفريق لا يغطي: {{standards}}",
-          "AVAILABILITY": "غير متاح ({{reason}}): من {{start}} إلى {{end}}",
-          "IMPARTIALITY": "تعارض في الحيادية: {{reason}}"
-        },
+        "alternatives": "بدائل مؤهلة:",
+        "useAlternative": "استخدم {{name}} ({{role}})",
         "exceptionApproved": "تمت الموافقة على الاستثناء",
         "exceptionPending": "الاستثناء بانتظار الموافقة",
+        "exceptionRejected": "تم رفض الاستثناء",
         "requestException": "طلب استثناء",
+        "mandatory": "إلزامي: لا يمكن تجاوزه",
+        "status": {
+          "ok": "يجتاز الفحوصات",
+          "warn": "يجتاز مع تحذيرات",
+          "block": "محظور"
+        },
+        "hideChecks": "إخفاء الفحوصات",
+        "showChecks": "عرض الفحوصات",
         "remove": "إزالة من الفريق",
-        "coverageGap": "لا يوجد عضو مؤهل لـ: {{standards}}. أضف مدققاً أو خبيراً فنياً مؤهلاً.",
-        "eligible": "مؤهل",
-        "hasIssues": "يحتاج مراجعة",
+        "title": "فريق التدقيق",
+        "subtitle": "اختر الفريق. تُفحص الكفاءة والتوفر والحيادية تلقائيًا مقابل التدقيق.",
+        "banner": {
+          "blocked": "لا يمكن تأكيد الفريق بعد: {{count}} من المشاكل المانعة ({{mandatory}} إلزامية، و{{overridable}} يمكن قبولها باستثناء).",
+          "warnings": "يمكن تأكيد الفريق مع {{count}} من التحذيرات.",
+          "ok": "جميع الفحوصات ناجحة. يمكن تأكيد الفريق."
+        },
+        "checking": "جارٍ فحص الفريق…",
+        "checkFailed": "تعذّر فحص الفريق. غيّر الفريق أو حاول مرة أخرى.",
+        "empty": "لا يوجد أعضاء في الفريق بعد. أضف قائد الفريق أولًا.",
+        "teamIssues": "فحوصات على مستوى الفريق",
+        "addPerson": "إضافة عضو للفريق",
+        "add": "إضافة",
+        "exceptions": "الاستثناءات",
+        "adminAction": "قرار مسؤول الجهة (تجريبي)",
+        "approve": "موافقة",
+        "reject": "رفض",
+        "noteLabel": "ملاحظة لسجل التدقيق (اختياري)",
+        "notePlaceholder": "مثال: تم الاتفاق مع المدير الفني",
+        "resolveIssues": "عالج {{count}} من المشاكل المانعة",
+        "confirmedContinue": "تم تأكيد الفريق: متابعة",
         "confirm": "تأكيد الفريق",
-        "resolveIssues": "عالج {{count}} من مشاكل الفريق",
-        "exceptionsSummary": "الاستثناءات ({{approved}} موافق عليها، {{pending}} معلقة)",
         "history": "سجل الفريق ({{count}})",
+        "noHistory": "لا توجد تغييرات على الفريق بعد.",
         "exceptionTitle": "طلب استثناء",
         "exceptionSubmit": "إرسال الطلب",
         "justification": "التبرير",
         "justificationHint": "اشرح لماذا يمكن استخدام هذا العضو رغم ذلك ({{min}} أحرف على الأقل).",
-        "exceptionRequested": "تم تقديم طلب الاستثناء وهو بانتظار الموافقة."
+        "rejectTitle": "رفض الاستثناء",
+        "rejectReason": "السبب",
+        "exceptionRequested": "تم تقديم طلب الاستثناء وهو بانتظار الموافقة.",
+        "error": "تعذّر تنفيذ إجراء الفريق. حاول مرة أخرى.",
+        "exceptionStatus": {
+          "PENDING": "قيد الانتظار",
+          "APPROVED": "تمت الموافقة",
+          "REJECTED": "مرفوض"
+        },
+        "events": {
+          "TEAM_CONFIRMED": "تم تأكيد الفريق",
+          "CONFIRM_BLOCKED": "تعذّر تأكيد الفريق",
+          "MEMBER_ADDED": "إضافة عضو",
+          "MEMBER_ROLE_CHANGED": "تغيير دور عضو",
+          "MEMBER_REMOVED": "إزالة عضو",
+          "EXCEPTION_REQUESTED": "طلب استثناء",
+          "EXCEPTION_APPROVED": "الموافقة على استثناء",
+          "EXCEPTION_REJECTED": "رفض استثناء",
+          "SETTINGS_UPDATED": "تحديث الإعدادات"
+        }
       },
       "checklists": {
         "matched": "تمت مطابقة {{count}} من قوائم التحقق لـ {{standard}} ({{stage}})."

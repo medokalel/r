@@ -246,8 +246,12 @@ test('API: exceptions cannot be requested for mandatory issues', async () => {
 test('API: an exception is requested once, then approved or rejected with a reason', async () => {
   seedPlan()
   const request = { auditPlanId: 'P1', personId: 'emp-0001', issueCode: 'TRAVEL_BUFFER', justification: 'Same city, no travel needed' }
+  const withText = await api.requestTeamException({ ...request, issueText: { en: 'Seen message', ar: 'رسالة' } })
+  assert.equal(withText.issueText.en, 'Seen message')
+  await api.decideTeamException(withText.id, 'reject', 'Retry without text')
   const exception = await api.requestTeamException(request)
   assert.equal(exception.status, 'PENDING')
+  assert.ok(!exception.issueText.en.includes('{{') && !exception.issueText.ar.includes('{{'), 'no raw placeholders')
   await assert.rejects(() => api.requestTeamException(request), (e) => e.code === 'EXCEPTION_EXISTS')
 
   await assert.rejects(() => api.decideTeamException(exception.id, 'reject'), (e) => e.status === 400)
@@ -261,7 +265,14 @@ test('API: an exception is requested once, then approved or rejected with a reas
   const events = await api.listTeamEvents({ auditPlanId: 'P1' })
   assert.deepEqual(
     events.map((e) => e.action).reverse(),
-    ['EXCEPTION_REQUESTED', 'EXCEPTION_REJECTED', 'EXCEPTION_REQUESTED', 'EXCEPTION_APPROVED']
+    [
+      'EXCEPTION_REQUESTED',
+      'EXCEPTION_REJECTED',
+      'EXCEPTION_REQUESTED',
+      'EXCEPTION_REJECTED',
+      'EXCEPTION_REQUESTED',
+      'EXCEPTION_APPROVED',
+    ]
   )
 })
 
@@ -291,6 +302,7 @@ test('API: confirming a valid team saves it on the plan and logs the change', as
   assert.equal(saved.leadAuditor, 'Omar Hassan')
   assert.deepEqual(Array.from(saved.auditTeam), ['Omar Hassan'], 'observers are not on-site personnel')
   assert.equal(saved.teamConfirmed, true)
+  assert.deepEqual(saved.teamMembers.map((m) => [m.id, m.role]), [['emp-0001', 'Lead Auditor'], ['emp-0004', 'Observer']])
   assert.equal(saved.teamDeclarations.noConflictsDeclared, true)
 
   const actions = (await api.listTeamEvents({ auditPlanId: 'P1' })).map((e) => e.action)

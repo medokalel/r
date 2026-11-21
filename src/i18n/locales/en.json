@@ -2824,29 +2824,69 @@
         }
       },
       "team": {
-        "passes": "Passes the checks",
-        "issues": {
-          "COMPETENCE": "Not competent for: {{standards}}",
-          "TEAM_COVERAGE": "The team does not cover: {{standards}}",
-          "AVAILABILITY": "Not available ({{reason}}): {{start}} to {{end}}",
-          "IMPARTIALITY": "Impartiality conflict: {{reason}}"
-        },
+        "alternatives": "Qualified alternatives:",
+        "useAlternative": "Use {{name}} ({{role}})",
         "exceptionApproved": "Exception approved",
         "exceptionPending": "Exception pending approval",
+        "exceptionRejected": "Exception rejected",
         "requestException": "Request exception",
+        "mandatory": "Mandatory: cannot be overridden",
+        "status": {
+          "ok": "Passes the checks",
+          "warn": "Passes with warnings",
+          "block": "Blocked"
+        },
+        "hideChecks": "Hide checks",
+        "showChecks": "Show checks",
         "remove": "Remove from team",
-        "coverageGap": "No team member is competent for: {{standards}}. Add a qualified auditor or technical expert.",
-        "eligible": "Eligible",
-        "hasIssues": "Needs attention",
+        "title": "Audit team",
+        "subtitle": "Choose the team. Competence, availability and impartiality are checked automatically against the audit.",
+        "banner": {
+          "blocked": "The team cannot be confirmed yet: {{count}} blocking issue(s) ({{mandatory}} mandatory, {{overridable}} can be accepted by an exception).",
+          "warnings": "The team can be confirmed with {{count}} warning(s).",
+          "ok": "All checks pass. The team can be confirmed."
+        },
+        "checking": "Checking the team…",
+        "checkFailed": "The team could not be checked. Change the team or try again.",
+        "empty": "No team members yet. Add a team leader first.",
+        "teamIssues": "Team-level checks",
+        "addPerson": "Add a team member",
+        "add": "Add",
+        "exceptions": "Exceptions",
+        "adminAction": "CAB admin decision (demo)",
+        "approve": "Approve",
+        "reject": "Reject",
+        "noteLabel": "Note for the audit trail (optional)",
+        "notePlaceholder": "For example: agreed with the technical manager",
+        "resolveIssues": "Resolve {{count}} blocking issue(s)",
+        "confirmedContinue": "Team confirmed: continue",
         "confirm": "Confirm team",
-        "resolveIssues": "Resolve {{count}} team issue(s)",
-        "exceptionsSummary": "Exceptions ({{approved}} approved, {{pending}} pending)",
         "history": "Team history ({{count}})",
+        "noHistory": "No team changes yet.",
         "exceptionTitle": "Request an exception",
         "exceptionSubmit": "Submit request",
         "justification": "Justification",
         "justificationHint": "Explain why this team member can still be used (at least {{min}} characters).",
-        "exceptionRequested": "Exception requested. It is pending approval."
+        "rejectTitle": "Reject the exception",
+        "rejectReason": "Reason",
+        "exceptionRequested": "Exception requested. It is pending approval.",
+        "error": "The team action failed. Try again.",
+        "exceptionStatus": {
+          "PENDING": "Pending",
+          "APPROVED": "Approved",
+          "REJECTED": "Rejected"
+        },
+        "events": {
+          "TEAM_CONFIRMED": "Team confirmed",
+          "CONFIRM_BLOCKED": "Team confirmation blocked",
+          "MEMBER_ADDED": "Member added",
+          "MEMBER_ROLE_CHANGED": "Member role changed",
+          "MEMBER_REMOVED": "Member removed",
+          "EXCEPTION_REQUESTED": "Exception requested",
+          "EXCEPTION_APPROVED": "Exception approved",
+          "EXCEPTION_REJECTED": "Exception rejected",
+          "SETTINGS_UPDATED": "Settings updated"
+        }
       },
       "checklists": {
         "matched": "Matched {{count}} checklist(s) for {{standard}} ({{stage}})."
