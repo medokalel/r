@@ -49,15 +49,6 @@ import {
   ChangeStageDatesModal,
 } from '@/components/cab/auditPlanning/AuditPlanModals'
 import { ROUTES, cabAuditExecutionPath } from '@/lib/routes'
-<<<<<<< HEAD
-import { AuditPlanChecklistsCard } from '@/components/dashboard/cab/AuditPlanChecklistsCard'
-import {
-  loadAuditChecklistsMock,
-  matchChecklistsForAuditPlan,
-} from '@/lib/api/auditChecklistMockData'
-import type { AuditChecklist } from '@/lib/auditChecklistTypes'
-=======
->>>>>>> origin/main
 import { cn } from '@/lib/utils'
 
 type BuildStep = 1 | 2 | 3 | 4
@@ -142,8 +133,6 @@ export function CabBuildAuditPlanPage() {
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false)
   const [changeReason, setChangeReason] = useState('')
   const [isSaving, setIsSaving] = useState(false)
-  const [allChecklists, setAllChecklists] = useState<AuditChecklist[]>([])
-  const [selectedChecklistIds, setSelectedChecklistIds] = useState<string[]>([])
 
   useEffect(() => {
     async function load() {
@@ -152,13 +141,8 @@ export function CabBuildAuditPlanPage() {
         fetchAuditPlanById(planId || 'AUD-0310'),
         loadAuditChecklistsMock(),
       ])
-<<<<<<< HEAD
       const combinedChecklists = [...checklistsData.mine, ...checklistsData.library]
       setAllChecklists(combinedChecklists)
-=======
-      const combined = [...checklistsData.mine, ...checklistsData.library]
-      setAllChecklists(combined)
->>>>>>> origin/main
       if (data) {
         const planTeam = await fetchPlanTeam(data.id)
         setPlan(data)
@@ -193,15 +177,7 @@ export function CabBuildAuditPlanPage() {
         setAvailabilityConfirmed(data.teamDeclarations?.availabilityConfirmed ?? true)
         setNoConflictsDeclared(data.teamDeclarations?.noConflictsDeclared ?? true)
         setActDate(data.proposedStartDate)
-<<<<<<< HEAD
         setActAuditor(planTeam.members.find((m) => m.role === 'TEAM_LEADER')?.name ?? data.leadAuditor)
-=======
-        setActAuditor(data.leadAuditor)
-        setSelectedChecklistIds(
-          data.checklistIds ??
-            matchChecklistsForAuditPlan(combined, data.standardName, data.stage).map((c) => c.id)
-        )
->>>>>>> origin/main
       }
       setIsLoading(false)
     }
@@ -288,10 +264,6 @@ export function CabBuildAuditPlanPage() {
         },
         travelNotes: { details: travelNotes },
         teamDeclarations: { availabilityConfirmed, noConflictsDeclared },
-<<<<<<< HEAD
-=======
-        checklistIds: selectedChecklistIds,
->>>>>>> origin/main
         agendaActivities: agenda,
         ...overrides,
       })
@@ -544,7 +516,6 @@ export function CabBuildAuditPlanPage() {
         )}
 
         {activeStep === 2 && (
-          <>
           <CabTourStep steps={tourSteps} stepId="build-plan-agenda-table">
             <section className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -703,17 +674,6 @@ export function CabBuildAuditPlanPage() {
               </div>
             </section>
           </CabTourStep>
-          <AuditPlanChecklistsCard
-            allChecklists={allChecklists}
-            selectedIds={selectedChecklistIds}
-            standardName={plan.standardName}
-            stage={auditStage}
-            onChangeSelectedIds={setSelectedChecklistIds}
-            onAutoMatch={() =>
-              setSelectedChecklistIds(matchChecklistsForAuditPlan(allChecklists, plan.standardName, auditStage).map((c) => c.id))
-            }
-          />
-          </>
         )}
 
         {activeStep === 3 && (

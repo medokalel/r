@@ -27,17 +27,14 @@ import {
   type CertificationAgreement,
   type CertificationAgreementStatus,
 } from '@/lib/api/cabCertificationAgreementsApi'
-<<<<<<< HEAD
 import {
   AGREEMENT_STATUSES,
   getAgreementKindLabel,
   getAgreementNextStepLabel,
   getAgreementStatusLabel,
 } from '@/lib/agreementStatus'
-=======
 import { listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
 import { getUserErrorMessage } from '@/lib/errorMessages'
->>>>>>> origin/main
 import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
@@ -342,22 +339,22 @@ export function CabCertificationAgreementsPage() {
                     </tr>
                   ))}
                   {filteredAgreements.length === 0 && (
-<<<<<<< HEAD
                     <tr>
                       <td colSpan={7} className="px-4 py-10 text-center">
                         <p className="text-[14px] font-medium text-neutral-700">
-                          {agreements.length === 0 ? (isAr ? 'لا توجد اتفاقيات بعد' : 'No agreements yet') : (isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filters')}
+                          {loading
+                            ? (isAr ? 'جارٍ التحميل…' : 'Loading…')
+                            : agreements.length === 0
+                              ? (isAr ? 'لا توجد اتفاقيات بعد' : 'No agreements yet')
+                              : (isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filters')}
                         </p>
-                        {agreements.length === 0 && (
+                        {!loading && agreements.length === 0 && (
                           <p className="mt-1 text-[13px] text-neutral-400">
                             {isAr ? 'تُنشأ الاتفاقية تلقائياً عند قبول العميل للعرض، ويمكنك أيضاً إنشاؤها لأي عميل.' : 'An agreement is drafted automatically when a client accepts an offer. You can also generate one for any client.'}
                           </p>
                         )}
                       </td>
                     </tr>
-=======
-                    <tr><td colSpan={7} className="px-4 py-10 text-center text-[14px] text-neutral-400">{loading ? (isAr ? 'جارٍ التحميل…' : 'Loading…') : isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filter'}</td></tr>
->>>>>>> origin/main
                   )}
                 </tbody>
               </table>
