@@ -26,9 +26,7 @@ import {
   type TeamEvent,
   type TeamValidationResult,
 } from '@/lib/api/teamSelectionApi'
-import type { IssueCode, LocalizedText } from '@/lib/teamSelection/catalog'
 import type { PlanAssignment } from '@/lib/teamSelection/personnel'
-import { PERSONNEL_SEED } from '@/lib/teamSelection/personnelSeed'
 import { assignmentToTeamMember } from '@/lib/teamSelection/teamMember'
 import {
   AuditStatusBadge,
@@ -91,6 +89,7 @@ export function CabBuildAuditPlanPage() {
   const [team, setTeam] = useState<PlanAssignment[]>([])
   const [savedTeam, setSavedTeam] = useState<PlanAssignment[]>([])
   const [savedConfirmed, setSavedConfirmed] = useState(false)
+  const [confirmation, setConfirmation] = useState<{ by: string; at: string } | null>(null)
   const [validation, setValidation] = useState<{ key: string; result: TeamValidationResult | null } | null>(null)
   const [validationTick, setValidationTick] = useState(0)
   const [teamEvents, setTeamEvents] = useState<TeamEvent[]>([])
@@ -152,6 +151,7 @@ export function CabBuildAuditPlanPage() {
         setTeam(planTeam.members)
         setSavedTeam(planTeam.members)
         setSavedConfirmed(planTeam.confirmed || (data.teamConfirmed ?? data.status !== 'Draft'))
+        setConfirmation(planTeam.confirmedBy && planTeam.confirmedAt ? { by: planTeam.confirmedBy, at: planTeam.confirmedAt } : null)
         setTeamEvents(planTeam.events)
         setAuditTrailNote(data.auditTrailNote || '')
         setSelectedChecklistIds(
@@ -437,45 +437,40 @@ export function CabBuildAuditPlanPage() {
 
         {activeStep === 1 && (
           <BuildPlanTeamStep
+            planId={plan.id}
+            startDate={proposedStartDate}
+            endDate={proposedEndDate}
             team={team}
+            onChangeTeam={setTeam}
             validation={teamCheck}
             validationFailed={!isValidating && !teamCheck}
             isValidating={isValidating}
             confirmed={teamConfirmed}
+            unsaved={teamSignature(team) !== teamSignature(savedTeam)}
+            confirmation={confirmation}
             readOnly={plan.status === 'Completed'}
             auditTrailNote={auditTrailNote}
             events={teamEvents}
-            onAddMember={(personId, role) => {
-              const person = PERSONNEL_SEED.find((candidate) => candidate.id === personId)
-              if (!person) return
-              setTeam((prev) =>
-                prev.some((member) => member.personId === personId)
-                  ? prev
-                  : [...prev, { personId, name: person.name, role }],
-              )
-            }}
-            onRemoveMember={(key) => setTeam((prev) => prev.filter((member) => (member.personId ?? member.name) !== key))}
-            onChangeRole={(key, role) =>
-              setTeam((prev) => prev.map((member) => ((member.personId ?? member.name) === key ? { ...member, role } : member)))
-            }
-            onReplaceMember={(key, alternative) =>
-              setTeam((prev) =>
-                prev.map((member) =>
-                  (member.personId ?? member.name) === key
-                    ? { personId: alternative.personId, name: alternative.name, role: member.role }
-                    : member,
-                ),
-              )
-            }
+            refreshKey={validationTick}
             onChangeAuditTrailNote={setAuditTrailNote}
-            onRequestException={async (personId: string | null, issueCode: IssueCode, justification: string, issueText: LocalizedText) => {
+            onRequestException={async (issue, justification) => {
               try {
-                await requestTeamException({ auditPlanId: plan.id, personId, issueCode, justification, issueText })
+                await requestTeamException({
+                  auditPlanId: plan.id,
+                  personId: issue.personId,
+                  issueCode: issue.code,
+                  justification,
+                  issueText: issue.message,
+                })
                 setTeamEvents(await listTeamEvents({ auditPlanId: plan.id }))
                 setValidationTick((tick) => tick + 1)
-                showToast(t('cab.auditPlanning.team.exceptionRequested', 'Exception requested. It is pending approval.'))
+                showToast(t('cab.auditPlanning.team.exception.requested', 'Exception requested. A CAB admin will review it.'))
+                return true
               } catch (error) {
-                toast.error(error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'))
+                toast.error(
+                  error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'),
+                )
+                return false
               }
             }}
             onDecideException={async (exceptionId, decision, notes) => {
@@ -483,8 +478,17 @@ export function CabBuildAuditPlanPage() {
                 await decideTeamException(exceptionId, decision, notes)
                 setTeamEvents(await listTeamEvents({ auditPlanId: plan.id }))
                 setValidationTick((tick) => tick + 1)
+                showToast(
+                  decision === 'approve'
+                    ? t('cab.auditPlanning.team.exceptions.approved', 'Exception approved.')
+                    : t('cab.auditPlanning.team.exceptions.rejected', 'Exception rejected.'),
+                )
+                return true
               } catch (error) {
-                toast.error(error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'))
+                toast.error(
+                  error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'),
+                )
+                return false
               }
             }}
             onConfirmTeam={async () => {
@@ -497,14 +501,17 @@ export function CabBuildAuditPlanPage() {
                 setTeam(result.members)
                 setSavedTeam(result.members)
                 setSavedConfirmed(true)
+                setConfirmation(result.confirmedBy && result.confirmedAt ? { by: result.confirmedBy, at: result.confirmedAt } : null)
                 setTeamEvents(result.events)
                 setOnSitePersonnel(result.members.filter((member) => member.role !== 'OBSERVER').map((member) => member.name))
                 const refreshed = await fetchAuditPlanById(plan.id)
                 if (refreshed) setPlan(refreshed)
                 setActiveStep(2)
-                showToast('Audit team confirmed. Moving to Agenda.')
+                showToast(t('cab.auditPlanning.team.panel.confirmed', 'Audit team confirmed. The CAB and the assigned people were notified.'))
               } catch (error) {
-                toast.error(error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'))
+                toast.error(
+                  error instanceof TeamSelectionError ? error.message : t('cab.auditPlanning.team.error', 'The team action failed. Try again.'),
+                )
               }
             }}
           />

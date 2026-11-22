@@ -2824,68 +2824,192 @@
         }
       },
       "team": {
-        "alternatives": "Qualified alternatives:",
-        "useAlternative": "Use {{name}} ({{role}})",
-        "exceptionApproved": "Exception approved",
-        "exceptionPending": "Exception pending approval",
-        "exceptionRejected": "Exception rejected",
-        "requestException": "Request exception",
-        "mandatory": "Mandatory: cannot be overridden",
-        "status": {
-          "ok": "Passes the checks",
-          "warn": "Passes with warnings",
-          "block": "Blocked"
+        "candidate": {
+          "add": {
+            "auditor": "Add as auditor",
+            "observer": "Add as observer",
+            "teamLeader": "Set as team leader",
+            "technicalExpert": "Add as expert",
+            "trainee": "Add as trainee"
+          },
+          "added": "In the team",
+          "criteria": "Criteria",
+          "eligible": "Eligible",
+          "hide": "Hide",
+          "ineligible": "Not eligible",
+          "scoreTitle": "Score {{score}} of 100",
+          "why": "Why"
         },
-        "hideChecks": "Hide checks",
-        "showChecks": "Show checks",
-        "remove": "Remove from team",
-        "title": "Audit team",
-        "subtitle": "Choose the team. Competence, availability and impartiality are checked automatically against the audit.",
-        "banner": {
-          "blocked": "The team cannot be confirmed yet: {{count}} blocking issue(s) ({{mandatory}} mandatory, {{overridable}} can be accepted by an exception).",
-          "warnings": "The team can be confirmed with {{count}} warning(s).",
-          "ok": "All checks pass. The team can be confirmed."
+        "components": {
+          "availability": "Availability",
+          "competence": "Competence fit",
+          "experience": "Sector experience",
+          "language": "Language",
+          "location": "Location",
+          "workload": "Workload balance"
         },
-        "checking": "Checking the team…",
-        "checkFailed": "The team could not be checked. Change the team or try again.",
-        "empty": "No team members yet. Add a team leader first.",
-        "teamIssues": "Team-level checks",
-        "addPerson": "Add a team member",
-        "add": "Add",
-        "exceptions": "Exceptions",
-        "adminAction": "CAB admin decision (demo)",
-        "approve": "Approve",
-        "reject": "Reject",
-        "noteLabel": "Note for the audit trail (optional)",
-        "notePlaceholder": "For example: agreed with the technical manager",
-        "resolveIssues": "Resolve {{count}} blocking issue(s)",
-        "confirmedContinue": "Team confirmed: continue",
-        "confirm": "Confirm team",
-        "history": "Team history ({{count}})",
-        "noHistory": "No team changes yet.",
-        "exceptionTitle": "Request an exception",
-        "exceptionSubmit": "Submit request",
-        "justification": "Justification",
-        "justificationHint": "Explain why this team member can still be used (at least {{min}} characters).",
-        "rejectTitle": "Reject the exception",
-        "rejectReason": "Reason",
-        "exceptionRequested": "Exception requested. It is pending approval.",
+        "coverage": {
+          "auditor": "Approved as auditor",
+          "auditorShort": "A",
+          "covered": "Covered",
+          "critical": "critical",
+          "expert": "Technical expert (sector knowledge)",
+          "expertShort": "E",
+          "legend": "A: approved auditor for that standard and code. E: technical expert, counts for sector knowledge only. Every code in scope needs a competent member.",
+          "missing": "Not covered",
+          "scope": "Standard or IAF code",
+          "status": "Coverage",
+          "title": "Team coverage"
+        },
+        "criterion": {
+          "fail": "Not met",
+          "na": "Not checked",
+          "partial": "Partly met",
+          "pass": "Met",
+          "warn": "Warning"
+        },
         "error": "The team action failed. Try again.",
-        "exceptionStatus": {
-          "PENDING": "Pending",
-          "APPROVED": "Approved",
-          "REJECTED": "Rejected"
+        "exception": {
+          "hint": "Only non-mandatory issues can be accepted. A CAB admin reviews the request in the work queue; it is kept in the audit trail.",
+          "justification": "Justification (at least 10 characters)",
+          "requested": "Exception requested. A CAB admin will review it.",
+          "submit": "Send request",
+          "title": "Request an exception"
         },
-        "events": {
-          "TEAM_CONFIRMED": "Team confirmed",
-          "CONFIRM_BLOCKED": "Team confirmation blocked",
-          "MEMBER_ADDED": "Member added",
-          "MEMBER_ROLE_CHANGED": "Member role changed",
-          "MEMBER_REMOVED": "Member removed",
-          "EXCEPTION_REQUESTED": "Exception requested",
-          "EXCEPTION_APPROVED": "Exception approved",
-          "EXCEPTION_REJECTED": "Exception rejected",
-          "SETTINGS_UPDATED": "Settings updated"
+        "exceptions": {
+          "approve": "Approve",
+          "approveTitle": "Approve the exception",
+          "approved": "Exception approved.",
+          "decidedBy": "decided by {{name}} on {{date}}",
+          "empty": "No exceptions.",
+          "hint": "Exceptions accept a non-mandatory blocking issue (travel buffer, missing declaration) for one person and one audit.",
+          "notes": "Notes (required to reject)",
+          "reject": "Reject",
+          "rejectTitle": "Reject the exception",
+          "rejected": "Exception rejected.",
+          "requestedBy": "Requested by {{name}} on {{date}}",
+          "status": {
+            "APPROVED": "Approved",
+            "PENDING": "Pending",
+            "REJECTED": "Rejected"
+          }
+        },
+        "flow": {
+          "addToSlot": "Add {{role}}",
+          "chartTitle": "Team structure",
+          "confirmBlocked": "The team cannot be confirmed while {{count}} blocking issue(s) remain. Choose another person or change the dates.",
+          "dragHint": "Drag to move to another role",
+          "emptyBranch": "Drag a member here or press +",
+          "hideDetails": "Hide recommendations",
+          "needLeader": "Choose a team leader to confirm the team.",
+          "noneEligible": "No eligible person",
+          "score": "Score {{score}}",
+          "showDetails": "Show recommendations and reasons"
+        },
+        "history": {
+          "actions": {
+            "CONFIRM_BLOCKED": "Confirmation refused (blocking issues)",
+            "DECLARATION_RECORDED": "Declaration recorded",
+            "EXCEPTION_APPROVED": "Exception approved",
+            "EXCEPTION_REJECTED": "Exception rejected",
+            "EXCEPTION_REQUESTED": "Exception requested",
+            "FEASIBILITY_TEAM_SAVED": "Feasibility team saved",
+            "MEMBER_ADDED": "Member added",
+            "MEMBER_REMOVED": "Member removed",
+            "MEMBER_ROLE_CHANGED": "Role changed",
+            "RELATIONSHIP_CONFIRMED": "Relationship confirmed",
+            "RELATIONSHIP_DELETED": "Relationship deleted",
+            "RELATIONSHIP_DISMISSED": "Relationship dismissed",
+            "RELATIONSHIP_RECORDED": "Relationship recorded",
+            "RELATIONSHIP_UPDATED": "Relationship changed",
+            "SETTINGS_UPDATED": "Rules updated",
+            "TEAM_CONFIRMATION_CLEARED": "Confirmation cleared after a change",
+            "TEAM_CONFIRMED": "Team confirmed",
+            "TEAM_EDITED": "Team changed on the plan form",
+            "UNAVAILABILITY_ADDED": "Unavailability recorded",
+            "UNAVAILABILITY_DELETED": "Unavailability deleted",
+            "UNAVAILABILITY_UPDATED": "Unavailability changed"
+          },
+          "empty": "No team decisions recorded yet."
+        },
+        "memberStatus": {
+          "block": "Blocked",
+          "ok": "Passes the checks",
+          "warn": "Passes with warnings"
+        },
+        "observer": {
+          "add": "Add observer",
+          "label": "External observer or witness",
+          "placeholder": "Name of the observer or accreditation witness"
+        },
+        "panel": {
+          "checkFailed": "The team could not be checked. Change the team or try again.",
+          "confirm": "Confirm team",
+          "confirmDisabled": "Confirm becomes available when there is a team leader and no blocking issue is left.",
+          "confirmed": "Audit team confirmed. The CAB and the assigned people were notified.",
+          "confirmedBadge": "Confirmed by {{name}} on {{date}}",
+          "exceptions": "Exceptions ({{count}}, pending {{pending}})",
+          "history": "Team history ({{count}})",
+          "notConfirmed": "Not confirmed",
+          "note": "Note for the audit trail (optional)",
+          "notePlaceholder": "For example: agreed with the technical manager",
+          "subtitle": "Recommended from the competence register; checked for competence, availability and impartiality. The plan is sent and started only with a confirmed team.",
+          "title": "Audit team",
+          "unsaved": "Changes not confirmed"
+        },
+        "recommended": {
+          "empty": "No one matches. Show the people who are not eligible to see why.",
+          "forRole": "Recommendations for the role",
+          "loading": "Ranking the competence register...",
+          "refresh": "Refresh",
+          "search": "Search by name",
+          "showIneligible": "Show people who are not eligible ({{count}})",
+          "title": "Recommended people"
+        },
+        "roles": {
+          "auditor": "Auditor",
+          "observer": "Observer",
+          "teamLeader": "Team leader",
+          "technicalExpert": "Technical expert",
+          "trainee": "Trainee auditor"
+        },
+        "score": "Suitability score {{score}} of 100",
+        "severity": {
+          "block": "Blocking",
+          "excepted": "Exception approved",
+          "info": "Note",
+          "mandatory": "Mandatory",
+          "overridable": "Blocking",
+          "warn": "Warning"
+        },
+        "slotHints": {
+          "auditor": "Approved auditors",
+          "observer": "No competence check",
+          "teamLeader": "One, all standards",
+          "technicalExpert": "Sector knowledge only",
+          "trainee": "With a qualified auditor"
+        },
+        "slots": {
+          "auditor": "Auditors",
+          "empty": "Nobody yet",
+          "observer": "Observers and witnesses",
+          "remove": "Remove {{name}}",
+          "teamLeader": "Team leader",
+          "technicalExpert": "Technical experts",
+          "trainee": "Trainees"
+        },
+        "validation": {
+          "alternatives": "Qualified alternatives:",
+          "blockedMandatory": "Mandatory competence, scheduling and impartiality requirements cannot be overridden. Choose another person or change the team.",
+          "blockedOverridable": "These issues can be accepted only through an exception approved by a CAB admin, with a justification.",
+          "blockedTitle": "The team cannot be confirmed yet: {{count}} blocking issue(s)",
+          "checking": "Checking the team...",
+          "hideNotes": "Hide notes",
+          "readyHint": "Warnings to note: {{count}}.",
+          "readyTitle": "The team passes the competence, availability and impartiality checks",
+          "requestException": "Request an exception",
+          "showNotes": "Show notes ({{count}})",
+          "use": "Use {{name}} ({{role}})"
         }
       },
       "checklists": {

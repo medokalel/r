@@ -2844,68 +2844,192 @@
         }
       },
       "team": {
-        "alternatives": "بدائل مؤهلة:",
-        "useAlternative": "استخدم {{name}} ({{role}})",
-        "exceptionApproved": "تمت الموافقة على الاستثناء",
-        "exceptionPending": "الاستثناء بانتظار الموافقة",
-        "exceptionRejected": "تم رفض الاستثناء",
-        "requestException": "طلب استثناء",
-        "mandatory": "إلزامي: لا يمكن تجاوزه",
-        "status": {
-          "ok": "يجتاز الفحوصات",
-          "warn": "يجتاز مع تحذيرات",
-          "block": "محظور"
+        "candidate": {
+          "add": {
+            "auditor": "إضافة كمدقق",
+            "observer": "إضافة كمراقب",
+            "teamLeader": "تعيين قائداً للفريق",
+            "technicalExpert": "إضافة كخبير",
+            "trainee": "إضافة كمتدرب"
+          },
+          "added": "ضمن الفريق",
+          "criteria": "المعايير",
+          "eligible": "مؤهل",
+          "hide": "إخفاء",
+          "ineligible": "غير مؤهل",
+          "scoreTitle": "الدرجة {{score}} من 100",
+          "why": "لماذا"
         },
-        "hideChecks": "إخفاء الفحوصات",
-        "showChecks": "عرض الفحوصات",
-        "remove": "إزالة من الفريق",
-        "title": "فريق التدقيق",
-        "subtitle": "اختر الفريق. تُفحص الكفاءة والتوفر والحيادية تلقائيًا مقابل التدقيق.",
-        "banner": {
-          "blocked": "لا يمكن تأكيد الفريق بعد: {{count}} من المشاكل المانعة ({{mandatory}} إلزامية، و{{overridable}} يمكن قبولها باستثناء).",
-          "warnings": "يمكن تأكيد الفريق مع {{count}} من التحذيرات.",
-          "ok": "جميع الفحوصات ناجحة. يمكن تأكيد الفريق."
+        "components": {
+          "availability": "التوافر",
+          "competence": "ملاءمة الكفاءة",
+          "experience": "الخبرة القطاعية",
+          "language": "اللغة",
+          "location": "الموقع",
+          "workload": "توازن عبء العمل"
         },
-        "checking": "جارٍ فحص الفريق…",
-        "checkFailed": "تعذّر فحص الفريق. غيّر الفريق أو حاول مرة أخرى.",
-        "empty": "لا يوجد أعضاء في الفريق بعد. أضف قائد الفريق أولًا.",
-        "teamIssues": "فحوصات على مستوى الفريق",
-        "addPerson": "إضافة عضو للفريق",
-        "add": "إضافة",
-        "exceptions": "الاستثناءات",
-        "adminAction": "قرار مسؤول الجهة (تجريبي)",
-        "approve": "موافقة",
-        "reject": "رفض",
-        "noteLabel": "ملاحظة لسجل التدقيق (اختياري)",
-        "notePlaceholder": "مثال: تم الاتفاق مع المدير الفني",
-        "resolveIssues": "عالج {{count}} من المشاكل المانعة",
-        "confirmedContinue": "تم تأكيد الفريق: متابعة",
-        "confirm": "تأكيد الفريق",
-        "history": "سجل الفريق ({{count}})",
-        "noHistory": "لا توجد تغييرات على الفريق بعد.",
-        "exceptionTitle": "طلب استثناء",
-        "exceptionSubmit": "إرسال الطلب",
-        "justification": "التبرير",
-        "justificationHint": "اشرح لماذا يمكن استخدام هذا العضو رغم ذلك ({{min}} أحرف على الأقل).",
-        "rejectTitle": "رفض الاستثناء",
-        "rejectReason": "السبب",
-        "exceptionRequested": "تم تقديم طلب الاستثناء وهو بانتظار الموافقة.",
+        "coverage": {
+          "auditor": "معتمد كمدقق",
+          "auditorShort": "م",
+          "covered": "مغطى",
+          "critical": "حرج",
+          "expert": "خبير فني (معرفة قطاعية)",
+          "expertShort": "خ",
+          "legend": "م: مدقق معتمد لتلك المواصفة والرمز. خ: خبير فني يُحتسب للمعرفة القطاعية فقط. كل رمز ضمن النطاق يحتاج عضواً كفؤاً.",
+          "missing": "غير مغطى",
+          "scope": "المواصفة أو رمز IAF",
+          "status": "التغطية",
+          "title": "تغطية الفريق"
+        },
+        "criterion": {
+          "fail": "غير مستوفى",
+          "na": "لا يُتحقق منه",
+          "partial": "مستوفى جزئياً",
+          "pass": "مستوفى",
+          "warn": "تنبيه"
+        },
         "error": "تعذّر تنفيذ إجراء الفريق. حاول مرة أخرى.",
-        "exceptionStatus": {
-          "PENDING": "قيد الانتظار",
-          "APPROVED": "تمت الموافقة",
-          "REJECTED": "مرفوض"
+        "exception": {
+          "hint": "تُقبل المسائل غير الإلزامية فقط. يراجع مسؤول الجهة الطلب في قائمة المهام، ويُحفظ في سجل التدقيق.",
+          "justification": "المبرر (10 أحرف على الأقل)",
+          "requested": "أُرسل طلب الاستثناء وسيراجعه مسؤول الجهة.",
+          "submit": "إرسال الطلب",
+          "title": "طلب استثناء"
         },
-        "events": {
-          "TEAM_CONFIRMED": "تم تأكيد الفريق",
-          "CONFIRM_BLOCKED": "تعذّر تأكيد الفريق",
-          "MEMBER_ADDED": "إضافة عضو",
-          "MEMBER_ROLE_CHANGED": "تغيير دور عضو",
-          "MEMBER_REMOVED": "إزالة عضو",
-          "EXCEPTION_REQUESTED": "طلب استثناء",
-          "EXCEPTION_APPROVED": "الموافقة على استثناء",
-          "EXCEPTION_REJECTED": "رفض استثناء",
-          "SETTINGS_UPDATED": "تحديث الإعدادات"
+        "exceptions": {
+          "approve": "اعتماد",
+          "approveTitle": "اعتماد الاستثناء",
+          "approved": "اعتُمد الاستثناء.",
+          "decidedBy": "وقرر فيه {{name}} في {{date}}",
+          "empty": "لا توجد استثناءات.",
+          "hint": "يقبل الاستثناء مسألة مانعة غير إلزامية (مهلة السفر، إقرار ناقص) لشخص واحد في تدقيق واحد.",
+          "notes": "ملاحظات (مطلوبة عند الرفض)",
+          "reject": "رفض",
+          "rejectTitle": "رفض الاستثناء",
+          "rejected": "رُفض الاستثناء.",
+          "requestedBy": "طلبه {{name}} في {{date}}",
+          "status": {
+            "APPROVED": "معتمد",
+            "PENDING": "قيد الانتظار",
+            "REJECTED": "مرفوض"
+          }
+        },
+        "flow": {
+          "addToSlot": "إضافة {{role}}",
+          "chartTitle": "الهيكل التنظيمي للفريق",
+          "confirmBlocked": "لا يمكن تأكيد الفريق مع وجود {{count}} من المشكلات المانعة. اختر شخصًا آخر أو غيّر التواريخ.",
+          "dragHint": "اسحب للنقل إلى دور آخر",
+          "emptyBranch": "اسحب عضوًا إلى هنا أو اضغط +",
+          "hideDetails": "إخفاء التوصيات",
+          "needLeader": "اختر قائد الفريق لتأكيد الفريق.",
+          "noneEligible": "لا يوجد شخص مؤهل",
+          "score": "الدرجة {{score}}",
+          "showDetails": "عرض التوصيات والأسباب"
+        },
+        "history": {
+          "actions": {
+            "CONFIRM_BLOCKED": "رفض التأكيد (مسائل مانعة)",
+            "DECLARATION_RECORDED": "تسجيل إقرار",
+            "EXCEPTION_APPROVED": "اعتماد استثناء",
+            "EXCEPTION_REJECTED": "رفض استثناء",
+            "EXCEPTION_REQUESTED": "طلب استثناء",
+            "FEASIBILITY_TEAM_SAVED": "حفظ فريق الجدوى الفنية",
+            "MEMBER_ADDED": "إضافة عضو",
+            "MEMBER_REMOVED": "إزالة عضو",
+            "MEMBER_ROLE_CHANGED": "تغيير الدور",
+            "RELATIONSHIP_CONFIRMED": "تأكيد علاقة",
+            "RELATIONSHIP_DELETED": "حذف علاقة",
+            "RELATIONSHIP_DISMISSED": "استبعاد علاقة",
+            "RELATIONSHIP_RECORDED": "تسجيل علاقة",
+            "RELATIONSHIP_UPDATED": "تعديل علاقة",
+            "SETTINGS_UPDATED": "تحديث القواعد",
+            "TEAM_CONFIRMATION_CLEARED": "إلغاء التأكيد بعد تغيير",
+            "TEAM_CONFIRMED": "تأكيد الفريق",
+            "TEAM_EDITED": "تعديل الفريق من نموذج الخطة",
+            "UNAVAILABILITY_ADDED": "تسجيل عدم توافر",
+            "UNAVAILABILITY_DELETED": "حذف عدم توافر",
+            "UNAVAILABILITY_UPDATED": "تعديل عدم توافر"
+          },
+          "empty": "لا توجد قرارات فريق مسجلة بعد."
+        },
+        "memberStatus": {
+          "block": "محظور",
+          "ok": "يجتاز الفحوص",
+          "warn": "يجتاز مع تنبيهات"
+        },
+        "observer": {
+          "add": "إضافة مراقب",
+          "label": "مراقب أو شاهد خارجي",
+          "placeholder": "اسم المراقب أو شاهد جهة الاعتماد"
+        },
+        "panel": {
+          "checkFailed": "تعذّر فحص الفريق. غيّر الفريق أو حاول مرة أخرى.",
+          "confirm": "تأكيد الفريق",
+          "confirmDisabled": "يتاح التأكيد عند وجود قائد للفريق وعدم بقاء أي مسألة مانعة.",
+          "confirmed": "تأكد فريق التدقيق، وأُبلغت الجهة والأشخاص المكلفون.",
+          "confirmedBadge": "أكده {{name}} في {{date}}",
+          "exceptions": "الاستثناءات ({{count}}، قيد الانتظار {{pending}})",
+          "history": "سجل الفريق ({{count}})",
+          "notConfirmed": "غير مؤكد",
+          "note": "ملاحظة لسجل التدقيق (اختيارية)",
+          "notePlaceholder": "مثال: تم الاتفاق مع المدير الفني",
+          "subtitle": "اقتراح من سجل الكفاءة مع فحص الكفاءة والتوافر والحياد. لا تُرسل الخطة ولا تبدأ إلا بفريق مؤكد.",
+          "title": "فريق التدقيق",
+          "unsaved": "تغييرات غير مؤكدة"
+        },
+        "recommended": {
+          "empty": "لا يوجد تطابق. اعرض غير المؤهلين لمعرفة السبب.",
+          "forRole": "الاقتراحات حسب الدور",
+          "loading": "جارٍ ترتيب سجل الكفاءة...",
+          "refresh": "تحديث",
+          "search": "البحث بالاسم",
+          "showIneligible": "عرض غير المؤهلين ({{count}})",
+          "title": "الأشخاص المقترحون"
+        },
+        "roles": {
+          "auditor": "مدقق",
+          "observer": "مراقب",
+          "teamLeader": "قائد الفريق",
+          "technicalExpert": "خبير فني",
+          "trainee": "مدقق متدرب"
+        },
+        "score": "درجة الملاءمة {{score}} من 100",
+        "severity": {
+          "block": "مانع",
+          "excepted": "استثناء معتمد",
+          "info": "ملاحظة",
+          "mandatory": "إلزامي",
+          "overridable": "مانع",
+          "warn": "تنبيه"
+        },
+        "slotHints": {
+          "auditor": "مدققون معتمدون",
+          "observer": "دون فحص كفاءة",
+          "teamLeader": "شخص واحد لكل المواصفات",
+          "technicalExpert": "للمعرفة القطاعية فقط",
+          "trainee": "مع مدقق مؤهل"
+        },
+        "slots": {
+          "auditor": "المدققون",
+          "empty": "لا أحد بعد",
+          "observer": "المراقبون والشهود",
+          "remove": "إزالة {{name}}",
+          "teamLeader": "قائد الفريق",
+          "technicalExpert": "الخبراء الفنيون",
+          "trainee": "المتدربون"
+        },
+        "validation": {
+          "alternatives": "بدائل مؤهلة:",
+          "blockedMandatory": "لا يمكن تجاوز متطلبات الكفاءة والجدولة والحياد الإلزامية. اختر شخصاً آخر أو عدّل الفريق.",
+          "blockedOverridable": "لا تُقبل هذه المسائل إلا باستثناء يعتمده مسؤول الجهة مع مبرر.",
+          "blockedTitle": "لا يمكن تأكيد الفريق بعد: عدد المسائل المانعة {{count}}",
+          "checking": "جارٍ فحص الفريق...",
+          "hideNotes": "إخفاء الملاحظات",
+          "readyHint": "تنبيهات للعلم: {{count}}.",
+          "readyTitle": "اجتاز الفريق فحوص الكفاءة والتوافر والحياد",
+          "requestException": "طلب استثناء",
+          "showNotes": "عرض الملاحظات ({{count}})",
+          "use": "استخدام {{name}} ({{role}})"
         }
       },
       "checklists": {

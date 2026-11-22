@@ -110,6 +110,15 @@ test('standards and IAF codes are read from the standard name', () => {
   assert.deepEqual(Array.from(ctx.languages), ['ar', 'en'])
 })
 
+test('standards come from the plan list even when its title is a label', () => {
+  const labelled = plan({ standardName: 'Integrated Management System', standards: ['ISO 9001:2015', 'ISO 14001:2015', 'ISO 45001:2018'] })
+  const ctx = context(labelled)
+  assert.deepEqual(ctx.standards.map((s) => s.key), ['9001', '14001', '45001'])
+  assert.deepEqual(Array.from(ctx.iafCodes), ['14', '28', '29', '31'])
+  // A plan without any recognisable standard has nothing to check against.
+  assert.equal(context(plan({ standardName: 'Special audit', standards: [] })).standards.length, 0)
+})
+
 test('a qualified lead is eligible and scores out of 100', () => {
   const ctx = context()
   const ranked = rules.rankCandidates(poolFor(ctx), 'TEAM_LEADER', ctx)

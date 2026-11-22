@@ -56,13 +56,18 @@ export function parseStandards(standardName: string): StandardRef[] {
   ]
 }
 
+/** The standards of a plan: its `standards` list and any standard named in its title. */
+export function standardsOfPlan(plan: Pick<AuditPlan, 'standardName' | 'standards'>): StandardRef[] {
+  return parseStandards([...(plan.standards ?? []), plan.standardName].join(', '))
+}
+
 export function buildPlanContext(
   plan: AuditPlan,
   settings: TeamSelectionSettings = DEFAULT_SETTINGS,
   overrides: { startDate?: string; endDate?: string } = {},
   now: Date = new Date(),
 ): TeamContext {
-  const standards = parseStandards(plan.standardName)
+  const standards = standardsOfPlan(plan)
   const start = overrides.startDate ?? plan.proposedStartDate
   const end = overrides.endDate ?? plan.proposedEndDate
   return {
@@ -171,10 +176,11 @@ export function buildPersonRecords({
 
     const sectorAudits = plansOfPerson.filter((plan) => {
       if (plan.status !== 'Completed') return false
-      const planCodes = iafCodesForStandards(parseStandards(plan.standardName).map((standard) => standard.key))
+      const planStandards = standardsOfPlan(plan)
+      const planCodes = iafCodesForStandards(planStandards.map((standard) => standard.key))
       return (
         planCodes.some((code) => context.iafCodes.includes(code)) ||
-        context.standards.some((standard) => plan.standardName.includes(standard.key))
+        context.standards.some((standard) => planStandards.some((own) => own.key === standard.key))
       )
     }).length
 
