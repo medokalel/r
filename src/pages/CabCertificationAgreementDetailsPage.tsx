@@ -2,14 +2,20 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { AgreementAuditTrail } from '@/components/dashboard/cab/agreements/AgreementAuditTrail'
 import { AgreementDocumentView } from '@/components/dashboard/cab/agreements/AgreementDocumentView'
+import { AgreementStatusBadge } from '@/components/dashboard/cab/agreements/AgreementStatusBadge'
+import { CalloutCard, SectionCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import {
   AppIcon,
   BuildingsIcon,
   CheckIcon,
   EditIcon,
+  ErrorCircleIcon,
   ExportIcon,
   FileTextIcon,
+  InfoIcon,
+  NotificationIcon,
   PdfFileIcon,
   RefreshIcon,
   SuccessCircleIcon,
@@ -17,15 +23,27 @@ import {
 } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
-import { getAgreementTermsState } from '@/lib/api/cabAgreementTermsApi'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { FormField, Textarea } from '@/components/ui'
 import { downloadAgreementPdf } from '@/lib/api/agreementPdfGenerator'
 import {
+  countersignAgreement,
+  createAgreementAmendment,
+  getAmendmentInProgress,
   getCertificationAgreementById,
-  updateCertificationAgreement,
+  listAgreementVersions,
+  recordClientSignature,
+  refreshAgreementTerms,
+  remindAgreementClient,
+  sendCertificationAgreement,
+  terminateAgreement,
+  updateAgreementValues,
   type CertificationAgreement,
   type CertificationAgreementStatus,
 } from '@/lib/api/cabCertificationAgreementsApi'
-import { ROUTES } from '@/lib/routes'
+import { getAgreementKindLabel, getAgreementStatusLabel } from '@/lib/agreementStatus'
+import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 function Chevron() {
@@ -43,19 +61,26 @@ function SummaryDivider() {
 const STEPS: { key: CertificationAgreementStatus; labelEn: string; labelAr: string; subEn: string; subAr: string }[] = [
   { key: 'draft', labelEn: 'Draft prepared', labelAr: 'إعداد المسودة', subEn: 'Generated from accepted offer', subAr: 'مبنية على العرض المقبول' },
   { key: 'sent', labelEn: 'Sent to client', labelAr: 'إرسال للعميل', subEn: 'Awaiting client e-signature', subAr: 'بانتظار توقيع العميل' },
-  { key: 'signed_by_client', labelEn: 'Signed by client', labelAr: 'توقيع العميل', subEn: 'Ready for CAB countersignature', subAr: 'جاهزة للتوقيع المشترك' },
+  { key: 'client_signed', labelEn: 'Signed by client', labelAr: 'توقيع العميل', subEn: 'Ready for CAB countersignature', subAr: 'جاهزة للتوقيع المشترك' },
   { key: 'active', labelEn: 'Active & in force', labelAr: 'سارية ونشطة', subEn: 'Audit plan gate unlocked', subAr: 'بوابة خطة التدقيق مفعّلة' },
 ]
 
-const STATUS_BADGE_STYLES: Record<CertificationAgreementStatus, string> = {
-  draft: 'bg-[#f1f5f9] text-[#475569]',
-  sent: 'bg-[#fef9c3] text-[#a16207]',
-  signed_by_client: 'bg-[#e8edfc] text-primary',
-  active: 'bg-[#dcfce7] text-[#15803d]',
-}
+type AgreementDialog = 'terminate' | 'amend' | null
+
+const TERMINABLE_STATUSES: readonly CertificationAgreementStatus[] = ['sent', 'client_signed', 'active']
+
+const formatDisplayDate = (iso?: string) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+    : ''
 
 export function CabCertificationAgreementDetailsPage() {
   const { agreementId } = useParams<{ agreementId: string }>()
+  // Keyed by id so the page state resets when navigating between versions of an agreement.
+  return <AgreementDetails key={agreementId} agreementId={agreementId} />
+}
+
+function AgreementDetails({ agreementId }: { agreementId?: string }) {
   const navigate = useNavigate()
   const { i18n } = useTranslation()
   const isAr = Boolean(i18n.language?.startsWith('ar'))
@@ -66,7 +91,8 @@ export function CabCertificationAgreementDetailsPage() {
   const [docLang, setDocLang] = useState<'en' | 'ar'>(isAr ? 'ar' : 'en')
   const [isEditingValues, setIsEditingValues] = useState(false)
   const [draftValues, setDraftValues] = useState(() => agreement?.values ?? null)
-  const [syncedNotice, setSyncedNotice] = useState(false)
+  const [dialog, setDialog] = useState<AgreementDialog>(null)
+  const [reason, setReason] = useState('')
 
   if (!agreement || !draftValues) {
     return (
@@ -80,73 +106,89 @@ export function CabCertificationAgreementDetailsPage() {
     )
   }
 
-  const currentStepIndex = STEPS.findIndex((s) => s.key === agreement.status)
+  const isClosed = agreement.status === 'superseded' || agreement.status === 'terminated'
+  const currentStepIndex = isClosed ? STEPS.length : STEPS.findIndex((s) => s.key === agreement.status)
+  const versions = listAgreementVersions(agreement)
+  const amendmentInProgress = agreement.status === 'active' ? getAmendmentInProgress(agreement.id) : null
+  const statusLabel = getAgreementStatusLabel(agreement.status, isAr)
 
-  const todayStamp = () => {
-    const now = new Date()
-    const d = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-    const t = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-    return { dateOnly: d, full: `${d} · ${t}` }
-  }
-
-  const handleAdvanceLifecycle = () => {
-    const stamp = todayStamp()
-    let updated: CertificationAgreement = { ...agreement, lastChange: stamp.dateOnly }
-    if (agreement.status === 'draft') {
-      updated = { ...updated, status: 'sent' }
-    } else if (agreement.status === 'sent') {
-      const [namePart, titlePart] = agreement.values.signatoryEn.split('—').map((s) => s.trim())
-      updated = {
-        ...updated,
-        status: 'signed_by_client',
-        clientSignature: {
-          signerName: namePart || agreement.values.signatoryEn,
-          signerTitle: titlePart || 'Authorised Signatory',
-          signedAt: stamp.full,
-          fingerprint: 'SHA256:8c41e9a0b32f71d4...5a19',
-        },
-      }
-    } else if (agreement.status === 'signed_by_client') {
-      updated = {
-        ...updated,
-        status: 'active',
-        cabSignature: {
-          signerName: 'Mohamed El Manawahly',
-          signerTitle: 'Certification Body Director',
-          signedAt: stamp.full,
-          fingerprint: 'SHA256:2f90d4c1e78a63b2...9c04',
-        },
-      }
+  /** Runs one lifecycle step; the API refuses it when the status no longer allows it. */
+  const runAction = (action: () => CertificationAgreement | null, successMessage: string) => {
+    const updated = action()
+    if (!updated) {
+      toast.error(
+        isAr
+          ? 'هذا الإجراء غير متاح في حالة الاتفاقية الحالية. حدّث الصفحة.'
+          : 'This action is not available for the agreement in its current status. Refresh the page.',
+      )
+      return null
     }
-    updateCertificationAgreement(updated)
-    setAgreement(updated)
-  }
-
-  const handleSaveValues = () => {
-    const stamp = todayStamp()
-    const updated: CertificationAgreement = { ...agreement, lastChange: stamp.dateOnly, values: draftValues }
-    updateCertificationAgreement(updated)
-    setAgreement(updated)
-    setIsEditingValues(false)
-  }
-
-  const handleUseLatestTerms = () => {
-    const latest = getAgreementTermsState()
-    const stamp = todayStamp()
-    const nextVer = agreement.version + 1
-    const updated: CertificationAgreement = {
-      ...agreement,
-      version: nextVer,
-      reference: `${agreement.id} v${nextVer}`,
-      lastChange: stamp.dateOnly,
-      sections: latest.sections,
-      values: { ...agreement.values, agreementVersion: `v${latest.version}.0` },
-    }
-    updateCertificationAgreement(updated)
     setAgreement(updated)
     setDraftValues(updated.values)
-    setSyncedNotice(true)
-    setTimeout(() => setSyncedNotice(false), 2500)
+    toast.success(successMessage)
+    return updated
+  }
+
+  const handleSend = () => {
+    if (runAction(() => sendCertificationAgreement(agreement.id), isAr ? 'تم إرسال الاتفاقية إلى العميل.' : 'Agreement sent to the client.')) {
+      setIsEditingValues(false)
+    }
+  }
+
+  const handleRemind = () =>
+    runAction(() => remindAgreementClient(agreement.id), isAr ? 'تم إرسال تذكير إلى العميل.' : 'Reminder sent to the client.')
+
+  const handleRecordClientSignature = () =>
+    runAction(() => recordClientSignature(agreement.id), isAr ? 'تم تسجيل توقيع العميل.' : 'Client signature recorded.')
+
+  const handleCountersign = () =>
+    runAction(
+      () => countersignAgreement(agreement.id),
+      isAr ? 'تم التوقيع المشترك. الاتفاقية الآن سارية.' : 'Agreement countersigned. It is now active.',
+    )
+
+  const handleSaveValues = () => {
+    if (runAction(() => updateAgreementValues(agreement.id, draftValues), isAr ? 'تم تحديث الاتفاقية.' : 'Agreement updated.')) {
+      setIsEditingValues(false)
+    }
+  }
+
+  const handleUseLatestTerms = () =>
+    runAction(
+      () => refreshAgreementTerms(agreement.id),
+      isAr ? 'تستخدم المسودة الآن أحدث شروط الاتفاقية.' : 'The draft now uses your latest agreement terms.',
+    )
+
+  const openDialog = (next: Exclude<AgreementDialog, null>) => {
+    setReason('')
+    setDialog(next)
+  }
+
+  const closeDialog = () => {
+    setDialog(null)
+    setReason('')
+  }
+
+  const handleTerminate = () => {
+    runAction(() => terminateAgreement(agreement.id, reason), isAr ? 'تم إنهاء الاتفاقية.' : 'Agreement terminated.')
+    closeDialog()
+  }
+
+  const handleAmend = () => {
+    const created = createAgreementAmendment(agreement.id, reason)
+    closeDialog()
+    if (!created) {
+      toast.error(
+        isAr
+          ? 'لا يمكن إنشاء تعديل: يوجد تعديل قيد التنفيذ أو الاتفاقية غير سارية.'
+          : 'An amendment cannot be created: one is already in progress, or the agreement is not active.',
+      )
+      return
+    }
+    toast.success(
+      isAr ? `تم إنشاء التعديل ${created.reference} كمسودة.` : `Amendment ${created.reference} created as a draft.`,
+    )
+    navigate(cabCertificationAgreementDetailsPath(created.id))
   }
 
   const editableFields = [
@@ -175,26 +217,55 @@ export function CabCertificationAgreementDetailsPage() {
         <div className="flex flex-col items-start justify-between gap-4 lg:flex-row lg:items-center">
           <div className="min-w-0">
             <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
-              {isAr ? 'اتفاقية منح الشهادة' : 'Certification agreement'} <span dir="ltr">{agreement.reference}</span>
+              {getAgreementKindLabel(agreement.kind, isAr)} <span dir="ltr">{agreement.reference}</span>
             </h1>
             <p className="mt-1 text-[14px] text-neutral-500">
               {isAr ? 'إدارة دورة اعتماد الاتفاقية والتوقيعات الإلكترونية وبنود التعاقد وفق ISO/IEC 17021-1 (5.1.2).' : 'Manage the certification agreement lifecycle, electronic signatures, and clause values under ISO/IEC 17021-1 (5.1.2).'}
             </p>
           </div>
 
-          <div className="flex w-full shrink-0 flex-wrap items-center gap-2.5 lg:w-auto lg:flex-nowrap">
-            <Button type="button" variant="outline" size="sm" onClick={() => setIsEditingValues((p) => !p)} icon={<AppIcon icon={EditIcon} size={16} />} className="h-11 whitespace-nowrap">
-              {isAr ? 'تعديل القيم' : 'Edit values'}
-            </Button>
-            <Button type="button" variant="outline" size="sm" onClick={handleUseLatestTerms} icon={<AppIcon icon={syncedNotice ? CheckIcon : RefreshIcon} size={16} />} className="h-11 whitespace-nowrap">
-              {syncedNotice ? (isAr ? 'تم التحديث' : 'Updated') : (isAr ? 'أحدث الشروط' : 'Use latest terms')}
-            </Button>
+          <div className="flex w-full shrink-0 flex-wrap items-center gap-2.5 lg:w-auto">
+            {agreement.status === 'draft' && (
+              <>
+                <Button type="button" variant="outline" size="sm" onClick={() => setIsEditingValues((p) => !p)} icon={<AppIcon icon={EditIcon} size={16} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'تعديل القيم' : 'Edit values'}
+                </Button>
+                <Button type="button" variant="outline" size="sm" onClick={handleUseLatestTerms} icon={<AppIcon icon={RefreshIcon} size={16} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'أحدث الشروط' : 'Use latest terms'}
+                </Button>
+              </>
+            )}
             <Button type="button" variant="outline" size="sm" onClick={() => downloadAgreementPdf(agreement, docLang)} icon={<AppIcon icon={PdfFileIcon} size={18} />} className="h-11 whitespace-nowrap">
               {isAr ? 'تحميل PDF' : 'Download PDF'}
             </Button>
-            {agreement.status !== 'active' && (
-              <Button type="button" variant="primary" size="sm" onClick={handleAdvanceLifecycle} icon={<AppIcon icon={agreement.status === 'draft' ? ExportIcon : SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
-                {agreement.status === 'draft' ? (isAr ? 'إرسال للعميل' : 'Send to client') : agreement.status === 'sent' ? (isAr ? 'تسجيل توقيع العميل' : 'Record client signature') : (isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign & activate')}
+            {agreement.status === 'active' && (
+              <Button type="button" variant="outline" size="sm" disabled={Boolean(amendmentInProgress)} onClick={() => openDialog('amend')} icon={<AppIcon icon={FileTextIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {isAr ? 'إنشاء تعديل' : 'Create amendment'}
+              </Button>
+            )}
+            {TERMINABLE_STATUSES.includes(agreement.status) && (
+              <Button type="button" variant="outline" size="sm" onClick={() => openDialog('terminate')} icon={<AppIcon icon={ErrorCircleIcon} size={18} />} className="h-11 whitespace-nowrap border-error-500 text-error-600 hover:bg-error-50">
+                {isAr ? 'إنهاء الاتفاقية' : 'Terminate agreement'}
+              </Button>
+            )}
+            {agreement.status === 'draft' && (
+              <Button type="button" variant="primary" size="sm" onClick={handleSend} icon={<AppIcon icon={ExportIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {isAr ? 'إرسال للعميل' : 'Send to client'}
+              </Button>
+            )}
+            {agreement.status === 'sent' && (
+              <>
+                <Button type="button" variant="outline" size="sm" onClick={handleRemind} icon={<AppIcon icon={NotificationIcon} size={18} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'إرسال تذكير' : 'Send reminder'}
+                </Button>
+                <Button type="button" variant="primary" size="sm" onClick={handleRecordClientSignature} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'تسجيل توقيع العميل' : 'Record client signature'}
+                </Button>
+              </>
+            )}
+            {agreement.status === 'client_signed' && (
+              <Button type="button" variant="primary" size="sm" onClick={handleCountersign} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign & activate'}
               </Button>
             )}
           </div>
@@ -249,15 +320,26 @@ export function CabCertificationAgreementDetailsPage() {
           <SummaryDivider />
 
           <div className="flex shrink-0 flex-col justify-center">
-            <span className={cn('inline-flex w-fit items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap', STATUS_BADGE_STYLES[agreement.status])}>
-              {isAr ? STEPS[currentStepIndex]?.labelAr : STEPS[currentStepIndex]?.labelEn}
-            </span>
+            <AgreementStatusBadge status={agreement.status} label={statusLabel} className="w-fit" />
             <p className="mt-2 text-[12px] text-neutral-500">
               {isAr ? 'تاريخ الإصدار:' : 'Issued:'} <span dir="ltr">{agreement.values.agreementDate}</span>
             </p>
             <p className="text-[12px] text-neutral-500">
               {isAr ? 'آخر تحديث:' : 'Updated:'} <span dir="ltr">{agreement.lastChange}</span>
             </p>
+            {agreement.sentAt && (
+              <p className="text-[12px] text-neutral-500">
+                {isAr ? 'تاريخ الإرسال:' : 'Sent:'} <span dir="ltr">{formatDisplayDate(agreement.sentAt)}</span>
+              </p>
+            )}
+            {agreement.reminderCount > 0 && (
+              <p className="text-[12px] text-neutral-500">
+                {isAr ? 'التذكيرات:' : 'Reminders:'}{' '}
+                <span dir="ltr">
+                  {agreement.reminderCount} · {formatDisplayDate(agreement.lastReminderAt)}
+                </span>
+              </p>
+            )}
           </div>
         </section>
 
@@ -294,7 +376,92 @@ export function CabCertificationAgreementDetailsPage() {
           </ol>
         </section>
 
-        {isEditingValues && (
+        {agreement.status === 'terminated' && (
+          <CalloutCard
+            tone="red"
+            icon={<AppIcon icon={ErrorCircleIcon} size={20} />}
+            title={isAr ? 'تم إنهاء الاتفاقية' : 'Agreement terminated'}
+          >
+            {isAr
+              ? `أُنهيت بتاريخ ${formatDisplayDate(agreement.terminatedAt)}. السبب: ${agreement.terminationReason ?? ''}`
+              : `Terminated on ${formatDisplayDate(agreement.terminatedAt)}. Reason: ${agreement.terminationReason ?? ''}`}
+          </CalloutCard>
+        )}
+
+        {agreement.supersededBy && (
+          <CalloutCard
+            tone="blue"
+            icon={<AppIcon icon={InfoIcon} size={20} />}
+            title={isAr ? 'تم استبدال هذا الإصدار' : 'This version was replaced'}
+          >
+            {isAr ? 'استُبدل هذا الإصدار بـ ' : 'This version was replaced by '}
+            <Link to={cabCertificationAgreementDetailsPath(agreement.supersededBy.id)} className="font-semibold text-primary hover:underline" dir="ltr">
+              {agreement.supersededBy.reference}
+            </Link>
+          </CalloutCard>
+        )}
+
+        {agreement.amendmentOf && (
+          <CalloutCard
+            tone="blue"
+            icon={<AppIcon icon={InfoIcon} size={20} />}
+            title={isAr ? 'تعديل على الاتفاقية' : 'Amendment'}
+          >
+            {isAr ? 'يستبدل ' : 'Replaces '}
+            <Link to={cabCertificationAgreementDetailsPath(agreement.amendmentOf.id)} className="font-semibold text-primary hover:underline" dir="ltr">
+              {agreement.amendmentOf.reference}
+            </Link>
+            {agreement.amendmentOf.reason ? ` · ${agreement.amendmentOf.reason}` : ''}
+          </CalloutCard>
+        )}
+
+        {amendmentInProgress && (
+          <CalloutCard
+            tone="amber"
+            icon={<AppIcon icon={InfoIcon} size={20} />}
+            title={isAr ? 'يوجد تعديل قيد التنفيذ' : 'An amendment is in progress'}
+          >
+            <Link to={cabCertificationAgreementDetailsPath(amendmentInProgress.id)} className="font-semibold text-primary hover:underline" dir="ltr">
+              {amendmentInProgress.reference}
+            </Link>
+          </CalloutCard>
+        )}
+
+        {agreement.status === 'draft' && (
+          <CalloutCard
+            tone="blue"
+            icon={<AppIcon icon={InfoIcon} size={20} />}
+            title={isAr ? 'مسودة' : 'Draft'}
+          >
+            {isAr
+              ? 'هذه مسودة. راجع القيم ثم أرسلها إلى العميل للتوقيع.'
+              : 'This is a draft. Check the values, then send it to the client for signature.'}
+          </CalloutCard>
+        )}
+
+        {versions.length > 1 && (
+          <SectionCard title={isAr ? 'الإصدارات' : 'Versions'}>
+            <ul className="flex flex-col divide-y divide-[#f0f0f0]">
+              {versions.map((version) => (
+                <li key={version.id} className="flex items-center justify-between gap-3 py-2.5">
+                  {version.id === agreement.id ? (
+                    <span className="text-[14px] font-semibold text-neutral-900" dir="ltr">{version.reference}</span>
+                  ) : (
+                    <Link to={cabCertificationAgreementDetailsPath(version.id)} className="text-[14px] font-semibold text-primary hover:underline" dir="ltr">
+                      {version.reference}
+                    </Link>
+                  )}
+                  <div className="flex items-center gap-3">
+                    <span className="text-[12px] text-neutral-500" dir="ltr">{version.lastChange}</span>
+                    <AgreementStatusBadge status={version.status} label={getAgreementStatusLabel(version.status, isAr)} />
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </SectionCard>
+        )}
+
+        {isEditingValues && agreement.status === 'draft' && (
           <section className="rounded-[16px] border-2 border-primary bg-white p-5 shadow-sm">
             <h3 className="mb-4 border-b border-[#f0f0f0] pb-3 text-[16px] font-bold text-neutral-900">
               {isAr ? 'تعديل قيم ومتغيرات الاتفاقية' : 'Edit agreement variable values'}
@@ -321,7 +488,38 @@ export function CabCertificationAgreementDetailsPage() {
         )}
 
         <AgreementDocumentView agreement={agreement} docLang={docLang} onChangeDocLang={setDocLang} isAr={isAr} />
+
+        <AgreementAuditTrail events={agreement.events} isAr={isAr} />
       </main>
+
+      <ConfirmDialog
+        open={dialog === 'terminate'}
+        destructive
+        title={isAr ? `إنهاء ${agreement.reference}` : `Terminate ${agreement.reference}`}
+        description={isAr ? 'لا يمكن التراجع عن الإنهاء. إذا كان العميل قد استلم الاتفاقية فسيتم إشعاره.' : 'Termination cannot be undone. If the client received the agreement, they are notified.'}
+        confirmLabel={isAr ? 'إنهاء الاتفاقية' : 'Terminate agreement'}
+        confirmDisabled={reason.trim() === ''}
+        onConfirm={handleTerminate}
+        onClose={closeDialog}
+      >
+        <FormField label={isAr ? 'سبب الإنهاء' : 'Reason for termination'} required>
+          <Textarea rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
+        </FormField>
+      </ConfirmDialog>
+
+      <ConfirmDialog
+        open={dialog === 'amend'}
+        title={isAr ? `تعديل ${agreement.reference}` : `Amend ${agreement.reference}`}
+        description={isAr ? 'التعديل هو إصدار جديد من الاتفاقية. عندما يوقّعه الطرفان يحلّ محل الإصدار الحالي.' : 'An amendment is a new version of the agreement. When both parties sign it, it replaces the current version.'}
+        confirmLabel={isAr ? 'إنشاء تعديل' : 'Create amendment'}
+        confirmDisabled={reason.trim() === ''}
+        onConfirm={handleAmend}
+        onClose={closeDialog}
+      >
+        <FormField label={isAr ? 'سبب التعديل' : 'Reason for the amendment'} required>
+          <Textarea rows={3} value={reason} onChange={(e) => setReason(e.target.value)} />
+        </FormField>
+      </ConfirmDialog>
     </CabLayout>
   )
 }

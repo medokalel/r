@@ -6,8 +6,39 @@ import {
 export type CertificationAgreementStatus =
   | 'draft'
   | 'sent'
-  | 'signed_by_client'
+  | 'client_signed'
   | 'active'
+  | 'superseded'
+  | 'terminated'
+
+export type CertificationAgreementKind = 'original' | 'amendment'
+
+export type AgreementEventType =
+  | 'GENERATED'
+  | 'UPDATED'
+  | 'SENT'
+  | 'REMINDED'
+  | 'CLIENT_SIGNED'
+  | 'COUNTERSIGNED'
+  | 'SUPERSEDED'
+  | 'TERMINATED'
+  | 'AMENDMENT_CREATED'
+
+export type AgreementEventActor = 'cab' | 'client' | 'system'
+
+export interface AgreementEvent {
+  id: string
+  type: AgreementEventType
+  actor: AgreementEventActor
+  /** ISO timestamp. */
+  at: string
+  reason?: string
+}
+
+export interface AgreementVersionRef {
+  id: string
+  reference: string
+}
 
 export interface AgreementSignRecord {
   signerName: string
@@ -43,12 +74,26 @@ export interface CertificationAgreement {
   reference: string
   version: number
   status: CertificationAgreementStatus
+  kind: CertificationAgreementKind
   lastChange: string
   values: CertificationAgreementValues
   sections: AgreementSection[]
   clientSignature?: AgreementSignRecord
   cabSignature?: AgreementSignRecord
+  /** ISO timestamp of the first send to the client. */
+  sentAt?: string
+  reminderCount: number
+  /** ISO timestamp of the latest reminder. */
+  lastReminderAt?: string
+  /** Set on an amendment: the version it replaces once both parties sign. */
+  amendmentOf?: AgreementVersionRef & { reason: string }
+  /** Set on a replaced version: the version that superseded it. */
+  supersededBy?: AgreementVersionRef
+  terminatedAt?: string
+  terminationReason?: string
+  events: AgreementEvent[]
 }
+
 
 export interface EligibleClientOffer {
   clientId: string
@@ -144,9 +189,80 @@ export const ELIGIBLE_CLIENT_OFFERS: EligibleClientOffer[] = [
   },
 ]
 
+
 const STORAGE_KEY = 'icasco_cab_certification_agreements_v1'
 
-function buildDefaultAgreements(): CertificationAgreement[] {
+const CAB_SIGNATORY = {
+  name: 'Mohamed El Manawahly',
+  title: 'Certification Body Director',
+} as const
+
+type SeedAgreement = Omit<
+  CertificationAgreement,
+  'kind' | 'events' | 'reminderCount' | 'sentAt'
+>
+
+/** Shape of a record saved before amendments, reminders and the audit trail existed. */
+type StoredAgreement = Omit<
+  CertificationAgreement,
+  'status' | 'kind' | 'events' | 'reminderCount'
+> & {
+  status: CertificationAgreementStatus | 'signed_by_client'
+  kind?: CertificationAgreementKind
+  events?: AgreementEvent[]
+  reminderCount?: number
+}
+
+const IN_PROGRESS_STATUSES: readonly CertificationAgreementStatus[] = [
+  'draft',
+  'sent',
+  'client_signed',
+]
+
+const seedEvent = (
+  agreementId: string,
+  index: number,
+  type: AgreementEventType,
+  actor: AgreementEventActor,
+  at: string,
+): AgreementEvent => ({ id: `${agreementId}-seed-${index}`, type, actor, at })
+
+const SEED_EVENTS: Record<string, AgreementEvent[]> = {
+  'AGR-0005': [
+    seedEvent('AGR-0005', 1, 'GENERATED', 'cab', '2026-11-04T09:00:00.000Z'),
+  ],
+  'AGR-0004': [
+    seedEvent('AGR-0004', 1, 'GENERATED', 'cab', '2026-11-03T10:00:00.000Z'),
+    seedEvent('AGR-0004', 2, 'SENT', 'cab', '2026-11-04T08:30:00.000Z'),
+  ],
+  'AGR-0003': [
+    seedEvent('AGR-0003', 1, 'GENERATED', 'cab', '2026-10-30T10:00:00.000Z'),
+    seedEvent('AGR-0003', 2, 'SENT', 'cab', '2026-10-31T09:00:00.000Z'),
+    seedEvent('AGR-0003', 3, 'CLIENT_SIGNED', 'client', '2026-11-02T14:20:00.000Z'),
+  ],
+  'AGR-0002': [
+    seedEvent('AGR-0002', 1, 'GENERATED', 'cab', '2026-05-02T10:00:00.000Z'),
+    seedEvent('AGR-0002', 2, 'SENT', 'cab', '2026-05-03T09:00:00.000Z'),
+    seedEvent('AGR-0002', 3, 'CLIENT_SIGNED', 'client', '2026-05-05T11:15:00.000Z'),
+    seedEvent('AGR-0002', 4, 'COUNTERSIGNED', 'cab', '2026-05-06T09:40:00.000Z'),
+  ],
+  'AGR-0001': [
+    seedEvent('AGR-0001', 1, 'GENERATED', 'cab', '2026-04-14T10:00:00.000Z'),
+    seedEvent('AGR-0001', 2, 'SENT', 'cab', '2026-04-15T09:00:00.000Z'),
+    seedEvent('AGR-0001', 3, 'CLIENT_SIGNED', 'client', '2026-04-17T16:05:00.000Z'),
+    seedEvent('AGR-0001', 4, 'COUNTERSIGNED', 'cab', '2026-04-18T10:12:00.000Z'),
+  ],
+}
+
+const SEED_SENT_AT: Record<string, string> = {
+  'AGR-0004': '2026-11-04T08:30:00.000Z',
+  'AGR-0003': '2026-10-31T09:00:00.000Z',
+  'AGR-0002': '2026-05-03T09:00:00.000Z',
+  'AGR-0001': '2026-04-15T09:00:00.000Z',
+}
+
+
+function buildSeedAgreements(): SeedAgreement[] {
   const terms = getAgreementTermsState()
   return [
     {
@@ -185,7 +301,7 @@ function buildDefaultAgreements(): CertificationAgreement[] {
       id: 'AGR-0003',
       reference: 'AGR-0003 v1',
       version: 1,
-      status: 'signed_by_client',
+      status: 'client_signed',
       lastChange: '02 Nov 2026',
       sections: terms.sections,
       values: {
@@ -262,6 +378,28 @@ function buildDefaultAgreements(): CertificationAgreement[] {
   ]
 }
 
+
+function buildDefaultAgreements(): CertificationAgreement[] {
+  return buildSeedAgreements().map((seed) => ({
+    ...seed,
+    kind: 'original',
+    reminderCount: 0,
+    sentAt: SEED_SENT_AT[seed.id],
+    events: SEED_EVENTS[seed.id] ?? [],
+  }))
+}
+
+/** Upgrades records saved by an older version of the mock (renamed status, no trail). */
+function normalizeAgreement(item: StoredAgreement): CertificationAgreement {
+  return {
+    ...item,
+    status: item.status === 'signed_by_client' ? 'client_signed' : item.status,
+    kind: item.kind ?? 'original',
+    reminderCount: item.reminderCount ?? 0,
+    events: item.events ?? [],
+  }
+}
+
 export function listCertificationAgreements(): CertificationAgreement[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY)
@@ -270,8 +408,10 @@ export function listCertificationAgreements(): CertificationAgreement[] {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(defaults))
       return defaults
     }
-    const parsed = JSON.parse(raw)
-    return Array.isArray(parsed) ? parsed : buildDefaultAgreements()
+    const parsed: unknown = JSON.parse(raw)
+    return Array.isArray(parsed)
+      ? (parsed as StoredAgreement[]).map(normalizeAgreement)
+      : buildDefaultAgreements()
   } catch {
     return buildDefaultAgreements()
   }
@@ -295,6 +435,40 @@ export function getCertificationAgreementById(
   return all.find((item) => item.id === id) ?? null
 }
 
+const formatDisplayDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+  })
+
+const formatDisplayStamp = (iso: string) =>
+  `${formatDisplayDate(iso)} · ${new Date(iso).toLocaleTimeString('en-GB', {
+    hour: '2-digit',
+    minute: '2-digit',
+  })}`
+
+const createEvent = (
+  type: AgreementEventType,
+  actor: AgreementEventActor,
+  at: string,
+  reason?: string,
+): AgreementEvent => ({
+  id: `${type}-${at}-${Math.random().toString(36).slice(2, 8)}`,
+  type,
+  actor,
+  at,
+  ...(reason ? { reason } : {}),
+})
+
+const withEvent = (
+  current: CertificationAgreement,
+  event: AgreementEvent,
+): AgreementEvent[] => [...current.events, event]
+
+const agreementNumeric = (item: CertificationAgreement) =>
+  Number.parseInt(item.values.agreementNumber.replace(/\D/g, ''), 10) || 0
+
 export function generateCertificationAgreement(
   clientId: string,
 ): CertificationAgreement {
@@ -303,21 +477,22 @@ export function generateCertificationAgreement(
     ELIGIBLE_CLIENT_OFFERS.find((c) => c.clientId === clientId) ??
     ELIGIBLE_CLIENT_OFFERS[0]
   const terms = getAgreementTermsState()
-  const nextNumber = all.length + 1
+  // Highest existing number + 1: amendments add records, so `length + 1` could collide.
+  const nextNumber = Math.max(0, ...all.map(agreementNumeric)) + 1
   const id = `AGR-${String(nextNumber).padStart(4, '0')}`
-  const today = new Date().toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
+  const now = new Date().toISOString()
+  const today = formatDisplayDate(now)
 
   const created: CertificationAgreement = {
     id,
     reference: `${id} v1`,
     version: 1,
     status: 'draft',
+    kind: 'original',
     lastChange: today,
     sections: terms.sections,
+    reminderCount: 0,
+    events: [createEvent('GENERATED', 'cab', now)],
     values: {
       agreementNumber: id,
       agreementVersion: `v${terms.version}.0`,
@@ -339,6 +514,226 @@ export function updateCertificationAgreement(
   saveCertificationAgreements(next)
   return updated
 }
+
+/**
+ * Applies one lifecycle step to an agreement. Returns `null` (and saves nothing)
+ * when the agreement is missing or not in a status that allows the step.
+ */
+function applyTransition(
+  id: string,
+  allowedFrom: readonly CertificationAgreementStatus[],
+  apply: (current: CertificationAgreement, now: string) => CertificationAgreement,
+): CertificationAgreement | null {
+  const all = listCertificationAgreements()
+  const current = all.find((item) => item.id === id)
+  if (!current || !allowedFrom.includes(current.status)) return null
+  const updated = apply(current, new Date().toISOString())
+  saveCertificationAgreements(all.map((item) => (item.id === id ? updated : item)))
+  return updated
+}
+
+export function updateAgreementValues(
+  id: string,
+  values: CertificationAgreementValues,
+): CertificationAgreement | null {
+  return applyTransition(id, ['draft'], (current, now) => ({
+    ...current,
+    values,
+    lastChange: formatDisplayDate(now),
+    events: withEvent(current, createEvent('UPDATED', 'cab', now)),
+  }))
+}
+
+/** Re-applies the latest agreement terms to a draft. */
+export function refreshAgreementTerms(
+  id: string,
+): CertificationAgreement | null {
+  const latest = getAgreementTermsState()
+  return applyTransition(id, ['draft'], (current, now) => ({
+    ...current,
+    sections: latest.sections,
+    lastChange: formatDisplayDate(now),
+    values: { ...current.values, agreementVersion: `v${latest.version}.0` },
+    events: withEvent(current, createEvent('UPDATED', 'cab', now)),
+  }))
+}
+
+export function sendCertificationAgreement(
+  id: string,
+): CertificationAgreement | null {
+  return applyTransition(id, ['draft'], (current, now) => ({
+    ...current,
+    status: 'sent',
+    sentAt: now,
+    lastChange: formatDisplayDate(now),
+    events: withEvent(current, createEvent('SENT', 'cab', now)),
+  }))
+}
+
+export function remindAgreementClient(
+  id: string,
+): CertificationAgreement | null {
+  return applyTransition(id, ['sent'], (current, now) => ({
+    ...current,
+    reminderCount: current.reminderCount + 1,
+    lastReminderAt: now,
+    lastChange: formatDisplayDate(now),
+    events: withEvent(current, createEvent('REMINDED', 'cab', now)),
+  }))
+}
+
+/** Mock of the client signing from their portal, so the flow can be walked end to end. */
+export function recordClientSignature(
+  id: string,
+): CertificationAgreement | null {
+  return applyTransition(id, ['sent'], (current, now) => {
+    const [namePart, titlePart] = current.values.signatoryEn
+      .split('—')
+      .map((part) => part.trim())
+    return {
+      ...current,
+      status: 'client_signed',
+      lastChange: formatDisplayDate(now),
+      clientSignature: {
+        signerName: namePart || current.values.signatoryEn,
+        signerTitle: titlePart || 'Authorised Signatory',
+        signedAt: formatDisplayStamp(now),
+        fingerprint: 'SHA256:8c41e9a0b32f71d4...5a19',
+      },
+      events: withEvent(current, createEvent('CLIENT_SIGNED', 'client', now)),
+    }
+  })
+}
+
+/** Countersigns the agreement. An amendment also replaces the version it amends. */
+export function countersignAgreement(
+  id: string,
+): CertificationAgreement | null {
+  const all = listCertificationAgreements()
+  const current = all.find((item) => item.id === id)
+  if (!current || current.status !== 'client_signed') return null
+
+  const now = new Date().toISOString()
+  const activated: CertificationAgreement = {
+    ...current,
+    status: 'active',
+    lastChange: formatDisplayDate(now),
+    cabSignature: {
+      signerName: CAB_SIGNATORY.name,
+      signerTitle: CAB_SIGNATORY.title,
+      signedAt: formatDisplayStamp(now),
+      fingerprint: 'SHA256:2f90d4c1e78a63b2...9c04',
+    },
+    events: withEvent(current, createEvent('COUNTERSIGNED', 'cab', now)),
+  }
+
+  const replacedId = current.amendmentOf?.id
+  saveCertificationAgreements(
+    all.map((item): CertificationAgreement => {
+      if (item.id === id) return activated
+      if (item.id === replacedId && item.status === 'active') {
+        return {
+          ...item,
+          status: 'superseded',
+          lastChange: formatDisplayDate(now),
+          supersededBy: { id: current.id, reference: current.reference },
+          events: withEvent(item, createEvent('SUPERSEDED', 'system', now)),
+        }
+      }
+      return item
+    }),
+  )
+  return activated
+}
+
+export function terminateAgreement(
+  id: string,
+  reason: string,
+): CertificationAgreement | null {
+  return applyTransition(id, ['sent', 'client_signed', 'active'], (current, now) => ({
+    ...current,
+    status: 'terminated',
+    terminatedAt: now,
+    terminationReason: reason.trim(),
+    lastChange: formatDisplayDate(now),
+    events: withEvent(current, createEvent('TERMINATED', 'cab', now, reason.trim())),
+  }))
+}
+
+/** The amendment of this agreement that is still being drafted, sent or signed, if any. */
+export function getAmendmentInProgress(
+  id: string,
+): CertificationAgreement | null {
+  return (
+    listCertificationAgreements().find(
+      (item) =>
+        item.amendmentOf?.id === id && IN_PROGRESS_STATUSES.includes(item.status),
+    ) ?? null
+  )
+}
+
+/** Creates a draft amendment (a new version) of an active agreement. */
+export function createAgreementAmendment(
+  id: string,
+  reason: string,
+): CertificationAgreement | null {
+  const all = listCertificationAgreements()
+  const current = all.find((item) => item.id === id)
+  if (!current || current.status !== 'active') return null
+  if (getAmendmentInProgress(id)) return null
+
+  const now = new Date().toISOString()
+  const number = current.values.agreementNumber
+  const nextVersion =
+    Math.max(
+      ...all
+        .filter((item) => item.values.agreementNumber === number)
+        .map((item) => item.version),
+    ) + 1
+
+  const amendment: CertificationAgreement = {
+    ...current,
+    id: `${number}-V${nextVersion}`,
+    reference: `${number} v${nextVersion}`,
+    version: nextVersion,
+    status: 'draft',
+    kind: 'amendment',
+    lastChange: formatDisplayDate(now),
+    values: {
+      ...current.values,
+      agreementVersion: `v${nextVersion}.0`,
+      agreementDate: formatDisplayDate(now),
+    },
+    clientSignature: undefined,
+    cabSignature: undefined,
+    sentAt: undefined,
+    reminderCount: 0,
+    lastReminderAt: undefined,
+    supersededBy: undefined,
+    terminatedAt: undefined,
+    terminationReason: undefined,
+    amendmentOf: {
+      id: current.id,
+      reference: current.reference,
+      reason: reason.trim(),
+    },
+    events: [createEvent('AMENDMENT_CREATED', 'cab', now, reason.trim())],
+  }
+  saveCertificationAgreements([amendment, ...all])
+  return amendment
+}
+
+/** Every version of the same agreement (original and amendments), oldest first. */
+export function listAgreementVersions(
+  agreement: CertificationAgreement,
+): CertificationAgreement[] {
+  return listCertificationAgreements()
+    .filter(
+      (item) => item.values.agreementNumber === agreement.values.agreementNumber,
+    )
+    .sort((a, b) => a.version - b.version)
+}
+
 
 export function renderAgreementClauseText(
   text: string | undefined,

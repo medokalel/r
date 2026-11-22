@@ -19,6 +19,7 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
 import { CardFooterLink } from '@/components/ui/CardFooterLink'
 import { SelectField } from '@/components/ui/Select'
+import { AgreementStatusBadge } from '@/components/dashboard/cab/agreements/AgreementStatusBadge'
 import {
   ELIGIBLE_CLIENT_OFFERS,
   generateCertificationAgreement,
@@ -26,6 +27,12 @@ import {
   type CertificationAgreement,
   type CertificationAgreementStatus,
 } from '@/lib/api/cabCertificationAgreementsApi'
+import {
+  AGREEMENT_STATUSES,
+  getAgreementKindLabel,
+  getAgreementNextStepLabel,
+  getAgreementStatusLabel,
+} from '@/lib/agreementStatus'
 import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -35,13 +42,6 @@ function Chevron() {
       <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
-}
-
-const STATUS_BADGE_STYLES: Record<CertificationAgreementStatus, string> = {
-  draft: 'bg-[#f1f5f9] text-[#475569]',
-  sent: 'bg-[#fef9c3] text-[#a16207]',
-  signed_by_client: 'bg-[#e8edfc] text-primary',
-  active: 'bg-[#dcfce7] text-[#15803d]',
 }
 
 export function CabCertificationAgreementsPage() {
@@ -60,7 +60,7 @@ export function CabCertificationAgreementsPage() {
     () => ({
       draft: agreements.filter((a) => a.status === 'draft').length,
       sent: agreements.filter((a) => a.status === 'sent').length,
-      signed_by_client: agreements.filter((a) => a.status === 'signed_by_client').length,
+      client_signed: agreements.filter((a) => a.status === 'client_signed').length,
       active: agreements.filter((a) => a.status === 'active').length,
     }),
     [agreements],
@@ -81,11 +81,9 @@ export function CabCertificationAgreementsPage() {
     })
   }, [agreements, search, statusFilter])
 
-  const getStatusLabel = (status: CertificationAgreementStatus) =>
-    status === 'draft' ? (isAr ? 'مسودة' : 'Draft') : status === 'sent' ? (isAr ? 'مُرسلة للعميل' : 'Sent') : status === 'signed_by_client' ? (isAr ? 'موقعة من العميل' : 'Signed by client') : (isAr ? 'سارية ونشطة' : 'Active')
+  const getStatusLabel = (status: CertificationAgreementStatus) => getAgreementStatusLabel(status, isAr)
 
-  const getNextStepLabel = (status: CertificationAgreementStatus) =>
-    status === 'draft' ? (isAr ? 'مراجعة وإرسال للعميل' : 'Review and send') : status === 'sent' ? (isAr ? 'بانتظار توقيع العميل' : 'Await client signature') : status === 'signed_by_client' ? (isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign agreement') : (isAr ? 'سارية المفعول' : 'In force')
+  const getNextStepLabel = (status: CertificationAgreementStatus) => getAgreementNextStepLabel(status, isAr)
 
   const handleGenerate = () => {
     if (!selectedClientId) return
@@ -106,7 +104,7 @@ export function CabCertificationAgreementsPage() {
   const kpiCards = [
     { key: 'draft' as const, label: isAr ? 'مسودات للإرسال' : 'Drafts to send', sub: isAr ? 'جاهزة للمراجعة والإرسال' : 'Ready to review and send', count: counts.draft, icon: FileTextIcon, iconBg: 'bg-[#dbeafe]', iconColor: 'text-[#1447e6]' },
     { key: 'sent' as const, label: isAr ? 'بانتظار توقيع العميل' : 'Waiting for client', sub: isAr ? 'أُرسلت لبوابة العميل' : 'Sent to client portal', count: counts.sent, icon: HistoryIcon, iconBg: 'bg-[#fef3c6]', iconColor: 'text-[#b45309]' },
-    { key: 'signed_by_client' as const, label: isAr ? 'بانتظار التوقيع المشترك' : 'To countersign', sub: isAr ? 'وقّعها العميل إلكترونياً' : 'Signed by client signatory', count: counts.signed_by_client, icon: CheckIcon, iconBg: 'bg-[#d7f4f0]', iconColor: 'text-[#0f9488]' },
+    { key: 'client_signed' as const, label: isAr ? 'بانتظار التوقيع المشترك' : 'To countersign', sub: isAr ? 'وقّعها العميل إلكترونياً' : 'Signed by client signatory', count: counts.client_signed, icon: CheckIcon, iconBg: 'bg-[#d7f4f0]', iconColor: 'text-[#0f9488]' },
     { key: 'active' as const, label: isAr ? 'سارية ونشطة' : 'Active', sub: isAr ? 'معتمدة وسارية المفعول' : 'Countersigned & in force', count: counts.active, icon: SuccessCircleIcon, iconBg: 'bg-[#dcfce7]', iconColor: 'text-[#15803d]' },
   ]
 
@@ -232,10 +230,7 @@ export function CabCertificationAgreementsPage() {
                 className="h-11"
                 options={[
                   { value: 'all', label: isAr ? 'جميع الحالات' : 'All statuses' },
-                  { value: 'draft', label: isAr ? 'مسودة' : 'Draft' },
-                  { value: 'sent', label: isAr ? 'مُرسلة للعميل' : 'Sent' },
-                  { value: 'signed_by_client', label: isAr ? 'موقعة من العميل' : 'Signed by client' },
-                  { value: 'active', label: isAr ? 'سارية ونشطة' : 'Active' },
+                  ...AGREEMENT_STATUSES.map((status) => ({ value: status, label: getStatusLabel(status) })),
                 ]}
               />
             </div>
@@ -293,7 +288,7 @@ export function CabCertificationAgreementsPage() {
                     >
                       <td className="px-5 py-4 whitespace-nowrap">
                         <div className="font-semibold text-[15px] text-primary" dir="ltr">{item.reference}</div>
-                        <div className="mt-0.5 text-[12px] text-neutral-500">{isAr ? 'اتفاقية منح شهادة' : 'Certification agreement'}</div>
+                        <div className="mt-0.5 text-[12px] text-neutral-500">{getAgreementKindLabel(item.kind, isAr)}</div>
                       </td>
                       <td className="px-4 py-4">
                         <div className="truncate font-medium text-[15px] text-neutral-900">{isAr ? item.values.clientLegalNameAr : item.values.clientLegalNameEn}</div>
@@ -309,9 +304,7 @@ export function CabCertificationAgreementsPage() {
                         </div>
                       </td>
                       <td className="px-4 py-4 text-start whitespace-nowrap">
-                        <span className={cn('inline-flex items-center justify-center rounded-[4px] px-3 py-1 text-[12px] font-medium whitespace-nowrap', STATUS_BADGE_STYLES[item.status])}>
-                          {getStatusLabel(item.status)}
-                        </span>
+                        <AgreementStatusBadge status={item.status} label={getStatusLabel(item.status)} />
                       </td>
                       <td className="px-4 py-4 text-[13px] font-medium text-neutral-700 whitespace-nowrap">{getNextStepLabel(item.status)}</td>
                       <td className="px-4 py-4 text-start text-[13px] text-neutral-600 whitespace-nowrap" dir="ltr">{item.lastChange}</td>
@@ -328,21 +321,32 @@ export function CabCertificationAgreementsPage() {
                     </tr>
                   ))}
                   {filteredAgreements.length === 0 && (
-                    <tr><td colSpan={7} className="px-4 py-10 text-center text-[14px] text-neutral-400">{isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filter'}</td></tr>
+                    <tr>
+                      <td colSpan={7} className="px-4 py-10 text-center">
+                        <p className="text-[14px] font-medium text-neutral-700">
+                          {agreements.length === 0 ? (isAr ? 'لا توجد اتفاقيات بعد' : 'No agreements yet') : (isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filters')}
+                        </p>
+                        {agreements.length === 0 && (
+                          <p className="mt-1 text-[13px] text-neutral-400">
+                            {isAr ? 'تُنشأ الاتفاقية تلقائياً عند قبول العميل للعرض، ويمكنك أيضاً إنشاؤها لأي عميل.' : 'An agreement is drafted automatically when a client accepts an offer. You can also generate one for any client.'}
+                          </p>
+                        )}
+                      </td>
+                    </tr>
                   )}
                 </tbody>
               </table>
             </div>
           </section>
         ) : (
-          <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {(['draft', 'sent', 'signed_by_client', 'active'] as CertificationAgreementStatus[]).map((stage) => {
+          <section className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {AGREEMENT_STATUSES.map((stage) => {
               const stageItems = filteredAgreements.filter((a) => a.status === stage)
               return (
                 <div key={stage} className="flex flex-col rounded-[16px] border border-[#ececec] bg-white p-4">
                   <div className="mb-3 flex items-center justify-between border-b border-[#f0f0f0] pb-3">
                     <span className="text-[14px] font-bold text-neutral-900">{getStatusLabel(stage)}</span>
-                    <span className={cn('rounded-[4px] px-2.5 py-0.5 text-[12px] font-bold', STATUS_BADGE_STYLES[stage])}>{stageItems.length}</span>
+                    <AgreementStatusBadge status={stage} label={String(stageItems.length)} className="px-2.5 py-0.5 font-bold" />
                   </div>
                   <div className="flex flex-col gap-2.5">
                     {stageItems.map((item) => (
