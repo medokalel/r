@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { FormLabel } from '@/components/ui/FormField'
 import { SelectDropdownIcon } from '@/components/ui/SelectDropdownIcon'
 import {
@@ -51,11 +51,13 @@ export function SearchableSelect({
   const searchInputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
-  const selected = options.find((option) => option.value === value)
-  // Cap rendering so very long lists (all cities) stay fast; typing narrows the matches.
-  const filtered = options
-    .filter((option) => option.label.toLowerCase().includes(query.trim().toLowerCase()))
-    .slice(0, 300)
+  const selected = useMemo(() => options.find((option) => option.value === value), [options, value])
+  // Only filter while open, and cap rendering, so very long lists (all cities) don't slow every re-render.
+  const filtered = useMemo(() => {
+    if (!open) return []
+    const needle = query.trim().toLowerCase()
+    return options.filter((option) => option.label.toLowerCase().includes(needle)).slice(0, 300)
+  }, [open, options, query])
 
   useEffect(() => {
     if (!open) return

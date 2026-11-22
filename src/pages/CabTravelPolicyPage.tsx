@@ -2,10 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CalloutCard } from '@/components/dashboard/cab/ReviewPrimitives'
-import {
-  TravelCityCapsSection,
-  type TravelCityOption,
-} from '@/components/dashboard/cab/travelPolicy/TravelCityCapsSection'
+import { TravelCityCapsSection } from '@/components/dashboard/cab/travelPolicy/TravelCityCapsSection'
 import { TravelCountryRatesSection } from '@/components/dashboard/cab/travelPolicy/TravelCountryRatesSection'
 import { TravelPricingProvidersSection } from '@/components/dashboard/cab/travelPolicy/TravelPricingProvidersSection'
 import { TravelPolicyRulesSection } from '@/components/dashboard/cab/travelPolicy/TravelPolicyRulesSection'
@@ -13,13 +10,16 @@ import { TravelRailRoutesSection } from '@/components/dashboard/cab/travelPolicy
 import { AppIcon, CorrectiveActionIcon } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
-import { TRAVEL_CITIES_MOCK, TRAVEL_POLICY_MOCK } from '@/lib/api/travelPolicyMockData'
+import { TRAVEL_POLICY_MOCK } from '@/lib/api/travelPolicyMockData'
+import { getTravelPolicy, saveTravelPolicy } from '@/lib/api/cabTravelPolicyApi'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 import { toast } from '@/lib/toast'
-import { fetchAllTravelCityOptions } from '@/lib/travelCities'
+import { useTravelCityOptions } from '@/lib/useTravelCityOptions'
 import {
   countSampleRows,
   fieldIdForError,
   formatPolicyTimestamp,
+  draftToInput,
   policyToDraft,
   serializeDraft,
   validateDraft,
@@ -42,30 +42,32 @@ export function CabTravelPolicyPage() {
   const [baseline, setBaseline] = useState(() => serializeDraft(draft))
   const [savedAt, setSavedAt] = useState<string | null>(null)
   const [showErrors, setShowErrors] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [saving, setSaving] = useState(false)
+
+  // Show what the CAB saved; sample values only until it saves a policy.
+  useEffect(() => {
+    let active = true
+    getTravelPolicy()
+      .then((policy) => {
+        if (!active || !policy) return
+        const saved = policyToDraft(policy)
+        setDraft(saved)
+        setBaseline(serializeDraft(saved))
+      })
+      .catch((error) => active && toast.error(getUserErrorMessage(error, t)))
+      .finally(() => active && setLoaded(true))
+    return () => {
+      active = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
+  }, [])
 
   const errors = useMemo(() => validateDraft(draft), [draft])
   const dirty = serializeDraft(draft) !== baseline
   const sampleCount = countSampleRows(draft)
 
-  // Curated cities first (with Arabic names), then every other city once the dataset has loaded.
-  const [moreCities, setMoreCities] = useState<TravelCityOption[]>([])
-  useEffect(() => {
-    let active = true
-    fetchAllTravelCityOptions(TRAVEL_CITIES_MOCK).then((options) => active && setMoreCities(options))
-    return () => {
-      active = false
-    }
-  }, [])
-  const cityOptions: TravelCityOption[] = useMemo(
-    () => [
-      ...TRAVEL_CITIES_MOCK.map((city) => ({
-        value: city.key,
-        label: `${isArabic ? city.nameAr : city.name} (${city.country})`,
-      })),
-      ...moreCities,
-    ],
-    [isArabic, moreCities]
-  )
+  const cityOptions = useTravelCityOptions(isArabic)
 
   const getError = (key: string) => {
     const code = errors[key]
@@ -74,7 +76,7 @@ export function CabTravelPolicyPage() {
 
   const patchDraft = (patch: Partial<TravelPolicyDraft>) => setDraft((current) => ({ ...current, ...patch }))
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const errorKeys = Object.keys(errors)
     if (errorKeys.length > 0) {
       setShowErrors(true)
@@ -83,15 +85,22 @@ export function CabTravelPolicyPage() {
       return
     }
 
-    // TODO: send `draftToInput(draft)` to the API once the travel policy endpoint exists.
-    setBaseline(serializeDraft(draft))
-    setSavedAt(new Date().toISOString())
-    setShowErrors(false)
-    toast.success(t('cab.travelPolicy.saved'))
+    setSaving(true)
+    try {
+      const saved = await saveTravelPolicy(draftToInput(draft))
+      setBaseline(serializeDraft(draft))
+      setSavedAt(saved.updatedAt ?? new Date().toISOString())
+      setShowErrors(false)
+      toast.success(t('cab.travelPolicy.saved'))
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
+    } finally {
+      setSaving(false)
+    }
   }
 
   const saveButton = (
-    <Button type="button" onClick={handleSave} disabled={!dirty}>
+    <Button type="button" onClick={handleSave} disabled={!dirty || saving}>
       {t('cab.travelPolicy.save')}
     </Button>
   )
@@ -100,6 +109,8 @@ export function CabTravelPolicyPage() {
     <CabLayout>
       <CabHeader title={t('cab.travelPolicy.title')} />
       <main className="cab-setup flex flex-1 flex-col gap-6 overflow-auto bg-[var(--cab-canvas)] p-6">
+        {loaded && (
+        <>
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
             <h1 className="text-[24px] font-bold text-[var(--cab-ink)]">{t('cab.travelPolicy.title')}</h1>
@@ -123,7 +134,7 @@ export function CabTravelPolicyPage() {
           </p>
         )}
 
-        <TravelPricingProvidersSection />
+        <TravelPricingProvidersSection currency={draft.currency} />
         <TravelPolicyRulesSection
           draft={draft}
           getError={getError}
@@ -152,6 +163,8 @@ export function CabTravelPolicyPage() {
           />
         </div>
         <div className="flex justify-end">{saveButton}</div>
+        </>
+        )}
       </main>
     </CabLayout>
   )

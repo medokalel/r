@@ -175,7 +175,7 @@ export function AgreementSectionCard({
           <div className="flex flex-wrap items-center gap-1.5 rounded-[10px] border border-[#e8edfc] bg-white px-3 py-2">
             <span className="me-1 text-[11px] font-bold text-neutral-500">{isAr ? 'إدراج سريع:' : 'Quick insert:'}</span>
             {AGREEMENT_VARIABLES.slice(0, 6).map((v) => (
-              <button key={v.key} type="button" onClick={() => onInsertVariable(v)} className="rounded-[6px] bg-[#f4f7ff] px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary hover:text-white">
+              <button key={v.key} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => onInsertVariable(v)} className="rounded-[6px] bg-[#f4f7ff] px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary hover:text-white">
                 + {isAr ? v.labelAr : v.labelEn}
               </button>
             ))}

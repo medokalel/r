@@ -50,6 +50,21 @@ export interface TravelNotes {
   details: string
 }
 
+/** The travel cost estimate saved with a plan: the inputs it was worked out from and the result. */
+export interface AuditTravelEstimate {
+  mode: 'ON_SITE' | 'HYBRID' | 'REMOTE'
+  firstDay: string
+  lastDay: string
+  sites: { name: string; address: string; cityKey: string; onsite: boolean }[]
+  /** `baseKey` is empty when the auditor travels from the CAB's office city. */
+  team: { name: string; baseKey: string }[]
+  currency: string
+  total: number
+  lines: { key: string; amount: number }[]
+  bySite: { name: string; total: number }[]
+  savedAt: string
+}
+
 export interface TeamDeclarations {
   availabilityConfirmed: boolean
   noConflictsDeclared: boolean
@@ -197,6 +212,7 @@ export interface AuditPlan {
   siteAllocation: SiteAllocation
   remoteActivities: RemoteActivities
   travelNotes: TravelNotes
+  travelEstimate?: AuditTravelEstimate
   teamDeclarations: TeamDeclarations
   /** Plan history: lifecycle steps, team confirmation, exception requests. */
   events?: AuditPlanEvent[]

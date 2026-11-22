@@ -1,3 +1,5 @@
+import { authorizedRequest } from '@/lib/api/authorizedClient'
+
 export type AuditPlanGateMode = 'block' | 'warn'
 
 export interface AgreementSection {
@@ -138,32 +140,6 @@ export const VARIABLE_PRESETS: Record<string, Record<string, string>> = {
     '{{client_signatory}}': 'Sara Ali — Quality Manager',
     '{{المفوض_بالتوقيع}}': 'سارة علي — مديرة الجودة',
   },
-  gulfHorizon: {
-    '{{agreement_number}}': 'AGR-2026-0105',
-    '{{رقم_الاتفاقية}}': 'AGR-2026-0105',
-    '{{agreement_version}}': 'v1.0',
-    '{{إصدار_الاتفاقية}}': '1.0',
-    '{{agreement_date}}': '04 Nov 2026',
-    '{{تاريخ_الاتفاقية}}': '04 نوفمبر 2026',
-    '{{cab_legal_name}}': 'iCASCO Certification Body Co.',
-    '{{اسم_جهة_المنح}}': 'شركة أي كاسكو لمنح الشهادات',
-    '{{client_legal_name}}': 'Gulf Horizon Logistics',
-    '{{اسم_العميل}}': 'شركة آفاق الخليج للخدمات اللوجستية',
-    '{{client_cr_number}}': '1010482910',
-    '{{السجل_التجاري}}': '1010482910',
-    '{{client_city}}': 'Riyadh',
-    '{{مدينة_العميل}}': 'الرياض',
-    '{{standards}}': 'ISO 9001:2015, ISO 14001:2015, ISO 45001:2018',
-    '{{المواصفات_القياسية}}': 'ISO 9001:2015، ISO 14001:2015، ISO 45001:2018',
-    '{{certification_scope}}': 'Transport & Storage Services',
-    '{{نطاق_الشهادة}}': 'خدمات النقل والتخزين والإمداد',
-    '{{sites_count}}': '4',
-    '{{عدد_المواقع}}': '4',
-    '{{total_fee}}': '1,744,719 SAR',
-    '{{إجمالي_الرسوم}}': '1,744,719 ر.س',
-    '{{client_signatory}}': 'Fahad Al-Mutairi — HSE Director',
-    '{{المفوض_بالتوقيع}}': 'فهد المطيري — مدير السلامة والجودة',
-  },
 }
 
 export const DEFAULT_AGREEMENT_SECTIONS: AgreementSection[] = [
@@ -295,50 +271,82 @@ export const DEFAULT_AGREEMENT_SECTIONS: AgreementSection[] = [
   },
 ]
 
-const STORAGE_KEY = 'icasco_cab_agreement_terms_v2'
-
-const DEFAULT_STATE: AgreementTermsState = {
+/** What the page shows until the CAB saves its own version: the default clauses, version 1. */
+export const DEFAULT_AGREEMENT_TERMS: AgreementTermsState = {
   version: 1,
-  savedBy: 'Mohamed El Manawahly',
-  savedAt: '04 Nov 2026 · 15:38',
+  savedBy: '',
+  savedAt: '',
   auditPlanGate: 'block',
   sections: DEFAULT_AGREEMENT_SECTIONS,
 }
 
-export function getAgreementTermsState(): AgreementTermsState {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return DEFAULT_STATE
-    const parsed = JSON.parse(raw)
-    if (parsed && Array.isArray(parsed.sections)) return parsed
-    return DEFAULT_STATE
-  } catch {
-    return DEFAULT_STATE
+/** Preview values for one registered audit client: its own data over the sample values for everything else. */
+export function buildClientPreset(
+  client: { name: string; city?: string | null; ownerName?: string | null },
+  profile?: { commercialRegisterNumber?: string | null; authorizedPersonName?: string | null; city?: string | null } | null,
+): Record<string, string> {
+  const name = client.name
+  const city = profile?.city || client.city || ''
+  const signatory = profile?.authorizedPersonName || client.ownerName || ''
+  const cr = profile?.commercialRegisterNumber || ''
+  const own: Record<string, string> = {
+    '{{client_legal_name}}': name,
+    '{{اسم_العميل}}': name,
+    '{{client_city}}': city,
+    '{{مدينة_العميل}}': city,
+    '{{client_cr_number}}': cr,
+    '{{السجل_التجاري}}': cr,
+    '{{client_signatory}}': signatory,
+    '{{المفوض_بالتوقيع}}': signatory,
   }
-}
-
-export function saveAgreementTermsState(
-  state: AgreementTermsState,
-): AgreementTermsState {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-  } catch {
-    // Ignore storage errors
-  }
-  return state
-}
-
-export function restoreDefaultAgreementTerms(): AgreementTermsState {
-  return saveAgreementTermsState(DEFAULT_STATE)
+  // Only override the sample when the client actually has a value.
+  return { ...VARIABLE_PRESETS.sample, ...Object.fromEntries(Object.entries(own).filter(([, value]) => value)) }
 }
 
 export function interpolateAgreementText(
   text: string,
   presetKey: string,
+  presets: Record<string, Record<string, string>> = VARIABLE_PRESETS,
 ): string {
-  const map = VARIABLE_PRESETS[presetKey] ?? VARIABLE_PRESETS.sample
+  const map = presets[presetKey] ?? VARIABLE_PRESETS.sample
   return Object.entries(map).reduce(
     (acc, [token, val]) => acc.split(token).join(val),
     text,
   )
+}
+
+// --- Backend (GET/PUT /cab/agreement-terms) ---
+
+interface AgreementTermsDto {
+  auditPlanGate: AuditPlanGateMode
+  version: number
+  sections: AgreementSection[]
+  savedBy: string | null
+  savedAt: string
+}
+
+function fromDto(dto: AgreementTermsDto): AgreementTermsState {
+  const savedAt = new Date(dto.savedAt)
+  return {
+    version: dto.version,
+    savedBy: dto.savedBy ?? '',
+    savedAt: `${savedAt.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })} · ${savedAt.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`,
+    auditPlanGate: dto.auditPlanGate,
+    sections: dto.sections,
+  }
+}
+
+/** The CAB's saved terms, or null when it has not saved any yet. */
+export async function fetchAgreementTerms(): Promise<AgreementTermsState | null> {
+  const dto = await authorizedRequest<AgreementTermsDto | null>('/cab/agreement-terms')
+  return dto ? fromDto(dto) : null
+}
+
+/** Saves the whole template; the backend bumps the version and records who saved it. */
+export async function persistAgreementTerms(state: AgreementTermsState): Promise<AgreementTermsState> {
+  const dto = await authorizedRequest<AgreementTermsDto>('/cab/agreement-terms', {
+    method: 'PUT',
+    body: JSON.stringify({ auditPlanGate: state.auditPlanGate, sections: state.sections }),
+  })
+  return fromDto(dto)
 }

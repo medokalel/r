@@ -6,6 +6,7 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { ApplicationSummaryCard } from '@/components/dashboard/cab/ApplicationSummaryCard'
 import { WorkflowProgressCard } from '@/components/dashboard/cab/WorkflowProgressCard'
 import { buildCabWorkflowSteps } from '@/lib/workflowSteps'
+import { TravelEstimatePanel } from '@/components/dashboard/cab/travelPolicy/TravelEstimatePanel'
 import { ApplicationPicker } from '@/components/dashboard/cab/ApplicationPicker'
 import { QuotationStatusBadge, QuotationView } from '@/components/dashboard/cab/QuotationView'
 import { AppIcon, DownloadIcon } from '@/components/icons'
@@ -236,6 +237,15 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
         )}
         {step === 3 && (
           <div className="space-y-6">
+            <TravelEstimatePanel
+              auditors={auditors.length + experts.length}
+              auditDays={3}
+              daysEditable
+              siteHints={[application.legalInfo?.city ?? ''].filter(Boolean)}
+              siteCountry={application.legalInfo?.country}
+              applyCurrency={pricing?.currency}
+              onApply={(amount) => setTravel(String(amount))}
+            />
             <TextField id="quotation-travel" label={`${t('cab.quotationEditor.travelExpenses')} (${pricing?.currency ?? ''})`} type="number" min="0" step="0.01" required value={travel} onChange={(event) => setTravel(event.target.value)} />
             <div className="space-y-4">
               <h2 className="text-[16px] font-bold text-primary">{t('cab.quotationEditor.additionalCosts')}</h2>

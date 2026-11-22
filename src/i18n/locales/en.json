@@ -7426,6 +7426,82 @@
       "technicalExperts": "Technical experts",
       "dateOrderError": "The audit end date must be on or after the start date."
     },
+    "travelCosts": {
+      "title": "Travel costs (estimate)",
+      "shownBecause": "Shown because the audit has on-site work at {{sites}}.",
+      "remoteOnly": "This audit is remote, so no travel cost applies.",
+      "heading": "Travel and logistics costs",
+      "intro": "Estimate the travel of this audit from your travel policy, then save the estimate with the plan.",
+      "sampleRates": "Sample rates still to confirm in the travel policy: {{count}}.",
+      "auditMode": "Audit mode",
+      "mode": {
+        "ON_SITE": "On site",
+        "HYBRID": "Hybrid",
+        "REMOTE": "Remote"
+      },
+      "firstDay": "First audit day",
+      "lastDay": "Last audit day",
+      "endBeforeStart": "The last audit day must be on or after the first.",
+      "sitesToVisit": "Sites to visit",
+      "site": "Site",
+      "city": "City",
+      "findInAddress": "Find the city in the address",
+      "locatedIn": "Located in {{city}} (city table)",
+      "notLocated": "City not found yet. Choose it from the list.",
+      "addSite": "Add site",
+      "onsite": "On site",
+      "remove": "Remove",
+      "team": "Audit team",
+      "auditor": "Auditor",
+      "travelsFrom": "Travels from",
+      "baseFromProfile": "Base from the employee profile",
+      "addAuditor": "Add auditor",
+      "calculate": "Calculate",
+      "saveEstimate": "Save estimate",
+      "saved": "Travel estimate saved with the plan.",
+      "savedAt": "Saved {{date}}",
+      "needSite": "Add a site with on-site work first.",
+      "needTeam": "Add at least one auditor first.",
+      "needCity": "Choose the city of {{site}}.",
+      "needBase": "Choose where {{name}} travels from.",
+      "daysSummary": "{{count}} audit days",
+      "noCost": "No travel cost for this audit.",
+      "bySite": "{{site}}"
+    },
+    "travelEstimate": {
+      "title": "Estimate from your travel policy",
+      "hint": "Worked out from the travel policy you saved: per-country rates, transport rules, per diem, visa and contingency.",
+      "from": "Auditors travel from",
+      "to": "Audit site city",
+      "selectCity": "Select a city",
+      "days": "Audit days on site",
+      "noTeam": "Select the audit team first to estimate the travel cost.",
+      "pickCities": "Choose both cities to see the estimate.",
+      "summary": "{{mode}} · {{km}} km · about {{hours}} h one way · {{nights}} hotel nights · {{count}} travelling",
+      "total": "Estimated travel total",
+      "use": "Use this estimate",
+      "converted": "About {{amount}} at today's rate (1 policy unit = {{rate}})",
+      "noRate": "Could not get today's {{from}} to {{to}} rate, so this estimate cannot be applied automatically.",
+      "noPolicy": "No travel policy has been saved yet. Save one to get automatic travel estimates.",
+      "loadError": "The travel policy could not be loaded.",
+      "openPolicy": "Open Travel policy",
+      "mode": {
+        "local": "Local, no trip",
+        "train": "Train",
+        "drive": "Drive",
+        "flight": "Flight"
+      },
+      "lines": {
+        "transport": "Transport",
+        "airportTransfers": "Airport transfers",
+        "localTransport": "Local transport",
+        "accommodation": "Hotel",
+        "perDiem": "Per diem",
+        "visa": "Visa",
+        "contingency": "Contingency",
+        "insurance": "Travel insurance"
+      }
+    },
     "travelPolicy": {
       "title": "Travel policy",
       "subtitle": "The rules and rates the travel cost calculator uses when no live price is available.",
@@ -7437,6 +7513,18 @@
       "providers": {
         "title": "Pricing providers",
         "check": "Check connection",
+        "service": {
+          "name": "Travel policy service",
+          "detail": "Your saved travel policy · loads and saves in the platform database."
+        },
+        "result": {
+          "working": "Working",
+          "failed": "Not working: the check failed. Try again or contact support.",
+          "notConnected": "Not connected: no live API yet, so demo or benchmark values are used.",
+          "local": "calculated locally from city coordinates"
+        },
+        "allWorking": "All connected: every API is working.",
+        "someFailed": "Not working: {{names}}.",
         "intro": "Live prices need a connected provider. Without one, every price is a labelled benchmark from this policy.",
         "phase2": "Phase 2: provider integration (flight, hotel and FX APIs) and the CAB's own confirmed rates. Until then, estimates use the configurable sample rates of this policy.",
         "flights": {
@@ -7457,13 +7545,15 @@
         },
         "fx": {
           "name": "Exchange rates",
-          "detail": "Official USD peg · No provider: the benchmark rates of this policy are used."
+          "detail": "Official USD peg · No provider: the benchmark rates of this policy are used.",
+          "liveDetail": "open.er-api.com · 1 USD = {{rate}} {{currency}} on {{date}} · daily rate, not a market quote"
         },
         "distances": {
           "name": "Distances",
           "detail": "Great-circle distance · Connected: used to estimate, not a market price."
         },
         "status": {
+          "failed": "Not working",
           "demo": "Demo data",
           "benchmark": "Benchmark only",
           "connected": "Connected"
@@ -8251,6 +8341,8 @@
       "variables": {
         "title": "Variables",
         "subtitle": "Click a variable to insert it where your cursor is. Each agreement fills it with the client's value.",
+        "selectClient": "Select a client",
+        "noClients": "No registered clients yet",
         "fillWith": "Fill the variables with",
         "sampleValues": "Sample values",
         "showPreview": "Show preview",

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -21,14 +21,20 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
 import {
   AGREEMENT_VARIABLES,
-  getAgreementTermsState,
-  saveAgreementTermsState,
+  VARIABLE_PRESETS,
+  buildClientPreset,
+  DEFAULT_AGREEMENT_TERMS,
+  fetchAgreementTerms,
+  persistAgreementTerms,
   type AgreementSection,
   type AgreementTermsState,
   type AgreementVariable,
   type AuditPlanGateMode,
 } from '@/lib/api/cabAgreementTermsApi'
+import { getCabClientProfile, listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
+import { getUserErrorMessage } from '@/lib/errorMessages'
 import { ROUTES } from '@/lib/routes'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 function Chevron() {
@@ -43,15 +49,78 @@ export function CabAgreementTermsPage() {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language?.startsWith('ar')
 
-  const [state, setState] = useState<AgreementTermsState>(() => getAgreementTermsState())
+  const [state, setState] = useState<AgreementTermsState>(DEFAULT_AGREEMENT_TERMS)
   const [expandedId, setExpandedId] = useState<string | null>(state.sections[0]?.id ?? null)
   const [activeField, setActiveField] = useState<{ sectionId: string | 'new'; field: EditableFieldKey } | null>(null)
   const [isAddingNew, setIsAddingNew] = useState(false)
   const [newDraft, setNewDraft] = useState<Omit<AgreementSection, 'id'>>({ titleEn: '', titleAr: '', textEn: '', textAr: '' })
-  const [presetKey, setPresetKey] = useState('sample')
+  const [presetKey, setPresetKey] = useState('')
+  const [clients, setClients] = useState<CabAuditClientListItem[]>([])
+  const [clientPresets, setClientPresets] = useState<Record<string, Record<string, string>>>({})
   const [showPreview, setShowPreview] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
   const [justSaved, setJustSaved] = useState(false)
+  const [loaded, setLoaded] = useState(false)
+  const [saving, setSaving] = useState(false)
+  // false until the backend has a saved version, so the first Save persists even with no edits.
+  const [persisted, setPersisted] = useState(false)
+
+  // Show what the CAB saved; the default text until it saves its own version.
+  useEffect(() => {
+    let active = true
+    fetchAgreementTerms()
+      .then((saved) => {
+        if (!active || !saved) return
+        setState(saved)
+        setExpandedId(saved.sections[0]?.id ?? null)
+        setPersisted(true)
+      })
+      .catch((error) => active && toast.error(getUserErrorMessage(error, t)))
+      .finally(() => active && setLoaded(true))
+    return () => {
+      active = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
+  }, [])
+
+  // Every registered audit client of this CAB can fill the preview.
+  useEffect(() => {
+    let active = true
+    listAllCabAuditClients()
+      .then((items) => active && setClients(items))
+      .catch(() => undefined) // the preview still works with the sample values
+    return () => {
+      active = false
+    }
+  }, [])
+
+  const presetOptions = useMemo(
+    () =>
+      clients.map((client) => ({
+        value: client.id,
+        label: `${client.name || client.tradeName || client.id}${client.city ? ` · ${client.city}` : ''}`,
+      })),
+    [clients]
+  )
+
+  const presets = useMemo(() => ({ ...VARIABLE_PRESETS, ...clientPresets }), [clientPresets])
+
+  /** Picking a client shows its list data at once, then adds its commercial registration and signatory from its profile. */
+  const handlePresetChange = (key: string) => {
+    setPresetKey(key)
+    const client = clients.find((item) => item.id === key)
+    if (!client) return
+    const base = { name: client.name || client.tradeName || '', city: client.city, ownerName: client.owner?.fullName }
+    setClientPresets((prev) => ({ ...prev, [key]: buildClientPreset(base) }))
+    getCabClientProfile(key)
+      .then((profile) =>
+        setClientPresets((prev) => ({
+          ...prev,
+          [key]: buildClientPreset(base, { ...profile.profile, city: profile.address?.city }),
+        }))
+      )
+      .catch(() => undefined) // keep the list data
+  }
 
   const handleGateChange = (gate: AuditPlanGateMode) => {
     setState((prev) => ({ ...prev, auditPlanGate: gate }))
@@ -112,13 +181,24 @@ export function CabAgreementTermsPage() {
     setJustSaved(false)
   }
 
+  /** Puts the token at the caret of the field being edited (the chips keep focus); appends when no field is focused. */
+  const withToken = (current: string, token: string) => {
+    const el = document.activeElement
+    if ((el instanceof HTMLInputElement || el instanceof HTMLTextAreaElement) && el.value === current) {
+      const start = el.selectionStart ?? current.length
+      const end = el.selectionEnd ?? start
+      requestAnimationFrame(() => el.setSelectionRange(start + token.length, start + token.length))
+      return `${current.slice(0, start)}${token}${current.slice(end)}`
+    }
+    return `${current}${current && !current.endsWith(' ') ? ' ' : ''}${token}`
+  }
+
   const handleInsertVariable = (variable: AgreementVariable) => {
     if (isAddingNew || activeField?.sectionId === 'new') {
       const targetField: EditableFieldKey = activeField?.sectionId === 'new' ? activeField.field : isAr ? 'textAr' : 'textEn'
       const token = targetField === 'titleAr' || targetField === 'textAr' ? variable.tokenAr : variable.tokenEn
       setNewDraft((prev) => {
-        const current = prev[targetField]
-        return { ...prev, [targetField]: `${current}${current && !current.endsWith(' ') ? ' ' : ''}${token}` }
+        return { ...prev, [targetField]: withToken(prev[targetField], token) }
       })
       return
     }
@@ -131,41 +211,50 @@ export function CabAgreementTermsPage() {
       ...prev,
       sections: prev.sections.map((sec) => {
         if (sec.id !== targetSectionId) return sec
-        const current = sec[targetField]
-        return { ...sec, [targetField]: `${current}${current && !current.endsWith(' ') ? ' ' : ''}${token}` }
+        return { ...sec, [targetField]: withToken(sec[targetField], token) }
       }),
     }))
     setIsDirty(true)
     setJustSaved(false)
   }
 
-  const handleSave = () => {
-    const now = new Date()
-    const formattedDate = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
-    const formattedTime = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-    const nextState: AgreementTermsState = {
-      ...state,
-      version: isDirty ? state.version + 1 : state.version,
-      savedBy: 'Mohamed El Manawahly',
-      savedAt: `${formattedDate} · ${formattedTime}`,
+  const handleSave = async () => {
+    if (!isDirty && persisted) {
+      setJustSaved(true)
+      return
     }
-    saveAgreementTermsState(nextState)
-    setState(nextState)
-    setIsDirty(false)
-    setJustSaved(true)
+    setSaving(true)
+    try {
+      setState(await persistAgreementTerms(state))
+      setPersisted(true)
+      setIsDirty(false)
+      setJustSaved(true)
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
+    } finally {
+      setSaving(false)
+    }
   }
 
   const kpiCards = [
     { icon: ShieldIcon, iconClass: 'bg-[#e8edfc] text-primary', label: isAr ? 'المرجع القياسي' : 'Standard compliance', value: 'ISO/IEC 17021-1 (5.1.2)', ltr: true },
     { icon: TaskSquareIcon, iconClass: 'bg-[#e8edfc] text-primary', label: t('cab.agreementTerms.sectionsTitle', 'Sections'), value: `${state.sections.length} ${isAr ? 'بنداً ثنائي اللغة' : 'bilingual clauses'}` },
     { icon: FileTextIcon, iconClass: 'bg-[#e8edfc] text-primary', label: t('cab.agreementTerms.variables.title', 'Variables'), value: `${AGREEMENT_VARIABLES.length} ${isAr ? 'متغيراً تلقائياً' : 'auto-filled fields'}` },
-    { icon: SuccessCircleIcon, iconClass: 'bg-[#eafaf1] text-[#16a34a]', label: isAr ? 'الإصدار الحالي' : 'Active version', value: `${isAr ? `الإصدار ${state.version}` : `Version ${state.version}`} (${state.savedAt})` },
+    { icon: SuccessCircleIcon, iconClass: 'bg-[#eafaf1] text-[#16a34a]', label: isAr ? 'الإصدار الحالي' : 'Active version', value: `${isAr ? `الإصدار ${state.version}` : `Version ${state.version}`}${state.savedAt ? ` (${state.savedAt})` : isAr ? ' (النص الافتراضي)' : ' (default text)'}` },
   ]
 
   const gateOptions = [
     { mode: 'block' as const, title: t('cab.agreementTerms.gate.blockTitle', 'Block (recommended)'), badge: isAr ? 'موصى به' : 'Recommended', desc: t('cab.agreementTerms.gate.blockDesc', 'The plan cannot be sent until the agreement is active.') },
     { mode: 'warn' as const, title: t('cab.agreementTerms.gate.warnTitle', 'Warn'), badge: isAr ? 'مرن' : 'Flexible', desc: t('cab.agreementTerms.gate.warnDesc', 'The plan is sent and a warning is shown.') },
   ]
+
+  if (!loaded) {
+    return (
+      <CabLayout>
+        <CabHeader title={t('cab.agreementTerms.title', 'Agreement terms')} />
+      </CabLayout>
+    )
+  }
 
   return (
     <CabLayout>
@@ -185,7 +274,7 @@ export function CabAgreementTermsPage() {
             <h1 className="text-[28px] font-bold leading-tight text-neutral-900">{t('cab.agreementTerms.title', 'Agreement terms')}</h1>
             <p className="mt-1 text-[14px] text-neutral-500">{t('cab.agreementTerms.subtitle', 'The certification agreement your clients sign: bilingual sections with variables, filled for each client.')}</p>
           </div>
-          <Button type="button" variant="primary" onClick={handleSave} icon={justSaved ? <AppIcon icon={CheckIcon} size={18} /> : undefined} className="h-11 rounded-[10px] px-5 text-[14px]">
+          <Button type="button" variant="primary" onClick={() => void handleSave()} disabled={saving} icon={justSaved ? <AppIcon icon={CheckIcon} size={18} /> : undefined} className="h-11 rounded-[10px] px-5 text-[14px]">
             {justSaved ? t('cab.agreementTerms.saved', 'Saved') : t('cab.agreementTerms.save', 'Save')}
           </Button>
         </div>
@@ -280,7 +369,9 @@ export function CabAgreementTermsPage() {
           <div className="xl:col-span-4">
             <AgreementVariablesPanel
               presetKey={presetKey}
-              onPresetChange={setPresetKey}
+              presetOptions={presetOptions}
+              presets={presets}
+              onPresetChange={handlePresetChange}
               showPreview={showPreview}
               onTogglePreview={() => setShowPreview((p) => !p)}
               onInsertVariable={handleInsertVariable}

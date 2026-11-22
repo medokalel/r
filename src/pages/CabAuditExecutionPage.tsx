@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -32,7 +32,6 @@ import {
   ExecutionReportStep,
 } from '@/components/cab/auditPlanning/ExecutionMeetingReportSteps'
 import { ROUTES } from '@/lib/routes'
-import { cn } from '@/lib/utils'
 
 type ExecutionStep = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -60,7 +59,6 @@ function formatDisplayDate(iso: string) {
 export function CabAuditExecutionPage() {
   const { t } = useTranslation()
   const { planId } = useParams<{ planId: string }>()
-  const navigate = useNavigate()
 
   const [plan, setPlan] = useState<AuditPlan | null>(null)
   const [execution, setExecution] = useState<AuditExecutionData | null>(null)

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -18,22 +18,28 @@ import {
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
 import { CardFooterLink } from '@/components/ui/CardFooterLink'
+import { SearchableSelect } from '@/components/ui/SearchableSelect'
 import { SelectField } from '@/components/ui/Select'
 import { AgreementStatusBadge } from '@/components/dashboard/cab/agreements/AgreementStatusBadge'
 import {
-  ELIGIBLE_CLIENT_OFFERS,
   generateCertificationAgreement,
   listCertificationAgreements,
   type CertificationAgreement,
   type CertificationAgreementStatus,
 } from '@/lib/api/cabCertificationAgreementsApi'
+<<<<<<< HEAD
 import {
   AGREEMENT_STATUSES,
   getAgreementKindLabel,
   getAgreementNextStepLabel,
   getAgreementStatusLabel,
 } from '@/lib/agreementStatus'
+=======
+import { listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
+import { getUserErrorMessage } from '@/lib/errorMessages'
+>>>>>>> origin/main
 import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
+import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
 function Chevron() {
@@ -49,12 +55,30 @@ export function CabCertificationAgreementsPage() {
   const navigate = useNavigate()
   const isAr = Boolean(i18n.language?.startsWith('ar'))
 
-  const [agreements, setAgreements] = useState<CertificationAgreement[]>(() => listCertificationAgreements())
+  const [agreements, setAgreements] = useState<CertificationAgreement[]>([])
+  const [loading, setLoading] = useState(true)
+  const [generating, setGenerating] = useState(false)
+  const [clients, setClients] = useState<CabAuditClientListItem[]>([])
+  const [selectedClientId, setSelectedClientId] = useState('')
+
+  useEffect(() => {
+    let active = true
+    listCertificationAgreements()
+      .then((items) => active && setAgreements(items))
+      .catch((error) => active && toast.error(getUserErrorMessage(error, t)))
+      .finally(() => active && setLoading(false))
+    listAllCabAuditClients()
+      .then((items) => active && setClients(items))
+      .catch(() => undefined) // the generator then has no clients to choose from
+    return () => {
+      active = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- load once on mount
+  }, [])
   const [viewMode, setViewMode] = useState<'list' | 'pipeline'>('list')
   const [search, setSearch] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('all')
   const [showGenerator, setShowGenerator] = useState(false)
-  const [selectedClientId, setSelectedClientId] = useState(ELIGIBLE_CLIENT_OFFERS[0]?.clientId ?? '')
 
   const counts = useMemo(
     () => ({
@@ -85,12 +109,18 @@ export function CabCertificationAgreementsPage() {
 
   const getNextStepLabel = (status: CertificationAgreementStatus) => getAgreementNextStepLabel(status, isAr)
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     if (!selectedClientId) return
-    const created = generateCertificationAgreement(selectedClientId)
-    setAgreements(listCertificationAgreements())
-    setShowGenerator(false)
-    navigate(cabCertificationAgreementDetailsPath(created.id))
+    setGenerating(true)
+    try {
+      const created = await generateCertificationAgreement(selectedClientId)
+      setShowGenerator(false)
+      navigate(cabCertificationAgreementDetailsPath(created.id))
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
+    } finally {
+      setGenerating(false)
+    }
   }
 
   const hasActiveFilters = search.trim() !== '' || statusFilter !== 'all'
@@ -99,7 +129,10 @@ export function CabCertificationAgreementsPage() {
     setStatusFilter('all')
   }
 
-  const selectedOfferPreview = useMemo(() => ELIGIBLE_CLIENT_OFFERS.find((c) => c.clientId === selectedClientId), [selectedClientId])
+  const clientOptions = useMemo(
+    () => clients.map((c) => ({ value: c.id, label: `${c.name || c.tradeName || c.id}${c.city ? ` · ${c.city}` : ''}` })),
+    [clients],
+  )
 
   const kpiCards = [
     { key: 'draft' as const, label: isAr ? 'مسودات للإرسال' : 'Drafts to send', sub: isAr ? 'جاهزة للمراجعة والإرسال' : 'Ready to review and send', count: counts.draft, icon: FileTextIcon, iconBg: 'bg-[#dbeafe]', iconColor: 'text-[#1447e6]' },
@@ -140,34 +173,22 @@ export function CabCertificationAgreementsPage() {
           <section className="rounded-[16px] border-2 border-primary bg-[#f8faff] p-5 shadow-sm">
             <div className="border-b border-[#dbe6ff] pb-3.5">
               <h2 className="text-[16px] font-bold text-neutral-900">{isAr ? 'إنشاء مسودة اتفاقية منح شهادة' : 'Generate certification agreement'}</h2>
-              <p className="mt-1 text-[13px] text-neutral-500">{isAr ? 'تُبنى المسودة تلقائياً باستخدام قالب شروط الاتفاقية المعتمد وآخر عرض سعر مقبول للعميل، ويمكنك تعديلها قبل الإرسال.' : "The draft uses your agreement terms and the client's latest accepted offer. You can edit it before sending."}</p>
+              <p className="mt-1 text-[13px] text-neutral-500">{isAr ? 'تُبنى المسودة من قالب شروط الاتفاقية وبيانات العميل المسجل (ملفه وآخر طلب وعرض سعر)، ويمكنك تعديلها قبل الإرسال.' : "The draft uses your agreement terms and the registered client's own records (profile, latest application and quotation). You can edit it before sending."}</p>
             </div>
             <div className="mt-4 grid grid-cols-1 items-end gap-4 lg:grid-cols-12">
-              <div className="space-y-1.5 lg:col-span-5">
+              <div className="space-y-1.5 lg:col-span-10">
                 <label className="block text-[13px] font-semibold text-neutral-800">{isAr ? 'العميل' : 'Client'}</label>
-                <SelectField value={selectedClientId} onChange={setSelectedClientId} className="h-11 bg-white" options={ELIGIBLE_CLIENT_OFFERS.map((c) => ({ value: c.clientId, label: `${isAr ? c.clientLegalNameAr : c.clientLegalNameEn} (${c.offerRef})` }))} />
+                <SearchableSelect
+                  value={selectedClientId}
+                  onChange={setSelectedClientId}
+                  options={clientOptions}
+                  placeholder={clientOptions.length ? (isAr ? 'اختر عميلاً مسجلاً' : 'Select a registered client') : isAr ? 'لا يوجد عملاء مسجلون بعد' : 'No registered clients yet'}
+                  searchPlaceholder={t('common.search')}
+                />
               </div>
-              {selectedOfferPreview && (
-                <div className="flex flex-wrap items-center gap-4 rounded-[12px] border border-[#dbe6ff] bg-white px-4 py-2.5 lg:col-span-5">
-                  <div>
-                    <p className="text-[11px] text-neutral-400">{isAr ? 'العرض المقبول' : 'Accepted offer'}</p>
-                    <p className="text-[13px] font-bold text-neutral-900">{selectedOfferPreview.offerRef}</p>
-                  </div>
-                  <div className="h-7 w-px bg-[#ececec]" />
-                  <div>
-                    <p className="text-[11px] text-neutral-400">{isAr ? 'إجمالي الرسوم' : 'Total fee'}</p>
-                    <p className="text-[13px] font-bold text-primary">{isAr ? selectedOfferPreview.totalFeeAr : selectedOfferPreview.totalFeeEn}</p>
-                  </div>
-                  <div className="h-7 w-px bg-[#ececec]" />
-                  <div>
-                    <p className="text-[11px] text-neutral-400">{isAr ? 'المواصفات' : 'Standards'}</p>
-                    <p className="text-[12px] font-semibold text-neutral-800">{selectedOfferPreview.standards.join(', ')}</p>
-                  </div>
-                </div>
-              )}
               <div className="flex items-center justify-end gap-2.5 lg:col-span-2">
                 <Button type="button" variant="outline" onClick={() => setShowGenerator(false)} className="h-11 rounded-[10px] px-4 text-[13px]">{isAr ? 'إلغاء' : 'Cancel'}</Button>
-                <Button type="button" variant="primary" onClick={handleGenerate} icon={<AppIcon icon={CheckIcon} size={17} />} className="h-11 rounded-[10px] px-5 text-[13px]">{isAr ? 'إنشاء' : 'Generate'}</Button>
+                <Button type="button" variant="primary" onClick={() => void handleGenerate()} disabled={generating || !selectedClientId} icon={<AppIcon icon={CheckIcon} size={17} />} className="h-11 rounded-[10px] px-5 text-[13px]">{isAr ? 'إنشاء' : 'Generate'}</Button>
               </div>
             </div>
           </section>
@@ -321,6 +342,7 @@ export function CabCertificationAgreementsPage() {
                     </tr>
                   ))}
                   {filteredAgreements.length === 0 && (
+<<<<<<< HEAD
                     <tr>
                       <td colSpan={7} className="px-4 py-10 text-center">
                         <p className="text-[14px] font-medium text-neutral-700">
@@ -333,6 +355,9 @@ export function CabCertificationAgreementsPage() {
                         )}
                       </td>
                     </tr>
+=======
+                    <tr><td colSpan={7} className="px-4 py-10 text-center text-[14px] text-neutral-400">{loading ? (isAr ? 'جارٍ التحميل…' : 'Loading…') : isAr ? 'لا توجد اتفاقيات مطابقة للبحث' : 'No agreements match your filter'}</td></tr>
+>>>>>>> origin/main
                   )}
                 </tbody>
               </table>

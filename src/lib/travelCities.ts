@@ -1,3 +1,7 @@
+import { TRAVEL_CITIES_MOCK } from '@/lib/api/travelPolicyMockData'
+import type { TravelPlace } from '@/lib/travelCostEstimate'
+import type { TravelCity } from '@/lib/travelPolicyTypes'
+
 export interface TravelCityOption {
   value: string
   label: string
@@ -23,4 +27,45 @@ export async function fetchAllTravelCityOptions(
     options.push({ value: key, label: `${city.name} (${city.countryCode})` })
   }
   return options.sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))
+}
+
+const toPlace = (city: { name: string; countryCode: string; stateCode: string; latitude?: string | null; longitude?: string | null }): TravelPlace => ({
+  key: `${city.countryCode}:${city.stateCode}:${city.name}`.toLowerCase(),
+  name: city.name,
+  country: city.countryCode,
+  latitude: Number(city.latitude),
+  longitude: Number(city.longitude),
+})
+
+const curatedPlace = (city: TravelCity): TravelPlace => ({
+  key: city.key,
+  name: city.name,
+  country: city.country,
+  latitude: city.latitude,
+  longitude: city.longitude,
+})
+
+/** A city with its country and coordinates, from a key the travel policy page uses (curated or `country:state:name`). */
+export async function resolveTravelCity(key: string): Promise<TravelPlace | null> {
+  const curated = TRAVEL_CITIES_MOCK.find((city) => city.key === key)
+  if (curated) return curatedPlace(curated)
+  const country = key.split(':')[0]?.toUpperCase()
+  if (!country) return null
+  const { City } = await import('country-state-city')
+  const found = City.getCitiesOfCountry(country)?.find((city) => toPlace(city).key === key)
+  return found ? toPlace(found) : null
+}
+
+/** First city called `name`, preferring the curated list; `country` (ISO code) narrows the dataset search. */
+export async function findTravelCityByName(name: string, country?: string): Promise<TravelPlace | null> {
+  const wanted = name.trim().toLowerCase()
+  if (!wanted) return null
+  const curated = TRAVEL_CITIES_MOCK.find(
+    (city) => (city.name.toLowerCase() === wanted || city.nameAr === name.trim()) && (!country || city.country === country.toUpperCase()),
+  )
+  if (curated) return curatedPlace(curated)
+  if (!country) return null
+  const { City } = await import('country-state-city')
+  const found = City.getCitiesOfCountry(country.toUpperCase())?.find((city) => city.name.toLowerCase() === wanted)
+  return found ? toPlace(found) : null
 }

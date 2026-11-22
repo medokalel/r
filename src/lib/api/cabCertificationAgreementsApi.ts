@@ -1,7 +1,5 @@
-import {
-  getAgreementTermsState,
-  type AgreementSection,
-} from '@/lib/api/cabAgreementTermsApi'
+import { authorizedRequest } from '@/lib/api/authorizedClient'
+import { DEFAULT_AGREEMENT_SECTIONS, type AgreementSection } from '@/lib/api/cabAgreementTermsApi'
 
 export type CertificationAgreementStatus =
   | 'draft'
@@ -94,6 +92,7 @@ export interface CertificationAgreement {
   events: AgreementEvent[]
 }
 
+<<<<<<< HEAD
 
 export interface EligibleClientOffer {
   clientId: string
@@ -414,27 +413,70 @@ export function listCertificationAgreements(): CertificationAgreement[] {
       : buildDefaultAgreements()
   } catch {
     return buildDefaultAgreements()
+=======
+// --- Backend (/cab/certification-agreements) ---
+
+interface SignatureDto extends Omit<AgreementSignRecord, 'signedAt'> {
+  signedAt: string
+}
+
+interface CertificationAgreementDto extends Omit<CertificationAgreement, 'lastChange' | 'clientSignature' | 'cabSignature'> {
+  lastChange: string
+  clientSignature?: SignatureDto
+  cabSignature?: SignatureDto
+}
+
+const formatDate = (iso: string) =>
+  new Date(iso).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+
+const formatDateTime = (iso: string) =>
+  `${formatDate(iso)} · ${new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
+
+function fromDto(dto: CertificationAgreementDto): CertificationAgreement {
+  const signature = (record?: SignatureDto): AgreementSignRecord | undefined =>
+    record ? { ...record, signedAt: formatDateTime(record.signedAt) } : undefined
+  return {
+    ...dto,
+    lastChange: formatDate(dto.lastChange),
+    clientSignature: signature(dto.clientSignature),
+    cabSignature: signature(dto.cabSignature),
+>>>>>>> origin/main
   }
 }
 
-export function saveCertificationAgreements(
-  items: CertificationAgreement[],
-): CertificationAgreement[] {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(items))
-  } catch {
-    // Ignore storage errors
-  }
-  return items
+const agreementPath = (id: string) => `/cab/certification-agreements/${encodeURIComponent(id)}`
+const post = (body?: unknown): RequestInit => ({ method: 'POST', body: JSON.stringify(body ?? {}) })
+
+async function request(path: string, init?: RequestInit): Promise<CertificationAgreement> {
+  return fromDto(await authorizedRequest<CertificationAgreementDto>(path, init))
 }
 
-export function getCertificationAgreementById(
+export async function listCertificationAgreements(): Promise<CertificationAgreement[]> {
+  const items = await authorizedRequest<CertificationAgreementDto[]>('/cab/certification-agreements')
+  return items.map(fromDto)
+}
+
+export function getCertificationAgreementById(id: string): Promise<CertificationAgreement> {
+  return request(agreementPath(id))
+}
+
+/**
+ * Drafts an agreement for a registered audit client. The backend numbers it, fills the client's
+ * details from its own records and snapshots the CAB's saved terms (or these default sections).
+ */
+export function generateCertificationAgreement(clientId: string): Promise<CertificationAgreement> {
+  return request('/cab/certification-agreements', post({ clientId, sections: DEFAULT_AGREEMENT_SECTIONS }))
+}
+
+/** Draft only: edits the client, offer and scope values. */
+export function updateCertificationAgreementValues(
   id: string,
-): CertificationAgreement | null {
-  const all = listCertificationAgreements()
-  return all.find((item) => item.id === id) ?? null
+  values: Partial<CertificationAgreementValues>,
+): Promise<CertificationAgreement> {
+  return request(agreementPath(id), { method: 'PATCH', body: JSON.stringify({ values }) })
 }
 
+<<<<<<< HEAD
 const formatDisplayDate = (iso: string) =>
   new Date(iso).toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -504,16 +546,16 @@ export function generateCertificationAgreement(
   }
   saveCertificationAgreements([created, ...all])
   return created
+=======
+/** Draft only: re-snapshots the CAB's current agreement terms and starts a new agreement version. */
+export function refreshAgreementTerms(id: string): Promise<CertificationAgreement> {
+  return request(`${agreementPath(id)}/use-latest-terms`, post({ sections: DEFAULT_AGREEMENT_SECTIONS }))
+>>>>>>> origin/main
 }
 
-export function updateCertificationAgreement(
-  updated: CertificationAgreement,
-): CertificationAgreement {
-  const all = listCertificationAgreements()
-  const next = all.map((item) => (item.id === updated.id ? updated : item))
-  saveCertificationAgreements(next)
-  return updated
-}
+export const sendCertificationAgreement = (id: string) => request(`${agreementPath(id)}/send`, post())
+export const recordClientSignature = (id: string) => request(`${agreementPath(id)}/client-signature`, post())
+export const countersignCertificationAgreement = (id: string) => request(`${agreementPath(id)}/countersign`, post())
 
 /**
  * Applies one lifecycle step to an agreement. Returns `null` (and saves nothing)

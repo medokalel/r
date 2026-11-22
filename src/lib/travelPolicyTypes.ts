@@ -1,7 +1,7 @@
 /**
- * Types for the CAB travel policy: the rules and rates the travel cost
- * calculator uses when no live price is available. The page currently runs on
- * `lib/api/travelPolicyMockData.ts`; there is no backend endpoint yet.
+ * Types for the CAB travel policy: the rules and rates the travel cost calculator uses when no live price
+ * is available. It is saved through GET/PUT /cab/travel-policy; `lib/api/travelPolicyMockData.ts` only holds the
+ * sample values shown until the first save.
  */
 export type TravelCabin = 'ECONOMY' | 'PREMIUM_ECONOMY' | 'BUSINESS'
 
@@ -75,6 +75,8 @@ export interface TravelPolicyInput {
   countries: TravelCountryRate[]
   cities: TravelCityCap[]
   railRoutes: TravelRailRoute[]
+  /** Set by the API once the policy has been saved. */
+  updatedAt?: string
 }
 
 export interface TravelCity {

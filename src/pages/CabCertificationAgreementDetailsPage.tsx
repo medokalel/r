@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -23,6 +23,7 @@ import {
 } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
+<<<<<<< HEAD
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { FormField, Textarea } from '@/components/ui'
 import { downloadAgreementPdf } from '@/lib/api/agreementPdfGenerator'
@@ -38,11 +39,27 @@ import {
   sendCertificationAgreement,
   terminateAgreement,
   updateAgreementValues,
+=======
+import { downloadAgreementPdf } from '@/lib/api/agreementPdfGenerator'
+import {
+  countersignCertificationAgreement,
+  getCertificationAgreementById,
+  recordClientSignature,
+  sendCertificationAgreement,
+  updateCertificationAgreementValues,
+  refreshAgreementTerms,
+>>>>>>> origin/main
   type CertificationAgreement,
   type CertificationAgreementStatus,
+  type CertificationAgreementValues,
 } from '@/lib/api/cabCertificationAgreementsApi'
+<<<<<<< HEAD
 import { getAgreementKindLabel, getAgreementStatusLabel } from '@/lib/agreementStatus'
 import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
+=======
+import { getUserErrorMessage } from '@/lib/errorMessages'
+import { ROUTES } from '@/lib/routes'
+>>>>>>> origin/main
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
@@ -82,17 +99,49 @@ export function CabCertificationAgreementDetailsPage() {
 
 function AgreementDetails({ agreementId }: { agreementId?: string }) {
   const navigate = useNavigate()
-  const { i18n } = useTranslation()
+  const { t, i18n } = useTranslation()
   const isAr = Boolean(i18n.language?.startsWith('ar'))
 
-  const [agreement, setAgreement] = useState<CertificationAgreement | null>(() =>
-    agreementId ? getCertificationAgreementById(agreementId) : null,
-  )
+  const [agreement, setAgreement] = useState<CertificationAgreement | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [busy, setBusy] = useState(false)
   const [docLang, setDocLang] = useState<'en' | 'ar'>(isAr ? 'ar' : 'en')
   const [isEditingValues, setIsEditingValues] = useState(false)
+<<<<<<< HEAD
   const [draftValues, setDraftValues] = useState(() => agreement?.values ?? null)
   const [dialog, setDialog] = useState<AgreementDialog>(null)
   const [reason, setReason] = useState('')
+=======
+  const [draftValues, setDraftValues] = useState<CertificationAgreementValues | null>(null)
+  const [syncedNotice, setSyncedNotice] = useState(false)
+  // Standards are edited as one comma-separated line and split on save.
+  const [standardsText, setStandardsText] = useState('')
+
+  useEffect(() => {
+    if (!agreementId) return
+    let active = true
+    getCertificationAgreementById(agreementId)
+      .then((loaded) => {
+        if (!active) return
+        setAgreement(loaded)
+        setDraftValues(loaded.values)
+        setStandardsText(loaded.values.standards.join(', '))
+      })
+      .catch(() => undefined) // not found: the "Agreement not found" view below
+      .finally(() => active && setLoading(false))
+    return () => {
+      active = false
+    }
+  }, [agreementId])
+
+  if (loading) {
+    return (
+      <CabLayout>
+        <CabHeader title={isAr ? 'اتفاقيات منح الشهادة' : 'Certification agreements'} />
+      </CabLayout>
+    )
+  }
+>>>>>>> origin/main
 
   if (!agreement || !draftValues) {
     return (
@@ -112,6 +161,7 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
   const amendmentInProgress = agreement.status === 'active' ? getAmendmentInProgress(agreement.id) : null
   const statusLabel = getAgreementStatusLabel(agreement.status, isAr)
 
+<<<<<<< HEAD
   /** Runs one lifecycle step; the API refuses it when the status no longer allows it. */
   const runAction = (action: () => CertificationAgreement | null, successMessage: string) => {
     const updated = action()
@@ -190,14 +240,62 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
     )
     navigate(cabCertificationAgreementDetailsPath(created.id))
   }
+=======
+  /** Runs a backend action on this agreement and shows the result (or the error). */
+  const run = async (action: () => Promise<CertificationAgreement>, after?: (updated: CertificationAgreement) => void) => {
+    setBusy(true)
+    try {
+      const updated = await action()
+      setAgreement(updated)
+      setDraftValues(updated.values)
+      setStandardsText(updated.values.standards.join(', '))
+      after?.(updated)
+    } catch (error) {
+      toast.error(getUserErrorMessage(error, t))
+    } finally {
+      setBusy(false)
+    }
+  }
 
-  const editableFields = [
-    { key: 'clientLegalNameAr' as const, label: isAr ? 'اسم العميل (عربي)' : 'Client legal name (Arabic)', dir: 'rtl' as const },
-    { key: 'clientLegalNameEn' as const, label: isAr ? 'اسم العميل (إنجليزي)' : 'Client legal name (English)', dir: 'ltr' as const },
-    { key: 'clientCrNumber' as const, label: isAr ? 'رقم السجل التجاري' : 'Client CR number', dir: 'ltr' as const },
-    { key: 'scopeAr' as const, label: isAr ? 'نطاق الشهادة (عربي)' : 'Certification scope (Arabic)', dir: 'rtl' as const },
-    { key: 'scopeEn' as const, label: isAr ? 'نطاق الشهادة (إنجليزي)' : 'Certification scope (English)', dir: 'ltr' as const },
-    { key: 'totalFeeEn' as const, label: isAr ? 'إجمالي الرسوم' : 'Total fee', dir: 'ltr' as const },
+  const handleAdvanceLifecycle = () =>
+    run(() =>
+      agreement.status === 'draft'
+        ? sendCertificationAgreement(agreement.id)
+        : agreement.status === 'sent'
+          ? recordClientSignature(agreement.id)
+          : countersignCertificationAgreement(agreement.id),
+    )
+
+  const handleSaveValues = () =>
+    run(
+      () =>
+        updateCertificationAgreementValues(agreement.id, {
+          ...draftValues,
+          standards: standardsText.split(',').map((standard) => standard.trim()).filter(Boolean),
+        }),
+      () => setIsEditingValues(false),
+    )
+>>>>>>> origin/main
+
+  const handleUseLatestTerms = () =>
+    run(() => refreshAgreementTerms(agreement.id), () => {
+      setSyncedNotice(true)
+      setTimeout(() => setSyncedNotice(false), 2500)
+    })
+
+  const editableFields: { key: keyof CertificationAgreementValues; label: string; dir: 'ltr' | 'rtl'; numeric?: boolean }[] = [
+    { key: 'clientLegalNameAr', label: isAr ? 'اسم العميل (عربي)' : 'Client legal name (Arabic)', dir: 'rtl' },
+    { key: 'clientLegalNameEn', label: isAr ? 'اسم العميل (إنجليزي)' : 'Client legal name (English)', dir: 'ltr' },
+    { key: 'clientCrNumber', label: isAr ? 'رقم السجل التجاري' : 'Client CR number', dir: 'ltr' },
+    { key: 'clientCityAr', label: isAr ? 'مدينة العميل (عربي)' : 'Client city (Arabic)', dir: 'rtl' },
+    { key: 'clientCityEn', label: isAr ? 'مدينة العميل (إنجليزي)' : 'Client city (English)', dir: 'ltr' },
+    { key: 'scopeAr', label: isAr ? 'نطاق الشهادة (عربي)' : 'Certification scope (Arabic)', dir: 'rtl' },
+    { key: 'scopeEn', label: isAr ? 'نطاق الشهادة (إنجليزي)' : 'Certification scope (English)', dir: 'ltr' },
+    { key: 'sitesCount', label: isAr ? 'عدد المواقع' : 'Number of sites', dir: 'ltr', numeric: true },
+    { key: 'totalFeeEn', label: isAr ? 'إجمالي الرسوم' : 'Total fee', dir: 'ltr' },
+    { key: 'signatoryAr', label: isAr ? 'المفوض بالتوقيع (عربي)' : 'Client signatory (Arabic)', dir: 'rtl' },
+    { key: 'signatoryEn', label: isAr ? 'المفوض بالتوقيع (إنجليزي)' : 'Client signatory (English)', dir: 'ltr' },
+    { key: 'offerRef', label: isAr ? 'مرجع العرض' : 'Offer reference', dir: 'ltr' },
   ]
 
   return (
@@ -224,20 +322,30 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
             </p>
           </div>
 
+<<<<<<< HEAD
           <div className="flex w-full shrink-0 flex-wrap items-center gap-2.5 lg:w-auto">
+=======
+          <div className="flex w-full shrink-0 flex-wrap items-center gap-2.5 lg:w-auto lg:flex-nowrap">
+>>>>>>> origin/main
             {agreement.status === 'draft' && (
               <>
                 <Button type="button" variant="outline" size="sm" onClick={() => setIsEditingValues((p) => !p)} icon={<AppIcon icon={EditIcon} size={16} />} className="h-11 whitespace-nowrap">
                   {isAr ? 'تعديل القيم' : 'Edit values'}
                 </Button>
+<<<<<<< HEAD
                 <Button type="button" variant="outline" size="sm" onClick={handleUseLatestTerms} icon={<AppIcon icon={RefreshIcon} size={16} />} className="h-11 whitespace-nowrap">
                   {isAr ? 'أحدث الشروط' : 'Use latest terms'}
+=======
+                <Button type="button" variant="outline" size="sm" onClick={() => void handleUseLatestTerms()} disabled={busy} icon={<AppIcon icon={syncedNotice ? CheckIcon : RefreshIcon} size={16} />} className="h-11 whitespace-nowrap">
+                  {syncedNotice ? (isAr ? 'تم التحديث' : 'Updated') : (isAr ? 'أحدث الشروط' : 'Use latest terms')}
+>>>>>>> origin/main
                 </Button>
               </>
             )}
             <Button type="button" variant="outline" size="sm" onClick={() => downloadAgreementPdf(agreement, docLang)} icon={<AppIcon icon={PdfFileIcon} size={18} />} className="h-11 whitespace-nowrap">
               {isAr ? 'تحميل PDF' : 'Download PDF'}
             </Button>
+<<<<<<< HEAD
             {agreement.status === 'active' && (
               <Button type="button" variant="outline" size="sm" disabled={Boolean(amendmentInProgress)} onClick={() => openDialog('amend')} icon={<AppIcon icon={FileTextIcon} size={18} />} className="h-11 whitespace-nowrap">
                 {isAr ? 'إنشاء تعديل' : 'Create amendment'}
@@ -266,6 +374,11 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
             {agreement.status === 'client_signed' && (
               <Button type="button" variant="primary" size="sm" onClick={handleCountersign} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
                 {isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign & activate'}
+=======
+            {agreement.status !== 'active' && (
+              <Button type="button" variant="primary" size="sm" onClick={() => void handleAdvanceLifecycle()} disabled={busy} icon={<AppIcon icon={agreement.status === 'draft' ? ExportIcon : SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {agreement.status === 'draft' ? (isAr ? 'إرسال للعميل' : 'Send to client') : agreement.status === 'sent' ? (isAr ? 'تسجيل توقيع العميل' : 'Record client signature') : (isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign & activate')}
+>>>>>>> origin/main
               </Button>
             )}
           </div>
@@ -474,15 +587,31 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
                     type="text"
                     dir={field.dir}
                     value={String(draftValues[field.key])}
-                    onChange={(e) => setDraftValues({ ...draftValues, [field.key]: e.target.value, ...(field.key === 'totalFeeEn' ? { totalFeeAr: e.target.value.replace('SAR', 'ر.س') } : {}) })}
+                    onChange={(e) =>
+                      setDraftValues({
+                        ...draftValues,
+                        [field.key]: field.numeric ? Math.max(Number(e.target.value.replace(/\D/g, '')), 1) : e.target.value,
+                        ...(field.key === 'totalFeeEn' ? { totalFeeAr: e.target.value.replace('SAR', 'ر.س') } : {}),
+                      })
+                    }
                     className="h-11 w-full rounded-[10px] border border-[#e2e2e2] px-3.5 text-[14px] outline-none focus:border-primary"
                   />
                 </div>
               ))}
+              <div className="space-y-1.5">
+                <label className="block text-[12px] font-semibold text-neutral-700">{isAr ? 'المواصفات (مفصولة بفواصل)' : 'Standards (comma separated)'}</label>
+                <input
+                  type="text"
+                  dir="ltr"
+                  value={standardsText}
+                  onChange={(e) => setStandardsText(e.target.value)}
+                  className="h-11 w-full rounded-[10px] border border-[#e2e2e2] px-3.5 text-[14px] outline-none focus:border-primary"
+                />
+              </div>
             </div>
             <div className="mt-4 flex justify-end gap-2.5 border-t border-[#f0f0f0] pt-3.5">
               <Button type="button" variant="outline" onClick={() => setIsEditingValues(false)} className="h-10 rounded-[10px] px-4 text-[13px]">{isAr ? 'إلغاء' : 'Cancel'}</Button>
-              <Button type="button" variant="primary" onClick={handleSaveValues} icon={<AppIcon icon={CheckIcon} size={16} />} className="h-10 rounded-[10px] px-5 text-[13px]">{isAr ? 'حفظ التغييرات' : 'Save changes'}</Button>
+              <Button type="button" variant="primary" onClick={() => void handleSaveValues()} disabled={busy} icon={<AppIcon icon={CheckIcon} size={16} />} className="h-10 rounded-[10px] px-5 text-[13px]">{isAr ? 'حفظ التغييرات' : 'Save changes'}</Button>
             </div>
           </section>
         )}

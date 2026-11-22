@@ -6,6 +6,10 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useBuildAuditPlanTourSteps } from '@/config/buildAuditPlanTourSteps'
 import { AppIcon, MoreIcon } from '@/components/icons'
+import { AuditTravelCostsPanel } from '@/components/dashboard/cab/travelPolicy/AuditTravelCostsPanel'
+import { AuditPlanChecklistsCard } from '@/components/dashboard/cab/AuditPlanChecklistsCard'
+import { loadAuditChecklistsMock, matchChecklistsForAuditPlan } from '@/lib/api/auditChecklistMockData'
+import type { AuditChecklist } from '@/lib/auditChecklistTypes'
 import {
   fetchAuditPlanById,
   saveAuditPlan,
@@ -45,12 +49,15 @@ import {
   ChangeStageDatesModal,
 } from '@/components/cab/auditPlanning/AuditPlanModals'
 import { ROUTES, cabAuditExecutionPath } from '@/lib/routes'
+<<<<<<< HEAD
 import { AuditPlanChecklistsCard } from '@/components/dashboard/cab/AuditPlanChecklistsCard'
 import {
   loadAuditChecklistsMock,
   matchChecklistsForAuditPlan,
 } from '@/lib/api/auditChecklistMockData'
 import type { AuditChecklist } from '@/lib/auditChecklistTypes'
+=======
+>>>>>>> origin/main
 import { cn } from '@/lib/utils'
 
 type BuildStep = 1 | 2 | 3 | 4
@@ -135,6 +142,8 @@ export function CabBuildAuditPlanPage() {
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false)
   const [changeReason, setChangeReason] = useState('')
   const [isSaving, setIsSaving] = useState(false)
+  const [allChecklists, setAllChecklists] = useState<AuditChecklist[]>([])
+  const [selectedChecklistIds, setSelectedChecklistIds] = useState<string[]>([])
 
   useEffect(() => {
     async function load() {
@@ -143,8 +152,13 @@ export function CabBuildAuditPlanPage() {
         fetchAuditPlanById(planId || 'AUD-0310'),
         loadAuditChecklistsMock(),
       ])
+<<<<<<< HEAD
       const combinedChecklists = [...checklistsData.mine, ...checklistsData.library]
       setAllChecklists(combinedChecklists)
+=======
+      const combined = [...checklistsData.mine, ...checklistsData.library]
+      setAllChecklists(combined)
+>>>>>>> origin/main
       if (data) {
         const planTeam = await fetchPlanTeam(data.id)
         setPlan(data)
@@ -179,7 +193,15 @@ export function CabBuildAuditPlanPage() {
         setAvailabilityConfirmed(data.teamDeclarations?.availabilityConfirmed ?? true)
         setNoConflictsDeclared(data.teamDeclarations?.noConflictsDeclared ?? true)
         setActDate(data.proposedStartDate)
+<<<<<<< HEAD
         setActAuditor(planTeam.members.find((m) => m.role === 'TEAM_LEADER')?.name ?? data.leadAuditor)
+=======
+        setActAuditor(data.leadAuditor)
+        setSelectedChecklistIds(
+          data.checklistIds ??
+            matchChecklistsForAuditPlan(combined, data.standardName, data.stage).map((c) => c.id)
+        )
+>>>>>>> origin/main
       }
       setIsLoading(false)
     }
@@ -266,6 +288,10 @@ export function CabBuildAuditPlanPage() {
         },
         travelNotes: { details: travelNotes },
         teamDeclarations: { availabilityConfirmed, noConflictsDeclared },
+<<<<<<< HEAD
+=======
+        checklistIds: selectedChecklistIds,
+>>>>>>> origin/main
         agendaActivities: agenda,
         ...overrides,
       })
@@ -518,6 +544,7 @@ export function CabBuildAuditPlanPage() {
         )}
 
         {activeStep === 2 && (
+          <>
           <CabTourStep steps={tourSteps} stepId="build-plan-agenda-table">
             <section className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -676,6 +703,17 @@ export function CabBuildAuditPlanPage() {
               </div>
             </section>
           </CabTourStep>
+          <AuditPlanChecklistsCard
+            allChecklists={allChecklists}
+            selectedIds={selectedChecklistIds}
+            standardName={plan.standardName}
+            stage={auditStage}
+            onChangeSelectedIds={setSelectedChecklistIds}
+            onAutoMatch={() =>
+              setSelectedChecklistIds(matchChecklistsForAuditPlan(allChecklists, plan.standardName, auditStage).map((c) => c.id))
+            }
+          />
+          </>
         )}
 
         {activeStep === 3 && (
@@ -845,7 +883,7 @@ export function CabBuildAuditPlanPage() {
             {/* Travel & Logistics Card with Edit / Save toggle */}
             <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="flex items-center justify-between border-b border-[#ececec] pb-2.5">
-                <h3 className="text-[16px] font-bold text-neutral-900">Travel & logistics</h3>
+                <h3 className="text-[16px] font-bold text-neutral-900">Travel notes</h3>
                 <button
                   type="button"
                   onClick={async () => {
@@ -873,6 +911,20 @@ export function CabBuildAuditPlanPage() {
                   className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[13px] disabled:bg-[#f9fafc] disabled:text-neutral-600 focus:border-[#1236a3] focus:outline-none"
                 />
               </div>
+                <AuditTravelCostsPanel
+                  siteName={siteName}
+                  siteAddress={siteAddress}
+                  country={plan.country}
+                  teamNames={teamMembers.map((member) => member.name)}
+                  firstDay={proposedStartDate}
+                  lastDay={proposedEndDate}
+                  remoteEnabled={remoteEnabled}
+                  saved={plan.travelEstimate}
+                  onSave={async (travelEstimate) => {
+                    const updated = await saveAuditPlan({ id: plan.id, travelEstimate })
+                    setPlan(updated)
+                  }}
+                />
             </section>
 
             <div className="flex justify-end lg:col-span-3">
