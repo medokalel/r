@@ -16,6 +16,11 @@ export type LifecycleBlock = 'notSent' | 'notStarted' | 'done' | 'completed'
 
 const NOT_STARTED: ReadonlyArray<AuditPlan['status']> = ['Draft', 'Planned']
 
+/** Starting an audit opens its report, so a plan that has left Draft / Planned has one. */
+export function hasAuditReport(plan: Pick<AuditPlan, 'status'>): boolean {
+  return !NOT_STARTED.includes(plan.status)
+}
+
 export function getLifecycleBlock(plan: AuditPlan, action: LifecycleAction): LifecycleBlock | null {
   const { status } = plan
 

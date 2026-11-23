@@ -189,6 +189,10 @@ export function cabSalesHubEditPath(leadId: string): string {
 export function cabCertificationAgreementDetailsPath(agreementId: string): string {
   return `/cab/certification-agreements/${encodeURIComponent(agreementId)}`;
 }
+export function cabBuildAuditPlanPath(planId: string, options?: { tab?: 'agenda' }): string {
+  const base = `/cab/audit-planning/build/${encodeURIComponent(planId)}`
+  return options?.tab ? `${base}?tab=${options.tab}` : base
+}
 export function cabAuditExecutionPath(planId?: string): string {
   return planId
     ? `/cab/audit-planning/${encodeURIComponent(planId)}/execution`

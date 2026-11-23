@@ -8,6 +8,7 @@ import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useAuditScheduleTourSteps } from '@/config/auditScheduleTourSteps'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { Button } from '@/components/ui/Button'
+import { ActionMenu, type ActionMenuItem } from '@/components/ui/ActionMenu'
 import { CardFooterLink } from '@/components/ui/CardFooterLink'
 import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
 import { SelectField } from '@/components/ui/Select'
@@ -24,7 +25,6 @@ import {
   FileTextIcon,
   HistoryIcon,
   MenuRowsIcon,
-  MoreIcon,
   SearchIcon,
   SuccessCircleIcon,
 } from '@/components/icons'
@@ -35,14 +35,40 @@ import {
   type AuditPlanStatus,
 } from '@/lib/api/cabAuditPlanningApi'
 import { downloadExcelCsv, downloadPdfFromTable, type TableColumn } from '@/lib/tableTools'
+import { AuditPlanLifecycleDialog } from '@/components/cab/auditPlanning/AuditPlanLifecycleDialog'
 import {
   AuditStatusBadge,
   BreadcrumbChevron,
   formatIcascoDate,
 } from '@/components/cab/auditPlanning/shared'
-import { ROUTES, cabAuditExecutionPath } from '@/lib/routes'
+import { getLifecycleBlock, hasAuditReport, type LifecycleAction } from '@/lib/api/auditPlanLifecycleApi'
+import {
+  LIFECYCLE_ACTIONS,
+  lifecycleActionLabel,
+  lifecycleBlockMessage,
+} from '@/lib/auditPlanLifecycleCopy'
+import {
+  buildCalendarMonth,
+  collectCountries,
+  collectPlannedPeriods,
+  currentPeriod,
+  formatPeriodLabel,
+  localizeCountry,
+  planOverlapsPeriod,
+} from '@/lib/auditSchedule'
+import { ROUTES, cabAuditExecutionPath, cabBuildAuditPlanPath } from '@/lib/routes'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
+
+const WEEKDAYS = [
+  { key: 'sun', label: 'Sun' },
+  { key: 'mon', label: 'Mon' },
+  { key: 'tue', label: 'Tue' },
+  { key: 'wed', label: 'Wed' },
+  { key: 'thu', label: 'Thu' },
+  { key: 'fri', label: 'Fri' },
+  { key: 'sat', label: 'Sat' },
+] as const
 
 const PIPELINE_STAGES: AuditPlanStatus[] = [
   'Draft',
@@ -53,7 +79,7 @@ const PIPELINE_STAGES: AuditPlanStatus[] = [
 ]
 
 export function CabAuditSchedulePage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const tourSteps = useAuditScheduleTourSteps()
 
@@ -68,7 +94,10 @@ export function CabAuditSchedulePage() {
   const [allPlans, setAllPlans] = useState<AuditPlan[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [exporting, setExporting] = useState(false)
-  const [openActionMenuId, setOpenActionMenuId] = useState<string | null>(null)
+  const [lifecycleTarget, setLifecycleTarget] = useState<{
+    plan: AuditPlan
+    action: LifecycleAction
+  } | null>(null)
   const [page, setPage] = useState(1)
 
   useEffect(() => {
@@ -88,9 +117,31 @@ export function CabAuditSchedulePage() {
     [allPlans],
   )
 
+  // Period and country options come from the plans themselves, never from a fixed list.
+  const periodOptions = useMemo(
+    () =>
+      collectPlannedPeriods(allPlans).map((period) => ({
+        value: period,
+        label: formatPeriodLabel(period, i18n.language),
+      })),
+    [allPlans, i18n.language],
+  )
+
+  const countryOptions = useMemo(
+    () =>
+      collectCountries(allPlans).map((country) => ({
+        value: country,
+        label: localizeCountry(country, i18n.language),
+      })),
+    [allPlans, i18n.language],
+  )
+
   const auditPlans = useMemo(() => {
     const q = searchInput.trim().toLowerCase()
     return allPlans.filter((p) => {
+      if (selectedPeriod !== 'All' && !planOverlapsPeriod(p, selectedPeriod)) {
+        return false
+      }
       if (selectedCountry !== 'All' && p.country.toLowerCase() !== selectedCountry.toLowerCase()) {
         return false
       }
@@ -107,7 +158,7 @@ export function CabAuditSchedulePage() {
         p.standards.some((s) => s.toLowerCase().includes(q))
       )
     })
-  }, [allPlans, searchInput, selectedCountry, selectedStatus])
+  }, [allPlans, searchInput, selectedPeriod, selectedCountry, selectedStatus])
 
   const hasActiveFilters =
     searchInput.trim() !== '' ||
@@ -162,18 +213,67 @@ export function CabAuditSchedulePage() {
     }
   }
 
-  const calendarDays = useMemo(() => {
-    const days = []
-    for (let i = 1; i <= 31; i++) {
-      const dayStr = i < 10 ? `0${i}` : `${i}`
-      const fullDate = `2026-12-${dayStr}`
-      const matchedAudits = auditPlans.filter(
-        (p) => fullDate >= p.proposedStartDate && fullDate <= p.proposedEndDate,
-      )
-      days.push({ dayNumber: i, dateStr: fullDate, audits: matchedAudits })
+  // The calendar shows the selected period, or the current month when no period is selected.
+  const calendarPeriod = selectedPeriod === 'All' ? currentPeriod() : selectedPeriod
+  const calendarMonth = useMemo(
+    () => buildCalendarMonth(calendarPeriod, auditPlans),
+    [calendarPeriod, auditPlans],
+  )
+
+  /** Row actions: open / edit, lifecycle steps (disabled with a reason), report and export. */
+  const getPlanActions = (plan: AuditPlan): ActionMenuItem[] => {
+    const items: ActionMenuItem[] = [
+      {
+        key: 'edit',
+        label: t('cab.auditSchedule.actions.buildEdit', 'Build / Edit Plan'),
+        onSelect: () => navigate(cabBuildAuditPlanPath(plan.planNumber)),
+      },
+      {
+        key: 'agenda',
+        label: t('cab.auditSchedule.actions.viewAgenda', 'View Agenda'),
+        onSelect: () => navigate(cabBuildAuditPlanPath(plan.planNumber, { tab: 'agenda' })),
+      },
+    ]
+
+    // A draft is still being built: execution opens once the plan has left Draft.
+    if (plan.status !== 'Draft') {
+      items.push({
+        key: 'execution',
+        label:
+          plan.status === 'Completed'
+            ? t('cab.auditPlanning.lifecycle.viewExecution', 'View execution')
+            : t('cab.auditPlanning.lifecycle.openExecution', 'Start / continue execution'),
+        onSelect: () => navigate(cabAuditExecutionPath(plan.planNumber)),
+      })
     }
-    return days
-  }, [auditPlans])
+
+    for (const action of LIFECYCLE_ACTIONS) {
+      const block = getLifecycleBlock(plan, action)
+      items.push({
+        key: action,
+        label: lifecycleActionLabel(t, action),
+        disabled: Boolean(block),
+        hint: block ? lifecycleBlockMessage(t, block) : undefined,
+        onSelect: () => setLifecycleTarget({ plan, action }),
+      })
+    }
+
+    if (hasAuditReport(plan)) {
+      items.push({
+        key: 'report',
+        label: t('cab.auditPlanning.lifecycle.openReport', 'Open audit report'),
+        onSelect: () => navigate(ROUTES.cabAuditWorkspace),
+      })
+    }
+
+    items.push({
+      key: 'export',
+      label: t('cab.auditSchedule.actions.exportPlan', 'Export Plan'),
+      onSelect: () => exportAuditPlansToFormat([plan], 'csv'),
+    })
+
+    return items
+  }
 
   const kpiCards = [
     {
@@ -363,31 +463,31 @@ export function CabAuditSchedulePage() {
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-[13px] font-semibold text-neutral-700">Planned period</span>
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.auditSchedule.filters.period', 'Planned period')}
+                </span>
                 <SelectField
                   value={selectedPeriod}
                   onChange={setSelectedPeriod}
                   className="h-11"
                   options={[
-                    { value: 'All', label: 'All periods' },
-                    { value: 'November 2026', label: 'November 2026' },
-                    { value: 'December 2026', label: 'December 2026' },
-                    { value: 'January 2027', label: 'January 2027' },
+                    { value: 'All', label: t('cab.auditSchedule.filters.allPeriods', 'All periods') },
+                    ...periodOptions,
                   ]}
                 />
               </div>
 
               <div className="flex flex-col gap-2">
-                <span className="text-[13px] font-semibold text-neutral-700">Country</span>
+                <span className="text-[13px] font-semibold text-neutral-700">
+                  {t('cab.auditSchedule.filters.country', 'Country')}
+                </span>
                 <SelectField
                   value={selectedCountry}
                   onChange={setSelectedCountry}
                   className="h-11"
                   options={[
-                    { value: 'All', label: 'All countries' },
-                    { value: 'Egypt', label: 'Egypt' },
-                    { value: 'Saudi Arabia', label: 'Saudi Arabia' },
-                    { value: 'United Arab Emirates', label: 'United Arab Emirates' },
+                    { value: 'All', label: t('cab.auditSchedule.filters.allCountries', 'All countries') },
+                    ...countryOptions,
                   ]}
                 />
               </div>
@@ -515,18 +615,25 @@ export function CabAuditSchedulePage() {
             {topViewMode === 'calendar' ? (
               <div className="px-5">
                 <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-[16px] font-bold text-neutral-900">December 2026</h3>
-                  <p className="text-[13px] text-neutral-500">Timezone: Asia/Riyadh (AST)</p>
+                  <h3 className="text-[16px] font-bold text-neutral-900">
+                    {formatPeriodLabel(calendarPeriod, i18n.language)}
+                  </h3>
+                  <p className="text-[13px] text-neutral-500">
+                    {t('cab.auditSchedule.timezone', 'Timezone: Asia/Riyadh (AST)')}
+                  </p>
                 </div>
 
                 <div className="mb-2 grid grid-cols-7 gap-2 text-center text-[12px] font-semibold text-neutral-400">
-                  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map((d) => (
-                    <div key={d}>{d}</div>
+                  {WEEKDAYS.map((day) => (
+                    <div key={day.key}>{t(`cab.auditSchedule.daysOfWeek.${day.key}`, day.label)}</div>
                   ))}
                 </div>
 
                 <div className="grid grid-cols-7 gap-2">
-                  {calendarDays.map((d) => (
+                  {Array.from({ length: calendarMonth.leadingBlanks }, (_, index) => (
+                    <div key={`blank-${index}`} aria-hidden="true" />
+                  ))}
+                  {calendarMonth.days.map((d) => (
                     <div
                       key={d.dayNumber}
                       className={cn(
@@ -543,7 +650,7 @@ export function CabAuditSchedulePage() {
                         <button
                           key={a.id}
                           type="button"
-                          onClick={() => navigate(`/cab/audit-planning/build/${a.planNumber}`)}
+                          onClick={() => navigate(cabBuildAuditPlanPath(a.planNumber))}
                           className="mb-1 w-full truncate rounded-[6px] bg-[#1236a3] px-1.5 py-1 text-start text-[11px] font-bold text-white shadow-xs hover:bg-[#0e2a80]"
                         >
                           {a.planNumber} • {a.clientName}
@@ -573,7 +680,7 @@ export function CabAuditSchedulePage() {
                           <button
                             key={plan.id}
                             type="button"
-                            onClick={() => navigate(`/cab/audit-planning/build/${plan.planNumber}`)}
+                            onClick={() => navigate(cabBuildAuditPlanPath(plan.planNumber))}
                             className="flex w-full flex-col items-start rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3.5 text-start transition-all hover:border-primary hover:bg-white"
                           >
                             <div className="flex w-full items-center justify-between">
@@ -655,9 +762,7 @@ export function CabAuditSchedulePage() {
                             <td className="px-5 py-4 text-start">
                               <button
                                 type="button"
-                                onClick={() =>
-                                  navigate(`/cab/audit-planning/build/${plan.planNumber}`)
-                                }
+                                onClick={() => navigate(cabBuildAuditPlanPath(plan.planNumber))}
                                 className="text-[15px] font-bold text-primary hover:underline"
                               >
                                 {plan.planNumber}
@@ -684,7 +789,7 @@ export function CabAuditSchedulePage() {
                                 {plan.clientName}
                               </p>
                               <p className="mt-0.5 text-[12px] text-neutral-500">
-                                {plan.clientCode} · {plan.country}
+                                {plan.clientCode} · {localizeCountry(plan.country, i18n.language)}
                               </p>
                             </td>
 
@@ -713,49 +818,14 @@ export function CabAuditSchedulePage() {
                               <AuditStatusBadge status={plan.status} />
                             </td>
 
-                            <td className="relative px-5 py-4 text-end">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  setOpenActionMenuId(
-                                    openActionMenuId === plan.id ? null : plan.id,
-                                  )
-                                }
-                                className="inline-flex size-8 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-100 hover:text-neutral-900"
-                              >
-                                <AppIcon icon={MoreIcon} size={18} />
-                              </button>
-
-                              {openActionMenuId === plan.id && (
-                                <div className="absolute end-5 top-12 z-20 w-52 rounded-[10px] border border-[#ececec] bg-white py-1.5 text-start shadow-xl">
-                                  <button
-                                    type="button"
-                                    onClick={() =>
-                                      navigate(`/cab/audit-planning/build/${plan.planNumber}`)
-                                    }
-                                    className="w-full px-4 py-2 text-[13px] font-medium text-neutral-700 hover:bg-[#f9fafc]"
-                                  >
-                                    Build / Edit audit plan
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => navigate(cabAuditExecutionPath(plan.planNumber))}
-                                    className="w-full px-4 py-2 text-[13px] font-medium text-primary hover:bg-[#f3f6fd]"
-                                  >
-                                    Audit execution (Checklists)
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => {
-                                      exportAuditPlansToFormat([plan], 'csv')
-                                      setOpenActionMenuId(null)
-                                    }}
-                                    className="w-full px-4 py-2 text-[13px] font-medium text-neutral-700 hover:bg-[#f9fafc]"
-                                  >
-                                    Export plan
-                                  </button>
-                                </div>
-                              )}
+                            <td className="px-5 py-4 text-end">
+                              <ActionMenu
+                                ariaLabel={t('cab.auditSchedule.actions.menu', {
+                                  defaultValue: 'Actions for {{number}}',
+                                  number: plan.planNumber,
+                                })}
+                                items={getPlanActions(plan)}
+                              />
                             </td>
                           </tr>
                         ))
@@ -775,6 +845,15 @@ export function CabAuditSchedulePage() {
           </CabTourStep>
         </section>
       </main>
+
+      <AuditPlanLifecycleDialog
+        plan={lifecycleTarget?.plan ?? null}
+        action={lifecycleTarget?.action ?? null}
+        onClose={() => setLifecycleTarget(null)}
+        onDone={(updated) =>
+          setAllPlans((previous) => previous.map((plan) => (plan.id === updated.id ? updated : plan)))
+        }
+      />
     </CabLayout>
   )
 }

@@ -2,17 +2,20 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
-import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
+import { AuditPlanLifecycleDialog } from '@/components/cab/auditPlanning/AuditPlanLifecycleDialog'
 import { AuditStatusBadge } from '@/components/cab/auditPlanning/shared'
 import type { AuditPlan } from '@/lib/api/cabAuditPlanningApi'
 import {
-  applyLifecycleAction,
   getLifecycleBlock,
+  hasAuditReport,
   type LifecycleAction,
-  type LifecycleBlock,
 } from '@/lib/api/auditPlanLifecycleApi'
+import {
+  LIFECYCLE_ACTIONS,
+  lifecycleActionLabel,
+  lifecycleBlockMessage,
+} from '@/lib/auditPlanLifecycleCopy'
 import { ROUTES } from '@/lib/routes'
-import { toast } from '@/lib/toast'
 
 interface AuditPlanLifecycleBarProps {
   plan: AuditPlan
@@ -20,15 +23,6 @@ interface AuditPlanLifecycleBarProps {
   planReady: boolean
   onChanged: (plan: AuditPlan) => void
   onStartExecution: () => void
-}
-
-const ACTIONS: LifecycleAction[] = ['start', 'review', 'complete']
-
-const BLOCK_DEFAULTS: Record<LifecycleBlock, string> = {
-  notSent: 'Send the plan to the client first.',
-  notStarted: 'Start the audit first.',
-  done: 'Already done for this plan.',
-  completed: 'The audit is completed.',
 }
 
 const MAX_VISIBLE_EVENTS = 4
@@ -49,7 +43,7 @@ export function AuditPlanLifecycleBar({
   const blockFor = (action: LifecycleAction): string | null => {
     const block = getLifecycleBlock(plan, action)
     if (block) {
-      return t(`cab.auditPlanning.lifecycle.block.${block}`, BLOCK_DEFAULTS[block])
+      return lifecycleBlockMessage(t, block)
     }
     if (action === 'start' && !planReady) {
       return t(
@@ -60,35 +54,7 @@ export function AuditPlanLifecycleBar({
     return null
   }
 
-  const hasStarted = plan.status !== 'Draft' && plan.status !== 'Planned'
   const events = (plan.events ?? []).slice(-MAX_VISIBLE_EVENTS).reverse()
-
-  const handleConfirm = async () => {
-    if (!pending) return
-    try {
-      const { plan: updated, competenceLogged } = await applyLifecycleAction(plan, pending)
-      onChanged(updated)
-      toast.success(
-        pending === 'complete'
-          ? t(
-              'cab.auditPlanning.lifecycle.completed',
-              'Audit completed and added to the competence log of {{count}} team member(s).',
-              { count: competenceLogged },
-            )
-          : pending === 'start'
-            ? t('cab.auditPlanning.lifecycle.started', 'Audit started.')
-            : t('cab.auditPlanning.lifecycle.reviewed', 'Audit sent for review.'),
-      )
-      setPending(null)
-    } catch {
-      toast.error(t('cab.auditPlanning.lifecycle.error', 'The audit status could not be updated. Try again.'))
-    }
-  }
-
-  const actionLabel = (action: LifecycleAction) =>
-    t(`cab.auditPlanning.lifecycle.${action}`, {
-      defaultValue: { start: 'Start audit', review: 'Send for review', complete: 'Mark completed' }[action],
-    })
 
   return (
     <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
@@ -104,7 +70,7 @@ export function AuditPlanLifecycleBar({
         </div>
 
         <div className="flex flex-wrap items-start gap-2.5">
-          {ACTIONS.map((action) => {
+          {LIFECYCLE_ACTIONS.map((action) => {
             const reason = blockFor(action)
             return (
               <div key={action} className="flex flex-col items-center">
@@ -115,7 +81,7 @@ export function AuditPlanLifecycleBar({
                   disabled={Boolean(reason)}
                   onClick={() => setPending(action)}
                 >
-                  {actionLabel(action)}
+                  {lifecycleActionLabel(t, action)}
                 </Button>
                 {reason && (
                   <span className="mt-1 max-w-[180px] text-center text-[11px] text-neutral-400">{reason}</span>
@@ -130,10 +96,12 @@ export function AuditPlanLifecycleBar({
             className="h-11 px-5 text-[13px]"
             onClick={onStartExecution}
           >
-            {t('cab.auditPlanning.lifecycle.openExecution', 'Start / continue execution')}
+            {plan.status === 'Completed'
+              ? t('cab.auditPlanning.lifecycle.viewExecution', 'View execution')
+              : t('cab.auditPlanning.lifecycle.openExecution', 'Start / continue execution')}
           </Button>
 
-          {hasStarted && (
+          {hasAuditReport(plan) && (
             <Button asChild variant="tertiary" className="h-11 px-3 text-[13px]">
               <Link to={ROUTES.cabAuditWorkspace}>
                 {t('cab.auditPlanning.lifecycle.openReport', 'Open audit report')}
@@ -167,24 +135,11 @@ export function AuditPlanLifecycleBar({
         </div>
       )}
 
-      <ConfirmDialog
-        open={pending !== null}
-        title={pending ? actionLabel(pending) : ''}
-        description={
-          pending
-            ? t(`cab.auditPlanning.lifecycle.confirm.${pending}`, {
-                number: plan.planNumber,
-                defaultValue: {
-                  start: `Start audit ${plan.planNumber}? Its status becomes "In progress" and the audit report opens for the team.`,
-                  review: `Send audit ${plan.planNumber} for review? The status becomes "Under review" while the report is finalised.`,
-                  complete: `Mark audit ${plan.planNumber} as completed? The plan becomes read-only and the audit is added to the competence log of the team.`,
-                }[pending],
-              })
-            : undefined
-        }
-        confirmLabel={pending ? actionLabel(pending) : ''}
-        onConfirm={handleConfirm}
+      <AuditPlanLifecycleDialog
+        plan={pending ? plan : null}
+        action={pending}
         onClose={() => setPending(null)}
+        onDone={onChanged}
       />
     </section>
   )
