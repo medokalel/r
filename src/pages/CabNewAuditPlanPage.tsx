@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -6,9 +6,11 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import {
   AUDIT_PLANNING_CLIENTS,
   AVAILABLE_AUDITORS_POOL,
+  fetchAuditPlans,
   saveAuditPlan,
+  type AuditPlan,
 } from '@/lib/api/cabAuditPlanningApi'
-import { BreadcrumbChevron, IsoDateField } from '@/components/cab/auditPlanning/shared'
+import { BreadcrumbChevron, IsoDateField, auditStageLabel, auditStatusLabel } from '@/components/cab/auditPlanning/shared'
 import { SelectField } from '@/components/ui/Select'
 import {
   auditDateErrorField,
@@ -16,7 +18,7 @@ import {
   validateAuditDates,
   type AuditDateError,
 } from '@/lib/auditPlanDates'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabBuildAuditPlanPath } from '@/lib/routes'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
@@ -29,14 +31,24 @@ const DATE_ERROR_DEFAULTS: Record<AuditDateError, string> = {
 
 export function CabNewAuditPlanPage() {
   const { t } = useTranslation()
+  const optionLabel = (opt: { type: string; label: string; stage: string }) => {
+    if (opt.type === 'special') {
+      return t('cab.auditPlanning.create.specialOption', 'None: special audit (reason required)')
+    }
+    return opt.label
+      .replace(opt.stage, auditStageLabel(t, opt.stage))
+      .replace(/\((\d+(?:\.\d+)?) days\)/, (_match, days: string) =>
+        `(${t('cab.auditPlanning.create.optionDays', '{{days}} days', { days })})`,
+      )
+  }
   const navigate = useNavigate()
 
   const [selectedClientCode, setSelectedClientCode] = useState('')
   const [selectedOptionId, setSelectedOptionId] = useState('')
   const [specialReason, setSpecialReason] = useState('')
   const [today] = useState(() => todayIsoDate())
-  const [startDate, setStartDate] = useState(today)
-  const [endDate, setEndDate] = useState(today)
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
   const [leadAuditor, setLeadAuditor] = useState('Omar Hassan')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -51,6 +63,46 @@ export function CabNewAuditPlanPage() {
   )
 
   const isSpecialAudit = selectedOption?.type === 'special'
+  const [lastNonSpecialOptionId, setLastNonSpecialOptionId] = useState('')
+  const [existingPlan, setExistingPlan] = useState<AuditPlan | null>(null)
+
+  // The artifact shows a notice when an existing plan already covers the chosen client + stage.
+  useEffect(() => {
+    let cancelled = false
+    setExistingPlan(null)
+    if (selectedClient && selectedOption && !isSpecialAudit) {
+      fetchAuditPlans()
+        .then((plans) => {
+          if (cancelled) return
+          setExistingPlan(
+            plans.find(
+              (plan) => plan.clientCode === selectedClient.code && plan.stage === selectedOption.stage,
+            ) || null,
+          )
+        })
+        .catch(() => {})
+    }
+    return () => {
+      cancelled = true
+    }
+  }, [selectedClient, selectedOption, isSpecialAudit])
+
+  const dueStageOption = selectedClient?.options.find((o) => o.type !== 'special') || null
+  const toggleSpecialMode = () => {
+    if (!selectedClient) return
+    if (isSpecialAudit) {
+      const target =
+        selectedClient.options.find((o) => o.id === lastNonSpecialOptionId && o.type !== 'special') ||
+        dueStageOption
+      if (target) setSelectedOptionId(target.id)
+    } else {
+      const special = selectedClient.options.find((o) => o.type === 'special')
+      if (special) {
+        setLastNonSpecialOptionId(selectedOptionId)
+        setSelectedOptionId(special.id)
+      }
+    }
+  }
 
   const dateError = validateAuditDates(startDate, endDate, today)
   const dateErrorMessage = dateError
@@ -97,9 +149,9 @@ export function CabNewAuditPlanPage() {
         auditTeam: [leadAuditor],
         teamMembers: [leadMember],
         auditObjectives: isSpecialAudit
-          ? `Special audit: ${specialReason.trim()}`
-          : `Evaluate conformity and implementation for ${selectedOption.stage} (${selectedOption.standardName}).`,
-        scopeSummary: `Integrated Management System and operational processes at ${selectedOption.siteName} (${selectedOption.siteCode}).`,
+          ? t('cab.auditPlanning.create.generated.specialObjectives', 'Special audit: {{reason}}', { reason: specialReason.trim() })
+          : t('cab.auditPlanning.create.generated.objectives', 'Evaluate conformity and implementation for {{stage}} ({{standard}}).', { stage: auditStageLabel(t, selectedOption.stage), standard: selectedOption.standardName }),
+        scopeSummary: t('cab.auditPlanning.create.generated.scope', 'Integrated Management System and operational processes at {{site}} ({{code}}).', { site: selectedOption.siteName, code: selectedOption.siteCode }),
         status: 'Draft',
       })
 
@@ -146,7 +198,7 @@ export function CabNewAuditPlanPage() {
             {t('cab.auditPlanning.newAuditPlan', 'New audit plan')}
           </h1>
           <p className="mt-1 text-[14px] text-neutral-500">
-            Start from an application or the next due event of a certification cycle. What earlier stages know is filled in: check it and confirm.
+            {t('cab.auditPlanning.create.intro', 'Start from an application or the next due event of a certification cycle. What earlier stages know is filled in: check it and confirm.')}
           </p>
         </div>
 
@@ -154,17 +206,17 @@ export function CabNewAuditPlanPage() {
           {/* Card 1: Where this audit comes from */}
           <section className="space-y-4 rounded-[16px] border border-[#ececec] bg-white p-5">
             <h2 className="text-[15px] font-bold text-neutral-900">
-              Where this audit comes from
+              {t('cab.auditPlanning.create.sourceTitle', 'Where this audit comes from')}
             </h2>
 
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="space-y-1.5">
                 <label className="block text-[14px] font-medium text-neutral-800">
-                  Client <span className="text-error-500">*</span>
+                  {t('cab.auditSchedule.client', 'Client')} <span className="text-error-500">*</span>
                 </label>
                 <SelectField
                   value={selectedClientCode}
-                  placeholder="Select a client"
+                  placeholder={t('cab.auditPlanning.create.selectClient', 'Select a client')}
                   onChange={(code) => {
                     setSelectedClientCode(code)
                     const client = AUDIT_PLANNING_CLIENTS.find((c) => c.code === code)
@@ -172,7 +224,7 @@ export function CabNewAuditPlanPage() {
                   }}
                   options={AUDIT_PLANNING_CLIENTS.map((c) => ({
                     value: c.code,
-                    label: `${c.name} (${c.code} · ${c.country})`,
+                    label: `${c.name} (${c.code})`,
                   }))}
                   className="h-11"
                 />
@@ -180,16 +232,16 @@ export function CabNewAuditPlanPage() {
 
               <div className="space-y-1.5">
                 <label className="block text-[14px] font-medium text-neutral-800">
-                  Application or cycle event <span className="text-error-500">*</span>
+                  {t('cab.auditPlanning.create.applicationOrEvent', 'Application or cycle event')} <span className="text-error-500">*</span>
                 </label>
                 <SelectField
                   value={selectedOptionId}
-                  placeholder="Choose the application or cycle event"
+                  placeholder={t('cab.auditPlanning.create.selectEvent', 'Choose the application or cycle event')}
                   onChange={setSelectedOptionId}
                   disabled={!selectedClient}
                   options={(selectedClient?.options || []).map((opt) => ({
                     value: opt.id,
-                    label: opt.label,
+                    label: optionLabel(opt),
                   }))}
                   className="h-11"
                 />
@@ -200,80 +252,124 @@ export function CabNewAuditPlanPage() {
           {/* Card 2: Details & Special audit / Application pre-filled details */}
           {selectedClient && selectedOption && (
             <section className="space-y-5 rounded-[16px] border border-[#ececec] bg-white p-5">
-              {isSpecialAudit ? (
-                <>
-                  <div className="rounded-[8px] border-s-4 border-s-[#f59e0b] bg-[#fffbeb] px-4 py-3">
-                    <p className="text-[13px] font-bold text-neutral-900">
-                      Special audit without an application
-                    </p>
-                    <p className="mt-0.5 text-[12px] text-neutral-600">
-                      Use this only for special or short-notice audits. Give the reason; the details are completed on the build page.
-                    </p>
-                  </div>
+              <div>
+                <h2 className="text-[15px] font-bold text-neutral-900">{t('cab.auditPlanning.create.takenTitle', 'Taken from earlier stages')}</h2>
+                <p className="mt-0.5 text-[12px] text-neutral-500">
+                  {t('cab.auditPlanning.create.takenDescription', 'These values come from the application, quotation, technical feasibility and certification cycle. Check them and confirm.')}
+                </p>
+              </div>
 
-                  <div className="space-y-1.5">
-                    <label className="block text-[14px] font-medium text-neutral-800">
-                      Reason for the special audit <span className="text-error-500">*</span>
-                    </label>
-                    <textarea
-                      value={specialReason}
-                      onChange={(e) => setSpecialReason(e.target.value)}
-                      placeholder="For example: short-notice audit after a complaint"
-                      rows={3}
-                      className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3.5 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none focus:ring-1 focus:ring-[#1236a3]"
-                    />
+              {existingPlan && !isSpecialAudit && (
+                <div className="rounded-[8px] border border-[#fde68a] bg-[#fffbeb] px-4 py-3">
+                  <p className="text-[13px] font-bold text-neutral-900">
+                    {t('cab.auditPlanning.create.existingCovers', '{{number}} already covers {{stage}} ({{status}})', { number: existingPlan.planNumber, stage: auditStageLabel(t, existingPlan.stage), status: auditStatusLabel(t, existingPlan.status) })}
+                  </p>
+                  <p className="mt-0.5 text-[12px] text-neutral-600">
+                    {t('cab.auditPlanning.create.existingHint', 'Open that plan instead of creating a second one for the same stage.')}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => navigate(cabBuildAuditPlanPath(existingPlan.planNumber))}
+                    className="mt-1 text-[13px] font-semibold text-[#1236a3] underline-offset-4 hover:underline"
+                  >
+                    {t('cab.auditPlanning.create.openPlan', 'Open plan')}
+                  </button>
+                </div>
+              )}
+
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{t('cab.auditSchedule.client', 'Client')}</p>
+                  <p className="mt-0.5 text-[14px] font-bold text-neutral-900">{selectedClient.name}</p>
+                  {selectedOption.type === 'application' && (
+                    <p className="mt-0.5 text-[11px] text-neutral-400">
+                      {t('cab.auditPlanning.create.fromApplication', 'From application {{number}}', { number: selectedOption.applicationNumber })}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{t('cab.auditSchedule.standard', 'Standard')}</p>
+                  <div className="mt-1 flex flex-wrap gap-1">
+                    {selectedOption.standards.map((std) => (
+                      <span
+                        key={std}
+                        className="rounded-[4px] border border-[#c7d7fa] bg-white px-2 py-0.5 text-[11px] font-medium text-[#1236a3]"
+                      >
+                        {std}
+                      </span>
+                    ))}
                   </div>
-                </>
-              ) : (
-                <div className="rounded-[10px] border border-[#dce4f5] bg-[#f8faff] p-4">
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-4">
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                        Audit stage
-                      </p>
-                      <p className="mt-0.5 text-[14px] font-bold text-neutral-900">
-                        {selectedOption.stage}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                        Reviewed duration
-                      </p>
-                      <p className="mt-0.5 text-[14px] font-bold text-[#1236a3]">
-                        {selectedOption.reviewedDurationDays.toFixed(1)} day(s)
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                        Site
-                      </p>
-                      <p className="mt-0.5 text-[14px] font-bold text-neutral-900">
-                        {selectedOption.siteCode} · {selectedOption.siteName}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
-                        Standards
-                      </p>
-                      <div className="mt-1 flex flex-wrap gap-1">
-                        {selectedOption.standards.map((std) => (
-                          <span
-                            key={std}
-                            className="rounded-[4px] border border-[#c7d7fa] bg-white px-2 py-0.5 text-[11px] font-medium text-[#1236a3]"
-                          >
-                            {std}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{t('cab.auditSchedule.auditStage', 'Audit stage')}</p>
+                  <div className="mt-0.5 flex flex-wrap items-center gap-2">
+                    <span className="text-[14px] font-bold text-neutral-900">{auditStageLabel(t, selectedOption.stage)}</span>
+                    <button
+                      type="button"
+                      onClick={toggleSpecialMode}
+                      className="text-[12px] font-semibold text-[#1236a3] underline-offset-4 hover:underline"
+                    >
+                      {isSpecialAudit && dueStageOption
+                        ? t('cab.auditPlanning.create.useDueStage', 'Use the due stage ({{stage}})', { stage: auditStageLabel(t, dueStageOption.stage) })
+                        : t('cab.auditPlanning.create.planSpecial', 'Plan a special audit instead')}
+                    </button>
                   </div>
+                  <p className="mt-0.5 text-[11px] text-neutral-400">
+                    {isSpecialAudit
+                      ? t('cab.auditPlanning.create.specialChosen', 'Special audit chosen by you')
+                      : selectedOption.type === 'application'
+                        ? t('cab.auditPlanning.create.fromApplication', 'From application {{number}}', { number: selectedOption.applicationNumber })
+                        : ''}
+                  </p>
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">{t('cab.auditPlanning.fields.site', 'Site')}</p>
+                  <p className="mt-0.5 text-[14px] font-bold text-neutral-900">
+                    {selectedOption.siteCode} · {selectedOption.siteName}
+                  </p>
+                  {selectedOption.siteAddress && (
+                    <p className="mt-0.5 text-[11px] text-neutral-500">{selectedOption.siteAddress}</p>
+                  )}
+                  {selectedOption.type === 'application' && (
+                    <p className="mt-0.5 text-[11px] text-neutral-400">
+                      {t('cab.auditPlanning.create.siteDeclared', '1 site(s) declared in the application')}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-neutral-400">
+                    {t('cab.auditPlanning.create.proposedTeam', 'Proposed team')}
+                  </p>
+                  <p className="mt-0.5 text-[13px] text-neutral-500">
+                    {t('cab.auditPlanning.create.proposedTeamHint', 'Chosen and confirmed on the build page.')}
+                  </p>
+                </div>
+              </div>
+
+              {isSpecialAudit && (
+                <div className="space-y-1.5 border-t border-[#f0f0f0] pt-4">
+                  <label className="block text-[14px] font-medium text-neutral-800">
+                    {t('cab.auditPlanning.create.specialReason', 'Reason for the special audit')} <span className="text-error-500">*</span>
+                  </label>
+                  <textarea
+                    value={specialReason}
+                    onChange={(e) => setSpecialReason(e.target.value)}
+                    placeholder={t('cab.auditPlanning.create.specialReasonPlaceholder', 'For example: short-notice audit after a complaint')}
+                    rows={2}
+                    maxLength={500}
+                    className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3.5 text-[14px] text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none focus:ring-1 focus:ring-[#1236a3]"
+                  />
                 </div>
               )}
 
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-1.5">
                   <label className="block text-[14px] font-medium text-neutral-800">
-                    Start date <span className="text-error-500">*</span>
+                    {t('cab.auditSchedule.startDate', 'Start date')} <span className="text-error-500">*</span>
                   </label>
                   <IsoDateField value={startDate} onChange={setStartDate} />
                   {startError && (
@@ -285,7 +381,7 @@ export function CabNewAuditPlanPage() {
 
                 <div className="space-y-1.5">
                   <label className="block text-[14px] font-medium text-neutral-800">
-                    End date <span className="text-error-500">*</span>
+                    {t('cab.auditSchedule.endDate', 'End date')} <span className="text-error-500">*</span>
                   </label>
                   <IsoDateField value={endDate} onChange={setEndDate} />
                   {endError && (
@@ -298,11 +394,11 @@ export function CabNewAuditPlanPage() {
 
               <div className="max-w-md space-y-1.5">
                 <label className="block text-[14px] font-medium text-neutral-800">
-                  Lead auditor <span className="text-error-500">*</span>
+                  {t('cab.auditSchedule.leadAuditor', 'Lead auditor')} <span className="text-error-500">*</span>
                 </label>
                 <SelectField
                   value={leadAuditor}
-                  placeholder="Select the lead auditor"
+                  placeholder={t('cab.auditPlanning.create.selectLead', 'Select the lead auditor')}
                   onChange={setLeadAuditor}
                   options={AVAILABLE_AUDITORS_POOL.filter((a) => a.role === 'Lead Auditor').map((a) => ({
                     value: a.name,
@@ -317,8 +413,8 @@ export function CabNewAuditPlanPage() {
                   {dateErrorMessage
                     ? dateErrorMessage
                     : isSpecialAudit && !specialReason.trim()
-                      ? 'Provide the reason for the special audit.'
-                      : 'All pre-checks ready. Proceed to build the full plan.'}
+                      ? ''
+                      : t('cab.auditPlanning.create.ready', 'All pre-checks ready. Proceed to build the full plan.')}
                 </span>
 
                 <div className="flex items-center gap-3">
@@ -327,7 +423,7 @@ export function CabNewAuditPlanPage() {
                     onClick={() => navigate(ROUTES.cabAuditPlanning)}
                     className="h-11 rounded-[8px] border border-[#e2e2e2] bg-white px-5 text-[14px] font-medium text-neutral-700 hover:bg-neutral-50"
                   >
-                    Cancel
+                    {t('common.cancel', 'Cancel')}
                   </button>
                   <button
                     type="submit"
@@ -339,7 +435,7 @@ export function CabNewAuditPlanPage() {
                         : 'cursor-not-allowed bg-[#1236a3]/50',
                     )}
                   >
-                    {isSubmitting ? 'Creating...' : 'Confirm and create plan'}
+                    {isSubmitting ? t('cab.auditPlanning.create.creating', 'Creating...') : t('cab.auditPlanning.create.confirm', 'Confirm and create plan')}
                   </button>
                 </div>
               </div>

@@ -7,9 +7,6 @@ import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useBuildAuditPlanTourSteps } from '@/config/buildAuditPlanTourSteps'
 import { AppIcon, MoreIcon } from '@/components/icons'
 import { AuditTravelCostsPanel } from '@/components/dashboard/cab/travelPolicy/AuditTravelCostsPanel'
-import { AuditPlanChecklistsCard } from '@/components/dashboard/cab/AuditPlanChecklistsCard'
-import { loadAuditChecklistsMock, matchChecklistsForAuditPlan } from '@/lib/api/auditChecklistMockData'
-import type { AuditChecklist } from '@/lib/auditChecklistTypes'
 import {
   fetchAuditPlanById,
   saveAuditPlan,
@@ -37,6 +34,9 @@ import {
   BreadcrumbChevron,
   CheckmarkSvg,
   IcascoConnectedStepper,
+  auditDateLocale,
+  isolateDate,
+  auditStageLabel,
   formatIcascoDate,
 } from '@/components/cab/auditPlanning/shared'
 import { SelectField } from '@/components/ui/Select'
@@ -53,9 +53,9 @@ import { cn } from '@/lib/utils'
 
 type BuildStep = 1 | 2 | 3 | 4
 
-function formatShortRange(start: string, end: string) {
+function formatShortRange(start: string, end: string, locale = 'en-GB') {
   try {
-    const fmt = (d: Date) => d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })
+    const fmt = (d: Date) => isolateDate(d.toLocaleDateString(locale, { day: '2-digit', month: 'short' }), locale)
     return `${fmt(new Date(start))} → ${fmt(new Date(end))}`
   } catch {
     return `${start} → ${end}`
@@ -71,7 +71,7 @@ function teamSignature(members: PlanAssignment[]): string {
 }
 
 export function CabBuildAuditPlanPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { planId } = useParams<{ planId: string }>()
   const [searchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -92,10 +92,6 @@ export function CabBuildAuditPlanPage() {
   const [validationTick, setValidationTick] = useState(0)
   const [teamEvents, setTeamEvents] = useState<TeamEvent[]>([])
   const [auditTrailNote, setAuditTrailNote] = useState('')
-
-  // Audit checklists attached to the plan
-  const [allChecklists, setAllChecklists] = useState<AuditChecklist[]>([])
-  const [selectedChecklistIds, setSelectedChecklistIds] = useState<string[]>([])
 
   // Step 2: Agenda
   const [agenda, setAgenda] = useState<AgendaActivity[]>([])
@@ -137,12 +133,7 @@ export function CabBuildAuditPlanPage() {
   useEffect(() => {
     async function load() {
       setIsLoading(true)
-      const [data, checklistsData] = await Promise.all([
-        fetchAuditPlanById(planId || 'AUD-0310'),
-        loadAuditChecklistsMock(),
-      ])
-      const combinedChecklists = [...checklistsData.mine, ...checklistsData.library]
-      setAllChecklists(combinedChecklists)
+      const data = await fetchAuditPlanById(planId || 'AUD-0310')
       if (data) {
         const planTeam = await fetchPlanTeam(data.id)
         setPlan(data)
@@ -152,10 +143,6 @@ export function CabBuildAuditPlanPage() {
         setConfirmation(planTeam.confirmedBy && planTeam.confirmedAt ? { by: planTeam.confirmedBy, at: planTeam.confirmedAt } : null)
         setTeamEvents(planTeam.events)
         setAuditTrailNote(data.auditTrailNote || '')
-        setSelectedChecklistIds(
-          data.checklistIds ??
-            matchChecklistsForAuditPlan(combinedChecklists, data.standardName, data.stage).map((c) => c.id),
-        )
         setAgenda(data.agendaActivities || [])
         setSiteCode(data.siteAllocation?.siteCode || data.siteCode)
         setSiteName(data.siteAllocation?.siteName || data.siteName)
@@ -239,7 +226,6 @@ export function CabBuildAuditPlanPage() {
         proposedStartDate,
         proposedEndDate,
         auditTrailNote,
-        checklistIds: selectedChecklistIds,
         auditObjectives,
         scopeSummary,
         totalEffortHours: totalEffort,
@@ -289,19 +275,19 @@ export function CabBuildAuditPlanPage() {
     setIsActivityModalOpen(false)
     setEditingActivity(null)
     await persistPlan({ agendaActivities: nextAgenda })
-    showToast('Agenda activity saved.')
+    showToast(t('cab.buildAuditPlan.toast.activitySaved', 'Agenda activity saved.'))
   }
 
   const handleImportTemplate = async () => {
     const template: AgendaActivity[] = [
-      { id: `act-${Date.now()}-1`, date: proposedStartDate, startTime: '09:00', endTime: '09:30', activity: 'Opening meeting & confirmation of scope', auditors: [leadAuditor], durationHours: 0.5 },
-      { id: `act-${Date.now()}-2`, date: proposedStartDate, startTime: '09:30', endTime: '13:00', activity: 'Documented information review (Scope, Policy, Objectives, Manual)', auditors: [leadAuditor], durationHours: 3.5 },
-      { id: `act-${Date.now()}-3`, date: proposedStartDate, startTime: '14:00', endTime: '17:00', activity: 'Site tour, legal compliance & Stage 2 readiness check', auditors: teamMembers.map((m) => m.name), durationHours: 3.0 },
-      { id: `act-${Date.now()}-4`, date: proposedEndDate, startTime: '09:00', endTime: '10:00', activity: 'Closing meeting & Stage 1 conclusions', auditors: [leadAuditor], durationHours: 1.0 },
+      { id: `act-${Date.now()}-1`, date: proposedStartDate, startTime: '09:00', endTime: '09:30', activity: t('cab.buildAuditPlan.template.opening', 'Opening meeting & confirmation of scope'), auditors: [leadAuditor], durationHours: 0.5 },
+      { id: `act-${Date.now()}-2`, date: proposedStartDate, startTime: '09:30', endTime: '13:00', activity: t('cab.buildAuditPlan.template.documents', 'Documented information review (Scope, Policy, Objectives, Manual)'), auditors: [leadAuditor], durationHours: 3.5 },
+      { id: `act-${Date.now()}-3`, date: proposedStartDate, startTime: '14:00', endTime: '17:00', activity: t('cab.buildAuditPlan.template.siteTour', 'Site tour, legal compliance & Stage 2 readiness check'), auditors: teamMembers.map((m) => m.name), durationHours: 3.0 },
+      { id: `act-${Date.now()}-4`, date: proposedEndDate, startTime: '09:00', endTime: '10:00', activity: t('cab.buildAuditPlan.template.closing', 'Closing meeting & Stage 1 conclusions'), auditors: [leadAuditor], durationHours: 1.0 },
     ]
     setAgenda(template)
     await persistPlan({ agendaActivities: template })
-    showToast('Standard iCASCO audit agenda template imported.')
+    showToast(t('cab.buildAuditPlan.toast.templateImported', 'Standard iCASCO audit agenda template imported.'))
   }
 
   if (isLoading || !plan) {
@@ -316,15 +302,30 @@ export function CabBuildAuditPlanPage() {
 
   const teamConfirmed = savedConfirmed && teamSignature(team) === teamSignature(savedTeam)
   const teamReady = Boolean(teamConfirmed && teamCheck?.canConfirm)
+  // Mirrors the artifact: the reason Send to client (and starting) is blocked, or null when sending is allowed.
+  const sendBlockedReason = (() => {
+    if (isValidating || !teamCheck) return t('cab.buildAuditPlan.blocked.checking', 'Checking the audit team.')
+    if (!teamCheck.canConfirm) {
+      const count = Math.max(teamCheck.blockingCount, 1)
+      return t('cab.buildAuditPlan.blocked.issues', 'Sending and starting are blocked: the team has {{count}} blocking issue(s), such as a scheduling conflict.', { count })
+    }
+    if (!team.some((member) => member.role === 'TEAM_LEADER')) {
+      return t('cab.buildAuditPlan.blocked.noLeader', 'Sending and starting are blocked: the team has no team leader.')
+    }
+    if (!teamConfirmed) {
+      return t('cab.buildAuditPlan.blocked.notConfirmed', 'Sending and starting are blocked: the audit team is not confirmed.')
+    }
+    return null
+  })()
   const agendaReady = agenda.length > 0
   const siteReady = Boolean(siteCode && siteAddress.trim())
   const declarationsReady = availabilityConfirmed && noConflictsDeclared
 
   const stepsMeta = [
-    { id: 1 as BuildStep, label: 'Audit team', completed: teamReady },
-    { id: 2 as BuildStep, label: 'Agenda', completed: agendaReady },
-    { id: 3 as BuildStep, label: 'Site & logistics', completed: siteReady },
-    { id: 4 as BuildStep, label: 'Review & send', completed: teamReady && agendaReady && siteReady && declarationsReady },
+    { id: 1 as BuildStep, label: t('cab.buildAuditPlan.steps.team', 'Audit team'), completed: teamReady },
+    { id: 2 as BuildStep, label: t('cab.buildAuditPlan.steps.agenda', 'Agenda'), completed: agendaReady },
+    { id: 3 as BuildStep, label: t('cab.buildAuditPlan.steps.site', 'Site & logistics'), completed: siteReady },
+    { id: 4 as BuildStep, label: t('cab.buildAuditPlan.steps.review', 'Review & send'), completed: teamReady && agendaReady && siteReady && declarationsReady },
   ]
 
   return (
@@ -338,11 +339,11 @@ export function CabBuildAuditPlanPage() {
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
           <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
-            Application Hub
+            {t('cab.workspace.appHub', 'Application Hub')}
           </Link>
           <BreadcrumbChevron />
           <Link to={ROUTES.cabAuditPlanning} className="font-light text-neutral-400 hover:text-primary">
-            Audit schedule
+            {t('cab.sidebar.auditSchedule', 'Audit schedule')}
           </Link>
           <BreadcrumbChevron />
           <span className="font-medium text-neutral-700" dir="ltr">
@@ -356,7 +357,7 @@ export function CabBuildAuditPlanPage() {
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-[28px] font-bold leading-tight text-neutral-900">
-                  Build audit plan
+                  {t('cab.buildAuditPlan.title', 'Build audit plan')}
                 </h1>
                 <AuditStatusBadge status={plan.status} />
               </div>
@@ -366,9 +367,9 @@ export function CabBuildAuditPlanPage() {
                 <span>·</span>
                 <span className="font-medium text-neutral-800">{plan.clientName}</span>
                 <span>·</span>
-                <span>{auditStage}</span>
+                <span>{auditStageLabel(t, auditStage)}</span>
                 <span>·</span>
-                <span dir="ltr">{formatShortRange(proposedStartDate, proposedEndDate)}</span>
+                <span dir="ltr">{formatShortRange(proposedStartDate, proposedEndDate, auditDateLocale(i18n.language))}</span>
                 <span>·</span>
                 <span>{plan.applicationNumber}</span>
               </div>
@@ -379,18 +380,18 @@ export function CabBuildAuditPlanPage() {
                 type="button"
                 onClick={async () => {
                   await persistPlan({ status: 'Draft' })
-                  showToast('Draft saved.')
+                  showToast(t('cab.buildAuditPlan.toast.draftSaved', 'Draft saved.'))
                 }}
                 disabled={isSaving}
                 className="inline-flex h-11 items-center gap-2 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 transition hover:bg-neutral-50"
               >
-                <span>{isSaving ? 'Saving...' : 'Save as Draft'}</span>
+                <span>{isSaving ? t('common.saving', 'Saving...') : t('cab.buildAuditPlan.saveDraft', 'Save as Draft')}</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => setIsChangeModalOpen(true)}
-                title="Change stage or dates"
+                title={t('cab.buildAuditPlan.changeStageDates', 'Change stage or dates')}
                 className="inline-flex size-11 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition hover:bg-neutral-50"
               >
                 <AppIcon icon={MoreIcon} size={18} />
@@ -408,7 +409,7 @@ export function CabBuildAuditPlanPage() {
             rightSlot={
               <span className="inline-flex items-center gap-1.5 text-[13px] font-medium text-[#15803d]">
                 <CheckmarkSvg size={15} />
-                <span>Saved</span>
+                <span>{t('cab.buildAuditPlan.saved', 'Saved')}</span>
               </span>
             }
           />
@@ -429,7 +430,7 @@ export function CabBuildAuditPlanPage() {
           onSave={async () => {
             await persistPlan()
             setIsChangeModalOpen(false)
-            showToast('Audit details updated and reason recorded.')
+            showToast(t('cab.buildAuditPlan.toast.detailsUpdated', 'Audit details updated and reason recorded.'))
           }}
         />
 
@@ -519,7 +520,7 @@ export function CabBuildAuditPlanPage() {
           <CabTourStep steps={tourSteps} stepId="build-plan-agenda-table">
             <section className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-[16px] font-bold text-neutral-900">Audit agenda</h2>
+                <h2 className="text-[16px] font-bold text-neutral-900">{t('cab.buildAuditPlan.agenda.title', 'Audit agenda')}</h2>
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
@@ -536,14 +537,14 @@ export function CabBuildAuditPlanPage() {
                     className="inline-flex h-10 items-center gap-1.5 rounded-[8px] bg-[#1236a3] px-4 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
                   >
                     <span>+</span>
-                    <span>Add activity</span>
+                    <span>{t('cab.buildAuditPlan.agenda.add', 'Add activity')}</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleImportTemplate}
                     className="inline-flex h-10 items-center gap-1.5 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 transition hover:bg-neutral-50"
                   >
-                    <span>Import template</span>
+                    <span>{t('cab.buildAuditPlan.agenda.importTemplate', 'Import template')}</span>
                   </button>
                 </div>
               </div>
@@ -584,11 +585,11 @@ export function CabBuildAuditPlanPage() {
                   <thead>
                     <tr className="bg-[#1236a3] text-white">
                       <th className="w-12 p-3.5 text-start text-[13px] font-medium">#</th>
-                      <th className="p-3.5 text-start text-[13px] font-medium">Date</th>
-                      <th className="p-3.5 text-start text-[13px] font-medium">Time (AST)</th>
-                      <th className="p-3.5 text-start text-[13px] font-medium">Activity</th>
-                      <th className="p-3.5 text-start text-[13px] font-medium">Auditor(s)</th>
-                      <th className="p-3.5 text-start text-[13px] font-medium">Duration</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('cab.buildAuditPlan.agenda.columns.date', 'Date')}</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('cab.buildAuditPlan.agenda.columns.time', 'Time (AST)')}</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('cab.buildAuditPlan.agenda.columns.activity', 'Activity')}</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('cab.buildAuditPlan.agenda.columns.auditors', 'Auditor(s)')}</th>
+                      <th className="p-3.5 text-start text-[13px] font-medium">{t('cab.buildAuditPlan.agenda.columns.duration', 'Duration')}</th>
                       <th className="w-12 p-3.5 text-end text-[13px] font-medium" />
                     </tr>
                   </thead>
@@ -596,11 +597,11 @@ export function CabBuildAuditPlanPage() {
                     {agenda.map((item, idx) => (
                       <tr key={item.id} className={cn('transition-colors hover:bg-[#e8edfc]/40', idx % 2 === 1 ? 'bg-[#f9fafc]' : 'bg-white')}>
                         <td className="px-3.5 py-3 text-[13px] text-neutral-400">{idx + 1}</td>
-                        <td className="px-3.5 py-3 text-[14px] font-medium text-neutral-800" dir="ltr">{formatIcascoDate(item.date)}</td>
+                        <td className="px-3.5 py-3 text-[14px] font-medium text-neutral-800" dir="ltr">{formatIcascoDate(item.date, auditDateLocale(i18n.language))}</td>
                         <td className="px-3.5 py-3 text-[13px] text-neutral-600">{item.startTime} – {item.endTime}</td>
                         <td className="px-3.5 py-3 text-[14px] font-medium text-neutral-900">{item.activity}</td>
                         <td className="px-3.5 py-3 text-[13px] text-neutral-700">{item.auditors.join(', ')}</td>
-                        <td className="px-3.5 py-3 text-[13px] font-semibold text-neutral-800">{item.durationHours.toFixed(1)} h</td>
+                        <td className="px-3.5 py-3 text-[13px] font-semibold text-neutral-800">{item.durationHours.toFixed(1)} {t('cab.buildAuditPlan.agenda.hoursShort', 'h')}</td>
                         <td className="px-3.5 py-3 text-end">
                           <button
                             type="button"
@@ -625,34 +626,13 @@ export function CabBuildAuditPlanPage() {
                   <tfoot>
                     <tr className="border-t border-[#ececec] bg-[#f8fafc] font-bold text-neutral-900">
                       <td colSpan={5} className="p-3.5 text-start text-[14px]">
-                        Total (reviewed duration: {plan.reviewedDurationDays.toFixed(1)} d)
+                        {t('cab.buildAuditPlan.agenda.total', 'Total (reviewed duration: {{code}})', { code: plan.reviewedDurationCode || '' })}
                       </td>
-                      <td className="p-3.5 text-start text-[14px] text-[#1236a3]">{totalEffort.toFixed(1)} h</td>
+                      <td className="p-3.5 text-start text-[14px] text-[#1236a3]">{totalEffort.toFixed(1)} {t('cab.buildAuditPlan.agenda.hoursShort', 'h')}</td>
                       <td className="p-3.5" />
                     </tr>
                   </tfoot>
                 </table>
-              </div>
-
-              <div className="mt-5">
-                <AuditPlanChecklistsCard
-                  allChecklists={allChecklists}
-                  selectedIds={selectedChecklistIds}
-                  standardName={plan.standardName}
-                  stage={auditStage}
-                  onChangeSelectedIds={setSelectedChecklistIds}
-                  onAutoMatch={() => {
-                    const matched = matchChecklistsForAuditPlan(allChecklists, plan.standardName, auditStage)
-                    setSelectedChecklistIds(matched.map((c) => c.id))
-                    showToast(
-                      t('cab.auditPlanning.checklists.matched', 'Matched {{count}} checklist(s) for {{standard}} ({{stage}}).', {
-                        count: matched.length,
-                        standard: plan.standardName,
-                        stage: auditStage,
-                      }),
-                    )
-                  }}
-                />
               </div>
 
               <div className="mt-5 flex justify-end border-t border-[#f0f0f0] pt-4">
@@ -660,16 +640,16 @@ export function CabBuildAuditPlanPage() {
                   type="button"
                   onClick={async () => {
                     if (agenda.length === 0) {
-                      showToast('Please add at least one agenda activity before continuing.', 'warning')
+                      showToast(t('cab.buildAuditPlan.warn.addActivityBeforeContinue', 'Please add at least one agenda activity before continuing.'), 'warning')
                       return
                     }
                     await persistPlan()
                     setActiveStep(3)
-                    showToast('Agenda saved. Moving to Site & logistics.')
+                    showToast(t('cab.buildAuditPlan.toast.agendaSaved', 'Agenda saved. Moving to Site & logistics.'))
                   }}
                   className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
                 >
-                  Save & continue to Site & logistics →
+                  {t('cab.buildAuditPlan.agenda.continue', 'Save & continue to Site & logistics →')}
                 </button>
               </div>
             </section>
@@ -682,7 +662,7 @@ export function CabBuildAuditPlanPage() {
             <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="flex items-center justify-between border-b border-[#ececec] pb-2.5">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-[16px] font-bold text-neutral-900">Site allocation</h3>
+                  <h3 className="text-[16px] font-bold text-neutral-900">{t('cab.buildAuditPlan.site.title', 'Site allocation')}</h3>
                   <span className="rounded-[4px] bg-[#e8edfc] px-2.5 py-0.5 text-[11px] font-semibold text-[#1236a3]">
                     1 site
                   </span>
@@ -692,19 +672,19 @@ export function CabBuildAuditPlanPage() {
                   onClick={async () => {
                     if (isEditingSite) {
                       await persistPlan()
-                      showToast('Site allocation saved.')
+                      showToast(t('cab.buildAuditPlan.toast.siteSaved', 'Site allocation saved.'))
                     }
                     setIsEditingSite((prev) => !prev)
                   }}
                   className="text-[13px] font-semibold text-[#1236a3] hover:underline"
                 >
-                  {isEditingSite ? 'Save' : 'Edit'}
+                  {isEditingSite ? t('common.save', 'Save') : t('common.edit', 'Edit')}
                 </button>
               </div>
 
               <div className="space-y-3 text-[13px]">
                 <div>
-                  <label className="mb-1 block font-medium text-neutral-700">Site code *</label>
+                  <label className="mb-1 block font-medium text-neutral-700">{t('cab.buildAuditPlan.site.code', 'Site code *')}</label>
                   <input
                     type="text"
                     value={siteCode}
@@ -714,7 +694,7 @@ export function CabBuildAuditPlanPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block font-medium text-neutral-700">Site name *</label>
+                  <label className="mb-1 block font-medium text-neutral-700">{t('cab.buildAuditPlan.site.name', 'Site name *')}</label>
                   <input
                     type="text"
                     value={siteName}
@@ -724,7 +704,7 @@ export function CabBuildAuditPlanPage() {
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block font-medium text-neutral-700">On-site personnel</label>
+                  <label className="mb-1 block font-medium text-neutral-700">{t('cab.buildAuditPlan.site.personnel', 'On-site personnel')}</label>
                   {isEditingSite ? (
                     <div className="space-y-2 rounded-[8px] border border-[#e2e2e2] bg-white p-2.5">
                       <div className="flex flex-wrap gap-1.5">
@@ -748,7 +728,7 @@ export function CabBuildAuditPlanPage() {
                       </div>
                       <SelectField
                         value=""
-                        placeholder="+ Add on-site auditor"
+                        placeholder={t('cab.buildAuditPlan.site.addAuditor', '+ Add on-site auditor')}
                         onChange={(val) => {
                           if (val && !onSitePersonnel.includes(val)) {
                             setOnSitePersonnel((prev) => [...prev, val])
@@ -769,7 +749,7 @@ export function CabBuildAuditPlanPage() {
                   )}
                 </div>
                 <div>
-                  <label className="mb-1 block font-medium text-neutral-700">Site address *</label>
+                  <label className="mb-1 block font-medium text-neutral-700">{t('cab.buildAuditPlan.site.address', 'Site address *')}</label>
                   <textarea
                     value={siteAddress}
                     disabled={!isEditingSite}
@@ -784,10 +764,10 @@ export function CabBuildAuditPlanPage() {
             {/* Remote Activities Card with Edit / Save + Include remote toggle */}
             <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="flex items-center justify-between border-b border-[#ececec] pb-2.5">
-                <h3 className="text-[16px] font-bold text-neutral-900">Remote activities</h3>
+                <h3 className="text-[16px] font-bold text-neutral-900">{t('cab.buildAuditPlan.remote.title', 'Remote activities')}</h3>
                 <div className="flex items-center gap-3">
                   <div className="flex items-center gap-2">
-                    <span className="text-[12px] text-neutral-500">Include remote</span>
+                    <span className="text-[12px] text-neutral-500">{t('cab.buildAuditPlan.remote.include', 'Include remote')}</span>
                     <Toggle
                       size="sm"
                       checked={remoteEnabled}
@@ -795,7 +775,7 @@ export function CabBuildAuditPlanPage() {
                         setRemoteEnabled(next)
                         if (next) setIsEditingRemote(true)
                       }}
-                      aria-label="Include remote"
+                      aria-label={t('cab.buildAuditPlan.remote.include', 'Include remote')}
                     />
                   </div>
                   <button
@@ -803,19 +783,19 @@ export function CabBuildAuditPlanPage() {
                     onClick={async () => {
                       if (isEditingRemote) {
                         await persistPlan()
-                        showToast('Remote activities saved.')
+                        showToast(t('cab.buildAuditPlan.toast.remoteSaved', 'Remote activities saved.'))
                       }
                       setIsEditingRemote((prev) => !prev)
                     }}
                     className="text-[13px] font-semibold text-[#1236a3] hover:underline"
                   >
-                    {isEditingRemote ? 'Save' : 'Edit'}
+                    {isEditingRemote ? t('common.save', 'Save') : t('common.edit', 'Edit')}
                   </button>
                 </div>
               </div>
               <div className="space-y-3 text-[13px]">
                 <div>
-                  <label className="mb-1 block font-medium text-neutral-700">ICT Platform</label>
+                  <label className="mb-1 block font-medium text-neutral-700">{t('cab.buildAuditPlan.remote.platform', 'ICT Platform')}</label>
                   <SelectField
                     value={remotePlatform}
                     onChange={setRemotePlatform}
@@ -826,14 +806,14 @@ export function CabBuildAuditPlanPage() {
                 </div>
                 <div>
                   <label className="mb-1 block font-medium text-neutral-700">
-                    Remote audit notes (IAF MD 4)
+                    {t('cab.buildAuditPlan.remote.notes', 'Remote audit notes (IAF MD 4)')}
                   </label>
                   <textarea
                     value={remoteNotes}
                     disabled={!isEditingRemote && !remoteEnabled}
                     onChange={(e) => setRemoteNotes(e.target.value)}
                     rows={4}
-                    placeholder="Specify ICT tools, connectivity check, and confidentiality agreements..."
+                    placeholder={t('cab.buildAuditPlan.remote.placeholder', 'Specify ICT tools, connectivity check, and confidentiality agreements...')}
                     className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[13px] disabled:bg-[#f9fafc] disabled:text-neutral-600 focus:border-[#1236a3] focus:outline-none"
                   />
                 </div>
@@ -843,31 +823,31 @@ export function CabBuildAuditPlanPage() {
             {/* Travel & Logistics Card with Edit / Save toggle */}
             <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div className="flex items-center justify-between border-b border-[#ececec] pb-2.5">
-                <h3 className="text-[16px] font-bold text-neutral-900">Travel notes</h3>
+                <h3 className="text-[16px] font-bold text-neutral-900">{t('cab.buildAuditPlan.travel.title', 'Travel notes')}</h3>
                 <button
                   type="button"
                   onClick={async () => {
                     if (isEditingTravel) {
                       await persistPlan()
-                      showToast('Travel & logistics saved.')
+                      showToast(t('cab.buildAuditPlan.toast.travelSaved', 'Travel & logistics saved.'))
                     }
                     setIsEditingTravel((prev) => !prev)
                   }}
                   className="text-[13px] font-semibold text-[#1236a3] hover:underline"
                 >
-                  {isEditingTravel ? 'Save' : 'Edit'}
+                  {isEditingTravel ? t('common.save', 'Save') : t('common.edit', 'Edit')}
                 </button>
               </div>
               <div className="space-y-3 text-[13px]">
                 <label className="block font-medium text-neutral-700">
-                  Travel, accommodation & site entry notes
+                  {t('cab.buildAuditPlan.travel.notes', 'Travel, accommodation & site entry notes')}
                 </label>
                 <textarea
                   value={travelNotes}
                   disabled={!isEditingTravel}
                   onChange={(e) => setTravelNotes(e.target.value)}
                   rows={6}
-                  placeholder="Record flight/transport arrangements, PPE requirements, and arrival instructions..."
+                  placeholder={t('cab.buildAuditPlan.travel.placeholder', 'Record flight/transport arrangements, PPE requirements, and arrival instructions...')}
                   className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[13px] disabled:bg-[#f9fafc] disabled:text-neutral-600 focus:border-[#1236a3] focus:outline-none"
                 />
               </div>
@@ -892,16 +872,16 @@ export function CabBuildAuditPlanPage() {
                 type="button"
                 onClick={async () => {
                   if (!siteCode.trim() || !siteAddress.trim()) {
-                    showToast('Please complete site code and site address before continuing.', 'warning')
+                    showToast(t('cab.buildAuditPlan.warn.siteBeforeContinue', 'Please complete site code and site address before continuing.'), 'warning')
                     return
                   }
                   await persistPlan()
                   setActiveStep(4)
-                  showToast('Site & logistics saved. Moving to Review & send.')
+                  showToast(t('cab.buildAuditPlan.toast.siteLogisticsSaved', 'Site & logistics saved. Moving to Review & send.'))
                 }}
                 className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
               >
-                Save & continue to Review & send →
+                {t('cab.buildAuditPlan.site.continue', 'Save & continue to Review & send →')}
               </button>
             </div>
           </div>
@@ -925,11 +905,12 @@ export function CabBuildAuditPlanPage() {
             agendaReady={agendaReady}
             siteReady={siteReady}
             declarationsReady={declarationsReady}
+            sendBlockedReason={sendBlockedReason}
             onGoToStep={setActiveStep}
             onPlanChanged={setPlan}
             onStartExecution={async () => {
               if (!teamReady || !agendaReady || !siteReady || !declarationsReady) {
-                showToast('Complete Audit team, Agenda, Site & logistics, and Team declarations first.', 'warning')
+                showToast(t('cab.buildAuditPlan.warn.completeAllFirst', 'Complete Audit team, Agenda, Site & logistics, and Team declarations first.'), 'warning')
                 return
               }
               await persistPlan()
@@ -940,25 +921,29 @@ export function CabBuildAuditPlanPage() {
             onChangeScope={setScopeSummary}
             onChangeAvailability={setAvailabilityConfirmed}
             onChangeNoConflicts={setNoConflictsDeclared}
+            onChangeTimezone={async (timezone) => {
+              const updated = await saveAuditPlan({ id: plan.id, timezone })
+              setPlan(updated)
+            }}
             onSaveDraft={async () => {
               await persistPlan({ status: 'Draft' })
-              showToast('Draft saved.')
+              showToast(t('cab.buildAuditPlan.toast.draftSaved', 'Draft saved.'))
             }}
             onSendToClient={async () => {
               if (!teamReady) {
-                showToast('Please confirm the audit team first.', 'warning')
+                showToast(t('cab.buildAuditPlan.warn.confirmTeam', 'Please confirm the audit team first.'), 'warning')
                 return
               }
               if (!agendaReady) {
-                showToast('Please add at least one agenda activity first.', 'warning')
+                showToast(t('cab.buildAuditPlan.warn.addActivity', 'Please add at least one agenda activity first.'), 'warning')
                 return
               }
               if (!siteReady) {
-                showToast('Please complete site & logistics details first.', 'warning')
+                showToast(t('cab.buildAuditPlan.warn.completeSite', 'Please complete site & logistics details first.'), 'warning')
                 return
               }
               if (!declarationsReady) {
-                showToast('Please confirm all team declarations before sending.', 'warning')
+                showToast(t('cab.buildAuditPlan.warn.confirmDeclarations', 'Please confirm all team declarations before sending.'), 'warning')
                 return
               }
               await persistPlan({
@@ -975,7 +960,7 @@ export function CabBuildAuditPlanPage() {
                   },
                 },
               })
-              showToast('Audit plan sent to client.')
+              showToast(t('cab.buildAuditPlan.toast.sent', 'Audit plan sent to client.'))
             }}
           />
         )}

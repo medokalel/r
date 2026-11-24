@@ -5,9 +5,18 @@ interface TablePaginationProps {
   totalPages: number
   onPageChange: (page: number) => void
   className?: string
+  previousLabel?: string
+  nextLabel?: string
 }
 
-export function TablePagination({ page, totalPages, onPageChange, className }: TablePaginationProps) {
+export function TablePagination({
+  page,
+  totalPages,
+  onPageChange,
+  className,
+  previousLabel = 'Previous',
+  nextLabel = 'Next',
+}: TablePaginationProps) {
   const pages = Array.from({ length: Math.min(totalPages, 3) }, (_, index) => index + 1)
 
   return (
@@ -18,7 +27,7 @@ export function TablePagination({ page, totalPages, onPageChange, className }: T
         onClick={() => onPageChange(page - 1)}
         className="px-2 py-1 text-[14px] text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Previous
+        {previousLabel}
       </button>
       {pages.map((pageNumber) => (
         <button
@@ -41,7 +50,7 @@ export function TablePagination({ page, totalPages, onPageChange, className }: T
         onClick={() => onPageChange(page + 1)}
         className="px-2 py-1 text-[14px] text-neutral-500 transition-colors hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Next
+        {nextLabel}
       </button>
     </div>
   )

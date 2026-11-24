@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { useRef, useState } from 'react'
 import type { AuditPlan } from '@/lib/api/cabAuditPlanningApi'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -59,6 +60,7 @@ export function IcascoConnectedStepper<TStep extends number>({
   onSelectStep: (step: TStep) => void
   rightSlot?: React.ReactNode
 }) {
+  const { t } = useTranslation()
   return (
     <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
       {rightSlot && <div className="mb-4 flex items-center justify-end">{rightSlot}</div>}
@@ -119,10 +121,10 @@ export function IcascoConnectedStepper<TStep extends number>({
                   )}
                 >
                   {isCompleted && !isCurrent
-                    ? 'Completed'
+                    ? t('cab.auditPlanning.stepper.completed', 'Completed')
                     : isCurrent
-                      ? 'Current stage'
-                      : 'Pending'}
+                      ? t('cab.auditPlanning.stepper.current', 'Current stage')
+                      : t('cab.auditPlanning.stepper.pending', 'Pending')}
                 </span>
               </button>
             </li>
@@ -274,20 +276,34 @@ export function IsoDateField({
   )
 }
 
-export function formatIcascoDate(iso?: string): string {
+/** Date locale for Audit Planning screens; Latin digits are kept in Arabic, matching the rest of the app. */
+export function auditDateLocale(language?: string): string {
+  return language?.startsWith('ar') ? 'ar-u-nu-latn' : 'en-GB'
+}
+
+/** Keeps each Arabic date as its own right-to-left unit so ranges do not reorder inside mixed text. */
+export function isolateDate(text: string, locale: string): string {
+  return locale.startsWith('ar') ? `\u2067${text}\u2069` : text
+}
+
+export function formatIcascoDate(iso?: string, locale = 'en-GB'): string {
   if (!iso) return '—'
   const [y, m, d] = iso.split('-').map(Number)
   if (!y || !m || !d) return iso
   const date = new Date(y, m - 1, d)
   if (Number.isNaN(date.getTime())) return iso
-  return date.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  })
+  return isolateDate(
+    date.toLocaleDateString(locale, {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+    }),
+    locale,
+  )
 }
 
 export function AuditStatusBadge({ status }: { status: AuditPlan['status'] }) {
+  const { t } = useTranslation()
   return (
     <span
       className={cn(
@@ -298,7 +314,40 @@ export function AuditStatusBadge({ status }: { status: AuditPlan['status'] }) {
         (status === 'Draft' || status === 'In progress') && 'bg-[#fff7ed] text-[#ea580c]',
       )}
     >
-      {status}
+      {auditStatusLabel(t, status)}
     </span>
   )
+}
+
+const AUDIT_STATUS_KEYS: Record<string, string> = {
+  Draft: 'draft',
+  'Under review': 'underReview',
+  Planned: 'planned',
+  'In progress': 'inProgress',
+  Completed: 'completed',
+}
+
+export function auditStatusLabel(
+  t: (key: string, defaultValue: string) => string,
+  status: string,
+): string {
+  const key = AUDIT_STATUS_KEYS[status]
+  return key ? t(`cab.auditPlanning.status.${key}`, status) : status
+}
+
+const AUDIT_STAGE_KEYS: Record<string, string> = {
+  'Stage 1': 'stage1',
+  'Stage 2': 'stage2',
+  'Surveillance 1': 'surveillance1',
+  'Surveillance 2': 'surveillance2',
+  Recertification: 'recertification',
+  'Special Audit': 'specialAudit',
+}
+
+export function auditStageLabel(
+  t: (key: string, defaultValue: string) => string,
+  stage: string,
+): string {
+  const key = AUDIT_STAGE_KEYS[stage]
+  return key ? t(`cab.auditPlanning.stages.${key}`, stage) : stage
 }

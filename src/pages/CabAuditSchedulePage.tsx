@@ -39,6 +39,9 @@ import { AuditPlanLifecycleDialog } from '@/components/cab/auditPlanning/AuditPl
 import {
   AuditStatusBadge,
   BreadcrumbChevron,
+  auditStageLabel,
+  auditDateLocale,
+  auditStatusLabel,
   formatIcascoDate,
 } from '@/components/cab/auditPlanning/shared'
 import { getLifecycleBlock, hasAuditReport, type LifecycleAction } from '@/lib/api/auditPlanLifecycleApi'
@@ -72,9 +75,9 @@ const WEEKDAYS = [
 
 const PIPELINE_STAGES: AuditPlanStatus[] = [
   'Draft',
+  'Under review',
   'Planned',
   'In progress',
-  'Under review',
   'Completed',
 ]
 
@@ -136,17 +139,22 @@ export function CabAuditSchedulePage() {
     [allPlans, i18n.language],
   )
 
+  const isPipelineView = topViewMode === 'list' && subViewMode === 'pipeline'
+
   const auditPlans = useMemo(() => {
     const q = searchInput.trim().toLowerCase()
     return allPlans.filter((p) => {
-      if (selectedPeriod !== 'All' && !planOverlapsPeriod(p, selectedPeriod)) {
-        return false
-      }
-      if (selectedCountry !== 'All' && p.country.toLowerCase() !== selectedCountry.toLowerCase()) {
-        return false
-      }
-      if (selectedStatus !== 'All' && p.status.toLowerCase() !== selectedStatus.toLowerCase()) {
-        return false
+      // The pipeline view has no period/country/status filters: search only, like the artifact.
+      if (!isPipelineView) {
+        if (selectedPeriod !== 'All' && !planOverlapsPeriod(p, selectedPeriod)) {
+          return false
+        }
+        if (selectedCountry !== 'All' && p.country.toLowerCase() !== selectedCountry.toLowerCase()) {
+          return false
+        }
+        if (selectedStatus !== 'All' && p.status.toLowerCase() !== selectedStatus.toLowerCase()) {
+          return false
+        }
       }
       if (!q) return true
       return (
@@ -158,7 +166,7 @@ export function CabAuditSchedulePage() {
         p.standards.some((s) => s.toLowerCase().includes(q))
       )
     })
-  }, [allPlans, searchInput, selectedPeriod, selectedCountry, selectedStatus])
+  }, [allPlans, searchInput, selectedPeriod, selectedCountry, selectedStatus, isPipelineView])
 
   const hasActiveFilters =
     searchInput.trim() !== '' ||
@@ -175,19 +183,19 @@ export function CabAuditSchedulePage() {
   }
 
   const exportColumns: TableColumn<AuditPlan>[] = [
-    { header: 'Audit Plan', value: (row) => row.planNumber },
-    { header: 'Client', value: (row) => `${row.clientName} (${row.clientCode})` },
-    { header: 'Country', value: (row) => row.country },
-    { header: 'Stage', value: (row) => row.stage },
-    { header: 'Standards', value: (row) => row.standards.join(', ') },
-    { header: 'Site', value: (row) => row.siteName },
+    { header: t('cab.auditSchedule.export.columns.auditPlan', 'Audit Plan'), value: (row) => row.planNumber },
+    { header: t('cab.auditSchedule.columns.client', 'Client'), value: (row) => `${row.clientName} (${row.clientCode})` },
+    { header: t('cab.auditSchedule.filters.country', 'Country'), value: (row) => row.country },
+    { header: t('cab.auditSchedule.columns.stage', 'Stage'), value: (row) => auditStageLabel(t, row.stage) },
+    { header: t('cab.auditSchedule.export.columns.standards', 'Standards'), value: (row) => row.standards.join(', ') },
+    { header: t('cab.auditPlanning.fields.site', 'Site'), value: (row) => row.siteName },
     {
-      header: 'Dates',
+      header: t('cab.auditSchedule.columns.dates', 'Dates'),
       value: (row) =>
-        `${formatIcascoDate(row.proposedStartDate)} - ${formatIcascoDate(row.proposedEndDate)}`,
+        `${formatIcascoDate(row.proposedStartDate, auditDateLocale(i18n.language))} - ${formatIcascoDate(row.proposedEndDate, auditDateLocale(i18n.language))}`,
     },
-    { header: 'Lead Auditor', value: (row) => row.leadAuditor },
-    { header: 'Status', value: (row) => row.status },
+    { header: t('cab.auditSchedule.columns.leadAuditor', 'Lead auditor'), value: (row) => row.leadAuditor },
+    { header: t('cab.auditSchedule.columns.status', 'Status'), value: (row) => auditStatusLabel(t, row.status) },
   ]
 
   const handleExportExcel = () => {
@@ -278,8 +286,8 @@ export function CabAuditSchedulePage() {
   const kpiCards = [
     {
       key: 'Draft' as const,
-      label: 'Draft plans',
-      sub: 'In preparation & team setup',
+      label: t('cab.auditSchedule.kpi.draft.label', 'Draft plans'),
+      sub: t('cab.auditSchedule.kpi.draft.sub', 'In preparation & team setup'),
       count: counts.Draft,
       icon: FileTextIcon,
       iconBg: 'bg-[#dbeafe]',
@@ -287,8 +295,8 @@ export function CabAuditSchedulePage() {
     },
     {
       key: 'Planned' as const,
-      label: 'Planned audits',
-      sub: 'Confirmed & ready to start',
+      label: t('cab.auditSchedule.kpi.planned.label', 'Planned audits'),
+      sub: t('cab.auditSchedule.kpi.planned.sub', 'Confirmed & ready to start'),
       count: counts.Planned,
       icon: HistoryIcon,
       iconBg: 'bg-[#fef3c6]',
@@ -296,8 +304,8 @@ export function CabAuditSchedulePage() {
     },
     {
       key: 'In progress' as const,
-      label: 'In execution',
-      sub: 'On-site checklists active',
+      label: t('cab.auditSchedule.kpi.inProgress.label', 'In execution'),
+      sub: t('cab.auditSchedule.kpi.inProgress.sub', 'On-site checklists active'),
       count: counts['In progress'],
       icon: CheckIcon,
       iconBg: 'bg-[#d7f4f0]',
@@ -305,8 +313,8 @@ export function CabAuditSchedulePage() {
     },
     {
       key: 'Completed' as const,
-      label: 'Completed audits',
-      sub: 'Ready for decision handoff',
+      label: t('cab.auditSchedule.kpi.completed.label', 'Completed audits'),
+      sub: t('cab.auditSchedule.kpi.completed.sub', 'Ready for decision handoff'),
       count: counts.Completed,
       icon: SuccessCircleIcon,
       iconBg: 'bg-[#dcfce7]',
@@ -424,7 +432,7 @@ export function CabAuditSchedulePage() {
                 <div className="mt-auto flex items-center justify-between gap-2">
                   <span className="text-[12px] text-neutral-500">{card.sub}</span>
                   <CardFooterLink
-                    label={isSelected ? 'Show all' : 'Filter'}
+                    label={isSelected ? t('cab.auditSchedule.kpi.showAll', 'Show all') : t('cab.auditSchedule.kpi.filter', 'Filter')}
                     onClick={() => setSelectedStatus(isSelected ? 'All' : card.key)}
                   />
                 </div>
@@ -436,7 +444,13 @@ export function CabAuditSchedulePage() {
         {/* Separate iCASCO Filters Card */}
         <CabTourStep steps={tourSteps} stepId="audit-schedule-filters">
           <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto_auto] lg:items-end">
+            <div
+              className={
+                isPipelineView
+                  ? 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_auto] lg:items-end'
+                  : 'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr_auto_auto] lg:items-end'
+              }
+            >
               <div className="flex flex-col gap-2">
                 <label
                   htmlFor="audit-schedule-search"
@@ -462,6 +476,7 @@ export function CabAuditSchedulePage() {
                 </div>
               </div>
 
+              {!isPipelineView && (
               <div className="flex flex-col gap-2">
                 <span className="text-[13px] font-semibold text-neutral-700">
                   {t('cab.auditSchedule.filters.period', 'Planned period')}
@@ -476,7 +491,9 @@ export function CabAuditSchedulePage() {
                   ]}
                 />
               </div>
+              )}
 
+              {!isPipelineView && (
               <div className="flex flex-col gap-2">
                 <span className="text-[13px] font-semibold text-neutral-700">
                   {t('cab.auditSchedule.filters.country', 'Country')}
@@ -491,26 +508,29 @@ export function CabAuditSchedulePage() {
                   ]}
                 />
               </div>
+              )}
 
+              {!isPipelineView && (
               <div className="flex flex-col gap-2">
-                <span className="text-[13px] font-semibold text-neutral-700">Status</span>
+                <span className="text-[13px] font-semibold text-neutral-700">{t('cab.auditSchedule.filters.status', 'Status')}</span>
                 <SelectField
                   value={selectedStatus}
                   onChange={setSelectedStatus}
                   className="h-11"
                   options={[
-                    { value: 'All', label: 'All statuses' },
-                    { value: 'Draft', label: 'Draft' },
-                    { value: 'Planned', label: 'Planned' },
-                    { value: 'In progress', label: 'In progress' },
-                    { value: 'Under review', label: 'Under review' },
-                    { value: 'Completed', label: 'Completed' },
+                    { value: 'All', label: t('cab.auditSchedule.filters.allStatuses', 'All statuses') },
+                    { value: 'Draft', label: auditStatusLabel(t, 'Draft') },
+                    { value: 'Planned', label: auditStatusLabel(t, 'Planned') },
+                    { value: 'In progress', label: auditStatusLabel(t, 'In progress') },
+                    { value: 'Under review', label: auditStatusLabel(t, 'Under review') },
+                    { value: 'Completed', label: auditStatusLabel(t, 'Completed') },
                   ]}
                 />
               </div>
+              )}
 
               <div className="flex flex-col gap-2">
-                <span className="text-[13px] font-semibold text-neutral-700">View</span>
+                <span className="text-[13px] font-semibold text-neutral-700">{t('cab.auditSchedule.viewLabel', 'View')}</span>
                 <div className="inline-flex h-11 items-center gap-1 rounded-[8px] border border-[#e2e2e2] bg-[#f9fafc] p-1">
                   {(['list', 'pipeline'] as const).map((mode) => (
                     <button
@@ -528,12 +548,13 @@ export function CabAuditSchedulePage() {
                       )}
                     >
                       <AppIcon icon={mode === 'list' ? MenuRowsIcon : DashboardIcon} size={15} />
-                      <span className="capitalize">{mode}</span>
+                      <span className="capitalize">{mode === 'list' ? t('cab.auditSchedule.viewMode.list', 'List') : t('cab.auditSchedule.viewMode.pipeline', 'Pipeline')}</span>
                     </button>
                   ))}
                 </div>
               </div>
 
+              {!isPipelineView && (
               <div className="flex items-end justify-start lg:justify-end">
                 <button
                   type="button"
@@ -541,9 +562,10 @@ export function CabAuditSchedulePage() {
                   disabled={!hasActiveFilters}
                   className="h-11 whitespace-nowrap text-[14px] font-medium text-primary hover:underline disabled:cursor-not-allowed disabled:text-neutral-300 disabled:no-underline"
                 >
-                  Clear filters
+                  {t('cab.auditSchedule.filters.clear', 'Clear filters')}
                 </button>
               </div>
+              )}
             </div>
           </section>
         </CabTourStep>
@@ -556,7 +578,7 @@ export function CabAuditSchedulePage() {
                 {t('cab.sidebar.auditSchedule', 'Audit schedule')}
               </h2>
               <p className="text-[13px] text-neutral-500">
-                Showing {auditPlans.length} audit(s)
+                {t('cab.auditSchedule.showing', 'Showing {{total}} audit(s)', { total: auditPlans.length })}
               </p>
             </div>
 
@@ -581,21 +603,21 @@ export function CabAuditSchedulePage() {
                   >
                     <DropdownMenu.Item
                       onSelect={() => {
-                        toast.success('Import template downloaded (Excel/CSV).')
+                        toast.success(t('cab.auditSchedule.import.templateDownloaded', 'Import template downloaded (Excel/CSV).'))
                       }}
                       className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                     >
                       <AppIcon icon={DownloadTrayIcon} size={18} />
-                      Download Excel template
+                      {t('cab.auditSchedule.import.downloadTemplate', 'Download Excel template')}
                     </DropdownMenu.Item>
                     <DropdownMenu.Item
                       onSelect={() => {
-                        toast.success('Audit schedule import ready.')
+                        toast.success(t('cab.auditSchedule.import.ready', 'Audit schedule import ready.'))
                       }}
                       className="flex cursor-pointer select-none items-center gap-2 rounded-[6px] px-3 py-2.5 text-[13px] font-medium text-neutral-800 outline-none data-[highlighted]:bg-neutral-50"
                     >
                       <AppIcon icon={ExcelFileIcon} size={18} />
-                      Import from Excel / CSV
+                      {t('cab.auditSchedule.import.fromFile', 'Import from Excel / CSV')}
                     </DropdownMenu.Item>
                   </DropdownMenu.Content>
                 </DropdownMenu.Portal>
@@ -670,7 +692,7 @@ export function CabAuditSchedulePage() {
                       className="flex flex-col rounded-[16px] border border-[#ececec] bg-white p-4"
                     >
                       <div className="mb-3 flex items-center justify-between border-b border-[#f0f0f0] pb-3">
-                        <span className="text-[14px] font-bold text-neutral-900">{stage}</span>
+                        <span className="text-[14px] font-bold text-neutral-900">{auditStatusLabel(t, stage)}</span>
                         <span className="rounded-[4px] bg-[#e8edfc] px-2.5 py-0.5 text-[12px] font-bold text-primary">
                           {stagePlans.length}
                         </span>
@@ -687,7 +709,7 @@ export function CabAuditSchedulePage() {
                               <span className="text-[13px] font-bold text-primary">
                                 {plan.planNumber}
                               </span>
-                              <span className="text-[11px] text-neutral-500">{plan.stage}</span>
+                              <span className="text-[11px] text-neutral-500">{auditStageLabel(t, plan.stage)}</span>
                             </div>
                             <p className="mt-1.5 text-[14px] font-semibold text-neutral-900">
                               {plan.clientName}
@@ -703,14 +725,14 @@ export function CabAuditSchedulePage() {
                               ))}
                             </div>
                             <div className="mt-3 flex w-full items-center justify-between border-t border-[#ececec] pt-2 text-[11px] text-neutral-500">
-                              <span dir="ltr">{formatIcascoDate(plan.proposedStartDate)}</span>
+                              <span dir="ltr">{formatIcascoDate(plan.proposedStartDate, auditDateLocale(i18n.language))}</span>
                               <span className="font-medium text-neutral-700">{plan.leadAuditor}</span>
                             </div>
                           </button>
                         ))}
                         {stagePlans.length === 0 && (
                           <div className="rounded-[10px] border border-dashed border-[#e2e2e2] py-8 text-center text-[12px] text-neutral-400">
-                            No audits
+                            {t('cab.auditSchedule.pipeline.noAudits', 'No audits')}
                           </div>
                         )}
                       </div>
@@ -724,29 +746,29 @@ export function CabAuditSchedulePage() {
                   <table className="w-full min-w-[960px] border-collapse text-center">
                     <thead>
                       <tr className="bg-[#1236a3] text-white">
-                        <th className="px-5 py-4 text-start text-[14px] font-medium">Audit</th>
-                        <th className="px-4 py-4 text-start text-[14px] font-medium">Client</th>
-                        <th className="px-4 py-4 text-center text-[14px] font-medium">Sites</th>
-                        <th className="px-4 py-4 text-center text-[14px] font-medium">Dates</th>
+                        <th className="px-5 py-4 text-start text-[14px] font-medium">{t('cab.auditSchedule.columns.audit', 'Audit')}</th>
+                        <th className="px-4 py-4 text-start text-[14px] font-medium">{t('cab.auditSchedule.columns.client', 'Client')}</th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.auditSchedule.columns.sites', 'Sites')}</th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.auditSchedule.columns.dates', 'Dates')}</th>
                         <th className="px-4 py-4 text-center text-[14px] font-medium">
-                          Lead auditor
+                          {t('cab.auditSchedule.columns.leadAuditor', 'Lead auditor')}
                         </th>
-                        <th className="px-4 py-4 text-center text-[14px] font-medium">Status</th>
-                        <th className="px-5 py-4 text-end text-[14px] font-medium">Actions</th>
+                        <th className="px-4 py-4 text-center text-[14px] font-medium">{t('cab.auditSchedule.columns.status', 'Status')}</th>
+                        <th className="px-5 py-4 text-end text-[14px] font-medium">{t('common.actions', 'Actions')}</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-[#f0f0f0]">
                       {isLoading ? (
                         <tr>
                           <td colSpan={7} className="px-4 py-8 text-center text-[14px] text-neutral-500">
-                            Loading audits...
+                            {t('cab.auditSchedule.loading', 'Loading audits...')}
                           </td>
                         </tr>
                       ) : auditPlans.length === 0 ? (
                         <tr>
                           <td colSpan={7} className="px-4 py-12 text-center text-neutral-500">
                             <p className="text-[15px] font-semibold text-neutral-700">
-                              No audits found
+                              {t('cab.auditSchedule.noAudits', 'No audits found')}
                             </p>
                           </td>
                         </tr>
@@ -800,11 +822,11 @@ export function CabAuditSchedulePage() {
 
                             <td className="px-4 py-4 text-center">
                               <p className="text-[14px] font-medium text-neutral-900" dir="ltr">
-                                {formatIcascoDate(plan.proposedStartDate)} ·{' '}
-                                {formatIcascoDate(plan.proposedEndDate)}
+                                {formatIcascoDate(plan.proposedStartDate, auditDateLocale(i18n.language))} ·{' '}
+                                {formatIcascoDate(plan.proposedEndDate, auditDateLocale(i18n.language))}
                               </p>
                               <p className="mt-0.5 text-[12px] text-neutral-500">
-                                {plan.durationDays} days
+                                {plan.durationDays} {t('cab.auditSchedule.days', 'days')}
                               </p>
                             </td>
 
@@ -839,6 +861,8 @@ export function CabAuditSchedulePage() {
                   totalPages={1}
                   onPageChange={(nextPage) => setPage(nextPage)}
                   className="mt-5 px-5"
+                  previousLabel={t('cab.auditSchedule.pagination.previous', 'Previous')}
+                  nextLabel={t('cab.auditSchedule.pagination.next', 'Next')}
                 />
               </>
             )}

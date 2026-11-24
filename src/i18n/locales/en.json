@@ -28,7 +28,8 @@
     "export": "Export",
     "exporting": "Exporting…",
     "exportPdf": "Export as PDF",
-    "exportExcel": "Export as Excel"
+    "exportExcel": "Export as Excel",
+    "import": "Import"
   },
   "nav": {
     "home": "Home",
@@ -2804,7 +2805,8 @@
           "start": "Start audit {{number}}? Its status becomes \"In progress\" and the audit report opens for the team.",
           "review": "Send audit {{number}} for review? The status becomes \"Under review\" while the report is finalised.",
           "complete": "Mark audit {{number}} as completed? The plan becomes read-only and the audit is added to the competence log of the team."
-        }
+        },
+        "viewExecution": "View execution"
       },
       "history": {
         "title": "Plan history",
@@ -3023,8 +3025,104 @@
           "endRequired": "Choose the end date.",
           "startInPast": "The start date is in the past.",
           "endBeforeStart": "The end date must be on or after the start date."
-        }
-      }
+        },
+        "applicationOrEvent": "Application or cycle event",
+        "confirm": "Confirm and create plan",
+        "creating": "Creating...",
+        "existingCovers": "{{number}} already covers {{stage}} ({{status}})",
+        "existingHint": "Open that plan instead of creating a second one for the same stage.",
+        "fromApplication": "From application {{number}}",
+        "generated": {
+          "objectives": "Evaluate conformity and implementation for {{stage}} ({{standard}}).",
+          "scope": "Integrated Management System and operational processes at {{site}} ({{code}}).",
+          "specialObjectives": "Special audit: {{reason}}"
+        },
+        "intro": "Start from an application or the next due event of a certification cycle. What earlier stages know is filled in: check it and confirm.",
+        "openPlan": "Open plan",
+        "optionDays": "{{days}} days",
+        "planSpecial": "Plan a special audit instead",
+        "proposedTeam": "Proposed team",
+        "proposedTeamHint": "Chosen and confirmed on the build page.",
+        "ready": "All pre-checks ready. Proceed to build the full plan.",
+        "selectClient": "Select a client",
+        "selectEvent": "Choose the application or cycle event",
+        "selectLead": "Select the lead auditor",
+        "siteDeclared": "1 site(s) declared in the application",
+        "sourceTitle": "Where this audit comes from",
+        "specialChosen": "Special audit chosen by you",
+        "specialOption": "None: special audit (reason required)",
+        "specialReason": "Reason for the special audit",
+        "specialReasonPlaceholder": "For example: short-notice audit after a complaint",
+        "takenDescription": "These values come from the application, quotation, technical feasibility and certification cycle. Check them and confirm.",
+        "takenTitle": "Taken from earlier stages",
+        "useDueStage": "Use the due stage ({{stage}})"
+      },
+      "fields": {
+        "auditTeam": "Audit team",
+        "site": "Site"
+      },
+      "modals": {
+        "activityPlaceholder": "e.g. Document review, Site tour",
+        "activityTitle": "Activity Title",
+        "addActivity": "Add Agenda Activity",
+        "auditor": "Auditor",
+        "changeTitle": "Change stage or proposed dates",
+        "deleteActivity": "Delete activity",
+        "durationHint": "Set from start and end",
+        "durationHours": "Duration (Hours)",
+        "editActivity": "Edit Agenda Activity",
+        "endAst": "End (AST)",
+        "reasonLabel": "Reason for change (audit trail) *",
+        "reasonPlaceholder": "Record why dates or stage were changed...",
+        "saveActivity": "Save Activity",
+        "saveChanges": "Save changes",
+        "startAst": "Start (AST)"
+      },
+      "newAuditPlan": "New audit plan",
+      "review": {
+        "addActivity": "Add at least one activity",
+        "agendaAdded": "Agenda activities added",
+        "application": "Application",
+        "auditDetails": "Audit details",
+        "auditPlan": "Audit plan",
+        "availabilityConfirmed": "All team members have confirmed their availability for the planned dates.",
+        "beforeSend": "Before you send",
+        "changeTeam": "Change in the audit team",
+        "detailsHint": "Confirmed when the plan was created. Use Change to alter them; the reason is recorded.",
+        "durationDays": "{{days}} day(s)",
+        "fix": "Fix →",
+        "noConflicts": "All team members have declared no conflicts of interest.",
+        "objectives": "Audit objectives",
+        "objectivesScope": "Objectives and scope",
+        "primaryContact": "Primary contact",
+        "proposedDates": "Proposed dates",
+        "reviewedDuration": "Reviewed duration",
+        "scopeSummary": "Scope summary",
+        "teamDeclarations": "Team declarations",
+        "timezone": "Timezone"
+      },
+      "stages": {
+        "recertification": "Recertification",
+        "specialAudit": "Special Audit",
+        "stage1": "Stage 1",
+        "stage2": "Stage 2",
+        "surveillance1": "Surveillance 1",
+        "surveillance2": "Surveillance 2"
+      },
+      "status": {
+        "completed": "Completed",
+        "draft": "Draft",
+        "inProgress": "In progress",
+        "planned": "Planned",
+        "underReview": "Under review"
+      },
+      "stepper": {
+        "completed": "Completed",
+        "current": "Current stage",
+        "pending": "Pending"
+      },
+      "subtitle": "Plan and manage audits across clients and sites.",
+      "title": "Audit Planning"
     },
     "auditSchedule": {
       "subtitle": "Plan and manage audits across clients and sites.",
@@ -3048,12 +3146,17 @@
       "actions": {
         "buildEdit": "Build / Edit Plan",
         "viewAgenda": "View Agenda",
-        "exportPlan": "Export Plan"
+        "exportPlan": "Export Plan",
+        "menu": "Actions for {{number}}"
       },
       "export": {
         "csv": "Export as CSV",
         "excel": "Export as Excel",
-        "json": "Export as JSON"
+        "json": "Export as JSON",
+        "columns": {
+          "auditPlan": "Audit Plan",
+          "standards": "Standards"
+        }
       },
       "daysOfWeek": {
         "sun": "Sun",
@@ -3071,7 +3174,8 @@
         "status": "Status",
         "allPeriods": "All periods",
         "allCountries": "All countries",
-        "allStatuses": "All statuses"
+        "allStatuses": "All statuses",
+        "clear": "Clear filters"
       },
       "columns": {
         "audit": "Audit",
@@ -3103,6 +3207,45 @@
           "title": "Audit Plans Table & Actions",
           "description": "Access audit plans, configure full schedules & agendas, view site allocations, and export records."
         }
+      },
+      "import": {
+        "downloadTemplate": "Download Excel template",
+        "fromFile": "Import from Excel / CSV",
+        "ready": "Audit schedule import ready.",
+        "templateDownloaded": "Import template downloaded (Excel/CSV)."
+      },
+      "kpi": {
+        "completed": {
+          "label": "Completed audits",
+          "sub": "Ready for decision handoff"
+        },
+        "draft": {
+          "label": "Draft plans",
+          "sub": "In preparation & team setup"
+        },
+        "filter": "Filter",
+        "inProgress": {
+          "label": "In execution",
+          "sub": "On-site checklists active"
+        },
+        "planned": {
+          "label": "Planned audits",
+          "sub": "Confirmed & ready to start"
+        },
+        "showAll": "Show all"
+      },
+      "pagination": {
+        "next": "Next",
+        "previous": "Previous"
+      },
+      "pipeline": {
+        "noAudits": "No audits"
+      },
+      "showing": "Showing {{total}} audit(s)",
+      "viewLabel": "View",
+      "viewMode": {
+        "list": "List",
+        "pipeline": "Pipeline"
       }
     },
     "buildAuditPlan": {
@@ -3139,6 +3282,84 @@
           "title": "Site, Remote & Declarations",
           "description": "Manage site addresses, configure remote platforms, record logistics notes, and verify team conflict-of-interest declarations."
         }
+      },
+      "agenda": {
+        "add": "Add activity",
+        "columns": {
+          "activity": "Activity",
+          "auditors": "Auditor(s)",
+          "date": "Date",
+          "duration": "Duration",
+          "time": "Time (AST)"
+        },
+        "continue": "Save & continue to Site & logistics →",
+        "hoursShort": "h",
+        "importTemplate": "Import template",
+        "title": "Audit agenda",
+        "total": "Total (reviewed duration: {{code}})"
+      },
+      "blocked": {
+        "checking": "Checking the audit team.",
+        "issues": "Sending and starting are blocked: the team has {{count}} blocking issue(s), such as a scheduling conflict.",
+        "noLeader": "Sending and starting are blocked: the team has no team leader.",
+        "notConfirmed": "Sending and starting are blocked: the audit team is not confirmed."
+      },
+      "changeStageDates": "Change stage or dates",
+      "remote": {
+        "include": "Include remote",
+        "notes": "Remote audit notes (IAF MD 4)",
+        "placeholder": "Specify ICT tools, connectivity check, and confidentiality agreements...",
+        "platform": "ICT Platform",
+        "title": "Remote activities"
+      },
+      "saveDraft": "Save as Draft",
+      "saved": "Saved",
+      "site": {
+        "addAuditor": "+ Add on-site auditor",
+        "address": "Site address *",
+        "code": "Site code *",
+        "continue": "Save & continue to Review & send →",
+        "name": "Site name *",
+        "personnel": "On-site personnel",
+        "title": "Site allocation"
+      },
+      "steps": {
+        "agenda": "Agenda",
+        "review": "Review & send",
+        "site": "Site & logistics",
+        "team": "Audit team"
+      },
+      "template": {
+        "closing": "Closing meeting & Stage 1 conclusions",
+        "documents": "Documented information review (Scope, Policy, Objectives, Manual)",
+        "opening": "Opening meeting & confirmation of scope",
+        "siteTour": "Site tour, legal compliance & Stage 2 readiness check"
+      },
+      "toast": {
+        "activitySaved": "Agenda activity saved.",
+        "agendaSaved": "Agenda saved. Moving to Site & logistics.",
+        "detailsUpdated": "Audit details updated and reason recorded.",
+        "draftSaved": "Draft saved.",
+        "remoteSaved": "Remote activities saved.",
+        "sent": "Audit plan sent to client.",
+        "siteLogisticsSaved": "Site & logistics saved. Moving to Review & send.",
+        "siteSaved": "Site allocation saved.",
+        "templateImported": "Standard iCASCO audit agenda template imported.",
+        "travelSaved": "Travel & logistics saved."
+      },
+      "travel": {
+        "notes": "Travel, accommodation & site entry notes",
+        "placeholder": "Record flight/transport arrangements, PPE requirements, and arrival instructions...",
+        "title": "Travel notes"
+      },
+      "warn": {
+        "addActivity": "Please add at least one agenda activity first.",
+        "addActivityBeforeContinue": "Please add at least one agenda activity before continuing.",
+        "completeAllFirst": "Complete Audit team, Agenda, Site & logistics, and Team declarations first.",
+        "completeSite": "Please complete site & logistics details first.",
+        "confirmDeclarations": "Please confirm all team declarations before sending.",
+        "confirmTeam": "Please confirm the audit team first.",
+        "siteBeforeContinue": "Please complete site code and site address before continuing."
       }
     },
     "auditReporting": {

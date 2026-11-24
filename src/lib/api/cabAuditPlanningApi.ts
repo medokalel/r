@@ -292,7 +292,7 @@ export const AUDIT_PLANNING_CLIENTS: AuditPlanningClient[] = [
       {
         id: 'special-audit',
         type: 'special',
-        label: 'Special audit without an application (short-notice / complaint)',
+        label: 'None: special audit (reason required)',
         stage: 'Special Audit',
         applicationNumber: 'ISSC',
         standardName: 'Special Audit',
@@ -330,7 +330,7 @@ export const AUDIT_PLANNING_CLIENTS: AuditPlanningClient[] = [
       {
         id: 'special-audit',
         type: 'special',
-        label: 'Special audit without an application (short-notice / complaint)',
+        label: 'None: special audit (reason required)',
         stage: 'Special Audit',
         applicationNumber: 'APP-0024',
         standardName: 'Special Audit',
@@ -981,7 +981,7 @@ const initialAuditPlans: AuditPlan[] = [
     proposedStartDate: '2026-12-05',
     proposedEndDate: '2026-12-07',
     durationDays: 3,
-    timezone: 'Africa/Cairo',
+    timezone: 'Asia/Riyadh',
     leadAuditor: 'Omar Hassan',
     auditTeam: ['Omar Hassan'],
     teamMembers: [
@@ -1202,7 +1202,11 @@ export async function saveAuditPlan(plan: Partial<AuditPlan> & { id?: string }):
     applicationNumber: plan.applicationNumber || 'ISSC',
     standardName: plan.standardName || 'Integrated Management System',
     standards: plan.standards || ['ISO 9001:2015', 'ISO 14001:2015', 'ISO 45001:2018'],
-    reviewedDurationCode: plan.reviewedDurationCode || `DUR-${String(maxNum + 1).padStart(4, '0')}`,
+    // Like the artifact: a special audit has no reviewed-duration code from earlier stages,
+    // so the agenda total row stays empty; other plans keep the repo's generated code.
+    reviewedDurationCode:
+      plan.reviewedDurationCode ||
+      (plan.stage === 'Special Audit' ? '' : `DUR-${String(maxNum + 1).padStart(4, '0')}`),
     reviewedDurationDays: plan.reviewedDurationDays ?? 1.0,
     totalEffortHours: plan.totalEffortHours ?? 0,
     siteCode: plan.siteCode || 'SITE-1101',

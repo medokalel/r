@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
   BuildingsIcon,
@@ -14,6 +15,8 @@ import { Checkbox } from '@/components/ui/Checkbox'
 import { AuditPlanLifecycleBar } from '@/components/cab/auditPlanning/AuditPlanLifecycleBar'
 import type { TourStepConfig } from '@/context/TourContext'
 import type { AuditPlan, AuditStageType, AuditTeamMember } from '@/lib/api/cabAuditPlanningApi'
+import { auditDateLocale, auditStageLabel, isolateDate } from '@/components/cab/auditPlanning/shared'
+import { localizeCountry } from '@/lib/auditSchedule'
 import { cn } from '@/lib/utils'
 
 interface BuildPlanReviewStepProps {
@@ -33,6 +36,7 @@ interface BuildPlanReviewStepProps {
   agendaReady: boolean
   siteReady: boolean
   declarationsReady: boolean
+  sendBlockedReason: string | null
   onGoToStep: (step: 1 | 2 | 3 | 4) => void
   onPlanChanged: (plan: AuditPlan) => void
   onStartExecution: () => void
@@ -41,14 +45,15 @@ interface BuildPlanReviewStepProps {
   onChangeScope: (val: string) => void
   onChangeAvailability: (val: boolean) => void
   onChangeNoConflicts: (val: boolean) => void
+  onChangeTimezone: (timezone: string) => void
   onSaveDraft: () => void
   onSendToClient: () => void
 }
 
-function formatFullRange(start: string, end: string) {
+function formatFullRange(start: string, end: string, locale = 'en-GB') {
   try {
     const fmt = (d: Date) =>
-      d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      isolateDate(d.toLocaleDateString(locale, { day: '2-digit', month: 'short', year: 'numeric' }), locale)
     return `${fmt(new Date(start))} – ${fmt(new Date(end))}`
   } catch {
     return `${start} – ${end}`
@@ -72,6 +77,7 @@ export function BuildPlanReviewStep({
   agendaReady,
   siteReady,
   declarationsReady,
+  sendBlockedReason,
   onGoToStep,
   onPlanChanged,
   onStartExecution,
@@ -80,25 +86,27 @@ export function BuildPlanReviewStep({
   onChangeScope,
   onChangeAvailability,
   onChangeNoConflicts,
+  onChangeTimezone,
   onSaveDraft,
   onSendToClient,
 }: BuildPlanReviewStepProps) {
+  const { t, i18n } = useTranslation()
   const checklistItems = [
-    { label: 'Audit team', done: teamReady, fixStep: 1 as const },
+    { label: t('cab.auditPlanning.fields.auditTeam', 'Audit team'), done: teamReady, fixStep: 1 as const },
     {
-      label: agendaReady ? 'Agenda activities added' : 'Add at least one activity',
+      label: agendaReady ? t('cab.auditPlanning.review.agendaAdded', 'Agenda activities added') : t('cab.auditPlanning.review.addActivity', 'Add at least one activity'),
       done: agendaReady,
       fixStep: 2 as const,
     },
-    { label: 'Site & logistics', done: siteReady, fixStep: 3 as const },
-    { label: 'Team declarations', done: declarationsReady },
+    { label: t('cab.buildAuditPlan.steps.site', 'Site & logistics'), done: siteReady, fixStep: 3 as const },
+    { label: t('cab.auditPlanning.review.teamDeclarations', 'Team declarations'), done: declarationsReady },
   ]
 
   return (
     <div className="space-y-5">
       {/* Before you send */}
       <section className="space-y-3 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
-        <h2 className="text-[15px] font-bold text-neutral-900">Before you send</h2>
+        <h2 className="text-[15px] font-bold text-neutral-900">{t('cab.auditPlanning.review.beforeSend', 'Before you send')}</h2>
         <ul className="space-y-2.5 text-[13px]">
           {checklistItems.map((item) => (
             <li key={item.label} className="flex items-center justify-between">
@@ -121,7 +129,7 @@ export function BuildPlanReviewStep({
                   onClick={() => onGoToStep(item.fixStep)}
                   className="font-semibold text-[#1236a3] hover:underline"
                 >
-                  Fix →
+                  {t('cab.auditPlanning.review.fix', 'Fix →')}
                 </button>
               )}
             </li>
@@ -145,10 +153,10 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#dbeafe] text-[#1447e6]">
                 <CalendarIcon className="size-4" />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Audit plan</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditPlanning.review.auditPlan', 'Audit plan')}</span>
             </div>
             <p className="text-[15px] font-bold text-neutral-900">{plan.planNumber}</p>
-            <p className="text-[12px] text-neutral-500">{auditStage}</p>
+            <p className="text-[12px] text-neutral-500">{auditStageLabel(t, auditStage)}</p>
           </div>
 
           <div className="space-y-1 border-e border-neutral-100 pe-3 last:border-e-0">
@@ -156,11 +164,11 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#fef3c6] text-[#a58401]">
                 <AppIcon icon={BuildingsIcon} size={15} />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Client</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditSchedule.client', 'Client')}</span>
             </div>
             <p className="truncate text-[15px] font-bold text-neutral-900">{plan.clientName}</p>
             <p className="text-[12px] text-neutral-500">
-              {plan.clientCode} · {plan.country}
+              {plan.clientCode} · {localizeCountry(plan.country, i18n.language)}
             </p>
           </div>
 
@@ -169,7 +177,7 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#ede9fe] text-[#6d28d9]">
                 <AppIcon icon={FileTextIcon} size={15} />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Application</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditPlanning.review.application', 'Application')}</span>
             </div>
             <span className="inline-block rounded-[6px] border border-[#dce4f5] bg-[#f8faff] px-2.5 py-0.5 text-[12px] font-semibold text-[#1236a3]">
               {plan.applicationNumber}
@@ -181,10 +189,10 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#d7f4f0] text-[#0f9488]">
                 <AppIcon icon={HistoryIcon} size={15} />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Reviewed duration</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditPlanning.review.reviewedDuration', 'Reviewed duration')}</span>
             </div>
             <p className="text-[14px] font-bold text-neutral-900">
-              {plan.reviewedDurationDays.toFixed(1)} day(s)
+              {t('cab.auditPlanning.review.durationDays', '{{days}} day(s)', { days: plan.reviewedDurationDays.toFixed(1) })}
             </p>
           </div>
 
@@ -193,11 +201,11 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#fee2e2] text-[#dc2626]">
                 <AppIcon icon={MapPinIcon} size={15} />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Site</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditPlanning.fields.site', 'Site')}</span>
             </div>
             <p className="text-[14px] font-bold text-neutral-900">{siteCode}</p>
             <p className="text-[12px] text-neutral-500">
-              {plan.clientName} · {plan.country}
+              {plan.clientName} · {localizeCountry(plan.country, i18n.language)}
             </p>
           </div>
 
@@ -206,7 +214,7 @@ export function BuildPlanReviewStep({
               <span className="flex size-7 shrink-0 items-center justify-center rounded-[6px] bg-[#fce7f3] text-[#be185d]">
                 <AppIcon icon={UserIcon} size={15} />
               </span>
-              <span className="text-[12px] font-medium text-neutral-500">Primary contact</span>
+              <span className="text-[12px] font-medium text-neutral-500">{t('cab.auditPlanning.review.primaryContact', 'Primary contact')}</span>
             </div>
             <p className="text-[14px] font-bold text-neutral-900">{plan.primaryContactName}</p>
             <p className="flex items-center gap-1 truncate text-[12px] text-[#1236a3]">
@@ -227,53 +235,79 @@ export function BuildPlanReviewStep({
           <CabTourStep steps={tourSteps} stepId="build-plan-details">
             <section className="h-full space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
               <div>
-                <h3 className="text-[16px] font-bold text-neutral-900">Audit details</h3>
+                <h3 className="text-[16px] font-bold text-neutral-900">{t('cab.auditPlanning.review.auditDetails', 'Audit details')}</h3>
                 <p className="mt-0.5 text-[12px] text-neutral-400">
-                  Confirmed when the plan was created. Use Change to alter them; the reason is recorded.
+                  {t('cab.auditPlanning.review.detailsHint', 'Confirmed when the plan was created. Use Change to alter them; the reason is recorded.')}
                 </p>
               </div>
 
               <div className="grid grid-cols-1 gap-4 pt-2 sm:grid-cols-2">
                 <div>
-                  <span className="block text-[12px] text-neutral-500">Audit stage</span>
+                  <span className="block text-[12px] text-neutral-500">{t('cab.auditSchedule.auditStage', 'Audit stage')}</span>
                   <div className="mt-1 flex items-center gap-2">
-                    <span className="text-[14px] font-bold text-neutral-900">{auditStage}</span>
+                    <span className="text-[14px] font-bold text-neutral-900">{auditStageLabel(t, auditStage)}</span>
                     <button
                       type="button"
                       onClick={onOpenChangeModal}
                       className="text-[12px] font-semibold text-[#1236a3] hover:underline"
                     >
-                      Change
+                      {t('common.change', 'Change')}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <span className="block text-[12px] text-neutral-500">Proposed dates</span>
+                  <span className="block text-[12px] text-neutral-500">{t('cab.auditPlanning.review.proposedDates', 'Proposed dates')}</span>
                   <div className="mt-1 flex items-center gap-2">
-                    <span className="text-[14px] font-bold text-neutral-900">
-                      {formatFullRange(proposedStartDate, proposedEndDate)}
+                    <span dir="ltr" className="text-[14px] font-bold text-neutral-900">
+                      {formatFullRange(proposedStartDate, proposedEndDate, auditDateLocale(i18n.language))}
                     </span>
                     <button
                       type="button"
                       onClick={onOpenChangeModal}
                       className="text-[12px] font-semibold text-[#1236a3] hover:underline"
                     >
-                      Change
+                      {t('common.change', 'Change')}
                     </button>
                   </div>
                 </div>
 
                 <div>
-                  <span className="block text-[12px] text-neutral-500">Lead Auditor</span>
+                  <span className="block text-[12px] text-neutral-500">{t('cab.auditSchedule.leadAuditor', 'Lead auditor')}</span>
                   <p className="mt-1 text-[14px] font-semibold text-neutral-900">{leadAuditor}</p>
                 </div>
 
                 <div>
-                  <span className="block text-[12px] text-neutral-500">Audit team</span>
-                  <p className="mt-1 text-[14px] font-medium text-neutral-800">
-                    {teamMembers.map((m) => m.name).join(', ')}
-                  </p>
+                  <span className="block text-[12px] text-neutral-500">{t('cab.auditPlanning.fields.auditTeam', 'Audit team')}</span>
+                  <div className="mt-1 flex flex-wrap items-center gap-2">
+                    <span className="text-[14px] font-medium text-neutral-800">
+                      {teamMembers.map((m) => m.name).join(', ')}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => onGoToStep(1)}
+                      className="text-[12px] font-semibold text-[#1236a3] hover:underline"
+                    >
+                      {t('cab.auditPlanning.review.changeTeam', 'Change in the audit team')}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="block text-[12px] text-neutral-500">{t('cab.auditPlanning.review.timezone', 'Timezone')}</span>
+                  <select
+                    value={plan.timezone}
+                    onChange={(e) => onChangeTimezone(e.target.value)}
+                    className="mt-1 h-9 w-full max-w-xs rounded-[8px] border border-[#e2e2e2] bg-white px-2.5 text-[13px] text-neutral-900 focus:border-[#1236a3] focus:outline-none"
+                  >
+                    {Array.from(
+                      new Set([plan.timezone, 'Asia/Riyadh', 'Asia/Dubai', 'Africa/Cairo'].filter(Boolean)),
+                    ).map((tz) => (
+                      <option key={tz} value={tz}>
+                        {tz}
+                      </option>
+                    ))}
+                  </select>
                 </div>
               </div>
             </section>
@@ -283,10 +317,10 @@ export function BuildPlanReviewStep({
         <div className="lg:col-span-6">
           <CabTourStep steps={tourSteps} stepId="build-plan-objectives">
             <section className="h-full space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
-              <h3 className="text-[16px] font-bold text-neutral-900">Objectives and scope</h3>
+              <h3 className="text-[16px] font-bold text-neutral-900">{t('cab.auditPlanning.review.objectivesScope', 'Objectives and scope')}</h3>
 
               <div className="space-y-1.5">
-                <label className="text-[13px] font-medium text-neutral-700">Audit objectives</label>
+                <label className="text-[13px] font-medium text-neutral-700">{t('cab.auditPlanning.review.objectives', 'Audit objectives')}</label>
                 <textarea
                   value={auditObjectives}
                   onChange={(e) => onChangeObjectives(e.target.value)}
@@ -296,7 +330,7 @@ export function BuildPlanReviewStep({
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[13px] font-medium text-neutral-700">Scope summary</label>
+                <label className="text-[13px] font-medium text-neutral-700">{t('cab.auditPlanning.review.scopeSummary', 'Scope summary')}</label>
                 <textarea
                   value={scopeSummary}
                   onChange={(e) => onChangeScope(e.target.value)}
@@ -312,13 +346,13 @@ export function BuildPlanReviewStep({
       {/* Team declarations */}
       <section className="rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div className="mb-4 flex items-center justify-between border-b border-[#ececec] pb-2.5">
-          <h3 className="text-[15px] font-bold text-neutral-900">Team declarations</h3>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('cab.auditPlanning.review.teamDeclarations', 'Team declarations')}</h3>
           <button
             type="button"
             onClick={onSaveDraft}
             className="text-[13px] font-semibold text-[#1236a3] hover:underline"
           >
-            Edit
+            {t('common.edit', 'Edit')}
           </button>
         </div>
 
@@ -329,7 +363,7 @@ export function BuildPlanReviewStep({
               onChange={() => onChangeAvailability(!availabilityConfirmed)}
             />
             <span className="text-[13px] font-medium text-neutral-800">
-              All team members have confirmed their availability for the planned dates.
+              {t('cab.auditPlanning.review.availabilityConfirmed', 'All team members have confirmed their availability for the planned dates.')}
             </span>
           </label>
 
@@ -339,7 +373,7 @@ export function BuildPlanReviewStep({
               onChange={() => onChangeNoConflicts(!noConflictsDeclared)}
             />
             <span className="text-[13px] font-medium text-neutral-800">
-              All team members have declared no conflicts of interest.
+              {t('cab.auditPlanning.review.noConflicts', 'All team members have declared no conflicts of interest.')}
             </span>
           </label>
         </div>
@@ -353,16 +387,23 @@ export function BuildPlanReviewStep({
           className="inline-flex items-center gap-1.5 text-[14px] font-medium text-neutral-600 transition-colors hover:text-neutral-900"
         >
           <span>←</span>
-          <span>Back</span>
+          <span>{t('common.back', 'Back')}</span>
         </button>
 
-        <button
-          type="button"
-          onClick={onSendToClient}
-          className="inline-flex h-11 items-center justify-center rounded-[8px] bg-[#1236a3] px-6 text-[14px] font-semibold text-white transition-colors hover:bg-[#0e2a80]"
-        >
-          Send to client
-        </button>
+        <div className="flex items-center gap-3">
+          {sendBlockedReason && (
+            <span className="text-[13px] text-neutral-500">{sendBlockedReason}</span>
+          )}
+          <button
+            type="button"
+            onClick={onSendToClient}
+            disabled={Boolean(sendBlockedReason)}
+            title={sendBlockedReason ?? undefined}
+            className="inline-flex h-11 items-center justify-center rounded-[8px] bg-[#1236a3] px-6 text-[14px] font-semibold text-white transition-colors hover:bg-[#0e2a80] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {t('cab.buildAuditPlan.sendToClient', 'Send to client')}
+          </button>
+        </div>
       </section>
     </div>
   )
