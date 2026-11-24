@@ -9,6 +9,8 @@
  * change to call `client`/`authorizedClient`, the page itself needs no edits.
  */
 
+import { listClientPlanNotifications } from '@/lib/api/clientNotificationsApi'
+
 export interface DashboardStats {
   approvedCertificates: number
   currentOrders: number
@@ -27,7 +29,12 @@ export interface DashboardTask {
   status: DashboardTaskStatus
 }
 
-export type DashboardActivityType = 'documentReceived' | 'correspondenceSent' | 'statusChanged'
+export type DashboardActivityType =
+  | 'documentReceived'
+  | 'correspondenceSent'
+  | 'statusChanged'
+  | 'auditPlanSent'
+  | 'auditPlanRescheduled'
 
 export interface DashboardActivity {
   id: string
@@ -119,6 +126,24 @@ export function getDashboardTasks(): Promise<DashboardTask[]> {
 }
 
 // TODO: replace with `authorizedRequest<DashboardActivity[]>('/dashboard/activities')`
-export function getDashboardActivities(): Promise<DashboardActivity[]> {
-  return delay(MOCK_ACTIVITIES)
+// once the backend exposes this endpoint. The audit-plan entries are NOT
+// mocked: they are the client's real planning events (plan sent, plan
+// rescheduled) derived from the shared plan store (client-side phase 3), so
+// the home activity feed reflects what the CAB actually did.
+export async function getDashboardActivities(): Promise<DashboardActivity[]> {
+  const notifications = await listClientPlanNotifications()
+  const planActivities: DashboardActivity[] = notifications.map((notification) => ({
+    id: notification.id,
+    type: notification.kind === 'planSent' ? 'auditPlanSent' : 'auditPlanRescheduled',
+    titleKey:
+      notification.kind === 'planSent'
+        ? 'dashboard.activities.items.auditPlanSent'
+        : 'dashboard.activities.items.auditPlanRescheduled',
+    entityName: notification.planNumber,
+    occurredAt: notification.occurredAt,
+  }))
+  const merged = [...planActivities, ...MOCK_ACTIVITIES].sort(
+    (a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
+  )
+  return delay(merged)
 }

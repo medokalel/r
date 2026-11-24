@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AppIcon, MailIcon, NotificationIcon, LogoutIcon, TourGuideIcon } from '@/components/icons'
+import { AppIcon, MailIcon, LogoutIcon, TourGuideIcon } from '@/components/icons'
+import { ClientNotificationsBell } from '@/components/dashboard/ClientNotificationsBell'
 import { LanguageToggle } from '@/components/ui/LanguageToggle'
 import { Tooltip } from '@/components/ui/Tooltip'
 import { UserAvatar } from '@/components/ui/UserAvatar'
@@ -157,16 +158,8 @@ export function AccreditationHeader({
           </>
         )}
 
-        <button
-          type="button"
-          className="relative flex size-10 items-center justify-center text-neutral-600 hover:text-primary"
-          aria-label={t('accreditation.notifications')}
-        >
-          <AppIcon icon={NotificationIcon} size={30} />
-          <span className="absolute end-1 top-0.5 flex size-[18px] items-center justify-center rounded-full bg-[#1236a3] px-2.5 py-2.5 text-[11px] font-semibold leading-none text-white">
-            3
-          </span>
-        </button>
+        {/* Real planning notifications (plan sent / rescheduled) — replaces the old static placeholder bell. */}
+        <ClientNotificationsBell />
 
         <HeaderDivider className="hidden xs:block" />
 

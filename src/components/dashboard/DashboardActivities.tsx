@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
+  CalendarIcon,
   CorrespondenceSentIcon,
   DocumentReceivedIcon,
   StatusChangedIcon,
@@ -17,6 +18,8 @@ const activityIconConfig: Record <
   documentReceived: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
   correspondenceSent: { icon: StatusChangedIcon, bgColor: 'bg-[#dbeafe]' },
   statusChanged: { icon: StatusReviewIcon, bgColor: 'bg-[#fef3c6]' },
+  auditPlanSent: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
+  auditPlanRescheduled: { icon: CalendarIcon, bgColor: 'bg-[#fef3c6]' },
 }
 
 function relativeTimeLabel(

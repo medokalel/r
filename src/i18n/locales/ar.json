@@ -1,4 +1,13 @@
 {
+  "clientNotifications": {
+    "title": "الإشعارات",
+    "markAllRead": "تحديد الكل كمقروء",
+    "empty": "لا توجد إشعارات بعد",
+    "items": {
+      "planSent": "خطة التدقيق {{planNumber}} بانتظار تأكيدك",
+      "planRescheduled": "تمت إعادة جدولة خطة التدقيق {{planNumber}}"
+    }
+  },
   "clientAudits": {
     "pageTitle": "التدقيقات",
     "searchPlaceholder": "ابحث برقم التدقيق أو المواصفة أو الموقع...",
@@ -1419,6 +1428,14 @@
         "statusChanged": {
           "title": "تم تغيير الحالة",
           "detail": "تم تغيير حالة الطلب بواسطة {{entityName}}"
+        },
+        "auditPlanSent": {
+          "title": "تم استلام خطة تدقيق",
+          "detail": "خطة التدقيق {{entityName}} بانتظار تأكيدك"
+        },
+        "auditPlanRescheduled": {
+          "title": "تمت إعادة جدولة خطة تدقيق",
+          "detail": "أعادت جهة التصديق جدولة خطة التدقيق {{entityName}}"
         }
       },
       "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"

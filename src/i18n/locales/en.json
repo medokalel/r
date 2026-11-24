@@ -1,4 +1,13 @@
 {
+  "clientNotifications": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications yet",
+    "items": {
+      "planSent": "Audit plan {{planNumber}} is waiting for your confirmation",
+      "planRescheduled": "Audit plan {{planNumber}} was rescheduled"
+    }
+  },
   "clientAudits": {
     "pageTitle": "Audits",
     "searchPlaceholder": "Search by audit number, specification or site...",
@@ -1419,6 +1428,14 @@
         "statusChanged": {
           "title": "Status changed",
           "detail": "The status of a request has been changed by {{entityName}}"
+        },
+        "auditPlanSent": {
+          "title": "Audit plan received",
+          "detail": "Audit plan {{entityName}} is waiting for your confirmation"
+        },
+        "auditPlanRescheduled": {
+          "title": "Audit plan rescheduled",
+          "detail": "The certification body rescheduled audit plan {{entityName}}"
         }
       },
       "movedToAwaitingDocuments": "Moved to awaiting documents"
