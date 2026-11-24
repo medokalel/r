@@ -956,7 +956,10 @@ export function CabBuildAuditPlanPage() {
                     planSentToClient: true,
                     // Sending only hands the plan to the client; the status stays
                     // "pending client" until the client confirms it (phase 2).
+                    // Re-sending (e.g. after a reschedule) voids the client's
+                    // previous decision, so they decide on the latest version.
                     planConfirmedByClient: false,
+                    clientResponse: null,
                     declarationsCompleted: true,
                   },
                 },

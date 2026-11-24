@@ -5,9 +5,16 @@ import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
 import { AppIcon, CalendarIcon } from '@/components/icons'
 import { AppLayout } from '@/components/layout/AppLayout'
 import {
+  confirmClientAuditPlan,
   getClientAuditPlan,
+  getClientPlanObjection,
   getPlanConfirmation,
+  objectToClientAuditPlan,
 } from '@/lib/api/clientAuditsApi'
+import {
+  ClientPlanDecisionDialog,
+  type ClientPlanDecisionMode,
+} from '@/components/dashboard/ClientPlanDecisionDialog'
 import type { AuditPlan } from '@/lib/api/cabAuditPlanningApi'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
@@ -45,6 +52,7 @@ export function ClientAuditPlanPage() {
   const { planId } = useParams<{ planId: string }>()
   const [plan, setPlan] = useState<AuditPlan | null>(null)
   const [loading, setLoading] = useState(true)
+  const [decisionMode, setDecisionMode] = useState<ClientPlanDecisionMode | null>(null)
 
   useEffect(() => {
     let cancelled = false
@@ -61,6 +69,12 @@ export function ClientAuditPlanPage() {
   }, [planId])
 
   const confirmation = plan ? getPlanConfirmation(plan) : null
+  const objection = plan ? getClientPlanObjection(plan) : null
+
+  const applyDecision = (updated: AuditPlan | null) => {
+    if (updated) setPlan(updated)
+    setDecisionMode(null)
+  }
 
   return (
     <AppLayout>
@@ -99,12 +113,42 @@ export function ClientAuditPlanPage() {
             <div
               className={cn(
                 'rounded-[12px] border px-4 py-3 text-[13px] font-medium',
-                confirmation === 'confirmed'
-                  ? 'border-[#bbe5c8] bg-[#e7f6ec] text-[#1e7e34]'
-                  : 'border-[#fde68a] bg-[#fffbeb] text-[#92400e]'
+                confirmation === 'confirmed' && 'border-[#bbe5c8] bg-[#e7f6ec] text-[#1e7e34]',
+                confirmation === 'objected' && 'border-[#fecaca] bg-[#fef2f2] text-[#b91c1c]',
+                confirmation === 'pending' && 'border-[#fde68a] bg-[#fffbeb] text-[#92400e]'
               )}
             >
-              {t(`clientAudits.plan.banner.${confirmation ?? 'pending'}`)}
+              {confirmation === 'objected'
+                ? t('clientAudits.plan.banner.objected', {
+                    member: objection?.memberName ?? '',
+                  })
+                : t(`clientAudits.plan.banner.${confirmation ?? 'pending'}`)}
+              {confirmation === 'objected' && objection?.reason && (
+                <span dir="auto" className="mt-1 block text-start text-[12px] font-normal">
+                  {t('clientAudits.plan.objectionReason')}: {objection.reason}
+                </span>
+              )}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5">
+              {confirmation !== 'confirmed' && (
+                <button
+                  type="button"
+                  onClick={() => setDecisionMode('confirm')}
+                  className="h-10 rounded-[8px] bg-primary px-5 text-[13px] font-semibold text-white transition-colors hover:bg-[#0f2d8a]"
+                >
+                  {t('clientAudits.plan.confirm.confirmButton')}
+                </button>
+              )}
+              {confirmation !== 'objected' && (
+                <button
+                  type="button"
+                  onClick={() => setDecisionMode('objection')}
+                  className="h-10 rounded-[8px] border border-[#fecaca] bg-white px-5 text-[13px] font-semibold text-[#b91c1c] transition-colors hover:bg-[#fef2f2]"
+                >
+                  {t('clientAudits.plan.confirm.objectButton')}
+                </button>
+              )}
             </div>
 
             <section className="flex flex-col gap-5 rounded-[16px] border border-[#ececec] bg-white p-5">
@@ -126,7 +170,10 @@ export function ClientAuditPlanPage() {
                 <Fact
                   label={t('clientAudits.plan.fields.dates')}
                   value={
-                    <span>
+                    // Explicit page direction: the Fact value wrapper is dir="auto",
+                    // and isolated <bdi> dates give it no strong characters, which
+                    // would resolve LTR and put the start date on the left in Arabic.
+                    <span dir={i18n.dir()}>
                       <bdi>{formatAuditDate(plan.proposedStartDate, i18n.language)}</bdi>
                       {' - '}
                       <bdi>{formatAuditDate(plan.proposedEndDate, i18n.language)}</bdi>
@@ -245,6 +292,18 @@ export function ClientAuditPlanPage() {
               </dl>
             </Section>
           </>
+        )}
+        {plan && decisionMode && (
+          <ClientPlanDecisionDialog
+            isOpen
+            mode={decisionMode}
+            plan={plan}
+            onClose={() => setDecisionMode(null)}
+            onConfirmPlan={async () => applyDecision(await confirmClientAuditPlan(plan.planNumber))}
+            onSubmitObjection={async (memberName, reason) =>
+              applyDecision(await objectToClientAuditPlan(plan.planNumber, memberName, reason))
+            }
+          />
         )}
       </div>
     </AppLayout>

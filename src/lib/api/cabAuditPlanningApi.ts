@@ -137,6 +137,10 @@ export interface AuditExecutionData {
     agreementActive: boolean
     planSentToClient: boolean
     planConfirmedByClient: boolean
+    /** The client's latest decision on the sent plan (client-side phase 2).
+     *  Null until the client confirms or objects. The demo shortcuts that set
+     *  planConfirmedByClient directly leave this null. */
+    clientResponse: ClientPlanResponse | null
     declarationsCompleted: boolean
     clientDocumentsReviewed: boolean
     preparationNotes: string
@@ -167,6 +171,15 @@ export interface AuditExecutionData {
     recommendation: string
     reportFinalized: boolean
   }
+}
+
+export interface ClientPlanResponse {
+  decision: 'confirmed' | 'objection'
+  /** Name of the team member the client objected to (objection only). */
+  memberName?: string
+  /** The client's stated reason (objection only). */
+  reason?: string
+  at: string
 }
 
 export interface AuditPlanEvent {
@@ -923,6 +936,7 @@ function buildDefaultExecution(leadAuditor = 'Omar Hassan', agreementId = 'AGR-0
       agreementActive,
       planSentToClient: false,
       planConfirmedByClient: false,
+      clientResponse: null,
       declarationsCompleted: true,
       clientDocumentsReviewed: false,
       preparationNotes: '',

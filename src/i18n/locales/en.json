@@ -8,7 +8,8 @@
     "emptySearchSubtitle": "Try a different audit number, specification or site.",
     "confirmation": {
       "pending": "Pending your confirmation",
-      "confirmed": "Confirmed"
+      "confirmed": "Confirmed",
+      "objected": "Objection sent"
     },
     "upcomingCard": {
       "title": "Upcoming audit",
@@ -20,8 +21,9 @@
       "notFoundTitle": "Audit plan not available",
       "notFoundSubtitle": "This plan was not sent to your account or does not exist.",
       "banner": {
-        "pending": "This plan is waiting for your confirmation. Review it now; confirmation and objection will be available in the next phase.",
-        "confirmed": "You have confirmed this audit plan."
+        "pending": "This plan is waiting for your confirmation. Review it, then confirm it or object to a team member.",
+        "confirmed": "You have confirmed this audit plan.",
+        "objected": "You objected to {{member}}. The certification body will review your objection."
       },
       "sections": {
         "schedule": "Schedule",
@@ -52,7 +54,24 @@
       "objectives": "Audit objectives",
       "scope": "Audit scope",
       "notProvided": "Not provided in this plan.",
-      "scheduleEmpty": "The schedule will appear here once the certification body adds the agenda."
+      "scheduleEmpty": "The schedule will appear here once the certification body adds the agenda.",
+      "confirm": {
+        "confirmButton": "Confirm audit plan",
+        "objectButton": "Object to a team member"
+      },
+      "objectionReason": "Your objection",
+      "dialog": {
+        "confirmTitle": "Confirm the audit plan",
+        "confirmBody": "You confirm audit plan {{plan}} as scheduled. The certification body will see your confirmation.",
+        "confirmSubmit": "Confirm plan",
+        "objectionTitle": "Object to a team member",
+        "objectionBody": "Choose the team member you object to and explain why. The certification body will see your objection.",
+        "memberLabel": "Team member",
+        "reasonLabel": "Reason for the objection",
+        "reasonPlaceholder": "Explain why you object to this team member...",
+        "reasonTooShort": "Please write at least 10 characters.",
+        "objectionSubmit": "Submit objection"
+      }
     }
   },
   "common": {
@@ -2880,6 +2899,10 @@
           "plan": {
             "sent": "Plan sent to the client",
             "rescheduled": "Plan rescheduled"
+          },
+          "client": {
+            "confirmed": "Plan confirmed by the client",
+            "objection": "Client objected to a team member"
           }
         }
       },

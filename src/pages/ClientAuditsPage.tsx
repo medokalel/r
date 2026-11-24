@@ -26,6 +26,7 @@ function formatAuditDate(value: string, language: string): string {
 const confirmationStyles: Record<ClientPlanConfirmation, string> = {
   pending: 'bg-[#fef3c6] text-[#a58401]',
   confirmed: 'bg-[#e7f6ec] text-[#1e7e34]',
+  objected: 'bg-[#fef2f2] text-[#b91c1c]',
 }
 
 function AuditCard({ plan, onOpen }: { plan: AuditPlan; onOpen: () => void }) {

@@ -43,7 +43,9 @@ export function UpcomingAuditCard({ plan }: UpcomingAuditCardProps) {
             'shrink-0 rounded-full px-3 py-1 text-[12px] font-medium',
             confirmation === 'confirmed'
               ? 'bg-[#e7f6ec] text-[#1e7e34]'
-              : 'bg-[#fef3c6] text-[#a58401]'
+              : confirmation === 'objected'
+                ? 'bg-[#fef2f2] text-[#b91c1c]'
+                : 'bg-[#fef3c6] text-[#a58401]'
           )}
         >
           {t(`clientAudits.confirmation.${confirmation}`)}

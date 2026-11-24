@@ -13,11 +13,13 @@
 import {
   fetchAuditPlanById,
   fetchAuditPlans,
+  saveAuditPlan,
   type AuditPlan,
 } from '@/lib/api/cabAuditPlanningApi'
+import { createPlanEvent } from '@/lib/api/auditPlanLifecycleApi'
 import { getAuthSession } from '@/lib/authStorage'
 
-export type ClientPlanConfirmation = 'pending' | 'confirmed'
+export type ClientPlanConfirmation = 'pending' | 'confirmed' | 'objected'
 
 /** A plan is visible to the audit client only after the CAB sends it. */
 export function isPlanSentToClient(plan: AuditPlan): boolean {
@@ -40,9 +42,87 @@ export function isPlanForSessionClient(plan: AuditPlan): boolean {
   return normalizeName(plan.clientName) === orgName
 }
 
-/** What the client still owes on this plan. Confirmation itself is phase 2. */
+/** The client's current decision state on a sent plan. An explicit objection
+ *  wins over the confirmed flag; the flag alone (set by the CAB demo shortcut)
+ *  still reads as confirmed. */
 export function getPlanConfirmation(plan: AuditPlan): ClientPlanConfirmation {
-  return plan.execution?.preparation?.planConfirmedByClient ? 'confirmed' : 'pending'
+  const response = plan.execution?.preparation?.clientResponse
+  if (response?.decision === 'objection') return 'objected'
+  if (response?.decision === 'confirmed' || plan.execution?.preparation?.planConfirmedByClient) {
+    return 'confirmed'
+  }
+  return 'pending'
+}
+
+/** The recorded objection, when the client's latest decision objected to a
+ *  team member. Null otherwise. */
+export function getClientPlanObjection(
+  plan: AuditPlan,
+): { memberName?: string; reason?: string } | null {
+  const response = plan.execution?.preparation?.clientResponse
+  return response?.decision === 'objection' ? response : null
+}
+
+/** Minimum reason length for an objection, mirroring the CAB team-exception rule. */
+export const OBJECTION_REASON_MIN_LENGTH = 10
+
+/**
+ * The client approves the plan as scheduled. Demo wiring only: writes to the
+ * same localStorage store the CAB reads, records a `client.confirmed` history
+ * event, and flips the preparation flag the CAB readiness step watches.
+ */
+export async function confirmClientAuditPlan(idOrNumber: string): Promise<AuditPlan | null> {
+  const plan = await getClientAuditPlan(idOrNumber)
+  if (!plan) return null
+  return saveAuditPlan({
+    id: plan.id,
+    planNumber: plan.planNumber,
+    events: [...(plan.events ?? []), createPlanEvent('client.confirmed')],
+    execution: {
+      ...plan.execution,
+      preparation: {
+        ...plan.execution.preparation,
+        planConfirmedByClient: true,
+        clientResponse: { decision: 'confirmed', at: new Date().toISOString() },
+      },
+    },
+  })
+}
+
+/**
+ * The client objects to one team member with a reason. The plan stays
+ * unconfirmed, the objection is stored for the CAB, and a `client.objection`
+ * history event records the member and reason.
+ */
+export async function objectToClientAuditPlan(
+  idOrNumber: string,
+  memberName: string,
+  reason: string,
+): Promise<AuditPlan | null> {
+  const plan = await getClientAuditPlan(idOrNumber)
+  if (!plan) return null
+  const trimmedReason = reason.trim()
+  return saveAuditPlan({
+    id: plan.id,
+    planNumber: plan.planNumber,
+    events: [
+      ...(plan.events ?? []),
+      createPlanEvent('client.objection', `${memberName}: ${trimmedReason}`),
+    ],
+    execution: {
+      ...plan.execution,
+      preparation: {
+        ...plan.execution.preparation,
+        planConfirmedByClient: false,
+        clientResponse: {
+          decision: 'objection',
+          memberName,
+          reason: trimmedReason,
+          at: new Date().toISOString(),
+        },
+      },
+    },
+  })
 }
 
 function byStartDateAsc(a: AuditPlan, b: AuditPlan): number {

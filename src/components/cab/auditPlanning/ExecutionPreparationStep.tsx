@@ -136,9 +136,11 @@ export function ExecutionPreparationStep({
             done={preparation.planConfirmedByClient}
             title="Plan confirmed by the client"
             subtitle={
-              preparation.planConfirmedByClient
-                ? 'Confirmed by client contact.'
-                : "Waiting for the client's confirmation."
+              preparation.clientResponse?.decision === 'objection'
+                ? `Client objected to ${preparation.clientResponse.memberName ?? 'a team member'}: "${preparation.clientResponse.reason ?? ''}"`
+                : preparation.planConfirmedByClient
+                  ? 'Confirmed by client contact.'
+                  : "Waiting for the client's confirmation."
             }
           />
           <ReadinessRow
