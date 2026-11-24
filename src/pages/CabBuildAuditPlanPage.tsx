@@ -954,7 +954,9 @@ export function CabBuildAuditPlanPage() {
                     ...plan.execution.preparation,
                     agreementActive: true,
                     planSentToClient: true,
-                    planConfirmedByClient: true,
+                    // Sending only hands the plan to the client; the status stays
+                    // "pending client" until the client confirms it (phase 2).
+                    planConfirmedByClient: false,
                     declarationsCompleted: true,
                   },
                 },

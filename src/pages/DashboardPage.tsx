@@ -10,6 +10,7 @@ import {
   DashboardTasksTableSkeleton,
 } from '@/components/dashboard/DashboardLoadingSkeleton'
 import { DashboardTourStep } from '@/components/dashboard/DashboardTourStep'
+import { UpcomingAuditCard } from '@/components/dashboard/UpcomingAuditCard'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { useAuditeeDashboardTourSteps } from '@/config/auditeeTourSteps'
 import { TourProvider } from '@/context/TourContext'
@@ -21,6 +22,8 @@ import {
   type DashboardStats,
   type DashboardTask,
 } from '@/lib/api/dashboardApi'
+import { getUpcomingClientAudit } from '@/lib/api/clientAuditsApi'
+import type { AuditPlan } from '@/lib/api/cabAuditPlanningApi'
 import { certificationRequestFormPath, ROUTES } from '@/lib/routes'
 
 export function DashboardPage() {
@@ -29,17 +32,24 @@ export function DashboardPage() {
   const [stats, setStats] = useState<DashboardStats | null>(null)
   const [tasks, setTasks] = useState<DashboardTask[]>([])
   const [activities, setActivities] = useState<DashboardActivity[]>([])
+  const [upcomingAudit, setUpcomingAudit] = useState<AuditPlan | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    Promise.all([getDashboardStats(), getDashboardTasks(), getDashboardActivities()])
-      .then(([statsResult, tasksResult, activitiesResult]) => {
+    Promise.all([
+      getDashboardStats(),
+      getDashboardTasks(),
+      getDashboardActivities(),
+      getUpcomingClientAudit(),
+    ])
+      .then(([statsResult, tasksResult, activitiesResult, upcomingResult]) => {
         if (cancelled) return
         setStats(statsResult)
         setTasks(tasksResult)
         setActivities(activitiesResult)
+        setUpcomingAudit(upcomingResult)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -60,6 +70,8 @@ export function DashboardPage() {
           <DashboardTourStep steps={tourSteps} stepId="key-metrics">
             {loading ? <DashboardStatsSkeleton /> : <DashboardStatCards stats={stats} loading={loading} />}
           </DashboardTourStep>
+
+          {!loading && upcomingAudit && <UpcomingAuditCard plan={upcomingAudit} />}
 
           <div className="flex flex-col gap-5 @7xl:flex-row">
             <DashboardTourStep steps={tourSteps} stepId="pending-tasks" className="flex-1">

@@ -14,6 +14,8 @@ export const ROUTES = {
   wallet: "/wallet",
   periodicVisits: "/periodic-visits",
   invoices: "/invoices",
+  audits: "/audits",
+  auditPlanDetails: "/audits/:planId",
   cabDashboard: "/cab/dashboard",
   cabAuditClients: "/cab/audit-clients",
   cabApplicationRegister: "/cab/applications",
@@ -78,6 +80,10 @@ export const ROUTES = {
   cabCertificationAgreements: "/cab/certification-agreements",
   cabCertificationAgreementDetails: "/cab/certification-agreements/:agreementId",
 } as const;
+
+export function clientAuditPlanPath(planId: string): string {
+  return `/audits/${encodeURIComponent(planId)}`;
+}
 
 function withClientQuery(path: string, clientId?: string): string {
   if (!clientId) return path;

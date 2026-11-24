@@ -1,4 +1,60 @@
 {
+  "clientAudits": {
+    "pageTitle": "التدقيقات",
+    "searchPlaceholder": "ابحث برقم التدقيق أو المواصفة أو الموقع...",
+    "emptyTitle": "لا توجد تدقيقات مرسلة إليك بعد",
+    "emptySubtitle": "ستظهر هنا خطط التدقيق التي ترسلها جهة التصديق.",
+    "emptySearchTitle": "لا توجد نتائج مطابقة لبحثك",
+    "emptySearchSubtitle": "جرّب رقم تدقيق أو مواصفة أو موقعًا مختلفًا.",
+    "confirmation": {
+      "pending": "بانتظار تأكيدك",
+      "confirmed": "تم التأكيد"
+    },
+    "upcomingCard": {
+      "title": "التدقيق القادم",
+      "viewPlan": "عرض خطة التدقيق"
+    },
+    "plan": {
+      "pageTitle": "خطة التدقيق",
+      "backToAudits": "العودة إلى التدقيقات",
+      "notFoundTitle": "خطة التدقيق غير متاحة",
+      "notFoundSubtitle": "لم تُرسل هذه الخطة إلى حسابك أو أنها غير موجودة.",
+      "banner": {
+        "pending": "هذه الخطة بانتظار تأكيدك. يمكنك مراجعتها الآن، وسيتاح التأكيد والاعتراض في المرحلة القادمة.",
+        "confirmed": "لقد أكدت خطة التدقيق هذه."
+      },
+      "sections": {
+        "schedule": "الجدول الزمني",
+        "team": "فريق التدقيق",
+        "objectivesScope": "الأهداف والنطاق",
+        "siteLogistics": "الموقع والترتيبات اللوجستية"
+      },
+      "fields": {
+        "auditType": "نوع التدقيق",
+        "dates": "التواريخ",
+        "site": "الموقع",
+        "leadAuditor": "كبير المدققين",
+        "auditTeam": "فريق التدقيق",
+        "remoteActivities": "أنشطة عن بُعد",
+        "siteAddress": "عنوان الموقع",
+        "onSitePersonnel": "المتواجدون في الموقع",
+        "travelNotes": "ملاحظات السفر"
+      },
+      "roles": {
+        "Lead Auditor": "كبير المدققين",
+        "Auditor": "مدقق",
+        "Technical Expert": "خبير فني",
+        "Trainee Auditor": "مدقق متدرب",
+        "Observer": "مراقب"
+      },
+      "remoteYes": "نعم ({{platform}})",
+      "remoteNo": "لا",
+      "objectives": "أهداف التدقيق",
+      "scope": "نطاق التدقيق",
+      "notProvided": "لم تُذكر في هذه الخطة.",
+      "scheduleEmpty": "سيظهر الجدول هنا بعد أن تضيف جهة التصديق جدول الأعمال."
+    }
+  },
   "common": {
     "yes": "نعم",
     "no": "لا",
@@ -378,6 +434,7 @@
       "expand": "توسيع الشريط الجانبي",
       "collapse": "طي الشريط الجانبي",
       "requests": "الطلبات",
+      "audits": "التدقيقات",
       "clients": "العملاء",
       "users": "المستخدمين",
       "payments": "المدفوعات",

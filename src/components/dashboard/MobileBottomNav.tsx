@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
+  CalendarIcon,
   DashboardGridIcon,
   RequestsListIcon,
   UsersIcon,
@@ -27,6 +28,7 @@ const primaryItems = [
 ]
 
 const moreItems = [
+  { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
   { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },

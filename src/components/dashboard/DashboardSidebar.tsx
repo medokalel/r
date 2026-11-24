@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
+  CalendarIcon,
   DashboardGridIcon,
   DocumentsSidebarIcon,
   LogoutIcon,
@@ -21,6 +22,7 @@ import { cn } from '@/lib/utils'
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
+  { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },

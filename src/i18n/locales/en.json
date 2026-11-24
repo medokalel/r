@@ -1,4 +1,60 @@
 {
+  "clientAudits": {
+    "pageTitle": "Audits",
+    "searchPlaceholder": "Search by audit number, specification or site...",
+    "emptyTitle": "No audits sent to you yet",
+    "emptySubtitle": "Audit plans sent by the certification body will appear here.",
+    "emptySearchTitle": "No audits match your search",
+    "emptySearchSubtitle": "Try a different audit number, specification or site.",
+    "confirmation": {
+      "pending": "Pending your confirmation",
+      "confirmed": "Confirmed"
+    },
+    "upcomingCard": {
+      "title": "Upcoming audit",
+      "viewPlan": "View audit plan"
+    },
+    "plan": {
+      "pageTitle": "Audit plan",
+      "backToAudits": "Back to audits",
+      "notFoundTitle": "Audit plan not available",
+      "notFoundSubtitle": "This plan was not sent to your account or does not exist.",
+      "banner": {
+        "pending": "This plan is waiting for your confirmation. Review it now; confirmation and objection will be available in the next phase.",
+        "confirmed": "You have confirmed this audit plan."
+      },
+      "sections": {
+        "schedule": "Schedule",
+        "team": "Audit team",
+        "objectivesScope": "Objectives & scope",
+        "siteLogistics": "Site & logistics"
+      },
+      "fields": {
+        "auditType": "Audit type",
+        "dates": "Dates",
+        "site": "Site",
+        "leadAuditor": "Lead auditor",
+        "auditTeam": "Audit team",
+        "remoteActivities": "Remote activities",
+        "siteAddress": "Site address",
+        "onSitePersonnel": "On-site personnel",
+        "travelNotes": "Travel notes"
+      },
+      "roles": {
+        "Lead Auditor": "Lead Auditor",
+        "Auditor": "Auditor",
+        "Technical Expert": "Technical Expert",
+        "Trainee Auditor": "Trainee Auditor",
+        "Observer": "Observer"
+      },
+      "remoteYes": "Yes ({{platform}})",
+      "remoteNo": "No",
+      "objectives": "Audit objectives",
+      "scope": "Audit scope",
+      "notProvided": "Not provided in this plan.",
+      "scheduleEmpty": "The schedule will appear here once the certification body adds the agenda."
+    }
+  },
   "common": {
     "yes": "Yes",
     "no": "No",
@@ -378,6 +434,7 @@
       "expand": "Expand sidebar",
       "collapse": "Collapse sidebar",
       "requests": "Requests",
+      "audits": "Audits",
       "clients": "Clients",
       "users": "Users",
       "payments": "Payments",

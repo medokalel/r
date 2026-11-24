@@ -82,6 +82,8 @@ import {
   CompanyProfilePage,
   DashboardPage,
   DashboardTasksPage,
+  ClientAuditsPage,
+  ClientAuditPlanPage,
   UsersPage,
   DigitalWalletPage,
   PeriodicVisitsPage,
@@ -836,6 +838,22 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <InvoicesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.audits}
+                element={
+                  <RequireAuth>
+                    <ClientAuditsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.auditPlanDetails}
+                element={
+                  <RequireAuth>
+                    <ClientAuditPlanPage />
                   </RequireAuth>
                 }
               />
