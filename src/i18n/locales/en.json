@@ -2821,7 +2821,8 @@
             "exception": "Exception requested"
           },
           "plan": {
-            "sent": "Plan sent to the client"
+            "sent": "Plan sent to the client",
+            "rescheduled": "Plan rescheduled"
           }
         }
       },
@@ -3345,7 +3346,8 @@
         "siteLogisticsSaved": "Site & logistics saved. Moving to Review & send.",
         "siteSaved": "Site allocation saved.",
         "templateImported": "Standard iCASCO audit agenda template imported.",
-        "travelSaved": "Travel & logistics saved."
+        "travelSaved": "Travel & logistics saved.",
+        "rescheduled": "Audit plan rescheduled."
       },
       "travel": {
         "notes": "Travel, accommodation & site entry notes",
@@ -3360,6 +3362,18 @@
         "confirmDeclarations": "Please confirm all team declarations before sending.",
         "confirmTeam": "Please confirm the audit team first.",
         "siteBeforeContinue": "Please complete site code and site address before continuing."
+      },
+      "reschedule": {
+        "button": "Reschedule",
+        "tooltip": "Reschedule plan",
+        "title": "Reschedule audit plan",
+        "startDate": "New start date",
+        "endDate": "New end date",
+        "reasonLabel": "Reason for rescheduling",
+        "reasonPlaceholder": "Why are the dates changing?",
+        "confirm": "Confirm reschedule",
+        "close": "Close",
+        "invalidDates": "The end date must be on or after the start date."
       }
     },
     "auditReporting": {

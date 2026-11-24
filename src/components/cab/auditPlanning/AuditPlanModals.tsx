@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { AuditStageType, AuditTeamMember } from '@/lib/api/cabAuditPlanningApi'
 import { IsoDateField } from '@/components/cab/auditPlanning/shared'
@@ -180,106 +181,136 @@ export function AgendaActivityModal({
   )
 }
 
-interface ChangeStageDatesModalProps {
+interface RescheduleAuditPlanModalProps {
   isOpen: boolean
-  auditStage: AuditStageType
   startDate: string
   endDate: string
-  reason: string
-  onChangeStage: (stage: AuditStageType) => void
-  onChangeStart: (val: string) => void
-  onChangeEnd: (val: string) => void
-  onChangeReason: (val: string) => void
   onClose: () => void
-  onSave: () => void
+  onConfirm: (startDate: string, endDate: string, reason: string) => void | Promise<void>
 }
 
-export function ChangeStageDatesModal({
+export function RescheduleAuditPlanModal({
   isOpen,
-  auditStage,
   startDate,
   endDate,
-  reason,
-  onChangeStage,
-  onChangeStart,
-  onChangeEnd,
-  onChangeReason,
   onClose,
-  onSave,
-}: ChangeStageDatesModalProps) {
+  onConfirm,
+}: RescheduleAuditPlanModalProps) {
   const { t } = useTranslation()
+  const [draftStart, setDraftStart] = useState(startDate)
+  const [draftEnd, setDraftEnd] = useState(endDate)
+  const [reason, setReason] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (isOpen) {
+      setDraftStart(startDate)
+      setDraftEnd(endDate)
+      setReason('')
+    }
+  }, [isOpen, startDate, endDate])
+
+  useEffect(() => {
+    if (!isOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [isOpen, onClose])
+
   if (!isOpen) return null
 
-  return (
-    <div className="rounded-[12px] border-2 border-[#1236a3] bg-[#f8faff] p-5 shadow-xs space-y-4">
-      <div className="flex items-center justify-between border-b border-[#dbe6ff] pb-3">
-        <h3 className="text-[15px] font-bold text-[#1236a3]">{t('cab.auditPlanning.modals.changeTitle', 'Change stage or proposed dates')}</h3>
-        <button
-          type="button"
-          onClick={onClose}
-          className="text-[18px] font-bold text-neutral-400 hover:text-neutral-600"
-        >
-          ×
-        </button>
-      </div>
+  const datesValid = Boolean(draftStart) && Boolean(draftEnd) && draftEnd >= draftStart
+  const canConfirm = datesValid && reason.trim().length > 0 && !submitting
 
-      <div className="grid grid-cols-1 gap-3 text-[13px] sm:grid-cols-3">
-        <div>
-          <label className="mb-1 block font-medium text-neutral-800">{t('cab.auditSchedule.auditStage', 'Audit stage')}</label>
-          <SelectField
-            value={auditStage}
-            onChange={(val) => onChangeStage(val as AuditStageType)}
-            options={[
-              { value: 'Stage 1', label: t('cab.auditPlanning.stages.stage1', 'Stage 1') },
-              { value: 'Stage 2', label: t('cab.auditPlanning.stages.stage2', 'Stage 2') },
-              { value: 'Surveillance 1', label: t('cab.auditPlanning.stages.surveillance1', 'Surveillance 1') },
-              { value: 'Surveillance 2', label: t('cab.auditPlanning.stages.surveillance2', 'Surveillance 2') },
-              { value: 'Recertification', label: t('cab.auditPlanning.stages.recertification', 'Recertification') },
-              { value: 'Special Audit', label: t('cab.auditPlanning.stages.specialAudit', 'Special Audit') },
-            ]}
-            className="h-11"
+  const handleConfirm = async () => {
+    if (!canConfirm) return
+    setSubmitting(true)
+    try {
+      await onConfirm(draftStart, draftEnd, reason.trim())
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-neutral-900/50 p-4"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose()
+      }}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="reschedule-plan-title"
+        className="w-full max-w-[520px] rounded-[16px] bg-white p-6 shadow-xl"
+      >
+        <div className="flex items-start justify-between gap-3 border-b border-[#eef0f4] pb-4">
+          <h3 id="reschedule-plan-title" className="text-[17px] font-bold text-neutral-900">
+            {t('cab.buildAuditPlan.reschedule.title', 'Reschedule audit plan')}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label={t('cab.buildAuditPlan.reschedule.close', 'Close')}
+            className="text-[20px] leading-none text-neutral-400 hover:text-neutral-600"
+          >
+            ×
+          </button>
+        </div>
+
+        <div className="mt-4 grid grid-cols-1 gap-3 text-[13px] sm:grid-cols-2">
+          <div>
+            <label className="mb-1 block font-medium text-neutral-800">
+              {t('cab.buildAuditPlan.reschedule.startDate', 'New start date')} <span className="text-red-600">*</span>
+            </label>
+            <IsoDateField value={draftStart} onChange={setDraftStart} />
+          </div>
+          <div>
+            <label className="mb-1 block font-medium text-neutral-800">
+              {t('cab.buildAuditPlan.reschedule.endDate', 'New end date')} <span className="text-red-600">*</span>
+            </label>
+            <IsoDateField value={draftEnd} onChange={setDraftEnd} />
+          </div>
+        </div>
+        {draftStart && draftEnd && draftEnd < draftStart && (
+          <p className="mt-2 text-[12px] text-red-600">
+            {t('cab.buildAuditPlan.reschedule.invalidDates', 'The end date must be on or after the start date.')}
+          </p>
+        )}
+
+        <div className="mt-4">
+          <label className="mb-1 block text-[13px] font-medium text-neutral-800">
+            {t('cab.buildAuditPlan.reschedule.reasonLabel', 'Reason for rescheduling')} <span className="text-red-600">*</span>
+          </label>
+          <textarea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            rows={3}
+            placeholder={t('cab.buildAuditPlan.reschedule.reasonPlaceholder', 'Why are the dates changing?')}
+            className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[13px] text-neutral-900"
           />
         </div>
 
-        <div>
-          <label className="mb-1 block font-medium text-neutral-800">{t('cab.auditSchedule.startDate', 'Start date')}</label>
-          <IsoDateField value={startDate} onChange={onChangeStart} />
+        <div className="mt-5 flex justify-end gap-2.5 border-t border-[#eef0f4] pt-4">
+          <button
+            type="button"
+            onClick={onClose}
+            className="h-10 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50"
+          >
+            {t('common.cancel', 'Cancel')}
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirm}
+            disabled={!canConfirm}
+            className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white hover:bg-[#0e2a80] disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-[#1236a3]"
+          >
+            {t('cab.buildAuditPlan.reschedule.confirm', 'Confirm reschedule')}
+          </button>
         </div>
-
-        <div>
-          <label className="mb-1 block font-medium text-neutral-800">{t('cab.auditSchedule.endDate', 'End date')}</label>
-          <IsoDateField value={endDate} onChange={onChangeEnd} />
-        </div>
-      </div>
-
-      <div>
-        <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-          {t('cab.auditPlanning.modals.reasonLabel', 'Reason for change (audit trail) *')}
-        </label>
-        <textarea
-          value={reason}
-          onChange={(e) => onChangeReason(e.target.value)}
-          rows={2}
-          placeholder={t('cab.auditPlanning.modals.reasonPlaceholder', 'Record why dates or stage were changed...')}
-          className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[13px] text-neutral-900"
-        />
-      </div>
-
-      <div className="flex justify-end gap-2.5 pt-1">
-        <button
-          type="button"
-          onClick={onClose}
-          className="h-10 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700"
-        >
-          {t('common.cancel', 'Cancel')}
-        </button>
-        <button
-          type="button"
-          onClick={onSave}
-          className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white hover:bg-[#0e2a80]"
-        >
-          {t('cab.auditPlanning.modals.saveChanges', 'Save changes')}
-        </button>
       </div>
     </div>
   )

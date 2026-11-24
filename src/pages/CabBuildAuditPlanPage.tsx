@@ -5,7 +5,7 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useBuildAuditPlanTourSteps } from '@/config/buildAuditPlanTourSteps'
-import { AppIcon, MoreIcon } from '@/components/icons'
+import { AppIcon, CalendarIcon, MoreIcon } from '@/components/icons'
 import { AuditTravelCostsPanel } from '@/components/dashboard/cab/travelPolicy/AuditTravelCostsPanel'
 import {
   fetchAuditPlanById,
@@ -46,7 +46,7 @@ import { BuildPlanTeamStep } from '@/components/cab/auditPlanning/BuildPlanTeamS
 import { BuildPlanReviewStep } from '@/components/cab/auditPlanning/BuildPlanReviewStep'
 import {
   AgendaActivityModal,
-  ChangeStageDatesModal,
+  RescheduleAuditPlanModal,
 } from '@/components/cab/auditPlanning/AuditPlanModals'
 import { ROUTES, cabAuditExecutionPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
@@ -127,7 +127,6 @@ export function CabBuildAuditPlanPage() {
   const [noConflictsDeclared, setNoConflictsDeclared] = useState(true)
 
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false)
-  const [changeReason, setChangeReason] = useState('')
   const [isSaving, setIsSaving] = useState(false)
 
   useEffect(() => {
@@ -391,10 +390,11 @@ export function CabBuildAuditPlanPage() {
               <button
                 type="button"
                 onClick={() => setIsChangeModalOpen(true)}
-                title={t('cab.buildAuditPlan.changeStageDates', 'Change stage or dates')}
-                className="inline-flex size-11 items-center justify-center rounded-[8px] border border-[#e2e2e2] bg-white text-neutral-700 transition hover:bg-neutral-50"
+                title={t('cab.buildAuditPlan.reschedule.tooltip', 'Reschedule plan')}
+                className="inline-flex h-11 items-center gap-2 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 transition hover:bg-neutral-50"
               >
-                <AppIcon icon={MoreIcon} size={18} />
+                <AppIcon icon={CalendarIcon} size={18} />
+                <span>{t('cab.buildAuditPlan.reschedule.button', 'Reschedule')}</span>
               </button>
             </div>
           </div>
@@ -415,22 +415,21 @@ export function CabBuildAuditPlanPage() {
           />
         </CabTourStep>
 
-        {/* Inline panel for changing stage or proposed dates (no popup) */}
-        <ChangeStageDatesModal
+        <RescheduleAuditPlanModal
           isOpen={isChangeModalOpen}
-          auditStage={auditStage}
           startDate={proposedStartDate}
           endDate={proposedEndDate}
-          reason={changeReason}
-          onChangeStage={setAuditStage}
-          onChangeStart={setProposedStartDate}
-          onChangeEnd={setProposedEndDate}
-          onChangeReason={setChangeReason}
           onClose={() => setIsChangeModalOpen(false)}
-          onSave={async () => {
-            await persistPlan()
+          onConfirm={async (start, end, reason) => {
+            await persistPlan({
+              proposedStartDate: start,
+              proposedEndDate: end,
+              events: [...(plan.events ?? []), createPlanEvent('plan.rescheduled', reason)],
+            })
+            setProposedStartDate(start)
+            setProposedEndDate(end)
             setIsChangeModalOpen(false)
-            showToast(t('cab.buildAuditPlan.toast.detailsUpdated', 'Audit details updated and reason recorded.'))
+            showToast(t('cab.buildAuditPlan.toast.rescheduled', 'Audit plan rescheduled.'))
           }}
         />
 
