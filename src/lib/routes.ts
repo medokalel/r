@@ -16,8 +16,10 @@ export const ROUTES = {
   invoices: "/invoices",
   audits: "/audits",
   auditPlanDetails: "/audits/:planId",
-  quotations: "/quotations",
-  quotationDetails: "/quotations/:quotationId",
+  quotations: "/offers",
+  quotationDetails: "/offers/:quotationId",
+  legacyQuotations: "/quotations",
+  legacyQuotationDetails: "/quotations/:quotationId",
   cabDashboard: "/cab/dashboard",
   cabAuditClients: "/cab/audit-clients",
   cabApplicationRegister: "/cab/applications",
@@ -88,7 +90,7 @@ export function clientAuditPlanPath(planId: string): string {
 }
 
 export function clientQuotationPath(quotationId: string): string {
-  return `/quotations/${encodeURIComponent(quotationId)}`;
+  return `/offers/${encodeURIComponent(quotationId)}`;
 }
 
 function withClientQuery(path: string, clientId?: string): string {

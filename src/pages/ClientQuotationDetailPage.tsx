@@ -25,7 +25,7 @@ function Fact({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
       <dt className="text-[12px] text-neutral-500">{label}</dt>
-      <dd dir="auto" className="mt-0.5 text-start text-[14px] font-medium text-neutral-900">{value}</dd>
+      <dd className="mt-0.5 text-start text-[14px] font-medium text-neutral-900">{value}</dd>
     </div>
   )
 }
@@ -154,18 +154,18 @@ export function ClientQuotationDetailPage() {
               <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 <Fact label={t('clientQuotations.fields.request')} value={<bdi>{record.applicationNumber}</bdi>} />
                 {quotation.cabName && (
-                  <Fact label={t('clientQuotations.fields.certificationBody')} value={quotation.cabName} />
+                  <Fact label={t('clientQuotations.fields.certificationBody')} value={<bdi dir="auto">{quotation.cabName}</bdi>} />
                 )}
                 <Fact
                   label={t('clientQuotations.fields.standards')}
-                  value={quotation.standardCodesUsed.map((code) => code.replaceAll('_', ' ')).join(', ')}
+                  value={<bdi dir="auto">{quotation.standardCodesUsed.map((code) => code.replaceAll('_', ' ')).join(', ')}</bdi>}
                 />
                 <Fact label={t('clientQuotations.fields.issuedOn')} value={<bdi>{date(record.publishedAt)}</bdi>} />
                 <Fact label={t('clientQuotations.fields.startDate')} value={<bdi>{date(quotation.startDate)}</bdi>} />
                 <Fact label={t('clientQuotations.fields.validUntil')} value={<bdi>{date(quotation.offerEndDate)}</bdi>} />
               </dl>
               {quotation.isProvisional && (
-                <p role="alert" className="rounded-[8px] bg-[#fff7e6] p-3 text-[13px] text-[#92400e]">
+                <p role="alert" dir="auto" className="rounded-[8px] bg-[#fff7e6] p-3 text-[13px] text-[#92400e]">
                   {quotation.provisionalDisclaimer ?? t('clientQuotations.detail.provisional')}
                 </p>
               )}

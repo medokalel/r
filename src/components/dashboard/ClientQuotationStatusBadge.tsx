@@ -3,13 +3,13 @@ import type { ClientQuotationState } from '@/lib/api/clientQuotationsApi'
 import { cn } from '@/lib/utils'
 
 const stateStyles: Record<ClientQuotationState, string> = {
-  pending: 'bg-[#fef3c6] text-[#92400e]',
-  accepted: 'bg-[#e7f6ec] text-[#1e7e34]',
-  rejected: 'bg-[#fef2f2] text-[#b91c1c]',
-  expired: 'bg-[#f3f4f6] text-[#4b5563]',
+  pending: 'bg-[#e8edfc] text-primary',
+  accepted: 'bg-[#dcfce7] text-[#15803d]',
+  rejected: 'bg-[#fee2e2] text-[#dc2626]',
+  expired: 'bg-[#f1f5f9] text-[#475569]',
 }
 
-/** The client's state on an issued quotation, shown on the list and the detail page. */
+/** The client's state on an issued offer, shown on the list and the detail page. */
 export function ClientQuotationStatusBadge({
   state,
   className,
@@ -21,7 +21,7 @@ export function ClientQuotationStatusBadge({
   return (
     <span
       className={cn(
-        'shrink-0 rounded-full px-3 py-1 text-[12px] font-medium',
+        'inline-flex shrink-0 items-center justify-center whitespace-nowrap rounded-[4px] px-3 py-1 text-[12px] font-medium',
         stateStyles[state],
         className,
       )}

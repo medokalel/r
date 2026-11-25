@@ -6,26 +6,48 @@
     "items": {
       "planSent": "خطة التدقيق {{planNumber}} بانتظار تأكيدك",
       "planRescheduled": "تمت إعادة جدولة خطة التدقيق {{planNumber}}",
-      "quotationIssued": "عرض السعر {{reference}} بانتظار قرارك"
+      "quotationIssued": "العرض {{reference}} بانتظار قرارك"
     }
   },
   "clientQuotations": {
-    "pageTitle": "عروض الأسعار",
-    "searchPlaceholder": "ابحث برقم عرض السعر أو الطلب أو المعيار...",
+    "pageTitle": "العروض",
+    "subtitle": "العروض المرسلة إليك من جهة التصديق.",
+    "searchPlaceholder": "ابحث برقم العرض...",
+    "search": "بحث",
     "filterLabel": "تصفية حسب الحالة",
-    "filters": {
-      "all": "الكل",
-      "pending": "بانتظار القرار",
-      "accepted": "مقبولة",
-      "rejected": "مرفوضة",
-      "expired": "منتهية"
+    "allStatuses": "جميع الحالات",
+    "export": "تصدير",
+    "viewLabel": "العرض",
+    "views": {
+      "list": "قائمة",
+      "pipeline": "مراحل"
     },
-    "emptyTitle": "لا توجد عروض أسعار بعد",
-    "emptySubtitle": "ستظهر هنا عروض الأسعار التي تصدرها لك جهة التصديق.",
-    "emptySearchTitle": "لا توجد عروض أسعار مطابقة",
-    "emptySearchSubtitle": "جرّب رقم عرض سعر أو طلبًا أو معيارًا آخر، أو غيّر تصفية الحالة.",
+    "table": {
+      "offer": "العرض",
+      "amount": "المبلغ",
+      "currency": "العملة",
+      "validUntil": "ساري حتى",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "viewOffer": "عرض التفاصيل",
+    "previous": "السابق",
+    "next": "التالي",
+    "pipelineNote": "عرض مراحل عروضك. افتح البطاقة لمراجعة العرض والرد عليه.",
+    "pipelineEmpty": "لا يوجد شيء هنا",
+    "filters": {
+      "all": "جميع الحالات",
+      "pending": "صادر",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "expired": "منتهي"
+    },
+    "emptyTitle": "لا توجد عروض بعد.",
+    "emptySubtitle": "ستظهر هنا العروض التي تصدرها لك جهة التصديق.",
+    "emptySearchTitle": "لا توجد عروض مطابقة",
+    "emptySearchSubtitle": "جرّب رقم عرض آخر أو غيّر تصفية الحالة.",
     "state": {
-      "pending": "بانتظار قرارك",
+      "pending": "صادر",
       "accepted": "مقبول",
       "rejected": "مرفوض",
       "expired": "منتهي الصلاحية"
@@ -40,23 +62,23 @@
       "startDate": "تاريخ البدء"
     },
     "detail": {
-      "pageTitle": "عرض السعر",
-      "backToList": "العودة إلى عروض الأسعار",
-      "notFoundTitle": "عرض السعر غير متاح",
-      "notFoundSubtitle": "لم يُصدر عرض السعر هذا لحسابك أو أنه غير موجود.",
+      "pageTitle": "العرض",
+      "backToList": "العودة إلى العروض",
+      "notFoundTitle": "العرض غير متاح",
+      "notFoundSubtitle": "لم يُصدر هذا العرض لحسابك أو أنه غير موجود.",
       "banner": {
-        "pending": "عرض السعر هذا بانتظار قرارك. راجعه ثم اقبله أو ارفضه مع ذكر السبب.",
-        "accepted": "لقد قبلت عرض السعر هذا.",
-        "rejected": "لقد رفضت عرض السعر هذا.",
-        "expired": "انتهت صلاحية عرض السعر هذا. تواصل مع جهة التصديق لطلب عرض جديد."
+        "pending": "هذا العرض بانتظار قرارك. راجعه ثم اقبله أو ارفضه مع ذكر السبب.",
+        "accepted": "لقد قبلت هذا العرض.",
+        "rejected": "لقد رفضت هذا العرض.",
+        "expired": "انتهت صلاحية هذا العرض. تواصل مع جهة التصديق لطلب عرض جديد."
       },
       "rejectionReason": "سببك",
       "decidedOn": "تاريخ القرار",
-      "acceptButton": "قبول عرض السعر",
-      "rejectButton": "رفض عرض السعر",
-      "provisional": "بعض مدد التدقيق في عرض السعر هذا مؤقتة.",
+      "acceptButton": "قبول العرض",
+      "rejectButton": "رفض العرض",
+      "provisional": "بعض مدد التدقيق في هذا العرض مؤقتة.",
       "sections": {
-        "summary": "تفاصيل عرض السعر",
+        "summary": "تفاصيل العرض",
         "programme": "برنامج التدقيق",
         "costs": "ملخص التكلفة"
       },
@@ -69,16 +91,17 @@
       }
     },
     "dialog": {
-      "acceptTitle": "قبول عرض السعر",
-      "acceptBody": "أنت تقبل عرض السعر {{quotation}} كما صدر. سيظهر قرارك لجهة التصديق.",
-      "acceptSubmit": "قبول عرض السعر",
-      "rejectTitle": "رفض عرض السعر",
-      "rejectBody": "اشرح سبب رفضك لعرض السعر {{quotation}}. سيظهر السبب لجهة التصديق.",
+      "acceptTitle": "قبول العرض",
+      "acceptBody": "أنت تقبل العرض {{quotation}} كما صدر. سيظهر قرارك لجهة التصديق.",
+      "acceptSubmit": "قبول العرض",
+      "rejectTitle": "رفض العرض",
+      "rejectBody": "اشرح سبب رفضك للعرض {{quotation}}. سيظهر السبب لجهة التصديق.",
       "reasonLabel": "سبب الرفض",
-      "reasonPlaceholder": "اشرح سبب رفضك لعرض السعر هذا...",
+      "reasonPlaceholder": "اشرح سبب رفضك لهذا العرض...",
       "reasonTooShort": "يرجى كتابة {{count}} أحرف على الأقل.",
-      "rejectSubmit": "رفض عرض السعر"
-    }
+      "rejectSubmit": "رفض العرض"
+    },
+    "records": "{{count}} سجل"
   },
   "clientAudits": {
     "pageTitle": "التدقيقات",
@@ -534,7 +557,7 @@
       "expand": "توسيع الشريط الجانبي",
       "collapse": "طي الشريط الجانبي",
       "requests": "الطلبات",
-      "quotations": "عروض الأسعار",
+      "quotations": "العروض",
       "audits": "التدقيقات",
       "clients": "العملاء",
       "users": "المستخدمين",
@@ -1357,10 +1380,10 @@
       "underReview": "تحت المراجعة",
       "closedByDirector": "مغلق بقرار المدير",
       "issued": "تم إصدار الشهادة",
-      "quotationIssued": "صدر عرض السعر",
-      "quotationAccepted": "تم قبول عرض السعر",
-      "quotationRejected": "تم رفض عرض السعر",
-      "quotationExpired": "انتهت صلاحية عرض السعر"
+      "quotationIssued": "صدر العرض",
+      "quotationAccepted": "تم قبول العرض",
+      "quotationRejected": "تم رفض العرض",
+      "quotationExpired": "انتهت صلاحية العرض"
     },
     "card": {
       "orderNumber": "رقم الطلب",
@@ -1368,7 +1391,7 @@
       "draftOrderNumber": "مسودة — لم يتم الإرسال",
       "followUp": "متابعة الطلب",
       "orderStatus": "حالة الطلب",
-      "viewQuotation": "عرض السعر"
+      "viewQuotation": "عرض التفاصيل"
     },
     "invoiceModal": {
       "title": "الفاتورة التفاعلية",
@@ -1516,16 +1539,16 @@
           "detail": "أعادت جهة التصديق جدولة خطة التدقيق {{entityName}}"
         },
         "quotationIssued": {
-          "title": "تم استلام عرض سعر",
-          "detail": "عرض السعر {{entityName}} بانتظار قرارك"
+          "title": "تم استلام عرض",
+          "detail": "العرض {{entityName}} بانتظار قرارك"
         },
         "quotationAccepted": {
-          "title": "تم قبول عرض السعر",
-          "detail": "لقد قبلت عرض السعر {{entityName}}"
+          "title": "تم قبول العرض",
+          "detail": "لقد قبلت العرض {{entityName}}"
         },
         "quotationRejected": {
-          "title": "تم رفض عرض السعر",
-          "detail": "لقد رفضت عرض السعر {{entityName}}"
+          "title": "تم رفض العرض",
+          "detail": "لقد رفضت العرض {{entityName}}"
         }
       },
       "movedToAwaitingDocuments": "تم النقل إلى قيد انتظار المستندات"

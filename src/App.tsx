@@ -96,7 +96,13 @@ import {
   getAuthToken,
   getPostLoginRedirect,
 } from "@/lib/authStorage";
-import { LEGACY_DASHBOARD_PATH, ROUTES, cabApplicationQuotationPath } from "@/lib/routes";
+import { LEGACY_DASHBOARD_PATH, ROUTES, cabApplicationQuotationPath, clientQuotationPath } from "@/lib/routes";
+
+// Client "Quotations" are now called "Offers" (/offers); keep the old addresses working.
+function LegacyClientQuotationRedirect() {
+  const { quotationId } = useParams();
+  return <Navigate to={quotationId ? clientQuotationPath(quotationId) : ROUTES.quotations} replace />;
+}
 
 // The quotation lifecycle (issue / accept / reject) now lives on the quotation page itself.
 function QuotationApprovalRedirect() {
@@ -875,6 +881,8 @@ export default function App() {
                   </RequireAuth>
                 }
               />
+              <Route path={ROUTES.legacyQuotations} element={<LegacyClientQuotationRedirect />} />
+              <Route path={ROUTES.legacyQuotationDetails} element={<LegacyClientQuotationRedirect />} />
               <Route
                 path={ROUTES.portal}
                 element={

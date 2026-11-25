@@ -6,26 +6,48 @@
     "items": {
       "planSent": "Audit plan {{planNumber}} is waiting for your confirmation",
       "planRescheduled": "Audit plan {{planNumber}} was rescheduled",
-      "quotationIssued": "Quotation {{reference}} is waiting for your decision"
+      "quotationIssued": "Offer {{reference}} is waiting for your decision"
     }
   },
   "clientQuotations": {
-    "pageTitle": "Quotations",
-    "searchPlaceholder": "Search by quotation number, request or standard...",
+    "pageTitle": "Offers",
+    "subtitle": "Offers sent to you by the certification body.",
+    "searchPlaceholder": "Search by offer number...",
+    "search": "Search",
     "filterLabel": "Filter by status",
+    "allStatuses": "All statuses",
+    "export": "Export",
+    "viewLabel": "View",
+    "views": {
+      "list": "List",
+      "pipeline": "Pipeline"
+    },
+    "table": {
+      "offer": "Offer",
+      "amount": "Amount",
+      "currency": "Currency",
+      "validUntil": "Valid until",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "viewOffer": "View offer",
+    "previous": "Previous",
+    "next": "Next",
+    "pipelineNote": "Pipeline view of your offers. Open a card to review the offer and respond to it.",
+    "pipelineEmpty": "Nothing here",
     "filters": {
-      "all": "All",
-      "pending": "Awaiting decision",
+      "all": "All statuses",
+      "pending": "Issued",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "expired": "Expired"
     },
-    "emptyTitle": "No quotations yet",
-    "emptySubtitle": "Quotations issued to you by the certification body will appear here.",
-    "emptySearchTitle": "No quotations found",
-    "emptySearchSubtitle": "Try a different quotation number, request or standard, or change the status filter.",
+    "emptyTitle": "No offers yet.",
+    "emptySubtitle": "Offers issued to you by the certification body will appear here.",
+    "emptySearchTitle": "No offers found",
+    "emptySearchSubtitle": "Try a different offer number or change the status filter.",
     "state": {
-      "pending": "Awaiting your decision",
+      "pending": "Issued",
       "accepted": "Accepted",
       "rejected": "Rejected",
       "expired": "Expired"
@@ -40,23 +62,23 @@
       "startDate": "Start date"
     },
     "detail": {
-      "pageTitle": "Quotation",
-      "backToList": "Back to quotations",
-      "notFoundTitle": "Quotation not available",
-      "notFoundSubtitle": "This quotation was not issued to your account or does not exist.",
+      "pageTitle": "Offer",
+      "backToList": "Back to offers",
+      "notFoundTitle": "Offer not available",
+      "notFoundSubtitle": "This offer was not issued to your account or does not exist.",
       "banner": {
-        "pending": "This quotation is waiting for your decision. Review it, then accept it or reject it with a reason.",
-        "accepted": "You accepted this quotation.",
-        "rejected": "You rejected this quotation.",
-        "expired": "This quotation has expired. Contact the certification body to request a new one."
+        "pending": "This offer is waiting for your decision. Review it, then accept it or reject it with a reason.",
+        "accepted": "You accepted this offer.",
+        "rejected": "You rejected this offer.",
+        "expired": "This offer has expired. Contact the certification body to request a new one."
       },
       "rejectionReason": "Your reason",
       "decidedOn": "Decision date",
-      "acceptButton": "Accept quotation",
-      "rejectButton": "Reject quotation",
-      "provisional": "Some audit durations in this quotation are provisional.",
+      "acceptButton": "Accept offer",
+      "rejectButton": "Reject offer",
+      "provisional": "Some audit durations in this offer are provisional.",
       "sections": {
-        "summary": "Quotation details",
+        "summary": "Offer details",
         "programme": "Audit programme",
         "costs": "Cost summary"
       },
@@ -69,16 +91,17 @@
       }
     },
     "dialog": {
-      "acceptTitle": "Accept the quotation",
-      "acceptBody": "You accept quotation {{quotation}} as issued. The certification body will see your decision.",
-      "acceptSubmit": "Accept quotation",
-      "rejectTitle": "Reject the quotation",
-      "rejectBody": "Explain why you reject quotation {{quotation}}. The certification body will see your reason.",
+      "acceptTitle": "Accept the offer",
+      "acceptBody": "You accept offer {{quotation}} as issued. The certification body will see your decision.",
+      "acceptSubmit": "Accept offer",
+      "rejectTitle": "Reject the offer",
+      "rejectBody": "Explain why you reject offer {{quotation}}. The certification body will see your reason.",
       "reasonLabel": "Reason for rejection",
-      "reasonPlaceholder": "Explain why you reject this quotation...",
+      "reasonPlaceholder": "Explain why you reject this offer...",
       "reasonTooShort": "Please write at least {{count}} characters.",
-      "rejectSubmit": "Reject quotation"
-    }
+      "rejectSubmit": "Reject offer"
+    },
+    "records": "{{count}} records"
   },
   "clientAudits": {
     "pageTitle": "Audits",
@@ -534,7 +557,7 @@
       "expand": "Expand sidebar",
       "collapse": "Collapse sidebar",
       "requests": "Requests",
-      "quotations": "Quotations",
+      "quotations": "Offers",
       "audits": "Audits",
       "clients": "Clients",
       "users": "Users",
@@ -1357,10 +1380,10 @@
       "underReview": "Under review",
       "closedByDirector": "Closed by director's decision",
       "issued": "The certificate has been issued",
-      "quotationIssued": "Quotation issued",
-      "quotationAccepted": "Quotation accepted",
-      "quotationRejected": "Quotation rejected",
-      "quotationExpired": "Quotation expired"
+      "quotationIssued": "Offer issued",
+      "quotationAccepted": "Offer accepted",
+      "quotationRejected": "Offer rejected",
+      "quotationExpired": "Offer expired"
     },
     "card": {
       "orderNumber": "Order number",
@@ -1368,7 +1391,7 @@
       "draftOrderNumber": "Draft — not submitted",
       "followUp": "Follow up",
       "orderStatus": "Order Status",
-      "viewQuotation": "View quotation"
+      "viewQuotation": "View offer"
     },
     "invoiceModal": {
       "title": "Interactive invoice",
@@ -1516,16 +1539,16 @@
           "detail": "The certification body rescheduled audit plan {{entityName}}"
         },
         "quotationIssued": {
-          "title": "Quotation received",
-          "detail": "Quotation {{entityName}} is waiting for your decision"
+          "title": "Offer received",
+          "detail": "Offer {{entityName}} is waiting for your decision"
         },
         "quotationAccepted": {
-          "title": "Quotation accepted",
-          "detail": "You accepted quotation {{entityName}}"
+          "title": "Offer accepted",
+          "detail": "You accepted offer {{entityName}}"
         },
         "quotationRejected": {
-          "title": "Quotation rejected",
-          "detail": "You rejected quotation {{entityName}}"
+          "title": "Offer rejected",
+          "detail": "You rejected offer {{entityName}}"
         }
       },
       "movedToAwaitingDocuments": "Moved to awaiting documents"
