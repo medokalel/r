@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AccreditationHeader } from '@/components/dashboard/AccreditationHeader'
-import { DashboardActivities } from '@/components/dashboard/DashboardActivities'
+import { DashboardActivities, DASHBOARD_ACTIVITIES_PREVIEW_COUNT } from '@/components/dashboard/DashboardActivities'
 import { DashboardStatCards } from '@/components/dashboard/DashboardStatCards'
 import { DashboardTasksTable } from '@/components/dashboard/DashboardTasksTable'
 import {
@@ -101,7 +101,11 @@ export function DashboardPage() {
               {loading ? (
                 <DashboardActivitiesSkeleton />
               ) : (
-                <DashboardActivities activities={activities} loading={loading} onViewAll={() => undefined} />
+                <DashboardActivities
+                  activities={activities.slice(0, DASHBOARD_ACTIVITIES_PREVIEW_COUNT)}
+                  loading={loading}
+                  onViewAll={() => navigate(ROUTES.dashboardActivities)}
+                />
               )}
             </DashboardTourStep>
           </div>

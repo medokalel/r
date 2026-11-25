@@ -218,6 +218,12 @@
     "emptyTitle": "No agreements yet",
     "emptySubtitle": "Your certification body sends the agreement after you accept the offer. It appears here for your signature."
   },
+  "clientActivities": {
+    "pageTitle": "Activity history",
+    "backToDashboard": "Back to dashboard",
+    "empty": "No activity yet",
+    "daysAgo": "{{count}} days ago"
+  },
   "common": {
     "yes": "Yes",
     "no": "No",

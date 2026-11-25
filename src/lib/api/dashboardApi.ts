@@ -89,31 +89,6 @@ const MOCK_TASKS: DashboardTask[] = [
   },
 ]
 
-const MOCK_ACTIVITIES: DashboardActivity[] = [
-  {
-    id: '1',
-    type: 'documentReceived',
-    titleKey: 'dashboard.activities.items.documentReceived',
-    entityName: 'Food Solutions Company',
-    occurredAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '2',
-    type: 'correspondenceSent',
-    titleKey: 'dashboard.activities.items.correspondenceSent',
-    entityName: 'Arab Factory',
-    occurredAt: new Date(Date.now() - 60 * 60 * 1000).toISOString(),
-  },
-  {
-    id: '3',
-    type: 'statusChanged',
-    titleKey: 'dashboard.activities.items.statusChanged',
-    entityName: 'Food factory',
-    occurredAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
-    statusNote: 'dashboard.activities.movedToAwaitingDocuments',
-  },
-]
-
 function delay<T>(value: T, ms = 300): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
 }
@@ -130,8 +105,8 @@ export function getDashboardTasks(): Promise<DashboardTask[]> {
 }
 
 // TODO: replace with `authorizedRequest<DashboardActivity[]>('/dashboard/activities')`
-// once the backend exposes this endpoint. The audit-plan entries are NOT
-// mocked: they are the client's real planning events (plan sent, plan
+// once the backend exposes this endpoint. Only real events are listed (no
+// placeholder entries): the audit-plan entries are the client's real planning events (plan sent, plan
 // rescheduled) derived from the shared plan store (client-side phase 3), so
 // the home activity feed reflects what the CAB actually did.
 export async function getDashboardActivities(): Promise<DashboardActivity[]> {
@@ -159,7 +134,7 @@ export async function getDashboardActivities(): Promise<DashboardActivity[]> {
       occurredAt: activity.occurredAt,
     }),
   )
-  const merged = [...planActivities, ...quotationActivities, ...MOCK_ACTIVITIES].sort(
+  const merged = [...planActivities, ...quotationActivities].sort(
     (a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
   )
   return delay(merged)

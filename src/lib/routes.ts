@@ -7,6 +7,7 @@ export const ROUTES = {
   workspace: "/workspace",
   dashboard: "/dashboard",
   dashboardTasks: "/dashboard/tasks",
+  dashboardActivities: "/dashboard/activities",
   certificationRequestNew: "/certification-request/new",
   certificationRequests: "/certification-requests",
   companyProfile: "/settings/company-profile",

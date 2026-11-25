@@ -35,7 +35,8 @@ function relativeTimeLabel(
   if (diffMinutes < 60) return t('dashboard.activities.minutesAgo', { count: diffMinutes })
   const diffHours = Math.round(diffMinutes / 60)
   if (diffHours === 1) return t('dashboard.activities.hourAgo')
-  return t('dashboard.activities.hoursAgo', { count: diffHours })
+  if (diffHours < 48) return t('dashboard.activities.hoursAgo', { count: diffHours })
+  return t('clientActivities.daysAgo', { count: Math.round(diffHours / 24) })
 }
 
 /**
@@ -53,6 +54,59 @@ function detailWithHighlightedEntity(detail: string, entityName: string) {
       {detail.slice(0, index)}
       <span className="font-medium text-primary">{entityName}</span>
       {detail.slice(index + entityName.length)}
+    </>
+  )
+}
+
+export const DASHBOARD_ACTIVITIES_PREVIEW_COUNT = 3
+
+interface DashboardActivityTimelineProps {
+  activities: DashboardActivity[]
+  loading: boolean
+}
+
+/** The activity rows (icon, time, title, detail), shared by the dashboard card and the history page. */
+export function DashboardActivityTimeline({ activities, loading }: DashboardActivityTimelineProps) {
+  const { t } = useTranslation()
+
+  if (loading) {
+    return <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
+  }
+  if (activities.length === 0) {
+    return <p className="py-6 text-center text-neutral-500">{t('clientActivities.empty')}</p>
+  }
+
+  return (
+    <>
+      {activities.map((activity, index) => {
+        const { icon, bgColor } = activityIconConfig[activity.type]
+        const isLast = index === activities.length - 1
+        const detail = t(`${activity.titleKey}.detail`, { entityName: activity.entityName })
+
+        return (
+          <div key={activity.id} className="flex gap-3">
+            {/* Icon badge + connecting timeline line down to the next item */}
+            <div className="flex flex-col items-center">
+              <span
+                className={cn('flex size-9 shrink-0 items-center justify-center rounded-[10px]', bgColor)}
+              >
+                <AppIcon icon={icon} size={26} />
+              </span>
+              {!isLast && <span className="my-1 w-px flex-1 bg-[#e2e2e2]" />}
+            </div>
+
+            <div className={cn('min-w-0 flex-1', isLast ? 'pb-1' : 'pb-6')}>
+              <p className="text-[13px] text-neutral-500">{relativeTimeLabel(activity.occurredAt, t)}</p>
+              <p className="text-[15px] font-semibold leading-[1.6] text-neutral-900">
+                {t(`${activity.titleKey}.title`)}
+              </p>
+              <p className="text-[14px] leading-[1.6] text-neutral-600">
+                {detailWithHighlightedEntity(detail, activity.entityName)}
+              </p>
+            </div>
+          </div>
+        )
+      })}
     </>
   )
 }
@@ -76,46 +130,7 @@ export function DashboardActivities({ activities, loading, onViewAll }: Dashboar
       </div>
 
       <div className="flex flex-1 flex-col p-[24px] overflow-y-auto">
-        {loading ? (
-          <p className="py-6 text-center text-neutral-500">{t('common.loading')}</p>
-        ) : activities.length === 0 ? (
-          <p className="py-6 text-center text-neutral-500">—</p>
-        ) : (
-          activities.map((activity, index) => {
-            const { icon, bgColor } = activityIconConfig[activity.type]
-            const isLast = index === activities.length - 1
-            const detail = t(`${activity.titleKey}.detail`, { entityName: activity.entityName })
-
-            return (
-              <div key={activity.id} className="flex gap-3">
-                {/* Icon badge + connecting timeline line down to the next item */}
-                <div className="flex flex-col items-center">
-                  <span
-                    className={cn(
-                      'flex size-9 shrink-0 items-center justify-center rounded-[10px]',
-                      bgColor
-                    )}
-                  >
-                    <AppIcon icon={icon} size={26} />
-                  </span>
-                  {!isLast && <span className="my-1 w-px flex-1 bg-[#e2e2e2]" />}
-                </div>
-
-                <div className={cn('min-w-0 flex-1', isLast ? 'pb-1' : 'pb-6')}>
-                  <p className="text-[13px] text-neutral-500">
-                    {relativeTimeLabel(activity.occurredAt, t)}
-                  </p>
-                  <p className="text-[15px] font-semibold leading-[1.6] text-neutral-900">
-                    {t(`${activity.titleKey}.title`)}
-                  </p>
-                  <p className="text-[14px] leading-[1.6] text-neutral-600">
-                    {detailWithHighlightedEntity(detail, activity.entityName)}
-                  </p>
-                </div>
-              </div>
-            )
-          })
-        )}
+        <DashboardActivityTimeline activities={activities} loading={loading} />
       </div>
 
       {onViewAll && (

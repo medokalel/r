@@ -218,6 +218,12 @@
     "emptyTitle": "لا توجد اتفاقيات بعد",
     "emptySubtitle": "ترسل جهة التصديق الاتفاقية بعد قبولك للعرض، وتظهر هنا لتوقيعك."
   },
+  "clientActivities": {
+    "pageTitle": "سجل الأنشطة",
+    "backToDashboard": "العودة إلى لوحة التحكم",
+    "empty": "لا توجد أنشطة بعد",
+    "daysAgo": "منذ {{count}} أيام"
+  },
   "common": {
     "yes": "نعم",
     "no": "لا",

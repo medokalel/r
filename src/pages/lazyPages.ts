@@ -38,6 +38,10 @@ export const CabClientCompanyProfilePage = lazyNamed(
 )
 export const CabClientsPage = lazyNamed(() => import('@/pages/CabClientsPage'), 'CabClientsPage')
 export const ClientRegisterPage = lazyNamed(() => import('@/pages/ClientRegisterPage'), 'ClientRegisterPage')
+export const DashboardActivitiesPage = lazyNamed(
+  () => import('@/pages/DashboardActivitiesPage'),
+  'DashboardActivitiesPage',
+)
 export const ClientAgreementsPage = lazyNamed(
   () => import('@/pages/ClientAgreementsPage'),
   'ClientAgreementsPage',

@@ -23,6 +23,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
     ROUTES.certificationRequestNew,
     ROUTES.certificationRequests,
     ROUTES.dashboardTasks,
+    ROUTES.dashboardActivities,
     ROUTES.companyProfile,
     ROUTES.users,
     ROUTES.wallet,
