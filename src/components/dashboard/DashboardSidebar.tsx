@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
   CalendarIcon,
+  CertificateBadgeIcon,
   DashboardGridIcon,
   DocumentFileIcon,
   DocumentTextOutlineIcon,
@@ -27,6 +28,7 @@ const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href: string
   { icon: DocumentFileIcon, labelKey: 'accreditation.sidebar.agreements', href: ROUTES.agreements },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: InfoIcon, labelKey: 'clientFindings.navLabel', href: ROUTES.findings },
+  { icon: CertificateBadgeIcon, labelKey: 'clientCertificates.navLabel', href: ROUTES.certificates },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },

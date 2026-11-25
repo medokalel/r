@@ -87,6 +87,7 @@ import {
   DashboardActivitiesPage,
   ClientFindingsPage,
   ClientFindingResponsePage,
+  ClientCertificatesPage,
   ClientAuditsPage,
   ClientAuditPlanPage,
   ClientQuotationsPage,
@@ -891,6 +892,14 @@ export default function App() {
               element={
                 <RequireAuth>
                   <ClientFindingResponsePage />
+                </RequireAuth>
+              }
+            />
+            <Route
+                path={ROUTES.certificates}
+              element={
+                <RequireAuth>
+                  <ClientCertificatesPage />
                 </RequireAuth>
               }
             />

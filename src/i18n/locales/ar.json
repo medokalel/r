@@ -268,6 +268,30 @@
       "activity": "سجل النشاط"
     }
   },
+  "clientCertificates": {
+    "pageTitle": "الشهادات",
+    "navLabel": "الشهادات",
+    "subtitle": "الشهادات التي أصدرتها جهة التصديق لمنشأتك.",
+    "searchPlaceholder": "ابحث برقم الشهادة أو المعيار أو النطاق...",
+    "resultCount": "{{count}} نتيجة",
+    "resultCount_zero": "لا توجد نتائج",
+    "resultCount_one": "نتيجة واحدة",
+    "resultCount_two": "نتيجتان",
+    "resultCount_few": "{{count}} نتائج",
+    "resultCount_many": "{{count}} نتيجة",
+    "resultCount_other": "{{count}} نتيجة",
+    "emptyTitle": "لا توجد شهادات بعد",
+    "emptySubtitle": "ستظهر شهادتك هنا فور إصدارها من جهة التصديق بعد قرار اعتماد إيجابي.",
+    "viewApplications": "عرض الطلبات",
+    "noMatch": "لا توجد شهادات مطابقة لبحثك.",
+    "loadFailed": "تعذّر التحميل. حاول مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "issueDate": "تاريخ الإصدار",
+    "expiryDate": "تاريخ الانتهاء",
+    "status": {
+      "superseded": "مستبدَلة"
+    }
+  },
   "common": {
     "yes": "نعم",
     "no": "لا",

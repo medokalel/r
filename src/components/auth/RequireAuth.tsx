@@ -32,6 +32,7 @@ export function RequireAuth({ children }: RequireAuthProps) {
     ROUTES.audits,
     ROUTES.agreements,
     ROUTES.findings,
+    ROUTES.certificates,
   ].some(
     (route) =>
       location.pathname === route || location.pathname.startsWith(`${route}/`)

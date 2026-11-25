@@ -19,6 +19,7 @@ export const ROUTES = {
   audits: "/audits",
   findings: "/findings",
   findingDetails: "/findings/:ncId",
+  certificates: "/certificates",
   auditPlanDetails: "/audits/:planId",
   quotations: "/offers",
   quotationDetails: "/offers/:quotationId",

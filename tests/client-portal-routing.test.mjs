@@ -31,14 +31,11 @@ test('portal paths map to the Audit Client screen of the same subject', () => {
     '/portal/audits': '/audits',
     '/portal/audits/': '/audits',
     '/portal/findings': '/findings',
+    '/portal/certificates': '/certificates',
   }
   for (const [path, to] of Object.entries(expected)) {
     assert.deepEqual({ ...resolveClientPortalRoute(path) }, { kind: 'redirect', to }, path)
   }
-})
-
-test('sections the client layer does not have say so instead of redirecting', () => {
-  assert.deepEqual({ ...resolveClientPortalRoute('/portal/certificates') }, { kind: 'unavailable', section: 'certificates' })
 })
 
 test('unknown portal paths are reported as not found', () => {
@@ -46,8 +43,8 @@ test('unknown portal paths are reported as not found', () => {
 })
 
 test('every redirect target is a real client route', () => {
-  const clientRoutes = new Set(['/dashboard', '/settings/company-profile', '/certification-requests', '/offers', '/agreements', '/invoices', '/audits'])
-  for (const path of ['/portal', '/portal/home', '/portal/company-profile', '/portal/applications', '/portal/offers', '/portal/agreements', '/portal/invoices', '/portal/audits']) {
+  const clientRoutes = new Set(['/dashboard', '/settings/company-profile', '/certification-requests', '/offers', '/agreements', '/invoices', '/audits', '/findings', '/certificates'])
+  for (const path of ['/portal', '/portal/home', '/portal/company-profile', '/portal/applications', '/portal/offers', '/portal/agreements', '/portal/invoices', '/portal/audits', '/portal/findings', '/portal/certificates']) {
     const r = resolveClientPortalRoute(path)
     assert.ok(clientRoutes.has(r.to), path)
   }

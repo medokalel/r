@@ -268,6 +268,25 @@
       "activity": "Activity log"
     }
   },
+  "clientCertificates": {
+    "pageTitle": "Certificates",
+    "navLabel": "Certificates",
+    "subtitle": "Certificates the certification body has issued to your organization.",
+    "searchPlaceholder": "Search by number, standard or scope...",
+    "resultCount": "{{count}} result",
+    "resultCount_other": "{{count}} results",
+    "emptyTitle": "No certificates yet",
+    "emptySubtitle": "Your certificate appears here once the certification body issues it after a positive certification decision.",
+    "viewApplications": "View applications",
+    "noMatch": "No certificates match your search.",
+    "loadFailed": "Failed to load. Please try again.",
+    "retry": "Retry",
+    "issueDate": "Issue date",
+    "expiryDate": "Expiry date",
+    "status": {
+      "superseded": "Superseded"
+    }
+  },
   "common": {
     "yes": "Yes",
     "no": "No",

@@ -32,7 +32,7 @@ export function resolveClientPortalRoute(pathname: string): ClientPortalResoluti
     case ROUTES.portalFindings:
       return { kind: 'redirect', to: ROUTES.findings }
     case ROUTES.portalCertificates:
-      return { kind: 'unavailable', section: 'certificates' }
+      return { kind: 'redirect', to: ROUTES.certificates }
     default:
       return { kind: 'unavailable', section: 'notFound' }
   }
