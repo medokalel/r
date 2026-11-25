@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import {
@@ -41,15 +42,41 @@ export function DashboardSidebar() {
   const navigate = useNavigate()
   const location = useLocation()
   const session = getAuthSession()
+  const [expanded, setExpanded] = useState(false)
   const displayName = session?.organization?.name ?? ''
   const handleLogout = () => {
     clearAuthSession()
     navigate(ROUTES.login, { replace: true })
   }
 
+  const toggleIcon = (
+    <svg width="16" height="18" viewBox="0 0 16 18" fill="none" style={expanded ? { transform: 'scaleX(-1)' } : undefined}>
+      <path d="M7.33447 12.667L11.3345 8.66699L7.33447 4.66699" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11.3332 8.66699H0.666504" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M13.9946 16.667C15.728 11.4803 15.728 5.85366 13.9946 0.666992" stroke="currentColor" strokeWidth="1.33333" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+
   return (
-    <aside className="hidden min-h-screen w-[284px] shrink-0 flex-col border-e border-[#edf0f5] bg-white px-[14px] py-7 md:flex">
-      <div className="mb-7 flex h-[137px] shrink-0 items-center justify-center">
+    <aside
+      className={cn(
+        'hidden min-h-screen shrink-0 flex-col border-e border-[#edf0f5] bg-white py-6 transition-[width] duration-300 ease-in-out md:flex',
+        expanded ? 'w-[284px] px-[14px]' : 'w-[112px] items-center px-2'
+      )}
+    >
+      <div className={cn('mb-2 flex w-full shrink-0 px-2', expanded ? 'justify-end' : 'justify-center')}>
+        <button
+          type="button"
+          onClick={() => setExpanded((prev) => !prev)}
+          aria-expanded={expanded}
+          aria-label={t(expanded ? 'accreditation.sidebar.collapse' : 'accreditation.sidebar.expand')}
+          className="flex size-7 items-center justify-center rounded-[var(--radius-sm)] border border-neutral-200 bg-white text-neutral-600 shadow-sm transition-colors hover:border-neutral-300 hover:text-primary"
+        >
+          {toggleIcon}
+        </button>
+      </div>
+
+      <div className={cn('mb-5 flex shrink-0 items-center justify-center', expanded ? 'h-[110px]' : 'h-[93px] w-[100px]')}>
         <img
           src="/casco-logo.svg"
           alt={t('common.appName')}
@@ -60,7 +87,7 @@ export function DashboardSidebar() {
       </div>
 
       <nav
-        className="flex min-h-0 flex-1 flex-col gap-2"
+        className={cn('flex min-h-0 flex-1 flex-col gap-2', !expanded && 'items-center')}
         aria-label={t('nav.dashboard')}
       >
         {navItems.map(({ icon, labelKey, href }) => {
@@ -73,16 +100,21 @@ export function DashboardSidebar() {
               key={labelKey}
               type="button"
               onClick={() => navigate(href)}
+              title={t(labelKey)}
+              aria-label={t(labelKey)}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'flex h-12 w-full items-center gap-4 rounded-[24px] px-4 text-start text-[18px] transition-colors',
+                'flex items-center transition-colors',
+                expanded
+                  ? 'h-12 w-full gap-4 rounded-[24px] px-4 text-start text-[18px]'
+                  : 'size-11 justify-center rounded-[14px]',
                 active
                   ? 'bg-[#e8edfc] font-medium text-primary'
                   : 'text-neutral-600 hover:bg-[#f5f7fc] hover:text-primary'
               )}
             >
               <AppIcon icon={icon} size={24} className="shrink-0" />
-              <span className="truncate">{t(labelKey)}</span>
+              {expanded && <span className="truncate">{t(labelKey)}</span>}
             </button>
           )
         })}
@@ -90,10 +122,17 @@ export function DashboardSidebar() {
         <button
           type="button"
           onClick={handleLogout}
-          className="mt-auto flex h-12 w-full items-center gap-4 rounded-[24px] px-4 text-start text-[18px] text-error-500 transition-colors hover:bg-error-50"
+          title={t('nav.logout')}
+          aria-label={t('nav.logout')}
+          className={cn(
+            'mt-auto flex items-center text-error-500 transition-colors hover:bg-error-50',
+            expanded
+              ? 'h-12 w-full gap-4 rounded-[24px] px-4 text-start text-[18px]'
+              : 'size-11 justify-center rounded-[14px]'
+          )}
         >
           <AppIcon icon={LogoutIcon} size={24} className="shrink-0" />
-          <span>{t('nav.logout')}</span>
+          {expanded && <span>{t('nav.logout')}</span>}
         </button>
       </nav>
 
@@ -101,7 +140,6 @@ export function DashboardSidebar() {
         alt={displayName}
         className="size-[53px] self-center"
       />
-      
     </aside>
   )
 }

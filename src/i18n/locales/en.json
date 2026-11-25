@@ -287,6 +287,14 @@
       "superseded": "Superseded"
     }
   },
+  "clientInvoices": {
+    "subtitle": "Invoices issued to you by the certification body.",
+    "export": "Export",
+    "previous": "Previous",
+    "next": "Next",
+    "exportIncomplete": "The export is incomplete, so no file was created. Narrow the filters and try again.",
+    "empty": "No invoices found."
+  },
   "common": {
     "yes": "Yes",
     "no": "No",
