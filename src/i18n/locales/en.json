@@ -110,6 +110,24 @@
     "emptySubtitle": "Audit plans sent by the certification body will appear here.",
     "emptySearchTitle": "No audits match your search",
     "emptySearchSubtitle": "Try a different audit number, specification or site.",
+    "list": {
+      "previous": "Previous",
+      "next": "Next",
+      "columns": {
+        "planNumber": "Audit plan",
+        "specification": "Specification",
+        "site": "Site",
+        "dates": "Audit dates",
+        "stage": "Audit stage",
+        "confirmation": "Confirmation"
+      },
+      "filters": {
+        "stage": "Audit stage",
+        "allStages": "All stages",
+        "confirmation": "Confirmation",
+        "allConfirmations": "All confirmations"
+      }
+    },
     "confirmation": {
       "pending": "Pending your confirmation",
       "confirmed": "Confirmed",

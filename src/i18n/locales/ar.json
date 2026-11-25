@@ -110,6 +110,24 @@
     "emptySubtitle": "ستظهر هنا خطط التدقيق التي ترسلها جهة التصديق.",
     "emptySearchTitle": "لا توجد نتائج مطابقة لبحثك",
     "emptySearchSubtitle": "جرّب رقم تدقيق أو مواصفة أو موقعًا مختلفًا.",
+    "list": {
+      "previous": "السابق",
+      "next": "التالي",
+      "columns": {
+        "planNumber": "خطة التدقيق",
+        "specification": "المواصفة",
+        "site": "الموقع",
+        "dates": "تواريخ التدقيق",
+        "stage": "مرحلة التدقيق",
+        "confirmation": "التأكيد"
+      },
+      "filters": {
+        "stage": "مرحلة التدقيق",
+        "allStages": "جميع المراحل",
+        "confirmation": "التأكيد",
+        "allConfirmations": "جميع الحالات"
+      }
+    },
     "confirmation": {
       "pending": "بانتظار تأكيدك",
       "confirmed": "تم التأكيد",
