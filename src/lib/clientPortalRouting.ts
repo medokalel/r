@@ -25,6 +25,8 @@ export function resolveClientPortalRoute(pathname: string): ClientPortalResoluti
       return { kind: 'redirect', to: ROUTES.quotations }
     case ROUTES.portalInvoices:
       return { kind: 'redirect', to: ROUTES.invoices }
+    case ROUTES.portalAgreements:
+      return { kind: 'redirect', to: ROUTES.agreements }
     case ROUTES.portalAudits:
       return { kind: 'redirect', to: ROUTES.audits }
     case ROUTES.portalFindings:

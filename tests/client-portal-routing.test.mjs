@@ -27,6 +27,7 @@ test('portal paths map to the Audit Client screen of the same subject', () => {
     '/portal/applications': '/certification-requests',
     '/portal/offers': '/offers',
     '/portal/invoices': '/invoices',
+    '/portal/agreements': '/agreements',
     '/portal/audits': '/audits',
     '/portal/audits/': '/audits',
   }
@@ -45,8 +46,8 @@ test('unknown portal paths are reported as not found', () => {
 })
 
 test('every redirect target is a real client route', () => {
-  const clientRoutes = new Set(['/dashboard', '/settings/company-profile', '/certification-requests', '/offers', '/invoices', '/audits'])
-  for (const path of ['/portal', '/portal/home', '/portal/company-profile', '/portal/applications', '/portal/offers', '/portal/invoices', '/portal/audits']) {
+  const clientRoutes = new Set(['/dashboard', '/settings/company-profile', '/certification-requests', '/offers', '/agreements', '/invoices', '/audits'])
+  for (const path of ['/portal', '/portal/home', '/portal/company-profile', '/portal/applications', '/portal/offers', '/portal/agreements', '/portal/invoices', '/portal/audits']) {
     const r = resolveClientPortalRoute(path)
     assert.ok(clientRoutes.has(r.to), path)
   }
@@ -60,5 +61,12 @@ test('client navigation has no dead entries', () => {
     for (const line of text.split(/\r?\n/).filter((l) => l.includes("labelKey: '") && l.includes('icon:'))) {
       assert.ok(line.includes('href:'), `${file}: ${line.trim()}`)
     }
+  }
+})
+
+test('client navigation has an Agreements entry after Offers on desktop and in the mobile More list', () => {
+  for (const file of ['DashboardSidebar', 'MobileBottomNav']) {
+    const text = readFileSync(new URL(`../src/components/dashboard/${file}.tsx`, import.meta.url), 'utf8')
+    assert.ok(text.includes("labelKey: 'accreditation.sidebar.agreements', href: ROUTES.agreements"), file)
   }
 })

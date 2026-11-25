@@ -212,6 +212,12 @@
       "description": "The address you opened does not exist in this application. Use the menu to go to one of the available pages."
     }
   },
+  "clientAgreements": {
+    "pageTitle": "Agreements",
+    "subtitle": "Certification agreements from your certification body: review, sign and download.",
+    "emptyTitle": "No agreements yet",
+    "emptySubtitle": "Your certification body sends the agreement after you accept the offer. It appears here for your signature."
+  },
   "common": {
     "yes": "Yes",
     "no": "No",
@@ -593,6 +599,7 @@
       "collapse": "Collapse sidebar",
       "requests": "Requests",
       "quotations": "Offers",
+      "agreements": "Agreements",
       "audits": "Audits",
       "clients": "Clients",
       "users": "Users",

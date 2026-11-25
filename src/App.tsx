@@ -83,6 +83,7 @@ import {
   CompanyProfilePage,
   DashboardPage,
   DashboardTasksPage,
+  ClientAgreementsPage,
   ClientAuditsPage,
   ClientAuditPlanPage,
   ClientQuotationsPage,
@@ -859,6 +860,14 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.agreements}
+                element={
+                  <RequireAuth>
+                    <ClientAgreementsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
                 path={ROUTES.audits}
                 element={
                   <RequireAuth>
@@ -937,6 +946,14 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <ClientPortalGate><CabInvoiceRegisterPage /></ClientPortalGate>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.portalAgreements}
+                element={
+                  <RequireAuth>
+                    <ClientPortalGate><CabCertificationAgreementsPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
