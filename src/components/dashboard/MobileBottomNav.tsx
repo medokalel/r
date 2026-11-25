@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import {
   AppIcon,
   CalendarIcon,
+  InfoIcon,
   DashboardGridIcon,
   DocumentFileIcon,
   RequestsListIcon,
@@ -30,6 +31,7 @@ const primaryItems = [
 const moreItems = [
   { icon: DocumentFileIcon, labelKey: 'accreditation.sidebar.agreements', href: ROUTES.agreements },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
+  { icon: InfoIcon, labelKey: 'clientFindings.navLabel', href: ROUTES.findings },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },
   { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices', href: ROUTES.invoices },

@@ -1,6 +1,6 @@
 import { ROUTES } from '@/lib/routes'
 
-export type ClientUnavailableSection = 'findings' | 'certificates' | 'notFound'
+export type ClientUnavailableSection = 'certificates' | 'notFound'
 
 export type ClientPortalResolution =
   | { kind: 'redirect'; to: string }
@@ -30,7 +30,7 @@ export function resolveClientPortalRoute(pathname: string): ClientPortalResoluti
     case ROUTES.portalAudits:
       return { kind: 'redirect', to: ROUTES.audits }
     case ROUTES.portalFindings:
-      return { kind: 'unavailable', section: 'findings' }
+      return { kind: 'redirect', to: ROUTES.findings }
     case ROUTES.portalCertificates:
       return { kind: 'unavailable', section: 'certificates' }
     default:

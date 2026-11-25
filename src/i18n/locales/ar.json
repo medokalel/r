@@ -224,6 +224,50 @@
     "empty": "لا توجد أنشطة بعد",
     "daysAgo": "منذ {{count}} أيام"
   },
+  "clientFindings": {
+    "pageTitle": "الملاحظات",
+    "navLabel": "الملاحظات",
+    "subtitle": "حالات عدم المطابقة التي رُصدت في تدقيقاتك وردودك بالإجراءات التصحيحية.",
+    "searchPlaceholder": "ابحث برقم الملاحظة أو البند أو التدقيق...",
+    "allStatuses": "كل الحالات",
+    "awaiting": "ملاحظات بانتظار ردك: {{count}}",
+    "emptyTitle": "لا توجد ملاحظات",
+    "emptySubtitle": "ستظهر هنا حالات عدم المطابقة المرصودة في تدقيقاتك لتردّ عليها بالإجراء التصحيحي.",
+    "noMatch": "لا توجد ملاحظات مطابقة للفلاتر.",
+    "loadFailed": "تعذّر التحميل. حاول مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "respond": "رد",
+    "view": "عرض",
+    "overdueTag": "متأخرة",
+    "columns": {
+      "ncId": "رقم الملاحظة",
+      "requirement": "البند / المتطلب",
+      "classification": "التصنيف",
+      "raised": "تاريخ الرصد",
+      "responseDue": "موعد الرد",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    },
+    "classification": {
+      "critical": "حرجة",
+      "major": "كبرى",
+      "minor": "صغرى",
+      "observation": "ملاحظة"
+    },
+    "detail": {
+      "notFound": "الملاحظة غير موجودة",
+      "notFoundHint": "هذه الملاحظة غير موجودة أو غير موجهة إلى منظمتك.",
+      "backToFindings": "العودة إلى الملاحظات",
+      "audit": "التدقيق",
+      "clientId": "رقم العميل",
+      "originalFinding": "الملاحظة الأصلية",
+      "yourResponse": "ردك",
+      "responseUnavailable": "إرسال الرد بالإجراء التصحيحي غير متاح في هذا الإصدار.",
+      "actions": "الإجراءات التصحيحية",
+      "attachments": "المرفقات",
+      "activity": "سجل النشاط"
+    }
+  },
   "common": {
     "yes": "نعم",
     "no": "لا",

@@ -17,6 +17,8 @@ export const ROUTES = {
   invoices: "/invoices",
   agreements: "/agreements",
   audits: "/audits",
+  findings: "/findings",
+  findingDetails: "/findings/:ncId",
   auditPlanDetails: "/audits/:planId",
   quotations: "/offers",
   quotationDetails: "/offers/:quotationId",
@@ -165,6 +167,10 @@ export function cabApplicationReceiptPath(
 
 export function cabDecisionPath(decisionId?: string): string {
   return decisionId ? `/cab/decisions/${decisionId}` : ROUTES.cabDecisions;
+}
+
+export function clientFindingPath(ncId: string): string {
+  return `/findings/${encodeURIComponent(ncId)}`;
 }
 
 export function cabNonconformityResponsePath(ncId: string): string {

@@ -218,11 +218,55 @@
     "emptyTitle": "No agreements yet",
     "emptySubtitle": "Your certification body sends the agreement after you accept the offer. It appears here for your signature."
   },
-  "clientActivities": {
+  "clientActivities": { 
     "pageTitle": "Activity history",
     "backToDashboard": "Back to dashboard",
     "empty": "No activity yet",
     "daysAgo": "{{count}} days ago"
+  },
+  "clientFindings": {
+    "pageTitle": "Findings",
+    "navLabel": "Findings",
+    "subtitle": "Nonconformities raised at your audits and your corrective-action responses.",
+    "searchPlaceholder": "Search by NC ID, clause or audit...",
+    "allStatuses": "All statuses",
+    "awaiting": "Findings awaiting your response: {{count}}",
+    "emptyTitle": "No findings",
+    "emptySubtitle": "Nonconformities raised at your audits appear here for your corrective-action response.",
+    "noMatch": "No findings match your filters.",
+    "loadFailed": "Failed to load. Please try again.",
+    "retry": "Retry",
+    "respond": "Respond",
+    "view": "View",
+    "overdueTag": "Overdue",
+    "columns": {
+      "ncId": "NC ID",
+      "requirement": "Clause / requirement",
+      "classification": "Classification",
+      "raised": "Raised",
+      "responseDue": "Response due",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "classification": {
+      "critical": "Critical",
+      "major": "Major",
+      "minor": "Minor",
+      "observation": "Observation"
+    },
+    "detail": {
+      "notFound": "Finding not found",
+      "notFoundHint": "This finding does not exist or is not addressed to your organization.",
+      "backToFindings": "Back to findings",
+      "audit": "Audit",
+      "clientId": "Client ID",
+      "originalFinding": "Original finding",
+      "yourResponse": "Your response",
+      "responseUnavailable": "Submitting a corrective-action response is not available in this version.",
+      "actions": "Corrective actions",
+      "attachments": "Attachments",
+      "activity": "Activity log"
+    }
   },
   "common": {
     "yes": "Yes",

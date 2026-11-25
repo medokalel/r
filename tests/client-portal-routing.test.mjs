@@ -30,6 +30,7 @@ test('portal paths map to the Audit Client screen of the same subject', () => {
     '/portal/agreements': '/agreements',
     '/portal/audits': '/audits',
     '/portal/audits/': '/audits',
+    '/portal/findings': '/findings',
   }
   for (const [path, to] of Object.entries(expected)) {
     assert.deepEqual({ ...resolveClientPortalRoute(path) }, { kind: 'redirect', to }, path)
@@ -37,7 +38,6 @@ test('portal paths map to the Audit Client screen of the same subject', () => {
 })
 
 test('sections the client layer does not have say so instead of redirecting', () => {
-  assert.deepEqual({ ...resolveClientPortalRoute('/portal/findings') }, { kind: 'unavailable', section: 'findings' })
   assert.deepEqual({ ...resolveClientPortalRoute('/portal/certificates') }, { kind: 'unavailable', section: 'certificates' })
 })
 

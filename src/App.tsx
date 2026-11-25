@@ -85,6 +85,8 @@ import {
   DashboardTasksPage,
   ClientAgreementsPage,
   DashboardActivitiesPage,
+  ClientFindingsPage,
+  ClientFindingResponsePage,
   ClientAuditsPage,
   ClientAuditPlanPage,
   ClientQuotationsPage,
@@ -877,6 +879,22 @@ export default function App() {
                 }
               />
               <Route
+                path={ROUTES.findings}
+              element={
+                <RequireAuth>
+                  <ClientFindingsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+                path={ROUTES.findingDetails}
+              element={
+                <RequireAuth>
+                  <ClientFindingResponsePage />
+                </RequireAuth>
+              }
+            />
+            <Route
                 path={ROUTES.audits}
                 element={
                   <RequireAuth>
