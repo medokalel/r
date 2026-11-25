@@ -5,7 +5,79 @@
     "empty": "No notifications yet",
     "items": {
       "planSent": "Audit plan {{planNumber}} is waiting for your confirmation",
-      "planRescheduled": "Audit plan {{planNumber}} was rescheduled"
+      "planRescheduled": "Audit plan {{planNumber}} was rescheduled",
+      "quotationIssued": "Quotation {{reference}} is waiting for your decision"
+    }
+  },
+  "clientQuotations": {
+    "pageTitle": "Quotations",
+    "searchPlaceholder": "Search by quotation number, request or standard...",
+    "filterLabel": "Filter by status",
+    "filters": {
+      "all": "All",
+      "pending": "Awaiting decision",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    },
+    "emptyTitle": "No quotations yet",
+    "emptySubtitle": "Quotations issued to you by the certification body will appear here.",
+    "emptySearchTitle": "No quotations found",
+    "emptySearchSubtitle": "Try a different quotation number, request or standard, or change the status filter.",
+    "state": {
+      "pending": "Awaiting your decision",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "expired": "Expired"
+    },
+    "fields": {
+      "request": "Request",
+      "validUntil": "Valid until",
+      "total": "Total",
+      "certificationBody": "Certification body",
+      "standards": "Standards",
+      "issuedOn": "Issued on",
+      "startDate": "Start date"
+    },
+    "detail": {
+      "pageTitle": "Quotation",
+      "backToList": "Back to quotations",
+      "notFoundTitle": "Quotation not available",
+      "notFoundSubtitle": "This quotation was not issued to your account or does not exist.",
+      "banner": {
+        "pending": "This quotation is waiting for your decision. Review it, then accept it or reject it with a reason.",
+        "accepted": "You accepted this quotation.",
+        "rejected": "You rejected this quotation.",
+        "expired": "This quotation has expired. Contact the certification body to request a new one."
+      },
+      "rejectionReason": "Your reason",
+      "decidedOn": "Decision date",
+      "acceptButton": "Accept quotation",
+      "rejectButton": "Reject quotation",
+      "provisional": "Some audit durations in this quotation are provisional.",
+      "sections": {
+        "summary": "Quotation details",
+        "programme": "Audit programme",
+        "costs": "Cost summary"
+      },
+      "programme": {
+        "standard": "Standard",
+        "stage": "Audit stage",
+        "days": "Days",
+        "dailyRate": "Price per day",
+        "fee": "Fee"
+      }
+    },
+    "dialog": {
+      "acceptTitle": "Accept the quotation",
+      "acceptBody": "You accept quotation {{quotation}} as issued. The certification body will see your decision.",
+      "acceptSubmit": "Accept quotation",
+      "rejectTitle": "Reject the quotation",
+      "rejectBody": "Explain why you reject quotation {{quotation}}. The certification body will see your reason.",
+      "reasonLabel": "Reason for rejection",
+      "reasonPlaceholder": "Explain why you reject this quotation...",
+      "reasonTooShort": "Please write at least {{count}} characters.",
+      "rejectSubmit": "Reject quotation"
     }
   },
   "clientAudits": {
@@ -462,6 +534,7 @@
       "expand": "Expand sidebar",
       "collapse": "Collapse sidebar",
       "requests": "Requests",
+      "quotations": "Quotations",
       "audits": "Audits",
       "clients": "Clients",
       "users": "Users",
@@ -1283,14 +1356,19 @@
       "underConstruction": "Under construction",
       "underReview": "Under review",
       "closedByDirector": "Closed by director's decision",
-      "issued": "The certificate has been issued"
+      "issued": "The certificate has been issued",
+      "quotationIssued": "Quotation issued",
+      "quotationAccepted": "Quotation accepted",
+      "quotationRejected": "Quotation rejected",
+      "quotationExpired": "Quotation expired"
     },
     "card": {
       "orderNumber": "Order number",
       "authorizedPerson": "Name of the authorized person",
       "draftOrderNumber": "Draft — not submitted",
       "followUp": "Follow up",
-      "orderStatus": "Order Status"
+      "orderStatus": "Order Status",
+      "viewQuotation": "View quotation"
     },
     "invoiceModal": {
       "title": "Interactive invoice",
@@ -1436,6 +1514,18 @@
         "auditPlanRescheduled": {
           "title": "Audit plan rescheduled",
           "detail": "The certification body rescheduled audit plan {{entityName}}"
+        },
+        "quotationIssued": {
+          "title": "Quotation received",
+          "detail": "Quotation {{entityName}} is waiting for your decision"
+        },
+        "quotationAccepted": {
+          "title": "Quotation accepted",
+          "detail": "You accepted quotation {{entityName}}"
+        },
+        "quotationRejected": {
+          "title": "Quotation rejected",
+          "detail": "You rejected quotation {{entityName}}"
         }
       },
       "movedToAwaitingDocuments": "Moved to awaiting documents"
@@ -7614,6 +7704,16 @@
       }
     },
     "quotationFlow": {
+      "clientDecision": {
+        "title": "Client decision",
+        "awaiting": "Waiting for the client to accept or reject this quotation.",
+        "notPublished": "This quotation has not been shared with the client yet.",
+        "accepted": "The client accepted this quotation.",
+        "rejected": "The client rejected this quotation.",
+        "at": "Decision date",
+        "reason": "Reason",
+        "demoNote": "Demo bridge: the client decision is stored in this browser only and does not change the quotation on the server."
+      },
       "status": {
         "CREATED": "Draft (not sent)",
         "DRAFT": "Draft",

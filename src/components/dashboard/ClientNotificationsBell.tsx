@@ -6,6 +6,7 @@ import {
   CalendarIcon,
   DocumentReceivedIcon,
   NotificationIcon,
+  ReceiptIcon,
   type AppIconComponent,
 } from '@/components/icons'
 import {
@@ -15,12 +16,12 @@ import {
   type ClientPlanNotification,
   type ClientPlanNotificationKind,
 } from '@/lib/api/clientNotificationsApi'
-import { clientAuditPlanPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const kindIconConfig: Record<ClientPlanNotificationKind, { icon: AppIconComponent; bgColor: string }> = {
   planSent: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
   planRescheduled: { icon: CalendarIcon, bgColor: 'bg-[#fef3c6]' },
+  quotationIssued: { icon: ReceiptIcon, bgColor: 'bg-[#dbeafe]' },
 }
 
 /** Same relative labels as the dashboard activity feed. */
@@ -38,8 +39,8 @@ function relativeTimeLabel(
 
 /**
  * The audit client's notification bell: planning events (plan sent, plan
- * rescheduled) with an unread badge, replacing the old static placeholder.
- * Tapping a notification marks it read and opens that audit plan.
+ * rescheduled) and quotations received, with an unread badge, replacing the old static placeholder.
+ * Tapping a notification marks it read and opens that audit plan or quotation.
  */
 export function ClientNotificationsBell() {
   const { t } = useTranslation()
@@ -71,7 +72,7 @@ export function ClientNotificationsBell() {
   const handleOpenNotification = (notification: ClientPlanNotification) => {
     markClientPlanNotificationRead(notification.id)
     setOpen(false)
-    navigate(clientAuditPlanPath(notification.planId))
+    navigate(notification.targetPath)
   }
 
   const handleMarkAllRead = () => {
@@ -141,7 +142,8 @@ export function ClientNotificationsBell() {
                       <span className="min-w-0 flex-1">
                         <span className="block text-body-3-medium leading-[1.5] text-neutral-900">
                           {t(`clientNotifications.items.${notification.kind}`, {
-                            planNumber: notification.planNumber,
+                            planNumber: notification.reference,
+                            reference: notification.reference,
                           })}
                         </span>
                         <span className="mt-0.5 block text-[12px] text-neutral-500">

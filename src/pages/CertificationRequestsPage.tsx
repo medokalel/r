@@ -17,17 +17,31 @@ import {
   type ApplicationResponse,
   type ApplicationStatus,
 } from '@/lib/api/certificationApplicationApi'
+import {
+  getClientQuotationState,
+  getRequestQuotationRecord,
+} from '@/lib/api/clientQuotationsApi'
 import { clearAuthSession } from '@/lib/authStorage'
-import { certificationRequestFormPath, ROUTES } from '@/lib/routes'
+import { certificationRequestFormPath, clientQuotationPath, ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
-type RequestStatus = 'underConstruction' | 'underReview' | 'closedByDirector' | 'issued'
+type RequestStatus =
+  | 'underConstruction'
+  | 'underReview'
+  | 'closedByDirector'
+  | 'issued'
+  | 'quotationIssued'
+  | 'quotationAccepted'
+  | 'quotationRejected'
+  | 'quotationExpired'
 
 interface CertificationRequest {
   id: string
   orderNumber: string
   authorizedPerson: string
   status: RequestStatus
+  /** Quotation issued for this request, when the CAB sent one (local demo bridge). */
+  quotationId?: string
 }
 
 const API_STATUS_TO_UI: Record<ApplicationStatus, RequestStatus> = {
@@ -37,9 +51,39 @@ const API_STATUS_TO_UI: Record<ApplicationStatus, RequestStatus> = {
   APPROVED: 'issued',
   REJECTED: 'closedByDirector',
   QUOTATION_CREATED: 'underReview',
-  QUOTATION_ISSUED: 'underReview',
-  QUOTATION_ACCEPTED: 'underReview',
-  QUOTATION_REJECTED: 'underReview',
+  QUOTATION_ISSUED: 'quotationIssued',
+  QUOTATION_ACCEPTED: 'quotationAccepted',
+  QUOTATION_REJECTED: 'quotationRejected',
+}
+
+/** Statuses where a quotation decision made in the local demo bridge can refine the request status. */
+const QUOTATION_OVERLAY_STATUSES: ApplicationStatus[] = [
+  'SUBMITTED',
+  'UNDER_REVIEW',
+  'QUOTATION_CREATED',
+  'QUOTATION_ISSUED',
+  'QUOTATION_ACCEPTED',
+  'QUOTATION_REJECTED',
+]
+
+/** The request status as the client should read it: the quotation the CAB
+ *  issued (and the client's own decision on it) wins over the backend's
+ *  generic "under review". */
+function resolveRequestStatus(app: ApplicationResponse): { status: RequestStatus; quotationId?: string } {
+  const base = API_STATUS_TO_UI[app.status] ?? 'underConstruction'
+  if (!QUOTATION_OVERLAY_STATUSES.includes(app.status)) return { status: base }
+  const record = getRequestQuotationRecord(app.id)
+  if (!record) return { status: base }
+  const state = getClientQuotationState(record)
+  const status: RequestStatus =
+    state === 'accepted'
+      ? 'quotationAccepted'
+      : state === 'rejected'
+        ? 'quotationRejected'
+        : state === 'expired'
+          ? 'quotationExpired'
+          : 'quotationIssued'
+  return { status, quotationId: record.quotationId }
 }
 
 const statusConfig: Record<
@@ -66,6 +110,26 @@ const statusConfig: Record<
     borderColor: 'border-[#a4f4cf]',
     textColor: 'text-[#007a55]',
   },
+  quotationIssued: {
+    bgColor: 'bg-[#fef3c6]',
+    borderColor: 'border-[#fee685]',
+    textColor: 'text-[#92400e]',
+  },
+  quotationAccepted: {
+    bgColor: 'bg-[#d0fae5]',
+    borderColor: 'border-[#a4f4cf]',
+    textColor: 'text-[#007a55]',
+  },
+  quotationRejected: {
+    bgColor: 'bg-[#fee2e2]',
+    borderColor: 'border-[#fecaca]',
+    textColor: 'text-[#b42318]',
+  },
+  quotationExpired: {
+    bgColor: 'bg-[#f3f4f6]',
+    borderColor: 'border-[#e5e7eb]',
+    textColor: 'text-[#4b5563]',
+  },
 }
 
 function StatusIcon({ status }: { status: RequestStatus }) {
@@ -80,7 +144,13 @@ function StatusIcon({ status }: { status: RequestStatus }) {
       </svg>
     )
   }
-  if (status === 'underReview') {
+  if (
+    status === 'underReview' ||
+    status === 'quotationIssued' ||
+    status === 'quotationAccepted' ||
+    status === 'quotationRejected' ||
+    status === 'quotationExpired'
+  ) {
     return (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
         <circle cx="11.0996" cy="11.1992" r="6.75" stroke="#989898" strokeWidth="1.5"/>
@@ -111,9 +181,10 @@ interface RequestCardProps {
   request: CertificationRequest
   onFollowUp: () => void
   onOrderStatus: () => void
+  onViewQuotation?: () => void
 }
 
-function RequestCard({ request, onFollowUp, onOrderStatus }: RequestCardProps) {
+function RequestCard({ request, onFollowUp, onOrderStatus, onViewQuotation }: RequestCardProps) {
   const { t } = useTranslation()
   const { bgColor, borderColor, textColor } = statusConfig[request.status]
 
@@ -174,6 +245,15 @@ function RequestCard({ request, onFollowUp, onOrderStatus }: RequestCardProps) {
       >
         {t('certificationRequests.card.orderStatus')}
       </button>
+      {onViewQuotation && (
+        <button
+          type="button"
+          onClick={onViewQuotation}
+          className="flex h-12 w-full items-center justify-center rounded-[8px] border border-[#1236a3] bg-white text-[16px] leading-[1.6] text-[#1236a3] transition-colors hover:bg-[#f3f6fd]"
+        >
+          {t('certificationRequests.card.viewQuotation')}
+        </button>
+      )}
     </div>
   )
 }
@@ -206,7 +286,7 @@ export function CertificationRequestsPage() {
               app.legalInfo?.representativeName ||
               app.legalInfo?.organizationName ||
               '—',
-            status: API_STATUS_TO_UI[app.status] ?? 'underConstruction',
+            ...resolveRequestStatus(app),
           }))
         )
       } catch (err) {
@@ -306,6 +386,11 @@ export function CertificationRequestsPage() {
                     }
                     onOrderStatus={() =>
                       navigate(certificationRequestFormPath(request.id, 'status'))
+                    }
+                    onViewQuotation={
+                      request.quotationId
+                        ? () => navigate(clientQuotationPath(request.quotationId as string))
+                        : undefined
                     }
                   />
                 ))}

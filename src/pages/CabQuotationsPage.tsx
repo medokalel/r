@@ -6,6 +6,7 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { QuotationStatusBadge } from '@/components/dashboard/cab/QuotationView'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui'
+import { effectiveQuotationStatus, getQuotationClientRecords } from '@/lib/api/clientQuotationsApi'
 import { listQuotations, type QuotationList, type QuotationStatus } from '@/lib/api/cabQuotationApi'
 import { cabApplicationQuotationPath, ROUTES } from '@/lib/routes'
 
@@ -30,6 +31,7 @@ export function CabQuotationsPage() {
 
   const loading = result?.key !== key
   const list = result?.list
+  const clientRecords = getQuotationClientRecords()
   const money = (value: string, currency: string) =>
     new Intl.NumberFormat(i18n.language, { style: 'currency', currency }).format(Number(value))
 
@@ -78,7 +80,7 @@ export function CabQuotationsPage() {
                       </Link>
                     </td>
                     <td className="px-4 py-3.5">{item.standardCodesUsed.join(', ')}</td>
-                    <td className="px-4 py-3.5"><QuotationStatusBadge status={item.status} /></td>
+                    <td className="px-4 py-3.5"><QuotationStatusBadge status={effectiveQuotationStatus(item.status, clientRecords[item.id])} /></td>
                     <td className="px-4 py-3.5 font-semibold">{money(item.totalAmount, item.currency)}</td>
                     <td className="px-4 py-3.5">{item.offerEndDate ? new Date(`${item.offerEndDate.slice(0, 10)}T00:00:00`).toLocaleDateString(i18n.language) : '—'}</td>
                     <td className="px-4 py-3.5">{new Date(item.createdAt).toLocaleDateString(i18n.language)}</td>

@@ -4,6 +4,7 @@ import {
   AppIcon,
   CalendarIcon,
   DashboardGridIcon,
+  DocumentTextOutlineIcon,
   DocumentsSidebarIcon,
   LogoutIcon,
   ReceiptIcon,
@@ -22,6 +23,7 @@ import { cn } from '@/lib/utils'
 const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
+  { icon: DocumentTextOutlineIcon, labelKey: 'accreditation.sidebar.quotations', href: ROUTES.quotations },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
@@ -104,4 +106,4 @@ export function DashboardSidebar() {
       
     </aside>
   )
-}
+}

@@ -43,6 +43,14 @@ export const ClientAuditPlanPage = lazyNamed(
   () => import('@/pages/ClientAuditPlanPage'),
   'ClientAuditPlanPage',
 )
+export const ClientQuotationsPage = lazyNamed(
+  () => import('@/pages/ClientQuotationsPage'),
+  'ClientQuotationsPage',
+)
+export const ClientQuotationDetailPage = lazyNamed(
+  () => import('@/pages/ClientQuotationDetailPage'),
+  'ClientQuotationDetailPage',
+)
 export const CabClientDetailsPage = lazyNamed(() => import('@/pages/CabClientDetailsPage'), 'CabClientDetailsPage')
 export const ApplicationDraftPage = lazyNamed(() => import('@/pages/ApplicationDraftPage'), 'ApplicationDraftPage')
 export const AddSitePage = lazyNamed(() => import('@/pages/AddSitePage'), 'AddSitePage')

@@ -7,6 +7,7 @@ import {
   DashboardGridIcon,
   RequestsListIcon,
   UsersIcon,
+  DocumentTextOutlineIcon,
   DocumentsSidebarIcon,
   WalletCardIcon,
   ShieldIcon,
@@ -28,6 +29,7 @@ const primaryItems = [
 ]
 
 const moreItems = [
+  { icon: DocumentTextOutlineIcon, labelKey: 'accreditation.sidebar.quotations', href: ROUTES.quotations },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
   { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },

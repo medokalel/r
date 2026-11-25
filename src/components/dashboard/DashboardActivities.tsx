@@ -4,6 +4,7 @@ import {
   CalendarIcon,
   CorrespondenceSentIcon,
   DocumentReceivedIcon,
+  ReceiptIcon,
   StatusChangedIcon,
   StatusReviewIcon,
   type AppIconComponent,
@@ -20,6 +21,9 @@ const activityIconConfig: Record <
   statusChanged: { icon: StatusReviewIcon, bgColor: 'bg-[#fef3c6]' },
   auditPlanSent: { icon: DocumentReceivedIcon, bgColor: 'bg-[#d0fae5]' },
   auditPlanRescheduled: { icon: CalendarIcon, bgColor: 'bg-[#fef3c6]' },
+  quotationIssued: { icon: ReceiptIcon, bgColor: 'bg-[#dbeafe]' },
+  quotationAccepted: { icon: ReceiptIcon, bgColor: 'bg-[#d0fae5]' },
+  quotationRejected: { icon: ReceiptIcon, bgColor: 'bg-[#fee2e2]' },
 }
 
 function relativeTimeLabel(

@@ -10,6 +10,7 @@
  */
 
 import { listClientPlanNotifications } from '@/lib/api/clientNotificationsApi'
+import { listClientQuotationActivities } from '@/lib/api/clientQuotationsApi'
 
 export interface DashboardStats {
   approvedCertificates: number
@@ -35,6 +36,9 @@ export type DashboardActivityType =
   | 'statusChanged'
   | 'auditPlanSent'
   | 'auditPlanRescheduled'
+  | 'quotationIssued'
+  | 'quotationAccepted'
+  | 'quotationRejected'
 
 export interface DashboardActivity {
   id: string
@@ -132,17 +136,30 @@ export function getDashboardTasks(): Promise<DashboardTask[]> {
 // the home activity feed reflects what the CAB actually did.
 export async function getDashboardActivities(): Promise<DashboardActivity[]> {
   const notifications = await listClientPlanNotifications()
-  const planActivities: DashboardActivity[] = notifications.map((notification) => ({
-    id: notification.id,
-    type: notification.kind === 'planSent' ? 'auditPlanSent' : 'auditPlanRescheduled',
-    titleKey:
-      notification.kind === 'planSent'
-        ? 'dashboard.activities.items.auditPlanSent'
-        : 'dashboard.activities.items.auditPlanRescheduled',
-    entityName: notification.planNumber,
-    occurredAt: notification.occurredAt,
-  }))
-  const merged = [...planActivities, ...MOCK_ACTIVITIES].sort(
+  const planActivities: DashboardActivity[] = notifications
+    .filter((notification) => notification.kind !== 'quotationIssued')
+    .map((notification) => ({
+      id: notification.id,
+      type: notification.kind === 'planSent' ? 'auditPlanSent' : 'auditPlanRescheduled',
+      titleKey:
+        notification.kind === 'planSent'
+          ? 'dashboard.activities.items.auditPlanSent'
+          : 'dashboard.activities.items.auditPlanRescheduled',
+      entityName: notification.reference,
+      occurredAt: notification.occurredAt,
+    }))
+  // Quotation entries come from the local quotation bridge (quotation phase 1):
+  // issued by the CAB, then the client's own accept or reject.
+  const quotationActivities: DashboardActivity[] = (await listClientQuotationActivities()).map(
+    (activity) => ({
+      id: activity.id,
+      type: activity.kind,
+      titleKey: `dashboard.activities.items.${activity.kind}`,
+      entityName: activity.reference,
+      occurredAt: activity.occurredAt,
+    }),
+  )
+  const merged = [...planActivities, ...quotationActivities, ...MOCK_ACTIVITIES].sort(
     (a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),
   )
   return delay(merged)

@@ -1,5 +1,5 @@
 /**
- * Audit-client plan notifications (client-side phase 3).
+ * Audit-client notifications (client-side phases 3 and quotation phase 1).
  *
  * Demo wiring only, same bridge as `clientAuditsApi`: the CAB and the audit
  * client run inside the same demo frontend, so notifications are DERIVED from
@@ -8,7 +8,9 @@
  * "plan waiting for your confirmation" notification and a `plan.rescheduled`
  * event (after the plan was sent) becomes a "plan rescheduled" notification.
  * Only the read state is persisted, under
- * `icasco_client_plan_notifications_read_v1`. Real push/email delivery needs
+ * `icasco_client_plan_notifications_read_v1`. A quotation the CAB issued to
+ * this client (see `clientQuotationsApi`) becomes a "quotation received"
+ * notification the same way. Real push/email delivery needs
  * the backend API later, at which point only the bodies of these functions
  * change, not the header or the dashboard.
  */
@@ -19,14 +21,18 @@ import {
   type AuditPlanEvent,
 } from '@/lib/api/cabAuditPlanningApi'
 import { isPlanForSessionClient, isPlanSentToClient } from '@/lib/api/clientAuditsApi'
+import { listClientQuotations, quotationReference } from '@/lib/api/clientQuotationsApi'
+import { clientAuditPlanPath, clientQuotationPath } from '@/lib/routes'
 
-export type ClientPlanNotificationKind = 'planSent' | 'planRescheduled'
+export type ClientPlanNotificationKind = 'planSent' | 'planRescheduled' | 'quotationIssued'
 
 export interface ClientPlanNotification {
-  /** Stable id: the id of the plan event the notification is derived from. */
+  /** Stable id: the id of the plan event (or quotation) the notification is derived from. */
   id: string
-  planId: string
-  planNumber: string
+  /** Audit plan number, or quotation number for quotation notifications. */
+  reference: string
+  /** Where tapping the notification goes. */
+  targetPath: string
   kind: ClientPlanNotificationKind
   occurredAt: string
   /** ISO timestamp of when the client saw it; null while unread. */
@@ -71,7 +77,7 @@ function notifiableEvents(
   return result
 }
 
-/** Every planning notification addressed to THIS client, newest first. */
+/** Every planning and quotation notification addressed to THIS client, newest first. */
 export async function listClientPlanNotifications(): Promise<ClientPlanNotification[]> {
   const plans = await fetchAuditPlans()
   const readState = loadReadState()
@@ -81,13 +87,24 @@ export async function listClientPlanNotifications(): Promise<ClientPlanNotificat
     for (const { event, kind } of notifiableEvents(plan)) {
       notifications.push({
         id: event.id,
-        planId: plan.id,
-        planNumber: plan.planNumber,
+        reference: plan.planNumber,
+        targetPath: clientAuditPlanPath(plan.id),
         kind,
         occurredAt: event.at,
         readAt: readState[event.id] ?? null,
       })
     }
+  }
+  for (const record of await listClientQuotations()) {
+    const id = `quotation-issued-${record.quotationId}`
+    notifications.push({
+      id,
+      reference: quotationReference(record),
+      targetPath: clientQuotationPath(record.quotationId),
+      kind: 'quotationIssued',
+      occurredAt: record.publishedAt,
+      readAt: readState[id] ?? null,
+    })
   }
   return notifications.sort(
     (a, b) => new Date(b.occurredAt).getTime() - new Date(a.occurredAt).getTime(),

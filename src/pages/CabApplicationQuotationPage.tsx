@@ -336,7 +336,7 @@ function QuotationEditor({ applicationId }: { applicationId: string }) {
           </section>
         )}
         {quotation ? (
-          <QuotationView key={`${quotation.id}-${quotation.updatedAt}-${quotation.status}`} quotation={quotation} onChange={(next) => setQuotation(next.status === 'CANCELLED' ? null : next)} />
+          <QuotationView key={`${quotation.id}-${quotation.updatedAt}-${quotation.status}`} quotation={quotation} client={{ applicationId: application.id, applicationNumber, clientName: application.organization?.name || application.legalInfo?.organizationName || '', organizationId: application.organization?.id ?? application.organizationId ?? '' }} onChange={(next) => setQuotation(next.status === 'CANCELLED' ? null : next)} />
         ) : (
           <>
             {progress}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { FormField, TextField, Textarea } from '@/components/ui'
@@ -14,6 +14,13 @@ import {
   type QuotationStatus,
   type QuotationTransition,
 } from '@/lib/api/cabQuotationApi'
+import {
+  effectiveQuotationStatus,
+  getQuotationClientRecord,
+  syncQuotationToClient,
+  type ClientQuotationContext,
+  type ClientQuotationRecord,
+} from '@/lib/api/clientQuotationsApi'
 import { cn } from '@/lib/utils'
 
 const card = 'rounded-[10px] border border-[#ececec] bg-white p-5'
@@ -38,8 +45,18 @@ export function QuotationStatusBadge({ status }: { status: QuotationStatus }) {
   )
 }
 
-export function QuotationView({ quotation, onChange }: { quotation: Quotation; onChange: (next: Quotation) => void }) {
+export function QuotationView({
+  quotation,
+  onChange,
+  client,
+}: {
+  quotation: Quotation
+  onChange: (next: Quotation) => void
+  /** Where the quotation belongs; lets the CAB publish it to the client demo bridge. */
+  client?: ClientQuotationContext
+}) {
   const { t, i18n } = useTranslation()
+  const [clientRecord, setClientRecord] = useState<ClientQuotationRecord | null>(null)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [note, setNote] = useState('')
@@ -51,6 +68,18 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
   const [offerEnd, setOfferEnd] = useState(quotation.offerEndDate?.slice(0, 10) ?? '')
   const [notes, setNotes] = useState('')
 
+  // Demo bridge: publish an issued quotation to the client copy, then read the
+  // client's decision back. Re-read when the CAB returns to this window.
+  useEffect(() => {
+    if (client) syncQuotationToClient(quotation, client)
+    const refresh = () => setClientRecord(getQuotationClientRecord(quotation.id))
+    refresh()
+    window.addEventListener('focus', refresh)
+    return () => window.removeEventListener('focus', refresh)
+  }, [quotation, client])
+
+  const decision = clientRecord?.decision ?? null
+  const shownStatus = effectiveQuotationStatus(quotation.status, clientRecord)
   const editable = quotation.status === 'CREATED'
   const money = (value: string | number) =>
     new Intl.NumberFormat(i18n.language, { style: 'currency', currency: quotation.currency, currencyDisplay: 'code' }).format(Number(value))
@@ -61,7 +90,10 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
     setBusy(true)
     setError(null)
     try {
-      onChange(await action())
+      const next = await action()
+      if (client) syncQuotationToClient(next, client)
+      setClientRecord(getQuotationClientRecord(next.id))
+      onChange(next)
     } catch (failure) {
       setError(failure instanceof ApiError ? failure.message : t('errors.generic'))
     } finally {
@@ -94,7 +126,7 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
   }
 
   const actions: QuotationTransition[] =
-    quotation.status === 'CREATED' ? ['issue', 'cancel'] : quotation.status === 'ISSUED' ? ['cancel'] : []
+    quotation.status === 'CREATED' ? ['issue', 'cancel'] : quotation.status === 'ISSUED' && !decision ? ['cancel'] : []
 
   return (
     <div className="space-y-5">
@@ -113,7 +145,7 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
             <button type="button" disabled={busy} onClick={() => void run(() => getQuotation(quotation.id))} className="text-[12px] font-semibold text-primary hover:underline">
               {t('cab.quotationFlow.refresh')}
             </button>
-            <QuotationStatusBadge status={quotation.status} />
+            <QuotationStatusBadge status={shownStatus} />
           </div>
         </div>
         {quotation.isProvisional && (
@@ -122,6 +154,41 @@ export function QuotationView({ quotation, onChange }: { quotation: Quotation; o
           </p>
         )}
       </section>
+
+      {quotation.status !== 'CREATED' && quotation.status !== 'CANCELLED' && (
+        <section className={card} aria-live="polite">
+          <h2 className="text-[16px] font-bold text-primary">{t('cab.quotationFlow.clientDecision.title')}</h2>
+          <p
+            className={cn(
+              'mt-3 rounded-[8px] px-3 py-2 text-[13px] font-medium',
+              decision?.decision === 'accepted' && 'bg-[#eafaf1] text-[#16a34a]',
+              decision?.decision === 'rejected' && 'bg-[#fde8e8] text-[#e74c3c]',
+              !decision && 'bg-[#fff7e6] text-[#92400e]',
+            )}
+          >
+            {decision
+              ? t(`cab.quotationFlow.clientDecision.${decision.decision}`)
+              : clientRecord
+                ? t('cab.quotationFlow.clientDecision.awaiting')
+                : t('cab.quotationFlow.clientDecision.notPublished')}
+          </p>
+          {decision && (
+            <dl className="mt-3 space-y-2 text-[13px]">
+              <div className="flex flex-wrap gap-2">
+                <dt className="text-neutral-500">{t('cab.quotationFlow.clientDecision.at')}:</dt>
+                <dd className="font-medium"><bdi>{new Date(decision.at).toLocaleString(i18n.language)}</bdi></dd>
+              </div>
+              {decision.reason && (
+                <div className="flex flex-wrap gap-2">
+                  <dt className="text-neutral-500">{t('cab.quotationFlow.clientDecision.reason')}:</dt>
+                  <dd dir="auto" className="font-medium">{decision.reason}</dd>
+                </div>
+              )}
+            </dl>
+          )}
+          <p className="mt-3 text-[12px] text-neutral-500">{t('cab.quotationFlow.clientDecision.demoNote')}</p>
+        </section>
+      )}
 
       <section className="overflow-hidden rounded-[16px] border border-[#ececec] bg-white">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececec] px-5 py-4">
