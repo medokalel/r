@@ -8,9 +8,7 @@ import {
   RequestsListIcon,
   UsersIcon,
   DocumentTextOutlineIcon,
-  DocumentsSidebarIcon,
   WalletCardIcon,
-  ShieldIcon,
   RenewalsIcon,
   ReceiptIcon,
   SettingsIcon,
@@ -25,14 +23,12 @@ const primaryItems = [
   { icon: DashboardGridIcon, labelKey: 'nav.home', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
-  { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
+  { icon: DocumentTextOutlineIcon, labelKey: 'accreditation.sidebar.quotations', href: ROUTES.quotations },
 ]
 
 const moreItems = [
-  { icon: DocumentTextOutlineIcon, labelKey: 'accreditation.sidebar.quotations', href: ROUTES.quotations },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
-  { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
   { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },
   { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices', href: ROUTES.invoices },
   { icon: SettingsIcon, labelKey: 'nav.settings', href: ROUTES.companyProfile },
@@ -56,12 +52,12 @@ export function MobileBottomNav() {
         aria-label={t('nav.dashboard')}
       >
         {primaryItems.map(({ icon, labelKey, href }) => {
-          const isActive = href ? location.pathname === href : false
+          const isActive = location.pathname === href || (href !== ROUTES.dashboard && location.pathname.startsWith(`${href}/`))
           return (
             <button
               key={labelKey}
               type="button"
-              onClick={() => href && navigate(href)}
+              onClick={() => navigate(href)}
               aria-label={t(labelKey)}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
@@ -77,7 +73,7 @@ export function MobileBottomNav() {
         <button
           type="button"
           onClick={() => setMoreOpen(true)}
-          aria-label={t('common.more')}
+          aria-label={t('nav.more')}
           className="flex size-11 items-center justify-center rounded-[12px] text-neutral-500"
         >
           <AppIcon icon={MoreIcon} size={24} />
@@ -100,7 +96,7 @@ export function MobileBottomNav() {
                   type="button"
                   onClick={() => {
                     setMoreOpen(false)
-                    if (href) navigate(href)
+                    navigate(href)
                   }}
                   className="flex items-center gap-3 rounded-[var(--radius-sm)] px-3 py-3 text-neutral-700 hover:bg-[#f4f4f4]"
                 >

@@ -5,13 +5,11 @@ import {
   CalendarIcon,
   DashboardGridIcon,
   DocumentTextOutlineIcon,
-  DocumentsSidebarIcon,
   LogoutIcon,
   ReceiptIcon,
   RenewalsIcon,
   RequestsListIcon,
   SettingsIcon,
-  ShieldIcon,
   UsersIcon,
   WalletCardIcon,
 } from '@/components/icons'
@@ -20,15 +18,13 @@ import { clearAuthSession, getAuthSession } from '@/lib/authStorage'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
-const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href?: string }[] = [
+const navItems: { icon: typeof DashboardGridIcon; labelKey: string; href: string }[] = [
   { icon: DashboardGridIcon, labelKey: 'nav.dashboard', href: ROUTES.dashboard },
   { icon: RequestsListIcon, labelKey: 'accreditation.sidebar.requests', href: ROUTES.certificationRequests },
   { icon: DocumentTextOutlineIcon, labelKey: 'accreditation.sidebar.quotations', href: ROUTES.quotations },
   { icon: CalendarIcon, labelKey: 'accreditation.sidebar.audits', href: ROUTES.audits },
   { icon: UsersIcon, labelKey: 'accreditation.sidebar.users', href: ROUTES.users },
   { icon: WalletCardIcon, labelKey: 'accreditation.sidebar.payments', href: ROUTES.wallet },
-  { icon: DocumentsSidebarIcon, labelKey: 'accreditation.sidebar.documents' },
-  { icon: ShieldIcon, labelKey: 'accreditation.sidebar.accreditation' },
   { icon: RenewalsIcon, labelKey: 'accreditation.sidebar.renewals', href: ROUTES.periodicVisits },
   { icon: ReceiptIcon, labelKey: 'accreditation.sidebar.invoices', href: ROUTES.invoices },
   { icon: SettingsIcon, labelKey: 'nav.settings', href: ROUTES.companyProfile },
@@ -62,25 +58,21 @@ export function DashboardSidebar() {
         aria-label={t('nav.dashboard')}
       >
         {navItems.map(({ icon, labelKey, href }) => {
-          const active = Boolean(
-            href &&
-              (location.pathname === href ||
-                (href !== ROUTES.dashboard && location.pathname.startsWith(`${href}/`)))
-          )
+          const active =
+            location.pathname === href ||
+            (href !== ROUTES.dashboard && location.pathname.startsWith(`${href}/`))
 
           return (
             <button
               key={labelKey}
               type="button"
-              disabled={!href}
-              onClick={() => href && navigate(href)}
+              onClick={() => navigate(href)}
               aria-current={active ? 'page' : undefined}
               className={cn(
                 'flex h-12 w-full items-center gap-4 rounded-[24px] px-4 text-start text-[18px] transition-colors',
                 active
                   ? 'bg-[#e8edfc] font-medium text-primary'
-                  : 'text-neutral-600 hover:bg-[#f5f7fc] hover:text-primary',
-                !href && 'cursor-default'
+                  : 'text-neutral-600 hover:bg-[#f5f7fc] hover:text-primary'
               )}
             >
               <AppIcon icon={icon} size={24} className="shrink-0" />
@@ -106,4 +98,4 @@ export function DashboardSidebar() {
       
     </aside>
   )
-}
+}

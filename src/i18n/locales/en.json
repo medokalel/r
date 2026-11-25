@@ -196,6 +196,22 @@
       }
     }
   },
+  "clientUnavailable": {
+    "pageTitle": "Page not available",
+    "backToDashboard": "Back to dashboard",
+    "findings": {
+      "title": "Audit findings are not ready in this version",
+      "description": "This section has not been built yet. Findings and nonconformity responses will appear here in a later version."
+    },
+    "certificates": {
+      "title": "Certificates are not ready in this version",
+      "description": "This section has not been built yet. Your certificates will appear here in a later version."
+    },
+    "notFound": {
+      "title": "This page does not exist",
+      "description": "The address you opened does not exist in this application. Use the menu to go to one of the available pages."
+    }
+  },
   "common": {
     "yes": "Yes",
     "no": "No",
@@ -233,7 +249,8 @@
     "dashboard": "Dashboard",
     "profile": "Profile",
     "settings": "Settings",
-    "logout": "Logout"
+    "logout": "Logout",
+    "more": "More"
   },
   "auth": {
     "login": "Log In",

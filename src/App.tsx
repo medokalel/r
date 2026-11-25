@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
 import { RequireAuth } from "@/components/auth/RequireAuth";
+import { ClientPortalGate } from "@/components/auth/ClientPortalGate";
 import { RequireAuthOrPendingRegistration } from "@/components/auth/RequireAuthOrPendingRegistration";
 import { RequireCabOnboarded } from "@/components/auth/RequireCabOnboarded";
 import { RequireAbDashboard } from "@/components/auth/RequireAbDashboard";
@@ -86,6 +87,7 @@ import {
   ClientAuditPlanPage,
   ClientQuotationsPage,
   ClientQuotationDetailPage,
+  ClientUnavailablePage,
   UsersPage,
   DigitalWalletPage,
   PeriodicVisitsPage,
@@ -95,6 +97,7 @@ import {
   getAuthSession,
   getAuthToken,
   getPostLoginRedirect,
+  isAuditClientSession,
 } from "@/lib/authStorage";
 import { LEGACY_DASHBOARD_PATH, ROUTES, cabApplicationQuotationPath, clientQuotationPath } from "@/lib/routes";
 
@@ -108,6 +111,12 @@ function LegacyClientQuotationRedirect() {
 function QuotationApprovalRedirect() {
   const { applicationId } = useParams();
   return <Navigate to={cabApplicationQuotationPath(applicationId)} replace />;
+}
+
+// Unknown addresses: an Audit Client sees an honest "not available" page, everyone else keeps the old redirect.
+function NotFoundRoute() {
+  if (getAuthToken() && isAuditClientSession()) return <ClientUnavailablePage section="notFound" />;
+  return <HomeRedirect />;
 }
 
 function HomeRedirect() {
@@ -887,7 +896,7 @@ export default function App() {
                 path={ROUTES.portal}
                 element={
                   <RequireAuth>
-                    <PortalHomePage />
+                    <ClientPortalGate><PortalHomePage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -895,7 +904,7 @@ export default function App() {
                 path={ROUTES.portalHome}
                 element={
                   <RequireAuth>
-                    <PortalHomePage />
+                    <ClientPortalGate><PortalHomePage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -903,7 +912,7 @@ export default function App() {
                 path={ROUTES.portalCompanyProfile}
                 element={
                   <RequireAuth>
-                    <PortalCompanyProfilePage />
+                    <ClientPortalGate><PortalCompanyProfilePage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -911,7 +920,7 @@ export default function App() {
                 path={ROUTES.portalApplications}
                 element={
                   <RequireAuth>
-                    <CertificationRequestsPage />
+                    <ClientPortalGate><CertificationRequestsPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -919,7 +928,7 @@ export default function App() {
                 path={ROUTES.portalOffers}
                 element={
                   <RequireAuth>
-                    <CabOfferRegisterPage />
+                    <ClientPortalGate><CabOfferRegisterPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -927,7 +936,7 @@ export default function App() {
                 path={ROUTES.portalInvoices}
                 element={
                   <RequireAuth>
-                    <CabInvoiceRegisterPage />
+                    <ClientPortalGate><CabInvoiceRegisterPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -935,7 +944,7 @@ export default function App() {
                 path={ROUTES.portalAudits}
                 element={
                   <RequireAuth>
-                    <PeriodicVisitsPage />
+                    <ClientPortalGate><PeriodicVisitsPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -943,7 +952,7 @@ export default function App() {
                 path={ROUTES.portalFindings}
                 element={
                   <RequireAuth>
-                    <DashboardTasksPage />
+                    <ClientPortalGate><DashboardTasksPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
@@ -951,11 +960,11 @@ export default function App() {
                 path={ROUTES.portalCertificates}
                 element={
                   <RequireAuth>
-                    <DigitalWalletPage />
+                    <ClientPortalGate><DigitalWalletPage /></ClientPortalGate>
                   </RequireAuth>
                 }
               />
-            <Route path="*" element={<HomeRedirect />} />
+            <Route path="*" element={<NotFoundRoute />} />
           </Routes>
           </Suspense>
           </RouteSkeletonOverlay>

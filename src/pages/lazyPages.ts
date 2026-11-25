@@ -47,6 +47,10 @@ export const ClientQuotationsPage = lazyNamed(
   () => import('@/pages/ClientQuotationsPage'),
   'ClientQuotationsPage',
 )
+export const ClientUnavailablePage = lazy(async () => {
+  const mod = await import('@/pages/ClientUnavailablePage')
+  return { default: mod.ClientUnavailablePage }
+})
 export const ClientQuotationDetailPage = lazyNamed(
   () => import('@/pages/ClientQuotationDetailPage'),
   'ClientQuotationDetailPage',
