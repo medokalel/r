@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
-import { SCHEME_RULES, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
+import { SCHEME_RULES, listFindingRecords, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
 import { FIELD_KEYS, saveFindingRecord, type FindingRecord } from '@/lib/api/cabAuditReportingApi'
 import {
   fetchAuditPlanById,
@@ -11,7 +11,8 @@ import {
   type AuditPlan,
 } from '@/lib/api/cabAuditPlanningApi'
 import { attachFindingToItem, nextFindingCode } from '@/lib/api/auditExecutionGates'
-import { CARD, GHOST_BTN, INPUT, PRIMARY_BTN, ScopeBanner, Toast } from '@/components/cab/auditReporting/shared'
+import { canAddFinding, nextRegisterFindingCode } from '@/lib/api/auditReportingWorkspace'
+import { CARD, GHOST_BTN, INPUT, PRIMARY_BTN, Toast } from '@/components/cab/auditReporting/shared'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
@@ -32,9 +33,15 @@ export function CabAddFindingPage() {
   const clauseRef = searchParams.get('clauseRef') || ''
   const sourceResult = searchParams.get('result') || ''
   const returnTo = searchParams.get('returnTo') || ''
-  const isBound = Boolean(planId && itemId)
+  const isBound = Boolean(planId)
+  const hasItem = Boolean(itemId)
 
   const [boundPlan, setBoundPlan] = useState<AuditPlan | null>(null)
+
+  // A finding always belongs to an audit: without one, choose it in the register first.
+  useEffect(() => {
+    if (!isBound) navigate(ROUTES.cabAuditReporting, { replace: true })
+  }, [isBound, navigate])
 
   useEffect(() => {
     let active = true
@@ -78,6 +85,9 @@ export function CabAddFindingPage() {
   const [showCancel, setShowCancel] = useState(false)
   const [showScheme, setShowScheme] = useState(false)
 
+  // The report left the audit team's hands (in review, approved or issued): the audit's findings are fixed.
+  const locked = Boolean(boundPlan && !canAddFinding(boundPlan))
+
   const fallbackTarget = returnTo || ROUTES.cabAuditReporting
 
   const show = (m: string) => {
@@ -93,9 +103,9 @@ export function CabAddFindingPage() {
     id: `find-${Date.now()}`,
     findingCode,
     status,
-    planId: isBound ? planId : null,
+    planId: isBound ? (boundPlan?.id ?? planId) : null,
     planNumber: isBound ? (boundPlan?.planNumber ?? planId) : null,
-    checklistItemId: isBound ? itemId : null,
+    checklistItemId: isBound && hasItem ? itemId : null,
     clauseRef: isBound ? clauseRef || null : null,
     findingType,
     classification,
@@ -113,6 +123,7 @@ export function CabAddFindingPage() {
   // A draft keeps the entered fields but is never attached to the checklist
   // item, so it does not clear the NC-without-finding blocker.
   const handleSaveDraft = () => {
+    if (locked) return
     void saveFindingRecord(buildRecord('Draft', null))
     setIsDirty(false)
     setErrors([])
@@ -120,6 +131,7 @@ export function CabAddFindingPage() {
   }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (locked) return
     const res = validateFindingForSubmit({ findingType, classification, requirementRef, evidenceText, evidenceLinks, statement })
     setErrors(res.errors)
     if (!res.ok) {
@@ -128,13 +140,17 @@ export function CabAddFindingPage() {
     }
     setIsDirty(false)
     if (isBound && boundPlan) {
-      const code = nextFindingCode(boundPlan.execution)
-      const nextExecution = attachFindingToItem(boundPlan.execution, itemId, code)
-      await saveAuditPlan({
-        id: boundPlan.id,
-        planNumber: boundPlan.planNumber,
-        execution: nextExecution,
-      })
+      const itemCodes = boundPlan.execution.checklists.flatMap((s) => s.items.map((i) => i.findingCode ?? ''))
+      const code = hasItem
+        ? nextFindingCode(boundPlan.execution)
+        : nextRegisterFindingCode(boundPlan, listFindingRecords(), itemCodes)
+      if (hasItem) {
+        await saveAuditPlan({
+          id: boundPlan.id,
+          planNumber: boundPlan.planNumber,
+          execution: attachFindingToItem(boundPlan.execution, itemId, code),
+        })
+      }
       await saveFindingRecord(buildRecord('Submitted', code))
       show(tr('cab.auditReporting.findingSubmitted', 'Finding submitted. Classification follows configured scheme rules.'))
       window.setTimeout(() => navigate(fallbackTarget), 1100)
@@ -154,7 +170,7 @@ export function CabAddFindingPage() {
     : tr('cab.auditReporting.addFindingUnboundSub', 'Not linked to an audit')
 
   return (
-    <CabLayout sidebarVariant={isBound ? 'auditPlanning' : 'auditReporting'}>
+    <CabLayout sidebarVariant={hasItem ? 'auditPlanning' : 'auditReporting'}>
       <div className="flex min-h-screen flex-col">
         <CabHeader
           title={tr('cab.auditReporting.addFindingTitle', 'Add finding')}
@@ -165,7 +181,7 @@ export function CabAddFindingPage() {
         <main className="flex flex-1 flex-col gap-5 overflow-auto bg-[#f9fafc] p-3 sm:p-5">
           <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label="Breadcrumb">
             <button type="button" onClick={handleCancel} className="transition-colors hover:text-[#1236a3]">
-              {isBound
+              {hasItem
                 ? tr('execution.title', 'Audit execution')
                 : tr('cab.auditReporting.title', 'Audit Reporting')}
             </button>
@@ -194,15 +210,23 @@ export function CabAddFindingPage() {
                 )}
               </div>
               <p className="mt-1.5 text-[11px] text-neutral-500">
-                {tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')}
+                {hasItem
+                  ? tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')
+                  : tr('cab.auditReporting.register.findingForAudit', 'Raised from Audit Reporting, bound to this audit.')}
               </p>
             </section>
-          ) : isBound ? (
-            <p className="rounded-[8px] border border-[#dce4f5] bg-[#f8faff] px-4 py-2.5 text-[12px] font-medium text-neutral-700">
-              {tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')}
-            </p>
           ) : (
-            <ScopeBanner title={tr('cab.auditReporting.scope', 'CAB-client scope')} />
+            <p className="rounded-[8px] border border-[#dce4f5] bg-[#f8faff] px-4 py-2.5 text-[12px] font-medium text-neutral-700">
+              {hasItem
+                ? tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')
+                : tr('cab.auditReporting.register.findingForAudit', 'Raised from Audit Reporting, bound to this audit.')}
+            </p>
+          )}
+
+          {locked && (
+            <div className="rounded-[8px] border border-[#fde68a] bg-[#fffbeb] p-4 text-[13px] text-[#b45309]" role="alert" data-testid="finding-locked">
+              {tr('cab.auditReporting.register.findingsLocked', 'The stage report is with the reviewer or issued, so findings can no longer be added to this audit.')}
+            </div>
           )}
 
           {errors.length > 0 && (
@@ -341,8 +365,8 @@ export function CabAddFindingPage() {
               </ul>
               <div className="flex flex-col gap-2 border-t border-neutral-100 pt-4">
                 <button type="button" onClick={handleCancel} className={GHOST_BTN}>{tr('common.cancel', 'Cancel')}</button>
-                <button type="button" onClick={handleSaveDraft} className={GHOST_BTN}>{tr('common.saveDraft', 'Save as Draft')}</button>
-                <button type="submit" className={PRIMARY_BTN} data-testid="submit-finding">{tr('cab.auditReporting.submitFinding', 'Submit finding')}</button>
+                <button type="button" onClick={handleSaveDraft} disabled={locked} className={GHOST_BTN}>{tr('common.saveDraft', 'Save as Draft')}</button>
+                <button type="submit" disabled={locked} className={PRIMARY_BTN} data-testid="submit-finding">{tr('cab.auditReporting.submitFinding', 'Submit finding')}</button>
               </div>
             </aside>
             {/* ===== /Right column ===== */}

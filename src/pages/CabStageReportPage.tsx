@@ -32,7 +32,7 @@ import {
 } from '@/lib/api/stageReport'
 import { AuditStatusBadge, BreadcrumbChevron } from '@/components/cab/auditPlanning/shared'
 import { toast } from '@/lib/toast'
-import { ROUTES, cabAuditExecutionPath } from '@/lib/routes'
+import { ROUTES, cabAuditExecutionPath, cabAuditReportingPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 const CLASS_KEYS: Record<string, string> = {
@@ -436,7 +436,10 @@ export function CabStageReportPage() {
             >
               {t('stageReport.print')}
             </button>
-            <Link to={executionPath} className="ms-auto text-[13px] font-semibold text-[#1236a3] hover:underline">
+            <Link to={cabAuditReportingPath(plan.planNumber)} className="ms-auto text-[13px] font-semibold text-[#1236a3] hover:underline">
+              {t('cab.auditReporting.register.backToWorkspace')}
+            </Link>
+            <Link to={executionPath} className="text-[13px] font-semibold text-[#1236a3] hover:underline">
               {t('stageReport.backToExecution')}
             </Link>
           </div>

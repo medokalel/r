@@ -4113,6 +4113,153 @@
       }
     },
     "auditReporting": {
+      "register": {
+        "subtitle": "Reports of your audits with their status and version",
+        "summaryLabel": "Reporting summary",
+        "summary": {
+          "audits": "Audits in reporting",
+          "inProgress": "Being prepared",
+          "awaiting": "In review or approved",
+          "issued": "Issued"
+        },
+        "searchPlaceholder": "Search audit, client or site...",
+        "allStatuses": "All statuses",
+        "loading": "Loading audit reporting...",
+        "noMatch": "No audits match these filters",
+        "emptyTitle": "No audits in reporting yet",
+        "emptyBody": "An audit appears here once its execution is started. Start an audit in Audit Execution first.",
+        "goExecution": "Go to audit execution",
+        "notFound": "This audit was not found.",
+        "back": "Back to Audit Reporting",
+        "backToWorkspace": "Audit Reporting",
+        "flowTitle": "How a report moves",
+        "flowBody": "Finish the six execution steps and prepare the hand-off, create the stage report, send it to technical review, then issue the approved version. Each audit keeps its own report and version history.",
+        "status": {
+          "handoffPending": "Hand-off pending",
+          "readyToCreate": "Ready to create"
+        },
+        "columns": {
+          "audit": "Audit",
+          "client": "Client and site",
+          "dates": "Audit dates",
+          "status": "Report status",
+          "version": "Version",
+          "checklist": "Checklist",
+          "findings": "Findings",
+          "actions": "Actions"
+        },
+        "coverageValue": "{{audited}} of {{total}} audited",
+        "findingsValue": "{{submitted}} submitted, {{draft}} draft",
+        "action": {
+          "openExecution": "Finish in execution",
+          "generate": "Create report",
+          "continueDraft": "Continue draft",
+          "review": "Review report",
+          "issue": "Issue report",
+          "view": "View report",
+          "openWorkspace": "Open"
+        },
+        "scopeClient": "Client",
+        "scopeSite": "Site",
+        "scopeContact": "Contact",
+        "scopeLead": "Lead auditor",
+        "agendaTitle": "Audit agenda",
+        "agendaSub": "{{count}} planned activities from the audit plan.",
+        "agendaEmpty": "No agenda activities are planned for this audit.",
+        "agendaColumns": {
+          "date": "Date",
+          "time": "Time",
+          "activity": "Activity",
+          "auditors": "Auditors",
+          "hours": "Hours"
+        },
+        "evidenceSub": "Evidence recorded for each audited checklist item.",
+        "evidenceSearch": "Search clause, item or finding...",
+        "missingOnly": "Only items without evidence",
+        "evidenceEmpty": "No audited checklist items match.",
+        "evidenceRecorded": "Recorded",
+        "evidenceMissing": "Missing",
+        "evidenceColumns": {
+          "clause": "Clause",
+          "item": "Checklist item",
+          "result": "Result",
+          "evidence": "Evidence",
+          "finding": "Finding"
+        },
+        "findingsSub": "Findings raised for this audit only. Classification follows the configured scheme rules.",
+        "findingsEmpty": "No findings were raised for this audit yet.",
+        "findingForAudit": "Raised from Audit Reporting, bound to this audit.",
+        "findingDraft": "Draft",
+        "findingSubmitted": "Submitted",
+        "findingColumns": {
+          "finding": "Finding and type",
+          "requirement": "Requirement",
+          "statement": "Statement",
+          "classification": "Classification",
+          "status": "Status"
+        },
+        "class": {
+          "critical": "Critical",
+          "major": "Major",
+          "minor": "Minor",
+          "observation": "Observation"
+        },
+        "type": {
+          "Nonconformity": "Nonconformity",
+          "Observation": "Observation",
+          "Opportunity": "Opportunity for improvement"
+        },
+        "reportTitle": "Stage report",
+        "reviewer": "Technical reviewer",
+        "issuedOn": "Issued on",
+        "tour": {
+          "header": {
+            "title": "Audit Reporting",
+            "description": "See the reports of your audits with their status and version, and open the right report for each one."
+          },
+          "summary": {
+            "title": "Reporting summary",
+            "description": "Counts of audits being prepared, in review and issued, taken from your own audits."
+          },
+          "filters": {
+            "title": "Search and filter",
+            "description": "Find an audit by number, client or site, or filter by report status."
+          },
+          "register": {
+            "title": "Audits and reports",
+            "description": "Each row is one audit. Use the action button to create, review, issue or view its stage report, or open the audit workspace for its agenda, evidence and findings."
+          },
+          "flow": {
+            "title": "How a report moves",
+            "description": "A report is created after the execution hand-off, reviewed by a technical reviewer outside the audit team, then issued. An issued version is frozen."
+          }
+        },
+        "findingsLocked": "The stage report is with the reviewer or issued, so findings can no longer be added to this audit.",
+        "readinessTitle": "Report readiness",
+        "readinessSub": "Computed from this audit, using the same rules as the stage report page.",
+        "readiness": {
+          "submitTitle": "Before sending to technical review",
+          "submitSub": "The stage report page blocks sending until these are met.",
+          "issueTitle": "Review and issue",
+          "issueSub": "Technical review is separate from the audit team recommendation.",
+          "draftFindings": "{{count}} finding(s) are still drafts. Submit or remove them.",
+          "state": {
+            "met": "Met",
+            "pending": "Pending",
+            "waiting": "Not yet"
+          },
+          "item": {
+            "handoff": "Hand-off prepared",
+            "summary": "Executive summary written",
+            "recommendation": "Recommendation written",
+            "sections": "Report sections filled",
+            "findings": "All findings submitted",
+            "reviewer": "Technical reviewer chosen outside the team",
+            "approval": "Technical review approved",
+            "issued": "Report issued"
+          }
+        }
+      },
       "title": "Audit Reporting",
       "subtitle": "AUD-0024 · Al Noor Food Industries · Stage 1",
       "scope": "CAB-client scope",

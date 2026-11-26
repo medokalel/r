@@ -14,7 +14,7 @@ import {
   formatIcascoDate,
 } from '@/components/cab/auditPlanning/shared'
 import { Checkbox } from '@/components/ui/Checkbox'
-import { ROUTES, cabStageReportPath } from '@/lib/routes'
+import { cabAuditReportingPath, cabStageReportPath } from '@/lib/routes'
 import type { StageReportStatus } from '@/lib/api/stageReport'
 import { cn } from '@/lib/utils'
 
@@ -230,7 +230,7 @@ export function ExecutionTeamReviewStep({
           </div>
           <button
             type="button"
-            onClick={() => navigate(ROUTES.cabAuditReporting)}
+            onClick={() => navigate(cabAuditReportingPath(plan.planNumber))}
             className="text-[13px] font-semibold text-[#1236a3] hover:underline"
           >
             {t('execution.teamReview.openWorkspace')}
@@ -667,7 +667,7 @@ export function ExecutionReportStep({
             <div className="flex flex-wrap items-center gap-3 border-t border-[#f0f0f0] pt-4">
               <button
                 type="button"
-                onClick={() => navigate(ROUTES.cabAuditReporting)}
+                onClick={() => navigate(cabAuditReportingPath(planNumber))}
                 className="h-10 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50"
               >
                 {t('execution.reportStep.openRegister')}
