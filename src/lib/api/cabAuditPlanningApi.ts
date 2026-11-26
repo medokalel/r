@@ -1,4 +1,5 @@
 import { AUDITOR_REGISTER } from '@/lib/teamSelection/teamMember'
+import type { StageReportState } from './stageReport'
 
 export type AuditStageType =
   | 'Stage 1'
@@ -240,6 +241,8 @@ export interface AuditPlan {
   /** Audit checklists attached to this plan (library or custom checklist ids). */
   checklistIds?: string[]
   execution: AuditExecutionData
+  /** Phase 3: the stage report drafted, reviewed and issued from the stage report page. */
+  stageReport?: StageReportState
   version: number
   createdAt: string
   updatedAt: string

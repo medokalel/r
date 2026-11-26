@@ -109,7 +109,7 @@ test('step 3 counts mandatory unaudited items; Not audited counts as open', () =
         id: 'cl1',
         title: 'S1',
         assignedAuditor: 'Lead',
-        items: [item('i1', { result: 'Conform' }), item('i2'), item('i3', { result: 'Not audited' })],
+        items: [item('i1', { result: 'Conforming' }), item('i2'), item('i3', { result: 'Not audited' })],
       },
     ],
   })
@@ -194,7 +194,7 @@ test('step 5 requires findings presented, client position, signature and time', 
 test('result classification helpers', () => {
   assert.equal(gates.isNonconformingResult('Minor NC'), true)
   assert.equal(gates.isNonconformingResult('Major NC'), true)
-  assert.equal(gates.isNonconformingResult('Conform'), false)
+  assert.equal(gates.isNonconformingResult('Conforming'), false)
   assert.equal(gates.isAuditedResultValue(''), false)
   assert.equal(gates.isAuditedResultValue('Not audited'), false)
   assert.equal(gates.isAuditedResultValue('Observation'), true)

@@ -115,6 +115,7 @@ export const CabNewAuditPlanPage = lazyNamed(() => import('@/pages/CabNewAuditPl
 export const CabBuildAuditPlanPage = lazyNamed(() => import('@/pages/CabBuildAuditPlanPage'), 'CabBuildAuditPlanPage')
 export const CabAuditExecutionListPage = lazyNamed(() => import('@/pages/CabAuditExecutionListPage'), 'CabAuditExecutionListPage')
 export const CabAuditExecutionPage = lazyNamed(() => import('@/pages/CabAuditExecutionPage'), 'CabAuditExecutionPage')
+export const CabStageReportPage = lazyNamed(() => import('@/pages/CabStageReportPage'), 'CabStageReportPage')
 export const CabAuditReportingPage = lazyNamed(() => import('@/pages/CabAuditReportingPage'), 'CabAuditReportingPage')
 export const CabAddFindingPage = lazyNamed(() => import('@/pages/CabAddFindingPage'), 'CabAddFindingPage')
 export const CabDecisionQueuePage = lazyNamed(() => import('@/pages/CabDecisionQueuePage'), 'CabDecisionQueuePage')

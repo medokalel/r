@@ -2811,7 +2811,7 @@
       "timeDelivered": "Time delivered",
       "daysValue": "{{days}} days",
       "open": "Open stage report",
-      "openPendingHint": "Available once the stage report page is connected.",
+      "openPendingHint": "Mark the hand-off ready to open the stage report.",
       "noReport": "The report opens when the opening meeting is completed.",
       "title": "Stage report",
       "description": "Generated from the plan, the checklist results and the findings.",
@@ -2820,8 +2820,10 @@
       "recommendation": "Lead auditor recommendation",
       "openRegister": "Open Audit Reporting register",
       "markHandoffReady": "Mark hand-off ready",
-      "handoffReadyToast": "Hand-off prepared, awaiting the stage report connection.",
-      "handoffReadyState": "Hand-off prepared: awaiting the stage report connection. It will open with this data."
+      "handoffReadyToast": "Hand-off prepared. You can open the stage report.",
+      "handoffReadyState": "Hand-off prepared. The stage report opens with this data.",
+      "openReadyHint": "Review, approve and issue the report from the stage report page.",
+      "reportState": "Stage report: {{status}}"
     },
     "stepHints": {
       "preparation": "Confirm the plan, the agreement and the team, review the client documents and assign the checklists.",
@@ -2954,6 +2956,124 @@
       "hintImage": "PNG, JPG or SVG up to 5 MB",
       "hintPhoto": "PNG or JPG up to 5 MB"
     }
+  },
+  "stageReport": {
+    "loading": "Loading stage report...",
+    "notFound": "This audit was not found.",
+    "backToExecutionList": "Back to audit execution",
+    "title": "Stage report",
+    "notReady": {
+      "title": "The stage report is not ready yet",
+      "body": "The stage report opens from the report step of audit execution. Finish the six steps and mark the hand-off ready first.",
+      "back": "Back to audit execution"
+    },
+    "create": {
+      "title": "Create the stage report",
+      "description": "The report opens with texts generated from the plan, the checklist results and the findings raised in this audit.",
+      "point1": "You can edit every section before sending it to technical review.",
+      "point2": "The recommendation of the audit team is not a certification decision.",
+      "button": "Generate report"
+    },
+    "status": {
+      "draft": "Draft",
+      "returned": "Returned",
+      "inReview": "In technical review",
+      "approved": "Approved",
+      "issued": "Issued"
+    },
+    "overview": {
+      "nc": "Nonconformities",
+      "dates": "Audit dates",
+      "standards": "Standards"
+    },
+    "view": {
+      "edit": "Edit",
+      "preview": "Preview"
+    },
+    "print": "Print / save as PDF",
+    "backToExecution": "Back to audit execution",
+    "issuedBanner": "Version {{version}} was issued on {{date}}. The report is frozen and read-only.",
+    "frozen": "The report is with the technical reviewer and cannot be edited until it is returned.",
+    "recommendationNote": "The recommendation is the audit team's view only. It is not a certification decision; technical review is a separate step.",
+    "regenerated": "Sections regenerated from the audit data.",
+    "editor": {
+      "title": "Report sections",
+      "description": "Edit the generated texts. They are saved as you type.",
+      "regenerate": "Regenerate from audit data"
+    },
+    "sections": {
+      "executiveSummary": "Executive summary",
+      "scopeObjectives": "Scope and objectives",
+      "teamDates": "Audit team and dates",
+      "checklistCoverage": "Checklist coverage",
+      "findings": "Findings",
+      "closingMeeting": "Closing meeting",
+      "recommendation": "Audit team recommendation"
+    },
+    "document": {
+      "title": "{{stage}} audit report",
+      "reviewer": "Technical reviewer",
+      "issuedOn": "Issued on"
+    },
+    "review": {
+      "title": "Technical review",
+      "hint": "The reviewer must not be a member of the audit team.",
+      "reviewer": "Technical reviewer",
+      "choose": "Choose a reviewer",
+      "onTeam": "audit team",
+      "submit": "Send to technical review",
+      "actingAs": "Reviewing as {{name}}.",
+      "commentPlaceholder": "Review comments (required when returning the report)",
+      "approve": "Approve",
+      "return": "Return with comments",
+      "commentRequired": "Add a comment before returning the report.",
+      "returnedBy": "Returned by {{name}}:",
+      "approvedHint": "Approved by {{name}}. The report can now be issued to the client.",
+      "issue": "Issue to client",
+      "issueNote": "Issuing freezes this version and completes the audit."
+    },
+    "blockers": {
+      "title": "To send for review",
+      "ready": "All gates are met. You can send the report to technical review.",
+      "handoffNotReady": "Mark the hand-off ready in the report step of audit execution.",
+      "summaryMissing": "Write the executive summary.",
+      "recommendationMissing": "Record the audit team recommendation.",
+      "sectionsEmpty": "{{count}} report section(s) are empty.",
+      "reviewerMissing": "Choose a technical reviewer.",
+      "reviewerOnTeam": "The technical reviewer cannot be a member of the audit team.",
+      "findingsNotSubmitted": "{{count}} finding(s) are still drafts. Submit or remove them."
+    },
+    "toast": {
+      "submitted": "Report sent to technical review.",
+      "approved": "Report approved.",
+      "returned": "Report returned to the audit team.",
+      "issued": "Report issued. The audit is completed."
+    },
+    "history": {
+      "title": "Report history",
+      "generated": "Report generated",
+      "submitted": "Sent to technical review",
+      "approved": "Approved by the reviewer",
+      "returned": "Returned with comments",
+      "issued": "Issued to client"
+    },
+    "generated": {
+      "scope": "Scope: {{scope}}",
+      "objectives": "Objectives: {{objectives}}",
+      "standards": "Standards: {{standards}}",
+      "lead": "Lead auditor: {{name}}",
+      "team": "Audit team: {{names}}",
+      "dates": "Audit dates: {{start}} to {{end}} at {{site}}.",
+      "days": "Audit days recorded: {{days}}.",
+      "coverage": "{{audited}} of {{total}} checklist items were audited.",
+      "results": "Results: {{conforming}} conforming, {{minor}} minor NC, {{major}} major NC, {{observations}} observations, {{ofi}} opportunities for improvement.",
+      "noFindings": "No findings were raised in this audit.",
+      "findingLine": "{{code}} ({{classification}}), clause {{clause}}: {{statement}}",
+      "position": "Client position at the closing meeting: {{position}}",
+      "clientComments": "Client comments: {{comments}}",
+      "ncDue": "Nonconformity responses are due by {{date}}."
+    },
+    "completedElsewhere": "The audit was marked completed before this report was issued. The report is not issued yet. Finish the review and issue it to record the issued version."
   },
   "cab": {
     "sidebar": {

@@ -534,6 +534,8 @@ export function CabAuditExecutionPage() {
             {activeStep === 6 && (
               <ExecutionReportStep
                 execution={execution}
+                planNumber={plan.planNumber}
+                reportStatus={plan.stageReport?.status}
                 totalItems={totalItems}
                 auditedItems={auditedItems}
                 findingsCount={countFindingsRaised(execution)}

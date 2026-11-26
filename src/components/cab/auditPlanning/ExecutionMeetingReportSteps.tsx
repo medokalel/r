@@ -14,7 +14,8 @@ import {
   formatIcascoDate,
 } from '@/components/cab/auditPlanning/shared'
 import { Checkbox } from '@/components/ui/Checkbox'
-import { ROUTES } from '@/lib/routes'
+import { ROUTES, cabStageReportPath } from '@/lib/routes'
+import type { StageReportStatus } from '@/lib/api/stageReport'
 import { cn } from '@/lib/utils'
 
 /** Stored checklist result values stay English; labels map to locale keys. */
@@ -526,6 +527,10 @@ export function ExecutionClosingStep({
 
 interface ExecutionReportStepProps {
   execution: AuditExecutionData
+  /** Plan number the stage report page opens for. */
+  planNumber: string
+  /** Stage report state once it exists (draft, in review, approved, issued...). */
+  reportStatus?: StageReportStatus
   /** Hand-off data the stage report page (phase 3) will open with. */
   totalItems: number
   auditedItems: number
@@ -537,6 +542,8 @@ interface ExecutionReportStepProps {
 
 export function ExecutionReportStep({
   execution,
+  planNumber,
+  reportStatus,
   totalItems,
   auditedItems,
   findingsCount,
@@ -612,15 +619,24 @@ export function ExecutionReportStep({
             <div>
               <button
                 type="button"
-                disabled
+                disabled={!rpt.handoffReady}
+                onClick={() => navigate(cabStageReportPath(planNumber))}
                 data-testid="open-stage-report"
-                className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {t('execution.reportStep.open', 'Open stage report')}
               </button>
-              <p className="mt-1 text-[11px] text-neutral-400">
-                {t('execution.reportStep.openPendingHint', 'Available once the stage report page is connected.')}
-              </p>
+              {reportStatus ? (
+                <p className="mt-1 text-[12px] font-medium text-neutral-600" data-testid="stage-report-state">
+                  {t('execution.reportStep.reportState', { status: t(`stageReport.status.${reportStatus}`) })}
+                </p>
+              ) : (
+                <p className="mt-1 text-[11px] text-neutral-400">
+                  {rpt.handoffReady
+                    ? t('execution.reportStep.openReadyHint')
+                    : t('execution.reportStep.openPendingHint', 'Mark the hand-off ready to open the stage report.')}
+                </p>
+              )}
             </div>
 
             <div>

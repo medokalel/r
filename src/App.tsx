@@ -59,6 +59,7 @@ import {
   CabAuditExecutionListPage,
   CabAuditExecutionPage,
   CabAuditReportingPage,
+  CabStageReportPage,
   CabAddFindingPage,
   CabDecisionQueuePage,
   CabDecisionDetailsPage,
@@ -580,6 +581,14 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <CabAuditExecutionPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabStageReport}
+                element={
+                  <RequireAuth>
+                    <CabStageReportPage />
                   </RequireAuth>
                 }
               />

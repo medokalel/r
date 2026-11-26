@@ -49,6 +49,7 @@ export const ROUTES = {
   cabAuditPlanNew: "/cab/audit-planning/new",
   cabAuditExecutionList: "/cab/audit-execution",
   cabAuditExecution: "/cab/audit-planning/:planId/execution",
+  cabStageReport: "/cab/audit-planning/:planId/stage-report",
   cabAuditReporting: "/cab/audit-reporting",
   cabAuditWorkspace: "/cab/audit-reporting/workspace",
   cabAddFinding: "/cab/audit-reporting/findings/new",
@@ -225,6 +226,10 @@ export function cabBuildAuditPlanPath(planId: string, options?: { tab?: 'agenda'
   const base = `/cab/audit-planning/build/${encodeURIComponent(planId)}`
   return options?.tab ? `${base}?tab=${options.tab}` : base
 }
+export function cabStageReportPath(planId: string): string {
+  return `/cab/audit-planning/${encodeURIComponent(planId)}/stage-report`
+}
+
 export function cabAuditExecutionPath(planId?: string): string {
   return planId
     ? `/cab/audit-planning/${encodeURIComponent(planId)}/execution`
