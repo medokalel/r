@@ -9,10 +9,17 @@
  */
 
 import {
-  getNonconformities,
+  currentActor,
+  setNonconformityEvidence,
+  syncNonconformitiesFromFindings,
+  toItem,
+  updateNonconformity,
   type NonconformityItem,
+  type NonconformityPatch,
   type NonconformityStatus,
 } from '@/lib/api/cabNonconformitiesApi'
+import { toView, todayIso, type NcEventCode, type StoredEvidence, type StoredNonconformity } from '@/lib/api/nonconformityRegister'
+import { cabAuditReportingPath } from '@/lib/routes'
 
 export type EffectivenessResult = 'not_reviewed' | 'effective' | 'partially_effective' | 'not_effective'
 
@@ -59,6 +66,8 @@ export interface ResponseActivityEntry {
   text: string
   by: string
   at: string
+  code?: string
+  ref?: string
 }
 
 export interface NonconformityResponse {
@@ -104,131 +113,116 @@ export interface ResponseMutationResult {
 
 const RESPONSIBLE_OPTIONS = ['Sara Ali', 'Omar Hassan', 'Layla Ibrahim', 'Khalid Al-Rashid']
 
-const CURRENT_USER = 'Sara Ali'
+function daysBetween(fromIso: string, to = new Date()): number {
+  const from = new Date(`${fromIso}T00:00:00`)
+  if (Number.isNaN(from.getTime())) return 0
+  return Math.max(0, Math.floor((to.getTime() - from.getTime()) / 86_400_000))
+}
 
-function buildResponse(nonconformity: NonconformityItem): NonconformityResponse {
+function buildResponse(nc: StoredNonconformity, nonconformity: NonconformityItem): NonconformityResponse {
+  const options = Array.from(new Set([nc.responsiblePerson, nc.ownerName, ...RESPONSIBLE_OPTIONS].filter(Boolean)))
+  const last = nc.events.filter((e) => e.code === 'saved' || e.code === 'submitted').at(-1)
   return {
     nonconformity,
-    applicationId: `APP-${nonconformity.ncId.split('-')[1] ?? '0000'}`,
-    originalFinding:
-      'Food safety management system does not ensure adequate control of allergen risks. Allergen identification and segregation area were not consistently implemented, and records of cleaning verification were incomplete.',
+    applicationId: nc.planNumber,
+    originalFinding: nc.statement,
     findingRaisedDate: nonconformity.raisedDate,
-    targetClosureDate: '30 Jul 2024',
-    daysOpen: 45,
-    correction:
-      'Segregated allergen-containing raw materials and updated line labeling. Conducted immediate cleaning of affected production area.',
-    rootCause:
-      'Insufficient training and unclear procedures for allergen control, leading to inconsistent implementation by production staff.',
-    correctiveAction:
-      'Revise allergen control procedure, deliver targeted training to production and cleaning staff, and implement a verification checklist to ensure consistent application.',
-    evidence: [
-      {
-        id: 'ev-1',
-        name: 'Allergen_Control_Procedure_v2.pdf',
-        version: 2,
-        uploadedAt: '28 Mar 2024',
-        sizeLabel: '520 KB',
-      },
-      {
-        id: 'ev-2',
-        name: 'Training_Attendance.xlsx',
-        version: 1,
-        uploadedAt: '25 Mar 2024',
-        sizeLabel: '210 KB',
-      },
-      {
-        id: 'ev-3',
-        name: 'Production_Area_Cleaning.jpg',
-        version: 1,
-        uploadedAt: '25 Mar 2024',
-        sizeLabel: '1.3 MB',
-      },
-    ],
-    responsiblePerson: CURRENT_USER,
-    targetDate: '2024-04-30',
-    effectivenessReviewDate: '2024-07-30',
-    effectivenessResult: 'not_reviewed',
-    reviewerComments: '',
-    lastSavedAt: '28 Mar 2024, 14:32',
-    lastSavedBy: CURRENT_USER,
-    responsibleOptions: RESPONSIBLE_OPTIONS,
+    targetClosureDate: nonconformity.dueDate,
+    daysOpen: daysBetween(nc.raisedDate),
+    correction: nc.correction,
+    rootCause: nc.rootCause,
+    correctiveAction: nc.correctiveAction,
+    evidence: (nc.evidence ?? []).map((e) => ({ id: e.id, name: e.name, version: e.version, uploadedAt: e.uploadedAt, sizeLabel: e.sizeLabel, url: e.dataUrl })),
+    responsiblePerson: nc.responsiblePerson || nc.ownerName,
+    targetDate: nc.targetDate || nc.dueDate,
+    effectivenessReviewDate: nc.effectivenessReviewDate,
+    effectivenessResult: nc.effectivenessResult,
+    reviewerComments: nc.reviewerComments,
+    lastSavedAt: last ? new Date(last.at).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }) : null,
+    lastSavedBy: last?.by ?? null,
+    responsibleOptions: options,
     related: [
       { id: 'rel-1', label: 'Audit finding', reference: nonconformity.findingId },
-      { id: 'rel-2', label: 'Audit report', reference: nonconformity.auditId },
-      { id: 'rel-3', label: 'Application', reference: `APP-${nonconformity.ncId.split('-')[1] ?? '0000'}` },
-    ],
-    activity: nonconformity.history.map((entry) => ({
-      id: entry.id,
-      text: entry.text,
-      by: entry.by,
-      at: entry.at,
-    })),
+      { id: 'rel-2', label: 'Audit report', reference: nc.planNumber, href: nc.planId ? cabAuditReportingPath(nc.planNumber || nc.planId) : undefined },
+    ].filter((r) => r.reference),
+    activity: nonconformity.history.map((entry) => ({ id: entry.id, text: entry.text, by: entry.by, at: entry.at, code: entry.code, ref: entry.ref })),
   }
 }
 
-function timestamp(): string {
-  return new Intl.DateTimeFormat('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  })
-    .format(new Date())
-    .replace(',', ',')
+function stamp(nc: StoredNonconformity): ResponseMutationResult {
+  const last = nc.events.at(-1)
+  const at = last ? new Date(last.at) : new Date()
+  return {
+    savedAt: at.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }),
+    savedBy: last?.by ?? currentActor(),
+    status: toView(nc, todayIso()).displayStatus,
+  }
 }
 
 export async function getNonconformityResponse(ncId: string): Promise<NonconformityResponse | null> {
-  const register = await getNonconformities()
-  const match = register.find((item) => item.id === ncId || item.ncId === ncId)
-  return match ? buildResponse(match) : null
+  const stored = (await syncNonconformitiesFromFindings()).find((item) => item.id === ncId || item.ncId === ncId)
+  return stored ? buildResponse(stored, toItem(stored)) : null
 }
 
-/**
- * The four mutations below are mock transports: they validate their arguments
- * and echo back the resulting audit stamp. Swap the body for a real request
- * when the endpoint lands — the signatures are already the contract.
- */
-function stamp(status: NonconformityStatus): ResponseMutationResult {
-  return { savedAt: timestamp(), savedBy: CURRENT_USER, status }
+function patchOf(draft: ResponseDraftInput): NonconformityPatch {
+  return {
+    correction: draft.correction,
+    rootCause: draft.rootCause,
+    correctiveAction: draft.correctiveAction,
+    responsiblePerson: draft.responsiblePerson,
+    targetDate: draft.targetDate,
+    effectivenessReviewDate: draft.effectivenessReviewDate,
+    effectivenessResult: draft.effectivenessResult,
+    reviewerComments: draft.reviewerComments,
+  }
 }
 
-export async function saveResponseDraft(
-  ncId: string,
-  draft: ResponseDraftInput,
-): Promise<ResponseMutationResult> {
+async function save(ncId: string, patch: NonconformityPatch, code: NcEventCode): Promise<ResponseMutationResult> {
+  const saved = await updateNonconformity(ncId, patch, { code })
+  if (!saved) throw new Error(`Nonconformity ${ncId} was not found`)
+  return stamp(saved)
+}
+
+/** The mutations keep the response in this browser until the backend exists; the signatures are the contract. */
+export async function saveResponseDraft(ncId: string, draft: ResponseDraftInput): Promise<ResponseMutationResult> {
   if (!ncId) throw new Error('saveResponseDraft: ncId is required')
-  return stamp(draft.correction.trim() ? 'in_progress' : 'open')
+  return save(ncId, { ...patchOf(draft), status: draft.correction.trim() ? 'in_progress' : 'open' }, 'saved')
 }
 
-export async function submitResponse(
-  ncId: string,
-  draft: ResponseDraftInput,
-): Promise<ResponseMutationResult> {
+export async function submitResponse(ncId: string, draft: ResponseDraftInput): Promise<ResponseMutationResult> {
   if (!ncId) throw new Error('submitResponse: ncId is required')
   if (!draft.correctiveAction.trim()) {
     throw new Error('submitResponse: corrective action is required')
   }
-  return stamp('submitted')
+  return save(ncId, { ...patchOf(draft), status: 'submitted', revisionRequested: false }, 'submitted')
 }
 
-export async function requestRevision(
-  ncId: string,
-  comments: string,
-): Promise<ResponseMutationResult> {
+export async function requestRevision(ncId: string, comments: string): Promise<ResponseMutationResult> {
   if (!ncId) throw new Error('requestRevision: ncId is required')
-  void comments
-  return stamp('in_progress')
+  return save(ncId, { status: 'in_progress', revisionRequested: true, reviewerComments: comments }, 'revision')
 }
 
 export async function closeAfterVerification(
   ncId: string,
   comments: string,
+  effectivenessResult?: EffectivenessResult,
 ): Promise<ResponseMutationResult> {
   if (!ncId) throw new Error('closeAfterVerification: ncId is required')
-  void comments
-  return stamp('closed')
+  return save(
+    ncId,
+    { status: 'closed', revisionRequested: false, reviewerComments: comments, ...(effectivenessResult ? { effectivenessResult } : {}) },
+    'closed',
+  )
+}
+
+const toStored = (e: EvidenceFile): StoredEvidence => ({
+  id: e.id, name: e.name, version: e.version, uploadedAt: e.uploadedAt, sizeLabel: e.sizeLabel, dataUrl: e.url ?? '',
+})
+
+/** Keeps the evidence list with the nonconformity so it survives a reload. */
+export async function saveResponseEvidence(ncId: string, evidence: EvidenceFile[]): Promise<void> {
+  const saved = await setNonconformityEvidence(ncId, evidence.map(toStored))
+  if (!saved) throw new Error(`Nonconformity ${ncId} was not found`)
 }
 
 /** Response is only submittable once every mandatory narrative + evidence exists. */

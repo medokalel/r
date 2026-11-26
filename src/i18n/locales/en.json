@@ -3335,6 +3335,68 @@
       }
     },
     "nonconformities": {
+      "workflow": {
+        "notFound": "This nonconformity was not found.",
+        "notFoundHint": "It may belong to another account or no longer exist.",
+        "backToRegister": "Back to Nonconformities",
+        "clauseShort": "Clause",
+        "previous": "Previous",
+        "next": "Next",
+        "pipelineTitle": "Where it stands",
+        "overdueNote": "The due date {{date}} has passed and the response is not submitted yet.",
+        "auditTitle": "Audit",
+        "auditNumber": "Audit",
+        "site": "Site",
+        "standard": "Standard",
+        "noAudit": "Not linked to an audit in this system. It was imported from a previous system.",
+        "findingTitle": "Finding it came from",
+        "clause": "Clause",
+        "source": "Source",
+        "sourceImport": "Imported",
+        "sourceFinding": "Audit finding",
+        "stagesTitle": "Response stages",
+        "stageEmpty": "No response recorded yet.",
+        "emptyRegister": "No nonconformities yet. They appear here when a nonconformity finding is submitted in an audit, or when you import them.",
+        "viewLabel": "View",
+        "columnEmpty": "Nothing here",
+        "blockedTitle": "This action was not completed",
+        "evidenceHint": "PDF, DOCX, JPG, PNG (max 700 KB each, kept in this browser)",
+        "commentsLabel": "Comments (required to close)",
+        "commentsPlaceholder": "Add the verification comments. Required to close, not to save a draft.",
+        "blocked": {
+          "closed": "This nonconformity is already closed and cannot be changed.",
+          "notSubmitted": "The response must be submitted before this step.",
+          "correction": "Add the correction.",
+          "rootCause": "Add the root cause.",
+          "correctiveAction": "Add the corrective action.",
+          "responsible": "Choose the responsible person.",
+          "targetDate": "Set the target date.",
+          "evidence": "Attach at least one evidence file.",
+          "verification": "Record the verification: reviewer comments and an effectiveness result.",
+          "notEffective": "The effectiveness result must be Effective to close. Otherwise request a revision.",
+          "evidenceTooLarge": "A file is larger than 700 KB and was not added. Smaller files only for now.",
+          "storageFull": "The browser has no room to keep this. Remove some files and try again.",
+          "failed": "Something went wrong. Nothing was changed."
+        },
+        "view": {
+          "list": "List",
+          "pipeline": "Pipeline"
+        },
+        "class": {
+          "critical": "Critical",
+          "major": "Major",
+          "minor": "Minor",
+          "observation": "Observation"
+        },
+        "event": {
+          "raised": "Raised from finding {{ref}}",
+          "imported": "Imported from {{ref}}",
+          "saved": "Response saved",
+          "submitted": "Response submitted for review",
+          "revision": "Revision requested",
+          "closed": "Closed after verification"
+        }
+      },
       "title": "Nonconformities",
       "breadcrumbParent": "Workspace",
       "subtitle": "Manage client corrective actions raised from audit findings and other sources.",

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from 'react-router-dom'
 import { CabLayout } from '@/components/layout/CabLayout'
@@ -8,19 +8,22 @@ import { useNonconformitiesTourSteps } from '@/config/nonconformitiesTourSteps'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
 import { TablePagination } from '@/components/dashboard/TablePagination'
 import { Button } from '@/components/ui/Button'
+import { ImportWizardDialog } from '@/components/dashboard/cab/dataMigration/ImportWizardDialog'
+import { NC_PIPELINE_COLUMNS } from '@/lib/api/nonconformityRegister'
 import { ExportMenuButton } from '@/components/ui/ExportMenuButton'
 import { SelectField } from '@/components/ui/Select'
 import { DateRangePicker, type DateRange } from '@/components/ui/DateRangePicker'
-import { AppIcon, AttachIcon, HistoryIcon, SearchIcon } from '@/components/icons'
+import { AppIcon, SearchIcon } from '@/components/icons'
 import {
   getNonconformities,
   getNonconformityCountries,
   NONCONFORMITY_STATUSES,
   type NonconformityItem,
+  type NonconformityRecord,
   type NonconformityStatus,
 } from '@/lib/api/cabNonconformitiesApi'
 import { downloadExcelCsv, downloadPdfFromTable, matchesSearch, type TableColumn } from '@/lib/tableTools'
-import { ROUTES, cabNonconformityResponsePath } from '@/lib/routes'
+import { ROUTES, cabNonconformityPath } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 function Chevron() {
@@ -38,26 +41,14 @@ function Chevron() {
   )
 }
 
-const DETAIL_TABS = ['details', 'actions', 'attachments', 'history'] as const
-type DetailTab = (typeof DETAIL_TABS)[number]
-
 const PAGE_SIZE = 10
 
-function Field({ label, children }: { label: string; children: ReactNode }) {
-  return (
-    <div className="grid grid-cols-[120px_minmax(0,1fr)] items-start gap-3">
-      <p className="text-[13px] text-neutral-500">{label}</p>
-      <div className="text-[13px] font-medium text-neutral-900">{children || '—'}</div>
-    </div>
-  )
-}
-
 export function CabNonconformitiesPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const navigate = useNavigate()
   const tourSteps = useNonconformitiesTourSteps()
 
-  const [nonconformities, setNonconformities] = useState<NonconformityItem[]>([])
+  const [nonconformities, setNonconformities] = useState<NonconformityRecord[]>([])
   const [loading, setLoading] = useState(true)
 
   const [query, setQuery] = useState('')
@@ -66,11 +57,18 @@ export function CabNonconformitiesPage() {
   const [statusFilter, setStatusFilter] = useState('all')
   const [page, setPage] = useState(1)
 
-  const [selectedId, setSelectedId] = useState<string | null>(null)
-  const [tab, setTab] = useState<DetailTab>('details')
+  const [viewMode, setViewMode] = useState<'list' | 'pipeline'>('list')
+  const [importOpen, setImportOpen] = useState(false)
+  const [reloadKey, setReloadKey] = useState(0)
   const [exporting, setExporting] = useState(false)
 
-  const countryOptions = useMemo(() => getNonconformityCountries(), [])
+  const countryOptions = useMemo(() => getNonconformityCountries(nonconformities), [nonconformities])
+  const fmt = (iso: string) =>
+    iso
+      ? new Date(`${iso.slice(0, 10)}T00:00:00`).toLocaleDateString(i18n.language === 'ar' ? 'ar-EG-u-nu-latn' : 'en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+      : ''
+  const w = (key: string, fallback: string, opts?: Record<string, unknown>) =>
+    t(`cab.nonconformities.workflow.${key}`, { defaultValue: fallback, ...opts }) as string
 
   useEffect(() => {
     let cancelled = false
@@ -86,12 +84,12 @@ export function CabNonconformitiesPage() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [reloadKey])
 
   const filtered = useMemo(() => {
     return nonconformities.filter((item) => {
       const matchesQuery = matchesSearch(
-        [item.ncId, item.findingId, item.clientName, item.clientId],
+        [item.ncId, item.findingId, item.auditId, item.clientName, item.clientId],
         query,
       )
       const matchesCountry = countryFilter === 'all' || item.country === countryFilter
@@ -106,11 +104,6 @@ export function CabNonconformitiesPage() {
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE))
   const currentPage = Math.min(page, totalPages)
   const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE)
-
-  const selected = useMemo(
-    () => filtered.find((item) => item.id === selectedId) ?? null,
-    [filtered, selectedId],
-  )
 
   const hasActiveFilters = Boolean(
     query || period.from || period.to || countryFilter !== 'all' || statusFilter !== 'all',
@@ -156,13 +149,6 @@ export function CabNonconformitiesPage() {
     }
   }
 
-  const tabLabels: Record<DetailTab, string> = {
-    details: t('cab.nonconformities.tabs.details'),
-    actions: t('cab.nonconformities.tabs.actions'),
-    attachments: t('cab.nonconformities.tabs.attachments'),
-    history: t('cab.nonconformities.tabs.history'),
-  }
-
   return (
     <CabLayout tourId="cab-nonconformities" tourSteps={tourSteps}>
       <CabHeader title={t('cab.nonconformities.title')} notificationCount={3} />
@@ -184,6 +170,10 @@ export function CabNonconformitiesPage() {
               <p className="mt-1 text-[14px] text-neutral-500">{t('cab.nonconformities.subtitle')}</p>
             </div>
           </CabTourStep>
+          <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">
+          <Button variant="outline" className="h-11 flex-1 text-[14px] sm:flex-none" onClick={() => setImportOpen(true)}>
+            {t('common.import')}
+          </Button>
           <CabTourStep steps={tourSteps} stepId="nonconformities-export">
             <ExportMenuButton
               exporting={exporting}
@@ -193,6 +183,7 @@ export function CabNonconformitiesPage() {
               className="w-full sm:w-auto"
             />
           </CabTourStep>
+          </div>
         </div>
 
         {/* Filters */}
@@ -288,15 +279,67 @@ export function CabNonconformitiesPage() {
           </section>
         </CabTourStep>
 
-        <div className={cn('grid grid-cols-1 gap-5', selected && 'xl:grid-cols-[minmax(0,1fr)_400px]')}>
+        <div className="grid grid-cols-1 gap-5">
           {/* Register table */}
           <CabTourStep steps={tourSteps} stepId="nonconformities-table">
             <section className="flex min-w-0 flex-col rounded-[16px] border border-[#ececec] bg-white py-5">
-              <p className="mb-4 px-5 text-[13px] text-neutral-500">
-                {loading
-                  ? t('common.loading')
-                  : t('cab.nonconformities.resultCount', { count: filtered.length })}
-              </p>
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3 px-5">
+                <p className="text-[13px] text-neutral-500">
+                  {loading
+                    ? t('common.loading')
+                    : t('cab.nonconformities.resultCount', { count: filtered.length })}
+                </p>
+                <div role="group" aria-label={w('viewLabel', 'View')} className="inline-flex rounded-[8px] border border-[#e2e2e2] p-0.5">
+                  {(['list', 'pipeline'] as const).map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      aria-pressed={viewMode === mode}
+                      onClick={() => setViewMode(mode)}
+                      className={cn(
+                        'rounded-[6px] px-4 py-1.5 text-[13px] font-medium transition-colors',
+                        viewMode === mode ? 'bg-primary text-white' : 'text-neutral-600 hover:text-neutral-900',
+                      )}
+                    >
+                      {w(`view.${mode}`, mode === 'list' ? 'List' : 'Pipeline')}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {viewMode === 'pipeline' ? (
+                <div className="grid grid-cols-1 gap-4 overflow-x-auto px-5 md:grid-cols-5">
+                  {NC_PIPELINE_COLUMNS.map((column) => {
+                    const cards = filtered.filter((item) => item.status === column)
+                    return (
+                      <div key={column} className="flex min-w-[200px] flex-col gap-3 rounded-[12px] bg-[#f9fafc] p-3" data-column={column}>
+                        <div className="flex items-center justify-between">
+                          <NonconformityStatusBadge status={column} label={statusLabel(column)} />
+                          <span className="text-[13px] font-semibold text-neutral-600" dir="ltr">{cards.length}</span>
+                        </div>
+                        {cards.length === 0 && <p className="py-4 text-center text-[12px] text-neutral-400">{w('columnEmpty', 'Nothing here')}</p>}
+                        {cards.map((item) => (
+                          <Link
+                            key={item.id}
+                            to={cabNonconformityPath(item.id)}
+                            className="rounded-[10px] border border-[#ececec] bg-white p-3 transition-colors hover:border-primary"
+                          >
+                            <p className="text-[14px] font-semibold text-primary" dir="ltr">{item.ncId}</p>
+                            <p className="mt-0.5 truncate text-[13px] text-neutral-800">{item.clientName || '—'}</p>
+                            <p className="mt-0.5 text-[12px] text-neutral-500">
+                              {w(`class.${item.classification}`, item.classificationLabel)}
+                              {item.clause ? ` · ${item.clause}` : ''}
+                            </p>
+                            <p className={cn('mt-1 text-[12px]', item.overdue ? 'font-medium text-[#dc2626]' : 'text-neutral-500')}>
+                              {fmt(item.dueDateRaw) || '—'}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
+                    )
+                  })}
+                </div>
+              ) : (
 
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[900px] border-collapse text-center">
@@ -321,35 +364,30 @@ export function CabNonconformitiesPage() {
                     ) : paginated.length === 0 ? (
                       <tr>
                         <td colSpan={7} className="px-4 py-8 text-[15px] text-neutral-500">
-                          {t('cab.nonconformities.empty')}
+                          {nonconformities.length === 0 ? w('emptyRegister', 'No nonconformities yet. They appear here when a nonconformity finding is submitted in an audit, or when you import them.') : t('cab.nonconformities.empty')}
                         </td>
                       </tr>
                     ) : (
                       paginated.map((row, index) => (
                         <tr
                           key={row.id}
-                          onClick={() => {
-                            setSelectedId(row.id)
-                            setTab('details')
-                          }}
+                          onClick={() => navigate(cabNonconformityPath(row.id))}
                           className={cn(
                             'cursor-pointer transition-colors hover:bg-[#e8edfc]/50',
-                            selected?.id === row.id
-                              ? 'bg-[#e8edfc]/50'
-                              : index % 2
-                                ? 'bg-[#f9fafc]'
-                                : '',
+                            index % 2 ? 'bg-[#f9fafc]' : '',
                           )}
                         >
                           <td className="px-4 py-4 text-[15px] font-medium text-primary" dir="ltr">
-                            {row.ncId}
+                            <Link to={cabNonconformityPath(row.id)} onClick={(event) => event.stopPropagation()} className="hover:underline">
+                              {row.ncId}
+                            </Link>
                           </td>
                           <td className="px-4 py-4 text-[15px] text-neutral-700" dir="ltr">
                             {row.findingId}
                           </td>
                           <td className="px-4 py-4">
                             <div className="text-[15px] font-medium text-neutral-900">{row.clientName}</div>
-                            <div className="text-[12px] text-neutral-500" dir="ltr">{row.clientId}</div>
+                            <div className="text-[12px] text-neutral-500" dir="ltr">{row.clientId || row.auditId}</div>
                           </td>
                           <td className="px-4 py-4 text-[15px] text-neutral-700">{row.classificationLabel}</td>
                           <td
@@ -357,9 +395,9 @@ export function CabNonconformitiesPage() {
                               'px-4 py-4 text-[15px]',
                               row.overdue ? 'font-medium text-[#dc2626]' : 'text-neutral-700',
                             )}
-                            dir="ltr"
+                            
                           >
-                            {row.dueDate}
+                            {fmt(row.dueDateRaw) || '—'}
                           </td>
                           <td className="px-4 py-4 text-[15px] text-neutral-700">{row.ownerName}</td>
                           <td className="px-4 py-4">
@@ -377,212 +415,30 @@ export function CabNonconformitiesPage() {
                 </table>
               </div>
 
-              <TablePagination
-                page={currentPage}
-                totalPages={totalPages}
-                onPageChange={setPage}
-                className="mt-5 px-5"
-              />
+              )}
+
+              {viewMode === 'list' && (
+                <TablePagination
+                  page={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setPage}
+                  className="mt-5 px-5"
+                />
+              )}
             </section>
           </CabTourStep>
 
-          {/* Selected nonconformity detail panel */}
-          {selected && (
-            <aside className="flex min-w-0 flex-col rounded-[16px] border border-[#ececec] bg-white p-5">
-              <div className="flex items-start justify-between gap-3">
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h2 className="text-[22px] font-bold text-neutral-900">{selected.ncId}</h2>
-                    <NonconformityStatusBadge
-                      status={selected.status}
-                      label={statusLabel(selected.status)}
-                    />
-                  </div>
-                  <p className="mt-1 text-[13px] text-neutral-500">
-                    {t('cab.nonconformities.fields.finding')}: {selected.findingId}
-                    <span className="mx-2 text-neutral-200">|</span>
-                    {t('cab.nonconformities.table.client')}: {selected.clientId}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedId(null)}
-                  aria-label={t('common.close')}
-                  className="flex size-8 shrink-0 items-center justify-center rounded-full text-neutral-500 transition-colors hover:bg-neutral-50 hover:text-neutral-900"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <path d="M18 6L6 18M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Tabs */}
-              <div
-                className="mt-4 flex gap-1.5 overflow-x-auto border-b border-[#ececec]"
-                role="tablist"
-                aria-label={t('cab.nonconformities.tabsLabel')}
-              >
-                {DETAIL_TABS.map((tabId) => (
-                  <button
-                    key={tabId}
-                    type="button"
-                    role="tab"
-                    aria-selected={tab === tabId}
-                    onClick={() => setTab(tabId)}
-                    className={cn(
-                      'whitespace-nowrap border-b-2 px-4 py-2.5 text-[14px] font-medium transition-colors',
-                      tab === tabId
-                        ? 'border-primary text-primary'
-                        : 'border-transparent text-neutral-600 hover:text-neutral-900',
-                    )}
-                  >
-                    {tabLabels[tabId]}
-                  </button>
-                ))}
-              </div>
-
-              <div className="mt-5 flex-1">
-                {tab === 'details' && (
-                  <div className="space-y-3">
-                    <Field label={t('cab.nonconformities.table.client')}>
-                      {selected.clientName} ({selected.clientId})
-                    </Field>
-                    <Field label={t('cab.nonconformities.fields.country')}>{selected.country}</Field>
-                    <Field label={t('cab.nonconformities.fields.finding')}>
-                      <span className="text-primary">{selected.findingId}</span>
-                    </Field>
-                    <Field label={t('cab.nonconformities.table.classification')}>
-                      {selected.classificationLabel}
-                    </Field>
-                    <Field label={t('cab.nonconformities.fields.description')}>
-                      <span className="font-normal">{selected.description}</span>
-                    </Field>
-                    <Field label={t('cab.nonconformities.fields.raisedDate')}>{selected.raisedDate}</Field>
-                    <Field label={t('cab.nonconformities.table.due')}>
-                      <span className={cn(selected.overdue && 'text-[#dc2626]')}>{selected.dueDate}</span>
-                    </Field>
-                    <Field label={t('cab.nonconformities.table.owner')}>{selected.ownerName}</Field>
-                    <Field label={t('cab.nonconformities.table.status')}>
-                      <NonconformityStatusBadge
-                        status={selected.status}
-                        label={statusLabel(selected.status)}
-                      />
-                    </Field>
-                    <Field label={t('cab.nonconformities.fields.primaryContact')}>
-                      {selected.primaryContactName}
-                    </Field>
-                    <Field label={t('cab.nonconformities.fields.email')}>
-                      <a
-                        href={`mailto:${selected.primaryContactEmail}`}
-                        className="text-primary hover:underline"
-                      >
-                        {selected.primaryContactEmail}
-                      </a>
-                    </Field>
-                  </div>
-                )}
-
-                {tab === 'actions' &&
-                  (selected.actions.length === 0 ? (
-                    <p className="py-6 text-center text-[13px] text-neutral-400">
-                      {t('cab.nonconformities.noActions')}
-                    </p>
-                  ) : (
-                    <ul className="space-y-3">
-                      {selected.actions.map((action) => (
-                        <li
-                          key={action.id}
-                          className="rounded-[10px] border border-[#ececec] bg-[#f9fafc] p-3"
-                        >
-                          <div className="flex items-start justify-between gap-2">
-                            <p className="text-[13px] font-semibold text-neutral-900">
-                              {t(`cab.nonconformities.actionStage.${action.stage}`)}
-                            </p>
-                            <span className="shrink-0 text-[12px] font-medium text-neutral-500">
-                              {t(`cab.nonconformities.actionStatus.${action.status}`)}
-                            </span>
-                          </div>
-                          <p className="mt-1 text-[13px] text-neutral-700">{action.description}</p>
-                          <p className="mt-2 text-[12px] text-neutral-500">
-                            {action.ownerName}
-                            <span className="mx-2 text-neutral-200">|</span>
-                            {t('cab.nonconformities.table.due')}: {action.dueDate}
-                          </p>
-                        </li>
-                      ))}
-                    </ul>
-                  ))}
-
-                {tab === 'attachments' &&
-                  (selected.attachments.length === 0 ? (
-                    <p className="py-6 text-center text-[13px] text-neutral-400">
-                      {t('cab.nonconformities.noAttachments')}
-                    </p>
-                  ) : (
-                    <ul className="space-y-2">
-                      {selected.attachments.map((attachment) => (
-                        <li
-                          key={attachment.id}
-                          className="flex items-start gap-3 rounded-[10px] border border-[#ececec] p-3"
-                        >
-                          <AppIcon icon={AttachIcon} size={18} className="mt-0.5 shrink-0 text-primary" />
-                          <div className="min-w-0">
-                            <p className="truncate text-[13px] font-medium text-neutral-900">
-                              {attachment.name}
-                            </p>
-                            <p className="mt-0.5 text-[12px] text-neutral-500">
-                              {attachment.sizeLabel}
-                              <span className="mx-2 text-neutral-200">|</span>
-                              {attachment.uploadedBy}
-                              <span className="mx-2 text-neutral-200">|</span>
-                              {attachment.uploadedAt}
-                            </p>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  ))}
-
-                {tab === 'history' && (
-                  <ul className="space-y-4">
-                    {selected.history.map((entry) => (
-                      <li key={entry.id} className="flex items-start gap-3">
-                        <span className="mt-0.5 flex size-8 shrink-0 items-center justify-center rounded-full bg-[#e8edfc] text-primary">
-                          <AppIcon icon={HistoryIcon} size={16} />
-                        </span>
-                        <div className="min-w-0">
-                          <p className="text-[13px] font-medium text-neutral-900">{entry.text}</p>
-                          <p className="mt-0.5 text-[12px] text-neutral-500">
-                            {entry.by}
-                            <span className="mx-2 text-neutral-200">|</span>
-                            {entry.at}
-                          </p>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-
-              <div className="mt-5 flex flex-col gap-3 border-t border-[#ececec] pt-5 sm:flex-row">
-                <Button
-                  variant="primary"
-                  onClick={() => navigate(cabNonconformityResponsePath(selected.id))}
-                  className="h-11 flex-1 text-[14px]"
-                >
-                  {t('cab.nonconformities.openResponse')}
-                </Button>
-                <Button
-                  variant="outline"
-                  onClick={() => setSelectedId(null)}
-                  className="h-11 flex-1 text-[14px]"
-                >
-                  {t('common.close')}
-                </Button>
-              </div>
-            </aside>
-          )}
         </div>
+
+        {importOpen && (
+          <ImportWizardDialog
+            key="nonconformities"
+            entityKey="nonconformities"
+            isArabic={i18n.language === 'ar'}
+            onClose={() => setImportOpen(false)}
+            onImported={() => setReloadKey((k) => k + 1)}
+          />
+        )}
       </main>
     </CabLayout>
   )

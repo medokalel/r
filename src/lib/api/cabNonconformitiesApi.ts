@@ -1,6 +1,7 @@
 /**
  * CAB Nonconformities — corrective action register domain rules & mock API.
- * All values are illustrative design examples (no regulatory tables).
+ * The register is built from the findings of the CAB's own audits and from imports.
+ * It starts empty (no demo rows). Data stays in this browser until the backend exists.
  *
  * Classification values intentionally mirror `SCHEME_RULES.classifications`
  * in `cabAuditReportingApi` so a finding raised in the audit workspace and the
@@ -39,6 +40,9 @@ export interface NonconformityHistoryEntry {
   text: string
   by: string
   at: string
+  /** Event code and its reference, so a page can translate the entry. */
+  code?: string
+  ref?: string
 }
 
 export interface NonconformityItem {
@@ -65,6 +69,17 @@ export interface NonconformityItem {
   actions: CorrectiveAction[]
   attachments: NonconformityAttachment[]
   history: NonconformityHistoryEntry[]
+  /** Binding to the audit and the finding the nonconformity was raised from. */
+  planId?: string | null
+  planNumber?: string
+  findingRecordId?: string | null
+  findingCode?: string
+  clause?: string
+  statement?: string
+  source?: 'finding' | 'import'
+  siteName?: string
+  standard?: string
+  progress?: number
 }
 
 export interface NonconformityFilterParams {
@@ -99,235 +114,293 @@ export const NONCONFORMITY_STATUSES: NonconformityStatus[] = [
   'overdue',
 ]
 
-const MOCK_REGISTER: NonconformityItem[] = [
-  {
-    id: 'nc-0024',
-    ncId: 'NC-0024',
-    findingId: 'AUD-0024',
-    auditId: 'AUD-0024',
-    clientName: 'Al Noor Food Industries',
-    clientId: 'CL-0001',
-    country: 'Saudi Arabia',
-    classification: 'minor',
-    classificationLabel: 'Minor',
-    description: 'Incomplete temperature monitoring records in the production area.',
-    raisedDate: '12 Mar 2024',
-    raisedDateRaw: '2024-03-12',
-    dueDate: '30 Apr 2024',
-    dueDateRaw: '2024-04-30',
-    overdue: true,
-    ownerName: 'Omar Hassan',
-    status: 'open',
-    statusLabel: 'Open',
-    primaryContactName: 'Sara Ali',
-    primaryContactEmail: 'sara@alnoor.example',
-    actions: [
-      {
-        id: 'ca-0024-1',
-        stage: 'correction',
-        stageLabel: 'Correction',
-        description: 'Reconstruct missing temperature logs for the affected period.',
-        ownerName: 'Omar Hassan',
-        dueDate: '05 Apr 2024',
-        status: 'submitted',
-        statusLabel: 'Submitted',
-      },
-      {
-        id: 'ca-0024-2',
-        stage: 'root_cause',
-        stageLabel: 'Root cause analysis',
-        description: 'Identify why the monitoring schedule was not followed on night shifts.',
-        ownerName: 'Omar Hassan',
-        dueDate: '18 Apr 2024',
-        status: 'pending',
-        statusLabel: 'Pending',
-      },
-      {
-        id: 'ca-0024-3',
-        stage: 'corrective_action',
-        stageLabel: 'Corrective action',
-        description: 'Introduce an automated logging checkpoint with supervisor sign-off.',
-        ownerName: 'Omar Hassan',
-        dueDate: '30 Apr 2024',
-        status: 'pending',
-        statusLabel: 'Pending',
-      },
-    ],
-    attachments: [
-      {
-        id: 'att-0024-1',
-        name: 'Temperature logs — March 2024.pdf',
-        sizeLabel: '1.2 MB',
-        uploadedBy: 'Sara Ali',
-        uploadedAt: '02 Apr 2024',
-      },
-      {
-        id: 'att-0024-2',
-        name: 'Corrective action plan v1.docx',
-        sizeLabel: '340 KB',
-        uploadedBy: 'Omar Hassan',
-        uploadedAt: '05 Apr 2024',
-      },
-    ],
-    history: [
-      { id: 'h-0024-1', text: 'Nonconformity raised from finding AUD-0024', by: 'Audit team', at: '12 Mar 2024, 10:30' },
-      { id: 'h-0024-2', text: 'Assigned to client owner', by: 'System', at: '12 Mar 2024, 10:31' },
-      { id: 'h-0024-3', text: 'Correction evidence submitted', by: 'Sara Ali', at: '05 Apr 2024, 09:14' },
-    ],
-  },
-  {
-    id: 'nc-0025',
-    ncId: 'NC-0025',
-    findingId: 'AUD-0031',
-    auditId: 'AUD-0031',
-    clientName: 'GreenLeaf Pvt. Ltd.',
-    clientId: 'CLT-2025-0148',
-    country: 'United Arab Emirates',
-    classification: 'major',
-    classificationLabel: 'Major',
-    description: 'Training records incomplete for staff performing critical control point checks.',
-    raisedDate: '02 Apr 2024',
-    raisedDateRaw: '2024-04-02',
-    dueDate: '02 Jun 2024',
-    dueDateRaw: '2024-06-02',
-    overdue: false,
-    ownerName: 'Layla Mansour',
-    status: 'in_progress',
-    statusLabel: 'In progress',
-    primaryContactName: 'Hessa Al Marri',
-    primaryContactEmail: 'hessa@greenleaf.example',
-    actions: [
-      {
-        id: 'ca-0025-1',
-        stage: 'correction',
-        stageLabel: 'Correction',
-        description: 'Complete and file outstanding training records for all CCP operators.',
-        ownerName: 'Layla Mansour',
-        dueDate: '20 Apr 2024',
-        status: 'accepted',
-        statusLabel: 'Accepted',
-      },
-      {
-        id: 'ca-0025-2',
-        stage: 'root_cause',
-        stageLabel: 'Root cause analysis',
-        description: 'Review the competence matrix update process for new hires.',
-        ownerName: 'Layla Mansour',
-        dueDate: '10 May 2024',
-        status: 'submitted',
-        statusLabel: 'Submitted',
-      },
-    ],
-    attachments: [
-      {
-        id: 'att-0025-1',
-        name: 'Competence matrix 2024.xlsx',
-        sizeLabel: '820 KB',
-        uploadedBy: 'Hessa Al Marri',
-        uploadedAt: '19 Apr 2024',
-      },
-    ],
-    history: [
-      { id: 'h-0025-1', text: 'Nonconformity raised from finding AUD-0031', by: 'Audit team', at: '02 Apr 2024, 14:05' },
-      { id: 'h-0025-2', text: 'Correction accepted by reviewer', by: 'Mohammed Khan', at: '22 Apr 2024, 11:40' },
-    ],
-  },
-  {
-    id: 'nc-0026',
-    ncId: 'NC-0026',
-    findingId: 'AUD-0019',
-    auditId: 'AUD-0019',
-    clientName: 'Apex Health Systems',
-    clientId: 'CL-0019',
-    country: 'Egypt',
-    classification: 'observation',
-    classificationLabel: 'Observation',
-    description: 'Calibration labels on two measuring devices were not clearly legible.',
-    raisedDate: '20 Jan 2024',
-    raisedDateRaw: '2024-01-20',
-    dueDate: '20 Feb 2024',
-    dueDateRaw: '2024-02-20',
-    overdue: false,
-    ownerName: 'Nadia Fouad',
-    status: 'closed',
-    statusLabel: 'Closed',
-    primaryContactName: 'Kareem Adel',
-    primaryContactEmail: 'kareem@apexhealth.example',
-    actions: [
-      {
-        id: 'ca-0026-1',
-        stage: 'correction',
-        stageLabel: 'Correction',
-        description: 'Reprint and reapply calibration labels on the affected devices.',
-        ownerName: 'Nadia Fouad',
-        dueDate: '05 Feb 2024',
-        status: 'accepted',
-        statusLabel: 'Accepted',
-      },
-      {
-        id: 'ca-0026-2',
-        stage: 'verification',
-        stageLabel: 'Verification',
-        description: 'Verified during the follow-up visit; labels legible and in date.',
-        ownerName: 'Mohammed Khan',
-        dueDate: '18 Feb 2024',
-        status: 'accepted',
-        statusLabel: 'Accepted',
-      },
-    ],
-    attachments: [],
-    history: [
-      { id: 'h-0026-1', text: 'Nonconformity raised from finding AUD-0019', by: 'Audit team', at: '20 Jan 2024, 09:00' },
-      { id: 'h-0026-2', text: 'Closed after verification', by: 'Mohammed Khan', at: '18 Feb 2024, 16:20' },
-    ],
-  },
-]
+import { currentFindingsOwner, listFindingRecords } from '@/lib/api/cabAuditReportingApi'
+import { fetchAuditPlans } from '@/lib/api/cabAuditPlanningApi'
+import { getAuthSession } from '@/lib/authStorage'
+import {
+  buildFromFinding,
+  buildFromImport,
+  filterViews,
+  findingsWithoutNonconformity,
+  refreshFromFinding,
+  toView,
+  todayIso,
+  updateFromImport,
+  type NcEventCode,
+  type NcView,
+  type StoredEvidence,
+  type StoredNonconformity,
+  NcRuleError,
+  closeBlockers,
+  submitBlockers,
+} from '@/lib/api/nonconformityRegister'
 
-const wait = (ms = 220) => new Promise((resolve) => setTimeout(resolve, ms))
+const STORAGE_KEY = 'icasco_cab_nonconformities_v1'
 
-function clone<T>(value: T): T {
-  return JSON.parse(JSON.stringify(value)) as T
+function owner(): string {
+  return currentFindingsOwner() ?? 'local'
 }
 
-export async function getNonconformities(
-  params?: NonconformityFilterParams,
-): Promise<NonconformityItem[]> {
-  await wait()
-  let list = clone(MOCK_REGISTER)
+export function currentActor(): string {
+  const user = getAuthSession()?.user as { name?: string; fullName?: string; email?: string } | undefined
+  return user?.name || user?.fullName || user?.email || 'CAB user'
+}
 
-  if (params?.searchQuery) {
-    const query = params.searchQuery.toLowerCase().trim()
-    list = list.filter((item) =>
-      [item.ncId, item.findingId, item.clientName, item.clientId].some((value) =>
-        value.toLowerCase().includes(query),
-      ),
+function readAll(): StoredNonconformity[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY)
+    const parsed = raw ? JSON.parse(raw) : []
+    return Array.isArray(parsed) ? (parsed as StoredNonconformity[]) : []
+  } catch {
+    return []
+  }
+}
+
+function writeOwn(list: StoredNonconformity[]): void {
+  const id = owner()
+  const others = readAll().filter((nc) => nc.cabId !== id)
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify([...others, ...list]))
+  } catch {
+    // Browser storage is full: say so instead of pretending the change was saved.
+    throw new Error('NC_STORAGE_FULL')
+  }
+}
+
+export function listStoredNonconformities(): StoredNonconformity[] {
+  const id = owner()
+  return readAll().filter((nc) => nc.cabId === id)
+}
+
+/** Raises a register entry for every submitted nonconformity finding that has none, and refreshes the others. */
+export async function syncNonconformitiesFromFindings(): Promise<StoredNonconformity[]> {
+  const stored = listStoredNonconformities()
+  const records = listFindingRecords()
+  const plans = await fetchAuditPlans()
+  const planOf = (r: { planId: string | null; planNumber: string | null }) =>
+    plans.find((p) => p.id === r.planId || p.planNumber === r.planNumber || p.planNumber === r.planId) ?? null
+  let changed = false
+  const next = stored.map((nc) => {
+    const record = nc.findingRecordId ? records.find((r) => r.id === nc.findingRecordId) : undefined
+    if (!record) return nc
+    const refreshed = refreshFromFinding(nc, record, planOf(record))
+    if (JSON.stringify(refreshed) !== JSON.stringify(nc)) changed = true
+    return refreshed
+  })
+  const now = new Date().toISOString()
+  for (const record of findingsWithoutNonconformity(records, next)) {
+    next.push(
+      buildFromFinding({ record, plan: planOf(record), cabId: owner(), existingCodes: next.map((n) => n.ncId), now, by: currentActor() }),
     )
+    changed = true
   }
-  if (params?.country && params.country !== 'all') {
-    list = list.filter((item) => item.country === params.country)
-  }
-  if (params?.status && params.status !== 'all') {
-    list = list.filter((item) => item.status === params.status)
-  }
-  if (params?.startDate) {
-    list = list.filter((item) => item.raisedDateRaw >= params.startDate!)
-  }
-  if (params?.endDate) {
-    list = list.filter((item) => item.raisedDateRaw <= params.endDate!)
-  }
+  if (changed) writeOwn(next)
+  return next
+}
 
-  return list
+const STATUS_KEYS: Record<string, string> = {
+  open: 'Open',
+  in_progress: 'In progress',
+  submitted: 'Submitted',
+  closed: 'Closed',
+  overdue: 'Overdue',
+}
+const CLASS_LABELS: Record<string, string> = { critical: 'Critical', major: 'Major', minor: 'Minor', observation: 'Observation' }
+const STAGE_LABELS: Record<string, string> = {
+  correction: 'Correction',
+  root_cause: 'Root cause analysis',
+  corrective_action: 'Corrective action',
+  verification: 'Verification',
+}
+const STAGE_STATUS_LABELS: Record<string, string> = { pending: 'Pending', submitted: 'Submitted', accepted: 'Accepted', rejected: 'Rejected' }
+const EVENT_TEXT: Record<NcEventCode, string> = {
+  raised: 'Raised from finding {ref}',
+  imported: 'Imported from {ref}',
+  saved: 'Response saved',
+  submitted: 'Response submitted for review',
+  revision: 'Revision requested',
+  closed: 'Closed after verification',
+}
+
+const fmtDate = (iso: string) =>
+  iso && /^\d{4}-\d{2}-\d{2}/.test(iso)
+    ? new Date(`${iso.slice(0, 10)}T00:00:00`).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })
+    : ''
+
+export type NonconformityRecord = NonconformityItem & { view: NcView }
+
+export function toItem(nc: StoredNonconformity, today = todayIso()): NonconformityRecord {
+  const view = toView(nc, today)
+  return {
+    id: nc.id,
+    ncId: nc.ncId,
+    findingId: nc.findingCode || nc.importRef || nc.ncId,
+    auditId: nc.planNumber,
+    clientName: nc.clientName,
+    clientId: nc.clientId,
+    country: nc.country,
+    classification: nc.classification,
+    classificationLabel: CLASS_LABELS[nc.classification],
+    description: nc.statement,
+    raisedDate: fmtDate(nc.raisedDate),
+    raisedDateRaw: nc.raisedDate,
+    dueDate: fmtDate(nc.dueDate),
+    dueDateRaw: nc.dueDate,
+    overdue: view.overdue,
+    ownerName: nc.ownerName,
+    status: view.displayStatus,
+    statusLabel: STATUS_KEYS[view.displayStatus],
+    primaryContactName: nc.contactName,
+    primaryContactEmail: nc.contactEmail,
+    actions: view.stages.map((s) => ({
+      id: `${nc.id}-${s.stage}`,
+      stage: s.stage,
+      stageLabel: STAGE_LABELS[s.stage],
+      description: s.text,
+      ownerName: s.ownerName,
+      dueDate: fmtDate(s.dueDate),
+      status: s.status,
+      statusLabel: STAGE_STATUS_LABELS[s.status],
+    })),
+    attachments: [],
+    history: nc.events.map((e) => ({
+      id: e.id,
+      text: EVENT_TEXT[e.code].replace('{ref}', e.ref),
+      by: e.by,
+      at: new Date(e.at).toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }),
+      code: e.code,
+      ref: e.ref,
+    })),
+    planId: nc.planId,
+    planNumber: nc.planNumber,
+    findingRecordId: nc.findingRecordId,
+    findingCode: nc.findingCode,
+    clause: nc.clause,
+    statement: nc.statement,
+    source: nc.source,
+    siteName: nc.siteName,
+    standard: nc.standard,
+    progress: view.progress,
+    view,
+  }
+}
+
+/** The register, newest raised first. Raises entries from submitted findings first. */
+export async function getNonconformities(params?: NonconformityFilterParams): Promise<NonconformityRecord[]> {
+  const stored = await syncNonconformitiesFromFindings()
+  const today = todayIso()
+  const views = filterViews(
+    stored.map((nc) => toView(nc, today)),
+    { query: params?.searchQuery, country: params?.country, status: params?.status, from: params?.startDate, to: params?.endDate },
+  )
+  const order = new Map(views.map((v) => [v.id, v]))
+  return stored
+    .filter((nc) => order.has(nc.id))
+    .map((nc) => toItem(nc, today))
+    .sort((a, b) => (a.raisedDateRaw < b.raisedDateRaw ? 1 : a.raisedDateRaw > b.raisedDateRaw ? -1 : b.ncId.localeCompare(a.ncId)))
 }
 
 export async function getNonconformityById(id: string): Promise<NonconformityItem | null> {
-  await wait()
-  const match = MOCK_REGISTER.find(
-    (item) => item.id === id || item.ncId.toLowerCase() === id.toLowerCase(),
-  )
-  return match ? clone(match) : null
+  const stored = await syncNonconformitiesFromFindings()
+  const match = stored.find((nc) => nc.id === id || nc.ncId.toLowerCase() === id.toLowerCase())
+  return match ? toItem(match) : null
 }
 
-/** Countries present in the register — keeps the filter aligned with the data. */
-export function getNonconformityCountries(): string[] {
-  return Array.from(new Set(MOCK_REGISTER.map((item) => item.country)))
+/** Countries present in the register: keeps the filter aligned with the data. */
+export function getNonconformityCountries(items: Array<{ country: string }>): string[] {
+  return Array.from(new Set(items.map((item) => item.country).filter(Boolean)))
+}
+
+export interface NonconformityPatch {
+  status?: StoredNonconformity['status']
+  revisionRequested?: boolean
+  correction?: string
+  rootCause?: string
+  correctiveAction?: string
+  responsiblePerson?: string
+  targetDate?: string
+  effectivenessReviewDate?: string
+  effectivenessResult?: StoredNonconformity['effectivenessResult']
+  reviewerComments?: string
+}
+
+/** Saves a change to one nonconformity and records the event, if any, in its history. */
+export async function updateNonconformity(
+  id: string,
+  patch: NonconformityPatch,
+  event?: { code: NcEventCode; ref?: string },
+): Promise<StoredNonconformity | null> {
+  const stored = listStoredNonconformities()
+  const index = stored.findIndex((nc) => nc.id === id || nc.ncId === id)
+  if (index < 0) return null
+  const at = new Date().toISOString()
+  const current = stored[index]
+  const events = event
+    ? [...current.events, { id: `ev-${current.id}-${event.code}-${at}`, code: event.code, ref: event.ref ?? '', by: currentActor(), at }]
+    : current.events
+  const merged = { ...current, ...patch, events }
+  if (current.status === 'closed') throw new NcRuleError(['closed'])
+  // The rules follow the status being set, so no caller can reach submitted or closed around them.
+  const blockers =
+    merged.status === 'closed' ? closeBlockers({ ...merged, status: current.status })
+    : merged.status === 'submitted' ? submitBlockers(merged)
+    : event?.code === 'revision' && current.status !== 'submitted' ? (['notSubmitted'] as const)
+    : []
+  if (blockers.length) throw new NcRuleError([...blockers])
+  stored[index] = merged
+  writeOwn(stored)
+  return stored[index]
+}
+
+/** Replaces the evidence kept with a nonconformity. Throws NC_STORAGE_FULL when the browser cannot keep it. */
+export async function setNonconformityEvidence(id: string, evidence: StoredEvidence[]): Promise<StoredNonconformity | null> {
+  const stored = listStoredNonconformities()
+  const index = stored.findIndex((nc) => nc.id === id || nc.ncId === id)
+  if (index < 0) return null
+  if (stored[index].status === 'closed') throw new NcRuleError(['closed'])
+  stored[index] = { ...stored[index], evidence }
+  writeOwn(stored)
+  return stored[index]
+}
+
+/**
+ * The audit plan store has no CAB id, so a plan number alone proves nothing about ownership.
+ * A plan counts as this CAB's only when one of this CAB's own findings points at it.
+ */
+async function provableOwnPlans() {
+  const records = listFindingRecords()
+  const plans = await fetchAuditPlans()
+  return plans.filter((p) => records.some((r) => r.planId === p.id || r.planNumber === p.planNumber || r.planId === p.planNumber))
+}
+
+/** Imports validated rows from the data migration wizard into the register. */
+export async function importNonconformityRows(
+  rows: Array<{ values: Record<string, unknown>; update: boolean }>,
+  fileName: string,
+): Promise<{ created: number; updated: number }> {
+  const plans = await provableOwnPlans()
+  const list = listStoredNonconformities()
+  const now = new Date().toISOString()
+  let created = 0
+  let updated = 0
+  for (const row of rows) {
+    const ref = typeof row.values.reference === 'string' ? row.values.reference.trim().toLowerCase() : ''
+    const existing = ref ? list.findIndex((nc) => nc.importRef.toLowerCase() === ref) : -1
+    if (existing >= 0) {
+      if (row.update) {
+        list[existing] = updateFromImport(list[existing], row.values)
+        updated += 1
+      }
+      continue
+    }
+    list.push(buildFromImport({ values: row.values, plans, cabId: owner(), existingCodes: list.map((n) => n.ncId), fileName, now, by: currentActor() }))
+    created += 1
+  }
+  writeOwn(list)
+  return { created, updated }
+}
+
+/** Natural keys (previous-system references) of imported records, so a second import finds its duplicates. */
+export function importedReferences(): string[] {
+  return listStoredNonconformities().map((nc) => nc.importRef.trim().toLowerCase()).filter(Boolean)
 }

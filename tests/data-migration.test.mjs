@@ -467,6 +467,7 @@ const mockStubs = {
   '@/lib/api/applicationDraftApi': { STANDARD_OPTIONS: ['ISO 9001:2015 - Quality Management'] },
   '@/lib/api/cabEmployeesApi': { CAB_PROFESSIONAL_ROLES: [{ value: 'LEAD_AUDITOR', label: 'Lead Auditor' }] },
   '@/lib/authStorage': { getAuthSession: () => ({ user: { email: 'admin@cab-example.com' } }) },
+  '@/lib/api/cabNonconformitiesApi': { importNonconformityRows: async () => ({ created: 0, updated: 0 }), importedReferences: () => [] },
 }
 
 test('the mock backend: preview, import, then the next area sees the new records', async () => {
@@ -508,4 +509,31 @@ test('the mock backend: preview, import, then the next area sees the new records
   const hubAfter = await mock.loadMigrationHub()
   assert.equal(hubAfter.incomplete.length, 0)
   assert.equal(hubAfter.overview.entities.find((status) => status.entity === 'clients').state, 'completed')
+})
+test('imported nonconformities go to the register, and its references count as duplicates', async () => {
+  const saved = []
+  const refs = []
+  const mock = load('@/lib/api/dataMigrationMockData', {
+    ...mockStubs,
+    '@/lib/test-cache-key': {},
+    '@/lib/api/cabNonconformitiesApi': {
+      importNonconformityRows: async (rows, fileName) => (saved.push({ rows, fileName }), { created: rows.length, updated: 0 }),
+      importedReferences: () => refs,
+    },
+  })
+  const entity = IMPORT_ENTITIES.nonconformities
+  const header = entity.columns.map((column) => column.key)
+  const line = (reference, over = {}) =>
+    entity.columns.map((column) => over[column.key] ?? (column.key === 'reference' ? reference : column.example))
+  const table = { rows: [header, line('NC-9001'), line('NC-9002', { grade: 'Severe' })] }
+  const preview = await mock.previewImportTable('nonconformities', table, 'old.csv')
+  assert.equal(preview.totals.invalid, 1)
+  const result = await mock.commitImport(preview.importId, { mode: 'include_partial', duplicates: 'skip' })
+  assert.equal(result.created, 1)
+  assert.equal(saved.length, 1)
+  assert.equal(saved[0].fileName, 'old.csv')
+  assert.equal(saved[0].rows[0].values.reference, 'NC-9001')
+  refs.push('nc-9003')
+  const again = await mock.previewImportTable('nonconformities', { rows: [header, line('NC-9003')] }, 'again.csv')
+  assert.equal(again.rows[0].status, 'duplicate')
 })

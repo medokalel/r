@@ -44,6 +44,7 @@ import { STANDARD_OPTIONS } from '@/lib/api/applicationDraftApi'
 import { CAB_PROFESSIONAL_ROLES } from '@/lib/api/cabEmployeesApi'
 import { ImportFileError, readImportFile } from '@/lib/importFileReader'
 import { getAuthSession } from '@/lib/authStorage'
+import { importNonconformityRows, importedReferences } from '@/lib/api/cabNonconformitiesApi'
 
 const MOCK_LATENCY_MS = 250
 const MAX_BATCHES = 30
@@ -171,9 +172,14 @@ function buildContext(entity: ImportEntityKey): ImportContext {
     personnel.set(normalizeText(person.email), person.id)
     personnel.set(normalizeText(person.fullName), person.id)
   }
+  const existing = store.existing[entity]
+  if (entity === 'nonconformities') {
+    // Imported nonconformities live in the register, so a later import (or a reload) still finds them as duplicates.
+    for (const reference of importedReferences()) existing.set(normalizeText(reference), `nc-${reference}`)
+  }
   return {
     lists: getImportLists(),
-    existing: store.existing[entity],
+    existing,
     clients,
     personnel,
     certificates: store.certificates,
@@ -256,9 +262,11 @@ export async function commitImport(importId: string, options: ImportCommitOption
   let created = 0
   let updated = 0
   let incomplete = 0
+  const ncRows: Array<{ values: Record<string, unknown>; update: boolean }> = []
 
   for (const lines of groupLines(selected, preview.entity)) {
     const first = lines[0]
+    if (preview.entity === 'nonconformities') ncRows.push({ values: first.values, update: first.status === 'duplicate' })
     if (first.status === 'duplicate') {
       updated += 1
       continue
@@ -284,6 +292,8 @@ export async function commitImport(importId: string, options: ImportCommitOption
       })
     }
   }
+
+  if (ncRows.length) await importNonconformityRows(ncRows, preview.fileName)
 
   const result: ImportCommitResult = {
     importId,

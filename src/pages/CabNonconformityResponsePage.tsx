@@ -6,6 +6,7 @@ import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useNonconformityResponseTourSteps } from '@/config/nonconformityResponseTourSteps'
 import { NonconformityStatusBadge } from '@/components/dashboard/cab/NonconformityStatusBadge'
+import { NcRuleError, NC_EVIDENCE_MAX_BYTES } from '@/lib/api/nonconformityRegister'
 import { EvidenceUploadField } from '@/components/dashboard/cab/EvidenceUploadField'
 import { Button } from '@/components/ui/Button'
 import { SelectField } from '@/components/ui/Select'
@@ -27,7 +28,6 @@ import {
 import {
   EFFECTIVENESS_RESULTS,
   EVIDENCE_ACCEPT,
-  EVIDENCE_MAX_BYTES,
   RESPONSE_TABS,
   RESPONSE_TEXT_LIMIT,
   closeAfterVerification,
@@ -35,6 +35,7 @@ import {
   isResponseComplete,
   requestRevision,
   saveResponseDraft,
+  saveResponseEvidence,
   submitResponse,
   type EffectivenessResult,
   type EvidenceFile,
@@ -138,6 +139,7 @@ export function CabNonconformityResponsePage() {
 
   const [pendingAction, setPendingAction] = useState<string | null>(null)
   const [showErrors, setShowErrors] = useState(false)
+  const [notice, setNotice] = useState<string[]>([])
 
   const objectUrlsRef = useRef<string[]>([])
 
@@ -216,12 +218,17 @@ export function CabNonconformityResponsePage() {
       const result = await action()
       setLastSaved({ at: result.savedAt, by: result.savedBy })
       setStatus(result.status)
+      setNotice([])
     } catch (error) {
       console.error(`Nonconformity response action "${key}" failed:`, error)
+      setNotice(noticeCodes(error))
     } finally {
       setPendingAction(null)
     }
   }
+
+  const noticeCodes = (error: unknown): string[] =>
+    error instanceof NcRuleError ? error.blockers : error instanceof Error && error.message === 'NC_STORAGE_FULL' ? ['storageFull'] : ['failed']
 
   const handleSaveDraft = () => {
     if (!ncId || !draft) return
@@ -245,38 +252,57 @@ export function CabNonconformityResponsePage() {
 
   const handleClose = () => {
     if (!ncId || !draft) return
-    void runAction('close', () => closeAfterVerification(ncId, draft.reviewerComments))
+    void runAction('close', () => closeAfterVerification(ncId, draft.reviewerComments, draft.effectivenessResult))
   }
 
-  const handleAddEvidence = (files: File[]) => {
-    setEvidence((previous) => {
-      const next = [...previous]
-      files.forEach((file, index) => {
-        const url = URL.createObjectURL(file)
-        objectUrlsRef.current.push(url)
-        const existing = previous.filter((item) => item.name === file.name).length
+  const readAsDataUrl = (file: File) =>
+    new Promise<string>((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result))
+      reader.onerror = () => reject(reader.error)
+      reader.readAsDataURL(file)
+    })
+
+  // Evidence is kept with the nonconformity so it survives a reload. A file the browser cannot keep is refused out loud.
+  const persistEvidence = async (next: EvidenceFile[]) => {
+    if (!ncId) return
+    try {
+      await saveResponseEvidence(ncId, next)
+      setEvidence(next)
+      setNotice([])
+    } catch (error) {
+      console.error('Failed to save evidence:', error)
+      setNotice(noticeCodes(error))
+    }
+  }
+
+  const handleAddEvidence = async (files: File[]) => {
+    const accepted = files.filter((file) => file.size <= NC_EVIDENCE_MAX_BYTES)
+    if (accepted.length < files.length) setNotice(['evidenceTooLarge'])
+    if (accepted.length === 0) return
+    try {
+      const next = [...evidence]
+      for (const file of accepted) {
+        const existing = next.filter((item) => item.name === file.name).length
         next.push({
-          id: `local-${Date.now()}-${index}`,
+          id: `ev-${Date.now()}-${next.length}`,
           name: file.name,
           version: existing + 1,
           uploadedAt: formatDisplayDate(new Date()),
           sizeLabel: `${Math.max(1, Math.round(file.size / 1024))} KB`,
-          url,
+          url: await readAsDataUrl(file),
         })
-      })
-      return next
-    })
+      }
+      await persistEvidence(next)
+      if (accepted.length < files.length) setNotice(['evidenceTooLarge'])
+    } catch (error) {
+      console.error('Failed to read evidence:', error)
+      setNotice(['failed'])
+    }
   }
 
   const handleDeleteEvidence = (id: string) => {
-    setEvidence((previous) => {
-      const target = previous.find((item) => item.id === id)
-      if (target?.url) {
-        URL.revokeObjectURL(target.url)
-        objectUrlsRef.current = objectUrlsRef.current.filter((url) => url !== target.url)
-      }
-      return previous.filter((item) => item.id !== id)
-    })
+    void persistEvidence(evidence.filter((item) => item.id !== id))
   }
 
   const statusLabel = (value: NonconformityStatus) => t(`cab.nonconformities.status.${value}`)
@@ -445,6 +471,17 @@ export function CabNonconformityResponsePage() {
               </div>
             </CabTourStep>
 
+            {notice.length > 0 && (
+              <div role="alert" className="rounded-[10px] border border-red-200 bg-red-50 p-3 text-[13px] text-red-700">
+                <p className="font-medium">{t('cab.nonconformities.workflow.blockedTitle', { defaultValue: 'This action was not completed' })}</p>
+                <ul className="mt-1 list-disc ps-5">
+                  {notice.map((code) => (
+                    <li key={code}>{t(`cab.nonconformities.workflow.blocked.${code}`, { defaultValue: code })}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* ---------- Tab content ---------- */}
             <div className="grid min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,400px)]">
                 {tab === 'corrective_action' && (
@@ -510,8 +547,8 @@ export function CabNonconformityResponsePage() {
                           required
                           files={evidence}
                           accept={EVIDENCE_ACCEPT}
-                          maxSizeBytes={EVIDENCE_MAX_BYTES}
-                          hint={t('cab.nonconformityResponse.evidence.hint')}
+                          maxSizeBytes={Number.MAX_SAFE_INTEGER}
+                          hint={t('cab.nonconformities.workflow.evidenceHint', { defaultValue: 'PDF, DOCX, JPG, PNG (max 700 KB each, kept in this browser)' })}
                           disabled={readOnly || busy}
                           error={
                             showErrors && evidence.length === 0
@@ -615,10 +652,10 @@ export function CabNonconformityResponsePage() {
 
                               <CountedTextarea
                                 id="nc-comments"
-                                label={t('cab.nonconformityResponse.fields.comments')}
+                                label={t('cab.nonconformities.workflow.commentsLabel', { defaultValue: 'Comments (required to close)' })}
                                 value={draft.reviewerComments}
                                 disabled={readOnly || busy}
-                                placeholder={t('cab.nonconformityResponse.placeholders.comments')}
+                                placeholder={t('cab.nonconformities.workflow.commentsPlaceholder', { defaultValue: 'Add the verification comments. Required to close, not to save a draft.' })}
                                 onChange={(value) => patch({ reviewerComments: value })}
                               />
                             </div>
@@ -643,7 +680,11 @@ export function CabNonconformityResponsePage() {
                               <AppIcon icon={HistoryIcon} size={16} />
                             </span>
                             <div className="min-w-0">
-                              <p className="text-[14px] font-medium text-neutral-900">{entry.text}</p>
+                              <p className="text-[14px] font-medium text-neutral-900">
+                                {entry.code
+                                  ? t(`cab.nonconformities.workflow.event.${entry.code}`, { defaultValue: entry.text, ref: entry.ref ?? '' })
+                                  : entry.text}
+                              </p>
                               <p className="mt-0.5 text-[12px] text-neutral-500">
                                 {entry.by}
                                 <span className="mx-2 text-neutral-200">|</span>
@@ -666,7 +707,11 @@ export function CabNonconformityResponsePage() {
                           className="flex items-center justify-between gap-3 rounded-[10px] border border-[#ececec] px-4 py-3"
                         >
                           <div className="min-w-0">
-                            <p className="text-[12px] text-neutral-500">{record.label}</p>
+                            <p className="text-[12px] text-neutral-500">
+                              {record.id === 'rel-1'
+                                ? t('cab.nonconformities.workflow.findingTitle', { defaultValue: record.label })
+                                : t('cab.nonconformities.workflow.auditTitle', { defaultValue: record.label })}
+                            </p>
                             <p className="mt-0.5 text-[14px] font-medium text-primary" dir="ltr">
                               {record.reference}
                             </p>
@@ -684,8 +729,8 @@ export function CabNonconformityResponsePage() {
                       label={t('cab.nonconformityResponse.fields.evidence')}
                       files={evidence}
                       accept={EVIDENCE_ACCEPT}
-                      maxSizeBytes={EVIDENCE_MAX_BYTES}
-                      hint={t('cab.nonconformityResponse.evidence.hint')}
+                      maxSizeBytes={Number.MAX_SAFE_INTEGER}
+                      hint={t('cab.nonconformities.workflow.evidenceHint', { defaultValue: 'PDF, DOCX, JPG, PNG (max 700 KB each, kept in this browser)' })}
                       disabled={readOnly || busy}
                       onSelectFiles={handleAddEvidence}
                       onDeleteFile={handleDeleteEvidence}
@@ -824,7 +869,7 @@ export function CabNonconformityResponsePage() {
                     <Button
                       variant="outline"
                       icon={<AppIcon icon={RefreshIcon} size={18} />}
-                      disabled={readOnly || busy}
+                      disabled={readOnly || busy || status !== 'submitted'}
                       onClick={handleRequestRevision}
                       className="h-11 w-full text-[14px]"
                     >
@@ -836,7 +881,7 @@ export function CabNonconformityResponsePage() {
                     <Button
                       variant="primary"
                       icon={<AppIcon icon={SuccessCircleIcon} size={18} />}
-                      disabled={readOnly || busy}
+                      disabled={readOnly || busy || status !== 'submitted'}
                       onClick={handleClose}
                       className="h-11 w-full text-[14px]"
                     >

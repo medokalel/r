@@ -143,6 +143,10 @@ export const CabManageCertificationCyclePage = lazyNamed(
   'CabManageCertificationCyclePage',
 )
 export const CabNonconformitiesPage = lazyNamed(() => import('@/pages/CabNonconformitiesPage'), 'CabNonconformitiesPage')
+export const CabNonconformityDetailPage = lazyNamed(
+  () => import('@/pages/CabNonconformityDetailPage'),
+  'CabNonconformityDetailPage',
+)
 export const CabNonconformityResponsePage = lazyNamed(
   () => import('@/pages/CabNonconformityResponsePage'),
   'CabNonconformityResponsePage',

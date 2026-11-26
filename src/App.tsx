@@ -72,6 +72,7 @@ import {
   CabCertificationCyclesPage,
   CabManageCertificationCyclePage,
   CabNonconformitiesPage,
+  CabNonconformityDetailPage,
   CabNonconformityResponsePage,
   CabCertificateRegisterPage,
   CabPrepareCertificatePage,
@@ -631,6 +632,16 @@ export default function App() {
                   <RequireAuth>
                     <RequireCabOnboarded>
                       <CabNonconformitiesPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabNonconformityDetail}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabNonconformityDetailPage />
                     </RequireCabOnboarded>
                   </RequireAuth>
                 }

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -48,7 +48,11 @@ function CabAuditReportingAuditContent() {
   const [plan, setPlan] = useState<AuditPlan | null>(null)
   const [records, setRecords] = useState<FindingRecord[]>([])
   const [loading, setLoading] = useState(true)
-  const [tab, setTab] = useState<Tab>('agenda')
+  const [searchParams] = useSearchParams()
+  const requestedTab = searchParams.get('tab')
+  const [tab, setTab] = useState<Tab>(
+    requestedTab === 'evidence' || requestedTab === 'findings' || requestedTab === 'report' ? requestedTab : 'agenda',
+  )
   const [query, setQuery] = useState('')
   const [missingOnly, setMissingOnly] = useState(false)
 

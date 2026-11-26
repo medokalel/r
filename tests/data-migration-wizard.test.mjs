@@ -89,6 +89,7 @@ const mockStubs = {
   '@/lib/api/applicationDraftApi': { STANDARD_OPTIONS: ['ISO 9001:2015 - Quality Management'] },
   '@/lib/api/cabEmployeesApi': { CAB_PROFESSIONAL_ROLES: [{ value: 'LEAD_AUDITOR', label: 'Lead Auditor' }] },
   '@/lib/authStorage': { getAuthSession: () => ({ user: { email: 'admin@cab-example.com' } }) },
+  '@/lib/api/cabNonconformitiesApi': { importNonconformityRows: async () => ({ created: 0, updated: 0 }), importedReferences: () => [] },
 }
 
 test('upload a filled template file: preview, import, hub', async () => {

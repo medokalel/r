@@ -82,6 +82,7 @@ export const ROUTES = {
   cabCertificationCycles: "/cab/certification",
   cabManageCertificationCycle: "/cab/certification/:cycleId",
   cabNonconformities: "/cab/nonconformities",
+  cabNonconformityDetail: "/cab/nonconformities/:ncId",
   cabNonconformityResponse: "/cab/nonconformities/:ncId/response",
   cabCertificates: "/cab/certificates",
   cabPrepareCertificate: "/cab/certificates/:certificateId/prepare",
@@ -176,6 +177,10 @@ export function cabDecisionPath(decisionId?: string): string {
 
 export function clientFindingPath(ncId: string): string {
   return `/findings/${encodeURIComponent(ncId)}`;
+}
+
+export function cabNonconformityPath(ncId: string): string {
+  return `/cab/nonconformities/${encodeURIComponent(ncId)}`;
 }
 
 export function cabNonconformityResponsePath(ncId: string): string {
