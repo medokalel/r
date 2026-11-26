@@ -170,3 +170,76 @@ test('the register, workspace and routes are wired to the audit', () => {
   assert.match(stage, /cabAuditReportingPath\(plan\.planNumber\)/)
   assert.match(addFinding, /canAddFinding/)
 })
+
+test('finding submit gates return stable, translatable codes', () => {
+  const rep = load('../src/lib/api/cabAuditReportingApi.ts')
+  const bad = rep.validateFindingForSubmit({ findingType: '', classification: '', requirementRef: ' ', evidenceText: '', evidenceLinks: [], statement: '' })
+  assert.equal(bad.ok, false)
+  assert.deepEqual(plain(bad.errors), ['findingType', 'classification', 'requirementRef', 'statement', 'evidence'])
+  const good = rep.validateFindingForSubmit({ findingType: 'Nonconformity', classification: 'major', requirementRef: '8.5.1', evidenceText: 'seen', evidenceLinks: [], statement: 's' })
+  assert.deepEqual(plain(good), { ok: true, errors: [] })
+})
+
+test('the add-finding form stores classification values, not display labels', () => {
+  const page = readFileSync(new URL('../src/pages/CabAddFindingPage.tsx', import.meta.url), 'utf8')
+  assert.match(page, /option key=\{c\.value\} value=\{c\.value\}/)
+  assert.doesNotMatch(page, /value=\{c\.label\}/)
+})
+
+test('a reopened draft updates in place: same id, no duplicate, findings gate clears', async () => {
+  const store = new Map()
+  const localStorage = {
+    getItem: (k) => (store.has(k) ? store.get(k) : null),
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+  }
+  const api = load('../src/lib/api/cabAuditReportingApi.ts', { localStorage })
+  localStorage.setItem('icasco_auth_session', JSON.stringify({ cab: { id: 'cab-1' } }))
+  const draft = {
+    id: 'find-1', cabId: 'cab-1', findingCode: null, status: 'Draft', planId: 'plan-1', planNumber: 'AUD-1',
+    checklistItemId: null, clauseRef: '8.2', findingType: 'Nonconformity', classification: 'Major — per scheme rules',
+    requirementRef: '8.2', evidenceText: '', evidenceLinks: [], statement: 's', dueDate: '', process: '', contact: '',
+    comments: '', createdAt: '2026-11-20T10:00:00Z',
+  }
+  await api.saveFindingRecord(draft)
+  const p = plan('1')
+  assert.equal(ws.buildReportReadiness(p, api.listFindingRecords()).find((g) => g.id === 'findings').state, 'pending')
+  // Reopen and resubmit the same record, as the edit form does.
+  await api.saveFindingRecord({ ...draft, status: 'Submitted', findingCode: 'FND-01', evidenceText: 'seen', classification: 'major' })
+  const listed = api.listFindingRecords()
+  assert.equal(listed.length, 1)
+  assert.equal(listed[0].id, 'find-1')
+  assert.equal(listed[0].status, 'Submitted')
+  assert.equal(listed[0].findingCode, 'FND-01')
+  assert.equal(listed[0].createdAt, draft.createdAt)
+  assert.equal(listed[0].planId, 'plan-1')
+  assert.equal(listed[0].clauseRef, '8.2')
+  assert.equal(ws.buildReportReadiness(p, listed).find((g) => g.id === 'findings').state, 'met')
+})
+
+test('draft findings reopen from the workspace and keep identity, binding and scope', () => {
+  const page = readFileSync(new URL('../src/pages/CabAuditReportingAuditPage.tsx', import.meta.url), 'utf8')
+  assert.match(page, /f\.status === 'Draft' && addAllowed/)
+  assert.match(page, /findingId=\$\{encodeURIComponent\(f\.id\)\}/)
+  const add = readFileSync(new URL('../src/pages/CabAddFindingPage.tsx', import.meta.url), 'utf8')
+  assert.match(add, /searchParams\.get\('findingId'\)/)
+  assert.match(add, /r\.id === findingId && r\.status === 'Draft'/)
+  assert.match(add, /normalizeClassification\(existing\.classification\)/)
+  assert.match(add, /existing\?\.cabId/)
+  assert.match(add, /existing\?\.createdAt/)
+  assert.match(add, /canAddFinding/)
+})
+
+test('a reopened draft binds strictly from its record and stays locked until the audit loads', () => {
+  const add = readFileSync(new URL('../src/pages/CabAddFindingPage.tsx', import.meta.url), 'utf8')
+  // With findingId the record alone decides plan/item/clause, including nulls; URL cannot rebind.
+  assert.match(add, /findingId \? \(existing\?\.planId \?\? ''\)/)
+  assert.match(add, /findingId \? \(existing\?\.checklistItemId \?\? ''\)/)
+  assert.match(add, /findingId \? \(existing\?\.clauseRef \?\? ''\)/)
+  // An unknown findingId always redirects, even when the URL also carries a planId.
+  assert.match(add, /\(findingId && !existing\) \|\| !isBound/)
+  // Save/submit stay disabled until the audit lookup resolves, so a pending or
+  // failed lookup cannot bypass the report lock.
+  assert.match(add, /planLookup !== 'ready'/)
+  assert.match(add, /setPlanLookup\(data \? 'ready' : 'failed'\)/)
+})

@@ -33,7 +33,7 @@ export function CabAuditExecutionListPage() {
       />
 
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
           <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
             {t('cab.workspace.appHub', 'Application Hub')}
           </Link>
@@ -58,14 +58,14 @@ export function CabAuditExecutionListPage() {
           </div>
         ) : plans.length === 0 ? (
           <div className="rounded-[16px] border border-dashed border-[#e2e2e2] bg-white p-10 text-center">
-            <p className="text-[15px] font-semibold text-neutral-700">No audits available</p>
+            <p className="text-[15px] font-semibold text-neutral-700">{t('cab.auditExecution.empty', 'No audits available')}</p>
             <Button
               type="button"
               variant="primary"
               onClick={() => navigate(ROUTES.cabAuditPlanning)}
               className="mt-4"
             >
-              Go to Audit Planning
+              {t('cab.auditExecution.emptyCta', 'Go to Audit Planning')}
             </Button>
           </div>
         ) : (
@@ -116,7 +116,9 @@ export function CabAuditExecutionListPage() {
                     }}
                     className="shrink-0 text-start text-[13px] font-semibold text-primary hover:underline sm:text-end"
                   >
-                    {isCompleted ? 'View execution' : 'Start / continue execution'}
+                    {isCompleted
+                      ? t('cab.auditExecution.viewExecution', 'View execution')
+                      : t('cab.auditExecution.continue', 'Start / continue execution')}
                   </button>
                 </div>
               )

@@ -330,6 +330,7 @@
     "exporting": "جاري التصدير…",
     "exportPdf": "تصدير كملف PDF",
     "exportExcel": "تصدير كملف Excel",
+    "breadcrumb": "مسار التنقل",
     "import": "استيراد"
   },
   "nav": {
@@ -4200,7 +4201,28 @@
         "invalidDates": "يجب أن يكون تاريخ الانتهاء في نفس يوم البدء أو بعده."
       }
     },
+    "auditExecution": {
+      "title": "تنفيذ التدقيق",
+      "subtitle": "اختر تدقيقًا لبدئه أو متابعته.",
+      "empty": "لا توجد تدقيقات متاحة",
+      "emptyCta": "الانتقال إلى تخطيط التدقيق",
+      "viewExecution": "عرض التنفيذ",
+      "continue": "بدء / متابعة التنفيذ"
+    },
     "auditReporting": {
+      "schemeName": "مخطط FSMS (مهيأ)",
+      "schemeRules": "قواعد المخطط",
+      "schemeRulesInfo": "معلومات قواعد المخطط",
+      "schemeRulesIntro": "قواعد التصنيف وقيود تاريخ الاستحقاق:",
+      "submitError": {
+        "findingType": "نوع الملاحظة مطلوب عند التقديم.",
+        "classification": "التصنيف (قواعد المخطط) مطلوب عند التقديم.",
+        "requirementRef": "مرجع المتطلب مطلوب عند التقديم.",
+        "statement": "نص الملاحظة مطلوب عند التقديم.",
+        "evidence": "يجب ربط دليل موضوعي بالتدقيق والمتطلب. لا تُقبل الادعاءات العامة."
+      },
+      "editFindingTitle": "تعديل الملاحظة",
+      "editDraft": "تعديل المسودة",
       "register": {
         "subtitle": "تقارير تدقيقاتك مع حالة كل تقرير ونسخته",
         "summaryLabel": "ملخص التقارير",

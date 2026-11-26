@@ -244,3 +244,33 @@ test('import links only to a plan that one of the current CAB findings proves it
   assert.equal((await run([finding()], 'AUD-0900')).planId, null)
   assert.equal((await run([], 'AUD-0001')).planId, null)
 })
+
+// ---- phase 6: cross-module linkage ----
+test('classifications saved as display labels still normalize to values', () => {
+  assert.equal(nc.normalizeClassification('Major — per scheme rules'), 'major')
+  assert.equal(nc.normalizeClassification('minor'), 'minor')
+  assert.equal(nc.normalizeClassification('Observation — per scheme rules'), 'observation')
+  assert.equal(nc.normalizeClassification('something else'), null)
+  const n = raise({ classification: 'Critical — per scheme rules' })
+  assert.equal(n.classification, 'critical')
+})
+
+test('a finding takes the full path: raise, respond, submit, verify, close', async () => {
+  const { api } = loadApi([finding()])
+  const [raised] = await api.getNonconformities()
+  assert.equal(raised.ncId, 'NC-0001')
+  assert.equal(raised.planNumber, 'AUD-0001')
+  assert.equal(raised.findingRecordId, 'f1')
+  assert.equal(raised.classification, 'major')
+  await api.updateNonconformity(raised.id, {
+    correction: 'Fixed', rootCause: 'Training gap', correctiveAction: 'Retrain',
+    responsiblePerson: 'Sara', targetDate: '2026-12-01',
+  }, { code: 'saved' })
+  await api.setNonconformityEvidence(raised.id, [{ id: 'e1', name: 'a.pdf', version: 1, uploadedAt: '', sizeLabel: '1 KB', dataUrl: 'data:' }])
+  await api.updateNonconformity(raised.id, { status: 'submitted' }, { code: 'submitted' })
+  await assert.rejects(api.updateNonconformity(raised.id, { status: 'closed' }, { code: 'closed' }), /verification/)
+  await api.updateNonconformity(raised.id, { reviewerComments: 'Checked on site', effectivenessResult: 'effective' })
+  const closed = await api.updateNonconformity(raised.id, { status: 'closed' }, { code: 'closed' })
+  assert.equal(closed.status, 'closed')
+  assert.deepEqual(plain(closed.events.map((e) => e.code)), ['raised', 'saved', 'submitted', 'closed'])
+})

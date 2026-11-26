@@ -325,6 +325,7 @@
     "exporting": "Exporting…",
     "exportPdf": "Export as PDF",
     "exportExcel": "Export as Excel",
+    "breadcrumb": "Breadcrumb",
     "import": "Import"
   },
   "nav": {
@@ -4174,7 +4175,28 @@
         "invalidDates": "The end date must be on or after the start date."
       }
     },
+    "auditExecution": {
+      "title": "Audit execution",
+      "subtitle": "Choose an audit to start or continue.",
+      "empty": "No audits available",
+      "emptyCta": "Go to Audit Planning",
+      "viewExecution": "View execution",
+      "continue": "Start / continue execution"
+    },
     "auditReporting": {
+      "schemeName": "FSMS Scheme (configured)",
+      "schemeRules": "Scheme rules",
+      "schemeRulesInfo": "Scheme rules info",
+      "schemeRulesIntro": "Classification rules and due date constraints:",
+      "submitError": {
+        "findingType": "Finding type is required on submission.",
+        "classification": "Classification (scheme rules) is required on submission.",
+        "requirementRef": "Requirement reference is required on submission.",
+        "statement": "Finding statement is required on submission.",
+        "evidence": "Objective evidence linked to the audit and requirement is required. Generic claims are not accepted."
+      },
+      "editFindingTitle": "Edit finding",
+      "editDraft": "Edit draft",
       "register": {
         "subtitle": "Reports of your audits with their status and version",
         "summaryLabel": "Reporting summary",

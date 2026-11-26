@@ -135,7 +135,11 @@ const isIsoDate = (v: string) => /^\d{4}-\d{2}-\d{2}$/.test(v)
 
 export function normalizeClassification(value: string): NcClassification | null {
   const v = String(value ?? '').trim().toLowerCase()
-  return (NC_CLASSIFICATIONS as string[]).includes(v) ? (v as NcClassification) : null
+  if ((NC_CLASSIFICATIONS as string[]).includes(v)) return v as NcClassification
+  // Records saved before classifications were stored as values carry the display label
+  // ("Major — per scheme rules"); read the classification word off the front of it.
+  const legacy = NC_CLASSIFICATIONS.find((c) => v.startsWith(`${c} `) || v.startsWith(`${c}—`) || v.startsWith(`${c}-`))
+  return legacy ?? null
 }
 
 export function normalizeStatus(value: string): NcStoredStatus {

@@ -144,7 +144,7 @@ function CabAuditReportingAuditContent() {
         notificationCount={3}
       />
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-3 sm:p-5">
-        <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label="Breadcrumb">
+        <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
           <Link to={ROUTES.cabAuditReporting} className="transition-colors hover:text-[#1236a3]">{t('cab.auditReporting.title')}</Link>
           <span aria-hidden>/</span>
           <span className="font-semibold text-neutral-600" dir="ltr">{plan.planNumber}</span>
@@ -324,6 +324,16 @@ function CabAuditReportingAuditContent() {
                           <span className={cn('inline-flex rounded-[4px] px-3 py-1 text-[12px] font-medium', f.status === 'Submitted' ? 'bg-[#ecfdf5] text-[#16a34a]' : 'bg-[#f3f4f6] text-neutral-700')}>
                             {t(f.status === 'Submitted' ? 'cab.auditReporting.register.findingSubmitted' : 'cab.auditReporting.register.findingDraft')}
                           </span>
+                          {f.status === 'Draft' && addAllowed && (
+                            <button
+                              type="button"
+                              data-testid="edit-draft"
+                              className="ms-2 inline-flex rounded-[4px] border border-[#c5d7fa] bg-white px-3 py-1 text-[12px] font-semibold text-primary transition-colors hover:bg-[#f3f6fd]"
+                              onClick={() => navigate(`${ROUTES.cabAddFinding}?findingId=${encodeURIComponent(f.id)}&returnTo=${encodeURIComponent(workspacePath)}`)}
+                            >
+                              {t('cab.auditReporting.editDraft')}
+                            </button>
+                          )}
                         </td>
                       </tr>
                     ))}

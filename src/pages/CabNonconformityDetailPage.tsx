@@ -101,7 +101,7 @@ export function CabNonconformityDetailPage() {
     <CabLayout>
       {header}
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-4 sm:p-6">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
           <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
             {t('cab.nonconformities.breadcrumbParent')}
           </Link>

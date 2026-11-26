@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { SCHEME_RULES, listFindingRecords, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
-import { FIELD_KEYS, saveFindingRecord, type FindingRecord } from '@/lib/api/cabAuditReportingApi'
+import { FIELD_KEYS, saveFindingRecord, type FindingRecord, type FindingSubmitErrorCode } from '@/lib/api/cabAuditReportingApi'
 import {
   fetchAuditPlanById,
   saveAuditPlan,
@@ -12,6 +12,7 @@ import {
 } from '@/lib/api/cabAuditPlanningApi'
 import { attachFindingToItem, nextFindingCode } from '@/lib/api/auditExecutionGates'
 import { canAddFinding, nextRegisterFindingCode } from '@/lib/api/auditReportingWorkspace'
+import { normalizeClassification } from '@/lib/api/nonconformityRegister'
 import { CARD, GHOST_BTN, INPUT, PRIMARY_BTN, Toast } from '@/components/cab/auditReporting/shared'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
@@ -21,6 +22,9 @@ import { cn } from '@/lib/utils'
  * When opened from the conduct step (?planId=..&itemId=..&clauseRef=..&result=..&returnTo=..)
  * the form is bound to that audit and checklist item: submitting records the
  * finding code on the item and returns to the execution workspace.
+ * When opened with ?findingId=.. it reopens that saved draft with its own audit
+ * and item binding; saving or submitting updates the same record in place, so a
+ * draft never blocks the report with no way through.
  */
 export function CabAddFindingPage() {
   const { t } = useTranslation()
@@ -28,30 +32,51 @@ export function CabAddFindingPage() {
   const [searchParams] = useSearchParams()
   const tr = (k: string, fb: string) => t(k, fb)
 
-  const planId = searchParams.get('planId') || ''
-  const itemId = searchParams.get('itemId') || ''
-  const clauseRef = searchParams.get('clauseRef') || ''
+  const findingId = searchParams.get('findingId') || ''
+  // Reopening a draft: the record carries the binding, so it cannot be detached
+  // from its audit or item by editing the URL. Only drafts reopen; submitted
+  // findings are fixed records. CAB-scoped: another organization's id finds nothing.
+  const [existing] = useState<FindingRecord | null>(() =>
+    findingId
+      ? (listFindingRecords().find((r) => r.id === findingId && r.status === 'Draft') ?? null)
+      : null,
+  )
+  // Strict binding: with findingId the record alone decides, including its nulls —
+  // URL params can only bind a NEW finding, never rebind a reopened one.
+  const planId = findingId ? (existing?.planId ?? '') : searchParams.get('planId') || ''
+  const itemId = findingId ? (existing?.checklistItemId ?? '') : searchParams.get('itemId') || ''
+  const clauseRef = findingId ? (existing?.clauseRef ?? '') : searchParams.get('clauseRef') || ''
   const sourceResult = searchParams.get('result') || ''
   const returnTo = searchParams.get('returnTo') || ''
   const isBound = Boolean(planId)
   const hasItem = Boolean(itemId)
 
   const [boundPlan, setBoundPlan] = useState<AuditPlan | null>(null)
+  // The audit lookup gates every action: until it resolves, save/submit stay
+  // disabled so a pending or failed lookup cannot bypass the report lock.
+  const [planLookup, setPlanLookup] = useState<'loading' | 'ready' | 'failed'>(isBound ? 'loading' : 'failed')
 
   // A finding always belongs to an audit: without one, choose it in the register first.
+  // A findingId that resolves to no draft is always sent back, even if the URL
+  // also carries a planId (which only binds new findings).
   useEffect(() => {
-    if (!isBound) navigate(ROUTES.cabAuditReporting, { replace: true })
-  }, [isBound, navigate])
+    if ((findingId && !existing) || !isBound) navigate(returnTo || ROUTES.cabAuditReporting, { replace: true })
+  }, [findingId, existing, isBound, returnTo, navigate])
 
   useEffect(() => {
     let active = true
     if (isBound) {
+      setPlanLookup('loading')
       fetchAuditPlanById(planId)
         .then((data) => {
-          if (active) setBoundPlan(data)
+          if (!active) return
+          setBoundPlan(data)
+          setPlanLookup(data ? 'ready' : 'failed')
         })
         .catch(() => {
-          if (active) setBoundPlan(null)
+          if (!active) return
+          setBoundPlan(null)
+          setPlanLookup('failed')
         })
     }
     return () => {
@@ -59,34 +84,38 @@ export function CabAddFindingPage() {
     }
   }, [isBound, planId])
 
+  // Classifications are stored as values ('major'); the label is only ever a display translation.
   const suggestedClassification =
-    sourceResult === 'Major NC'
-      ? 'Major — per scheme rules'
-      : sourceResult === 'Minor NC'
-        ? 'Minor — per scheme rules'
-        : ''
+    sourceResult === 'Major NC' ? 'major' : sourceResult === 'Minor NC' ? 'minor' : ''
 
   const [findingType, setFindingType] = useState(
-    sourceResult === 'Minor NC' || sourceResult === 'Major NC' ? 'Nonconformity' : '',
+    existing?.findingType ?? (sourceResult === 'Minor NC' || sourceResult === 'Major NC' ? 'Nonconformity' : ''),
   )
-  const [classification, setClassification] = useState(suggestedClassification)
-  const [requirementRef, setRequirementRef] = useState(clauseRef)
-  const [evidenceText, setEvidenceText] = useState('')
-  const evidenceLinks: string[] = []
-  const [statement, setStatement] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [process, setProcess] = useState('')
-  const [contact, setContact] = useState('')
-  const [comments, setComments] = useState('')
+  // Drafts saved before classifications were stored as values carry the display label;
+  // normalize on reopen so the dropdown selects the canonical value.
+  const [classification, setClassification] = useState(
+    existing ? (normalizeClassification(existing.classification) ?? '') : suggestedClassification,
+  )
+  const [requirementRef, setRequirementRef] = useState(existing?.requirementRef ?? clauseRef)
+  const [evidenceText, setEvidenceText] = useState(existing?.evidenceText ?? '')
+  const evidenceLinks: string[] = existing?.evidenceLinks ?? []
+  const [statement, setStatement] = useState(existing?.statement ?? '')
+  const [dueDate, setDueDate] = useState(existing?.dueDate ?? '')
+  const [process, setProcess] = useState(existing?.process ?? '')
+  const [contact, setContact] = useState(existing?.contact ?? '')
+  const [comments, setComments] = useState(existing?.comments ?? '')
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
-  const [errors, setErrors] = useState<string[]>([])
+  const [errors, setErrors] = useState<FindingSubmitErrorCode[]>([])
   const [isDirty, setIsDirty] = useState(false)
   const [showCancel, setShowCancel] = useState(false)
   const [showScheme, setShowScheme] = useState(false)
 
   // The report left the audit team's hands (in review, approved or issued): the audit's findings are fixed.
-  const locked = Boolean(boundPlan && !canAddFinding(boundPlan))
+  // While the audit lookup is pending or failed the form is locked too, so the
+  // lock can never be bypassed by acting before the plan is known.
+  const reportLocked = Boolean(boundPlan && !canAddFinding(boundPlan))
+  const locked = reportLocked || (isBound && planLookup !== 'ready')
 
   const fallbackTarget = returnTo || ROUTES.cabAuditReporting
 
@@ -96,15 +125,18 @@ export function CabAddFindingPage() {
   }
   const markDirty = () => setIsDirty(true)
 
+  // Reopened drafts keep their identity (id, owner, createdAt) and binding; only
+  // the edited fields and status change, so resubmitting never duplicates a finding.
   const buildRecord = (
     status: 'Draft' | 'Submitted',
     findingCode: string | null,
-  ): Omit<FindingRecord, 'cabId'> => ({
-    id: `find-${Date.now()}`,
+  ): Omit<FindingRecord, 'cabId'> & { cabId?: string | null } => ({
+    id: existing?.id ?? `find-${Date.now()}`,
+    cabId: existing?.cabId ?? undefined,
     findingCode,
     status,
     planId: isBound ? (boundPlan?.id ?? planId) : null,
-    planNumber: isBound ? (boundPlan?.planNumber ?? planId) : null,
+    planNumber: isBound ? (boundPlan?.planNumber ?? existing?.planNumber ?? planId) : null,
     checklistItemId: isBound && hasItem ? itemId : null,
     clauseRef: isBound ? clauseRef || null : null,
     findingType,
@@ -117,7 +149,7 @@ export function CabAddFindingPage() {
     process,
     contact,
     comments,
-    createdAt: new Date().toISOString(),
+    createdAt: existing?.createdAt ?? new Date().toISOString(),
   })
 
   // A draft keeps the entered fields but is never attached to the checklist
@@ -141,10 +173,15 @@ export function CabAddFindingPage() {
     setIsDirty(false)
     if (isBound && boundPlan) {
       const itemCodes = boundPlan.execution.checklists.flatMap((s) => s.items.map((i) => i.findingCode ?? ''))
-      const code = hasItem
+      // A draft never attached its code, but another finding may have claimed the
+      // item since; never overwrite an item's existing code with a reopened draft's.
+      const itemFree = hasItem && !boundPlan.execution.checklists.some((s) =>
+        s.items.some((i) => i.id === itemId && (i.findingCode ?? '') !== ''),
+      )
+      const code = itemFree
         ? nextFindingCode(boundPlan.execution)
         : nextRegisterFindingCode(boundPlan, listFindingRecords(), itemCodes)
-      if (hasItem) {
+      if (itemFree) {
         await saveAuditPlan({
           id: boundPlan.id,
           planNumber: boundPlan.planNumber,
@@ -173,20 +210,20 @@ export function CabAddFindingPage() {
     <CabLayout sidebarVariant={hasItem ? 'auditPlanning' : 'auditReporting'}>
       <div className="flex min-h-screen flex-col">
         <CabHeader
-          title={tr('cab.auditReporting.addFindingTitle', 'Add finding')}
+          title={existing ? tr('cab.auditReporting.editFindingTitle', 'Edit finding') : tr('cab.auditReporting.addFindingTitle', 'Add finding')}
           subtitle={subtitle}
           notificationCount={0}
         />
 
         <main className="flex flex-1 flex-col gap-5 overflow-auto bg-[#f9fafc] p-3 sm:p-5">
-          <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label="Breadcrumb">
+          <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label={tr('common.breadcrumb', 'Breadcrumb')}>
             <button type="button" onClick={handleCancel} className="transition-colors hover:text-[#1236a3]">
               {hasItem
                 ? tr('execution.title', 'Audit execution')
                 : tr('cab.auditReporting.title', 'Audit Reporting')}
             </button>
             <span aria-hidden>/</span>
-            <span className="font-semibold text-neutral-600">{tr('cab.auditReporting.addFinding', 'Add finding')}</span>
+            <span className="font-semibold text-neutral-600">{existing ? tr('cab.auditReporting.editFindingTitle', 'Edit finding') : tr('cab.auditReporting.addFinding', 'Add finding')}</span>
           </nav>
 
           {isBound && boundPlan ? (
@@ -223,7 +260,7 @@ export function CabAddFindingPage() {
             </p>
           )}
 
-          {locked && (
+          {reportLocked && (
             <div className="rounded-[8px] border border-[#fde68a] bg-[#fffbeb] p-4 text-[13px] text-[#b45309]" role="alert" data-testid="finding-locked">
               {tr('cab.auditReporting.register.findingsLocked', 'The stage report is with the reviewer or issued, so findings can no longer be added to this audit.')}
             </div>
@@ -233,7 +270,7 @@ export function CabAddFindingPage() {
             <div className="rounded-[8px] border border-error-200 bg-error-50 p-4" role="alert">
               <p className="text-[13px] font-bold text-error-600">{tr('cab.auditReporting.gatesBlockedTitle', 'Submission gates — resolve to submit')}</p>
               <ul className="mt-1.5 list-disc space-y-0.5 ps-5 text-[12px] font-medium text-neutral-700">
-                {errors.map((e) => <li key={e}>{e}</li>)}
+                {errors.map((e) => <li key={e}>{tr(`cab.auditReporting.submitError.${e}`, e)}</li>)}
               </ul>
             </div>
           )}
@@ -257,13 +294,13 @@ export function CabAddFindingPage() {
                 <div>
                   <label className="mb-1 flex items-center gap-1.5 text-[13px] font-medium text-neutral-800">
                     {tr('cab.auditReporting.classification', 'Classification (scheme rules)')} *
-                    <button type="button" onClick={() => setShowScheme(true)} aria-label="Scheme rules info"
+                    <button type="button" onClick={() => setShowScheme(true)} aria-label={tr('cab.auditReporting.schemeRulesInfo', 'Scheme rules info')}
                       className="flex size-5 items-center justify-center rounded-full bg-[#e8edfc] text-[11px] font-bold text-[#1236a3]">?</button>
                   </label>
                   <select value={classification} onChange={(e) => { setClassification(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.classification}>
                     <option value="">{tr('cab.auditReporting.selectClass', 'Select per scheme rules…')}</option>
                     {SCHEME_RULES.classifications.map((c) => (
-                      <option key={c.value} value={c.label}>
+                      <option key={c.value} value={c.value}>
                         {tr(`cab.auditReporting.class${c.value.charAt(0).toUpperCase()}${c.value.slice(1)}`, c.label)}
                       </option>
                     ))}
@@ -376,7 +413,7 @@ export function CabAddFindingPage() {
         {toast && <Toast message={toast} />}
 
         {showCancel && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-neutral-900/50 p-4" role="alertdialog" aria-modal="true" aria-label="Discard changes">
+          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-neutral-900/50 p-4" role="alertdialog" aria-modal="true" aria-label={tr('cab.auditReporting.discard', 'Discard changes')}>
             <div className={cn(CARD, 'w-full max-w-md space-y-3 p-6 shadow-2xl')}>
               <p className="text-[15px] font-bold text-neutral-900">{tr('cab.auditReporting.dirtyCancelTitle', 'Discard unsaved finding?')}</p>
               <p className="text-[12px] text-neutral-600">{tr('cab.auditReporting.dirtyCancelBody', 'This finding has unsaved draft changes. Leave without saving?')}</p>
@@ -391,18 +428,18 @@ export function CabAddFindingPage() {
         )}
 
         {showScheme && (
-          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-neutral-900/50 p-4" role="dialog" aria-modal="true" aria-label="Scheme rules">
+          <div className="fixed inset-0 z-[999] flex items-center justify-center bg-neutral-900/50 p-4" role="dialog" aria-modal="true" aria-label={tr('cab.auditReporting.schemeRules', 'Scheme rules')}>
             <div className={cn(CARD, 'w-full max-w-lg space-y-4 p-6 shadow-2xl')}>
               <div className="flex items-center justify-between border-b border-neutral-100 pb-3">
-                <h3 className="text-[16px] font-bold text-neutral-900">{SCHEME_RULES.scheme}</h3>
-                <span className="text-[12px] text-neutral-500">{SCHEME_RULES.version}</span>
+                <h3 className="text-[16px] font-bold text-neutral-900">{tr('cab.auditReporting.schemeName', SCHEME_RULES.scheme)}</h3>
+                <span className="text-[12px] text-neutral-500">{tr('cab.auditReporting.schemeRulesVersion', SCHEME_RULES.version)}</span>
               </div>
-              <p className="text-[13px] text-neutral-600">Classification rules and due date constraints:</p>
+              <p className="text-[13px] text-neutral-600">{tr('cab.auditReporting.schemeRulesIntro', 'Classification rules and due date constraints:')}</p>
               <div className="space-y-2">
                 {SCHEME_RULES.classifications.map((c) => (
                   <div key={c.value} className="rounded-[8px] border border-neutral-200 bg-neutral-50 p-3 text-[13px]">
-                    <p className="font-semibold text-neutral-900">{c.label}</p>
-                    <p className="mt-0.5 text-[12px] text-neutral-600">{c.dueRule}</p>
+                    <p className="font-semibold text-neutral-900">{tr(`cab.auditReporting.class${c.value.charAt(0).toUpperCase()}${c.value.slice(1)}`, c.label)}</p>
+                    <p className="mt-0.5 text-[12px] text-neutral-600">{tr('cab.auditReporting.duePerScheme', c.dueRule)}</p>
                   </div>
                 ))}
               </div>

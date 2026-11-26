@@ -308,7 +308,7 @@ export function CabAuditExecutionPage() {
 
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
         {/* iCASCO Breadcrumb */}
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
           <Link to={ROUTES.workspace} className="font-light text-neutral-400 hover:text-primary">
             {t('execution.breadcrumb.applicationHub', 'Application Hub')}
           </Link>

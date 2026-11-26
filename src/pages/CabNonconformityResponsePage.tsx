@@ -346,7 +346,7 @@ export function CabNonconformityResponsePage() {
       <main className="flex flex-1 overflow-auto">
         <div className="grid min-w-0 flex-1 grid-cols-1 items-start gap-5 p-6 xl:grid-cols-[minmax(0,1fr)_320px]">
           <div className="flex min-w-0 flex-col gap-5">
-            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label="breadcrumb">
+            <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px]" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
               <Link to={ROUTES.cabNonconformities} className="font-light text-neutral-400 hover:text-primary">
                 {t('cab.nonconformities.title')}
               </Link>

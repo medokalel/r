@@ -65,6 +65,9 @@ export interface SubmissionGate {
   passed: boolean
 }
 
+/** Stable codes for the submission gates, so every surface can translate the same failure. */
+export type FindingSubmitErrorCode = 'findingType' | 'classification' | 'requirementRef' | 'statement' | 'evidence'
+
 export function validateFindingForSubmit(input: {
   findingType: string
   classification: string
@@ -72,14 +75,13 @@ export function validateFindingForSubmit(input: {
   evidenceText: string
   evidenceLinks: string[]
   statement: string
-}): { ok: boolean; errors: string[] } {
-  const errors: string[] = []
-  if (!input.findingType) errors.push('Finding type is required on submission.')
-  if (!input.classification) errors.push('Classification (scheme rules) is required on submission.')
-  if (!input.requirementRef.trim()) errors.push('Requirement reference is required on submission.')
-  if (!input.statement.trim()) errors.push('Finding statement is required on submission.')
-  if (!input.evidenceText.trim() && input.evidenceLinks.length === 0)
-    errors.push('Objective evidence linked to the audit and requirement is required — generic claims are not accepted.')
+}): { ok: boolean; errors: FindingSubmitErrorCode[] } {
+  const errors: FindingSubmitErrorCode[] = []
+  if (!input.findingType) errors.push('findingType')
+  if (!input.classification) errors.push('classification')
+  if (!input.requirementRef.trim()) errors.push('requirementRef')
+  if (!input.statement.trim()) errors.push('statement')
+  if (!input.evidenceText.trim() && input.evidenceLinks.length === 0) errors.push('evidence')
   return { ok: errors.length === 0, errors }
 }
 

@@ -42,6 +42,13 @@ const CLASS_KEYS: Record<string, string> = {
   observation: 'classObservation',
 }
 
+/** Records saved before classifications were stored as values carry the label; read the value off its front. */
+function classKeyOf(classification: string): string {
+  if (CLASS_KEYS[classification]) return CLASS_KEYS[classification]
+  const head = classification.trim().split(/\s+/)[0]?.toLowerCase() ?? ''
+  return CLASS_KEYS[head] ?? ''
+}
+
 const STATUS_STYLE: Record<StageReportStatus, string> = {
   draft: 'bg-[#fff7ed] text-[#ea580c]',
   returned: 'bg-[#fef2f2] text-[#dc2626]',
@@ -114,8 +121,8 @@ export function CabStageReportPage() {
         .filter((r) => r.status === 'Submitted' && r.findingCode)
         .map((r) => ({
           code: r.findingCode as string,
-          classification: CLASS_KEYS[r.classification]
-            ? (t(`cab.auditReporting.${CLASS_KEYS[r.classification]}`) as string)
+          classification: classKeyOf(r.classification)
+            ? (t(`cab.auditReporting.${classKeyOf(r.classification)}`) as string)
             : r.classification,
           clauseRef: r.clauseRef || r.requirementRef,
           statement: r.statement,
@@ -364,7 +371,7 @@ export function CabStageReportPage() {
       </div>
 
       <main className="flex flex-1 flex-col gap-5 overflow-auto p-6">
-        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px] print:hidden" aria-label="breadcrumb">
+        <nav className="flex min-w-0 flex-wrap items-center gap-2 text-[13px] print:hidden" aria-label={t('common.breadcrumb', 'Breadcrumb')}>
           <Link to={ROUTES.cabAuditPlanning} className="font-light text-neutral-400 hover:text-primary">
             {t('execution.breadcrumb.auditPlanning')}
           </Link>
