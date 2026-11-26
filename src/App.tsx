@@ -78,6 +78,8 @@ import {
   CabAgreementTermsPage,
   CabCertificationAgreementsPage,
   CabCertificationAgreementDetailsPage,
+  CabCertificationAgreementEditPage,
+  CabCertificationAgreementCountersignPage,
   CertificationRequestFormPage,
   CertificationRequestsPage,
   CompanyProfilePage,
@@ -701,6 +703,26 @@ export default function App() {
                   <RequireAuth>
                     <RequireCabOnboarded>
                       <CabCertificationAgreementDetailsPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabCertificationAgreementEdit}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabCertificationAgreementEditPage />
+                    </RequireCabOnboarded>
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.cabCertificationAgreementCountersign}
+                element={
+                  <RequireAuth>
+                    <RequireCabOnboarded>
+                      <CabCertificationAgreementCountersignPage />
                     </RequireCabOnboarded>
                   </RequireAuth>
                 }

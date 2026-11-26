@@ -89,6 +89,8 @@ export const ROUTES = {
   cabAgreementTerms: "/cab/agreement-terms",
   cabCertificationAgreements: "/cab/certification-agreements",
   cabCertificationAgreementDetails: "/cab/certification-agreements/:agreementId",
+  cabCertificationAgreementEdit: "/cab/certification-agreements/:agreementId/edit",
+  cabCertificationAgreementCountersign: "/cab/certification-agreements/:agreementId/countersign",
 } as const;
 
 export function clientAuditPlanPath(planId: string): string {
@@ -212,6 +214,12 @@ export function cabSalesHubEditPath(leadId: string): string {
 }
 export function cabCertificationAgreementDetailsPath(agreementId: string): string {
   return `/cab/certification-agreements/${encodeURIComponent(agreementId)}`;
+}
+export function cabCertificationAgreementEditPath(agreementId: string): string {
+  return `/cab/certification-agreements/${encodeURIComponent(agreementId)}/edit`;
+}
+export function cabCertificationAgreementCountersignPath(agreementId: string): string {
+  return `/cab/certification-agreements/${encodeURIComponent(agreementId)}/countersign`;
 }
 export function cabBuildAuditPlanPath(planId: string, options?: { tab?: 'agenda' }): string {
   const base = `/cab/audit-planning/build/${encodeURIComponent(planId)}`

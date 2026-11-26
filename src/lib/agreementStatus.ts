@@ -1,4 +1,4 @@
-import type {
+﻿import type {
   CertificationAgreementKind,
   CertificationAgreementStatus,
 } from '@/lib/api/cabCertificationAgreementsApi'
@@ -49,12 +49,13 @@ const KIND_LABELS: Record<CertificationAgreementKind, BilingualLabel> = {
   amendment: { en: 'Amendment', ar: 'تعديل على الاتفاقية' },
 }
 
-const pick = (label: BilingualLabel, isAr: boolean) => (isAr ? label.ar : label.en)
+const pick = (label: BilingualLabel | undefined, isAr: boolean, fallback = '') =>
+  label ? (isAr ? label.ar : label.en) : fallback
 
 export const getAgreementStatusLabel = (
   status: CertificationAgreementStatus,
   isAr: boolean,
-) => pick(STATUS_LABELS[status], isAr)
+) => pick(STATUS_LABELS[status], isAr, status ?? '')
 
 export const getAgreementNextStepLabel = (
   status: CertificationAgreementStatus,
@@ -64,4 +65,4 @@ export const getAgreementNextStepLabel = (
 export const getAgreementKindLabel = (
   kind: CertificationAgreementKind,
   isAr: boolean,
-) => pick(KIND_LABELS[kind], isAr)
+) => pick(KIND_LABELS[kind] ?? KIND_LABELS.original, isAr)

@@ -1,4 +1,4 @@
-import { AppIcon, HistoryIcon } from '@/components/icons'
+﻿import { AppIcon, HistoryIcon } from '@/components/icons'
 import type {
   AgreementEvent,
   AgreementEventActor,
@@ -10,18 +10,24 @@ interface AgreementAuditTrailProps {
   isAr: boolean
 }
 
-const EVENT_LABELS: Record<AgreementEventType, { en: string; ar: string }> = {
-  GENERATED: { en: 'Agreement drafted', ar: 'تم إنشاء مسودة الاتفاقية' },
+const EVENT_LABELS: Partial<Record<AgreementEventType, { en: string; ar: string }>> = {
+  GENERATED: { en: 'Agreement drafted', ar: 'أُعدّت الاتفاقية' },
   UPDATED: { en: 'Draft edited', ar: 'تم تعديل المسودة' },
   SENT: { en: 'Sent to the client', ar: 'أُرسلت إلى العميل' },
   REMINDED: { en: 'Reminder sent', ar: 'تم إرسال تذكير' },
+  OPENED: { en: 'Opened by the client', ar: 'فتحها العميل' },
+  VIEWED: { en: 'Opened by the client', ar: 'فتحها العميل' },
+  CLIENT_OPENED: { en: 'Opened by the client', ar: 'فتحها العميل' },
+  OTP_SENT: { en: 'Signature code sent', ar: 'أرسل رمز التوقيع' },
+  CODE_SENT: { en: 'Signature code sent', ar: 'أرسل رمز التوقيع' },
+  SIGNATURE_CODE_SENT: { en: 'Signature code sent', ar: 'أرسل رمز التوقيع' },
   CLIENT_SIGNED: { en: 'Signed by the client', ar: 'وقّعها العميل' },
   COUNTERSIGNED: {
     en: 'Countersigned by the certification body',
-    ar: 'تم التوقيع المشترك من جهة المنح',
+    ar: 'وقّعتها جهة المنح',
   },
   SUPERSEDED: { en: 'Replaced by a newer version', ar: 'استُبدلت بإصدار أحدث' },
-  TERMINATED: { en: 'Terminated', ar: 'تم إنهاء الاتفاقية' },
+  TERMINATED: { en: 'Terminated', ar: 'أُنهيت الاتفاقية' },
   AMENDMENT_CREATED: { en: 'Amendment created', ar: 'تم إنشاء تعديل' },
 }
 
@@ -31,19 +37,20 @@ const ACTOR_LABELS: Record<AgreementEventActor, { en: string; ar: string }> = {
   system: { en: 'System', ar: 'النظام' },
 }
 
-const formatEventTime = (iso: string) => {
+const formatEventTime = (iso: string, isAr: boolean) => {
   const date = new Date(iso)
-  const day = date.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
+  if (Number.isNaN(date.getTime())) return iso
+  const day = date.toLocaleDateString(isAr ? 'ar-EG' : 'en-GB', {
+    day: 'numeric',
+    month: isAr ? 'long' : 'short',
     year: 'numeric',
   })
   const time = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })
-  return `${day} · ${time}`
+  return `${day}، ${time}`
 }
 
-export function AgreementAuditTrail({ events, isAr }: AgreementAuditTrailProps) {
-  const newestFirst = [...events].reverse()
+export function AgreementAuditTrail({ events = [], isAr }: AgreementAuditTrailProps) {
+  const newestFirst = Array.isArray(events) ? [...events].reverse() : []
 
   return (
     <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
@@ -52,7 +59,7 @@ export function AgreementAuditTrail({ events, isAr }: AgreementAuditTrailProps) 
           <AppIcon icon={HistoryIcon} size={18} />
         </span>
         <h3 className="text-[15px] font-bold text-neutral-900">
-          {isAr ? 'سجل النشاط' : 'Audit trail'}
+          {isAr ? 'سجل التدقيق' : 'Audit trail'}
         </h3>
       </div>
 
@@ -63,8 +70,14 @@ export function AgreementAuditTrail({ events, isAr }: AgreementAuditTrailProps) 
       ) : (
         <ol className="mt-1 flex flex-col">
           {newestFirst.map((event) => {
-            const label = EVENT_LABELS[event.type]
-            const actor = ACTOR_LABELS[event.actor]
+            const label = EVENT_LABELS[event.type] ?? { en: event.type, ar: event.type }
+            const actorLabel =
+              event.actorName ||
+              (ACTOR_LABELS[event.actor]
+                ? isAr
+                  ? ACTOR_LABELS[event.actor].ar
+                  : ACTOR_LABELS[event.actor].en
+                : event.actor)
             return (
               <li
                 key={event.id}
@@ -72,13 +85,18 @@ export function AgreementAuditTrail({ events, isAr }: AgreementAuditTrailProps) 
               >
                 <span className="mt-1.5 size-2 shrink-0 rounded-full bg-primary" aria-hidden />
                 <div className="min-w-0 flex-1">
-                  <p className="text-[14px] font-medium text-neutral-900">
+                  <p className="text-[14px] font-semibold text-neutral-900">
                     {isAr ? label.ar : label.en}
                   </p>
-                  <p className="text-[12px] text-neutral-500">
-                    {isAr ? actor.ar : actor.en} ·{' '}
-                    <span dir="ltr">{formatEventTime(event.at)}</span>
+                  <p className="mt-0.5 text-[12px] text-neutral-500">
+                    {actorLabel} · <span>{formatEventTime(event.at, isAr)}</span>
                   </p>
+                  {event.ipAddress ? (
+                    <p className="mt-0.5 text-[11px] text-neutral-400">
+                      {isAr ? 'عنوان ' : ''}
+                      <span dir="ltr">IP {event.ipAddress}</span>
+                    </p>
+                  ) : null}
                   {event.reason ? (
                     <p className="mt-1 text-[12px] text-neutral-700">{event.reason}</p>
                   ) : null}

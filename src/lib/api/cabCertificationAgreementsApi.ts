@@ -1,4 +1,4 @@
-import { authorizedRequest } from '@/lib/api/authorizedClient'
+﻿import { authorizedRequest } from '@/lib/api/authorizedClient'
 import { DEFAULT_AGREEMENT_SECTIONS, type AgreementSection } from '@/lib/api/cabAgreementTermsApi'
 
 export type CertificationAgreementStatus =
@@ -16,6 +16,12 @@ export type AgreementEventType =
   | 'UPDATED'
   | 'SENT'
   | 'REMINDED'
+  | 'OPENED'
+  | 'VIEWED'
+  | 'CLIENT_OPENED'
+  | 'OTP_SENT'
+  | 'CODE_SENT'
+  | 'SIGNATURE_CODE_SENT'
   | 'CLIENT_SIGNED'
   | 'COUNTERSIGNED'
   | 'SUPERSEDED'
@@ -28,6 +34,8 @@ export interface AgreementEvent {
   id: string
   type: AgreementEventType
   actor: AgreementEventActor
+  actorName?: string
+  ipAddress?: string
   /** ISO timestamp. */
   at: string
   reason?: string
@@ -43,6 +51,9 @@ export interface AgreementSignRecord {
   signerTitle: string
   signedAt: string
   fingerprint: string
+  method?: string
+  ipAddress?: string
+  signatureDataUrl?: string
 }
 
 export interface CertificationAgreementValues {
@@ -102,6 +113,9 @@ interface CertificationAgreementDto extends Omit<CertificationAgreement, 'lastCh
   lastChange: string
   clientSignature?: SignatureDto
   cabSignature?: SignatureDto
+  auditTrail?: AgreementEvent[]
+  auditLogs?: AgreementEvent[]
+  history?: AgreementEvent[]
 }
 
 const formatDate = (iso: string) =>
@@ -110,11 +124,82 @@ const formatDate = (iso: string) =>
 const formatDateTime = (iso: string) =>
   `${formatDate(iso)} · ${new Date(iso).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}`
 
+function normalizeStatus(status: string): CertificationAgreementStatus {
+  const normalized = status?.toLowerCase?.() ?? 'draft'
+  if (normalized === 'signed_by_client') return 'client_signed'
+  return normalized as CertificationAgreementStatus
+}
+
+function buildFallbackEvents(dto: CertificationAgreementDto): AgreementEvent[] {
+  const events: AgreementEvent[] = []
+  if (dto.lastChange || dto.values?.agreementDate) {
+    events.push({
+      id: `${dto.id}-generated`,
+      type: 'GENERATED',
+      actor: 'cab',
+      at: dto.lastChange || dto.values.agreementDate,
+    })
+  }
+  if (dto.sentAt) {
+    events.push({
+      id: `${dto.id}-sent`,
+      type: 'SENT',
+      actor: 'cab',
+      at: dto.sentAt,
+    })
+  }
+  if (dto.lastReminderAt) {
+    events.push({
+      id: `${dto.id}-reminded`,
+      type: 'REMINDED',
+      actor: 'cab',
+      at: dto.lastReminderAt,
+    })
+  }
+  if (dto.clientSignature?.signedAt) {
+    events.push({
+      id: `${dto.id}-client-signed`,
+      type: 'CLIENT_SIGNED',
+      actor: 'client',
+      actorName: dto.clientSignature.signerName,
+      at: dto.clientSignature.signedAt,
+    })
+  }
+  if (dto.cabSignature?.signedAt) {
+    events.push({
+      id: `${dto.id}-countersigned`,
+      type: 'COUNTERSIGNED',
+      actor: 'cab',
+      actorName: dto.cabSignature.signerName,
+      at: dto.cabSignature.signedAt,
+    })
+  }
+  if (dto.terminatedAt) {
+    events.push({
+      id: `${dto.id}-terminated`,
+      type: 'TERMINATED',
+      actor: 'cab',
+      at: dto.terminatedAt,
+      reason: dto.terminationReason,
+    })
+  }
+  return events
+}
+
 function fromDto(dto: CertificationAgreementDto): CertificationAgreement {
   const signature = (record?: SignatureDto): AgreementSignRecord | undefined =>
     record ? { ...record, signedAt: formatDateTime(record.signedAt) } : undefined
+  const rawEvents = dto.events ?? dto.auditTrail ?? dto.auditLogs ?? dto.history
+  const events = Array.isArray(rawEvents) && rawEvents.length > 0 ? rawEvents : buildFallbackEvents(dto)
   return {
     ...dto,
+    status: normalizeStatus(dto.status),
+    values: {
+      ...dto.values,
+      standards: Array.isArray(dto.values?.standards) ? dto.values.standards : [],
+    },
+    sections: Array.isArray(dto.sections) ? dto.sections : [],
+    events,
     lastChange: formatDate(dto.lastChange),
     clientSignature: signature(dto.clientSignature),
     cabSignature: signature(dto.cabSignature),
@@ -159,8 +244,12 @@ export function refreshAgreementTerms(id: string): Promise<CertificationAgreemen
 }
 
 export const sendCertificationAgreement = (id: string) => request(`${agreementPath(id)}/send`, post())
+export const remindCertificationAgreement = (id: string) => request(`${agreementPath(id)}/remind`, post())
 export const recordClientSignature = (id: string) => request(`${agreementPath(id)}/client-signature`, post())
-export const countersignCertificationAgreement = (id: string) => request(`${agreementPath(id)}/countersign`, post())
+export const countersignCertificationAgreement = (id: string) =>
+  request(`${agreementPath(id)}/countersign`, post())
+export const terminateCertificationAgreement = (id: string, reason: string) =>
+  request(`${agreementPath(id)}/terminate`, post({ reason }))
 
 /** Replaces the {{tokens}} of a clause with the values of the agreement. */
 export function renderAgreementClauseText(

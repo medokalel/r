@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -301,15 +301,22 @@ export function CabCertificationAgreementsPage() {
                   {filteredAgreements.map((item, index) => (
                     <tr
                       key={item.id}
-                      onClick={() => navigate(cabCertificationAgreementDetailsPath(item.id))}
-                      className={cn('cursor-pointer transition-colors hover:bg-[#e8edfc]/40', index % 2 ? 'bg-[#f9fafc]' : 'bg-white')}
+                      className={cn('transition-colors hover:bg-[#e8edfc]/40', index % 2 ? 'bg-[#f9fafc]' : 'bg-white')}
                     >
                       <td className="px-5 py-4 whitespace-nowrap">
-                        <div className="font-semibold text-[15px] text-primary" dir="ltr">{item.reference}</div>
+                        <Link
+                          to={cabCertificationAgreementDetailsPath(item.id)}
+                          className="inline-block font-semibold text-[15px] text-primary hover:underline"
+                          dir="ltr"
+                        >
+                          {item.reference}
+                        </Link>
                         <div className="mt-0.5 text-[12px] text-neutral-500">{getAgreementKindLabel(item.kind, isAr)}</div>
                       </td>
                       <td className="px-4 py-4">
-                        <div className="truncate font-medium text-[15px] text-neutral-900">{isAr ? item.values.clientLegalNameAr : item.values.clientLegalNameEn}</div>
+                        <div className="truncate font-medium text-[15px] text-neutral-900">
+                          {isAr ? item.values.clientLegalNameAr : item.values.clientLegalNameEn}
+                        </div>
                         <div className="mt-0.5 text-[12px] text-neutral-500" dir="ltr">{item.values.offerRef} · {isAr ? item.values.clientCityAr : item.values.clientCityEn}</div>
                       </td>
                       <td className="px-4 py-4">
@@ -326,7 +333,7 @@ export function CabCertificationAgreementsPage() {
                       </td>
                       <td className="px-4 py-4 text-[13px] font-medium text-neutral-700 whitespace-nowrap">{getNextStepLabel(item.status)}</td>
                       <td className="px-4 py-4 text-start text-[13px] text-neutral-600 whitespace-nowrap" dir="ltr">{item.lastChange}</td>
-                      <td className="px-5 py-4 text-center whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-5 py-4 text-center whitespace-nowrap">
                         <button
                           type="button"
                           onClick={() => navigate(cabCertificationAgreementDetailsPath(item.id))}

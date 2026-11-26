@@ -12,24 +12,24 @@ import {
 interface AgreementVariablesPanelProps {
   presetKey: string
   /** Every registered audit client of this CAB. */
-  presetOptions: { value: string; label: string }[]
-  presets: Record<string, Record<string, string>>
+  presetOptions?: { value: string; label: string }[]
+  presets?: Record<string, Record<string, string>>
+  sections?: AgreementSection[]
   onPresetChange: (presetKey: string) => void
   showPreview: boolean
   onTogglePreview: () => void
   onInsertVariable: (variable: AgreementVariable) => void
-  sections: AgreementSection[]
 }
 
 export function AgreementVariablesPanel({
   presetKey,
-  presetOptions,
-  presets,
+  presetOptions = [],
+  presets = {},
+  sections = [],
   onPresetChange,
   showPreview,
   onTogglePreview,
   onInsertVariable,
-  sections,
 }: AgreementVariablesPanelProps) {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language?.startsWith('ar')
@@ -108,65 +108,6 @@ export function AgreementVariablesPanel({
           </Button>
         </div>
       </aside>
-
-      {/* Inline iCASCO Document Preview */}
-      {showPreview && (
-        <section className="rounded-[16px] border border-[#ececec] bg-white p-5">
-          <div className="flex items-center justify-between border-b border-[#f0f0f0] pb-3.5">
-            <div>
-              <h3 className="text-[15px] font-bold text-neutral-900">
-                {t(
-                  'cab.agreementTerms.variables.previewTitle',
-                  'Live agreement preview',
-                )}
-              </h3>
-              <p className="mt-0.5 text-[12px] text-neutral-500">
-                {t(
-                  'cab.agreementTerms.variables.previewSubtitle',
-                  'Interpolated with the selected client preset',
-                )}
-              </p>
-            </div>
-            <span className="rounded-full bg-[#eafaf1] px-2.5 py-1 text-[11px] font-bold text-[#16a34a]">
-              ISO/IEC 17021-1
-            </span>
-          </div>
-
-          <div className="mt-4 max-h-[520px] space-y-3 overflow-y-auto pe-1">
-            {sections.map((sec, idx) => {
-              const title = isAr
-                ? sec.titleAr || sec.titleEn
-                : sec.titleEn || sec.titleAr
-              const rawBody = isAr
-                ? sec.textAr || sec.textEn
-                : sec.textEn || sec.textAr
-              const body = interpolateAgreementText(rawBody, presetKey, presets)
-              return (
-                <div
-                  key={sec.id}
-                  className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-3.5"
-                >
-                  <div className="flex items-center gap-2 text-[13px] font-bold text-neutral-900">
-                    <span className="inline-flex size-5 shrink-0 items-center justify-center rounded-[6px] bg-[#e8edfc] text-[11px] font-bold text-primary">
-                      {idx + 1}
-                    </span>
-                    <span>
-                      {title ||
-                        t(
-                          'cab.agreementTerms.untitledSection',
-                          'Untitled section',
-                        )}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-[13px] leading-relaxed text-neutral-700">
-                    {body || '—'}
-                  </p>
-                </div>
-              )
-            })}
-          </div>
-        </section>
-      )}
     </div>
   )
 }

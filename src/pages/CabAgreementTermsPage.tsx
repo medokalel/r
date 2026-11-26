@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+﻿import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
@@ -7,6 +7,7 @@ import {
   NewAgreementSectionDrawer,
   type EditableFieldKey,
 } from '@/components/dashboard/cab/agreements/AgreementSectionCard'
+import { AgreementTermsPreview } from '@/components/dashboard/cab/agreements/AgreementTermsPreview'
 import { AgreementVariablesPanel } from '@/components/dashboard/cab/agreements/AgreementVariablesPanel'
 import {
   AddCircleIcon,
@@ -163,22 +164,46 @@ export function CabAgreementTermsPage() {
     setJustSaved(false)
   }
 
+  const persistSectionsUpdate = async (
+    nextSections: AgreementSection[],
+    successMessage: string,
+  ) => {
+    const previousState = state
+    const nextState = { ...state, sections: nextSections }
+    setState(nextState)
+    setSaving(true)
+    try {
+      setState(await persistAgreementTerms(nextState))
+      setPersisted(true)
+      setIsDirty(false)
+      setJustSaved(true)
+      toast.success(successMessage)
+    } catch (error) {
+      setState(previousState)
+      toast.error(getUserErrorMessage(error, t))
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const handleMoveSection = (index: number, direction: -1 | 1) => {
     const targetIndex = index + direction
     if (targetIndex < 0 || targetIndex >= state.sections.length) return
     const next = [...state.sections]
     const [moved] = next.splice(index, 1)
     next.splice(targetIndex, 0, moved)
-    setState((prev) => ({ ...prev, sections: next }))
-    setIsDirty(true)
-    setJustSaved(false)
+    void persistSectionsUpdate(
+      next,
+      isAr ? 'تم تغيير ترتيب البند وحفظ التغييرات' : 'Section order updated and saved',
+    )
   }
 
   const handleDeleteSection = (sectionId: string) => {
-    setState((prev) => ({ ...prev, sections: prev.sections.filter((sec) => sec.id !== sectionId) }))
     if (expandedId === sectionId) setExpandedId(null)
-    setIsDirty(true)
-    setJustSaved(false)
+    void persistSectionsUpdate(
+      state.sections.filter((sec) => sec.id !== sectionId),
+      isAr ? 'تم حذف البند وحفظ التغييرات' : 'Section deleted and saved',
+    )
   }
 
   /** Puts the token at the caret of the field being edited (the chips keep focus); appends when no field is focused. */
@@ -379,6 +404,16 @@ export function CabAgreementTermsPage() {
             />
           </div>
         </div>
+
+        {showPreview && (
+          <AgreementTermsPreview
+            sections={state.sections}
+            presetKey={presetKey}
+            presets={presets}
+            onClose={() => setShowPreview(false)}
+            initialLang={isAr ? 'ar' : 'en'}
+          />
+        )}
       </main>
     </CabLayout>
   )

@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
-import { AgreementAuditTrail } from '@/components/dashboard/cab/agreements/AgreementAuditTrail'
 import { AgreementDocumentView } from '@/components/dashboard/cab/agreements/AgreementDocumentView'
 import { AgreementStatusBadge } from '@/components/dashboard/cab/agreements/AgreementStatusBadge'
 import { CalloutCard } from '@/components/dashboard/cab/ReviewPrimitives'
@@ -15,6 +14,7 @@ import {
   ExportIcon,
   FileTextIcon,
   InfoIcon,
+  NotificationIcon,
   PdfFileIcon,
   RefreshIcon,
   SuccessCircleIcon,
@@ -22,21 +22,27 @@ import {
 } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
+import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { downloadAgreementPdf } from '@/lib/api/agreementPdfGenerator'
 import {
   countersignCertificationAgreement,
   getCertificationAgreementById,
   recordClientSignature,
-  sendCertificationAgreement,
-  updateCertificationAgreementValues,
   refreshAgreementTerms,
+  remindCertificationAgreement,
+  sendCertificationAgreement,
+  terminateCertificationAgreement,
   type CertificationAgreement,
   type CertificationAgreementStatus,
-  type CertificationAgreementValues,
 } from '@/lib/api/cabCertificationAgreementsApi'
 import { getAgreementKindLabel, getAgreementStatusLabel } from '@/lib/agreementStatus'
 import { getUserErrorMessage } from '@/lib/errorMessages'
-import { ROUTES, cabCertificationAgreementDetailsPath } from '@/lib/routes'
+import {
+  ROUTES,
+  cabCertificationAgreementCountersignPath,
+  cabCertificationAgreementDetailsPath,
+  cabCertificationAgreementEditPath,
+} from '@/lib/routes'
 import { toast } from '@/lib/toast'
 import { cn } from '@/lib/utils'
 
@@ -79,11 +85,9 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
   const [docLang, setDocLang] = useState<'en' | 'ar'>(isAr ? 'ar' : 'en')
-  const [isEditingValues, setIsEditingValues] = useState(false)
-  const [draftValues, setDraftValues] = useState<CertificationAgreementValues | null>(null)
+  const [isTerminating, setIsTerminating] = useState(false)
+  const [terminationReason, setTerminationReason] = useState('')
   const [syncedNotice, setSyncedNotice] = useState(false)
-  // Standards are edited as one comma-separated line and split on save.
-  const [standardsText, setStandardsText] = useState('')
 
   useEffect(() => {
     if (!agreementId) return
@@ -92,8 +96,6 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
       .then((loaded) => {
         if (!active) return
         setAgreement(loaded)
-        setDraftValues(loaded.values)
-        setStandardsText(loaded.values.standards.join(', '))
       })
       .catch(() => undefined) // not found: the "Agreement not found" view below
       .finally(() => active && setLoading(false))
@@ -110,7 +112,7 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
     )
   }
 
-  if (!agreement || !draftValues) {
+  if (!agreement) {
     return (
       <CabLayout>
         <CabHeader title={isAr ? 'اتفاقيات منح الشهادة' : 'Certification agreements'} />
@@ -132,8 +134,6 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
     try {
       const updated = await action()
       setAgreement(updated)
-      setDraftValues(updated.values)
-      setStandardsText(updated.values.standards.join(', '))
       after?.(updated)
     } catch (error) {
       toast.error(getUserErrorMessage(error, t))
@@ -151,36 +151,27 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
           : countersignCertificationAgreement(agreement.id),
     )
 
-  const handleSaveValues = () =>
-    run(
-      () =>
-        updateCertificationAgreementValues(agreement.id, {
-          ...draftValues,
-          standards: standardsText.split(',').map((standard) => standard.trim()).filter(Boolean),
-        }),
-      () => setIsEditingValues(false),
-    )
-
   const handleUseLatestTerms = () =>
     run(() => refreshAgreementTerms(agreement.id), () => {
       setSyncedNotice(true)
       setTimeout(() => setSyncedNotice(false), 2500)
     })
 
-  const editableFields: { key: keyof CertificationAgreementValues; label: string; dir: 'ltr' | 'rtl'; numeric?: boolean }[] = [
-    { key: 'clientLegalNameAr', label: isAr ? 'اسم العميل (عربي)' : 'Client legal name (Arabic)', dir: 'rtl' },
-    { key: 'clientLegalNameEn', label: isAr ? 'اسم العميل (إنجليزي)' : 'Client legal name (English)', dir: 'ltr' },
-    { key: 'clientCrNumber', label: isAr ? 'رقم السجل التجاري' : 'Client CR number', dir: 'ltr' },
-    { key: 'clientCityAr', label: isAr ? 'مدينة العميل (عربي)' : 'Client city (Arabic)', dir: 'rtl' },
-    { key: 'clientCityEn', label: isAr ? 'مدينة العميل (إنجليزي)' : 'Client city (English)', dir: 'ltr' },
-    { key: 'scopeAr', label: isAr ? 'نطاق الشهادة (عربي)' : 'Certification scope (Arabic)', dir: 'rtl' },
-    { key: 'scopeEn', label: isAr ? 'نطاق الشهادة (إنجليزي)' : 'Certification scope (English)', dir: 'ltr' },
-    { key: 'sitesCount', label: isAr ? 'عدد المواقع' : 'Number of sites', dir: 'ltr', numeric: true },
-    { key: 'totalFeeEn', label: isAr ? 'إجمالي الرسوم' : 'Total fee', dir: 'ltr' },
-    { key: 'signatoryAr', label: isAr ? 'المفوض بالتوقيع (عربي)' : 'Client signatory (Arabic)', dir: 'rtl' },
-    { key: 'signatoryEn', label: isAr ? 'المفوض بالتوقيع (إنجليزي)' : 'Client signatory (English)', dir: 'ltr' },
-    { key: 'offerRef', label: isAr ? 'مرجع العرض' : 'Offer reference', dir: 'ltr' },
-  ]
+  const handleSendReminder = () =>
+    run(
+      () => remindCertificationAgreement(agreement.id),
+      () => toast.success(isAr ? 'تم إرسال التذكير إلى العميل' : 'Reminder sent to client'),
+    )
+
+  const handleTerminate = () =>
+    run(
+      () => terminateCertificationAgreement(agreement.id, terminationReason.trim()),
+      () => {
+        setIsTerminating(false)
+        setTerminationReason('')
+        toast.success(isAr ? 'تم إنهاء الاتفاقية' : 'Agreement terminated')
+      },
+    )
 
   return (
     <CabLayout>
@@ -209,7 +200,7 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
           <div className="flex w-full shrink-0 flex-wrap items-center gap-2.5 lg:w-auto lg:flex-nowrap">
             {agreement.status === 'draft' && (
               <>
-                <Button type="button" variant="outline" size="sm" onClick={() => setIsEditingValues((p) => !p)} icon={<AppIcon icon={EditIcon} size={16} />} className="h-11 whitespace-nowrap">
+                <Button type="button" variant="outline" size="sm" onClick={() => navigate(cabCertificationAgreementEditPath(agreement.id))} icon={<AppIcon icon={EditIcon} size={16} />} className="h-11 whitespace-nowrap">
                   {isAr ? 'تعديل القيم' : 'Edit values'}
                 </Button>
                 <Button type="button" variant="outline" size="sm" onClick={() => void handleUseLatestTerms()} disabled={busy} icon={<AppIcon icon={syncedNotice ? CheckIcon : RefreshIcon} size={16} />} className="h-11 whitespace-nowrap">
@@ -218,11 +209,26 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
               </>
             )}
             <Button type="button" variant="outline" size="sm" onClick={() => downloadAgreementPdf(agreement, docLang)} icon={<AppIcon icon={PdfFileIcon} size={18} />} className="h-11 whitespace-nowrap">
-              {isAr ? 'تحميل PDF' : 'Download PDF'}
+              {isAr ? 'تنزيل PDF' : 'Download PDF'}
             </Button>
-            {(agreement.status === 'draft' || agreement.status === 'sent' || agreement.status === 'client_signed') && (
-              <Button type="button" variant="primary" size="sm" onClick={() => void handleAdvanceLifecycle()} disabled={busy} icon={<AppIcon icon={agreement.status === 'draft' ? ExportIcon : SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
-                {agreement.status === 'draft' ? (isAr ? 'إرسال للعميل' : 'Send to client') : agreement.status === 'sent' ? (isAr ? 'تسجيل توقيع العميل' : 'Record client signature') : (isAr ? 'التوقيع المشترك والتفعيل' : 'Countersign & activate')}
+            {agreement.status === 'sent' && (
+              <>
+                <Button type="button" variant="outline" size="sm" onClick={() => void handleAdvanceLifecycle()} disabled={busy} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'تسجيل توقيع العميل' : 'Record client signature'}
+                </Button>
+                <Button type="button" variant="primary" size="sm" onClick={() => void handleSendReminder()} disabled={busy} icon={<AppIcon icon={NotificationIcon} size={18} />} className="h-11 whitespace-nowrap">
+                  {isAr ? 'إرسال تذكير' : 'Send reminder'}
+                </Button>
+              </>
+            )}
+            {agreement.status === 'draft' && (
+              <Button type="button" variant="primary" size="sm" onClick={() => void handleAdvanceLifecycle()} disabled={busy} icon={<AppIcon icon={ExportIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {isAr ? 'إرسال للعميل' : 'Send to client'}
+              </Button>
+            )}
+            {agreement.status === 'client_signed' && (
+              <Button type="button" variant="primary" size="sm" onClick={() => navigate(cabCertificationAgreementCountersignPath(agreement.id))} disabled={busy} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+                {isAr ? 'التوقيع المقابل' : 'Countersign'}
               </Button>
             )}
           </div>
@@ -372,6 +378,18 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
           </CalloutCard>
         )}
 
+        {agreement.status === 'client_signed' && (
+          <CalloutCard
+            tone="amber"
+            icon={<AppIcon icon={InfoIcon} size={20} />}
+            title={isAr ? 'الخطوة التالية' : 'Next step'}
+          >
+            {isAr
+              ? 'وقّع العميل. وقّع من جهة المنح لتفعيل الاتفاقية.'
+              : 'Signed by client. Countersign on behalf of the certification body to activate the agreement.'}
+          </CalloutCard>
+        )}
+
         {agreement.status === 'draft' && (
           <CalloutCard
             tone="blue"
@@ -384,53 +402,46 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
           </CalloutCard>
         )}
 
-        {isEditingValues && agreement.status === 'draft' && (
-          <section className="rounded-[16px] border-2 border-primary bg-white p-5 shadow-sm">
-            <h3 className="mb-4 border-b border-[#f0f0f0] pb-3 text-[16px] font-bold text-neutral-900">
-              {isAr ? 'تعديل قيم ومتغيرات الاتفاقية' : 'Edit agreement variable values'}
-            </h3>
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {editableFields.map((field) => (
-                <div key={field.key} className="space-y-1.5">
-                  <label className="block text-[12px] font-semibold text-neutral-700">{field.label}</label>
-                  <input
-                    type="text"
-                    dir={field.dir}
-                    value={String(draftValues[field.key])}
-                    onChange={(e) =>
-                      setDraftValues({
-                        ...draftValues,
-                        [field.key]: field.numeric ? Math.max(Number(e.target.value.replace(/\D/g, '')), 1) : e.target.value,
-                        ...(field.key === 'totalFeeEn' ? { totalFeeAr: e.target.value.replace('SAR', 'ر.س') } : {}),
-                      })
-                    }
-                    className="h-11 w-full rounded-[10px] border border-[#e2e2e2] px-3.5 text-[14px] outline-none focus:border-primary"
-                  />
-                </div>
-              ))}
-              <div className="space-y-1.5">
-                <label className="block text-[12px] font-semibold text-neutral-700">{isAr ? 'المواصفات (مفصولة بفواصل)' : 'Standards (comma separated)'}</label>
-                <input
-                  type="text"
-                  dir="ltr"
-                  value={standardsText}
-                  onChange={(e) => setStandardsText(e.target.value)}
-                  className="h-11 w-full rounded-[10px] border border-[#e2e2e2] px-3.5 text-[14px] outline-none focus:border-primary"
-                />
-              </div>
-            </div>
-            <div className="mt-4 flex justify-end gap-2.5 border-t border-[#f0f0f0] pt-3.5">
-              <Button type="button" variant="outline" onClick={() => setIsEditingValues(false)} className="h-10 rounded-[10px] px-4 text-[13px]">{isAr ? 'إلغاء' : 'Cancel'}</Button>
-              <Button type="button" variant="primary" onClick={() => void handleSaveValues()} disabled={busy} icon={<AppIcon icon={CheckIcon} size={16} />} className="h-10 rounded-[10px] px-5 text-[13px]">{isAr ? 'حفظ التغييرات' : 'Save changes'}</Button>
-            </div>
-          </section>
-        )}
-
-        <AgreementDocumentView agreement={agreement} docLang={docLang} onChangeDocLang={setDocLang} isAr={isAr} />
-
-        <AgreementAuditTrail events={agreement.events} isAr={isAr} />
+        <AgreementDocumentView
+          agreement={agreement}
+          docLang={docLang}
+          onChangeDocLang={setDocLang}
+          isAr={isAr}
+          onRequestTerminate={() => setIsTerminating(true)}
+          busy={busy}
+        />
       </main>
 
+      <ConfirmDialog
+        open={isTerminating}
+        destructive
+        title={isAr ? 'إنهاء الاتفاقية' : 'Terminate agreement'}
+        description={
+          isAr
+            ? 'سيتم إنهاء هذه الاتفاقية بشكل دائم ولن يمكن التراجع عن هذا الإجراء. يرجى ذكر سبب الإنهاء.'
+            : 'This will permanently terminate the agreement and cannot be undone. Please provide a reason.'
+        }
+        confirmLabel={isAr ? 'تأكيد الإنهاء' : 'Confirm termination'}
+        cancelLabel={isAr ? 'إلغاء' : 'Cancel'}
+        confirmDisabled={!terminationReason.trim()}
+        onConfirm={handleTerminate}
+        onClose={() => {
+          setIsTerminating(false)
+          setTerminationReason('')
+        }}
+      >
+        <div className="space-y-1.5">
+          <label className="block text-[13px] font-semibold text-neutral-700">
+            {isAr ? 'سبب الإنهاء' : 'Termination reason'}
+          </label>
+          <textarea
+            value={terminationReason}
+            onChange={(e) => setTerminationReason(e.target.value)}
+            placeholder={isAr ? 'أدخل سبب إنهاء الاتفاقية...' : 'Enter the reason for terminating this agreement...'}
+            className="min-h-[88px] w-full resize-y rounded-[10px] border border-[#e2e2e2] px-3.5 py-2.5 text-[14px] text-neutral-900 outline-none focus:border-primary"
+          />
+        </div>
+      </ConfirmDialog>
     </CabLayout>
   )
 }
