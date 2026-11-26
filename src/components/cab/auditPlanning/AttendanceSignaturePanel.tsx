@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { SelectField } from '@/components/ui/Select'
 import { IcascoFileDropzone } from '@/components/cab/auditPlanning/shared'
@@ -12,12 +13,20 @@ interface AttendanceSignaturePanelProps {
   onRemoveAttendee: (id: string) => void
 }
 
+/** Stored organization values stay English; labels map to locale keys. */
+const ORG_LABEL_KEYS: Record<string, string> = {
+  Client: 'client',
+  'Audit team': 'auditTeam',
+  Observer: 'observer',
+}
+
 export function AttendanceSignaturePanel({
   title,
   attendees,
   onAddAttendee,
   onRemoveAttendee,
 }: AttendanceSignaturePanelProps) {
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [position, setPosition] = useState('')
   const [organization, setOrganization] = useState<AttendeeRecord['organization']>('Client')
@@ -138,15 +147,13 @@ export function AttendanceSignaturePanel({
     <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
       <div>
         <h3 className="text-[15px] font-bold text-neutral-900">{title}</h3>
-        <p className="mt-0.5 text-[12px] text-neutral-500">
-          Each attendee signs on this device: draw, type or upload the signature.
-        </p>
+        <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.attendance.description')}</p>
       </div>
 
       {/* Recorded Attendees */}
       {attendees.length === 0 ? (
         <div className="rounded-[8px] border border-dashed border-[#e2e2e2] bg-[#f9fafc] py-4 text-center text-[13px] text-neutral-400">
-          No attendee recorded yet.
+          {t('execution.attendance.empty')}
         </div>
       ) : (
         <div className="space-y-2">
@@ -159,11 +166,11 @@ export function AttendanceSignaturePanel({
                 <div className="flex items-center gap-2">
                   <span className="text-[14px] font-bold text-neutral-900">{att.name}</span>
                   <span className="rounded-[4px] bg-[#eef2ff] px-2 py-0.5 text-[11px] font-semibold text-[#1236a3]">
-                    {att.organization}
+                    {t(`execution.attendance.parties.${ORG_LABEL_KEYS[att.organization] ?? 'observer'}`)}
                   </span>
                   {att.attendedRemotely && (
                     <span className="rounded-[4px] bg-neutral-100 px-2 py-0.5 text-[11px] font-medium text-neutral-600">
-                      Remote
+                      {t('execution.attendance.remote')}
                     </span>
                   )}
                 </div>
@@ -175,17 +182,17 @@ export function AttendanceSignaturePanel({
                   att.signatureValue.startsWith('data:image') ? (
                     <img
                       src={att.signatureValue}
-                      alt={`${att.name} signature`}
+                      alt={t('execution.attendance.signatureOf', { name: att.name })}
                       className="h-9 rounded border border-[#e2e2e2] bg-white px-1"
                     />
                   ) : (
                     <span className="rounded-[4px] border border-[#bbf7d0] bg-[#f0fdf4] px-2.5 py-1 text-[11px] font-semibold text-[#15803d]">
-                      Signed ({att.signatureValue.replace(/^(typed:|file:)/, '')})
+                      {t('execution.attendance.signedWith', { value: att.signatureValue.replace(/^(typed:|file:)/, '') })}
                     </span>
                   )
                 ) : (
                   <span className="rounded-[4px] bg-[#fff7ed] px-2.5 py-1 text-[11px] font-medium text-[#ea580c]">
-                    Pending signature
+                    {t('execution.attendance.notSigned')}
                   </span>
                 )}
 
@@ -207,12 +214,12 @@ export function AttendanceSignaturePanel({
         onSubmit={handleSubmit}
         className="space-y-4 rounded-[10px] border border-[#e2e8f5] bg-[#f9fafc] p-4"
       >
-        <h4 className="text-[14px] font-bold text-neutral-900">Add an attendee</h4>
+        <h4 className="text-[14px] font-bold text-neutral-900">{t('execution.attendance.addTitle')}</h4>
 
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
           <div>
             <label className="mb-1 block text-[12px] font-medium text-neutral-700">
-              Name <span className="text-error-500">*</span>
+              {t('execution.attendance.name')} <span className="text-error-500">*</span>
             </label>
             <input
               type="text"
@@ -224,7 +231,7 @@ export function AttendanceSignaturePanel({
           </div>
 
           <div>
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Position</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.attendance.position')}</label>
             <input
               type="text"
               value={position}
@@ -235,12 +242,15 @@ export function AttendanceSignaturePanel({
 
           <div>
             <label className="mb-1 block text-[12px] font-medium text-neutral-700">
-              Organization
+              {t('execution.attendance.party')}
             </label>
             <SelectField
               value={organization}
               onChange={(val) => setOrganization(val as AttendeeRecord['organization'])}
-              options={['Client', 'Audit team', 'Observer']}
+              options={(['Client', 'Audit team', 'Observer'] as const).map((org) => ({
+                value: org,
+                label: t(`execution.attendance.parties.${ORG_LABEL_KEYS[org]}`),
+              }))}
               className="h-10"
             />
           </div>
@@ -251,13 +261,13 @@ export function AttendanceSignaturePanel({
             checked={attendedRemotely}
             onChange={() => setAttendedRemotely((prev) => !prev)}
           />
-          <span>Attended remotely</span>
+          <span>{t('execution.attendance.remoteLabel')}</span>
         </label>
 
         {/* Signature Pad */}
         <div className="space-y-2.5">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <span className="text-[12px] font-semibold text-neutral-700">Signature</span>
+            <span className="text-[12px] font-semibold text-neutral-700">{t('execution.attendance.signature')}</span>
             <div className="inline-flex rounded-[8px] border border-[#e2e2e2] bg-white p-0.5 text-[12px]">
               {(['draw', 'type', 'upload'] as const).map((mode) => (
                 <button
@@ -271,7 +281,7 @@ export function AttendanceSignaturePanel({
                       : 'text-neutral-600 hover:text-neutral-900',
                   )}
                 >
-                  {mode}
+                  {t(`execution.attendance.modes.${mode}`)}
                 </button>
               ))}
             </div>
@@ -295,7 +305,7 @@ export function AttendanceSignaturePanel({
                 />
                 {!hasDrawn && (
                   <span className="pointer-events-none absolute bottom-2 start-3 text-[11px] text-neutral-400">
-                    Sign here with your finger, pen or mouse
+                    {t('execution.attendance.signHere')}
                   </span>
                 )}
               </div>
@@ -305,17 +315,17 @@ export function AttendanceSignaturePanel({
                   onClick={clearCanvas}
                   className="h-8 rounded-[6px] border border-[#e2e2e2] bg-white px-3 text-[12px] font-medium text-neutral-700 hover:bg-neutral-50"
                 >
-                  Clear
+                  {t('execution.attendance.clear')}
                 </button>
                 <button
                   type="button"
                   onClick={handleUseSignature}
                   className="h-8 rounded-[6px] border border-[#1236a3] bg-white px-3 text-[12px] font-semibold text-[#1236a3] hover:bg-[#f3f6fd]"
                 >
-                  Use this signature
+                  {t('execution.attendance.saveSignature')}
                 </button>
                 {capturedSignature && (
-                  <span className="text-[12px] font-medium text-[#15803d]">✓ Signature captured</span>
+                  <span className="text-[12px] font-medium text-[#15803d]">{t('execution.attendance.captured')}</span>
                 )}
               </div>
             </div>
@@ -327,7 +337,7 @@ export function AttendanceSignaturePanel({
                 type="text"
                 value={typedSignature}
                 onChange={(e) => setTypedSignature(e.target.value)}
-                placeholder="Type full name as signature"
+                placeholder={t('execution.attendance.typePlaceholder')}
                 className="h-10 flex-1 rounded-[8px] border border-[#e2e2e2] bg-white px-3 font-serif text-[15px] italic text-[#1236a3]"
               />
               <button
@@ -335,7 +345,7 @@ export function AttendanceSignaturePanel({
                 onClick={handleUseSignature}
                 className="h-10 rounded-[8px] border border-[#1236a3] bg-white px-3.5 text-[12px] font-semibold text-[#1236a3] hover:bg-[#f3f6fd]"
               >
-                Use this signature
+                {t('execution.attendance.saveSignature')}
               </button>
             </div>
           )}
@@ -351,13 +361,11 @@ export function AttendanceSignaturePanel({
                 setUploadedFile(null)
                 setCapturedSignature('')
               }}
-              hint="PNG, JPG or SVG up to 5 MB"
+              hint={t('execution.dropzone.hintImage')}
             />
           )}
 
-          <p className="text-[11px] text-neutral-400">
-            Optional now: the attendee can also sign later.
-          </p>
+          <p className="text-[11px] text-neutral-400">{t('execution.attendance.signatureHint')}</p>
         </div>
 
         <div className="flex justify-end pt-1">
@@ -365,7 +373,7 @@ export function AttendanceSignaturePanel({
             type="submit"
             className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
           >
-            Add attendee
+            {t('execution.attendance.add')}
           </button>
         </div>
       </form>

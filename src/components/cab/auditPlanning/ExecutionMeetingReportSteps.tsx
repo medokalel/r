@@ -1,15 +1,32 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type {
   AttendeeRecord,
   AuditExecutionData,
   AuditPlan,
 } from '@/lib/api/cabAuditPlanningApi'
+import { getStepBlockers, isNonconformingResult } from '@/lib/api/auditExecutionGates'
 import { AttendanceSignaturePanel } from '@/components/cab/auditPlanning/AttendanceSignaturePanel'
-import { IsoDateField, formatIcascoDate } from '@/components/cab/auditPlanning/shared'
+import {
+  ExecutionGateFooter,
+  IsoDateField,
+  formatIcascoDate,
+} from '@/components/cab/auditPlanning/shared'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
+
+/** Stored checklist result values stay English; labels map to locale keys. */
+export const RESULT_LABEL_KEYS: Record<string, string> = {
+  Conforming: 'conforming',
+  Observation: 'observation',
+  OFI: 'ofi',
+  'Minor NC': 'minorNc',
+  'Major NC': 'majorNc',
+  'Not audited': 'notAudited',
+  'N/A': 'notApplicable',
+}
 
 interface ExecutionOpeningStepProps {
   plan: AuditPlan
@@ -24,31 +41,24 @@ export function ExecutionOpeningStep({
   onUpdateExecution,
   onComplete,
 }: ExecutionOpeningStepProps) {
+  const { t } = useTranslation()
   const om = execution.openingMeeting
+  const blockers = getStepBlockers(execution, 2)
   const update = (patch: Partial<AuditExecutionData['openingMeeting']>) =>
     onUpdateExecution({ ...execution, openingMeeting: { ...om, ...patch } })
-
-  const hasSignedClient = om.attendees.some(
-    (a) => a.organization === 'Client' && Boolean(a.signatureValue),
-  )
-  const hasTeamAttendee = om.attendees.some((a) => a.organization === 'Audit team')
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-[20px] font-bold text-neutral-900">Opening meeting</h2>
-        <p className="mt-0.5 text-[13px] text-neutral-500">
-          Confirm the agenda and confidentiality, test the remote tools and record who attended.
-        </p>
+        <h2 className="text-[20px] font-bold text-neutral-900">{t('execution.steps.2')}</h2>
+        <p className="mt-0.5 text-[13px] text-neutral-500">{t('execution.stepHints.opening')}</p>
       </div>
 
       {/* Opening meeting confirmations */}
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Opening meeting</h3>
-          <p className="mt-0.5 text-[12px] text-neutral-500">
-            Introduce the team, confirm the plan, the scope and the rules of the audit.
-          </p>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.opening.title')}</h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.opening.description')}</p>
         </div>
 
         <div className="space-y-2.5 text-[13px]">
@@ -59,8 +69,8 @@ export function ExecutionOpeningStep({
               className="mt-0.5"
             />
             <div>
-              <p className="font-semibold text-neutral-900">Agenda confirmed with the client</p>
-              <p className="text-[12px] text-neutral-500">Times, interviewees and guides are agreed.</p>
+              <p className="font-semibold text-neutral-900">{t('execution.opening.agendaConfirmed')}</p>
+              <p className="text-[12px] text-neutral-500">{t('execution.opening.agendaConfirmedHint')}</p>
             </div>
           </label>
 
@@ -71,17 +81,15 @@ export function ExecutionOpeningStep({
               className="mt-0.5"
             />
             <div>
-              <p className="font-semibold text-neutral-900">Confidentiality statement given</p>
-              <p className="text-[12px] text-neutral-500">
-                The client was told how information obtained during the audit is protected.
-              </p>
+              <p className="font-semibold text-neutral-900">{t('execution.opening.confidentiality')}</p>
+              <p className="text-[12px] text-neutral-500">{t('execution.opening.confidentialityHint')}</p>
             </div>
           </label>
         </div>
 
         <div className="space-y-1.5">
           <label className="block text-[13px] font-medium text-neutral-800">
-            Opening meeting notes
+            {t('execution.opening.notes')}
           </label>
           <textarea
             value={om.meetingNotes}
@@ -94,19 +102,19 @@ export function ExecutionOpeningStep({
 
       {/* Agenda summary */}
       <section className="space-y-3 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
-        <h3 className="text-[15px] font-bold text-neutral-900">Agenda</h3>
+        <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.opening.agendaTitle')}</h3>
         {plan.agendaActivities.length === 0 ? (
-          <p className="text-[13px] text-neutral-500">The plan has no agenda yet.</p>
+          <p className="text-[13px] text-neutral-500">{t('execution.opening.noAgenda')}</p>
         ) : (
           <div className="overflow-x-auto rounded-[8px] border border-[#ececec]">
             <table className="w-full border-collapse text-start text-[14px]">
               <thead>
                 <tr className="bg-[#1236a3] text-white">
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Date</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Time (AST)</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Activity</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Auditor(s)</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Duration</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.opening.columns.date')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.opening.columns.time')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.opening.columns.activity')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.opening.columns.auditors')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.opening.columns.duration')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f0f0f0]">
@@ -143,7 +151,7 @@ export function ExecutionOpeningStep({
 
       {/* Opening meeting attendance */}
       <AttendanceSignaturePanel
-        title="Opening meeting attendance"
+        title={t('execution.attendance.titleOpening')}
         attendees={om.attendees}
         onAddAttendee={(att: AttendeeRecord) => update({ attendees: [...om.attendees, att] })}
         onRemoveAttendee={(id: string) =>
@@ -152,28 +160,11 @@ export function ExecutionOpeningStep({
       />
 
       {/* To complete this step */}
-      <div className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#fde68a] bg-[#fffbeb] p-4 sm:flex-row sm:items-center">
-        <div className="text-[13px]">
-          <p className="font-bold text-[#92400e]">To complete this step</p>
-          <ul className="mt-1 list-disc space-y-0.5 ps-5 text-[12px] text-[#b45309]">
-            {!om.agendaConfirmed && <li>Confirm the agenda with the client.</li>}
-            {!om.confidentialityGiven && <li>Confirm the confidentiality statement.</li>}
-            {!hasSignedClient && <li>At least one client attendee must sign the attendance.</li>}
-            {!hasTeamAttendee && <li>Add the audit team to the attendance.</li>}
-            {om.agendaConfirmed && om.confidentialityGiven && hasSignedClient && hasTeamAttendee && (
-              <li>All opening meeting requirements are satisfied.</li>
-            )}
-          </ul>
-        </div>
-
-        <button
-          type="button"
-          onClick={onComplete}
-          className="h-10 shrink-0 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-        >
-          Complete: Opening meeting
-        </button>
-      </div>
+      <ExecutionGateFooter
+        blockers={blockers}
+        completeLabel={t('execution.complete', { step: t('execution.steps.2') })}
+        onComplete={onComplete}
+      />
     </div>
   )
 }
@@ -194,9 +185,18 @@ export function ExecutionTeamReviewStep({
   onComplete,
 }: ExecutionTeamReviewStepProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [wrapDate, setWrapDate] = useState(plan.proposedStartDate)
   const [wrapNotes, setWrapNotes] = useState('')
   const tr = execution.teamReview
+  const blockers = getStepBlockers(execution, 4)
+
+  const ncItems = execution.checklists.flatMap((sec) =>
+    sec.items
+      .filter((item) => isNonconformingResult(item.result))
+      .map((item) => ({ section: sec.title, ...item })),
+  )
+  void nonconformingItems
 
   const update = (patch: Partial<AuditExecutionData['teamReview']>) =>
     onUpdateExecution({ ...execution, teamReview: { ...tr, ...patch } })
@@ -216,48 +216,66 @@ export function ExecutionTeamReviewStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-[20px] font-bold text-neutral-900">Team review</h2>
-        <p className="mt-0.5 text-[13px] text-neutral-500">
-          Record the daily wrap-ups and agree the grading of the findings.
-        </p>
+        <h2 className="text-[20px] font-bold text-neutral-900">{t('execution.steps.4')}</h2>
+        <p className="mt-0.5 text-[13px] text-neutral-500">{t('execution.stepHints.teamReview')}</p>
       </div>
 
       {/* Findings raised */}
       <section className="space-y-3 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
-            <h3 className="text-[15px] font-bold text-neutral-900">Findings raised</h3>
-            <p className="mt-0.5 text-[12px] text-neutral-500">
-              Findings of the audit report. Edit or submit them in the reporting workspace.
-            </p>
+            <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.teamReview.findingsTitle')}</h3>
+            <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.teamReview.findingsDescription')}</p>
           </div>
           <button
             type="button"
             onClick={() => navigate(ROUTES.cabAuditReporting)}
             className="text-[13px] font-semibold text-[#1236a3] hover:underline"
           >
-            Open reporting workspace
+            {t('execution.teamReview.openWorkspace')}
           </button>
         </div>
 
-        {nonconformingItems === 0 ? (
+        {ncItems.length === 0 ? (
           <p className="rounded-[8px] border border-dashed border-[#e2e2e2] bg-[#f9fafc] py-4 text-center text-[13px] text-neutral-400">
-            No finding raised.
+            {t('execution.teamReview.noFindings')}
           </p>
         ) : (
-          <div className="rounded-[8px] border border-[#fecaca] bg-[#fef2f2] p-3 text-[13px] font-medium text-[#b91c1c]">
-            {nonconformingItems} nonconforming checklist item(s) recorded during Conduct.
-          </div>
+          <ul className="space-y-2" data-testid="execution-findings">
+            {ncItems.map((item) => (
+              <li
+                key={item.id}
+                className="flex flex-wrap items-center justify-between gap-2 rounded-[8px] border border-[#ececec] px-3.5 py-2.5 text-[13px]"
+              >
+                <div className="min-w-0">
+                  <span className="me-2 inline-block rounded-[4px] bg-[#eef2ff] px-2 py-0.5 text-[11px] font-bold text-[#1236a3]">
+                    {item.clauseRef}
+                  </span>
+                  <span className="font-medium text-neutral-900">{item.title}</span>
+                  <span className="ms-2 text-[12px] text-neutral-500">
+                    {t(`execution.results.${RESULT_LABEL_KEYS[item.result] ?? 'notAudited'}`)}
+                  </span>
+                </div>
+                {item.findingCode ? (
+                  <span className="inline-flex items-center rounded-[6px] border border-[#fecaca] bg-[#fef2f2] px-2.5 py-1 text-[12px] font-semibold text-[#b91c1c]">
+                    {t('execution.conduct.finding', { code: item.findingCode })}
+                  </span>
+                ) : (
+                  <span className="text-[12px] font-medium text-[#b45309]">
+                    {t('execution.blockers.ncWithoutFinding', { count: 1 })}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
         )}
       </section>
 
       {/* Daily wrap-ups */}
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Daily wrap-ups</h3>
-          <p className="mt-0.5 text-[12px] text-neutral-500">
-            What the team agreed at the end of each audit day.
-          </p>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.teamReview.wrapUpsTitle')}</h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.teamReview.wrapUpsDescription')}</p>
         </div>
 
         {tr.dailyWrapUps.length > 0 && (
@@ -273,17 +291,17 @@ export function ExecutionTeamReviewStep({
 
         <form onSubmit={handleAddWrapUp} className="space-y-3">
           <div className="max-w-xs">
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Date</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.teamReview.date')}</label>
             <IsoDateField value={wrapDate} onChange={setWrapDate} className="[&_button]:h-10" />
           </div>
 
           <div>
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Wrap-up</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.teamReview.wrapUp')}</label>
             <textarea
               value={wrapNotes}
               onChange={(e) => setWrapNotes(e.target.value)}
               rows={2}
-              placeholder="Summarize daily progress, evidence gaps, and next-day priorities..."
+              placeholder={t('execution.teamReview.wrapUpPlaceholder')}
               className="w-full rounded-[8px] border border-[#e2e2e2] p-3 text-[13px]"
             />
           </div>
@@ -292,14 +310,14 @@ export function ExecutionTeamReviewStep({
             type="submit"
             className="h-10 rounded-[8px] border border-[#1236a3] bg-white px-4 text-[13px] font-semibold text-[#1236a3] hover:bg-[#f3f6fd]"
           >
-            Add wrap-up
+            {t('execution.teamReview.addWrapUp')}
           </button>
         </form>
       </section>
 
       {/* Grading consensus */}
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
-        <h3 className="text-[15px] font-bold text-neutral-900">Grading consensus</h3>
+        <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.teamReview.consensusTitle')}</h3>
 
         <label className="flex cursor-pointer items-start gap-3 rounded-[8px] border border-[#ececec] px-4 py-3 text-[13px]">
           <Checkbox
@@ -308,18 +326,14 @@ export function ExecutionTeamReviewStep({
             className="mt-0.5"
           />
           <div>
-            <p className="font-semibold text-neutral-900">
-              The team agrees on the grading of every finding
-            </p>
-            <p className="text-[12px] text-neutral-500">
-              Major, minor, observation or opportunity, per the scheme rules.
-            </p>
+            <p className="font-semibold text-neutral-900">{t('execution.teamReview.consensus')}</p>
+            <p className="text-[12px] text-neutral-500">{t('execution.teamReview.consensusHint')}</p>
           </div>
         </label>
 
         <div>
           <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-            Team review notes
+            {t('execution.teamReview.notes')}
           </label>
           <textarea
             value={tr.internalTeamNotes}
@@ -331,28 +345,20 @@ export function ExecutionTeamReviewStep({
       </section>
 
       {/* To complete this step */}
-      <div className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#fde68a] bg-[#fffbeb] p-4 sm:flex-row sm:items-center">
-        <div className="text-[13px]">
-          <p className="font-bold text-[#92400e]">To complete this step</p>
-          <ul className="mt-1 list-disc space-y-0.5 ps-5 text-[12px] text-[#b45309]">
-            {tr.dailyWrapUps.length === 0 && <li>Record at least one team wrap-up.</li>}
-            {!tr.gradingConsensus && <li>Confirm the team agreed the grading of the findings.</li>}
-            {tr.dailyWrapUps.length > 0 && tr.gradingConsensus && (
-              <li>All team review requirements are satisfied.</li>
-            )}
-          </ul>
-        </div>
-
-        <button
-          type="button"
-          onClick={onComplete}
-          className="h-10 shrink-0 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-        >
-          Complete: Team review
-        </button>
-      </div>
+      <ExecutionGateFooter
+        blockers={blockers}
+        completeLabel={t('execution.complete', { step: t('execution.steps.4') })}
+        onComplete={onComplete}
+      />
     </div>
   )
+}
+
+/** Stored client-position values stay English; labels map to locale keys. */
+const CLIENT_POSITION_LABEL_KEYS: Record<string, string> = {
+  Agrees: 'agreed',
+  'Partly agrees': 'partiallyAgreed',
+  Disagrees: 'disagreed',
 }
 
 interface ExecutionClosingStepProps {
@@ -372,33 +378,28 @@ export function ExecutionClosingStep({
   onUpdateExecution,
   onComplete,
 }: ExecutionClosingStepProps) {
+  const { t } = useTranslation()
   const cm = execution.closingMeeting
+  const blockers = getStepBlockers(execution, 5)
   const update = (patch: Partial<AuditExecutionData['closingMeeting']>) =>
     onUpdateExecution({ ...execution, closingMeeting: { ...cm, ...patch } })
 
   const plannedDays = plan.reviewedDurationDays || 2.5
   const diffPercent =
     daysSpent === 0 ? 0 : Math.round(((daysSpent - plannedDays) / plannedDays) * 100)
-  const hasSignedClient = cm.attendees.some(
-    (a) => a.organization === 'Client' && Boolean(a.signatureValue),
-  )
 
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-[20px] font-bold text-neutral-900">Closing meeting</h2>
-        <p className="mt-0.5 text-[13px] text-neutral-500">
-          Present the findings, record the client's position, the response deadline and the signatures.
-        </p>
+        <h2 className="text-[20px] font-bold text-neutral-900">{t('execution.steps.5')}</h2>
+        <p className="mt-0.5 text-[13px] text-neutral-500">{t('execution.stepHints.closing')}</p>
       </div>
 
       {/* Closing meeting details */}
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Closing meeting</h3>
-          <p className="mt-0.5 text-[12px] text-neutral-500">
-            Present the findings and the conclusions, agree the next steps and the response deadline.
-          </p>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.closing.title')}</h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.closing.description')}</p>
         </div>
 
         <label className="flex cursor-pointer items-start gap-3 rounded-[8px] border border-[#ececec] px-4 py-3 text-[13px]">
@@ -409,17 +410,15 @@ export function ExecutionClosingStep({
           />
           <div>
             <p className="font-semibold text-neutral-900">
-              Findings presented to the client ({nonconformingItems})
+              {t('execution.closing.findingsPresented', { count: nonconformingItems })}
             </p>
-            <p className="text-[12px] text-neutral-500">
-              Each finding, its grading and the evidence were explained.
-            </p>
+            <p className="text-[12px] text-neutral-500">{t('execution.closing.findingsPresentedHint')}</p>
           </div>
         </label>
 
         <div>
           <span className="mb-1.5 block text-[13px] font-medium text-neutral-800">
-            Client's position on the findings
+            {t('execution.closing.clientPosition')}
           </span>
           <div className="flex flex-wrap gap-2">
             {(['Agrees', 'Partly agrees', 'Disagrees'] as const).map((pos) => (
@@ -434,7 +433,7 @@ export function ExecutionClosingStep({
                     : 'border-[#e2e2e2] bg-white text-neutral-700 hover:bg-neutral-50',
                 )}
               >
-                {pos}
+                {t(`execution.closing.positions.${CLIENT_POSITION_LABEL_KEYS[pos]}`)}
               </button>
             ))}
           </div>
@@ -442,13 +441,13 @@ export function ExecutionClosingStep({
 
         <div>
           <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-            Client comments
+            {t('execution.closing.clientComments')}
           </label>
           <textarea
             value={cm.clientComments}
             onChange={(e) => update({ clientComments: e.target.value })}
             rows={2}
-            placeholder="Record any disagreement and how it was resolved or left open."
+            placeholder={t('execution.closing.clientCommentsHint')}
             className="w-full rounded-[8px] border border-[#e2e2e2] p-3 text-[13px]"
           />
         </div>
@@ -456,7 +455,7 @@ export function ExecutionClosingStep({
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div className="w-full max-w-xs">
             <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-              Nonconformity response due by
+              {t('execution.closing.ncDueDate')}
             </label>
             <IsoDateField
               value={cm.ncResponseDueBy}
@@ -465,13 +464,13 @@ export function ExecutionClosingStep({
             />
           </div>
           <span className="text-[13px] font-semibold text-neutral-700">
-            Nonconformities raised: {nonconformingItems}
+            {t('execution.closing.ncDueDateHint', { count: nonconformingItems })}
           </span>
         </div>
 
         <div>
           <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-            Closing meeting notes
+            {t('execution.closing.notes')}
           </label>
           <textarea
             value={cm.closingNotes}
@@ -485,23 +484,21 @@ export function ExecutionClosingStep({
       {/* Audit time check */}
       <section className="space-y-3 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Audit time check</h3>
-          <p className="mt-0.5 text-[12px] text-neutral-500">
-            Time delivered against the planned audit days (IAF MD 5).
-          </p>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.closing.timeTitle')}</h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.closing.timeDescription')}</p>
         </div>
 
         <div className="grid grid-cols-3 gap-4 rounded-[10px] border border-[#ececec] bg-[#f9fafc] p-4 text-center">
           <div>
-            <span className="block text-[12px] text-neutral-500">Planned days</span>
+            <span className="block text-[12px] text-neutral-500">{t('execution.closing.plannedDays')}</span>
             <span className="mt-1 block text-[18px] font-bold text-neutral-900">{plannedDays}</span>
           </div>
           <div>
-            <span className="block text-[12px] text-neutral-500">Days spent</span>
+            <span className="block text-[12px] text-neutral-500">{t('execution.closing.actualDays')}</span>
             <span className="mt-1 block text-[18px] font-bold text-[#1236a3]">{daysSpent}</span>
           </div>
           <div>
-            <span className="block text-[12px] text-neutral-500">Difference</span>
+            <span className="block text-[12px] text-neutral-500">{t('execution.closing.variance')}</span>
             <span className="mt-1 block text-[18px] font-bold text-neutral-900">{diffPercent}%</span>
           </div>
         </div>
@@ -509,7 +506,7 @@ export function ExecutionClosingStep({
 
       {/* Closing meeting attendance */}
       <AttendanceSignaturePanel
-        title="Closing meeting attendance"
+        title={t('execution.attendance.titleClosing')}
         attendees={cm.attendees}
         onAddAttendee={(att: AttendeeRecord) => update({ attendees: [...cm.attendees, att] })}
         onRemoveAttendee={(id: string) =>
@@ -518,44 +515,39 @@ export function ExecutionClosingStep({
       />
 
       {/* To complete this step */}
-      <div className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#fde68a] bg-[#fffbeb] p-4 sm:flex-row sm:items-center">
-        <div className="text-[13px]">
-          <p className="font-bold text-[#92400e]">To complete this step</p>
-          <ul className="mt-1 list-disc space-y-0.5 ps-5 text-[12px] text-[#b45309]">
-            {!cm.findingsPresented && <li>Confirm the findings were presented to the client.</li>}
-            {!cm.clientPosition && <li>Record whether the client agrees with the findings.</li>}
-            {!hasSignedClient && (
-              <li>At least one client attendee must sign the closing meeting attendance.</li>
-            )}
-            {execution.timeSpent.length === 0 && <li>Record the time spent by the audit team.</li>}
-          </ul>
-        </div>
-
-        <button
-          type="button"
-          onClick={onComplete}
-          className="h-10 shrink-0 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-        >
-          Complete: Closing meeting
-        </button>
-      </div>
+      <ExecutionGateFooter
+        blockers={blockers}
+        completeLabel={t('execution.complete', { step: t('execution.steps.5') })}
+        onComplete={onComplete}
+      />
     </div>
   )
 }
 
 interface ExecutionReportStepProps {
   execution: AuditExecutionData
+  /** Hand-off data the stage report page (phase 3) will open with. */
+  totalItems: number
+  auditedItems: number
+  findingsCount: number
+  daysSpent: number
   onUpdateExecution: (next: AuditExecutionData) => void
-  onFinalize: () => void
+  onComplete: () => void
 }
 
 export function ExecutionReportStep({
   execution,
+  totalItems,
+  auditedItems,
+  findingsCount,
+  daysSpent,
   onUpdateExecution,
-  onFinalize,
+  onComplete,
 }: ExecutionReportStepProps) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const openingCompleted = execution.completedSteps.includes(2)
+  const blockers = getStepBlockers(execution, 6)
   const rpt = execution.report
   const update = (patch: Partial<AuditExecutionData['report']>) =>
     onUpdateExecution({ ...execution, report: { ...rpt, ...patch } })
@@ -563,42 +555,90 @@ export function ExecutionReportStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-[20px] font-bold text-neutral-900">Report</h2>
-        <p className="mt-0.5 text-[13px] text-neutral-500">
-          The stage report is generated from the audit, reviewed, approved and issued to the client.
-        </p>
+        <h2 className="text-[20px] font-bold text-neutral-900">{t('execution.steps.6')}</h2>
+        <p className="mt-0.5 text-[13px] text-neutral-500">{t('execution.stepHints.report')}</p>
       </div>
 
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div>
-          <h3 className="text-[15px] font-bold text-neutral-900">Stage report</h3>
-          <p className="mt-0.5 text-[12px] text-neutral-500">
-            Generated from the plan, the checklist results and the findings.
-          </p>
+          <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.reportStep.title')}</h3>
+          <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.reportStep.description')}</p>
         </div>
 
         {!openingCompleted ? (
           <div className="rounded-[8px] border border-dashed border-[#e2e2e2] bg-[#f9fafc] p-5 text-[13px] text-neutral-500">
-            The report opens when the opening meeting is completed.
+            {t('execution.reportStep.noReport', 'The report opens when the opening meeting is completed.')}
           </div>
         ) : (
           <>
+            {/* Hand-off to the Stage Report page: the data it will open with */}
+            <dl
+              className="grid grid-cols-1 gap-x-6 gap-y-3 rounded-[10px] border border-[#ececec] bg-[#f9fafc] p-4 sm:grid-cols-3"
+              data-testid="report-handoff"
+            >
+              <div>
+                <dt className="text-[12px] text-neutral-500">
+                  {t('execution.reportStep.checklistCoverage', 'Checklist coverage')}
+                </dt>
+                <dd className="mt-0.5 text-[13px] font-semibold text-neutral-900">
+                  {t('execution.reportStep.coverageValue', { answered: auditedItems, total: totalItems })}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-[12px] text-neutral-500">
+                  {t('execution.reportStep.findings', 'Findings')}
+                </dt>
+                <dd className="mt-0.5 text-[13px] font-semibold text-neutral-900">{findingsCount}</dd>
+              </div>
+              <div>
+                <dt className="text-[12px] text-neutral-500">
+                  {t('execution.reportStep.timeDelivered', 'Time delivered')}
+                </dt>
+                <dd className="mt-0.5 text-[13px] font-semibold text-neutral-900">
+                  {t('execution.reportStep.daysValue', { days: daysSpent })}
+                </dd>
+              </div>
+            </dl>
+
+            {rpt.handoffReady && (
+              <p
+                data-testid="handoff-ready"
+                className="rounded-[8px] border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-2.5 text-[13px] font-medium text-[#15803d]"
+              >
+                {t('execution.reportStep.handoffReadyState')}
+              </p>
+            )}
+
+            <div>
+              <button
+                type="button"
+                disabled
+                data-testid="open-stage-report"
+                className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {t('execution.reportStep.open', 'Open stage report')}
+              </button>
+              <p className="mt-1 text-[11px] text-neutral-400">
+                {t('execution.reportStep.openPendingHint', 'Available once the stage report page is connected.')}
+              </p>
+            </div>
+
             <div>
               <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-                Executive summary
+                {t('execution.reportStep.executiveSummary')}
               </label>
               <textarea
                 value={rpt.executiveSummary}
                 onChange={(e) => update({ executiveSummary: e.target.value })}
                 rows={3}
-                placeholder="Summarize the audit scope, strengths, areas of concern, and overall readiness..."
+                placeholder={t('execution.reportStep.executiveSummaryPlaceholder')}
                 className="w-full rounded-[8px] border border-[#e2e2e2] p-3 text-[13px]"
               />
             </div>
 
             <div>
               <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-                Lead auditor recommendation
+                {t('execution.reportStep.recommendation')}
               </label>
               <textarea
                 value={rpt.recommendation}
@@ -608,26 +648,27 @@ export function ExecutionReportStep({
               />
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[#f0f0f0] pt-4">
+            <div className="flex flex-wrap items-center gap-3 border-t border-[#f0f0f0] pt-4">
               <button
                 type="button"
                 onClick={() => navigate(ROUTES.cabAuditReporting)}
                 className="h-10 rounded-[8px] border border-[#e2e2e2] bg-white px-4 text-[13px] font-medium text-neutral-700 hover:bg-neutral-50"
               >
-                Open Audit Reporting register
-              </button>
-
-              <button
-                type="button"
-                onClick={onFinalize}
-                className="h-10 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white hover:bg-[#0e2a80]"
-              >
-                Finalize & submit report
+                {t('execution.reportStep.openRegister')}
               </button>
             </div>
           </>
         )}
       </section>
+
+      {/* To complete this step: phase 2 prepares the hand-off only; the report
+          is reviewed and issued from the stage report workspace (phase 3). */}
+      <ExecutionGateFooter
+        blockers={blockers}
+        completeLabel={t('execution.reportStep.markHandoffReady')}
+        onComplete={onComplete}
+        completeDisabled={blockers.length > 0 || rpt.handoffReady}
+      />
     </div>
   )
 }

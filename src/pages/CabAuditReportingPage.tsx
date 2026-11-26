@@ -7,7 +7,7 @@ import { CabTourStep } from '@/components/dashboard/cab/CabDashboardTourStep'
 import { useAuditReportingTourSteps } from '@/config/auditReportingTourSteps'
 import { useOptionalTour } from '@/context/TourContext'
 import { AddCircleIcon, AppIcon, SearchIcon, DownloadTrayIcon } from '@/components/icons'
-import { DEMO_SCOPE, SCHEME_RULES, buildReportGates, downloadFile, toCsv } from '@/lib/api/cabAuditReportingApi'
+import { DEMO_SCOPE, SCHEME_RULES, buildReportGates, downloadFile, listFindingRecords, toCsv } from '@/lib/api/cabAuditReportingApi'
 import { ScopeBanner, Toast } from '@/components/cab/auditReporting/shared'
 import type { EvidenceTask, Finding, PageState, TabId } from '@/components/cab/auditReporting/shared'
 import { SEED_EVIDENCE, SEED_FINDINGS } from '@/components/cab/auditReporting/shared'
@@ -23,7 +23,21 @@ function CabAuditReportingContent() {
   const [state, setState] = useState<PageState>('ready')
   const [toast, setToast] = useState<string | null>(null)
   const [evidence, setEvidence] = useState<EvidenceTask[]>(SEED_EVIDENCE)
-  const [findings] = useState<Finding[]>(SEED_FINDINGS)
+  // Findings raised from audits (local store) appear above the seed examples,
+  // with the fields entered on the Add finding form and their audit binding.
+  const [findings] = useState<Finding[]>(() => [
+    ...listFindingRecords().map((r) => ({
+      id: r.findingCode ?? r.id,
+      type: r.findingType,
+      requirementRef: r.requirementRef,
+      classification: r.classification,
+      statement: r.statement,
+      linkedEvidence: r.evidenceLinks,
+      status: r.status,
+      dueDate: r.dueDate,
+    })),
+    ...SEED_FINDINGS,
+  ])
   const [query, setQuery] = useState('')
   const [statusF, setStatusF] = useState('All')
   const [frozen, setFrozen] = useState(false)

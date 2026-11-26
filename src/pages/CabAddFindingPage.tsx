@@ -1,50 +1,124 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { SCHEME_RULES, validateFindingForSubmit } from '@/lib/api/cabAuditReportingApi'
-import { FIELD_KEYS } from '@/lib/api/cabAuditReportingApi'
+import { FIELD_KEYS, saveFindingRecord, type FindingRecord } from '@/lib/api/cabAuditReportingApi'
+import {
+  fetchAuditPlanById,
+  saveAuditPlan,
+  type AuditPlan,
+} from '@/lib/api/cabAuditPlanningApi'
+import { attachFindingToItem, nextFindingCode } from '@/lib/api/auditExecutionGates'
 import { CARD, GHOST_BTN, INPUT, PRIMARY_BTN, ScopeBanner, Toast } from '@/components/cab/auditReporting/shared'
+import { ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
+/**
+ * Add finding. Opens EMPTY: no demo audit, no prefilled statement or evidence.
+ * When opened from the conduct step (?planId=..&itemId=..&clauseRef=..&result=..&returnTo=..)
+ * the form is bound to that audit and checklist item: submitting records the
+ * finding code on the item and returns to the execution workspace.
+ */
 export function CabAddFindingPage() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const tr = (k: string, fb: string) => t(k, fb)
 
-  const [findingType, setFindingType] = useState('Nonconformity')
-  const [classification, setClassification] = useState('')
-  const [requirementRef, setRequirementRef] = useState('ISO 9001:2015, Clause 8.5.1')
-  const [evidenceText, setEvidenceText] = useState('Storage area temperature records for March were available for 1-10 March only (DOC-102).')
-  const [evidenceLinks, setEvidenceLinks] = useState<string[]>(['EV-0103'])
-  const [statement, setStatement] = useState('Complete temperature records for the storage area were not maintained per the referenced requirement.')
-  const [dueDate, setDueDate] = useState('2025-04-12')
-  const [process, setProcess] = useState('Storage and Handling')
-  const [contact, setContact] = useState('Sara Ali (CTC-011 - Client contact)')
+  const planId = searchParams.get('planId') || ''
+  const itemId = searchParams.get('itemId') || ''
+  const clauseRef = searchParams.get('clauseRef') || ''
+  const sourceResult = searchParams.get('result') || ''
+  const returnTo = searchParams.get('returnTo') || ''
+  const isBound = Boolean(planId && itemId)
+
+  const [boundPlan, setBoundPlan] = useState<AuditPlan | null>(null)
+
+  useEffect(() => {
+    let active = true
+    if (isBound) {
+      fetchAuditPlanById(planId)
+        .then((data) => {
+          if (active) setBoundPlan(data)
+        })
+        .catch(() => {
+          if (active) setBoundPlan(null)
+        })
+    }
+    return () => {
+      active = false
+    }
+  }, [isBound, planId])
+
+  const suggestedClassification =
+    sourceResult === 'Major NC'
+      ? 'Major — per scheme rules'
+      : sourceResult === 'Minor NC'
+        ? 'Minor — per scheme rules'
+        : ''
+
+  const [findingType, setFindingType] = useState(
+    sourceResult === 'Minor NC' || sourceResult === 'Major NC' ? 'Nonconformity' : '',
+  )
+  const [classification, setClassification] = useState(suggestedClassification)
+  const [requirementRef, setRequirementRef] = useState(clauseRef)
+  const [evidenceText, setEvidenceText] = useState('')
+  const evidenceLinks: string[] = []
+  const [statement, setStatement] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [process, setProcess] = useState('')
+  const [contact, setContact] = useState('')
   const [comments, setComments] = useState('')
-  const [detailsOpen, setDetailsOpen] = useState(true)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [toast, setToast] = useState<string | null>(null)
   const [errors, setErrors] = useState<string[]>([])
   const [isDirty, setIsDirty] = useState(false)
   const [showCancel, setShowCancel] = useState(false)
   const [showScheme, setShowScheme] = useState(false)
 
+  const fallbackTarget = returnTo || ROUTES.cabAuditReporting
+
   const show = (m: string) => {
     setToast(m)
     window.setTimeout(() => setToast(null), 3800)
   }
   const markDirty = () => setIsDirty(true)
-  const toggleLink = (id: string) => {
-    markDirty()
-    setEvidenceLinks((p) => (p.includes(id) ? p.filter((x) => x !== id) : [...p, id]))
-  }
+
+  const buildRecord = (
+    status: 'Draft' | 'Submitted',
+    findingCode: string | null,
+  ): Omit<FindingRecord, 'cabId'> => ({
+    id: `find-${Date.now()}`,
+    findingCode,
+    status,
+    planId: isBound ? planId : null,
+    planNumber: isBound ? (boundPlan?.planNumber ?? planId) : null,
+    checklistItemId: isBound ? itemId : null,
+    clauseRef: isBound ? clauseRef || null : null,
+    findingType,
+    classification,
+    requirementRef,
+    evidenceText,
+    evidenceLinks,
+    statement,
+    dueDate,
+    process,
+    contact,
+    comments,
+    createdAt: new Date().toISOString(),
+  })
+
+  // A draft keeps the entered fields but is never attached to the checklist
+  // item, so it does not clear the NC-without-finding blocker.
   const handleSaveDraft = () => {
+    void saveFindingRecord(buildRecord('Draft', null))
     setIsDirty(false)
     setErrors([])
     show(tr('cab.auditReporting.findingDraftSaved', 'Finding draft saved - incomplete later-stage data allowed in draft.'))
   }
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     const res = validateFindingForSubmit({ findingType, classification, requirementRef, evidenceText, evidenceLinks, statement })
     setErrors(res.errors)
@@ -53,33 +127,83 @@ export function CabAddFindingPage() {
       return
     }
     setIsDirty(false)
+    if (isBound && boundPlan) {
+      const code = nextFindingCode(boundPlan.execution)
+      const nextExecution = attachFindingToItem(boundPlan.execution, itemId, code)
+      await saveAuditPlan({
+        id: boundPlan.id,
+        planNumber: boundPlan.planNumber,
+        execution: nextExecution,
+      })
+      await saveFindingRecord(buildRecord('Submitted', code))
+      show(tr('cab.auditReporting.findingSubmitted', 'Finding submitted. Classification follows configured scheme rules.'))
+      window.setTimeout(() => navigate(fallbackTarget), 1100)
+      return
+    }
+    await saveFindingRecord(buildRecord('Submitted', null))
     show(tr('cab.auditReporting.findingSubmitted', 'Finding submitted. Classification follows configured scheme rules.'))
-    window.setTimeout(() => navigate('/cab/audit-reporting'), 1100)
+    window.setTimeout(() => navigate(fallbackTarget), 1100)
   }
   const handleCancel = () => {
     if (isDirty) setShowCancel(true)
-    else navigate('/cab/audit-reporting')
+    else navigate(fallbackTarget)
   }
 
+  const subtitle = isBound
+    ? [boundPlan?.planNumber ?? planId, boundPlan?.clientName, clauseRef].filter(Boolean).join(' · ')
+    : tr('cab.auditReporting.addFindingUnboundSub', 'Not linked to an audit')
+
   return (
-    <CabLayout sidebarVariant="auditReporting">
+    <CabLayout sidebarVariant={isBound ? 'auditPlanning' : 'auditReporting'}>
       <div className="flex min-h-screen flex-col">
         <CabHeader
-          title={tr('cab.auditReporting.addFindingTitle', 'Add finding — NC-0024')}
-          subtitle={tr('cab.auditReporting.addFindingSub', 'AUD-0024 · linked to audit + requirement')}
+          title={tr('cab.auditReporting.addFindingTitle', 'Add finding')}
+          subtitle={subtitle}
           notificationCount={0}
         />
 
         <main className="flex flex-1 flex-col gap-5 overflow-auto bg-[#f9fafc] p-3 sm:p-5">
           <nav className="flex items-center gap-2 text-[13px] font-medium text-neutral-400" aria-label="Breadcrumb">
             <button type="button" onClick={handleCancel} className="transition-colors hover:text-[#1236a3]">
-              {tr('cab.auditReporting.title', 'Audit Reporting')}
+              {isBound
+                ? tr('execution.title', 'Audit execution')
+                : tr('cab.auditReporting.title', 'Audit Reporting')}
             </button>
             <span aria-hidden>/</span>
             <span className="font-semibold text-neutral-600">{tr('cab.auditReporting.addFinding', 'Add finding')}</span>
           </nav>
 
-          <ScopeBanner title={tr('cab.auditReporting.scope', 'CAB-client scope')} />
+          {isBound && boundPlan ? (
+            <section className={cn(CARD, 'border-[#1236a3]/20 bg-[#f3f6fd] p-4')} aria-label={tr('cab.auditReporting.auditContext', 'Audit context')}>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[12px]">
+                <span className="rounded-[6px] bg-[#1236a3] px-2 py-0.5 font-bold text-white">
+                  {tr('cab.auditReporting.scope', 'CAB-client scope')}
+                </span>
+                <span className="font-medium text-neutral-700">
+                  {tr('cab.auditReporting.orgLabel', 'Org')}: {boundPlan.clientCode ? `${boundPlan.clientCode} · ` : ''}{boundPlan.clientName}
+                </span>
+                {boundPlan.siteName && (
+                  <span className="font-medium text-neutral-700">
+                    {tr('cab.auditReporting.siteLabel', 'Site')}: {boundPlan.siteCode ? `${boundPlan.siteCode} · ` : ''}{boundPlan.siteName}
+                  </span>
+                )}
+                {boundPlan.primaryContactName && (
+                  <span className="font-medium text-neutral-700">
+                    {tr('cab.auditReporting.contactLabel', 'Contact')}: {boundPlan.primaryContactName}
+                  </span>
+                )}
+              </div>
+              <p className="mt-1.5 text-[11px] text-neutral-500">
+                {tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')}
+              </p>
+            </section>
+          ) : isBound ? (
+            <p className="rounded-[8px] border border-[#dce4f5] bg-[#f8faff] px-4 py-2.5 text-[12px] font-medium text-neutral-700">
+              {tr('cab.auditReporting.findingRaisedFor', 'Raised from the conduct step, bound to this checklist item.')}
+            </p>
+          ) : (
+            <ScopeBanner title={tr('cab.auditReporting.scope', 'CAB-client scope')} />
+          )}
 
           {errors.length > 0 && (
             <div className="rounded-[8px] border border-error-200 bg-error-50 p-4" role="alert">
@@ -90,7 +214,7 @@ export function CabAddFindingPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+          <form onSubmit={(e) => void handleSubmit(e)} className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
             {/* ===== Left column ===== */}
             <div className={cn(CARD, 'space-y-4 p-5')}>
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -99,9 +223,10 @@ export function CabAddFindingPage() {
                     {tr('cab.auditReporting.findingType', 'Finding type')} *
                   </label>
                   <select value={findingType} onChange={(e) => { setFindingType(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.findingType}>
-                    <option value="Nonconformity">Nonconformity</option>
-                    <option value="Observation">Observation</option>
-                    <option value="Opportunity">Opportunity for improvement</option>
+                    <option value="">{tr('cab.auditReporting.selectType', 'Select…')}</option>
+                    <option value="Nonconformity">{tr('cab.auditReporting.typeNonconformity', 'Nonconformity')}</option>
+                    <option value="Observation">{tr('cab.auditReporting.typeObservation', 'Observation')}</option>
+                    <option value="Opportunity">{tr('cab.auditReporting.typeOpportunity', 'Opportunity for improvement')}</option>
                   </select>
                 </div>
 
@@ -113,12 +238,16 @@ export function CabAddFindingPage() {
                   </label>
                   <select value={classification} onChange={(e) => { setClassification(e.target.value); markDirty(); }} className={INPUT} data-field={FIELD_KEYS.classification}>
                     <option value="">{tr('cab.auditReporting.selectClass', 'Select per scheme rules…')}</option>
-                    {SCHEME_RULES.classifications.map((c) => <option key={c.value} value={c.label}>{c.label}</option>)}
+                    {SCHEME_RULES.classifications.map((c) => (
+                      <option key={c.value} value={c.label}>
+                        {tr(`cab.auditReporting.class${c.value.charAt(0).toUpperCase()}${c.value.slice(1)}`, c.label)}
+                      </option>
+                    ))}
                   </select>
                   <p className="mt-1 text-[11px] text-neutral-500">
                     {classification
-                      ? SCHEME_RULES.classifications.find((c) => c.label === classification)?.dueRule
-                      : SCHEME_RULES.version}
+                      ? tr('cab.auditReporting.duePerScheme', 'Due per scheme rules (configured)')
+                      : tr('cab.auditReporting.schemeRulesVersion', SCHEME_RULES.version)}
                   </p>
                 </div>
               </div>
@@ -133,23 +262,15 @@ export function CabAddFindingPage() {
                   onChange={(e) => { setRequirementRef(e.target.value); markDirty(); }}
                   className={INPUT}
                   data-field={FIELD_KEYS.requirementRef}
+                  dir="ltr"
                 />
               </div>
 
               <div>
                 <label className="mb-1 block text-[13px] font-medium text-neutral-800">
-                  {tr('cab.auditReporting.objectiveEvidence', 'Objective evidence (linked)')} *
+                  {tr('cab.auditReporting.objectiveEvidence', 'Objective evidence')} *
                 </label>
                 <textarea rows={3} value={evidenceText} onChange={(e) => { setEvidenceText(e.target.value); markDirty(); }} className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-3 text-[14px] text-neutral-900 focus:border-[#1236a3] focus:outline-none min-h-20 resize-y" data-field={FIELD_KEYS.objectiveEvidence} />
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {['EV-0101', 'EV-0102', 'EV-0103', 'DOC-102'].map((id) => (
-                    <label key={id} className={cn('cursor-pointer rounded-[8px] border px-3 py-1.5 text-[12px] font-medium',
-                      evidenceLinks.includes(id) ? 'border-[#1236a3] bg-[#e8edfc] text-[#1236a3]' : 'border-[#e2e2e2] bg-white text-neutral-600')}>
-                      <input type="checkbox" className="me-1.5 accent-[#1236a3]" checked={evidenceLinks.includes(id)} onChange={() => toggleLink(id)} />
-                      {id}
-                    </label>
-                  ))}
-                </div>
                 <p className="mt-1 text-[11px] text-neutral-500">
                   {tr('cab.auditReporting.evidenceGate', 'Evidence must reference the audit and requirement. Generic claims are blocked on submission.')}
                 </p>
@@ -221,7 +342,7 @@ export function CabAddFindingPage() {
               <div className="flex flex-col gap-2 border-t border-neutral-100 pt-4">
                 <button type="button" onClick={handleCancel} className={GHOST_BTN}>{tr('common.cancel', 'Cancel')}</button>
                 <button type="button" onClick={handleSaveDraft} className={GHOST_BTN}>{tr('common.saveDraft', 'Save as Draft')}</button>
-                <button type="submit" className={PRIMARY_BTN}>{tr('cab.auditReporting.submitFinding', 'Submit finding')}</button>
+                <button type="submit" className={PRIMARY_BTN} data-testid="submit-finding">{tr('cab.auditReporting.submitFinding', 'Submit finding')}</button>
               </div>
             </aside>
             {/* ===== /Right column ===== */}
@@ -237,7 +358,7 @@ export function CabAddFindingPage() {
               <p className="text-[12px] text-neutral-600">{tr('cab.auditReporting.dirtyCancelBody', 'This finding has unsaved draft changes. Leave without saving?')}</p>
               <div className="flex justify-end gap-2 border-t border-neutral-100 pt-4">
                 <button type="button" className={GHOST_BTN} onClick={() => setShowCancel(false)}>{tr('common.cancel', 'Cancel')}</button>
-                <button type="button" className={PRIMARY_BTN} onClick={() => { setIsDirty(false); navigate('/cab/audit-reporting'); }}>
+                <button type="button" className={PRIMARY_BTN} onClick={() => { setIsDirty(false); navigate(fallbackTarget); }}>
                   {tr('cab.auditReporting.discard', 'Discard changes')}
                 </button>
               </div>

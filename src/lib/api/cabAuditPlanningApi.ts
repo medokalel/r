@@ -94,6 +94,8 @@ export interface ChecklistItem {
   documentsSampled: string
   peopleInterviewed: string
   photoName?: string
+  /** Code of the finding raised for this item from the conduct step (FND-01, ...). */
+  findingCode?: string
 }
 
 export interface AuditChecklistSection {
@@ -130,6 +132,8 @@ export interface DailyWrapUp {
 }
 
 export interface AuditExecutionData {
+  /** False until the team presses "Start execution" on the start screen. */
+  started: boolean
   activeStep: 1 | 2 | 3 | 4 | 5 | 6
   completedSteps: number[]
   preparation: {
@@ -170,6 +174,8 @@ export interface AuditExecutionData {
     executiveSummary: string
     recommendation: string
     reportFinalized: boolean
+    /** Phase 2: the report step prepared its hand-off to the stage report workspace. */
+    handoffReady: boolean
   }
 }
 
@@ -929,6 +935,7 @@ export const LIBRARY_EXTRA_CHECKLISTS: Array<{ id: string; title: string; itemsC
 
 function buildDefaultExecution(leadAuditor = 'Omar Hassan', agreementId = 'AGR-0001 v1', agreementActive = false): AuditExecutionData {
   return {
+    started: false,
     activeStep: 1,
     completedSteps: [],
     preparation: {
@@ -966,6 +973,7 @@ function buildDefaultExecution(leadAuditor = 'Omar Hassan', agreementId = 'AGR-0
       executiveSummary: '',
       recommendation: 'Proceed to Stage 2 audit as scheduled subject to resolution of any Stage 1 areas of concern.',
       reportFinalized: false,
+      handoffReady: false,
     },
   }
 }
@@ -1158,7 +1166,16 @@ export async function fetchAuditPlanById(idOrNumber: string): Promise<AuditPlan 
   if (found && !found.execution) {
     found.execution = buildDefaultExecution(found.leadAuditor, 'AGR-0001 v1', false)
   }
+  if (found) {
+    found.execution = normalizeExecution(found.execution)
+  }
   return found || null
+}
+
+/** Older stored executions predate the start screen: treat them as started. */
+function normalizeExecution(execution: AuditExecutionData): AuditExecutionData {
+  if (typeof execution.started === 'boolean') return execution
+  return { ...execution, started: execution.completedSteps.length > 0 }
 }
 
 function calcDaysBetween(start: string, end: string): number {

@@ -139,7 +139,7 @@ export function IcascoFileDropzone({
   fileName,
   onSelectFile,
   onClear,
-  hint = 'PNG, JPG or SVG up to 5 MB',
+  hint,
   compact = false,
 }: {
   fileName?: string
@@ -148,8 +148,10 @@ export function IcascoFileDropzone({
   hint?: string
   compact?: boolean
 }) {
+  const { t } = useTranslation()
   const inputRef = useRef<HTMLInputElement>(null)
   const [dragging, setDragging] = useState(false)
+  const resolvedHint = hint ?? t('execution.dropzone.hintImage')
 
   const handleFiles = (files: FileList | null) => {
     const file = files?.[0]
@@ -198,10 +200,10 @@ export function IcascoFileDropzone({
           </span>
           <div className="text-center sm:text-start">
             <p className="text-[14px] text-neutral-600">
-              Drag and drop your file here or{' '}
-              <span className="font-semibold text-primary underline">browse</span>
+              {t('execution.dropzone.dragDrop')}{' '}
+              <span className="font-semibold text-primary underline">{t('execution.dropzone.browse')}</span>
             </p>
-            <p className="mt-0.5 text-[12px] text-neutral-400">{hint}</p>
+            <p className="mt-0.5 text-[12px] text-neutral-400">{resolvedHint}</p>
           </div>
         </div>
 
@@ -350,4 +352,52 @@ export function auditStageLabel(
 ): string {
   const key = AUDIT_STAGE_KEYS[stage]
   return key ? t(`cab.auditPlanning.stages.${key}`, stage) : stage
+}
+
+interface ExecutionGateFooterProps {
+  /** Remaining blockers for the step; empty means the step can be completed. */
+  blockers: Array<{ code: string; count?: number }>
+  completeLabel: string
+  onComplete: () => void
+  /** Disables the complete button (e.g. the report step before the opening meeting). */
+  completeDisabled?: boolean
+}
+
+/**
+ * The "To complete this step" footer shared by all six execution steps: lists
+ * what is still missing, or confirms the step is ready, next to its complete
+ * button. Blocker texts come from the execution.blockers.* locale keys.
+ */
+export function ExecutionGateFooter({ blockers, completeLabel, onComplete, completeDisabled }: ExecutionGateFooterProps) {
+  const { t } = useTranslation()
+  return (
+    <div className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#fde68a] bg-[#fffbeb] p-4 sm:flex-row sm:items-center">
+      <div className="text-[13px]">
+        <p className="font-bold text-[#92400e]">{t('execution.blockers.title', 'To complete this step')}</p>
+        {blockers.length === 0 ? (
+          <p className="mt-1 text-[12px] text-[#b45309]">
+            {t('execution.readyToComplete', 'All gates are met. You can complete this step.')}
+          </p>
+        ) : (
+          <ul className="mt-1 list-disc space-y-0.5 ps-5 text-[12px] text-[#b45309]">
+            {blockers.map((blocker) => (
+              <li key={blocker.code}>
+                {t(`execution.blockers.${blocker.code}`, { count: blocker.count ?? 0 })}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <button
+        type="button"
+        onClick={onComplete}
+        disabled={completeDisabled}
+        data-testid="complete-step"
+        className="h-10 shrink-0 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80] disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        {completeLabel}
+      </button>
+    </div>
+  )
 }

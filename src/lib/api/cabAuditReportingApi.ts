@@ -134,3 +134,81 @@ export function downloadFile(filename: string, content: string, mime: string) {
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
 }
+
+/**
+ * Raised findings, stored locally (same local data layer as audit plans).
+ * A Submitted finding raised from the conduct step carries its audit and
+ * checklist item binding; a Draft keeps the entered fields but is not
+ * attached to the item, so it never clears the NC-without-finding blocker.
+ */
+export interface FindingRecord {
+  id: string
+  /** Owning CAB organization — records are never listed across accounts. */
+  cabId: string | null
+  findingCode: string | null
+  status: 'Draft' | 'Submitted'
+  planId: string | null
+  planNumber: string | null
+  checklistItemId: string | null
+  clauseRef: string | null
+  findingType: string
+  classification: string
+  requirementRef: string
+  evidenceText: string
+  evidenceLinks: string[]
+  statement: string
+  dueDate: string
+  process: string
+  contact: string
+  comments: string
+  createdAt: string
+}
+
+const FINDINGS_STORAGE_KEY = 'icasco_cab_findings_v1'
+
+/** The signed-in CAB organization; null when no session is available. */
+export function currentFindingsOwner(): string | null {
+  try {
+    const raw =
+      localStorage.getItem('icasco_auth_session') ?? sessionStorage.getItem('icasco_auth_session')
+    if (!raw) return null
+    const session = JSON.parse(raw) as {
+      cab?: { id?: string }
+      organization?: { id?: string }
+      user?: { id?: string }
+    }
+    return session?.cab?.id ?? session?.organization?.id ?? session?.user?.id ?? null
+  } catch {
+    return null
+  }
+}
+
+function readAllFindingRecords(): FindingRecord[] {
+  try {
+    const raw = localStorage.getItem(FINDINGS_STORAGE_KEY)
+    if (!raw) return []
+    const parsed = JSON.parse(raw)
+    return Array.isArray(parsed) ? (parsed as FindingRecord[]) : []
+  } catch {
+    return []
+  }
+}
+
+/** Findings of the current CAB only — never another organization's records. */
+export function listFindingRecords(): FindingRecord[] {
+  const owner = currentFindingsOwner()
+  if (!owner) return []
+  return readAllFindingRecords().filter((r) => r.cabId === owner)
+}
+
+export async function saveFindingRecord(
+  record: Omit<FindingRecord, 'cabId'> & { cabId?: string | null },
+): Promise<FindingRecord> {
+  const stamped: FindingRecord = { ...record, cabId: record.cabId ?? currentFindingsOwner() }
+  const all = readAllFindingRecords()
+  const index = all.findIndex((r) => r.id === stamped.id)
+  if (index >= 0) all[index] = stamped
+  else all.push(stamped)
+  localStorage.setItem(FINDINGS_STORAGE_KEY, JSON.stringify(all))
+  return stamped
+}

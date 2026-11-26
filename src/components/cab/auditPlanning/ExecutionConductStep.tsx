@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { SelectField } from '@/components/ui/Select'
 import type {
@@ -7,7 +8,18 @@ import type {
   ChecklistItem,
   ChecklistResultValue,
 } from '@/lib/api/cabAuditPlanningApi'
-import { IcascoFileDropzone, IsoDateField, formatIcascoDate } from '@/components/cab/auditPlanning/shared'
+import {
+  getStepBlockers,
+  isAuditedResultValue,
+  isNonconformingResult,
+} from '@/lib/api/auditExecutionGates'
+import {
+  ExecutionGateFooter,
+  IcascoFileDropzone,
+  IsoDateField,
+  formatIcascoDate,
+} from '@/components/cab/auditPlanning/shared'
+import { RESULT_LABEL_KEYS } from '@/components/cab/auditPlanning/ExecutionMeetingReportSteps'
 import { cn } from '@/lib/utils'
 
 const RESULT_OPTIONS: ChecklistResultValue[] = [
@@ -21,11 +33,11 @@ const RESULT_OPTIONS: ChecklistResultValue[] = [
 ]
 
 export function isNonconforming(result: ChecklistResultValue) {
-  return result === 'Minor NC' || result === 'Major NC'
+  return isNonconformingResult(result)
 }
 
 export function isAuditedResult(result: ChecklistResultValue) {
-  return result !== '' && result !== 'Not audited'
+  return isAuditedResultValue(result)
 }
 
 interface ExecutionConductStepProps {
@@ -34,10 +46,11 @@ interface ExecutionConductStepProps {
   totalItems: number
   auditedItems: number
   nonconformingItems: number
-  mandatoryUnauditedCount: number
   daysSpent: number
   onUpdateItem: (sectionId: string, itemId: string, patch: Partial<ChecklistItem>) => void
   onMarkAllConforming: (sectionId: string) => void
+  /** Opens the Add finding form bound to this audit and checklist item. */
+  onRaiseFinding: (sectionId: string, itemId: string) => void
   onAddTimeEntry: (entry: {
     auditor: string
     date: string
@@ -54,13 +67,15 @@ export function ExecutionConductStep({
   totalItems,
   auditedItems,
   nonconformingItems,
-  mandatoryUnauditedCount,
   daysSpent,
   onUpdateItem,
   onMarkAllConforming,
+  onRaiseFinding,
   onAddTimeEntry,
   onComplete,
 }: ExecutionConductStepProps) {
+  const { t } = useTranslation()
+  const blockers = getStepBlockers(execution, 3)
   const [activeChecklistId, setActiveChecklistId] = useState(
     execution.checklists[0]?.id || 'chk-stage1-readiness',
   )
@@ -72,13 +87,17 @@ export function ExecutionConductStep({
   const [timeAuditor, setTimeAuditor] = useState(plan.leadAuditor)
   const [timeDate, setTimeDate] = useState(plan.proposedStartDate)
   const [timeHours, setTimeHours] = useState(8)
-  const [timeActivity, setTimeActivity] = useState('On-site audit, document review')
+  const [timeActivity, setTimeActivity] = useState(() => t('execution.time.activityPlaceholder'))
   const [timeRemote, setTimeRemote] = useState(false)
 
   const activeSection = useMemo(
     () => execution.checklists.find((c) => c.id === activeChecklistId) || execution.checklists[0] || null,
     [execution.checklists, activeChecklistId],
   )
+
+  const openCount = activeSection
+    ? activeSection.items.filter((i) => !isAuditedResult(i.result)).length
+    : 0
 
   const filteredItems = useMemo(() => {
     if (!activeSection) return []
@@ -98,21 +117,19 @@ export function ExecutionConductStep({
   return (
     <div className="space-y-5">
       <div>
-        <h2 className="text-[20px] font-bold text-neutral-900">Conduct</h2>
-        <p className="mt-0.5 text-[13px] text-neutral-500">
-          Fill the checklists with results and evidence, take photos and raise findings.
-        </p>
+        <h2 className="text-[20px] font-bold text-neutral-900">{t('execution.steps.3')}</h2>
+        <p className="mt-0.5 text-[13px] text-neutral-500">{t('execution.stepHints.conduct')}</p>
       </div>
 
       {/* Progress Card */}
       <section className="space-y-2.5 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
-        <h3 className="text-[15px] font-bold text-neutral-900">Progress</h3>
+        <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.conduct.progressTitle')}</h3>
         <div className="flex items-center justify-between text-[13px]">
           <span className="text-neutral-600">
-            {auditedItems} of {totalItems} items audited
+            {t('execution.conduct.answered', { answered: auditedItems, total: totalItems })}
           </span>
           <span className="font-semibold text-neutral-700">
-            Nonconforming items: {nonconformingItems}
+            {t('execution.conduct.ncCount', { count: nonconformingItems })}
           </span>
         </div>
         <div className="h-2 w-full overflow-hidden rounded-full bg-neutral-100">
@@ -127,13 +144,11 @@ export function ExecutionConductStep({
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h3 className="text-[15px] font-bold text-neutral-900">Live checklists</h3>
-            <p className="mt-0.5 text-[12px] text-neutral-500">
-              Record a result for each requirement with the evidence seen. Changes save as you go.
-            </p>
+            <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.conduct.checklistsTitle')}</h3>
+            <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.conduct.checklistsDescription')}</p>
           </div>
           <span className="rounded-[6px] border border-[#bbf7d0] bg-[#f0fdf4] px-3 py-1 text-[11px] font-semibold text-[#15803d]">
-            iCASCO library, approved
+            {t('execution.conduct.libraryBadge')}
           </span>
         </div>
 
@@ -163,8 +178,7 @@ export function ExecutionConductStep({
         {activeSection && (
           <>
             <p className="text-[12px] text-neutral-500">
-              Assigned to:{' '}
-              <span className="font-semibold text-neutral-800">{activeSection.assignedAuditor}</span>
+              {t('execution.conduct.assignedTo', { name: activeSection.assignedAuditor })}
             </p>
 
             {/* Search, Filter Pills & Mark all as conforming */}
@@ -174,14 +188,14 @@ export function ExecutionConductStep({
                   type="text"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search clause or requirement"
+                  placeholder={t('execution.conduct.search')}
                   className="h-10 w-60 rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[13px] text-neutral-800 focus:border-[#1236a3] focus:outline-none"
                 />
 
                 {[
-                  { key: 'all', label: 'All' },
-                  { key: 'unaudited', label: 'Not yet audited' },
-                  { key: 'nonconforming', label: 'Nonconforming' },
+                  { key: 'all', label: t('execution.conduct.filters.all') },
+                  { key: 'unaudited', label: t('execution.conduct.filters.open') },
+                  { key: 'nonconforming', label: t('execution.conduct.filters.nonconforming') },
                 ].map((f) => (
                   <button
                     key={f.key}
@@ -204,8 +218,7 @@ export function ExecutionConductStep({
                 onClick={() => onMarkAllConforming(activeSection.id)}
                 className="inline-flex h-10 items-center gap-1.5 rounded-[8px] bg-[#16a34a] px-4 text-[13px] font-semibold text-white transition hover:bg-[#15803d]"
               >
-                <span>✓</span>
-                <span>Mark all as conforming</span>
+                <span>{t('execution.conduct.markAllConforming', { count: openCount })}</span>
               </button>
             </div>
 
@@ -237,17 +250,17 @@ export function ExecutionConductStep({
                         }
                         className="text-[12px] font-semibold text-[#1236a3] hover:underline"
                       >
-                        {showGuidance ? 'Hide guidance' : 'Guidance and evidence prompts'}
+                        {t(showGuidance ? 'execution.conduct.hideGuidance' : 'execution.conduct.showGuidance')}
                       </button>
 
                       {showGuidance && (
                         <div className="mt-2 space-y-2 rounded-[8px] border border-[#e8edfc] bg-[#f8faff] p-3.5 text-[12px]">
                           <p className="text-neutral-700">
-                            <strong className="text-neutral-900">What to look for:</strong>{' '}
+                            <strong className="text-neutral-900">{t('execution.conduct.guidance')}:</strong>{' '}
                             {item.whatToLookFor}
                           </p>
                           <div>
-                            <p className="font-semibold text-neutral-900">Evidence to ask for</p>
+                            <p className="font-semibold text-neutral-900">{t('execution.conduct.evidencePrompts')}</p>
                             <ul className="mt-1 list-disc space-y-0.5 ps-5 text-neutral-600">
                               {item.evidenceToAskFor.map((ev) => (
                                 <li key={ev}>{ev}</li>
@@ -260,7 +273,7 @@ export function ExecutionConductStep({
 
                     <div>
                       <span className="mb-1.5 block text-[12px] font-semibold text-neutral-700">
-                        Result
+                        {t('execution.conduct.result')}
                       </span>
                       <div className="flex flex-wrap gap-2">
                         {RESULT_OPTIONS.map((resOpt) => {
@@ -281,7 +294,7 @@ export function ExecutionConductStep({
                                   : 'border-[#e2e2e2] bg-white text-neutral-700 hover:bg-neutral-50',
                               )}
                             >
-                              {resOpt}
+                              {t(`execution.results.${RESULT_LABEL_KEYS[resOpt]}`)}
                             </button>
                           )
                         })}
@@ -291,14 +304,14 @@ export function ExecutionConductStep({
                     <div className="space-y-3">
                       <div>
                         <label className="mb-1 block text-[12px] font-medium text-neutral-700">
-                          Evidence notes
+                          {t('execution.conduct.notes')}
                         </label>
                         <textarea
                           value={item.evidenceNotes}
                           onChange={(e) =>
                             onUpdateItem(activeSection.id, item.id, { evidenceNotes: e.target.value })
                           }
-                          placeholder="What you saw, heard and read"
+                          placeholder={t('execution.conduct.notesPlaceholder')}
                           rows={2}
                           className="w-full rounded-[8px] border border-[#e2e2e2] bg-white p-2.5 text-[13px] text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none"
                         />
@@ -307,7 +320,7 @@ export function ExecutionConductStep({
                       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                         <div>
                           <label className="mb-1 block text-[12px] font-medium text-neutral-700">
-                            Documents sampled
+                            {t('execution.conduct.documentsSampled')}
                           </label>
                           <input
                             type="text"
@@ -317,14 +330,14 @@ export function ExecutionConductStep({
                                 documentsSampled: e.target.value,
                               })
                             }
-                            placeholder="Separate with commas"
+                            placeholder={t('execution.conduct.listPlaceholder')}
                             className="h-10 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[13px] text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none"
                           />
                         </div>
 
                         <div>
                           <label className="mb-1 block text-[12px] font-medium text-neutral-700">
-                            People interviewed
+                            {t('execution.conduct.interviewees')}
                           </label>
                           <input
                             type="text"
@@ -334,7 +347,7 @@ export function ExecutionConductStep({
                                 peopleInterviewed: e.target.value,
                               })
                             }
-                            placeholder="Separate with commas"
+                            placeholder={t('execution.conduct.listPlaceholder')}
                             className="h-10 w-full rounded-[8px] border border-[#e2e2e2] bg-white px-3 text-[13px] text-neutral-900 placeholder:text-neutral-400 focus:border-[#1236a3] focus:outline-none"
                           />
                         </div>
@@ -342,7 +355,7 @@ export function ExecutionConductStep({
 
                       <div className="pt-1">
                         <label className="mb-1.5 block text-[12px] font-medium text-neutral-700">
-                          Take or add photo
+                          {t('execution.conduct.addPhoto')}
                         </label>
                         <IcascoFileDropzone
                           compact
@@ -353,9 +366,29 @@ export function ExecutionConductStep({
                           onClear={() =>
                             onUpdateItem(activeSection.id, item.id, { photoName: undefined })
                           }
-                          hint="PNG or JPG up to 5 MB"
+                          hint={t('execution.dropzone.hintPhoto')}
                         />
                       </div>
+
+                      {/* Raise finding: bound to this audit and checklist item */}
+                      {isNonconforming(item.result) && (
+                        <div className="border-t border-[#f0f0f0] pt-3">
+                          {item.findingCode ? (
+                            <span className="inline-flex items-center gap-1 rounded-[6px] border border-[#fecaca] bg-[#fef2f2] px-2.5 py-1 text-[12px] font-semibold text-[#b91c1c]">
+                              {t('execution.conduct.finding', { code: item.findingCode })}
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              data-testid="raise-finding"
+                              onClick={() => onRaiseFinding(activeSection.id, item.id)}
+                              className="h-9 rounded-[8px] border border-[#fecaca] bg-white px-4 text-[12px] font-semibold text-[#b91c1c] transition hover:bg-[#fef2f2]"
+                            >
+                              {t('execution.conduct.raiseFinding', 'Raise finding')}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 )
@@ -363,7 +396,7 @@ export function ExecutionConductStep({
 
               {filteredItems.length === 0 && (
                 <div className="rounded-[10px] border border-dashed border-[#e2e2e2] py-8 text-center text-[13px] text-neutral-500">
-                  No checklist items match your filter.
+                  {t('execution.conduct.noMatch')}
                 </div>
               )}
             </div>
@@ -375,35 +408,33 @@ export function ExecutionConductStep({
       <section className="space-y-4 rounded-[12px] border border-[#ececec] bg-white p-5 shadow-none">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h3 className="text-[15px] font-bold text-neutral-900">Time spent</h3>
-            <p className="mt-0.5 text-[12px] text-neutral-500">
-              Record the team's time each day. It is compared with the planned audit days (IAF MD 5) and added to the competence audit log.
-            </p>
+            <h3 className="text-[15px] font-bold text-neutral-900">{t('execution.time.title')}</h3>
+            <p className="mt-0.5 text-[12px] text-neutral-500">{t('execution.time.description')}</p>
           </div>
           <div className="flex items-center gap-4 text-[13px]">
             <span className="text-neutral-600">
-              Spent: <strong className="text-neutral-900">{daysSpent} days</strong>
+              <strong className="text-neutral-900">{t('execution.time.actual', { days: daysSpent })}</strong>
             </span>
             <span className="text-neutral-600">
-              Planned: <strong className="text-[#1236a3]">{plan.reviewedDurationDays} days</strong>
+              <strong className="text-[#1236a3]">{t('execution.time.planned', { days: plan.reviewedDurationDays })}</strong>
             </span>
           </div>
         </div>
 
         {execution.timeSpent.length === 0 ? (
           <div className="rounded-[8px] border border-dashed border-[#e2e2e2] bg-[#f9fafc] py-4 text-center text-[13px] text-neutral-400">
-            No time recorded
+            {t('execution.time.notStarted')}
           </div>
         ) : (
           <div className="overflow-x-auto rounded-[8px] border border-[#ececec]">
             <table className="w-full border-collapse text-start text-[14px]">
               <thead>
                 <tr className="bg-[#1236a3] text-white">
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Auditor</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Date</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Hours</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Activity</th>
-                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">Mode</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.time.auditor')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.time.date')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.time.hoursLabel')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.time.activity')}</th>
+                  <th className="px-4 py-3.5 text-start text-[13px] font-medium">{t('execution.time.mode')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#f0f0f0]">
@@ -436,7 +467,7 @@ export function ExecutionConductStep({
                             : 'bg-[#ecfdf5] text-[#16a34a]',
                         )}
                       >
-                        {entry.remote ? 'Remote' : 'On-site'}
+                        {t(entry.remote ? 'execution.time.remote' : 'execution.time.onSite')}
                       </span>
                     </td>
                   </tr>
@@ -461,7 +492,7 @@ export function ExecutionConductStep({
           className="grid grid-cols-1 gap-3 border-t border-[#f0f0f0] pt-4 sm:grid-cols-12 sm:items-end"
         >
           <div className="sm:col-span-3">
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Auditor</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.time.auditor')}</label>
             <SelectField
               value={timeAuditor}
               onChange={setTimeAuditor}
@@ -471,12 +502,12 @@ export function ExecutionConductStep({
           </div>
 
           <div className="sm:col-span-3">
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Date</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.time.date')}</label>
             <IsoDateField value={timeDate} onChange={setTimeDate} className="[&_button]:h-10" />
           </div>
 
           <div className="sm:col-span-1">
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Hours</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.time.hoursLabel')}</label>
             <input
               type="number"
               step="0.5"
@@ -488,7 +519,7 @@ export function ExecutionConductStep({
           </div>
 
           <div className="sm:col-span-3">
-            <label className="mb-1 block text-[12px] font-medium text-neutral-700">Activity</label>
+            <label className="mb-1 block text-[12px] font-medium text-neutral-700">{t('execution.time.activity')}</label>
             <input
               type="text"
               value={timeActivity}
@@ -500,35 +531,24 @@ export function ExecutionConductStep({
           <div className="flex items-center justify-between gap-2 sm:col-span-2">
             <label className="flex cursor-pointer items-center gap-2 text-[12px] font-medium text-neutral-700">
               <Checkbox checked={timeRemote} onChange={() => setTimeRemote((prev) => !prev)} />
-              <span>Remote</span>
+              <span>{t('execution.time.remoteLabel')}</span>
             </label>
             <button
               type="submit"
               className="h-10 whitespace-nowrap rounded-[8px] bg-[#1236a3] px-3.5 text-[13px] font-semibold text-white hover:bg-[#0e2a80]"
             >
-              Add time
+              {t('execution.time.add')}
             </button>
           </div>
         </form>
       </section>
 
       {/* To complete this step */}
-      <div className="flex flex-col justify-between gap-4 rounded-[12px] border border-[#fde68a] bg-[#fffbeb] p-4 sm:flex-row sm:items-center">
-        <div className="text-[13px]">
-          <p className="font-bold text-[#92400e]">To complete this step</p>
-          <p className="mt-1 text-[12px] text-[#b45309]">
-            Mandatory checklist items without a result: <strong>{mandatoryUnauditedCount}</strong>
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={onComplete}
-          className="h-10 shrink-0 rounded-[8px] bg-[#1236a3] px-5 text-[13px] font-semibold text-white transition hover:bg-[#0e2a80]"
-        >
-          Complete: Conduct
-        </button>
-      </div>
+      <ExecutionGateFooter
+        blockers={blockers}
+        completeLabel={t('execution.complete', { step: t('execution.steps.3') })}
+        onComplete={onComplete}
+      />
     </div>
   )
 }
