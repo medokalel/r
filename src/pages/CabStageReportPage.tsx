@@ -13,6 +13,7 @@ import {
 import { AUDITOR_REGISTER } from '@/lib/teamSelection/teamMember'
 import { applyLifecycleAction, createPlanEvent } from '@/lib/api/auditPlanLifecycleApi'
 import { listFindingRecords, type FindingRecord } from '@/lib/api/cabAuditReportingApi'
+import { StageReportDocument, STAGE_REPORT_PRINT_CSS } from '@/components/cab/stageReport/StageReportDocument'
 import {
   STAGE_REPORT_SECTION_IDS,
   countChecklistResults,
@@ -322,49 +323,19 @@ export function CabStageReportPage() {
     counts: { audited: counts.audited, total: counts.total, nc: counts.minorNc + counts.majorNc, findings: findings.length },
   }
 
-  const docSections: Array<{ id: string; title: string; text: string }> = [
-    { id: 'summary', title: t('stageReport.sections.executiveSummary') as string, text: d.executiveSummary },
-    ...STAGE_REPORT_SECTION_IDS.map((id) => ({
-      id,
-      title: t(`stageReport.sections.${id}`) as string,
-      text: d.sections[id],
-    })),
-    { id: 'recommendation', title: t('stageReport.sections.recommendation') as string, text: d.recommendation },
-  ]
-
   const reportDocument = (
-        <div className="rounded-[16px] border border-[#ececec] bg-white p-8 print:border-0 print:p-0" data-testid="report-document">
-          <h1 className="text-[22px] font-bold text-neutral-900">{t('stageReport.document.title', { stage: d.stage })}</h1>
-          <p className="mt-1 text-[13px] text-neutral-500">
-            {d.clientName} · {d.siteName} · <bdi dir="ltr">{d.planNumber}</bdi> · <bdi dir="ltr">v{state.version}</bdi> · {statusLabel(status)}
-          </p>
-          <dl className="mt-4 grid grid-cols-2 gap-x-3 gap-y-2 border-y border-[#e5e7eb] py-3 text-[12px]">
-            <div><dt className="text-neutral-400">{t('execution.plan.leadAuditor')}</dt><dd className="font-semibold">{d.leadAuditor}</dd></div>
-            <div><dt className="text-neutral-400">{t('execution.plan.auditTeam')}</dt><dd className="font-semibold">{d.auditTeam.join(', ')}</dd></div>
-            <div><dt className="text-neutral-400">{t('execution.plan.dates')}</dt><dd className="font-semibold"><bdi dir="ltr">{formatDate(d.proposedStartDate)} · {formatDate(d.proposedEndDate)}</bdi></dd></div>
-            <div><dt className="text-neutral-400">{t('stageReport.overview.standards')}</dt><dd className="font-semibold"><bdi dir="ltr">{d.standards.join(', ')}</bdi></dd></div>
-            <div><dt className="text-neutral-400">{t('stageReport.document.reviewer')}</dt><dd className="font-semibold">{state.reviewer || '-'}</dd></div>
-            <div><dt className="text-neutral-400">{t('stageReport.document.issuedOn')}</dt><dd className="font-semibold"><bdi dir="ltr">{state.issuedAt ? formatDate(state.issuedAt) : '-'}</bdi></dd></div>
-          </dl>
-          {docSections.map((section) => (
-            <section key={section.id} className="mt-5 print:mt-3">
-              <h2 className="break-after-avoid text-[14px] font-bold text-[#0e2a80]">{section.title}</h2>
-              <p dir="auto" className="mt-1 whitespace-pre-line text-[13px] leading-6 text-neutral-800">{section.text || '-'}</p>
-            </section>
-          ))}
-          <p className="mt-5 break-inside-avoid rounded-[8px] bg-[#f9fafc] p-3 text-[12px] text-neutral-600 print:mt-3">{t('stageReport.recommendationNote')}</p>
-        </div>
+    <StageReportDocument
+      data={d}
+      version={state.version}
+      statusLabel={statusLabel(status)}
+      reviewer={state.reviewer}
+      issuedAt={state.issuedAt}
+    />
   )
 
   return (
     <CabLayout sidebarVariant="auditPlanning">
-      <style>{`
-        @media print {
-          body > *:not(#stage-report-print-root) { display: none !important; }
-          #stage-report-print-root { display: block !important; }
-          @page { margin: 14mm; }
-        }
-      `}</style>
+      <style>{STAGE_REPORT_PRINT_CSS}</style>
 
       <div className="print:hidden">
         <CabHeader title={t('stageReport.title')} subtitle={`${plan.planNumber} · ${plan.clientName} · ${plan.stage}`} notificationCount={6} />
@@ -460,6 +431,14 @@ export function CabStageReportPage() {
         {status === 'issued' && (
           <p className="rounded-[10px] border border-[#bbf7d0] bg-[#f0fdf4] px-4 py-3 text-[13px] font-medium text-[#15803d] print:hidden" data-testid="issued-banner">
             {t('stageReport.issuedBanner', { version: state.version, date: formatDate(state.issuedAt) })}
+          </p>
+        )}
+        {status === 'issued' && state.acknowledgement && (
+          <p className="rounded-[10px] border border-[#bfdbfe] bg-[#eff6ff] px-4 py-3 text-[13px] text-[#1e40af] print:hidden" data-testid="acknowledged-banner">
+            <span className="font-semibold">
+              {t('clientAuditResults.cab.acknowledgedBanner', { name: state.acknowledgement.by, date: formatDate(state.acknowledgement.at) })}
+            </span>
+            {state.acknowledgement.note && <span dir="auto" className="mt-1 block text-start font-normal">{state.acknowledgement.note}</span>}
           </p>
         )}
         {status === 'inReview' && (
@@ -634,7 +613,7 @@ export function CabStageReportPage() {
                 <ul className="space-y-2 text-[12px]">
                   {[...state.events].reverse().map((event) => (
                     <li key={event.id} className="border-b border-[#f3f3f3] pb-2 last:border-0">
-                      <p className="font-semibold text-neutral-800">{t(`stageReport.history.${event.action}`)}</p>
+                      <p className="font-semibold text-neutral-800">{event.action === 'acknowledged' ? t('clientAuditResults.cab.historyAcknowledged') : t(`stageReport.history.${event.action}`)}</p>
                       <p className="text-neutral-500">
                         <bdi dir="ltr">{formatDateTime(event.at)}</bdi>
                         {event.actor ? ` · ${event.actor}` : ''}

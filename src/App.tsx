@@ -98,6 +98,7 @@ import {
   ClientCertificatesPage,
   ClientAuditsPage,
   ClientAuditPlanPage,
+  ClientAuditReportPage,
   ClientQuotationsPage,
   ClientQuotationDetailPage,
   ClientUnavailablePage,
@@ -998,6 +999,14 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <ClientAuditPlanPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.auditReport}
+                element={
+                  <RequireAuth>
+                    <ClientAuditReportPage />
                   </RequireAuth>
                 }
               />

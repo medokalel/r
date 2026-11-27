@@ -323,6 +323,59 @@
     "exportIncomplete": "التصدير غير مكتمل، لذلك لم يتم إنشاء ملف. ضيّق عوامل التصفية وحاول مرة أخرى.",
     "empty": "لا توجد فواتير."
   },
+  "clientAuditResults": {
+    "cab": {
+      "acknowledgedBanner": "اطّلع عليه {{name}} بتاريخ {{date}}",
+      "historyAcknowledged": "أقرّ العميل بالاطلاع",
+      "registerAcknowledged": "أقرّ العميل بالاطلاع"
+    },
+    "report": {
+      "pageTitle": "تقرير التدقيق",
+      "backToAudit": "العودة إلى التدقيق",
+      "unavailableTitle": "هذا التقرير غير متاح",
+      "unavailableSubtitle": "يظهر التقرير هنا بعد أن تصدره جهة منح الشهادات لمؤسستك.",
+      "acknowledgeTitle": "الإقرار بالاطلاع على التقرير",
+      "acknowledgeHint": "أكّد أنك استلمت هذا التقرير واطّلعت عليه. يمكنك الإقرار مرة واحدة فقط.",
+      "yourName": "اسمك",
+      "nameRequired": "أدخل اسمك.",
+      "note": "ملاحظة (اختياري)",
+      "acknowledge": "الإقرار بالاطلاع",
+      "print": "طباعة / حفظ PDF",
+      "acknowledgedBy": "أقرّ {{name}} بالاطلاع بتاريخ {{date}}",
+      "acknowledgedToast": "تم الإقرار بالاطلاع على التقرير",
+      "acknowledgeFailed": "تعذّر تسجيل الإقرار"
+    },
+    "plan": {
+      "noAttendance": "لا يوجد حضور مسجّل.",
+      "remote": "عن بُعد",
+      "held": "تم عقده",
+      "notHeld": "لم يُعقد بعد",
+      "opening": "الاجتماع الافتتاحي",
+      "closing": "الاجتماع الختامي",
+      "findingsPresented": "تم عرض النتائج",
+      "yes": "نعم",
+      "no": "لا",
+      "clientPosition": "موقف العميل",
+      "clientComments": "تعليقات العميل",
+      "ncDue": "موعد الرد على عدم المطابقة",
+      "reportTitle": "تقرير التدقيق",
+      "reportNotIssued": "لم يصدر التقرير بعد.",
+      "reportIssued": "صدر التقرير بتاريخ {{date}} (الإصدار {{version}})",
+      "reportAwaiting": "في انتظار إقرارك بالاطلاع.",
+      "reportAcknowledged": "أقرّ {{name}} بالاطلاع بتاريخ {{date}}",
+      "readReport": "قراءة التقرير",
+      "organization": {
+        "Client": "العميل",
+        "Audit team": "فريق التدقيق",
+        "Observer": "مراقب"
+      },
+      "position": {
+        "Agrees": "موافق",
+        "Partly agrees": "موافق جزئيًا",
+        "Disagrees": "غير موافق"
+      }
+    }
+  },
   "common": {
     "yes": "نعم",
     "no": "لا",

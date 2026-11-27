@@ -52,6 +52,13 @@ export interface StageReportSnapshot {
   counts: { audited: number; total: number; nc: number; findings: number }
 }
 
+/** The audit client's acknowledgement that it received and read the issued report. */
+export interface StageReportAcknowledgement {
+  by: string
+  note?: string
+  at: string
+}
+
 export interface StageReportState {
   version: number
   status: StageReportStatus
@@ -63,6 +70,8 @@ export interface StageReportState {
   issuedAt?: string
   /** Frozen copy of the report content, set when the report is issued. */
   snapshot?: StageReportSnapshot
+  /** Set once by the audit client after issue. It never changes the report itself. */
+  acknowledgement?: StageReportAcknowledgement
 }
 
 export type StageReportBlockerCode =
@@ -219,7 +228,7 @@ export interface StageReportResult {
   blockers: StageReportBlocker[]
   next?: StageReportState
   /** Set for reject reasons that are not blockers (wrong state, missing comment). */
-  error?: 'wrongState' | 'commentRequired' | 'reviewerNotAllowed'
+  error?: 'wrongState' | 'commentRequired' | 'reviewerNotAllowed' | 'nameRequired' | 'alreadyAcknowledged'
 }
 
 export function submitForReview(
@@ -317,4 +326,29 @@ export function issueReport(
 /** The report becomes read-only once it leaves draft/returned; this is the one state that is final. */
 export function isFinal(state: StageReportState | undefined): boolean {
   return state?.status === 'issued'
+}
+
+/**
+ * The audit client acknowledges an issued report. Allowed once, only after the
+ * report is issued, and only with a name. The frozen snapshot is not touched.
+ */
+export function acknowledgeReport(
+  state: StageReportState,
+  input: { name: string; note?: string },
+  now: string,
+): StageReportResult {
+  if (state.status !== 'issued' || !state.snapshot) return { ok: false, blockers: [], error: 'wrongState' }
+  if (state.acknowledgement) return { ok: false, blockers: [], error: 'alreadyAcknowledged' }
+  const by = input.name.trim()
+  if (!by) return { ok: false, blockers: [], error: 'nameRequired' }
+  const note = input.note?.trim() || undefined
+  return {
+    ok: true,
+    blockers: [],
+    next: {
+      ...state,
+      acknowledgement: { by, ...(note ? { note } : {}), at: now },
+      events: [...state.events, newEvent('acknowledged', now, by, note)],
+    },
+  }
 }

@@ -18,6 +18,8 @@ import {
 } from '@/lib/api/cabAuditPlanningApi'
 import { createPlanEvent } from '@/lib/api/auditPlanLifecycleApi'
 import { getAuthSession } from '@/lib/authStorage'
+import { acknowledgeReport, type StageReportResult } from '@/lib/api/stageReport'
+import { getClientReportStatus } from '@/lib/clientAuditResults'
 
 export type ClientPlanConfirmation = 'pending' | 'confirmed' | 'objected'
 
@@ -158,4 +160,41 @@ export async function getUpcomingClientAudit(): Promise<AuditPlan | null> {
     return !Number.isNaN(end.getTime()) && end >= today
   })
   return upcoming[0] ?? null
+}
+
+/**
+ * One audit with an ISSUED report for the signed-in client, or null. Same
+ * scoping as the plan view (sent to this client), plus the report must be
+ * issued with its frozen snapshot: drafts and reports in review never reach
+ * the client.
+ */
+export async function getClientAuditReport(idOrNumber: string): Promise<AuditPlan | null> {
+  const plan = await getClientAuditPlan(idOrNumber)
+  if (!plan || getClientReportStatus(plan) === 'notIssued') return null
+  return plan
+}
+
+export type ClientAcknowledgeResult =
+  | { ok: true; plan: AuditPlan }
+  | { ok: false; error: NonNullable<StageReportResult['error']> | 'notFound' }
+
+/**
+ * The client acknowledges the issued report (once, with a name). Demo wiring
+ * only, same shared plan store as confirm/object: the CAB reads the same
+ * `stageReport.acknowledgement`.
+ */
+export async function acknowledgeClientAuditReport(
+  idOrNumber: string,
+  input: { name: string; note?: string },
+): Promise<ClientAcknowledgeResult> {
+  const plan = await getClientAuditReport(idOrNumber)
+  if (!plan || !plan.stageReport) return { ok: false, error: 'notFound' }
+  const result = acknowledgeReport(plan.stageReport, input, new Date().toISOString())
+  if (!result.ok || !result.next) return { ok: false, error: result.error ?? 'wrongState' }
+  const saved = await saveAuditPlan({
+    id: plan.id,
+    planNumber: plan.planNumber,
+    stageReport: result.next,
+  })
+  return { ok: true, plan: saved }
 }

@@ -21,6 +21,7 @@ export const ROUTES = {
   findingDetails: "/findings/:ncId",
   certificates: "/certificates",
   auditPlanDetails: "/audits/:planId",
+  auditReport: "/audits/:planId/report",
   quotations: "/offers",
   quotationDetails: "/offers/:quotationId",
   legacyQuotations: "/quotations",
@@ -101,6 +102,10 @@ export const ROUTES = {
 
 export function clientAuditPlanPath(planId: string): string {
   return `/audits/${encodeURIComponent(planId)}`;
+}
+
+export function clientAuditReportPath(planId: string): string {
+  return `/audits/${encodeURIComponent(planId)}/report`;
 }
 
 export function clientQuotationPath(quotationId: string): string {

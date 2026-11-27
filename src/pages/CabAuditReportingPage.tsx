@@ -194,7 +194,14 @@ function CabAuditReportingContent() {
                         <td className="px-4 py-3.5 text-[13px] text-neutral-600" dir="ltr">
                           {formatReportingDate(row.startDate)} - {formatReportingDate(row.endDate)}
                         </td>
-                        <td className="px-4 py-3.5"><ReportingStatusBadge status={row.status} /></td>
+                        <td className="px-4 py-3.5">
+                          <ReportingStatusBadge status={row.status} />
+                          {row.acknowledgedAt && (
+                            <p className="mt-1 text-[11px] font-medium text-[#1e40af]" data-testid="register-acknowledged" title={row.acknowledgedBy}>
+                              {t('clientAuditResults.cab.registerAcknowledged')} · <bdi dir="ltr">{formatReportingDate(row.acknowledgedAt)}</bdi>
+                            </p>
+                          )}
+                        </td>
                         <td className="px-4 py-3.5 text-[13px] text-neutral-700">
                           {row.version > 0 ? `v${row.version}` : '-'}
                           {row.issuedAt && <p className="text-[11px] text-neutral-500" dir="ltr">{formatReportingDate(row.issuedAt)}</p>}

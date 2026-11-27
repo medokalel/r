@@ -16,7 +16,13 @@ import {
   type ClientPlanDecisionMode,
 } from '@/components/dashboard/ClientPlanDecisionDialog'
 import type { AuditPlan } from '@/lib/api/cabAuditPlanningApi'
-import { ROUTES } from '@/lib/routes'
+import {
+  getClientExecutionSummary,
+  getClientReportAcknowledgement,
+  getClientReportStatus,
+  type ClientAttendee,
+} from '@/lib/clientAuditResults'
+import { clientAuditReportPath, ROUTES } from '@/lib/routes'
 import { cn } from '@/lib/utils'
 
 function formatAuditDate(value: string, language: string): string {
@@ -35,6 +41,40 @@ function Fact({ label, value }: { label: string; value: React.ReactNode }) {
       <dt className="text-[12px] text-neutral-500">{label}</dt>
       <dd dir="auto" className="mt-0.5 text-start text-[14px] font-medium text-neutral-900">{value}</dd>
     </div>
+  )
+}
+
+function AttendanceList({ attendees }: { attendees: ClientAttendee[] }) {
+  const { t } = useTranslation()
+  if (attendees.length === 0) {
+    return <p className="text-[13px] text-neutral-500">{t('clientAuditResults.plan.noAttendance', 'No attendance recorded.')}</p>
+  }
+  return (
+    <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+      {attendees.map((a) => (
+        <li key={a.id} className="rounded-[10px] border border-[#eef0f4] px-4 py-2.5">
+          <p dir="auto" className="text-start text-[13px] font-medium text-neutral-900">{a.name}</p>
+          <p dir="auto" className="text-start text-[12px] text-neutral-500">
+            {[a.position, t(`clientAuditResults.plan.organization.${a.organization}`, a.organization)].filter(Boolean).join(' · ')}
+            {a.attendedRemotely ? ` · ${t('clientAuditResults.plan.remote', 'Remote')}` : ''}
+          </p>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+function HeldBadge({ held }: { held: boolean }) {
+  const { t } = useTranslation()
+  return (
+    <span
+      className={cn(
+        'self-start rounded-full px-3 py-0.5 text-[12px] font-medium',
+        held ? 'bg-[#e7f6ec] text-[#1e7e34]' : 'bg-[#f3f4f6] text-neutral-600',
+      )}
+    >
+      {held ? t('clientAuditResults.plan.held', 'Held') : t('clientAuditResults.plan.notHeld', 'Not held yet')}
+    </span>
   )
 }
 
@@ -70,6 +110,9 @@ export function ClientAuditPlanPage() {
 
   const confirmation = plan ? getPlanConfirmation(plan) : null
   const objection = plan ? getClientPlanObjection(plan) : null
+  const execution = plan ? getClientExecutionSummary(plan) : null
+  const reportStatus = plan ? getClientReportStatus(plan) : 'notIssued'
+  const reportAck = plan ? getClientReportAcknowledgement(plan) : null
 
   const applyDecision = (updated: AuditPlan | null) => {
     if (updated) setPlan(updated)
@@ -290,6 +333,88 @@ export function ClientAuditPlanPage() {
                   />
                 ) : null}
               </dl>
+            </Section>
+
+            {execution && execution.started && (
+              <>
+                <Section title={t('clientAuditResults.plan.opening', 'Opening meeting')}>
+                  <div className="flex flex-col gap-3" data-testid="opening-meeting">
+                    <HeldBadge held={execution.opening.held} />
+                    {execution.opening.held && <AttendanceList attendees={execution.opening.attendees} />}
+                  </div>
+                </Section>
+
+                <Section title={t('clientAuditResults.plan.closing', 'Closing meeting')}>
+                  <div className="flex flex-col gap-4" data-testid="closing-meeting">
+                    <HeldBadge held={execution.closing.held} />
+                    {execution.closing.held && (
+                      <>
+                        <AttendanceList attendees={execution.closing.attendees} />
+                        <dl className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                          <Fact
+                            label={t('clientAuditResults.plan.findingsPresented', 'Findings presented')}
+                            value={execution.closing.findingsPresented ? t('clientAuditResults.plan.yes', 'Yes') : t('clientAuditResults.plan.no', 'No')}
+                          />
+                          {execution.closing.clientPosition ? (
+                            <Fact
+                              label={t('clientAuditResults.plan.clientPosition', 'Client position')}
+                              value={t(`clientAuditResults.plan.position.${execution.closing.clientPosition}`, execution.closing.clientPosition)}
+                            />
+                          ) : null}
+                          {execution.closing.ncResponseDueBy ? (
+                            <Fact
+                              label={t('clientAuditResults.plan.ncDue', 'Nonconformity response due by')}
+                              value={<bdi>{formatAuditDate(execution.closing.ncResponseDueBy, i18n.language)}</bdi>}
+                            />
+                          ) : null}
+                          {execution.closing.clientComments ? (
+                            <Fact
+                              label={t('clientAuditResults.plan.clientComments', 'Client comments')}
+                              value={<span className="whitespace-pre-line">{execution.closing.clientComments}</span>}
+                            />
+                          ) : null}
+                        </dl>
+                      </>
+                    )}
+                  </div>
+                </Section>
+              </>
+            )}
+
+            <Section title={t('clientAuditResults.plan.reportTitle', 'Audit report')}>
+              <div className="flex flex-wrap items-center justify-between gap-3" data-testid="report-card">
+                <div className="min-w-0 text-[13px] text-neutral-700">
+                  {reportStatus === 'notIssued' ? (
+                    <p>{t('clientAuditResults.plan.reportNotIssued', 'The report has not been issued yet.')}</p>
+                  ) : (
+                    <>
+                      <p className="font-medium text-neutral-900">
+                        {t('clientAuditResults.plan.reportIssued', 'Report issued on {{date}} (version {{version}})', {
+                          date: plan.stageReport?.issuedAt ? new Intl.DateTimeFormat(i18n.language, { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(plan.stageReport.issuedAt)) : '-',
+                          version: plan.stageReport?.version ?? 1,
+                        })}
+                      </p>
+                      <p className="mt-0.5 text-neutral-500">
+                        {reportAck
+                          ? t('clientAuditResults.plan.reportAcknowledged', 'Acknowledged by {{name}} on {{date}}', {
+                              name: reportAck.by,
+                              date: new Intl.DateTimeFormat(i18n.language, { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(reportAck.at)),
+                            })
+                          : t('clientAuditResults.plan.reportAwaiting', 'Awaiting your acknowledgement.')}
+                      </p>
+                    </>
+                  )}
+                </div>
+                {reportStatus !== 'notIssued' && (
+                  <Link
+                    to={clientAuditReportPath(plan.planNumber)}
+                    data-testid="read-report"
+                    className="inline-flex h-10 items-center rounded-[8px] bg-primary px-5 text-[13px] font-semibold !text-white transition-colors hover:bg-[#0f2d8a]"
+                  >
+                    {t('clientAuditResults.plan.readReport', 'Read report')}
+                  </Link>
+                )}
+              </div>
             </Section>
           </>
         )}

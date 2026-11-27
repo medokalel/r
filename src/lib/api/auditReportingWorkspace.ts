@@ -62,6 +62,9 @@ export interface AuditReportingRow {
   /** 0 until a report exists. */
   version: number
   issuedAt?: string
+  /** Set once the audit client acknowledged the issued report. */
+  acknowledgedAt?: string
+  acknowledgedBy?: string
   reviewer: string
   audited: number
   total: number
@@ -86,6 +89,8 @@ export function buildReportingRow(plan: AuditPlan, records: FindingRecord[]): Au
     status: getReportingStatus(plan),
     version: plan.stageReport?.version ?? 0,
     issuedAt: plan.stageReport?.issuedAt,
+    acknowledgedAt: plan.stageReport?.acknowledgement?.at,
+    acknowledgedBy: plan.stageReport?.acknowledgement?.by,
     reviewer: plan.stageReport?.reviewer ?? '',
     audited: counts.audited,
     total: counts.total,

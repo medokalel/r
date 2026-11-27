@@ -243,3 +243,14 @@ test('a reopened draft binds strictly from its record and stays locked until the
   assert.match(add, /planLookup !== 'ready'/)
   assert.match(add, /setPlanLookup\(data \? 'ready' : 'failed'\)/)
 })
+
+test('register row shows the client acknowledgement only once it exists', () => {
+  const issued = state('issued', { issuedAt: '2026-12-10T10:00:00.000Z', snapshot: { counts: { audited: 1, total: 2, nc: 0, findings: 0 } } })
+  const before = ws.buildReportingRow(plan('1', { stageReport: issued }), [])
+  assert.equal(before.acknowledgedAt, undefined)
+  const ack = { by: 'Sara', at: '2026-12-11T09:00:00.000Z' }
+  const after = ws.buildReportingRow(plan('1', { stageReport: { ...issued, acknowledgement: ack } }), [])
+  assert.equal(after.acknowledgedAt, ack.at)
+  assert.equal(after.acknowledgedBy, 'Sara')
+  assert.equal(after.status, 'issued')
+})

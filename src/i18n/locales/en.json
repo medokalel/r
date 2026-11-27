@@ -318,6 +318,59 @@
     "exportIncomplete": "The export is incomplete, so no file was created. Narrow the filters and try again.",
     "empty": "No invoices found."
   },
+  "clientAuditResults": {
+    "cab": {
+      "acknowledgedBanner": "Acknowledged by {{name}} on {{date}}",
+      "historyAcknowledged": "Acknowledged by the client",
+      "registerAcknowledged": "Acknowledged by client"
+    },
+    "report": {
+      "pageTitle": "Audit report",
+      "backToAudit": "Back to audit",
+      "unavailableTitle": "This report is not available",
+      "unavailableSubtitle": "The report appears here once the certification body issues it to your organization.",
+      "acknowledgeTitle": "Acknowledge the report",
+      "acknowledgeHint": "Confirm that you received and read this report. You can acknowledge it once.",
+      "yourName": "Your name",
+      "nameRequired": "Enter your name.",
+      "note": "Note (optional)",
+      "acknowledge": "Acknowledge report",
+      "print": "Print / save as PDF",
+      "acknowledgedBy": "Acknowledged by {{name}} on {{date}}",
+      "acknowledgedToast": "Report acknowledged",
+      "acknowledgeFailed": "Could not acknowledge the report"
+    },
+    "plan": {
+      "noAttendance": "No attendance recorded.",
+      "remote": "Remote",
+      "held": "Held",
+      "notHeld": "Not held yet",
+      "opening": "Opening meeting",
+      "closing": "Closing meeting",
+      "findingsPresented": "Findings presented",
+      "yes": "Yes",
+      "no": "No",
+      "clientPosition": "Client position",
+      "clientComments": "Client comments",
+      "ncDue": "Nonconformity response due by",
+      "reportTitle": "Audit report",
+      "reportNotIssued": "The report has not been issued yet.",
+      "reportIssued": "Report issued on {{date}} (version {{version}})",
+      "reportAwaiting": "Awaiting your acknowledgement.",
+      "reportAcknowledged": "Acknowledged by {{name}} on {{date}}",
+      "readReport": "Read report",
+      "organization": {
+        "Client": "Client",
+        "Audit team": "Audit team",
+        "Observer": "Observer"
+      },
+      "position": {
+        "Agrees": "Agrees",
+        "Partly agrees": "Partly agrees",
+        "Disagrees": "Disagrees"
+      }
+    }
+  },
   "common": {
     "yes": "Yes",
     "no": "No",

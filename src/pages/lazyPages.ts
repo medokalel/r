@@ -60,6 +60,10 @@ export const ClientAuditPlanPage = lazyNamed(
   () => import('@/pages/ClientAuditPlanPage'),
   'ClientAuditPlanPage',
 )
+export const ClientAuditReportPage = lazyNamed(
+  () => import('@/pages/ClientAuditReportPage'),
+  'ClientAuditReportPage',
+)
 export const ClientQuotationsPage = lazyNamed(
   () => import('@/pages/ClientQuotationsPage'),
   'ClientQuotationsPage',
