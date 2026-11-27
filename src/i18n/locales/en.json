@@ -3091,6 +3091,7 @@
       "nonconformities": "Nonconformities",
       "certification": "Certification",
       "competence": "Competence",
+      "impartialityRegister": "Impartiality register",
       "clientPortal": "Client Portal",
       "dashboard": "Dashboard",
       "clients": "Clients",
@@ -3151,6 +3152,84 @@
       "salesHub": "Sales Hub",
       "agreementTerms": "Agreement terms",
       "certificationAgreements": "Certification agreements"
+    },
+    "impartialityRegister": {
+      "title": "Impartiality register",
+      "subtitle": "Annual declarations and declared client relationships across all personnel. Cooling-off period: {{months}} months.",
+      "recordRelationship": "Record relationship",
+      "searchLabel": "Search people",
+      "searchPlaceholder": "Search by name or code...",
+      "peopleCount": "{{count}} people",
+      "relationshipsCount": "{{count}} declared relationships",
+      "exceptionsCount": "{{count}} exceptions",
+      "emptyPeople": "No matching people.",
+      "emptyRelationships": "No declared relationships.",
+      "emptyExceptions": "No exceptions recorded.",
+      "loadFailed": "Could not load the impartiality register.",
+      "kpis": {
+        "valid": "Valid annual declarations",
+        "missingOrExpired": "Missing or expired",
+        "toReview": "Relationships to review",
+        "blocking": "Blocking relationships"
+      },
+      "tabs": {
+        "people": "People",
+        "relationships": "Relationships",
+        "exceptions": "Exceptions"
+      },
+      "columns": {
+        "person": "Person",
+        "annualDeclaration": "Annual declaration",
+        "validUntil": "Valid until",
+        "relationships": "Relationships",
+        "toReview": "To review",
+        "blocking": "Blocking",
+        "client": "Client",
+        "type": "Type",
+        "period": "Period",
+        "classification": "Classification",
+        "issue": "Issue",
+        "justification": "Justification",
+        "status": "Status",
+        "requested": "Requested",
+        "decision": "Decision"
+      },
+      "declarationState": {
+        "valid": "Valid",
+        "missing": "Missing",
+        "expired": "Expired"
+      },
+      "relStatus": {
+        "ongoing": "Ongoing"
+      },
+      "classification": {
+        "blocking": "Blocking",
+        "toReview": "To review"
+      },
+      "exceptionStatus": {
+        "PENDING": "Pending review",
+        "APPROVED": "Approved",
+        "REJECTED": "Rejected"
+      },
+      "dialog": {
+        "title": "Record relationship",
+        "subtitle": "Declare a consultancy, employment, internal audit, or financial relationship with a client organisation.",
+        "person": "Person",
+        "selectPerson": "Select person...",
+        "clientOrganisation": "Client organisation",
+        "selectClient": "Select client organisation...",
+        "relationshipType": "Relationship type",
+        "startDate": "Start date",
+        "endDate": "End date (optional)",
+        "ongoing": "Ongoing (no end date)",
+        "description": "Description (optional)",
+        "saving": "Saving...",
+        "personRequired": "Select the person.",
+        "clientRequired": "Select the client organisation.",
+        "startDateRequired": "Set the start date.",
+        "endDateBeforeStart": "The end date cannot be before the start date.",
+        "failed": "Could not record the relationship."
+      }
     },
     "certification": {
       "title": "Certification cycles",

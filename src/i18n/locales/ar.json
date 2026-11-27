@@ -3117,6 +3117,7 @@
       "nonconformities": "عدم المطابقة",
       "certification": "الاعتماد",
       "competence": "الكفاءة",
+      "impartialityRegister": "سجل الحيادية",
       "clientPortal": "بوابة العميل",
       "dashboard": "لوحة التحكم",
       "clients": "العملاء",
@@ -3177,6 +3178,84 @@
       "salesHub": "مركز المبيعات",
       "agreementTerms": "شروط الاتفاقية",
       "certificationAgreements": "اتفاقيات منح الشهادة"
+    },
+    "impartialityRegister": {
+      "title": "سجل الحيادية",
+      "subtitle": "الإقرارات السنوية والعلاقات المعلنة مع العملاء لجميع الأفراد. فترة التهدئة: {{months}} شهرًا.",
+      "recordRelationship": "تسجيل علاقة",
+      "searchLabel": "بحث في الأشخاص",
+      "searchPlaceholder": "ابحث بالاسم أو الكود...",
+      "peopleCount": "{{count}} أشخاص",
+      "relationshipsCount": "{{count}} علاقات معلنة",
+      "exceptionsCount": "{{count}} استثناءات",
+      "emptyPeople": "لا يوجد أشخاص مطابقون.",
+      "emptyRelationships": "لا توجد علاقات معلنة.",
+      "emptyExceptions": "لا توجد استثناءات مسجلة.",
+      "loadFailed": "تعذر تحميل سجل الحيادية.",
+      "kpis": {
+        "valid": "إقرارات سنوية سارية",
+        "missingOrExpired": "مفقودة أو منتهية",
+        "toReview": "علاقات تحتاج إلى مراجعة",
+        "blocking": "علاقات مانعة"
+      },
+      "tabs": {
+        "people": "الأشخاص",
+        "relationships": "العلاقات",
+        "exceptions": "الاستثناءات"
+      },
+      "columns": {
+        "person": "الشخص",
+        "annualDeclaration": "الإقرار السنوي",
+        "validUntil": "ساري حتى",
+        "relationships": "العلاقات",
+        "toReview": "تحتاج مراجعة",
+        "blocking": "مانعة",
+        "client": "العميل",
+        "type": "النوع",
+        "period": "الفترة",
+        "classification": "التصنيف",
+        "issue": "الملاحظة",
+        "justification": "المبرر",
+        "status": "الحالة",
+        "requested": "تاريخ الطلب",
+        "decision": "القرار"
+      },
+      "declarationState": {
+        "valid": "ساري",
+        "missing": "مفقود",
+        "expired": "منتهٍ"
+      },
+      "relStatus": {
+        "ongoing": "مستمرة"
+      },
+      "classification": {
+        "blocking": "مانعة",
+        "toReview": "تحتاج مراجعة"
+      },
+      "exceptionStatus": {
+        "PENDING": "قيد المراجعة",
+        "APPROVED": "معتمد",
+        "REJECTED": "مرفوض"
+      },
+      "dialog": {
+        "title": "تسجيل علاقة",
+        "subtitle": "أعلن عن علاقة استشارات أو توظيف أو تدقيق داخلي أو مصلحة مالية مع جهة عميلة.",
+        "person": "الشخص",
+        "selectPerson": "اختر الشخص...",
+        "clientOrganisation": "جهة العميل",
+        "selectClient": "اختر جهة العميل...",
+        "relationshipType": "نوع العلاقة",
+        "startDate": "تاريخ البداية",
+        "endDate": "تاريخ النهاية (اختياري)",
+        "ongoing": "مستمرة (بدون تاريخ نهاية)",
+        "description": "الوصف (اختياري)",
+        "saving": "جارٍ الحفظ...",
+        "personRequired": "اختر الشخص.",
+        "clientRequired": "اختر جهة العميل.",
+        "startDateRequired": "حدد تاريخ البداية.",
+        "endDateBeforeStart": "تاريخ النهاية لا يمكن أن يكون قبل تاريخ البداية.",
+        "failed": "تعذر تسجيل العلاقة."
+      }
     },
     "certification": {
       "title": "دورات الشهادات",

@@ -154,6 +154,7 @@ const navGroups: CabNavGroup[] = [
     labelKey: 'cab.sidebar.groups.peoplePortals',
     items: [
       { icon: AccreditationFieldIcon, labelKey: 'cab.sidebar.competence', href: ROUTES.cabCompetence },
+      { icon: ShieldIcon, labelKey: 'cab.sidebar.impartialityRegister', href: ROUTES.cabImpartiality },
       { icon: UserIcon, labelKey: 'cab.sidebar.clientPortal', href: ROUTES.portal },
     ],
   },
