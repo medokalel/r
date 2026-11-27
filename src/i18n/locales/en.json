@@ -3115,6 +3115,7 @@
       "certification": "Certification",
       "competence": "Competence",
       "impartialityRegister": "Impartiality register",
+      "teamAvailability": "Team availability",
       "clientPortal": "Client Portal",
       "dashboard": "Dashboard",
       "clients": "Clients",
@@ -3177,10 +3178,38 @@
       "agreementTerms": "Agreement terms",
       "certificationAgreements": "Certification agreements"
     },
+    "teamAvailability": {
+      "title": "Team availability",
+      "subtitle": "Audit bookings and unavailable periods for every auditor, from the same records the team selection rules use.",
+      "impartialityLink": "Impartiality register",
+      "searchLabel": "Search people",
+      "searchPlaceholder": "Search by name...",
+      "person": "Person",
+      "today": "Today",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "legend": "Legend",
+      "empty": "No matching people.",
+      "loadFailed": "Could not load team availability.",
+      "kpis": {
+        "people": "People shown",
+        "auditDays": "Audit days this month",
+        "leaveDays": "Unavailable days",
+        "conflicts": "Conflicting days"
+      },
+      "state": {
+        "free": "Available",
+        "auditConfirmed": "Confirmed audit",
+        "auditUnconfirmed": "Unconfirmed audit",
+        "leave": "Unavailable",
+        "conflict": "Conflict"
+      }
+    },
     "impartialityRegister": {
       "title": "Impartiality register",
       "subtitle": "Annual declarations and declared client relationships across all personnel. Cooling-off period: {{months}} months.",
       "recordRelationship": "Record relationship",
+      "availabilityLink": "Team availability calendar",
       "searchLabel": "Search people",
       "searchPlaceholder": "Search by name or code...",
       "peopleCount": "{{count}} people",
@@ -3199,7 +3228,57 @@
       "tabs": {
         "people": "People",
         "relationships": "Relationships",
-        "exceptions": "Exceptions"
+        "exceptions": "Exceptions",
+        "rules": "Rules"
+      },
+      "rules": {
+        "title": "Team selection rules",
+        "subtitle": "Applied to every recommendation and validation of this CAB.",
+        "loadFailed": "Could not load the team selection rules.",
+        "saved": "Rules saved.",
+        "saveFailed": "Could not save the rules. Try again.",
+        "save": "Save rules",
+        "errors": {
+          "required": "Enter a value.",
+          "integer": "Enter a whole number.",
+          "range": "Enter a number from {{min}} to {{max}}."
+        },
+        "coolingOffMonths": {
+          "label": "Cooling-off period (months)",
+          "hint": "After consultancy, internal audit or employment ends, the person cannot audit that client for this period."
+        },
+        "travelBufferDays": {
+          "label": "Travel buffer (days)",
+          "hint": "Free days needed between two audits of the same person."
+        },
+        "workloadWindowDays": {
+          "label": "Workload window (days)",
+          "hint": "Look-back period used to balance the workload."
+        },
+        "maxAuditDaysInWindow": {
+          "label": "Audit days limit in the window",
+          "hint": "Above this, a workload warning is shown."
+        },
+        "declarationValidityMonths": {
+          "label": "Annual declaration validity (months)",
+          "hint": "How long an annual declaration stays valid."
+        },
+        "expiryWarningDays": {
+          "label": "Approval expiry warning (days)",
+          "hint": "Warn when a competence approval expires within this many days after the audit."
+        },
+        "requireAnnualDeclaration": {
+          "label": "Require a valid annual declaration for audit plans",
+          "hint": "Blocking, but an exception can accept it."
+        },
+        "requireAuditDeclaration": {
+          "label": "Require a declaration for each audit",
+          "hint": "Blocking, but an exception can accept it. Otherwise shown as a note."
+        },
+        "exceptionSecondApprover": {
+          "label": "Second approver for exceptions (optional)",
+          "hint": "Off by default. When on, the admin who requested an exception cannot approve or reject it; another CAB admin decides."
+        }
       },
       "columns": {
         "person": "Person",
@@ -3793,6 +3872,7 @@
           "rejectTitle": "Reject the exception",
           "rejected": "Exception rejected.",
           "requestedBy": "Requested by {{name}} on {{date}}",
+          "secondApproverRequired": "You requested this exception. Another CAB admin must approve or reject it.",
           "status": {
             "APPROVED": "Approved",
             "PENDING": "Pending",
@@ -3849,6 +3929,7 @@
         },
         "panel": {
           "checkFailed": "The team could not be checked. Change the team or try again.",
+          "availabilityLink": "View team availability calendar",
           "confirm": "Confirm team",
           "confirmDisabled": "Confirm becomes available when there is a team leader and no blocking issue is left.",
           "confirmed": "Audit team confirmed. The CAB and the assigned people were notified.",

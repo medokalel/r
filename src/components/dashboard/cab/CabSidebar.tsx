@@ -7,6 +7,7 @@ import {
   AccreditationFieldIcon,
   AppIcon,
   BuildingsIcon,
+  CalendarIcon,
   CertificateBadgeIcon,
   ChevronDownIcon,
   CorrectiveActionIcon,
@@ -155,6 +156,7 @@ const navGroups: CabNavGroup[] = [
     items: [
       { icon: AccreditationFieldIcon, labelKey: 'cab.sidebar.competence', href: ROUTES.cabCompetence },
       { icon: ShieldIcon, labelKey: 'cab.sidebar.impartialityRegister', href: ROUTES.cabImpartiality },
+      { icon: CalendarIcon, labelKey: 'cab.sidebar.teamAvailability', href: ROUTES.cabTeamAvailability },
       { icon: UserIcon, labelKey: 'cab.sidebar.clientPortal', href: ROUTES.portal },
     ],
   },

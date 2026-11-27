@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
+import { TeamRulesPanel } from '@/components/cab/impartiality/TeamRulesPanel'
 import { Button } from '@/components/ui/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { DatePicker } from '@/components/ui/DatePicker'
@@ -67,7 +68,7 @@ function fromIsoDate(value?: string | null): Date | undefined {
   return Number.isNaN(parsed.getTime()) ? undefined : parsed
 }
 
-type TabId = 'people' | 'relationships' | 'exceptions'
+type TabId = 'people' | 'relationships' | 'exceptions' | 'rules'
 
 const DECLARATION_STYLES: Record<ImpartialityDeclarationState, string> = {
   valid: 'bg-[#e8f7ee] text-[#1d7a46]',
@@ -309,6 +310,7 @@ export function CabImpartialityRegisterPage() {
       label: t('cab.impartialityRegister.tabs.relationships', 'Relationships'),
     },
     { id: 'exceptions', label: t('cab.impartialityRegister.tabs.exceptions', 'Exceptions') },
+    { id: 'rules', label: t('cab.impartialityRegister.tabs.rules', 'Rules') },
   ]
 
   return (
@@ -344,6 +346,9 @@ export function CabImpartialityRegisterPage() {
               })}
             </p>
           </div>
+          <Link to={ROUTES.cabTeamAvailability} className="text-[13px] font-semibold text-primary hover:underline">
+            {t('cab.impartialityRegister.availabilityLink', 'Team availability calendar')}
+          </Link>
           <Button
             variant="primary"
             icon={<AppIcon icon={AddCircleIcon} size={20} />}
@@ -396,7 +401,9 @@ export function CabImpartialityRegisterPage() {
           ))}
         </div>
 
-        {loading ? (
+        {activeTab === 'rules' ? (
+          <TeamRulesPanel onSaved={(settings) => setCoolingOffMonths(settings.coolingOffMonths)} />
+        ) : loading ? (
           <div className="flex items-center justify-center rounded-[16px] border border-[#ececec] bg-white py-16">
             <span className="size-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
           </div>

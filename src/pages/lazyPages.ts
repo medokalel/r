@@ -133,6 +133,10 @@ export const CabImpartialityRegisterPage = lazyNamed(
   () => import('@/pages/CabImpartialityRegisterPage'),
   'CabImpartialityRegisterPage',
 )
+export const CabTeamAvailabilityPage = lazyNamed(
+  () => import('@/pages/CabTeamAvailabilityPage'),
+  'CabTeamAvailabilityPage',
+)
 export const PortalHomePage = lazyNamed(() => import('@/pages/portal/PortalHomePage'), 'PortalHomePage')
 export const PortalCompanyProfilePage = lazyNamed(
   () => import('@/pages/portal/PortalCompanyProfilePage'),

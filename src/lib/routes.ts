@@ -67,6 +67,7 @@ export const ROUTES = {
   cabDecisionDetails: "/cab/decisions/:decisionId",
   cabCompetence: "/cab/competence",
   cabImpartiality: "/cab/impartiality",
+  cabTeamAvailability: "/cab/team-availability",
   cabPersonnelNew: "/cab/competence/persons/new",
   cabPersonnelEdit: "/cab/competence/persons/:id/edit",
   cabCompetenceEvaluation: "/cab/competence/persons/:id/evaluation",

@@ -20,7 +20,11 @@ import {
   type PlanAssignment,
 } from '@/lib/teamSelection/personnel'
 import { rankCandidates, suggestRole, toIsoDate, validateTeam, isCriticalCode } from '@/lib/teamSelection/rules'
+import { PERSONNEL_SEED } from '@/lib/teamSelection/personnelSeed'
+import { UNAVAILABILITY_SEED } from '@/lib/teamSelection/registerSeed'
 import { assignmentToTeamMember } from '@/lib/teamSelection/teamMember'
+import { getAuthSession } from '@/lib/authStorage'
+import { validateRulesDraft } from '@/lib/teamRulesView'
 import type {
   Candidate,
   ExceptionStatus,
@@ -47,8 +51,11 @@ export interface TeamSelectionException {
   justification: string
   status: ExceptionStatus
   requestedBy: string
+  /** Stable id of the requester (user id or email). Missing on exceptions saved before this field existed. */
+  requestedById?: string | null
   requestedAt: string
   decidedBy: string | null
+  decidedById?: string | null
   decidedAt: string | null
   decisionNotes: string | null
 }
@@ -174,6 +181,35 @@ interface TeamSelectionStore {
 const STORAGE_KEY = 'icasco-team-selection-v1'
 /** Who the demo backend records as the acting user. */
 const DEMO_ACTOR = 'Mohamed El Manawahly'
+/**
+ * Who is acting: the signed-in user from the auth session (same source as the other
+ * CAB APIs). The fixed demo name is only the fallback when no session user exists.
+ * Note: the second approver rule below runs in the browser against local demo data.
+ * It is not server security; the real service must enforce it with its own authentication.
+ */
+type SessionUser = { id?: string; name?: string; fullName?: string; email?: string }
+
+/** Display name of the acting user (for showing in lists and the audit trail only). */
+export function getActingAdmin(): string {
+  const user = getAuthSession()?.user as SessionUser | undefined
+  return user?.fullName?.trim() || user?.name?.trim() || user?.email?.trim() || DEMO_ACTOR
+}
+
+/** Stable identity used for the second approver check: user id, else email. Never the display name. */
+export function getActingAdminId(): string | null {
+  const user = getAuthSession()?.user as SessionUser | undefined
+  return user?.id?.trim() || user?.email?.trim().toLowerCase() || null
+}
+
+/**
+ * Whether the acting user is the one who requested this exception. Compares stable ids when the
+ * exception has one. Older exceptions saved without an id fall back to the display name.
+ */
+export function isRequesterOf(exception: Pick<TeamSelectionException, 'requestedBy' | 'requestedById'>): boolean {
+  const actorId = getActingAdminId()
+  if (exception.requestedById) return actorId !== null && actorId === exception.requestedById
+  return exception.requestedBy === getActingAdmin()
+}
 
 let cachedStore: TeamSelectionStore | null = null
 
@@ -211,7 +247,7 @@ const makeId = (prefix: string): string =>
   `${prefix}-${Date.now().toString(36)}${Math.round(Math.random() * 1e6).toString(36)}`
 
 function recordEvent(event: Omit<TeamEvent, 'id' | 'actor' | 'createdAt'>): void {
-  loadStore().events.unshift({ id: makeId('evt'), actor: DEMO_ACTOR, createdAt: new Date().toISOString(), ...event })
+  loadStore().events.unshift({ id: makeId('evt'), actor: getActingAdmin(), createdAt: new Date().toISOString(), ...event })
 }
 
 /** Test helper: forget the in-memory copy so the next call reads storage again. */
@@ -412,7 +448,7 @@ export async function confirmPlanTeam(
   }
 
   store.assignments[plan.id] = nextTeam
-  store.confirmations[plan.id] = { at: new Date().toISOString(), by: DEMO_ACTOR }
+  store.confirmations[plan.id] = { at: new Date().toISOString(), by: getActingAdmin() }
 
   const onSiteNames = nextTeam.filter((member) => member.role !== 'OBSERVER').map((member) => member.name)
   const updated = await saveAuditPlan({
@@ -492,7 +528,8 @@ export async function requestTeamException(request: {
     },
     justification: request.justification,
     status: 'PENDING',
-    requestedBy: DEMO_ACTOR,
+    requestedBy: getActingAdmin(),
+    requestedById: getActingAdminId(),
     requestedAt: new Date().toISOString(),
     decidedBy: null,
     decidedAt: null,
@@ -523,9 +560,17 @@ export async function decideTeamException(
   if (decision === 'reject' && !notes?.trim()) {
     throw new TeamSelectionError('A reason is required to reject an exception.', 400)
   }
+  if (store.settings.exceptionSecondApprover && isRequesterOf(exception)) {
+    throw new TeamSelectionError(
+      'SECOND_APPROVER_REQUIRED: the admin who requested an exception cannot decide it. Another CAB admin must approve or reject it.',
+      403,
+      'SECOND_APPROVER_REQUIRED',
+    )
+  }
 
   exception.status = decision === 'approve' ? 'APPROVED' : 'REJECTED'
-  exception.decidedBy = DEMO_ACTOR
+  exception.decidedBy = getActingAdmin()
+  exception.decidedById = getActingAdminId()
   exception.decidedAt = new Date().toISOString()
   exception.decisionNotes = notes?.trim() || null
   recordEvent({
@@ -555,6 +600,14 @@ export async function updateTeamSelectionSettings(
   changes: Partial<TeamSelectionSettings>,
 ): Promise<TeamSelectionSettings> {
   const store = loadStore()
+  const problems = validateRulesDraft({ ...store.settings, ...changes })
+  if (problems.length) {
+    throw new TeamSelectionError(
+      `INVALID_SETTINGS: ${problems.map((problem) => `${problem.key} (${problem.code})`).join(', ')}.`,
+      400,
+      'INVALID_SETTINGS',
+    )
+  }
   const details = Object.fromEntries(
     (Object.entries(changes) as Array<[keyof TeamSelectionSettings, unknown]>)
       .filter(([key, value]) => store.settings[key] !== value)
@@ -566,4 +619,69 @@ export async function updateTeamSelectionSettings(
   }
   persistStore()
   return { ...store.settings }
+}
+
+// ---------------------------------------------------------------- availability calendar
+
+export interface TeamAvailabilityData {
+  people: Array<{ id: string; name: string; role: string }>
+  bookings: Array<{
+    personId: string
+    planNumber: string
+    clientName: string
+    start: string
+    end: string
+    confirmed: boolean
+  }>
+  unavailability: Array<{ personId: string; start: string; end: string; reason: string }>
+}
+
+/**
+ * Everything the availability calendar draws, from the same sources the team
+ * selection rules use: unavailability records and the teams of the audit plans.
+ */
+export async function fetchTeamAvailability(): Promise<TeamAvailabilityData> {
+  const store = loadStore()
+  const plans = await fetchAuditPlans()
+  const people = PERSONNEL_SEED.filter((person) =>
+    ['Lead Auditor', 'Auditor', 'Technical Expert'].includes(person.competenceRole),
+  ).map((person) => ({ id: person.id, name: person.name, role: person.competenceRole }))
+
+  const bookings: TeamAvailabilityData['bookings'] = []
+  for (const plan of plans) {
+    if (!plan.proposedStartDate) continue
+    for (const assignment of planAssignments(plan, store.assignments[plan.id])) {
+      if (!assignment.personId) continue
+      bookings.push({
+        personId: assignment.personId,
+        planNumber: plan.planNumber,
+        clientName: plan.clientName,
+        start: plan.proposedStartDate,
+        end: plan.proposedEndDate || plan.proposedStartDate,
+        // Same rule as the Build Audit Plan page: a saved team confirmation, or the plan's own flag.
+        confirmed: Boolean(store.confirmations[plan.id]) || (plan.teamConfirmed ?? plan.status !== 'Draft'),
+      })
+    }
+  }
+  for (const extra of store.extraBookings) {
+    bookings.push({
+      personId: extra.personId,
+      planNumber: extra.planNumber,
+      clientName: '',
+      start: extra.start,
+      end: extra.end,
+      confirmed: true,
+    })
+  }
+
+  return {
+    people,
+    bookings,
+    unavailability: UNAVAILABILITY_SEED.map((entry) => ({
+      personId: entry.personId,
+      start: entry.startDate,
+      end: entry.endDate,
+      reason: entry.reason,
+    })),
+  }
 }

@@ -1,5 +1,7 @@
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
+import { ROUTES } from '@/lib/routes'
 import type { TeamEvent, TeamSelectionException, TeamValidationResult } from '@/lib/api/teamSelectionApi'
 import type { PlanAssignment } from '@/lib/teamSelection/personnel'
 import { PERSONNEL_SEED } from '@/lib/teamSelection/personnelSeed'
@@ -106,6 +108,12 @@ export function BuildPlanTeamStep({
               'Recommended from the competence register; checked for competence, availability and impartiality. The plan is sent and started only with a confirmed team.',
             )}
           </p>
+          <Link
+            to={`${ROUTES.cabTeamAvailability}${startDate ? `?month=${startDate.slice(0, 7)}` : ''}`}
+            className="mt-1 inline-block text-[13px] font-semibold text-primary hover:underline"
+          >
+            {t('cab.auditPlanning.team.panel.availabilityLink', 'View team availability calendar')}
+          </Link>
         </div>
         <span
           className={`rounded-[4px] px-2 py-1 text-[12px] font-semibold ${

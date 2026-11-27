@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/Button'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { Textarea } from '@/components/ui/TextField'
-import type { TeamSelectionException } from '@/lib/api/teamSelectionApi'
+import { getTeamSelectionSettings, isRequesterOf, type TeamSelectionException } from '@/lib/api/teamSelectionApi'
+import { isSelfDecisionBlocked } from '@/lib/teamRulesView'
 import type { ExceptionStatus } from '@/lib/teamSelection/types'
 import { cn } from '@/lib/utils'
 import { useTeamLanguage } from './teamSelectorUtils'
@@ -28,6 +29,14 @@ export function TeamExceptionsList({ exceptions, personName, onDecide }: TeamExc
   const { text } = useTeamLanguage()
   const [pending, setPending] = useState<{ row: TeamSelectionException; decision: 'approve' | 'reject' } | null>(null)
   const [notes, setNotes] = useState('')
+  const [secondApprover, setSecondApprover] = useState(false)
+
+  // Re-read the rule whenever the list changes.
+  useEffect(() => {
+    getTeamSelectionSettings()
+      .then((settings) => setSecondApprover(settings.exceptionSecondApprover))
+      .catch(() => {})
+  }, [exceptions])
 
   const formatDate = (iso: string | null) =>
     iso ? new Date(iso).toLocaleDateString(i18n.language.startsWith('ar') ? 'ar-EG' : 'en-GB', { dateStyle: 'medium' }) : ''
@@ -65,12 +74,20 @@ export function TeamExceptionsList({ exceptions, personName, onDecide }: TeamExc
                 })}`}
             </p>
             {row.decisionNotes && <p className="text-[12px] text-neutral-700">{row.decisionNotes}</p>}
+            {row.status === 'PENDING' && isSelfDecisionBlocked({ secondApprover, isRequester: isRequesterOf(row) }) && (
+              <p role="note" className="rounded-[8px] bg-[#fffbeb] px-3 py-2 text-[12px] text-[#92400e]">
+                {t(
+                  'cab.auditPlanning.team.exceptions.secondApproverRequired',
+                  'You requested this exception. Another CAB admin must approve or reject it.',
+                )}
+              </p>
+            )}
             {row.status === 'PENDING' && (
               <div className="flex flex-wrap gap-2">
-                <Button type="button" className="h-9 px-3 text-[12px]" onClick={() => setPending({ row, decision: 'approve' })}>
+                <Button type="button" disabled={isSelfDecisionBlocked({ secondApprover, isRequester: isRequesterOf(row) })} className="h-9 px-3 text-[12px]" onClick={() => setPending({ row, decision: 'approve' })}>
                   {t('cab.auditPlanning.team.exceptions.approve', 'Approve')}
                 </Button>
-                <Button type="button" variant="outline" className="h-9 px-3 text-[12px]" onClick={() => setPending({ row, decision: 'reject' })}>
+                <Button type="button" variant="outline" disabled={isSelfDecisionBlocked({ secondApprover, isRequester: isRequesterOf(row) })} className="h-9 px-3 text-[12px]" onClick={() => setPending({ row, decision: 'reject' })}>
                   {t('cab.auditPlanning.team.exceptions.reject', 'Reject')}
                 </Button>
               </div>
