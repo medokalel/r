@@ -1,17 +1,16 @@
+import { AgreementTextCard } from '@/components/dashboard/cab/agreements/AgreementTextCard'
 import { AgreementAuditTrail } from '@/components/dashboard/cab/agreements/AgreementAuditTrail'
 import { AgreementIntegrityCard } from '@/components/dashboard/cab/agreements/AgreementIntegrityCard'
 import {
   AppIcon,
   CheckIcon,
   ErrorCircleIcon,
-  FileTextIcon,
   ShieldIcon,
   SuccessCircleIcon,
   UserIcon,
 } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import {
-  renderAgreementClauseText,
   type CertificationAgreement,
 } from '@/lib/api/cabCertificationAgreementsApi'
 import { cn } from '@/lib/utils'
@@ -95,59 +94,8 @@ export function AgreementDocumentView({
   return (
     <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-12">
       {/* Main Clause Document Card (8 cols) */}
-      <section className="rounded-[16px] border border-[#ececec] bg-white p-6 xl:col-span-8">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#ececec] pb-4">
-          <div className="flex items-center gap-3">
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-[10px] bg-[#e8edfc] text-primary">
-              <AppIcon icon={FileTextIcon} size={20} />
-            </span>
-            <div>
-              <h2 className="text-[16px] font-bold text-neutral-900">
-                {isAr ? 'وثيقة اتفاقية منح الشهادة' : 'Certification agreement document'}
-              </h2>
-              <p className="text-[12px] text-neutral-500">
-                {isAr ? `${agreement.sections.length} بنداً قانونياً وفق ISO/IEC 17021-1 (5.1.2)` : `${agreement.sections.length} legal clauses under ISO/IEC 17021-1 (5.1.2)`}
-              </p>
-            </div>
-          </div>
-
-          <div className="inline-flex h-10 items-center gap-1 rounded-[8px] border border-[#e2e2e2] bg-[#f9fafc] p-1">
-            {(['en', 'ar'] as const).map((lang) => (
-              <button
-                key={lang}
-                type="button"
-                onClick={() => onChangeDocLang(lang)}
-                className={cn(
-                  'h-full rounded-[6px] px-3.5 text-[13px] font-medium transition-colors',
-                  docLang === lang ? 'bg-[#1236a3] text-white shadow-xs' : 'text-neutral-600 hover:bg-white hover:text-neutral-900',
-                )}
-              >
-                {lang === 'en' ? 'English' : 'العربية'}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Document Clauses */}
-        <div dir={docLang === 'ar' ? 'rtl' : 'ltr'} className="mt-5 space-y-3">
-          {agreement.sections.map((sec, idx) => {
-            const title = docLang === 'ar' ? sec.titleAr || sec.titleEn : sec.titleEn || sec.titleAr
-            const rawText = docLang === 'ar' ? sec.textAr || sec.textEn : sec.textEn || sec.textAr
-            return (
-              <div key={sec.id} className="rounded-[12px] border border-[#ececec] bg-[#f9fafc] p-4 transition-colors hover:bg-white">
-                <div className="flex items-center gap-2.5">
-                  <span className="inline-flex size-6 shrink-0 items-center justify-center rounded-[6px] bg-[#e8edfc] text-[12px] font-bold text-primary">
-                    {idx + 1}
-                  </span>
-                  <h4 className="text-[15px] font-bold text-neutral-900">{title}</h4>
-                </div>
-                <p className="mt-2 ps-8 text-[14px] leading-relaxed text-neutral-700">
-                  {renderAgreementClauseText(rawText, agreement.values)}
-                </p>
-              </div>
-            )
-          })}
-        </div>
+      <section className="rounded-[16px] border border-[#ececec] bg-white p-6 sm:p-8 xl:col-span-8">
+        <AgreementTextCard agreement={agreement} docLang={docLang} onChangeDocLang={onChangeDocLang} isAr={isAr} />
 
         {/* Document Bottom Signatures Block */}
         <div dir={docLang === 'ar' ? 'rtl' : 'ltr'} className="mt-6 border-t border-[#ececec] pt-6">
@@ -172,7 +120,7 @@ export function AgreementDocumentView({
                 },
               ].map((box, i) => {
                 const sigImg = box.local?.signatureDataUrl || box.sig?.signatureDataUrl
-                const typedSig = box.local?.typedSignature
+                const typedSig = box.local?.typedSignature || box.sig?.typedSignature
                 const signerName = box.local?.signerName || box.sig?.signerName || ''
                 const signerTitle = box.local?.signerTitle || box.sig?.signerTitle || ''
                 const methodText = getSignatureMethodLabel(box.local?.method || box.sig?.method, docLang === 'ar')
@@ -253,7 +201,7 @@ export function AgreementDocumentView({
               { role: isAr ? 'توقيع جهة المنح (iCASCO)' : 'Certification body (iCASCO)', expected: agreement.values.cabLegalNameEn || 'iCASCO', sig: agreement.cabSignature, local: localCabSig },
             ].map((box, i) => {
               const sigImg = box.local?.signatureDataUrl || box.sig?.signatureDataUrl
-              const typedSig = box.local?.typedSignature
+              const typedSig = box.local?.typedSignature || box.sig?.typedSignature
               const signerName = box.local?.signerName || box.sig?.signerName || ''
               const signerTitle = box.local?.signerTitle || box.sig?.signerTitle || ''
               const methodText = getSignatureMethodLabel(box.local?.method || box.sig?.method, isAr)

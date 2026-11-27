@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import { AgreementDocumentView } from '@/components/dashboard/cab/agreements/AgreementDocumentView'
+import { SignAgreementDialog } from '@/components/dashboard/cab/agreements/SignAgreementDialog'
 import { AgreementStatusBadge } from '@/components/dashboard/cab/agreements/AgreementStatusBadge'
 import { CalloutCard } from '@/components/dashboard/cab/ReviewPrimitives'
 import {
@@ -30,16 +31,17 @@ import {
   recordClientSignature,
   refreshAgreementTerms,
   remindCertificationAgreement,
+  requestCabSigningCode,
   sendCertificationAgreement,
   terminateCertificationAgreement,
   type CertificationAgreement,
   type CertificationAgreementStatus,
+  type SignaturePayload,
 } from '@/lib/api/cabCertificationAgreementsApi'
 import { getAgreementKindLabel, getAgreementStatusLabel } from '@/lib/agreementStatus'
 import { getUserErrorMessage } from '@/lib/errorMessages'
 import {
   ROUTES,
-  cabCertificationAgreementCountersignPath,
   cabCertificationAgreementDetailsPath,
   cabCertificationAgreementEditPath,
 } from '@/lib/routes'
@@ -84,7 +86,12 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
   const [agreement, setAgreement] = useState<CertificationAgreement | null>(null)
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState(false)
-  const [docLang, setDocLang] = useState<'en' | 'ar'>(isAr ? 'ar' : 'en')
+  // The document follows the site language; the English/العربية switch only overrides it until the site language changes.
+  const siteLang = isAr ? 'ar' : 'en'
+  const [pickedLang, setPickedLang] = useState<{ lang: 'en' | 'ar'; siteLang: 'en' | 'ar' } | null>(null)
+  const docLang = pickedLang?.siteLang === siteLang ? pickedLang.lang : siteLang
+  const setDocLang = (lang: 'en' | 'ar') => setPickedLang({ lang, siteLang })
+  const [countersigning, setCountersigning] = useState(false)
   const [isTerminating, setIsTerminating] = useState(false)
   const [terminationReason, setTerminationReason] = useState('')
   const [syncedNotice, setSyncedNotice] = useState(false)
@@ -103,6 +110,16 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
       active = false
     }
   }, [agreementId])
+
+  // The client signs from their own session: while a signature is pending, re-read the agreement now and then.
+  const pendingSignature = agreement?.status === 'sent' || agreement?.status === 'client_signed'
+  useEffect(() => {
+    if (!agreementId || !pendingSignature) return
+    const timer = setInterval(() => {
+      getCertificationAgreementById(agreementId).then(setAgreement).catch(() => undefined)
+    }, 15000)
+    return () => clearInterval(timer)
+  }, [agreementId, pendingSignature])
 
   if (loading) {
     return (
@@ -143,13 +160,14 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
   }
 
   const handleAdvanceLifecycle = () =>
-    run(() =>
-      agreement.status === 'draft'
-        ? sendCertificationAgreement(agreement.id)
-        : agreement.status === 'sent'
-          ? recordClientSignature(agreement.id)
-          : countersignCertificationAgreement(agreement.id),
-    )
+    run(() => (agreement.status === 'draft' ? sendCertificationAgreement(agreement.id) : recordClientSignature(agreement.id)))
+
+  /** Runs inside the signing dialog: a failure is thrown back so the dialog can show it. */
+  const handleCountersign = async (payload: SignaturePayload) => {
+    setAgreement(await countersignCertificationAgreement(agreement.id, payload))
+    setCountersigning(false)
+    toast.success(isAr ? 'تم التوقيع المقابل وتفعيل الاتفاقية' : 'Agreement countersigned and activated')
+  }
 
   const handleUseLatestTerms = () =>
     run(() => refreshAgreementTerms(agreement.id), () => {
@@ -227,7 +245,7 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
               </Button>
             )}
             {agreement.status === 'client_signed' && (
-              <Button type="button" variant="primary" size="sm" onClick={() => navigate(cabCertificationAgreementCountersignPath(agreement.id))} disabled={busy} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
+              <Button type="button" variant="primary" size="sm" onClick={() => setCountersigning(true)} disabled={busy} icon={<AppIcon icon={SuccessCircleIcon} size={18} />} className="h-11 whitespace-nowrap">
                 {isAr ? 'التوقيع المقابل' : 'Countersign'}
               </Button>
             )}
@@ -411,6 +429,17 @@ function AgreementDetails({ agreementId }: { agreementId?: string }) {
           busy={busy}
         />
       </main>
+
+      <SignAgreementDialog
+        open={countersigning}
+        onClose={() => setCountersigning(false)}
+        reference={agreement.reference}
+        fingerprint={agreement.fingerprint}
+        defaultName=""
+        defaultTitle="Certification Body Director"
+        requestCode={() => requestCabSigningCode(agreement.id)}
+        onSign={handleCountersign}
+      />
 
       <ConfirmDialog
         open={isTerminating}

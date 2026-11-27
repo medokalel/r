@@ -13,6 +13,8 @@ import {
 } from '@/lib/api/cabAgreementTermsApi'
 import { cn } from '@/lib/utils'
 
+const QUICK_INSERT_KEYS = ['agreementNumber', 'agreementVersion', 'agreementDate', 'cabName', 'clientName', 'clientCr']
+
 export type EditableFieldKey = 'titleEn' | 'titleAr' | 'textEn' | 'textAr'
 
 interface NewSectionDrawerProps {
@@ -174,7 +176,7 @@ export function AgreementSectionCard({
         <div className="space-y-4 rounded-b-[16px] border-t border-[#f0f0f0] bg-[#fcfcfd] px-5 pb-5 pt-4">
           <div className="flex flex-wrap items-center gap-1.5 rounded-[10px] border border-[#e8edfc] bg-white px-3 py-2">
             <span className="me-1 text-[11px] font-bold text-neutral-500">{isAr ? 'إدراج سريع:' : 'Quick insert:'}</span>
-            {AGREEMENT_VARIABLES.slice(0, 6).map((v) => (
+            {AGREEMENT_VARIABLES.filter((v) => QUICK_INSERT_KEYS.includes(v.key)).map((v) => (
               <button key={v.key} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => onInsertVariable(v)} className="rounded-[6px] bg-[#f4f7ff] px-2 py-0.5 text-[11px] font-semibold text-primary hover:bg-primary hover:text-white">
                 + {isAr ? v.labelAr : v.labelEn}
               </button>

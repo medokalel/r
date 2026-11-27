@@ -1,9 +1,14 @@
-import type {
-  AuditTeamMember,
-  TeamException,
-  TeamIssueCode,
-} from '@/lib/api/cabAuditPlanningApi'
+import type { AuditTeamMember } from '@/lib/api/cabAuditPlanningApi'
 import { AUDITOR_BUSY_PERIODS, AUDITOR_IMPARTIALITY_RECORDS } from '@/lib/auditTeamMockData'
+
+// These two types are no longer exported by cabAuditPlanningApi (the team selector moved to lib/teamSelection);
+// they are declared here so these rules still compile.
+export type TeamIssueCode = string
+export interface TeamException {
+  personId: string
+  issueCode: TeamIssueCode
+  status: string
+}
 
 /**
  * Pure rules that decide whether an audit team member can be used on a plan.

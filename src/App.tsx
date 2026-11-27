@@ -90,6 +90,7 @@ import {
   DashboardPage,
   DashboardTasksPage,
   ClientAgreementsPage,
+  ClientAgreementDetailsPage,
   DashboardActivitiesPage,
   ClientFindingsPage,
   ClientFindingResponsePage,
@@ -938,6 +939,14 @@ export default function App() {
                 element={
                   <RequireAuth>
                     <ClientAgreementsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path={ROUTES.agreementDetails}
+                element={
+                  <RequireAuth>
+                    <ClientAgreementDetailsPage />
                   </RequireAuth>
                 }
               />

@@ -22,8 +22,6 @@ import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
 import {
   AGREEMENT_VARIABLES,
-  VARIABLE_PRESETS,
-  buildClientPreset,
   DEFAULT_AGREEMENT_TERMS,
   fetchAgreementTerms,
   persistAgreementTerms,
@@ -32,7 +30,8 @@ import {
   type AgreementVariable,
   type AuditPlanGateMode,
 } from '@/lib/api/cabAgreementTermsApi'
-import { getCabClientProfile, listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
+import { fetchAgreementPreviewValues, type CertificationAgreementValues } from '@/lib/api/cabCertificationAgreementsApi'
+import { listAllCabAuditClients, type CabAuditClientListItem } from '@/lib/api/clientRegistrationApi'
 import { getUserErrorMessage } from '@/lib/errorMessages'
 import { ROUTES } from '@/lib/routes'
 import { toast } from '@/lib/toast'
@@ -57,7 +56,9 @@ export function CabAgreementTermsPage() {
   const [newDraft, setNewDraft] = useState<Omit<AgreementSection, 'id'>>({ titleEn: '', titleAr: '', textEn: '', textAr: '' })
   const [presetKey, setPresetKey] = useState('')
   const [clients, setClients] = useState<CabAuditClientListItem[]>([])
-  const [clientPresets, setClientPresets] = useState<Record<string, Record<string, string>>>({})
+  // What was fetched for one client; it only counts while that client is still selected.
+  const [preview, setPreview] = useState<{ clientId: string; values?: CertificationAgreementValues; failed?: boolean } | null>(null)
+  const currentPreview = preview?.clientId === presetKey ? preview : null
   const [showPreview, setShowPreview] = useState(false)
   const [isDirty, setIsDirty] = useState(false)
   const [justSaved, setJustSaved] = useState(false)
@@ -104,24 +105,17 @@ export function CabAgreementTermsPage() {
     [clients]
   )
 
-  const presets = useMemo(() => ({ ...VARIABLE_PRESETS, ...clientPresets }), [clientPresets])
-
-  /** Picking a client shows its list data at once, then adds its commercial registration and signatory from its profile. */
-  const handlePresetChange = (key: string) => {
-    setPresetKey(key)
-    const client = clients.find((item) => item.id === key)
-    if (!client) return
-    const base = { name: client.name || client.tradeName || '', city: client.city, ownerName: client.owner?.fullName }
-    setClientPresets((prev) => ({ ...prev, [key]: buildClientPreset(base) }))
-    getCabClientProfile(key)
-      .then((profile) =>
-        setClientPresets((prev) => ({
-          ...prev,
-          [key]: buildClientPreset(base, { ...profile.profile, city: profile.address?.city }),
-        }))
-      )
-      .catch(() => undefined) // keep the list data
-  }
+  // The preview shows what the backend would put into a new agreement for the selected client.
+  useEffect(() => {
+    if (!showPreview || !presetKey) return
+    let active = true
+    fetchAgreementPreviewValues(presetKey)
+      .then((values) => active && setPreview({ clientId: presetKey, values }))
+      .catch(() => active && setPreview({ clientId: presetKey, failed: true }))
+    return () => {
+      active = false
+    }
+  }, [showPreview, presetKey])
 
   const handleGateChange = (gate: AuditPlanGateMode) => {
     setState((prev) => ({ ...prev, auditPlanGate: gate }))
@@ -395,23 +389,21 @@ export function CabAgreementTermsPage() {
             <AgreementVariablesPanel
               presetKey={presetKey}
               presetOptions={presetOptions}
-              presets={presets}
-              onPresetChange={handlePresetChange}
+              onPresetChange={setPresetKey}
               showPreview={showPreview}
               onTogglePreview={() => setShowPreview((p) => !p)}
               onInsertVariable={handleInsertVariable}
-              sections={state.sections}
             />
           </div>
         </div>
 
-        {showPreview && (
+        {showPreview && presetKey && (
           <AgreementTermsPreview
             sections={state.sections}
-            presetKey={presetKey}
-            presets={presets}
+            values={currentPreview?.values ?? null}
+            failed={Boolean(currentPreview?.failed)}
+            isAr={Boolean(isAr)}
             onClose={() => setShowPreview(false)}
-            initialLang={isAr ? 'ar' : 'en'}
           />
         )}
       </main>

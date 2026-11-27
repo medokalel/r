@@ -216,9 +216,32 @@
     "pageTitle": "Agreements",
     "subtitle": "Certification agreements from your certification body: review, sign and download.",
     "emptyTitle": "No agreements yet",
-    "emptySubtitle": "Your certification body sends the agreement after you accept the offer. It appears here for your signature."
+    "emptySubtitle": "Your certification body sends the agreement after you accept the offer. It appears here for your signature.",
+    "loading": "Loading agreements…",
+    "waiting": "Agreements waiting for your signature: {{count}}",
+    "cardTitle": "Certification agreement",
+    "standards": "Standards",
+    "sentOn": "Sent on",
+    "signedOn": "Signed on",
+    "activeSince": "Active since",
+    "status": {
+      "sent": "Sent",
+      "signed": "Signed",
+      "active": "Active"
+    },
+    "reviewAndSign": "Review and sign",
+    "view": "View",
+    "back": "Back to agreements",
+    "notFound": "Agreement not found",
+    "download": "Download PDF",
+    "reviewTitle": "Review and sign",
+    "reviewHint": "Read the agreement below. By signing you accept its terms on behalf of {{client}}.",
+    "sign": "Sign agreement",
+    "signedToast": "Agreement signed. Your certification body will countersign it.",
+    "signedNotice": "You signed this agreement. Your certification body will countersign it next.",
+    "activeNotice": "This agreement is signed by both parties and in force."
   },
-  "clientActivities": { 
+  "clientActivities": {
     "pageTitle": "Activity history",
     "backToDashboard": "Back to dashboard",
     "empty": "No activity yet",
@@ -3098,6 +3121,7 @@
       "applications": "Applications",
       "applicationReview": "Application Review",
       "auditPlanning": "Audit Planning",
+      "auditExecution": "Audit Execution",
       "auditSchedule": "Audit schedule",
       "resourcePlanning": "Resource planning",
       "auditTemplates": "Audit Templates",
@@ -4260,7 +4284,257 @@
       "empty": "No audits available",
       "emptyCta": "Go to Audit Planning",
       "viewExecution": "View execution",
-      "continue": "Start / continue execution"
+      "continue": "Start / continue execution",
+      "pleaseSendTheAuditPlanTo": "Please send the audit plan to the client first.",
+      "teamAvailabilityAndImpartialityDeclarationsMust": "Team availability and impartiality declarations must be completed.",
+      "pleaseConfirmThatTheClientDocuments": "Please confirm that the client documents were reviewed.",
+      "pleaseConfirmTheAgendaWithThe": "Please confirm the agenda with the client.",
+      "pleaseConfirmTheConfidentialityStatementWas": "Please confirm the confidentiality statement was given.",
+      "atLeastOneClientAttendeeMust": "At least one client attendee must sign the opening meeting attendance.",
+      "pleaseAddAtLeastOneAudit": "Please add at least one audit team member to the attendance.",
+      "pleaseRecordAtLeastOneDaily": "Please record at least one daily team wrap-up.",
+      "pleaseConfirmTheTeamAgreedOn": "Please confirm the team agreed on the grading of every finding.",
+      "pleaseConfirmThatFindingsWerePresented": "Please confirm that findings were presented to the client.",
+      "pleaseRecordTheClientSPosition": "Please record the client's position on the findings.",
+      "atLeastOneClientAttendeeMust2": "At least one client attendee must sign the closing meeting attendance.",
+      "pleaseRecordTheTimeSpentBy": "Please record the time spent by the audit team.",
+      "thisChecklistIsAlreadyAssigned": "This checklist is already assigned.",
+      "allRemainingItemsMarkedAsConforming": "All remaining items marked as Conforming.",
+      "auditExecution": "Audit execution",
+      "applicationHub": "Application Hub",
+      "auditPlanning": "Audit planning",
+      "auditType": "Audit type",
+      "dates": "Dates",
+      "site": "Site",
+      "leadAuditor": "Lead auditor",
+      "auditTeam": "Audit team",
+      "remoteActivities": "Remote activities",
+      "yes": "Yes",
+      "checklistItemsAudited": "Checklist items audited",
+      "auditDaysSpentAndPlanned": "Audit days spent and planned",
+      "timeEntryRecorded": "Time entry recorded.",
+      "auditExecutionReportFinalizedAndSubmitted": "Audit execution report finalized and submitted.",
+      "noAuditsAvailable": "No audits available",
+      "goToAuditPlanning": "Go to Audit Planning",
+      "startContinueExecution": "Start / continue execution",
+      "completed": "Completed",
+      "currentStage": "Current stage",
+      "pending": "Pending",
+      "dragAndDropYourFileHere": "Drag and drop your file here or",
+      "browse": "browse",
+      "preparation": "Preparation",
+      "confirmThePlanTheAgreementAnd": "Confirm the plan, the agreement and the team, review the client documents and assign the checklists.",
+      "readiness": "Readiness",
+      "whatMustBeInPlaceBefore": "What must be in place before the audit starts.",
+      "thisPlanCannotBeSentYet": "This plan cannot be sent yet",
+      "stage1Stage2AndRecertification": "Stage 1, Stage 2 and recertification audits need an active certification agreement with the client (signed by the client and countersigned by you).",
+      "openAgreement": "Open agreement",
+      "markAgreementActiveDemo": "Mark agreement active (demo)",
+      "auditPlanSentToTheClient": "Audit plan sent to the client",
+      "planSentToPrimaryContact": "Plan sent to primary contact.",
+      "thePlanIsStillADraft": "The plan is still a draft.",
+      "openPlan": "Open plan",
+      "planConfirmedByTheClient": "Plan confirmed by the client",
+      "confirmedByClientContact": "Confirmed by client contact.",
+      "waitingForTheClientSConfirmation": "Waiting for the client's confirmation.",
+      "teamAvailabilityAndImpartialityDeclarations": "Team availability and impartiality declarations",
+      "allTeamDeclarationsCompletedOnThe": "All team declarations completed on the audit plan.",
+      "completeTheDeclarationsOnTheAudit": "Complete the declarations on the audit plan.",
+      "certificationAgreement": "Certification agreement",
+      "noActiveAgreementThePlanCannot": "No active agreement: the plan cannot be sent until the client signs it.",
+      "clientDocumentsReviewed": "Client documents reviewed",
+      "manualProceduresPreviousReportsAndThe": "Manual, procedures, previous reports and the internal audit and management review records.",
+      "preparationNotes": "Preparation notes",
+      "recordDocumentReviewFindingsOrPre": "Record document review findings or pre-audit notes...",
+      "checklistsAndAuditors": "Checklists and auditors",
+      "generatedFromThePlanSStandards": "Generated from the plan's standards and stage. Assign each checklist to an auditor.",
+      "items": "Items:",
+      "auditor": "Auditor",
+      "removeChecklist": "Remove checklist",
+      "addAChecklist": "Add a checklist",
+      "chooseFromTheLibraryOrYour": "Choose from the library or your checklists",
+      "add": "Add",
+      "toCompleteThisStep": "To complete this step",
+      "sendTheAuditPlanToThe": "Send the audit plan to the client first.",
+      "theAuditTeamMustConfirmAvailability": "The audit team must confirm availability and declare no conflicts on the audit plan.",
+      "confirmThatTheClientDocumentsWere": "Confirm that the client documents were reviewed.",
+      "allPreparationPrerequisitesAreSatisfied": "All preparation prerequisites are satisfied.",
+      "completePreparation": "Complete: Preparation",
+      "conduct": "Conduct",
+      "fillTheChecklistsWithResultsAnd": "Fill the checklists with results and evidence, take photos and raise findings.",
+      "progress": "Progress",
+      "of": "of",
+      "itemsAudited": "items audited",
+      "nonconformingItems": "Nonconforming items:",
+      "liveChecklists": "Live checklists",
+      "recordAResultForEachRequirement": "Record a result for each requirement with the evidence seen. Changes save as you go.",
+      "icascoLibraryApproved": "iCASCO library, approved",
+      "assignedTo": "Assigned to:",
+      "searchClauseOrRequirement": "Search clause or requirement",
+      "all": "All",
+      "notYetAudited": "Not yet audited",
+      "nonconforming": "Nonconforming",
+      "markAllAsConforming": "Mark all as conforming",
+      "hideGuidance": "Hide guidance",
+      "guidanceAndEvidencePrompts": "Guidance and evidence prompts",
+      "whatToLookFor": "What to look for:",
+      "evidenceToAskFor": "Evidence to ask for",
+      "result": "Result",
+      "evidenceNotes": "Evidence notes",
+      "whatYouSawHeardAndRead": "What you saw, heard and read",
+      "documentsSampled": "Documents sampled",
+      "separateWithCommas": "Separate with commas",
+      "peopleInterviewed": "People interviewed",
+      "takeOrAddPhoto": "Take or add photo",
+      "pngOrJpgUpTo5": "PNG or JPG up to 5 MB",
+      "noChecklistItemsMatchYourFilter": "No checklist items match your filter.",
+      "timeSpent": "Time spent",
+      "recordTheTeamSTimeEach": "Record the team's time each day. It is compared with the planned audit days (IAF MD 5) and added to the competence audit log.",
+      "spent": "Spent:",
+      "days": "days",
+      "planned": "Planned:",
+      "noTimeRecorded": "No time recorded",
+      "date": "Date",
+      "hours": "Hours",
+      "activity": "Activity",
+      "mode": "Mode",
+      "remote": "Remote",
+      "onSite": "On-site",
+      "addTime": "Add time",
+      "mandatoryChecklistItemsWithoutAResult": "Mandatory checklist items without a result:",
+      "completeConduct": "Complete: Conduct",
+      "openingMeeting": "Opening meeting",
+      "confirmTheAgendaAndConfidentialityTest": "Confirm the agenda and confidentiality, test the remote tools and record who attended.",
+      "introduceTheTeamConfirmThePlan": "Introduce the team, confirm the plan, the scope and the rules of the audit.",
+      "agendaConfirmedWithTheClient": "Agenda confirmed with the client",
+      "timesIntervieweesAndGuidesAreAgreed": "Times, interviewees and guides are agreed.",
+      "confidentialityStatementGiven": "Confidentiality statement given",
+      "theClientWasToldHowInformation": "The client was told how information obtained during the audit is protected.",
+      "openingMeetingNotes": "Opening meeting notes",
+      "agenda": "Agenda",
+      "thePlanHasNoAgendaYet": "The plan has no agenda yet.",
+      "timeAst": "Time (AST)",
+      "auditorS": "Auditor(s)",
+      "duration": "Duration",
+      "openingMeetingAttendance": "Opening meeting attendance",
+      "confirmTheAgendaWithTheClient": "Confirm the agenda with the client.",
+      "confirmTheConfidentialityStatement": "Confirm the confidentiality statement.",
+      "atLeastOneClientAttendeeMust3": "At least one client attendee must sign the attendance.",
+      "addTheAuditTeamToThe": "Add the audit team to the attendance.",
+      "allOpeningMeetingRequirementsAreSatisfied": "All opening meeting requirements are satisfied.",
+      "completeOpeningMeeting": "Complete: Opening meeting",
+      "teamReview": "Team review",
+      "recordTheDailyWrapUpsAnd": "Record the daily wrap-ups and agree the grading of the findings.",
+      "findingsRaised": "Findings raised",
+      "findingsOfTheAuditReportEdit": "Findings of the audit report. Edit or submit them in the reporting workspace.",
+      "openReportingWorkspace": "Open reporting workspace",
+      "noFindingRaised": "No finding raised.",
+      "nonconformingChecklistItemSRecordedDuring": "nonconforming checklist item(s) recorded during Conduct.",
+      "dailyWrapUps": "Daily wrap-ups",
+      "whatTheTeamAgreedAtThe": "What the team agreed at the end of each audit day.",
+      "wrapUp": "Wrap-up",
+      "summarizeDailyProgressEvidenceGapsAnd": "Summarize daily progress, evidence gaps, and next-day priorities...",
+      "addWrapUp": "Add wrap-up",
+      "gradingConsensus": "Grading consensus",
+      "theTeamAgreesOnTheGrading": "The team agrees on the grading of every finding",
+      "majorMinorObservationOrOpportunityPer": "Major, minor, observation or opportunity, per the scheme rules.",
+      "teamReviewNotes": "Team review notes",
+      "recordAtLeastOneTeamWrap": "Record at least one team wrap-up.",
+      "confirmTheTeamAgreedTheGrading": "Confirm the team agreed the grading of the findings.",
+      "allTeamReviewRequirementsAreSatisfied": "All team review requirements are satisfied.",
+      "completeTeamReview": "Complete: Team review",
+      "closingMeeting": "Closing meeting",
+      "presentTheFindingsRecordTheClient": "Present the findings, record the client's position, the response deadline and the signatures.",
+      "presentTheFindingsAndTheConclusions": "Present the findings and the conclusions, agree the next steps and the response deadline.",
+      "eachFindingItsGradingAndThe": "Each finding, its grading and the evidence were explained.",
+      "clientSPositionOnTheFindings": "Client's position on the findings",
+      "agrees": "Agrees",
+      "partlyAgrees": "Partly agrees",
+      "disagrees": "Disagrees",
+      "clientComments": "Client comments",
+      "recordAnyDisagreementAndHowIt": "Record any disagreement and how it was resolved or left open.",
+      "nonconformityResponseDueBy": "Nonconformity response due by",
+      "nonconformitiesRaised": "Nonconformities raised:",
+      "closingMeetingNotes": "Closing meeting notes",
+      "auditTimeCheck": "Audit time check",
+      "timeDeliveredAgainstThePlannedAudit": "Time delivered against the planned audit days (IAF MD 5).",
+      "plannedDays": "Planned days",
+      "daysSpent": "Days spent",
+      "difference": "Difference",
+      "closingMeetingAttendance": "Closing meeting attendance",
+      "confirmTheFindingsWerePresentedTo": "Confirm the findings were presented to the client.",
+      "recordWhetherTheClientAgreesWith": "Record whether the client agrees with the findings.",
+      "recordTheTimeSpentByThe": "Record the time spent by the audit team.",
+      "completeClosingMeeting": "Complete: Closing meeting",
+      "report": "Report",
+      "theStageReportIsGeneratedFrom": "The stage report is generated from the audit, reviewed, approved and issued to the client.",
+      "stageReport": "Stage report",
+      "generatedFromThePlanTheChecklist": "Generated from the plan, the checklist results and the findings.",
+      "theReportOpensWhenTheOpening": "The report opens when the opening meeting is completed.",
+      "executiveSummary": "Executive summary",
+      "summarizeTheAuditScopeStrengthsAreas": "Summarize the audit scope, strengths, areas of concern, and overall readiness...",
+      "leadAuditorRecommendation": "Lead auditor recommendation",
+      "openAuditReportingRegister": "Open Audit Reporting register",
+      "finalizeSubmitReport": "Finalize & submit report",
+      "eachAttendeeSignsOnThisDevice": "Each attendee signs on this device: draw, type or upload the signature.",
+      "noAttendeeRecordedYet": "No attendee recorded yet.",
+      "signed": "Signed",
+      "pendingSignature": "Pending signature",
+      "addAnAttendee": "Add an attendee",
+      "name": "Name",
+      "position": "Position",
+      "organization": "Organization",
+      "attendedRemotely": "Attended remotely",
+      "signature": "Signature",
+      "signHereWithYourFingerPen": "Sign here with your finger, pen or mouse",
+      "clear": "Clear",
+      "useThisSignature": "Use this signature",
+      "signatureCaptured": "✓ Signature captured",
+      "typeFullNameAsSignature": "Type full name as signature",
+      "pngJpgOrSvgUpTo": "PNG, JPG or SVG up to 5 MB",
+      "optionalNowTheAttendeeCanAlso": "Optional now: the attendee can also sign later.",
+      "addAttendee": "Add attendee",
+      "no": "No",
+      "completeMandatoryFirst": "Complete all mandatory checklist items first ({{count}} remaining without a result).",
+      "stepCompleted": "Step {{step}} completed.",
+      "checklistAdded": "{{title}} added.",
+      "signatureOf": "{{name}} signature",
+      "activeAgreementCountersigned": "Active agreement {{id}} countersigned.",
+      "findingsPresentedToTheClient": "Findings presented to the client",
+      "values": {
+        "Stage 1": "Stage 1",
+        "Stage 2": "Stage 2",
+        "Surveillance 1": "Surveillance 1",
+        "Surveillance 2": "Surveillance 2",
+        "Recertification": "Recertification",
+        "Special Audit": "Special Audit",
+        "Draft": "Draft",
+        "Planned": "Planned",
+        "In progress": "In progress",
+        "Under review": "Under review",
+        "Completed": "Completed",
+        "Conforming": "Conforming",
+        "Observation": "Observation",
+        "OFI": "OFI",
+        "Minor NC": "Minor NC",
+        "Major NC": "Major NC",
+        "Not audited": "Not audited",
+        "N/A": "N/A",
+        "Client": "Client",
+        "Audit team": "Audit team",
+        "Observer": "Observer",
+        "Agrees": "Agrees",
+        "Partly agrees": "Partly agrees",
+        "Disagrees": "Disagrees"
+      },
+      "signMode": {
+        "draw": "Draw",
+        "type": "Type",
+        "upload": "Upload"
+      },
+      "hoursShort": "h",
+      "clientObjected": "Client objected to {{member}}: \"{{reason}}\"",
+      "aTeamMember": "a team member"
     },
     "auditReporting": {
       "schemeName": "FSMS Scheme (configured)",
@@ -5581,7 +5855,12 @@
         "quotationApproval": "Quotation Approval",
         "salesHub": "Sales Hub",
         "agreementTerms": "Agreement terms",
-        "certificationAgreements": "Certification agreements"
+        "certificationAgreements": "Certification agreements",
+        "auditExecution": "Audit Execution",
+        "singleSignOn": "Single sign-on",
+        "travelPolicy": "Travel policy",
+        "auditChecklists": "Audit checklists",
+        "dataMigration": "Data migration"
       },
       "appDesc": {
         "applications": "View, create, and manage certification applications.",
@@ -5608,7 +5887,12 @@
         "quotationApproval": "Review and approve quotations before they are issued.",
         "salesHub": "Track every lead from client registration to a signed agreement.",
         "agreementTerms": "Your agreement template, its variables and the audit plan gate.",
-        "certificationAgreements": "Send the certification agreement, collect e-signatures and keep everything together."
+        "certificationAgreements": "Send the certification agreement, collect e-signatures and keep everything together.",
+        "auditExecution": "Run the audit on site: checklists, evidence, meetings and findings.",
+        "singleSignOn": "Let your staff sign in with Microsoft Entra ID, Google Workspace, Okta.",
+        "travelPolicy": "Rules, rates and providers of the travel cost calculator.",
+        "auditChecklists": "A checklist for every standard, clause by clause, ready for the audit.",
+        "dataMigration": "Import your existing clients, people, certificates, audits and more."
       },
       "orgApps": {
         "newRequest": "New Certification Request",
@@ -5627,7 +5911,42 @@
         "wallet": "View wallet activity and payment information.",
         "periodicVisits": "Review scheduled and completed periodic visits.",
         "invoices": "View and manage organization invoices."
-      }
+      },
+      "groups": {
+        "setup": {
+          "title": "Set up your body",
+          "description": "Start here: profile, schemes, people and competence."
+        },
+        "sales": {
+          "title": "Sales & business development",
+          "description": "Capture every lead and move it to a signed agreement."
+        },
+        "clients": {
+          "title": "Clients",
+          "description": "Register the organisations you certify and their contacts."
+        },
+        "application": {
+          "title": "Application",
+          "description": "Receive the application and confirm you can certify it."
+        },
+        "quotation": {
+          "title": "Quotation & contract",
+          "description": "Price the audit, approve it and send the offer."
+        },
+        "audit": {
+          "title": "Audit",
+          "description": "Plan the audit, report findings and close nonconformities."
+        },
+        "certification": {
+          "title": "Decision & certification",
+          "description": "Decide, issue the certificate and run the cycle."
+        },
+        "finance": {
+          "title": "Finance & insight",
+          "description": "Invoice the work and follow performance."
+        }
+      },
+      "startHere": "Start here"
     },
     "header": {
       "timeAndDate": "Time and date",
@@ -9542,1415 +9861,1454 @@
         "password_login_blocked": "Password sign-in blocked",
         "break_glass_login": "Break-glass password sign-in"
       },
-    "salesHub": {
-      "title": "Sales Hub",
-      "subtitle": "Every lead in one place, from client registration to a signed certification agreement.",
-      "breadcrumbWorkspace": "Workspace",
-      "resetDemoData": "Reset demo data",
-      "addLead": "Add lead",
-      "portalCallout": "Client portal registrations arrive here automatically as New leads. Work each lead through the stages; a stage closes when its checklist is complete.",
-      "currencySar": "SAR",
-      "workflowTitle": "Business development workflow",
-      "viewLabel": "View",
-      "dragHint": "Drag a card to another stage to move it.",
-      "noLeadsHere": "No leads here",
-      "tasks": "tasks",
-      "sitesLabel": "sites",
-      "employeesLabel": "employees",
-      "stageChecklist": "Stage checklist",
-      "moveStage": "Move to stage",
-      "maintenance": {
-        "title": "Scheduled maintenance",
-        "message": "iCASCO will be unavailable on Friday from 01:00 to 02:00 (KSA time) for planned maintenance."
-      },
-      "views": {
-        "list": "List",
-        "pipeline": "Pipeline"
-      },
-      "kpi": {
-        "openLeads": "Open leads",
-        "everyLeadHasOwner": "Every lead has an owner",
-        "unassignedLeads": "{{count}} unassigned",
-        "viewPipeline": "View pipeline",
-        "pipelineValue": "Pipeline value",
-        "noValuesYet": "No values yet",
-        "activePipelineLeads": "Across {{count}} open leads",
-        "viewList": "View list",
-        "weightedForecast": "Weighted forecast",
-        "weightedSubtitle": "{{pct}}% of pipeline value, weighted by stage",
-        "winRate": "Win rate",
-        "wonLostSummary": "Won {{won}} · Lost {{lost}}",
-        "needsAction": "Needs action",
-        "nothingOverdue": "Nothing overdue",
-        "overdueCount": "{{count}} overdue"
-      },
-      "filters": {
-        "search": "Search",
-        "searchPlaceholder": "Search leads by company, contact or standard",
-        "owner": "Owner",
-        "allOwners": "All owners",
-        "source": "Source",
-        "allSources": "All sources"
-      },
-      "stages": {
-        "new_lead": {
-          "label": "New lead",
-          "description": "Received from the portal or added by the team."
+      "salesHub": {
+        "title": "Sales Hub",
+        "subtitle": "Every lead in one place, from client registration to a signed certification agreement.",
+        "breadcrumbWorkspace": "Workspace",
+        "resetDemoData": "Reset demo data",
+        "addLead": "Add lead",
+        "portalCallout": "Client portal registrations arrive here automatically as New leads. Work each lead through the stages; a stage closes when its checklist is complete.",
+        "currencySar": "SAR",
+        "workflowTitle": "Business development workflow",
+        "viewLabel": "View",
+        "dragHint": "Drag a card to another stage to move it.",
+        "noLeadsHere": "No leads here",
+        "tasks": "tasks",
+        "sitesLabel": "sites",
+        "employeesLabel": "employees",
+        "stageChecklist": "Stage checklist",
+        "moveStage": "Move to stage",
+        "maintenance": {
+          "title": "Scheduled maintenance",
+          "message": "iCASCO will be unavailable on Friday from 01:00 to 02:00 (KSA time) for planned maintenance."
         },
-        "qualified": {
-          "label": "Qualified",
-          "description": "Contact made and fit with our scope confirmed."
+        "views": {
+          "list": "List",
+          "pipeline": "Pipeline"
         },
-        "needs_analysis": {
-          "label": "Needs analysis",
-          "description": "Scope, sites and headcount collected."
-        },
-        "proposal_sent": {
-          "label": "Proposal sent",
-          "description": "Audit time calculated and quotation sent."
-        },
-        "negotiation": {
-          "label": "Negotiation",
-          "description": "Terms and price being agreed."
-        },
-        "won": {
-          "label": "Won",
-          "description": "Signed certification agreement received."
-        }
-      },
-      "table": {
-        "company": "Company",
-        "contact": "Contact",
-        "standards": "Standards",
-        "stage": "Stage",
-        "estimatedValue": "Estimated value",
-        "owner": "Owner",
-        "source": "Source",
-        "actions": "Actions"
-      },
-      "modal": {
-        "title": "New lead",
-        "companyName": "Company name",
-        "companyNameRequired": "Company name is required",
-        "contactPerson": "Contact person",
-        "email": "Email",
-        "phone": "Phone",
-        "city": "City",
-        "sector": "Sector",
-        "standards": "Standards (comma separated)",
-        "employees": "Employees",
-        "sites": "Sites",
-        "estimatedValue": "Estimated value (SAR)",
-        "source": "Source",
-        "owner": "Owner"
-      }
-    },
-    "agreementTerms": {
-      "title": "Agreement terms",
-      "subtitle": "The certification agreement your clients sign: bilingual sections with variables, filled for each client.",
-      "breadcrumbHub": "Application Hub",
-      "breadcrumbSettings": "Settings",
-      "restoreDefault": "Restore default text",
-      "save": "Save",
-      "saved": "Saved",
-      "bannerTitle": "Default text: draft for the product owner's review",
-      "bannerDesc": "The default text covers the obligations of ISO/IEC 17021-1 clause 5.1.2 in our own words. Have it reviewed by your legal adviser and adapt it to your rules before using it with clients.",
-      "versionMeta": "Version {{version}}, saved by {{savedBy}} on {{savedAt}}",
-      "gate": {
-        "title": "Audit plan gate",
-        "subtitle": "What happens when a Stage 1, Stage 2 or recertification plan is sent and the client has no active agreement.",
-        "blockTitle": "Block (recommended)",
-        "blockDesc": "The plan cannot be sent until the agreement is active.",
-        "warnTitle": "Warn",
-        "warnDesc": "The plan is sent and a warning is shown."
-      },
-      "sectionsTitle": "Sections",
-      "addSection": "Add section",
-      "untitledSection": "Untitled section",
-      "moveUp": "Move up",
-      "moveDown": "Move down",
-      "deleteSection": "Delete section",
-      "titleEn": "Title (English)",
-      "titleAr": "Title (Arabic)",
-      "textEn": "Text (English)",
-      "textAr": "Text (Arabic)",
-      "variables": {
-        "title": "Variables",
-        "subtitle": "Click a variable to insert it where your cursor is. Each agreement fills it with the client's value.",
-        "selectClient": "Select a client",
-        "noClients": "No registered clients yet",
-        "fillWith": "Fill the variables with",
-        "sampleValues": "Sample values",
-        "showPreview": "Show preview",
-        "hidePreview": "Hide preview",
-        "previewTitle": "Live agreement preview",
-        "previewSubtitle": "Interpolated with the selected client preset"
-      }
-    },
-    "certificationAgreements": {
-      "title": "Certification agreements"
-    }
-  },
-  "ia": {
-    "setup": {
-      "badge": "Internal Audit Setup",
-      "profile": {
-        "title": "Confirm your organization profile",
-        "subtitle": "Add the identity used across internal audit plans, reports and dashboards.",
-        "legalName": "Legal organization name",
-        "legalNamePlaceholder": "ABC Manufacturing Ltd.",
-        "industry": "Industry",
-        "industryPlaceholder": "Select industry",
-        "industryOther": "Describe your industry",
-        "industryOtherPlaceholder": "Enter the industry",
-        "registrationNumber": "Registration number",
-        "registrationNumberPlaceholder": "Enter number",
-        "website": "Website",
-        "websitePlaceholder": "https://example.com",
-        "contactEmail": "Primary contact email",
-        "contactEmailPlaceholder": "audit@example.com",
-        "employeeRange": "Employee range",
-        "employeeRangePlaceholder": "Select range"
-      },
-      "industries": {
-        "foodManufacturing": "Food manufacturing",
-        "manufacturing": "Manufacturing",
-        "construction": "Construction",
-        "healthcare": "Healthcare",
-        "energyUtilities": "Energy and utilities",
-        "transportLogistics": "Transport and logistics",
-        "informationTechnology": "Information technology",
-        "financialServices": "Financial services",
-        "education": "Education",
-        "publicSector": "Public sector",
-        "other": "Other"
-      },
-      "structure": {
-        "title": "Map the organization structure",
-        "subtitle": "Start with headquarters, then add sites and departments included in the audit universe.",
-        "headOfficeCountry": "Head office country",
-        "city": "City",
-        "address": "Main office address",
-        "addressPlaceholder": "Enter address",
-        "siteCount": "Number of sites",
-        "departmentCount": "Number of departments",
-        "languages": "Operating languages",
-        "languagesPlaceholder": "Select languages",
-        "singleManagementSystem": "Sites operate under one management system",
-        "includeRemoteFunctions": "Include remote functions"
-      },
-      "locationTypes": {
-        "hq": "Headquarters",
-        "plant": "Plant",
-        "branch": "Branch",
-        "warehouse": "Warehouse",
-        "project": "Project",
-        "remote": "Remote"
-      },
-      "universe": {
-        "title": "What will internal audit cover?",
-        "subtitle": "Select management systems, corporate processes and other assurance areas.",
-        "standardsLabel": "Management system standards",
-        "processesLabel": "Corporate processes",
-        "note": "Standards and processes can be combined in one integrated programme."
-      },
-      "processes": {
-        "leadership": "Leadership",
-        "sales": "Sales",
-        "procurement": "Procurement",
-        "hr": "HR",
-        "it": "IT",
-        "operations": "Operations",
-        "finance": "Finance",
-        "compliance": "Compliance",
-        "support": "Support"
-      },
-      "criteria": {
-        "title": "Define audit criteria",
-        "subtitle": "Link each programme to policies, procedures, standards and legal requirements.",
-        "programmeName": "Programme name",
-        "programmeNamePlaceholder": "Integrated Management System",
-        "primaryCriteria": "Primary criteria",
-        "primaryCriteriaPlaceholder": "Select criteria",
-        "noUniverseSelected": "Select audit areas first",
-        "internalPolicies": "Internal policies",
-        "uploadOrSelect": "Upload or select",
-        "legalRegister": "Legal register",
-        "legalRegisterPlaceholder": "Select register",
-        "auditCycle": "Audit cycle",
-        "auditCyclePlaceholder": "Select cycle",
-        "programmeOwner": "Programme owner",
-        "programmeOwnerPlaceholder": "Quality Manager",
-        "allowMultipleCriteria": "Allow multiple criteria per audit",
-        "trackClauseFindings": "Track clause-level findings"
-      },
-      "criteriaTypes": {
-        "standard": "Standard",
-        "policy": "Policy",
-        "procedure": "Procedure",
-        "law": "Law",
-        "contract": "Contract",
-        "customerRequirement": "Customer requirement",
-        "other": "Other"
-      },
-      "frequency": {
-        "monthly": "Monthly",
-        "quarterly": "Quarterly",
-        "semiannual": "Every 6 months",
-        "annual": "Annual",
-        "biennial": "Biennial",
-        "riskBased": "Risk-based"
-      },
-      "risk": {
-        "title": "Set the audit universe and risk rating",
-        "subtitle": "Prioritize sites and processes using risk, performance and previous results.",
-        "riskScale": "Risk scale",
-        "riskScalePlaceholder": "Select scale",
-        "riskFactors": "Inherent risk factors",
-        "riskFactorsPlaceholder": "Select factors",
-        "previousFindings": "Previous findings",
-        "previousFindingsPlaceholder": "Select handling",
-        "performanceIndicators": "Performance indicators",
-        "performanceIndicatorsPlaceholder": "Select KPIs",
-        "scoringRules": "Scoring rules",
-        "useHistoricalLastAuditDate": "Use historical last audit date",
-        "automaticPriorityScore": "Automatic priority score",
-        "prioritizeOverdue": "Prioritize overdue areas",
-        "increaseFrequencyAfterMajorNc": "Increase frequency after major NCs"
-      },
-      "riskScales": {
-        "lowMediumHigh": "Low / Medium / High",
-        "lowMediumHighCritical": "Low / Medium / High / Critical",
-        "numeric": "Numeric 1–5"
-      },
-      "riskFactors": {
-        "impact": "Impact",
-        "change": "Change",
-        "complexity": "Complexity",
-        "previousFindings": "Previous findings",
-        "kpiPerformance": "KPI performance",
-        "regulatoryExposure": "Regulatory exposure"
-      },
-      "previousFindings": {
-        "openAndOverdue": "Include open and overdue",
-        "all": "Include all findings",
-        "majorOnly": "Major nonconformities only",
-        "ignore": "Do not use previous findings"
-      },
-      "programme": {
-        "title": "Configure the annual audit programme",
-        "subtitle": "Define frequency, timing and integrated audit rules.",
-        "periodStart": "Programme period start",
-        "periodEnd": "Programme period end",
-        "endAfterStart": "The end date must be after the start date.",
-        "defaultFrequency": "Default frequency",
-        "highRiskFrequency": "High-risk frequency",
-        "frequencyPlaceholder": "Select frequency",
-        "planningOwner": "Planning owner",
-        "planningOwnerPlaceholder": "Internal Audit Manager",
-        "approvalAuthority": "Approval authority",
-        "approvalAuthorityPlaceholder": "Audit Committee",
-        "planningRules": "Planning rules",
-        "integratedAudits": "Enable integrated audits",
-        "avoidPeakPeriods": "Avoid peak operational periods",
-        "notifyProcessOwners": "Notify process owners automatically"
-      },
-      "findings": {
-        "title": "Set finding and follow-up rules",
-        "subtitle": "Standardize classifications, due dates and escalation.",
-        "findingTypes": "Finding types",
-        "findingTypesPlaceholder": "Select classification set",
-        "correctionDue": "Default correction due (days)",
-        "correctiveActionDue": "Corrective action due (days)",
-        "verificationMethod": "Verification method",
-        "verificationMethodPlaceholder": "Select method",
-        "escalationAfter": "Escalation after (overdue days)",
-        "closureAuthority": "Closure authority",
-        "closureAuthorityPlaceholder": "Lead Auditor",
-        "workflowRules": "Workflow rules",
-        "requireRootCause": "Require root cause for NCs",
-        "trackEffectivenessReview": "Track effectiveness review"
-      },
-      "findingTypes": {
-        "majorMinorOfi": "Major / Minor / OFI",
-        "majorMinorObsOfi": "Major / Minor / Observation / OFI",
-        "ncObservation": "Nonconformity / Observation"
-      },
-      "verification": {
-        "evidenceAndFollowUp": "Evidence + follow-up",
-        "evidenceOnly": "Evidence only",
-        "followUpAudit": "Follow-up audit"
-      },
-      "templates": {
-        "title": "Prepare templates and numbering",
-        "subtitle": "Set report, finding and audit reference formats.",
-        "auditNumberFormat": "Audit number format",
-        "findingNumberFormat": "Finding number format",
-        "seqRequired": "The format must include {SEQ} so identifiers stay unique.",
-        "example": "Example",
-        "auditPlanTemplate": "Audit plan template",
-        "checklistTemplate": "Checklist template",
-        "templatePlaceholder": "Select template",
-        "reportLanguage": "Report language",
-        "reportLanguagePlaceholder": "Select language",
-        "documentRules": "Document rules",
-        "electronicApproval": "Enable electronic approval",
-        "useControlledTemplates": "Use controlled templates",
-        "showRevisionHistory": "Show revision history",
-        "default": "Use iCASCO default",
-        "upload": "Upload our own",
-        "createLater": "Create later"
-      },
-      "reportLanguages": {
-        "english": "English",
-        "arabic": "Arabic",
-        "bilingual": "English + Arabic"
-      },
-      "roles": {
-        "title": "Add key audit roles",
-        "subtitle": "Invite the core internal audit team; full competence records can follow.",
-        "programmeManager": "Audit programme manager",
-        "leadAuditor": "Lead auditor",
-        "auditors": "Auditors",
-        "technicalExperts": "Technical experts",
-        "committeeViewer": "Audit committee viewer",
-        "processOwners": "Process owners",
-        "requirement": {
-          "REQUIRED": "Required",
-          "RECOMMENDED": "Recommended",
-          "OPTIONAL": "Optional"
-        },
-        "inviteByEmail": "Invite by email",
-        "addLater": "Add later",
-        "importLater": "Import later",
-        "emailPlaceholder": "name@example.com",
-        "enforceIndependence": "Enforce auditor independence",
-        "roleBasedPermissions": "Use role-based permissions",
-        "independenceNote": "An auditor cannot audit their own process without an approval warning."
-      },
-      "review": {
-        "title": "Review and activate internal audits",
-        "subtitle": "Confirm the programme foundation before scheduling the first audit.",
-        "activate": "Activate Workspace",
-        "rows": {
-          "structure": "Organization structure",
-          "universe": "Audit universe",
-          "criteria": "Criteria & risk rules",
-          "programme": "Annual programme",
-          "findings": "Finding workflow",
-          "roles": "Audit roles"
-        },
-        "status": {
-          "READY": "Ready",
-          "REVIEW": "Review",
-          "MISSING": "Missing"
-        },
-        "sitesCount_one": "{{count}} site",
-        "sitesCount_other": "{{count}} sites",
-        "departmentsCount_one": "{{count}} department",
-        "departmentsCount_other": "{{count}} departments",
-        "areasCount_one": "{{count}} area",
-        "areasCount_other": "{{count}} areas",
-        "configured": "Configured",
-        "draftReady": "Draft ready",
-        "needsAttention": "Needs attention",
-        "rolesDetail_one": "{{count}} invitation pending",
-        "rolesDetail_other": "{{count}} invitations pending",
-        "rolesNone": "No pending invitations",
-        "nextStepNote": "Next: import previous audits and open findings, or build the new annual programme."
-      }
-    }
-  },
-  "so": {
-    "setup": {
-      "badge": "Scheme Owner Setup",
-      "profile": {
-        "title": "Confirm the scheme owner profile",
-        "subtitle": "Add the legal identity and ownership model used in scheme documents and licences.",
-        "legalName": "Legal organization name",
-        "legalNamePlaceholder": "Global Sustainable Scheme Ltd.",
-        "ownerType": "Scheme owner type",
-        "ownerTypePlaceholder": "Select owner type",
-        "ownerTypeOther": "Describe the ownership model",
-        "ownerTypeOtherPlaceholder": "Enter the ownership model and legal basis",
-        "registrationNumber": "Registration number",
-        "registrationNumberPlaceholder": "Enter registration number",
-        "website": "Website",
-        "websitePlaceholder": "https://example.com",
-        "contactEmail": "Primary contact email",
-        "contactEmailPlaceholder": "scheme@example.com",
-        "yearEstablished": "Year established",
-        "yearEstablishedPlaceholder": "Select year"
-      },
-      "ownerTypes": {
-        "regulatory": "Regulatory scheme owner",
-        "government": "Government scheme owner",
-        "industryAssociation": "Industry / association scheme owner",
-        "privateCertification": "Private certification scheme owner",
-        "sustainabilityEsg": "Sustainability / ESG scheme owner",
-        "retailerBrand": "Retailer / brand scheme owner",
-        "other": "Other"
-      },
-      "location": {
-        "title": "Where is the scheme governed?",
-        "subtitle": "Identify the headquarters, markets and languages covered by the scheme.",
-        "country": "Country",
-        "city": "City",
-        "address": "Head office address",
-        "addressPlaceholder": "Enter address",
-        "coverage": "Scheme coverage",
-        "coveragePlaceholder": "Select coverage",
-        "coverageCountries": "Countries covered",
-        "coverageCountriesPlaceholder": "Select countries",
-        "languages": "Operating languages",
-        "languagesPlaceholder": "Select languages",
-        "timeZone": "Time zone",
-        "timeZonePlaceholder": "Select a country first",
-        "hasRegionalOffices": "We have regional offices",
-        "offeredCrossBorder": "The scheme is offered cross-border"
-      },
-      "coverage": {
-        "national": "National",
-        "regional": "Regional",
-        "international": "International",
-        "sectorSpecific": "Sector-specific"
-      },
-      "families": {
-        "title": "What kind of schemes do you own?",
-        "subtitle": "Choose one or more scheme families to configure the correct controls.",
-        "schemeCount": "Number of active schemes",
-        "familiesLabel": "Scheme families",
-        "note": "Each scheme will be created as a separate controlled record."
-      },
-      "familyOptions": {
-        "regulatory": "Regulatory",
-        "government": "Government",
-        "industryAssociation": "Industry / Association",
-        "privateCertification": "Private Certification",
-        "sustainabilityEsg": "Sustainability / ESG",
-        "productProcess": "Product / Process",
-        "service": "Service",
-        "personnel": "Personnel",
-        "auditRating": "Audit / Rating"
-      },
-      "schemes": {
-        "title": "Add your scheme records",
-        "subtitle": "Capture identity, version, status and scheme purpose.",
-        "schemeTab": "Scheme {{index}}",
-        "addAnother": "+ Add another",
-        "name": "Scheme name",
-        "namePlaceholder": "Sustainable Supply Standard",
-        "code": "Scheme code",
-        "codePlaceholder": "SSS",
-        "version": "Current version",
-        "versionPlaceholder": "Version 3.0",
-        "effectiveDate": "Effective date",
-        "status": "Scheme status",
-        "statusPlaceholder": "Select status",
-        "document": "Scheme document",
-        "uploadPdf": "Upload PDF",
-        "reviewReminders": "Set review-date reminders",
-        "keepPreviousVersions": "Keep previous versions accessible"
-      },
-      "schemeStatus": {
-        "draft": "Draft",
-        "active": "Active",
-        "underReview": "Under review",
-        "suspended": "Suspended",
-        "withdrawn": "Withdrawn",
-        "retired": "Retired"
-      },
-      "activities": {
-        "title": "Define conformity assessment activities",
-        "subtitle": "Specify what the scheme authorizes and which standards govern the assessment bodies.",
-        "activitiesLabel": "Assessment activities",
-        "cabStandard": "CAB requirement standard",
-        "cabStandardPlaceholder": "Select standard",
-        "outcome": "Assessment outcome",
-        "outcomePlaceholder": "Select outcome",
-        "certificationCycle": "Certification cycle",
-        "certificationCyclePlaceholder": "Select cycle",
-        "certification": "Certification",
-        "inspection": "Inspection",
-        "testing": "Testing",
-        "validationVerification": "Validation / Verification",
-        "auditRating": "Audit / Rating"
-      },
-      "outcomes": {
-        "certificate": "Certificate",
-        "licence": "Licence",
-        "certificateAndLicence": "Certificate + licence",
-        "mark": "Mark",
-        "rating": "Rating",
-        "report": "Report"
-      },
-      "cycle": {
-        "oneYear": "1 year",
-        "twoYears": "2 years",
-        "threeYears": "3 years",
-        "fourYears": "4 years",
-        "fiveYears": "5 years",
-        "custom": "Custom"
-      },
-      "scope": {
-        "title": "Define scheme scope and eligibility",
-        "subtitle": "Set products, sectors, geographies and applicant eligibility.",
-        "classification": "Scope classification",
-        "classificationPlaceholder": "Select classifications",
-        "eligibleApplicants": "Eligible applicants",
-        "eligibleApplicantsPlaceholder": "Select applicant types",
-        "geographicLimits": "Geographic limits",
-        "geographicLimitsPlaceholder": "Select limits",
-        "geographicCountries": "Selected countries",
-        "geographicCountriesPlaceholder": "Select countries",
-        "excludedActivities": "Excluded activities",
-        "excludedActivitiesPlaceholder": "Enter exclusions",
-        "normativeRequirements": "Normative requirements",
-        "uploadRequirements": "Upload requirements",
-        "scopeRules": "Scope rules",
-        "publicScopeList": "Publish a public scope list",
-        "blockOutsideScope": "Block applications outside scope",
-        "requireEligibilityReview": "Require eligibility review"
-      },
-      "scopeClasses": {
-        "foodAgriculture": "Food and agricultural products",
-        "manufacturedGoods": "Manufactured goods",
-        "textiles": "Textiles and apparel",
-        "chemicals": "Chemicals",
-        "construction": "Construction",
-        "energy": "Energy",
-        "services": "Services",
-        "forestry": "Forestry and paper"
-      },
-      "applicants": {
-        "manufacturer": "Manufacturers",
-        "processor": "Processors",
-        "serviceProvider": "Service providers",
-        "farm": "Farms and growers",
-        "organization": "Organizations",
-        "person": "Persons",
-        "cab": "Conformity assessment bodies",
-        "other": "Other"
-      },
-      "geography": {
-        "global": "Global",
-        "selectedCountries": "Selected countries"
-      },
-      "approval": {
-        "title": "Set approval and licensing rules",
-        "subtitle": "Control which CABs may operate the scheme and how approvals are maintained.",
-        "route": "CAB approval route",
-        "routePlaceholder": "Select route",
-        "validity": "Approval validity",
-        "validityPlaceholder": "Select validity",
-        "surveillance": "Surveillance frequency",
-        "surveillancePlaceholder": "Select frequency",
-        "licenceFormat": "Licence number format",
-        "seqRequired": "The format must include {SEQ} so licences stay unique.",
-        "example": "Example",
-        "renewalRule": "Renewal rule",
-        "renewalRulePlaceholder": "Reassessment before expiry",
-        "suspensionRule": "Suspension rule",
-        "suspensionRulePlaceholder": "Immediate mark restriction",
-        "licensingRules": "Licensing rules",
-        "requireActiveAccreditation": "Require active accreditation",
-        "publishDirectory": "Publish approved CAB directory",
-        "recognitionNote": "The recognition route relies on accreditation evidence — keep \"Require active accreditation\" on."
-      },
-      "approvalRoutes": {
-        "documentReview": "Document review",
-        "assessment": "Assessment",
-        "applicationAndAssessment": "Application + assessment",
-        "recognitionOfAccreditation": "Recognition of accreditation",
-        "witness": "Witness assessment",
-        "combined": "Combined"
-      },
-      "surveillance": {
-        "semiannual": "Every 6 months",
-        "annual": "Annual",
-        "biennial": "Biennial",
-        "riskBased": "Risk-based"
-      },
-      "marks": {
-        "title": "Upload scheme marks and usage rules",
-        "subtitle": "Keep the scheme mark, licence conditions and artwork versions under control.",
-        "schemeMark": "Scheme mark",
-        "schemeMarkCaption": "Upload SVG / PNG",
-        "upload": "Upload",
-        "artworkVersion": "Artwork version",
-        "artworkVersionPlaceholder": "Version 2.1",
-        "permittedUse": "Permitted use",
-        "permittedUsePlaceholder": "Select where the mark may be used",
-        "approvalReference": "Approval reference",
-        "approvalReferencePlaceholder": "Enter reference",
-        "validFrom": "Valid from",
-        "validUntil": "Valid until",
-        "usageGuide": "Usage guide",
-        "uploadPdf": "Upload PDF",
-        "usageRules": "Usage rules",
-        "blockAfterSuspension": "Block use after suspension",
-        "keepAuditTrail": "Keep mark-use audit trail"
-      },
-      "markUse": {
-        "product": "Products",
-        "packaging": "Packaging",
-        "certificate": "Certificates",
-        "website": "Websites",
-        "marketing": "Marketing",
-        "digitalBadge": "Digital badges"
-      },
-      "roles": {
-        "title": "Add the key scheme roles",
-        "subtitle": "Invite only the roles needed to operate and approve the scheme.",
-        "workspaceOwner": "Workspace owner",
-        "schemeManager": "Scheme manager",
-        "technicalCommitteeLead": "Technical committee lead",
-        "licensingAdministrator": "Licensing administrator",
-        "complaintsManager": "Complaints manager",
-        "documentController": "Document controller",
-        "requirement": {
-          "OWNER": "Active",
-          "REQUIRED": "Required",
-          "RECOMMENDED": "Recommended",
-          "OPTIONAL": "Optional"
-        },
-        "inviteByEmail": "Invite by email",
-        "addLater": "Add later",
-        "emailPlaceholder": "name@example.com",
-        "ownerFallback": "Workspace owner",
-        "roleBasedPermissions": "Use role-based permissions",
-        "sendInvitations": "Send invitations after activation"
-      },
-      "review": {
-        "title": "Review and activate the scheme owner workspace",
-        "subtitle": "Confirm the scheme foundation before licensing CABs or publishing requirements.",
-        "activate": "Activate Workspace",
-        "rows": {
-          "identity": "Identity & locations",
-          "schemes": "Scheme records",
-          "scope": "Scope & eligibility",
-          "approval": "CAB approval rules",
-          "marks": "Marks & licences",
-          "roles": "Key roles"
-        },
-        "status": {
-          "READY": "Ready",
-          "REVIEW": "Review",
-          "MISSING": "Missing"
-        },
-        "notProvided": "Not provided yet",
-        "activeSchemes_one": "{{count}} active scheme",
-        "activeSchemes_other": "{{count}} active schemes",
-        "configured": "Configured",
-        "ready": "Ready",
-        "markMissing": "Scheme mark not uploaded",
-        "needsAttention": "Needs attention",
-        "rolesDetail_one": "{{count}} invitation pending",
-        "rolesDetail_other": "{{count}} invitations pending",
-        "rolesNone": "No pending invitations",
-        "nextStepNote": "Next: import existing approved CABs, licences and scheme versions — or start clean."
-      }
-    }
-  },
-  "sa": {
-    "setup": {
-      "badge": "Supplier Audit Setup",
-      "profile": {
-        "title": "Confirm the buying organization profile",
-        "subtitle": "Add the identity used across supplier qualification, audits and performance reports.",
-        "legalName": "Legal organization name",
-        "legalNamePlaceholder": "ABC Retail Group",
-        "industry": "Industry",
-        "industryPlaceholder": "Select industry",
-        "industryOther": "Describe your industry",
-        "industryOtherPlaceholder": "Enter the industry",
-        "registrationNumber": "Registration number",
-        "registrationNumberPlaceholder": "Enter number",
-        "website": "Website",
-        "websitePlaceholder": "https://example.com",
-        "contactEmail": "Primary contact email",
-        "contactEmailPlaceholder": "supplier@example.com",
-        "supplierCount": "Annual supplier count",
-        "supplierCountPlaceholder": "Select range"
-      },
-      "industries": {
-        "retailDistribution": "Retail and distribution",
-        "foodBeverage": "Food and beverage",
-        "manufacturing": "Manufacturing",
-        "pharmaceuticals": "Pharmaceuticals",
-        "automotive": "Automotive",
-        "construction": "Construction",
-        "energyUtilities": "Energy and utilities",
-        "healthcare": "Healthcare",
-        "technology": "Technology",
-        "other": "Other"
-      },
-      "locations": {
-        "title": "Where are suppliers managed?",
-        "subtitle": "Identify procurement locations, receiving sites and operating markets.",
-        "headOfficeCountry": "Head office country",
-        "city": "City",
-        "procurementOffices": "Procurement offices",
-        "receivingSites": "Receiving sites",
-        "supplierCountries": "Supplier countries",
-        "approvalModel": "Supplier approval model",
-        "approvalModelPlaceholder": "Select model",
-        "languages": "Operating languages",
-        "languagesPlaceholder": "Select languages",
-        "centralizedApproval": "Use centralized supplier approval",
-        "allowSiteSpecific": "Allow site-specific suppliers",
-        "siteSpecificDisabledHint": "Available only for decentralized or hybrid approval models."
-      },
-      "approvalModels": {
-        "centralized": "Centralized",
-        "decentralized": "Decentralized",
-        "hybrid": "Hybrid"
-      },
-      "categories": {
-        "title": "Define supplier categories",
-        "subtitle": "Create the category structure used for qualification, risk and audit planning.",
-        "categoryOwner": "Category owner",
-        "categoryOwnerPlaceholder": "Procurement Manager",
-        "customCategories": "Custom categories",
-        "customCategoriesPlaceholder": "Add later",
-        "keyCategories": "Key categories",
-        "rawMaterials": "Raw materials",
-        "packaging": "Packaging",
-        "logistics": "Logistics",
-        "cleaning": "Cleaning",
-        "maintenance": "Maintenance",
-        "itServices": "IT Services",
-        "contractors": "Contractors",
-        "criticalEquipment": "Critical Equipment",
-        "professionalServices": "Professional Services",
-        "utilities": "Utilities"
-      },
-      "risk": {
-        "title": "Set supplier risk criteria",
-        "subtitle": "Score suppliers using criticality, spend, country, performance and compliance exposure.",
-        "riskLevels": "Risk levels",
-        "riskLevelsPlaceholder": "Select scale",
-        "riskFactors": "Criticality factors",
-        "riskFactorsPlaceholder": "Select factors",
-        "spendThreshold": "Spend threshold",
-        "spendThresholdPlaceholder": "Enter annual value",
-        "scoringRules": "Scoring rules",
-        "countryRisk": "Include country risk",
-        "regulatoryRisk": "Include regulatory risk",
-        "automaticRiskScore": "Automatic risk score",
-        "recalculateAfterIncidents": "Recalculate after incidents",
-        "requireApprovalForCritical": "Require approval for critical suppliers"
-      },
-      "riskLevels": {
-        "lowMediumHigh": "Low / Medium / High",
-        "lowMediumHighCritical": "Low / Medium / High / Critical",
-        "numeric": "Numeric 1–5"
-      },
-      "riskFactors": {
-        "criticality": "Criticality",
-        "spend": "Spend",
-        "country": "Country",
-        "regulatory": "Regulatory",
-        "performance": "Performance",
-        "singleSource": "Single source",
-        "incidentHistory": "Incident history"
-      },
-      "qualification": {
-        "title": "Configure qualification requirements",
-        "subtitle": "Collect only the evidence needed for each supplier category and risk level.",
-        "route": "Qualification route",
-        "routePlaceholder": "Select route",
-        "approvalValidity": "Approval validity",
-        "approvalValidityPlaceholder": "Select validity",
-        "requiredEvidence": "Required evidence",
-        "requiredEvidencePlaceholder": "Select evidence types",
-        "requiredLicences": "Required licences",
-        "requiredLicencesPlaceholder": "By category",
-        "managementCertificates": "Management certificates",
-        "managementCertificatesPlaceholder": "ISO 9001 / 14001 / 45001",
-        "financialChecks": "Financial checks",
-        "financialChecksPlaceholder": "For critical suppliers",
-        "insuranceEvidence": "Insurance evidence",
-        "insuranceEvidencePlaceholder": "Where applicable",
-        "documentRules": "Document rules",
-        "blockExpiredDocuments": "Block expired documents",
-        "applyConditionalApproval": "Apply conditional approval"
-      },
-      "qualificationRoutes": {
-        "questionnaire": "Questionnaire only",
-        "questionnaireAndDocuments": "Questionnaire + document review",
-        "documentReview": "Document review only",
-        "auditRequired": "Audit required"
-      },
-      "evidence": {
-        "licence": "Licence",
-        "isoCertificate": "ISO certificate",
-        "insurance": "Insurance",
-        "financial": "Financial",
-        "productSpecs": "Product specifications",
-        "esg": "ESG",
-        "other": "Other"
-      },
-      "validity": {
-        "oneYear": "1 year",
-        "twoYears": "2 years",
-        "threeYears": "3 years",
-        "custom": "Custom"
-      },
-      "auditTypes": {
-        "title": "Define audit types and criteria",
-        "subtitle": "Set second-party audits for qualification, surveillance, incidents and reapproval.",
-        "typesLabel": "Audit types",
-        "modesLabel": "Audit modes",
-        "criteria": "Default audit criteria",
-        "criteriaPlaceholder": "Select criteria",
-        "frequency": "Audit frequency",
-        "frequencyPlaceholder": "Select frequency",
-        "additionalStandards": "Additional standards",
-        "additionalStandardsPlaceholder": "Select standards",
-        "initialQualification": "Initial qualification",
-        "routineSurveillance": "Routine surveillance",
-        "reapproval": "Reapproval",
-        "forCause": "For-cause",
-        "incident": "Incident",
-        "followUp": "Follow-up"
-      },
-      "auditModes": {
-        "onSite": "On-site audit",
-        "remote": "Remote audit",
-        "hybrid": "Hybrid",
-        "desktop": "Desktop"
-      },
-      "auditCriteria": {
-        "supplierCode": "Supplier code",
-        "contract": "Contract",
-        "standard": "Standard",
-        "legal": "Legal",
-        "customerSpecific": "Customer-specific"
-      },
-      "auditFrequency": {
-        "annual": "Annual",
-        "biennial": "Biennial",
-        "riskBased": "Risk-based",
-        "byCategory": "By category"
-      },
-      "scoring": {
-        "title": "Set scoring and approval decisions",
-        "subtitle": "Translate audit results into consistent supplier status and actions.",
-        "scoreScale": "Audit score scale",
-        "scoreScalePlaceholder": "Select scale",
-        "approvalThreshold": "Approval threshold (%)",
-        "conditionalLowerBound": "Conditional lower bound (%)",
-        "rejectionThreshold": "Rejection threshold (%)",
-        "bandsOverlap": "Thresholds must not overlap: rejection ≤ conditional < approval.",
-        "criticalRule": "Critical finding rule",
-        "criticalRulePlaceholder": "Select rule",
-        "decisionAuthority": "Decision authority",
-        "decisionAuthorityPlaceholder": "Supplier Approval Committee",
-        "decisionRules": "Decision rules",
-        "requireActionPlan": "Require action plan for gaps",
-        "recalculateStatus": "Recalculate supplier status"
-      },
-      "scoreScales": {
-        "percentage": "0–100",
-        "oneToFive": "1–5",
-        "passFail": "Pass / Fail",
-        "weighted": "Weighted"
-      },
-      "criticalRules": {
-        "automaticHold": "Automatic hold",
-        "automaticReject": "Automatic reject",
-        "conditionalOnly": "Conditional approval only",
-        "scoreOnly": "Affect score only"
-      },
-      "findings": {
-        "title": "Configure findings and follow-up",
-        "subtitle": "Standardize correction, corrective action, verification and escalation.",
-        "findingClasses": "Finding classes",
-        "findingClassesPlaceholder": "Select classification set",
-        "correctionDue": "Correction due (days)",
-        "correctiveActionDue": "Corrective action due (days)",
-        "followUpTrigger": "Follow-up audit trigger",
-        "followUpTriggerPlaceholder": "Select trigger",
-        "escalationOwner": "Escalation owner",
-        "escalationOwnerPlaceholder": "Procurement Director",
-        "workflowRules": "Workflow rules",
-        "evidenceReview": "Require evidence review",
-        "requireRootCause": "Require root cause analysis",
-        "trackEffectivenessReview": "Track effectiveness review"
-      },
-      "findingClasses": {
-        "criticalMajorMinor": "Critical / Major / Minor",
-        "criticalMajorMinorObs": "Critical / Major / Minor / Observation",
-        "majorMinor": "Major / Minor"
-      },
-      "followUpTriggers": {
-        "criticalOrRepeated": "Critical or repeated issue",
-        "criticalOnly": "Critical only",
-        "always": "Always",
-        "never": "Never"
-      },
-      "roles": {
-        "title": "Add key supplier assurance roles",
-        "subtitle": "Invite the people needed to qualify, audit and approve suppliers.",
-        "assuranceManager": "Supplier assurance manager",
-        "procurementManager": "Procurement manager",
-        "leadAuditor": "Lead supplier auditor",
-        "categoryManagers": "Category managers",
-        "technicalExperts": "Technical experts",
-        "approvalCommittee": "Approval committee",
-        "requirement": {
-          "REQUIRED": "Required",
-          "RECOMMENDED": "Recommended",
-          "OPTIONAL": "Optional"
-        },
-        "inviteByEmail": "Invite by email",
-        "addLater": "Add later",
-        "emailPlaceholder": "name@example.com",
-        "independenceNote": "Keep the auditor and the approval authority separate where policy requires it.",
-        "separateAuditFromApproval": "Separate audit from approval",
-        "categoryBasedAccess": "Use category-based access"
-      },
-      "review": {
-        "title": "Review and activate supplier audits",
-        "subtitle": "Confirm the supplier assurance framework before importing suppliers.",
-        "activate": "Activate Workspace",
-        "rows": {
-          "profile": "Organization profile",
-          "categories": "Supplier categories",
-          "risk": "Risk & qualification rules",
-          "audits": "Audit types & criteria",
-          "scoring": "Scoring & CAPA",
-          "roles": "Key roles"
-        },
-        "status": {
-          "READY": "Ready",
-          "REVIEW": "Review",
-          "MISSING": "Missing"
-        },
-        "notProvided": "Not provided yet",
-        "categoriesCount_one": "{{count}} category",
-        "categoriesCount_other": "{{count}} categories",
-        "configured": "Configured",
-        "needsAttention": "Needs attention",
-        "rolesDetail_one": "{{count}} invitation pending",
-        "rolesDetail_other": "{{count}} invitations pending",
-        "rolesNone": "No pending invitations",
-        "nextStepNote": "Next: import the supplier master list, documents, scores and previous audits — or start clean."
-      }
-    }
-  },
-  "invoices": {
-    "pageTitle": "Invoices",
-    "searchPlaceholder": "search...",
-    "downloadPdf": "Download to PDF",
-    "downloadOptions": "Download options",
-    "exportExcel": "Export to Excel",
-    "paymentMade": "Payment made",
-    "preview": "Preview",
-    "printInvoice": "Print the invoice",
-    "filters": {
-      "currency": "Currency",
-      "status": "Status",
-      "allCurrencies": "All currencies",
-      "allStatuses": "All statuses",
-      "pending": "Pending",
-      "overdue": "Overdue"
-    },
-    "columns": {
-      "index": "#",
-      "commercialRegister": "Commercial registration number",
-      "username": "Username",
-      "email": "E-mail",
-      "orderNumber": "Order Number",
-      "orderStatus": "Order Status",
-      "invoiceType": "Invoice type",
-      "paymentNumber": "Payment number",
-      "paymentDate": "Payment date",
-      "totalAmount": "Total Amount",
-      "currency": "Currency",
-      "invoiceStatus": "Invoice status",
-      "details": "Invoice details"
-    },
-    "tour": {
-      "header": {
-        "title": "Your Invoices",
-        "description": "This page lists every invoice issued to you, with its amount, currency, and payment status."
-      },
-      "toolbar": {
-        "title": "Search, Filter & Export",
-        "description": "Search by name or order number, filter by currency or status, and export the list to PDF or Excel."
-      },
-      "table": {
-        "title": "Invoice Details",
-        "description": "Each row shows the order, amount, and payment status — preview or print any invoice from here."
-      }
-    },
-    "register": {
-      "breadcrumb": "Finance",
-      "title": "Invoice register",
-      "subtitle": "View and manage invoices issued to clients.",
-      "createInvoice": "Create invoice",
-      "searchLabel": "Search invoice or client",
-      "searchPlaceholder": "Enter invoice number, client name or client ID...",
-      "issuePeriodLabel": "Issue period",
-      "countryLabel": "Country",
-      "allCountries": "All countries",
-      "paymentStatusLabel": "Payment status",
-      "allStatuses": "All statuses",
-      "unpaid": "Unpaid",
-      "paid": "Paid",
-      "partiallyPaid": "Partially paid",
-      "draft": "Draft",
-      "search": "Search",
-      "clear": "Clear",
-      "invoicesCount": "{{count}} invoices",
-      "export": "Export",
-      "exportExcel": "Export to Excel (.xlsx)",
-      "exportPdf": "Export to PDF (.pdf)",
-      "colInvoice": "Invoice",
-      "colClient": "Client",
-      "colIssued": "Issued",
-      "colDue": "Due",
-      "colAmount": "Amount",
-      "colPaid": "Paid",
-      "colBalance": "Balance",
-      "colStatus": "Status",
-      "loading": "Loading invoices...",
-      "showing": "Showing 1 to {{shown}} of {{total}} invoices",
-      "perPage": "{{count}} per page",
-      "viewInvoice": "View invoice",
-      "recordPayment": "Record payment",
-      "createCreditNote": "Create credit note",
-      "downloadPdf": "Download PDF",
-      "editDraftOnly": "Edit (draft only)",
-      "deleteNotAvailable": "Delete (not available)",
-      "createInvoiceTitle": "Create invoice",
-      "createInvoiceDesc": "Open the invoice draft form with pre-populated order details. Draft invoices can be saved with incomplete fields.",
-      "saveAsDraft": "Save as draft",
-      "creditNoteTitle": "Create credit note",
-      "creditNoteDesc": "Creates a credit note linked to {{invoiceNumber}}. Issued invoices cannot be deleted. Credit notes follow the same validation and tax rules.",
-      "recordPaymentTitle": "Record payment ({{invoiceNumber}})",
-      "amountLabel": "Amount ({{currency}})",
-      "paymentDateLabel": "Payment date",
-      "paymentMethodLabel": "Payment method",
-      "bankTransfer": "Bank transfer",
-      "creditCard": "Credit Card",
-      "cheque": "Cheque",
-      "cash": "Cash",
-      "referenceLabel": "Reference",
-      "referencePlaceholder": "e.g. TRX-12345",
-      "save": "Save",
-      "cancel": "Cancel",
-      "tour": {
-        "header": {
-          "title": "Invoices Register Overview",
-          "description": "Track and manage billing operations, view balances, and handle payments for all client certification services."
+        "kpi": {
+          "openLeads": "Open leads",
+          "everyLeadHasOwner": "Every lead has an owner",
+          "unassignedLeads": "{{count}} unassigned",
+          "viewPipeline": "View pipeline",
+          "pipelineValue": "Pipeline value",
+          "noValuesYet": "No values yet",
+          "activePipelineLeads": "Across {{count}} open leads",
+          "viewList": "View list",
+          "weightedForecast": "Weighted forecast",
+          "weightedSubtitle": "{{pct}}% of pipeline value, weighted by stage",
+          "winRate": "Win rate",
+          "wonLostSummary": "Won {{won}} · Lost {{lost}}",
+          "needsAction": "Needs action",
+          "nothingOverdue": "Nothing overdue",
+          "overdueCount": "{{count}} overdue"
         },
         "filters": {
-          "title": "Search & Filtering",
-          "description": "Find invoices by number or client name, and filter by country and payment status (Paid, Unpaid, Partially Paid, Draft)."
+          "search": "Search",
+          "searchPlaceholder": "Search leads by company, contact or standard",
+          "owner": "Owner",
+          "allOwners": "All owners",
+          "source": "Source",
+          "allSources": "All sources"
         },
-        "actionsBtn": {
-          "title": "Create & Export Invoices",
-          "description": "Create new invoice drafts and export records in bulk to Excel (.xlsx) or PDF formats."
+        "stages": {
+          "new_lead": {
+            "label": "New lead",
+            "description": "Received from the portal or added by the team."
+          },
+          "qualified": {
+            "label": "Qualified",
+            "description": "Contact made and fit with our scope confirmed."
+          },
+          "needs_analysis": {
+            "label": "Needs analysis",
+            "description": "Scope, sites and headcount collected."
+          },
+          "proposal_sent": {
+            "label": "Proposal sent",
+            "description": "Audit time calculated and quotation sent."
+          },
+          "negotiation": {
+            "label": "Negotiation",
+            "description": "Terms and price being agreed."
+          },
+          "won": {
+            "label": "Won",
+            "description": "Signed certification agreement received."
+          }
         },
         "table": {
-          "title": "Invoices List Table",
-          "description": "Detailed view of invoice numbers, client names, issue and due dates, amounts, payments, and remaining balances."
+          "company": "Company",
+          "contact": "Contact",
+          "standards": "Standards",
+          "stage": "Stage",
+          "estimatedValue": "Estimated value",
+          "owner": "Owner",
+          "source": "Source",
+          "actions": "Actions"
         },
-        "rowActions": {
-          "title": "Payment & Credit Notes",
-          "description": "Record client payments, issue linked credit notes, view full details, and download individual invoice PDFs."
+        "modal": {
+          "title": "New lead",
+          "companyName": "Company name",
+          "companyNameRequired": "Company name is required",
+          "contactPerson": "Contact person",
+          "email": "Email",
+          "phone": "Phone",
+          "city": "City",
+          "sector": "Sector",
+          "standards": "Standards (comma separated)",
+          "employees": "Employees",
+          "sites": "Sites",
+          "estimatedValue": "Estimated value (SAR)",
+          "source": "Source",
+          "owner": "Owner"
+        }
+      },
+      "agreementTerms": {
+        "title": "Agreement terms",
+        "subtitle": "The certification agreement your clients sign: bilingual sections with variables, filled for each client.",
+        "breadcrumbHub": "Application Hub",
+        "breadcrumbSettings": "Settings",
+        "restoreDefault": "Restore default text",
+        "save": "Save",
+        "saved": "Saved",
+        "bannerTitle": "Default text: draft for the product owner's review",
+        "bannerDesc": "The default text covers the obligations of ISO/IEC 17021-1 clause 5.1.2 in our own words. Have it reviewed by your legal adviser and adapt it to your rules before using it with clients.",
+        "versionMeta": "Version {{version}}, saved by {{savedBy}} on {{savedAt}}",
+        "gate": {
+          "title": "Audit plan gate",
+          "subtitle": "What happens when a Stage 1, Stage 2 or recertification plan is sent and the client has no active agreement.",
+          "blockTitle": "Block (recommended)",
+          "blockDesc": "The plan cannot be sent until the agreement is active.",
+          "warnTitle": "Warn",
+          "warnDesc": "The plan is sent and a warning is shown."
+        },
+        "sectionsTitle": "Sections",
+        "addSection": "Add section",
+        "untitledSection": "Untitled section",
+        "moveUp": "Move up",
+        "moveDown": "Move down",
+        "deleteSection": "Delete section",
+        "titleEn": "Title (English)",
+        "titleAr": "Title (Arabic)",
+        "textEn": "Text (English)",
+        "textAr": "Text (Arabic)",
+        "variables": {
+          "title": "Variables",
+          "subtitle": "Click a variable to insert it where your cursor is. Each agreement fills it with the client's value.",
+          "selectClient": "Select a client",
+          "noClients": "No registered clients yet",
+          "fillWith": "Fill the variables with",
+          "sampleValues": "Sample values",
+          "showPreview": "Show preview",
+          "hidePreview": "Hide preview",
+          "previewTitle": "Live agreement preview",
+          "previewSubtitle": "Interpolated with the selected client preset"
+        }
+      },
+      "certificationAgreements": {
+        "title": "Certification agreements"
+      }
+    },
+    "ia": {
+      "setup": {
+        "badge": "Internal Audit Setup",
+        "profile": {
+          "title": "Confirm your organization profile",
+          "subtitle": "Add the identity used across internal audit plans, reports and dashboards.",
+          "legalName": "Legal organization name",
+          "legalNamePlaceholder": "ABC Manufacturing Ltd.",
+          "industry": "Industry",
+          "industryPlaceholder": "Select industry",
+          "industryOther": "Describe your industry",
+          "industryOtherPlaceholder": "Enter the industry",
+          "registrationNumber": "Registration number",
+          "registrationNumberPlaceholder": "Enter number",
+          "website": "Website",
+          "websitePlaceholder": "https://example.com",
+          "contactEmail": "Primary contact email",
+          "contactEmailPlaceholder": "audit@example.com",
+          "employeeRange": "Employee range",
+          "employeeRangePlaceholder": "Select range"
+        },
+        "industries": {
+          "foodManufacturing": "Food manufacturing",
+          "manufacturing": "Manufacturing",
+          "construction": "Construction",
+          "healthcare": "Healthcare",
+          "energyUtilities": "Energy and utilities",
+          "transportLogistics": "Transport and logistics",
+          "informationTechnology": "Information technology",
+          "financialServices": "Financial services",
+          "education": "Education",
+          "publicSector": "Public sector",
+          "other": "Other"
+        },
+        "structure": {
+          "title": "Map the organization structure",
+          "subtitle": "Start with headquarters, then add sites and departments included in the audit universe.",
+          "headOfficeCountry": "Head office country",
+          "city": "City",
+          "address": "Main office address",
+          "addressPlaceholder": "Enter address",
+          "siteCount": "Number of sites",
+          "departmentCount": "Number of departments",
+          "languages": "Operating languages",
+          "languagesPlaceholder": "Select languages",
+          "singleManagementSystem": "Sites operate under one management system",
+          "includeRemoteFunctions": "Include remote functions"
+        },
+        "locationTypes": {
+          "hq": "Headquarters",
+          "plant": "Plant",
+          "branch": "Branch",
+          "warehouse": "Warehouse",
+          "project": "Project",
+          "remote": "Remote"
+        },
+        "universe": {
+          "title": "What will internal audit cover?",
+          "subtitle": "Select management systems, corporate processes and other assurance areas.",
+          "standardsLabel": "Management system standards",
+          "processesLabel": "Corporate processes",
+          "note": "Standards and processes can be combined in one integrated programme."
+        },
+        "processes": {
+          "leadership": "Leadership",
+          "sales": "Sales",
+          "procurement": "Procurement",
+          "hr": "HR",
+          "it": "IT",
+          "operations": "Operations",
+          "finance": "Finance",
+          "compliance": "Compliance",
+          "support": "Support"
+        },
+        "criteria": {
+          "title": "Define audit criteria",
+          "subtitle": "Link each programme to policies, procedures, standards and legal requirements.",
+          "programmeName": "Programme name",
+          "programmeNamePlaceholder": "Integrated Management System",
+          "primaryCriteria": "Primary criteria",
+          "primaryCriteriaPlaceholder": "Select criteria",
+          "noUniverseSelected": "Select audit areas first",
+          "internalPolicies": "Internal policies",
+          "uploadOrSelect": "Upload or select",
+          "legalRegister": "Legal register",
+          "legalRegisterPlaceholder": "Select register",
+          "auditCycle": "Audit cycle",
+          "auditCyclePlaceholder": "Select cycle",
+          "programmeOwner": "Programme owner",
+          "programmeOwnerPlaceholder": "Quality Manager",
+          "allowMultipleCriteria": "Allow multiple criteria per audit",
+          "trackClauseFindings": "Track clause-level findings"
+        },
+        "criteriaTypes": {
+          "standard": "Standard",
+          "policy": "Policy",
+          "procedure": "Procedure",
+          "law": "Law",
+          "contract": "Contract",
+          "customerRequirement": "Customer requirement",
+          "other": "Other"
+        },
+        "frequency": {
+          "monthly": "Monthly",
+          "quarterly": "Quarterly",
+          "semiannual": "Every 6 months",
+          "annual": "Annual",
+          "biennial": "Biennial",
+          "riskBased": "Risk-based"
+        },
+        "risk": {
+          "title": "Set the audit universe and risk rating",
+          "subtitle": "Prioritize sites and processes using risk, performance and previous results.",
+          "riskScale": "Risk scale",
+          "riskScalePlaceholder": "Select scale",
+          "riskFactors": "Inherent risk factors",
+          "riskFactorsPlaceholder": "Select factors",
+          "previousFindings": "Previous findings",
+          "previousFindingsPlaceholder": "Select handling",
+          "performanceIndicators": "Performance indicators",
+          "performanceIndicatorsPlaceholder": "Select KPIs",
+          "scoringRules": "Scoring rules",
+          "useHistoricalLastAuditDate": "Use historical last audit date",
+          "automaticPriorityScore": "Automatic priority score",
+          "prioritizeOverdue": "Prioritize overdue areas",
+          "increaseFrequencyAfterMajorNc": "Increase frequency after major NCs"
+        },
+        "riskScales": {
+          "lowMediumHigh": "Low / Medium / High",
+          "lowMediumHighCritical": "Low / Medium / High / Critical",
+          "numeric": "Numeric 1–5"
+        },
+        "riskFactors": {
+          "impact": "Impact",
+          "change": "Change",
+          "complexity": "Complexity",
+          "previousFindings": "Previous findings",
+          "kpiPerformance": "KPI performance",
+          "regulatoryExposure": "Regulatory exposure"
+        },
+        "previousFindings": {
+          "openAndOverdue": "Include open and overdue",
+          "all": "Include all findings",
+          "majorOnly": "Major nonconformities only",
+          "ignore": "Do not use previous findings"
+        },
+        "programme": {
+          "title": "Configure the annual audit programme",
+          "subtitle": "Define frequency, timing and integrated audit rules.",
+          "periodStart": "Programme period start",
+          "periodEnd": "Programme period end",
+          "endAfterStart": "The end date must be after the start date.",
+          "defaultFrequency": "Default frequency",
+          "highRiskFrequency": "High-risk frequency",
+          "frequencyPlaceholder": "Select frequency",
+          "planningOwner": "Planning owner",
+          "planningOwnerPlaceholder": "Internal Audit Manager",
+          "approvalAuthority": "Approval authority",
+          "approvalAuthorityPlaceholder": "Audit Committee",
+          "planningRules": "Planning rules",
+          "integratedAudits": "Enable integrated audits",
+          "avoidPeakPeriods": "Avoid peak operational periods",
+          "notifyProcessOwners": "Notify process owners automatically"
+        },
+        "findings": {
+          "title": "Set finding and follow-up rules",
+          "subtitle": "Standardize classifications, due dates and escalation.",
+          "findingTypes": "Finding types",
+          "findingTypesPlaceholder": "Select classification set",
+          "correctionDue": "Default correction due (days)",
+          "correctiveActionDue": "Corrective action due (days)",
+          "verificationMethod": "Verification method",
+          "verificationMethodPlaceholder": "Select method",
+          "escalationAfter": "Escalation after (overdue days)",
+          "closureAuthority": "Closure authority",
+          "closureAuthorityPlaceholder": "Lead Auditor",
+          "workflowRules": "Workflow rules",
+          "requireRootCause": "Require root cause for NCs",
+          "trackEffectivenessReview": "Track effectiveness review"
+        },
+        "findingTypes": {
+          "majorMinorOfi": "Major / Minor / OFI",
+          "majorMinorObsOfi": "Major / Minor / Observation / OFI",
+          "ncObservation": "Nonconformity / Observation"
+        },
+        "verification": {
+          "evidenceAndFollowUp": "Evidence + follow-up",
+          "evidenceOnly": "Evidence only",
+          "followUpAudit": "Follow-up audit"
+        },
+        "templates": {
+          "title": "Prepare templates and numbering",
+          "subtitle": "Set report, finding and audit reference formats.",
+          "auditNumberFormat": "Audit number format",
+          "findingNumberFormat": "Finding number format",
+          "seqRequired": "The format must include {SEQ} so identifiers stay unique.",
+          "example": "Example",
+          "auditPlanTemplate": "Audit plan template",
+          "checklistTemplate": "Checklist template",
+          "templatePlaceholder": "Select template",
+          "reportLanguage": "Report language",
+          "reportLanguagePlaceholder": "Select language",
+          "documentRules": "Document rules",
+          "electronicApproval": "Enable electronic approval",
+          "useControlledTemplates": "Use controlled templates",
+          "showRevisionHistory": "Show revision history",
+          "default": "Use iCASCO default",
+          "upload": "Upload our own",
+          "createLater": "Create later"
+        },
+        "reportLanguages": {
+          "english": "English",
+          "arabic": "Arabic",
+          "bilingual": "English + Arabic"
+        },
+        "roles": {
+          "title": "Add key audit roles",
+          "subtitle": "Invite the core internal audit team; full competence records can follow.",
+          "programmeManager": "Audit programme manager",
+          "leadAuditor": "Lead auditor",
+          "auditors": "Auditors",
+          "technicalExperts": "Technical experts",
+          "committeeViewer": "Audit committee viewer",
+          "processOwners": "Process owners",
+          "requirement": {
+            "REQUIRED": "Required",
+            "RECOMMENDED": "Recommended",
+            "OPTIONAL": "Optional"
+          },
+          "inviteByEmail": "Invite by email",
+          "addLater": "Add later",
+          "importLater": "Import later",
+          "emailPlaceholder": "name@example.com",
+          "enforceIndependence": "Enforce auditor independence",
+          "roleBasedPermissions": "Use role-based permissions",
+          "independenceNote": "An auditor cannot audit their own process without an approval warning."
+        },
+        "review": {
+          "title": "Review and activate internal audits",
+          "subtitle": "Confirm the programme foundation before scheduling the first audit.",
+          "activate": "Activate Workspace",
+          "rows": {
+            "structure": "Organization structure",
+            "universe": "Audit universe",
+            "criteria": "Criteria & risk rules",
+            "programme": "Annual programme",
+            "findings": "Finding workflow",
+            "roles": "Audit roles"
+          },
+          "status": {
+            "READY": "Ready",
+            "REVIEW": "Review",
+            "MISSING": "Missing"
+          },
+          "sitesCount_one": "{{count}} site",
+          "sitesCount_other": "{{count}} sites",
+          "departmentsCount_one": "{{count}} department",
+          "departmentsCount_other": "{{count}} departments",
+          "areasCount_one": "{{count}} area",
+          "areasCount_other": "{{count}} areas",
+          "configured": "Configured",
+          "draftReady": "Draft ready",
+          "needsAttention": "Needs attention",
+          "rolesDetail_one": "{{count}} invitation pending",
+          "rolesDetail_other": "{{count}} invitations pending",
+          "rolesNone": "No pending invitations",
+          "nextStepNote": "Next: import previous audits and open findings, or build the new annual programme."
         }
       }
     },
-    "details": {
-      "breadcrumb": "Invoices",
-      "fromOrder": "From Order:",
-      "client": "Client:",
-      "saveDraft": "Save draft",
-      "configureTax": "Configure tax",
-      "issueInvoice": "Issue invoice",
-      "taxWarning": "Must configure tax before issuing.",
-      "configureNow": "Configure now",
-      "invoiceNumber": "Invoice number",
-      "issueDate": "Issue date",
-      "dueDate": "Due date",
-      "status": "Status",
-      "clientLabel": "Client",
-      "country": "Country",
-      "primaryContact": "Primary contact",
-      "email": "Email",
-      "relatedOrder": "Related order",
-      "application": "Application",
-      "poReference": "Purchase order reference",
-      "currency": "Currency",
-      "paymentTerms": "Payment terms",
-      "tabItems": "Invoice items",
-      "tabInstallments": "Installments",
-      "tabAttachments": "Attachments",
-      "tabMoreDetails": "More details",
-      "colDescription": "Description",
-      "colQty": "Qty",
-      "colUnit": "Unit price",
-      "colDiscount": "Discount",
-      "colAmount": "Amount",
-      "addLineItem": "Add line item",
-      "subtotal": "Subtotal",
-      "taxLabel": "Tax ({{label}})",
-      "noTax": "No tax configured",
-      "total": "Total",
-      "amountPaid": "Amount paid",
-      "balanceDue": "Balance due",
-      "taxModalTitle": "Configure tax",
-      "taxModalSubtitle": "Select the applicable tax rate. Only one tax rate may apply per invoice.",
-      "applyTax": "Apply tax",
-      "recordPaymentTitle": "Record payment ({{invoiceNumber}})",
-      "paymentSuccessToast": "Payment recorded successfully!",
-      "taxSuccessToast": "Tax configured successfully!",
-      "issuedToast": "Invoice issued successfully! Invoice is now finalized and immutable.",
-      "draftSavedToast": "Invoice draft saved.",
+    "so": {
+      "setup": {
+        "badge": "Scheme Owner Setup",
+        "profile": {
+          "title": "Confirm the scheme owner profile",
+          "subtitle": "Add the legal identity and ownership model used in scheme documents and licences.",
+          "legalName": "Legal organization name",
+          "legalNamePlaceholder": "Global Sustainable Scheme Ltd.",
+          "ownerType": "Scheme owner type",
+          "ownerTypePlaceholder": "Select owner type",
+          "ownerTypeOther": "Describe the ownership model",
+          "ownerTypeOtherPlaceholder": "Enter the ownership model and legal basis",
+          "registrationNumber": "Registration number",
+          "registrationNumberPlaceholder": "Enter registration number",
+          "website": "Website",
+          "websitePlaceholder": "https://example.com",
+          "contactEmail": "Primary contact email",
+          "contactEmailPlaceholder": "scheme@example.com",
+          "yearEstablished": "Year established",
+          "yearEstablishedPlaceholder": "Select year"
+        },
+        "ownerTypes": {
+          "regulatory": "Regulatory scheme owner",
+          "government": "Government scheme owner",
+          "industryAssociation": "Industry / association scheme owner",
+          "privateCertification": "Private certification scheme owner",
+          "sustainabilityEsg": "Sustainability / ESG scheme owner",
+          "retailerBrand": "Retailer / brand scheme owner",
+          "other": "Other"
+        },
+        "location": {
+          "title": "Where is the scheme governed?",
+          "subtitle": "Identify the headquarters, markets and languages covered by the scheme.",
+          "country": "Country",
+          "city": "City",
+          "address": "Head office address",
+          "addressPlaceholder": "Enter address",
+          "coverage": "Scheme coverage",
+          "coveragePlaceholder": "Select coverage",
+          "coverageCountries": "Countries covered",
+          "coverageCountriesPlaceholder": "Select countries",
+          "languages": "Operating languages",
+          "languagesPlaceholder": "Select languages",
+          "timeZone": "Time zone",
+          "timeZonePlaceholder": "Select a country first",
+          "hasRegionalOffices": "We have regional offices",
+          "offeredCrossBorder": "The scheme is offered cross-border"
+        },
+        "coverage": {
+          "national": "National",
+          "regional": "Regional",
+          "international": "International",
+          "sectorSpecific": "Sector-specific"
+        },
+        "families": {
+          "title": "What kind of schemes do you own?",
+          "subtitle": "Choose one or more scheme families to configure the correct controls.",
+          "schemeCount": "Number of active schemes",
+          "familiesLabel": "Scheme families",
+          "note": "Each scheme will be created as a separate controlled record."
+        },
+        "familyOptions": {
+          "regulatory": "Regulatory",
+          "government": "Government",
+          "industryAssociation": "Industry / Association",
+          "privateCertification": "Private Certification",
+          "sustainabilityEsg": "Sustainability / ESG",
+          "productProcess": "Product / Process",
+          "service": "Service",
+          "personnel": "Personnel",
+          "auditRating": "Audit / Rating"
+        },
+        "schemes": {
+          "title": "Add your scheme records",
+          "subtitle": "Capture identity, version, status and scheme purpose.",
+          "schemeTab": "Scheme {{index}}",
+          "addAnother": "+ Add another",
+          "name": "Scheme name",
+          "namePlaceholder": "Sustainable Supply Standard",
+          "code": "Scheme code",
+          "codePlaceholder": "SSS",
+          "version": "Current version",
+          "versionPlaceholder": "Version 3.0",
+          "effectiveDate": "Effective date",
+          "status": "Scheme status",
+          "statusPlaceholder": "Select status",
+          "document": "Scheme document",
+          "uploadPdf": "Upload PDF",
+          "reviewReminders": "Set review-date reminders",
+          "keepPreviousVersions": "Keep previous versions accessible"
+        },
+        "schemeStatus": {
+          "draft": "Draft",
+          "active": "Active",
+          "underReview": "Under review",
+          "suspended": "Suspended",
+          "withdrawn": "Withdrawn",
+          "retired": "Retired"
+        },
+        "activities": {
+          "title": "Define conformity assessment activities",
+          "subtitle": "Specify what the scheme authorizes and which standards govern the assessment bodies.",
+          "activitiesLabel": "Assessment activities",
+          "cabStandard": "CAB requirement standard",
+          "cabStandardPlaceholder": "Select standard",
+          "outcome": "Assessment outcome",
+          "outcomePlaceholder": "Select outcome",
+          "certificationCycle": "Certification cycle",
+          "certificationCyclePlaceholder": "Select cycle",
+          "certification": "Certification",
+          "inspection": "Inspection",
+          "testing": "Testing",
+          "validationVerification": "Validation / Verification",
+          "auditRating": "Audit / Rating"
+        },
+        "outcomes": {
+          "certificate": "Certificate",
+          "licence": "Licence",
+          "certificateAndLicence": "Certificate + licence",
+          "mark": "Mark",
+          "rating": "Rating",
+          "report": "Report"
+        },
+        "cycle": {
+          "oneYear": "1 year",
+          "twoYears": "2 years",
+          "threeYears": "3 years",
+          "fourYears": "4 years",
+          "fiveYears": "5 years",
+          "custom": "Custom"
+        },
+        "scope": {
+          "title": "Define scheme scope and eligibility",
+          "subtitle": "Set products, sectors, geographies and applicant eligibility.",
+          "classification": "Scope classification",
+          "classificationPlaceholder": "Select classifications",
+          "eligibleApplicants": "Eligible applicants",
+          "eligibleApplicantsPlaceholder": "Select applicant types",
+          "geographicLimits": "Geographic limits",
+          "geographicLimitsPlaceholder": "Select limits",
+          "geographicCountries": "Selected countries",
+          "geographicCountriesPlaceholder": "Select countries",
+          "excludedActivities": "Excluded activities",
+          "excludedActivitiesPlaceholder": "Enter exclusions",
+          "normativeRequirements": "Normative requirements",
+          "uploadRequirements": "Upload requirements",
+          "scopeRules": "Scope rules",
+          "publicScopeList": "Publish a public scope list",
+          "blockOutsideScope": "Block applications outside scope",
+          "requireEligibilityReview": "Require eligibility review"
+        },
+        "scopeClasses": {
+          "foodAgriculture": "Food and agricultural products",
+          "manufacturedGoods": "Manufactured goods",
+          "textiles": "Textiles and apparel",
+          "chemicals": "Chemicals",
+          "construction": "Construction",
+          "energy": "Energy",
+          "services": "Services",
+          "forestry": "Forestry and paper"
+        },
+        "applicants": {
+          "manufacturer": "Manufacturers",
+          "processor": "Processors",
+          "serviceProvider": "Service providers",
+          "farm": "Farms and growers",
+          "organization": "Organizations",
+          "person": "Persons",
+          "cab": "Conformity assessment bodies",
+          "other": "Other"
+        },
+        "geography": {
+          "global": "Global",
+          "selectedCountries": "Selected countries"
+        },
+        "approval": {
+          "title": "Set approval and licensing rules",
+          "subtitle": "Control which CABs may operate the scheme and how approvals are maintained.",
+          "route": "CAB approval route",
+          "routePlaceholder": "Select route",
+          "validity": "Approval validity",
+          "validityPlaceholder": "Select validity",
+          "surveillance": "Surveillance frequency",
+          "surveillancePlaceholder": "Select frequency",
+          "licenceFormat": "Licence number format",
+          "seqRequired": "The format must include {SEQ} so licences stay unique.",
+          "example": "Example",
+          "renewalRule": "Renewal rule",
+          "renewalRulePlaceholder": "Reassessment before expiry",
+          "suspensionRule": "Suspension rule",
+          "suspensionRulePlaceholder": "Immediate mark restriction",
+          "licensingRules": "Licensing rules",
+          "requireActiveAccreditation": "Require active accreditation",
+          "publishDirectory": "Publish approved CAB directory",
+          "recognitionNote": "The recognition route relies on accreditation evidence — keep \"Require active accreditation\" on."
+        },
+        "approvalRoutes": {
+          "documentReview": "Document review",
+          "assessment": "Assessment",
+          "applicationAndAssessment": "Application + assessment",
+          "recognitionOfAccreditation": "Recognition of accreditation",
+          "witness": "Witness assessment",
+          "combined": "Combined"
+        },
+        "surveillance": {
+          "semiannual": "Every 6 months",
+          "annual": "Annual",
+          "biennial": "Biennial",
+          "riskBased": "Risk-based"
+        },
+        "marks": {
+          "title": "Upload scheme marks and usage rules",
+          "subtitle": "Keep the scheme mark, licence conditions and artwork versions under control.",
+          "schemeMark": "Scheme mark",
+          "schemeMarkCaption": "Upload SVG / PNG",
+          "upload": "Upload",
+          "artworkVersion": "Artwork version",
+          "artworkVersionPlaceholder": "Version 2.1",
+          "permittedUse": "Permitted use",
+          "permittedUsePlaceholder": "Select where the mark may be used",
+          "approvalReference": "Approval reference",
+          "approvalReferencePlaceholder": "Enter reference",
+          "validFrom": "Valid from",
+          "validUntil": "Valid until",
+          "usageGuide": "Usage guide",
+          "uploadPdf": "Upload PDF",
+          "usageRules": "Usage rules",
+          "blockAfterSuspension": "Block use after suspension",
+          "keepAuditTrail": "Keep mark-use audit trail"
+        },
+        "markUse": {
+          "product": "Products",
+          "packaging": "Packaging",
+          "certificate": "Certificates",
+          "website": "Websites",
+          "marketing": "Marketing",
+          "digitalBadge": "Digital badges"
+        },
+        "roles": {
+          "title": "Add the key scheme roles",
+          "subtitle": "Invite only the roles needed to operate and approve the scheme.",
+          "workspaceOwner": "Workspace owner",
+          "schemeManager": "Scheme manager",
+          "technicalCommitteeLead": "Technical committee lead",
+          "licensingAdministrator": "Licensing administrator",
+          "complaintsManager": "Complaints manager",
+          "documentController": "Document controller",
+          "requirement": {
+            "OWNER": "Active",
+            "REQUIRED": "Required",
+            "RECOMMENDED": "Recommended",
+            "OPTIONAL": "Optional"
+          },
+          "inviteByEmail": "Invite by email",
+          "addLater": "Add later",
+          "emailPlaceholder": "name@example.com",
+          "ownerFallback": "Workspace owner",
+          "roleBasedPermissions": "Use role-based permissions",
+          "sendInvitations": "Send invitations after activation"
+        },
+        "review": {
+          "title": "Review and activate the scheme owner workspace",
+          "subtitle": "Confirm the scheme foundation before licensing CABs or publishing requirements.",
+          "activate": "Activate Workspace",
+          "rows": {
+            "identity": "Identity & locations",
+            "schemes": "Scheme records",
+            "scope": "Scope & eligibility",
+            "approval": "CAB approval rules",
+            "marks": "Marks & licences",
+            "roles": "Key roles"
+          },
+          "status": {
+            "READY": "Ready",
+            "REVIEW": "Review",
+            "MISSING": "Missing"
+          },
+          "notProvided": "Not provided yet",
+          "activeSchemes_one": "{{count}} active scheme",
+          "activeSchemes_other": "{{count}} active schemes",
+          "configured": "Configured",
+          "ready": "Ready",
+          "markMissing": "Scheme mark not uploaded",
+          "needsAttention": "Needs attention",
+          "rolesDetail_one": "{{count}} invitation pending",
+          "rolesDetail_other": "{{count}} invitations pending",
+          "rolesNone": "No pending invitations",
+          "nextStepNote": "Next: import existing approved CABs, licences and scheme versions — or start clean."
+        }
+      }
+    },
+    "sa": {
+      "setup": {
+        "badge": "Supplier Audit Setup",
+        "profile": {
+          "title": "Confirm the buying organization profile",
+          "subtitle": "Add the identity used across supplier qualification, audits and performance reports.",
+          "legalName": "Legal organization name",
+          "legalNamePlaceholder": "ABC Retail Group",
+          "industry": "Industry",
+          "industryPlaceholder": "Select industry",
+          "industryOther": "Describe your industry",
+          "industryOtherPlaceholder": "Enter the industry",
+          "registrationNumber": "Registration number",
+          "registrationNumberPlaceholder": "Enter number",
+          "website": "Website",
+          "websitePlaceholder": "https://example.com",
+          "contactEmail": "Primary contact email",
+          "contactEmailPlaceholder": "supplier@example.com",
+          "supplierCount": "Annual supplier count",
+          "supplierCountPlaceholder": "Select range"
+        },
+        "industries": {
+          "retailDistribution": "Retail and distribution",
+          "foodBeverage": "Food and beverage",
+          "manufacturing": "Manufacturing",
+          "pharmaceuticals": "Pharmaceuticals",
+          "automotive": "Automotive",
+          "construction": "Construction",
+          "energyUtilities": "Energy and utilities",
+          "healthcare": "Healthcare",
+          "technology": "Technology",
+          "other": "Other"
+        },
+        "locations": {
+          "title": "Where are suppliers managed?",
+          "subtitle": "Identify procurement locations, receiving sites and operating markets.",
+          "headOfficeCountry": "Head office country",
+          "city": "City",
+          "procurementOffices": "Procurement offices",
+          "receivingSites": "Receiving sites",
+          "supplierCountries": "Supplier countries",
+          "approvalModel": "Supplier approval model",
+          "approvalModelPlaceholder": "Select model",
+          "languages": "Operating languages",
+          "languagesPlaceholder": "Select languages",
+          "centralizedApproval": "Use centralized supplier approval",
+          "allowSiteSpecific": "Allow site-specific suppliers",
+          "siteSpecificDisabledHint": "Available only for decentralized or hybrid approval models."
+        },
+        "approvalModels": {
+          "centralized": "Centralized",
+          "decentralized": "Decentralized",
+          "hybrid": "Hybrid"
+        },
+        "categories": {
+          "title": "Define supplier categories",
+          "subtitle": "Create the category structure used for qualification, risk and audit planning.",
+          "categoryOwner": "Category owner",
+          "categoryOwnerPlaceholder": "Procurement Manager",
+          "customCategories": "Custom categories",
+          "customCategoriesPlaceholder": "Add later",
+          "keyCategories": "Key categories",
+          "rawMaterials": "Raw materials",
+          "packaging": "Packaging",
+          "logistics": "Logistics",
+          "cleaning": "Cleaning",
+          "maintenance": "Maintenance",
+          "itServices": "IT Services",
+          "contractors": "Contractors",
+          "criticalEquipment": "Critical Equipment",
+          "professionalServices": "Professional Services",
+          "utilities": "Utilities"
+        },
+        "risk": {
+          "title": "Set supplier risk criteria",
+          "subtitle": "Score suppliers using criticality, spend, country, performance and compliance exposure.",
+          "riskLevels": "Risk levels",
+          "riskLevelsPlaceholder": "Select scale",
+          "riskFactors": "Criticality factors",
+          "riskFactorsPlaceholder": "Select factors",
+          "spendThreshold": "Spend threshold",
+          "spendThresholdPlaceholder": "Enter annual value",
+          "scoringRules": "Scoring rules",
+          "countryRisk": "Include country risk",
+          "regulatoryRisk": "Include regulatory risk",
+          "automaticRiskScore": "Automatic risk score",
+          "recalculateAfterIncidents": "Recalculate after incidents",
+          "requireApprovalForCritical": "Require approval for critical suppliers"
+        },
+        "riskLevels": {
+          "lowMediumHigh": "Low / Medium / High",
+          "lowMediumHighCritical": "Low / Medium / High / Critical",
+          "numeric": "Numeric 1–5"
+        },
+        "riskFactors": {
+          "criticality": "Criticality",
+          "spend": "Spend",
+          "country": "Country",
+          "regulatory": "Regulatory",
+          "performance": "Performance",
+          "singleSource": "Single source",
+          "incidentHistory": "Incident history"
+        },
+        "qualification": {
+          "title": "Configure qualification requirements",
+          "subtitle": "Collect only the evidence needed for each supplier category and risk level.",
+          "route": "Qualification route",
+          "routePlaceholder": "Select route",
+          "approvalValidity": "Approval validity",
+          "approvalValidityPlaceholder": "Select validity",
+          "requiredEvidence": "Required evidence",
+          "requiredEvidencePlaceholder": "Select evidence types",
+          "requiredLicences": "Required licences",
+          "requiredLicencesPlaceholder": "By category",
+          "managementCertificates": "Management certificates",
+          "managementCertificatesPlaceholder": "ISO 9001 / 14001 / 45001",
+          "financialChecks": "Financial checks",
+          "financialChecksPlaceholder": "For critical suppliers",
+          "insuranceEvidence": "Insurance evidence",
+          "insuranceEvidencePlaceholder": "Where applicable",
+          "documentRules": "Document rules",
+          "blockExpiredDocuments": "Block expired documents",
+          "applyConditionalApproval": "Apply conditional approval"
+        },
+        "qualificationRoutes": {
+          "questionnaire": "Questionnaire only",
+          "questionnaireAndDocuments": "Questionnaire + document review",
+          "documentReview": "Document review only",
+          "auditRequired": "Audit required"
+        },
+        "evidence": {
+          "licence": "Licence",
+          "isoCertificate": "ISO certificate",
+          "insurance": "Insurance",
+          "financial": "Financial",
+          "productSpecs": "Product specifications",
+          "esg": "ESG",
+          "other": "Other"
+        },
+        "validity": {
+          "oneYear": "1 year",
+          "twoYears": "2 years",
+          "threeYears": "3 years",
+          "custom": "Custom"
+        },
+        "auditTypes": {
+          "title": "Define audit types and criteria",
+          "subtitle": "Set second-party audits for qualification, surveillance, incidents and reapproval.",
+          "typesLabel": "Audit types",
+          "modesLabel": "Audit modes",
+          "criteria": "Default audit criteria",
+          "criteriaPlaceholder": "Select criteria",
+          "frequency": "Audit frequency",
+          "frequencyPlaceholder": "Select frequency",
+          "additionalStandards": "Additional standards",
+          "additionalStandardsPlaceholder": "Select standards",
+          "initialQualification": "Initial qualification",
+          "routineSurveillance": "Routine surveillance",
+          "reapproval": "Reapproval",
+          "forCause": "For-cause",
+          "incident": "Incident",
+          "followUp": "Follow-up"
+        },
+        "auditModes": {
+          "onSite": "On-site audit",
+          "remote": "Remote audit",
+          "hybrid": "Hybrid",
+          "desktop": "Desktop"
+        },
+        "auditCriteria": {
+          "supplierCode": "Supplier code",
+          "contract": "Contract",
+          "standard": "Standard",
+          "legal": "Legal",
+          "customerSpecific": "Customer-specific"
+        },
+        "auditFrequency": {
+          "annual": "Annual",
+          "biennial": "Biennial",
+          "riskBased": "Risk-based",
+          "byCategory": "By category"
+        },
+        "scoring": {
+          "title": "Set scoring and approval decisions",
+          "subtitle": "Translate audit results into consistent supplier status and actions.",
+          "scoreScale": "Audit score scale",
+          "scoreScalePlaceholder": "Select scale",
+          "approvalThreshold": "Approval threshold (%)",
+          "conditionalLowerBound": "Conditional lower bound (%)",
+          "rejectionThreshold": "Rejection threshold (%)",
+          "bandsOverlap": "Thresholds must not overlap: rejection ≤ conditional < approval.",
+          "criticalRule": "Critical finding rule",
+          "criticalRulePlaceholder": "Select rule",
+          "decisionAuthority": "Decision authority",
+          "decisionAuthorityPlaceholder": "Supplier Approval Committee",
+          "decisionRules": "Decision rules",
+          "requireActionPlan": "Require action plan for gaps",
+          "recalculateStatus": "Recalculate supplier status"
+        },
+        "scoreScales": {
+          "percentage": "0–100",
+          "oneToFive": "1–5",
+          "passFail": "Pass / Fail",
+          "weighted": "Weighted"
+        },
+        "criticalRules": {
+          "automaticHold": "Automatic hold",
+          "automaticReject": "Automatic reject",
+          "conditionalOnly": "Conditional approval only",
+          "scoreOnly": "Affect score only"
+        },
+        "findings": {
+          "title": "Configure findings and follow-up",
+          "subtitle": "Standardize correction, corrective action, verification and escalation.",
+          "findingClasses": "Finding classes",
+          "findingClassesPlaceholder": "Select classification set",
+          "correctionDue": "Correction due (days)",
+          "correctiveActionDue": "Corrective action due (days)",
+          "followUpTrigger": "Follow-up audit trigger",
+          "followUpTriggerPlaceholder": "Select trigger",
+          "escalationOwner": "Escalation owner",
+          "escalationOwnerPlaceholder": "Procurement Director",
+          "workflowRules": "Workflow rules",
+          "evidenceReview": "Require evidence review",
+          "requireRootCause": "Require root cause analysis",
+          "trackEffectivenessReview": "Track effectiveness review"
+        },
+        "findingClasses": {
+          "criticalMajorMinor": "Critical / Major / Minor",
+          "criticalMajorMinorObs": "Critical / Major / Minor / Observation",
+          "majorMinor": "Major / Minor"
+        },
+        "followUpTriggers": {
+          "criticalOrRepeated": "Critical or repeated issue",
+          "criticalOnly": "Critical only",
+          "always": "Always",
+          "never": "Never"
+        },
+        "roles": {
+          "title": "Add key supplier assurance roles",
+          "subtitle": "Invite the people needed to qualify, audit and approve suppliers.",
+          "assuranceManager": "Supplier assurance manager",
+          "procurementManager": "Procurement manager",
+          "leadAuditor": "Lead supplier auditor",
+          "categoryManagers": "Category managers",
+          "technicalExperts": "Technical experts",
+          "approvalCommittee": "Approval committee",
+          "requirement": {
+            "REQUIRED": "Required",
+            "RECOMMENDED": "Recommended",
+            "OPTIONAL": "Optional"
+          },
+          "inviteByEmail": "Invite by email",
+          "addLater": "Add later",
+          "emailPlaceholder": "name@example.com",
+          "independenceNote": "Keep the auditor and the approval authority separate where policy requires it.",
+          "separateAuditFromApproval": "Separate audit from approval",
+          "categoryBasedAccess": "Use category-based access"
+        },
+        "review": {
+          "title": "Review and activate supplier audits",
+          "subtitle": "Confirm the supplier assurance framework before importing suppliers.",
+          "activate": "Activate Workspace",
+          "rows": {
+            "profile": "Organization profile",
+            "categories": "Supplier categories",
+            "risk": "Risk & qualification rules",
+            "audits": "Audit types & criteria",
+            "scoring": "Scoring & CAPA",
+            "roles": "Key roles"
+          },
+          "status": {
+            "READY": "Ready",
+            "REVIEW": "Review",
+            "MISSING": "Missing"
+          },
+          "notProvided": "Not provided yet",
+          "categoriesCount_one": "{{count}} category",
+          "categoriesCount_other": "{{count}} categories",
+          "configured": "Configured",
+          "needsAttention": "Needs attention",
+          "rolesDetail_one": "{{count}} invitation pending",
+          "rolesDetail_other": "{{count}} invitations pending",
+          "rolesNone": "No pending invitations",
+          "nextStepNote": "Next: import the supplier master list, documents, scores and previous audits — or start clean."
+        }
+      }
+    },
+    "invoices": {
+      "pageTitle": "Invoices",
+      "searchPlaceholder": "search...",
+      "downloadPdf": "Download to PDF",
+      "downloadOptions": "Download options",
+      "exportExcel": "Export to Excel",
+      "paymentMade": "Payment made",
+      "preview": "Preview",
+      "printInvoice": "Print the invoice",
+      "filters": {
+        "currency": "Currency",
+        "status": "Status",
+        "allCurrencies": "All currencies",
+        "allStatuses": "All statuses",
+        "pending": "Pending",
+        "overdue": "Overdue"
+      },
+      "columns": {
+        "index": "#",
+        "commercialRegister": "Commercial registration number",
+        "username": "Username",
+        "email": "E-mail",
+        "orderNumber": "Order Number",
+        "orderStatus": "Order Status",
+        "invoiceType": "Invoice type",
+        "paymentNumber": "Payment number",
+        "paymentDate": "Payment date",
+        "totalAmount": "Total Amount",
+        "currency": "Currency",
+        "invoiceStatus": "Invoice status",
+        "details": "Invoice details"
+      },
       "tour": {
         "header": {
-          "title": "Invoice Details Overview",
-          "description": "Review comprehensive invoice details, connected certification orders, client info, and current billing lifecycle status."
+          "title": "Your Invoices",
+          "description": "This page lists every invoice issued to you, with its amount, currency, and payment status."
         },
-        "actions": {
-          "title": "Issuance & Tax Configuration",
-          "description": "Configure statutory tax rates (e.g. VAT 15%), save drafts, issue finalized invoices, and record incoming payments."
+        "toolbar": {
+          "title": "Search, Filter & Export",
+          "description": "Search by name or order number, filter by currency or status, and export the list to PDF or Excel."
         },
-        "infoGrid": {
-          "title": "Client & Billing Snapshot",
-          "description": "Verify issue/due dates, client legal address snapshot, primary contact details, currency, and PO references."
+        "table": {
+          "title": "Invoice Details",
+          "description": "Each row shows the order, amount, and payment status — preview or print any invoice from here."
+        }
+      },
+      "register": {
+        "breadcrumb": "Finance",
+        "title": "Invoice register",
+        "subtitle": "View and manage invoices issued to clients.",
+        "createInvoice": "Create invoice",
+        "searchLabel": "Search invoice or client",
+        "searchPlaceholder": "Enter invoice number, client name or client ID...",
+        "issuePeriodLabel": "Issue period",
+        "countryLabel": "Country",
+        "allCountries": "All countries",
+        "paymentStatusLabel": "Payment status",
+        "allStatuses": "All statuses",
+        "unpaid": "Unpaid",
+        "paid": "Paid",
+        "partiallyPaid": "Partially paid",
+        "draft": "Draft",
+        "search": "Search",
+        "clear": "Clear",
+        "invoicesCount": "{{count}} invoices",
+        "export": "Export",
+        "exportExcel": "Export to Excel (.xlsx)",
+        "exportPdf": "Export to PDF (.pdf)",
+        "colInvoice": "Invoice",
+        "colClient": "Client",
+        "colIssued": "Issued",
+        "colDue": "Due",
+        "colAmount": "Amount",
+        "colPaid": "Paid",
+        "colBalance": "Balance",
+        "colStatus": "Status",
+        "loading": "Loading invoices...",
+        "showing": "Showing 1 to {{shown}} of {{total}} invoices",
+        "perPage": "{{count}} per page",
+        "viewInvoice": "View invoice",
+        "recordPayment": "Record payment",
+        "createCreditNote": "Create credit note",
+        "downloadPdf": "Download PDF",
+        "editDraftOnly": "Edit (draft only)",
+        "deleteNotAvailable": "Delete (not available)",
+        "createInvoiceTitle": "Create invoice",
+        "createInvoiceDesc": "Open the invoice draft form with pre-populated order details. Draft invoices can be saved with incomplete fields.",
+        "saveAsDraft": "Save as draft",
+        "creditNoteTitle": "Create credit note",
+        "creditNoteDesc": "Creates a credit note linked to {{invoiceNumber}}. Issued invoices cannot be deleted. Credit notes follow the same validation and tax rules.",
+        "recordPaymentTitle": "Record payment ({{invoiceNumber}})",
+        "amountLabel": "Amount ({{currency}})",
+        "paymentDateLabel": "Payment date",
+        "paymentMethodLabel": "Payment method",
+        "bankTransfer": "Bank transfer",
+        "creditCard": "Credit Card",
+        "cheque": "Cheque",
+        "cash": "Cash",
+        "referenceLabel": "Reference",
+        "referencePlaceholder": "e.g. TRX-12345",
+        "save": "Save",
+        "cancel": "Cancel",
+        "tour": {
+          "header": {
+            "title": "Invoices Register Overview",
+            "description": "Track and manage billing operations, view balances, and handle payments for all client certification services."
+          },
+          "filters": {
+            "title": "Search & Filtering",
+            "description": "Find invoices by number or client name, and filter by country and payment status (Paid, Unpaid, Partially Paid, Draft)."
+          },
+          "actionsBtn": {
+            "title": "Create & Export Invoices",
+            "description": "Create new invoice drafts and export records in bulk to Excel (.xlsx) or PDF formats."
+          },
+          "table": {
+            "title": "Invoices List Table",
+            "description": "Detailed view of invoice numbers, client names, issue and due dates, amounts, payments, and remaining balances."
+          },
+          "rowActions": {
+            "title": "Payment & Credit Notes",
+            "description": "Record client payments, issue linked credit notes, view full details, and download individual invoice PDFs."
+          }
+        }
+      },
+      "details": {
+        "breadcrumb": "Invoices",
+        "fromOrder": "From Order:",
+        "client": "Client:",
+        "saveDraft": "Save draft",
+        "configureTax": "Configure tax",
+        "issueInvoice": "Issue invoice",
+        "taxWarning": "Must configure tax before issuing.",
+        "configureNow": "Configure now",
+        "invoiceNumber": "Invoice number",
+        "issueDate": "Issue date",
+        "dueDate": "Due date",
+        "status": "Status",
+        "clientLabel": "Client",
+        "country": "Country",
+        "primaryContact": "Primary contact",
+        "email": "Email",
+        "relatedOrder": "Related order",
+        "application": "Application",
+        "poReference": "Purchase order reference",
+        "currency": "Currency",
+        "paymentTerms": "Payment terms",
+        "tabItems": "Invoice items",
+        "tabInstallments": "Installments",
+        "tabAttachments": "Attachments",
+        "tabMoreDetails": "More details",
+        "colDescription": "Description",
+        "colQty": "Qty",
+        "colUnit": "Unit price",
+        "colDiscount": "Discount",
+        "colAmount": "Amount",
+        "addLineItem": "Add line item",
+        "subtotal": "Subtotal",
+        "taxLabel": "Tax ({{label}})",
+        "noTax": "No tax configured",
+        "total": "Total",
+        "amountPaid": "Amount paid",
+        "balanceDue": "Balance due",
+        "taxModalTitle": "Configure tax",
+        "taxModalSubtitle": "Select the applicable tax rate. Only one tax rate may apply per invoice.",
+        "applyTax": "Apply tax",
+        "recordPaymentTitle": "Record payment ({{invoiceNumber}})",
+        "paymentSuccessToast": "Payment recorded successfully!",
+        "taxSuccessToast": "Tax configured successfully!",
+        "issuedToast": "Invoice issued successfully! Invoice is now finalized and immutable.",
+        "draftSavedToast": "Invoice draft saved.",
+        "tour": {
+          "header": {
+            "title": "Invoice Details Overview",
+            "description": "Review comprehensive invoice details, connected certification orders, client info, and current billing lifecycle status."
+          },
+          "actions": {
+            "title": "Issuance & Tax Configuration",
+            "description": "Configure statutory tax rates (e.g. VAT 15%), save drafts, issue finalized invoices, and record incoming payments."
+          },
+          "infoGrid": {
+            "title": "Client & Billing Snapshot",
+            "description": "Verify issue/due dates, client legal address snapshot, primary contact details, currency, and PO references."
+          },
+          "amounts": {
+            "title": "Financial Totals & Balance",
+            "description": "Track line item subtotals, calculated taxes, total billed amount, client payments, and remaining balance due."
+          },
+          "breakdown": {
+            "title": "Line Items & Installments",
+            "description": "Break down audited services line items, schedule installment due dates, and manage supporting attachments."
+          }
+        }
+      }
+    },
+    "portal": {
+      "title": "Client Portal",
+      "home": {
+        "breadcrumb": "Home",
+        "clientId": "Client ID",
+        "primaryContact": "Primary:",
+        "editProfile": "Edit profile",
+        "status": {
+          "active": "Active",
+          "pending": "Pending",
+          "inactive": "Inactive"
         },
-        "amounts": {
-          "title": "Financial Totals & Balance",
-          "description": "Track line item subtotals, calculated taxes, total billed amount, client payments, and remaining balance due."
+        "applicationCard": {
+          "title": "Application APP-0024",
+          "draft": "Draft",
+          "scheme": "Scheme",
+          "foodSafety": "Food Safety Management",
+          "submitted": "Submitted",
+          "lastUpdated": "Last updated",
+          "date": "12 Mar 2025",
+          "continue": "Continue application",
+          "view": "View application"
         },
-        "breakdown": {
-          "title": "Line Items & Installments",
-          "description": "Break down audited services line items, schedule installment due dates, and manage supporting attachments."
+        "clarificationCard": {
+          "title": "Clarification required",
+          "desc": "We need additional information to proceed with your application APP-0024.",
+          "viewBtn": "View requested info",
+          "dueDate": "Due date",
+          "dueDateVal": "20 Mar 2025"
+        },
+        "auditCard": {
+          "title": "Upcoming audit",
+          "stage": "Stage 1 Audit",
+          "date": "28 Apr 2025",
+          "location": "Riyadh, Saudi Arabia",
+          "viewBtn": "View audit details"
+        },
+        "docsCard": {
+          "title": "Documents",
+          "uploadedByYou": "Uploaded by you",
+          "requestedByUs": "Requested by us",
+          "sharedWithYou": "Shared with you",
+          "viewBtn": "View all documents"
+        },
+        "recentActivity": {
+          "title": "Recent activity",
+          "viewAll": "View all activity",
+          "colDate": "Date",
+          "colDetails": "Details",
+          "colRelatedTo": "Related to"
+        },
+        "contacts": {
+          "title": "Your contacts at Example CAB"
+        },
+        "tour": {
+          "header": {
+            "title": "Client Account Overview",
+            "description": "View your registered company details, active certification status, primary contact information, and quick profile management."
+          },
+          "appCard": {
+            "title": "Certification Applications",
+            "description": "Track live progress of your active certification schemes, review draft submissions, and resume incomplete applications."
+          },
+          "clarificationCard": {
+            "title": "Information & Clarification Requests",
+            "description": "Review and respond to technical clarification requests from auditors before stated deadlines to avoid review delays."
+          },
+          "auditCard": {
+            "title": "Upcoming Audits & Visits",
+            "description": "Check upcoming audit stages, dates, and confirmed facilities to ensure site readiness for audit teams."
+          },
+          "activityContacts": {
+            "title": "Activity Log & CAB Team",
+            "description": "Monitor audit trail history, uploaded records, and directly reach your assigned CAB account manager and lead auditors."
+          }
+        }
+      },
+      "companyProfile": {
+        "breadcrumbParent": "Client portal",
+        "breadcrumbClients": "Clients",
+        "breadcrumbUpdate": "Update company profile",
+        "title": "Update company profile",
+        "subtitle": "Client ID: {{clientCode}} | Application: {{appNumber}} | {{country}}",
+        "reviewPending": "Review pending changes",
+        "cancel": "Cancel",
+        "saveChanges": "Save changes",
+        "savedToast": "Company profile changes saved successfully.",
+        "siteDraftToast": "Site draft added — saved to profile.",
+        "contactDraftToast": "Contact draft added — saved to profile.",
+        "docUploadedToast": "Document uploaded successfully.",
+        "logoUpdatedToast": "Logo updated successfully.",
+        "logoRequirementsToast": "Requirements: PNG, JPG, or SVG up to 5MB. Minimum dimensions 200x200px.",
+        "pendingBanner": {
+          "title": "There are pending changes to your legal identity.",
+          "desc": "Your request to update the legal name is under review. You can still update other information.",
+          "viewDetails": "View details"
+        },
+        "tabs": {
+          "essentials": "Essentials",
+          "more": "More details"
+        },
+        "logo": {
+          "title": "Logo",
+          "changeBtn": "Change logo",
+          "requirements": "View upload requirements"
+        },
+        "details": {
+          "title": "Company details",
+          "legalName": "Legal name",
+          "changePending": "Change pending",
+          "countryOfInc": "Country of incorporation",
+          "tradingName": "Trading name (if different)",
+          "industrySector": "Industry sector",
+          "regNumber": "Company registration number",
+          "website": "Website"
+        },
+        "address": {
+          "title": "Main address",
+          "country": "Country",
+          "building": "Building",
+          "city": "City",
+          "postalCode": "Postal code",
+          "street": "Street",
+          "additionalLine": "Additional address line"
+        },
+        "sites": {
+          "title": "Sites & branches",
+          "addSite": "+ Add site",
+          "colSiteId": "Site ID",
+          "colName": "Site name",
+          "colAddress": "Address",
+          "colStatus": "Status",
+          "colActions": "Actions",
+          "edit": "Edit"
+        },
+        "contacts": {
+          "title": "Additional contacts",
+          "addContact": "+ Add contact",
+          "colName": "Name",
+          "colRole": "Role",
+          "colEmail": "Email",
+          "colPhone": "Phone",
+          "colPrimary": "Primary",
+          "primaryBadge": "Primary",
+          "colActions": "Actions",
+          "edit": "Edit"
+        },
+        "docs": {
+          "title": "Official documents",
+          "addDoc": "+ Add document",
+          "colName": "Document name",
+          "colType": "Type",
+          "colLastUpdated": "Last updated",
+          "colActions": "Actions",
+          "view": "View"
+        },
+        "modals": {
+          "pendingTitle": "Pending Legal Identity Change",
+          "pendingDesc": "A change to your legal organization name was submitted for review. Legal identity modifications require CAB verification to preserve audit certificate integrity.",
+          "currentVal": "Current value:",
+          "requestedVal": "Requested value:",
+          "submittedOn": "Submitted on {{date}}",
+          "close": "Close",
+          "addSiteTitle": "Add New Site or Branch",
+          "siteName": "Site Name *",
+          "siteNamePlaceholder": "e.g. Jeddah Warehouse",
+          "siteAddress": "Address *",
+          "siteAddressPlaceholder": "Full street address, city, country",
+          "saveSite": "Save site",
+          "addContactTitle": "Add Additional Contact",
+          "contactName": "Full Name *",
+          "contactNamePlaceholder": "e.g. Ahmed Mansoor",
+          "contactRole": "Role / Job Title",
+          "contactRolePlaceholder": "e.g. Operations Manager",
+          "contactEmail": "Email Address *",
+          "contactEmailPlaceholder": "ahmed@example.com",
+          "contactPhone": "Phone Number",
+          "contactPhonePlaceholder": "+966 50 123 4567",
+          "saveContact": "Save contact",
+          "uploadDocTitle": "Upload Official Document",
+          "docName": "Document Name *",
+          "docNamePlaceholder": "e.g. Environmental Policy 2025",
+          "docType": "Document Type",
+          "selectFile": "Select File",
+          "uploadBtn": "Upload",
+          "changeLogoTitle": "Change Company Logo",
+          "changeLogoDesc": "Upload a clear high-resolution logo (PNG, JPG, or SVG). Maximum 5MB.",
+          "saveLogo": "Save logo",
+          "discardTitle": "Discard unsaved changes?",
+          "discardDesc": "You have unsaved changes to your company profile. Leaving now will discard them.",
+          "keepEditing": "Keep editing",
+          "discardLeave": "Discard & leave"
+        },
+        "tour": {
+          "header": {
+            "title": "Company Profile & Status",
+            "description": "Review your registered organization identifiers, pending legal changes awaiting CAB approval, and manage save operations."
+          },
+          "logo": {
+            "title": "Brand Identity & Logo",
+            "description": "Maintain high-resolution official logos used across your issued audit certificates, client portal, and compliance reports."
+          },
+          "details": {
+            "title": "Legal & Commercial Details",
+            "description": "Update registered trade names, commercial registration number, industry category, and official website."
+          },
+          "address": {
+            "title": "Main Registered Address",
+            "description": "Ensure company headquarters address, postal codes, and city records are accurate for official certification documentation."
+          },
+          "sitesDocs": {
+            "title": "Sites, Contacts & Documents",
+            "description": "Manage secondary operational facilities, authorized contact representatives, and upload official statutory compliance documents."
+          }
         }
       }
     }
   },
-  "portal": {
-    "title": "Client Portal",
-    "home": {
-      "breadcrumb": "Home",
-      "clientId": "Client ID",
-      "primaryContact": "Primary:",
-      "editProfile": "Edit profile",
-      "status": {
-        "active": "Active",
-        "pending": "Pending",
-        "inactive": "Inactive"
-      },
-      "applicationCard": {
-        "title": "Application APP-0024",
-        "draft": "Draft",
-        "scheme": "Scheme",
-        "foodSafety": "Food Safety Management",
-        "submitted": "Submitted",
-        "lastUpdated": "Last updated",
-        "date": "12 Mar 2025",
-        "continue": "Continue application",
-        "view": "View application"
-      },
-      "clarificationCard": {
-        "title": "Clarification required",
-        "desc": "We need additional information to proceed with your application APP-0024.",
-        "viewBtn": "View requested info",
-        "dueDate": "Due date",
-        "dueDateVal": "20 Mar 2025"
-      },
-      "auditCard": {
-        "title": "Upcoming audit",
-        "stage": "Stage 1 Audit",
-        "date": "28 Apr 2025",
-        "location": "Riyadh, Saudi Arabia",
-        "viewBtn": "View audit details"
-      },
-      "docsCard": {
-        "title": "Documents",
-        "uploadedByYou": "Uploaded by you",
-        "requestedByUs": "Requested by us",
-        "sharedWithYou": "Shared with you",
-        "viewBtn": "View all documents"
-      },
-      "recentActivity": {
-        "title": "Recent activity",
-        "viewAll": "View all activity",
-        "colDate": "Date",
-        "colDetails": "Details",
-        "colRelatedTo": "Related to"
-      },
-      "contacts": {
-        "title": "Your contacts at Example CAB"
-      },
-      "tour": {
-        "header": {
-          "title": "Client Account Overview",
-          "description": "View your registered company details, active certification status, primary contact information, and quick profile management."
-        },
-        "appCard": {
-          "title": "Certification Applications",
-          "description": "Track live progress of your active certification schemes, review draft submissions, and resume incomplete applications."
-        },
-        "clarificationCard": {
-          "title": "Information & Clarification Requests",
-          "description": "Review and respond to technical clarification requests from auditors before stated deadlines to avoid review delays."
-        },
-        "auditCard": {
-          "title": "Upcoming Audits & Visits",
-          "description": "Check upcoming audit stages, dates, and confirmed facilities to ensure site readiness for audit teams."
-        },
-        "activityContacts": {
-          "title": "Activity Log & CAB Team",
-          "description": "Monitor audit trail history, uploaded records, and directly reach your assigned CAB account manager and lead auditors."
-        }
-      }
-    },
-    "companyProfile": {
-      "breadcrumbParent": "Client portal",
-      "breadcrumbClients": "Clients",
-      "breadcrumbUpdate": "Update company profile",
-      "title": "Update company profile",
-      "subtitle": "Client ID: {{clientCode}} | Application: {{appNumber}} | {{country}}",
-      "reviewPending": "Review pending changes",
-      "cancel": "Cancel",
-      "saveChanges": "Save changes",
-      "savedToast": "Company profile changes saved successfully.",
-      "siteDraftToast": "Site draft added — saved to profile.",
-      "contactDraftToast": "Contact draft added — saved to profile.",
-      "docUploadedToast": "Document uploaded successfully.",
-      "logoUpdatedToast": "Logo updated successfully.",
-      "logoRequirementsToast": "Requirements: PNG, JPG, or SVG up to 5MB. Minimum dimensions 200x200px.",
-      "pendingBanner": {
-        "title": "There are pending changes to your legal identity.",
-        "desc": "Your request to update the legal name is under review. You can still update other information.",
-        "viewDetails": "View details"
-      },
-      "tabs": {
-        "essentials": "Essentials",
-        "more": "More details"
-      },
-      "logo": {
-        "title": "Logo",
-        "changeBtn": "Change logo",
-        "requirements": "View upload requirements"
-      },
-      "details": {
-        "title": "Company details",
-        "legalName": "Legal name",
-        "changePending": "Change pending",
-        "countryOfInc": "Country of incorporation",
-        "tradingName": "Trading name (if different)",
-        "industrySector": "Industry sector",
-        "regNumber": "Company registration number",
-        "website": "Website"
-      },
-      "address": {
-        "title": "Main address",
-        "country": "Country",
-        "building": "Building",
-        "city": "City",
-        "postalCode": "Postal code",
-        "street": "Street",
-        "additionalLine": "Additional address line"
-      },
-      "sites": {
-        "title": "Sites & branches",
-        "addSite": "+ Add site",
-        "colSiteId": "Site ID",
-        "colName": "Site name",
-        "colAddress": "Address",
-        "colStatus": "Status",
-        "colActions": "Actions",
-        "edit": "Edit"
-      },
-      "contacts": {
-        "title": "Additional contacts",
-        "addContact": "+ Add contact",
-        "colName": "Name",
-        "colRole": "Role",
-        "colEmail": "Email",
-        "colPhone": "Phone",
-        "colPrimary": "Primary",
-        "primaryBadge": "Primary",
-        "colActions": "Actions",
-        "edit": "Edit"
-      },
-      "docs": {
-        "title": "Official documents",
-        "addDoc": "+ Add document",
-        "colName": "Document name",
-        "colType": "Type",
-        "colLastUpdated": "Last updated",
-        "colActions": "Actions",
-        "view": "View"
-      },
-      "modals": {
-        "pendingTitle": "Pending Legal Identity Change",
-        "pendingDesc": "A change to your legal organization name was submitted for review. Legal identity modifications require CAB verification to preserve audit certificate integrity.",
-        "currentVal": "Current value:",
-        "requestedVal": "Requested value:",
-        "submittedOn": "Submitted on {{date}}",
-        "close": "Close",
-        "addSiteTitle": "Add New Site or Branch",
-        "siteName": "Site Name *",
-        "siteNamePlaceholder": "e.g. Jeddah Warehouse",
-        "siteAddress": "Address *",
-        "siteAddressPlaceholder": "Full street address, city, country",
-        "saveSite": "Save site",
-        "addContactTitle": "Add Additional Contact",
-        "contactName": "Full Name *",
-        "contactNamePlaceholder": "e.g. Ahmed Mansoor",
-        "contactRole": "Role / Job Title",
-        "contactRolePlaceholder": "e.g. Operations Manager",
-        "contactEmail": "Email Address *",
-        "contactEmailPlaceholder": "ahmed@example.com",
-        "contactPhone": "Phone Number",
-        "contactPhonePlaceholder": "+966 50 123 4567",
-        "saveContact": "Save contact",
-        "uploadDocTitle": "Upload Official Document",
-        "docName": "Document Name *",
-        "docNamePlaceholder": "e.g. Environmental Policy 2025",
-        "docType": "Document Type",
-        "selectFile": "Select File",
-        "uploadBtn": "Upload",
-        "changeLogoTitle": "Change Company Logo",
-        "changeLogoDesc": "Upload a clear high-resolution logo (PNG, JPG, or SVG). Maximum 5MB.",
-        "saveLogo": "Save logo",
-        "discardTitle": "Discard unsaved changes?",
-        "discardDesc": "You have unsaved changes to your company profile. Leaving now will discard them.",
-        "keepEditing": "Keep editing",
-        "discardLeave": "Discard & leave"
-      },
-      "tour": {
-        "header": {
-          "title": "Company Profile & Status",
-          "description": "Review your registered organization identifiers, pending legal changes awaiting CAB approval, and manage save operations."
-        },
-        "logo": {
-          "title": "Brand Identity & Logo",
-          "description": "Maintain high-resolution official logos used across your issued audit certificates, client portal, and compliance reports."
-        },
-        "details": {
-          "title": "Legal & Commercial Details",
-          "description": "Update registered trade names, commercial registration number, industry category, and official website."
-        },
-        "address": {
-          "title": "Main Registered Address",
-          "description": "Ensure company headquarters address, postal codes, and city records are accurate for official certification documentation."
-        },
-        "sitesDocs": {
-          "title": "Sites, Contacts & Documents",
-          "description": "Manage secondary operational facilities, authorized contact representatives, and upload official statutory compliance documents."
-        }
-      }
+  "signAgreement": {
+    "title": "Sign the certification agreement",
+    "intro": "You are signing {{reference}}. Your signature applies to the text in both languages.",
+    "fingerprint": "Document fingerprint (SHA-256): {{value}}",
+    "fullName": "Full name",
+    "jobTitle": "Job title",
+    "signature": "Signature",
+    "draw": "Draw",
+    "type": "Type",
+    "upload": "Upload",
+    "drawHint": "Sign here with your finger, pen or mouse",
+    "clear": "Clear",
+    "useSignature": "Use this signature",
+    "signatureReady": "Signature ready",
+    "typeLabel": "Type your name",
+    "uploadHint": "A PNG, JPG or WebP image of your signature, up to 250 KB.",
+    "uploadWrongType": "Choose a PNG, JPG or WebP image.",
+    "uploadTooLarge": "The image is too large (250 KB at most).",
+    "consent": "I have read the agreement and agree to sign it electronically. My name, title, signature, date and time, IP address and device are recorded with it.",
+    "codeTitle": "Signing code",
+    "codeHelp": "We email you a 6 digit code. It is valid for 10 minutes and you have 5 attempts.",
+    "emailCode": "Email me a code",
+    "emailNewCode": "Email me a new code",
+    "sending": "Sending…",
+    "codeSent": "We sent a code to {{email}}.",
+    "enterCode": "Enter the 6 digit code",
+    "submit": "Sign agreement",
+    "signing": "Signing…",
+    "errors": {
+      "incorrect_one": "Incorrect code. {{count}} attempt left.",
+      "incorrect_other": "Incorrect code. {{count}} attempts left.",
+      "expired": "The code has expired or was never requested. Request a new code.",
+      "locked": "Too many incorrect attempts. Request a new code.",
+      "wait": "A code was just sent. Please wait a few seconds before requesting another.",
+      "changed": "The agreement changed after you opened it. Reload the page and review it again.",
+      "delivery": "The code email could not be delivered. Try again shortly.",
+      "already": "This agreement was already signed."
     }
-  }
   }
 }

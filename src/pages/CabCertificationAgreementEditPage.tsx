@@ -39,12 +39,19 @@ const CLIENT_FIELDS: FieldConfig[] = [
   { key: 'clientCityAr', labelAr: 'مدينة / عنوان العميل (عربي)', labelEn: 'Client city / address (Arabic)', dir: 'rtl' },
   { key: 'clientCityEn', labelAr: 'مدينة / عنوان العميل (إنجليزي)', labelEn: 'Client city / address (English)', dir: 'ltr' },
   { key: 'clientCrNumber', labelAr: 'رقم السجل التجاري', labelEn: 'Client CR number', dir: 'ltr' },
+  { key: 'clientTradeName', labelAr: 'الاسم التجاري للعميل', labelEn: 'Client trade name', dir: 'ltr' },
+  { key: 'clientAddress', labelAr: 'عنوان العميل', labelEn: 'Client address', dir: 'ltr' },
 ]
 
 const OFFER_FIELDS: FieldConfig[] = [
   { key: 'offerRef', labelAr: 'مرجع العرض', labelEn: 'Offer reference', dir: 'ltr' },
   { key: 'totalFeeEn', labelAr: 'إجمالي الرسوم', labelEn: 'Total fee', dir: 'ltr' },
   { key: 'sitesCount', labelAr: 'عدد المواقع', labelEn: 'Number of sites', dir: 'ltr', numeric: true },
+  { key: 'offerNumber', labelAr: 'رقم العرض', labelEn: 'Offer number', dir: 'ltr' },
+  { key: 'applicationNumber', labelAr: 'رقم الطلب', labelEn: 'Application number', dir: 'ltr' },
+  { key: 'currency', labelAr: 'العملة', labelEn: 'Currency', dir: 'ltr' },
+  { key: 'paymentTerms', labelAr: 'شروط السداد', labelEn: 'Payment terms', dir: 'ltr' },
+  { key: 'certificationCycleYears', labelAr: 'دورة الشهادة (بالسنوات)', labelEn: 'Certification cycle (years)', dir: 'ltr', numeric: true },
 ]
 
 const SCOPE_FIELDS: FieldConfig[] = [

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { valueLabel } from '@/components/cab/auditPlanning/displayValue'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { CabHeader } from '@/components/dashboard/cab/CabHeader'
 import {
@@ -302,7 +303,7 @@ export function CabAuditExecutionPage() {
     <CabLayout sidebarVariant="auditPlanning">
       <CabHeader
         title={t('execution.title', 'Audit execution')}
-        subtitle={`${plan.planNumber} · ${plan.clientName} · ${plan.stage}`}
+        subtitle={`${plan.planNumber} · ${plan.clientName} · ${valueLabel(t, plan.stage)}`}
         notificationCount={6}
       />
 
@@ -350,7 +351,7 @@ export function CabAuditExecutionPage() {
           <div className="grid grid-cols-1 gap-4 border-t border-[#f0f0f0] pt-4 text-[13px] sm:grid-cols-3">
             <div>
               <span className="block text-[12px] text-neutral-400">{t('execution.plan.auditType', 'Audit type')}</span>
-              <span className="mt-0.5 block font-semibold text-neutral-900">{plan.stage}</span>
+              <span className="mt-0.5 block font-semibold text-neutral-900">{valueLabel(t, plan.stage)}</span>
             </div>
             <div>
               <span className="block text-[12px] text-neutral-400">{t('execution.plan.dates', 'Dates')}</span>

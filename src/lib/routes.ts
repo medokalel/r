@@ -80,6 +80,7 @@ export const ROUTES = {
   portalAudits: "/portal/audits",
   portalFindings: "/portal/findings",
   portalCertificates: "/portal/certificates",
+  agreementDetails: "/agreements/:agreementId",
   cabCertificationCycles: "/cab/certification",
   cabManageCertificationCycle: "/cab/certification/:cycleId",
   cabNonconformities: "/cab/nonconformities",
@@ -219,6 +220,9 @@ export function certificationRequestFormPath(
 }
 export function cabSalesHubEditPath(leadId: string): string {
   return `/cab/sales-hub/${encodeURIComponent(leadId)}/edit`;
+}
+export function clientAgreementDetailsPath(agreementId: string): string {
+  return `/agreements/${encodeURIComponent(agreementId)}`;
 }
 export function cabCertificationAgreementDetailsPath(agreementId: string): string {
   return `/cab/certification-agreements/${encodeURIComponent(agreementId)}`;

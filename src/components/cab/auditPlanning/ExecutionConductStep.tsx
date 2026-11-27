@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { valueLabel } from '@/components/cab/auditPlanning/displayValue'
 import { Checkbox } from '@/components/ui/Checkbox'
 import { SelectField } from '@/components/ui/Select'
 import type {
@@ -169,7 +170,7 @@ export function ExecutionConductStep({
                     : 'border-transparent text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900',
                 )}
               >
-                {sec.title} ({secAudited}/{sec.items.length})
+                {valueLabel(t, sec.title)} ({secAudited}/{sec.items.length})
               </button>
             )
           })}
@@ -233,13 +234,13 @@ export function ExecutionConductStep({
                   >
                     <div>
                       <span className="inline-block rounded-[4px] bg-[#eef2ff] px-2.5 py-0.5 text-[11px] font-bold text-[#1236a3]">
-                        {item.clauseRef}
+                        {valueLabel(t, item.clauseRef)}
                       </span>
                       <h4 className="mt-1.5 text-[15px] font-bold text-neutral-900">
-                        {item.title}
+                        {valueLabel(t, item.title)}
                         {item.mandatory && <span className="ms-1 text-error-500">*</span>}
                       </h4>
-                      <p className="mt-1 text-[13px] text-neutral-600">{item.description}</p>
+                      <p className="mt-1 text-[13px] text-neutral-600">{valueLabel(t, item.description)}</p>
                     </div>
 
                     <div>
@@ -257,13 +258,13 @@ export function ExecutionConductStep({
                         <div className="mt-2 space-y-2 rounded-[8px] border border-[#e8edfc] bg-[#f8faff] p-3.5 text-[12px]">
                           <p className="text-neutral-700">
                             <strong className="text-neutral-900">{t('execution.conduct.guidance')}:</strong>{' '}
-                            {item.whatToLookFor}
+                            {valueLabel(t, item.whatToLookFor)}
                           </p>
                           <div>
                             <p className="font-semibold text-neutral-900">{t('execution.conduct.evidencePrompts')}</p>
                             <ul className="mt-1 list-disc space-y-0.5 ps-5 text-neutral-600">
                               {item.evidenceToAskFor.map((ev) => (
-                                <li key={ev}>{ev}</li>
+                                <li key={ev}>{valueLabel(t, ev)}</li>
                               ))}
                             </ul>
                           </div>

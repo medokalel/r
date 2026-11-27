@@ -51,9 +51,28 @@ export interface AgreementSignRecord {
   signerTitle: string
   signedAt: string
   fingerprint: string
-  method?: string
-  ipAddress?: string
+  method?: 'draw' | 'type' | 'upload'
   signatureDataUrl?: string
+  typedSignature?: string
+  ipAddress?: string
+  device?: string
+}
+
+/** What a signer sends: their details, the signature, consent, the emailed code and the text they saw. */
+export interface SignaturePayload {
+  signerName: string
+  signerTitle: string
+  signature: { method: 'draw' | 'type' | 'upload'; dataUrl?: string; typedText?: string }
+  consent: true
+  code: string
+  fingerprint: string
+}
+
+export interface SigningCodeInfo {
+  /** Masked email the code was sent to. */
+  sentTo: string
+  expiresInMinutes: number
+  maxAttempts: number
 }
 
 export interface CertificationAgreementValues {
@@ -76,12 +95,26 @@ export interface CertificationAgreementValues {
   signatoryEn: string
   signatoryAr: string
   offerRef: string
+  // Added later: agreements created before these existed don't have them.
+  cabName?: string
+  cabRegistrationNumber?: string
+  cabAddress?: string
+  accreditationBody?: string
+  clientTradeName?: string
+  clientAddress?: string
+  currency?: string
+  paymentTerms?: string
+  certificationCycleYears?: number
+  offerNumber?: string
+  applicationNumber?: string
 }
 
 export interface CertificationAgreement {
   id: string
   reference: string
   version: number
+  /** SHA-256 of the exact text and values a signature covers. */
+  fingerprint: string
   status: CertificationAgreementStatus
   kind: CertificationAgreementKind
   lastChange: string
@@ -243,18 +276,52 @@ export function refreshAgreementTerms(id: string): Promise<CertificationAgreemen
   return request(`${agreementPath(id)}/use-latest-terms`, post({ sections: DEFAULT_AGREEMENT_SECTIONS }))
 }
 
+// --- Audit client side (/client/certification-agreements): only agreements sent to the signed-in client ---
+
+const clientPath = '/client/certification-agreements'
+
+export async function listClientAgreements(): Promise<CertificationAgreement[]> {
+  const items = await authorizedRequest<CertificationAgreementDto[]>(clientPath)
+  return items.map(fromDto)
+}
+
+export const getClientAgreement = (id: string) => request(`${clientPath}/${encodeURIComponent(id)}`)
+
+/** Emails the signed-in client user a 6-digit code to sign with. */
+export const requestClientSigningCode = (id: string) =>
+  authorizedRequest<SigningCodeInfo>(`${clientPath}/${encodeURIComponent(id)}/signing-code`, post())
+
+/** The signed-in client user signs with the emailed code; the CAB countersigns next. */
+export const signClientAgreement = (id: string, payload: SignaturePayload) =>
+  request(`${clientPath}/${encodeURIComponent(id)}/sign`, post(payload))
+
 export const sendCertificationAgreement = (id: string) => request(`${agreementPath(id)}/send`, post())
 export const remindCertificationAgreement = (id: string) => request(`${agreementPath(id)}/remind`, post())
 export const recordClientSignature = (id: string) => request(`${agreementPath(id)}/client-signature`, post())
-export const countersignCertificationAgreement = (id: string) =>
-  request(`${agreementPath(id)}/countersign`, post())
+/** Emails the signed-in CAB user a 6-digit code to countersign with. */
+export const requestCabSigningCode = (id: string) =>
+  authorizedRequest<SigningCodeInfo>(`${agreementPath(id)}/signing-code`, post())
+
+export const countersignCertificationAgreement = (id: string, payload: SignaturePayload) =>
+  request(`${agreementPath(id)}/countersign`, post(payload))
 export const terminateCertificationAgreement = (id: string, reason: string) =>
   request(`${agreementPath(id)}/terminate`, post({ reason }))
 
-/** Replaces the {{tokens}} of a clause with the values of the agreement. */
+/** What a new agreement for this client would contain (nothing is saved): the backend's own values. */
+export function fetchAgreementPreviewValues(clientId: string): Promise<CertificationAgreementValues> {
+  return authorizedRequest<CertificationAgreementValues>(
+    `/cab/certification-agreements/preview?clientId=${encodeURIComponent(clientId)}`,
+  )
+}
+
+/**
+ * Replaces the {{tokens}} of a clause with the values of the agreement.
+ * `markMissing` shows "[not provided]" where the client has no value, instead of leaving a gap.
+ */
 export function renderAgreementClauseText(
   text: string | undefined,
   values: CertificationAgreementValues,
+  markMissing = false,
 ): string {
   const safeText = text ?? ''
   const map: Record<string, string> = {
@@ -282,9 +349,31 @@ export function renderAgreementClauseText(
     '{{إجمالي_الرسوم}}': values.totalFeeAr ?? '',
     '{{client_signatory}}': values.signatoryEn ?? '',
     '{{المفوض_بالتوقيع}}': values.signatoryAr ?? '',
+    '{{cab_name}}': values.cabName ?? '',
+    '{{اسم_جهة_المنح_المختصر}}': values.cabName ?? '',
+    '{{cab_registration_number}}': values.cabRegistrationNumber ?? '',
+    '{{رقم_تسجيل_جهة_المنح}}': values.cabRegistrationNumber ?? '',
+    '{{cab_address}}': values.cabAddress ?? '',
+    '{{عنوان_جهة_المنح}}': values.cabAddress ?? '',
+    '{{accreditation_body}}': values.accreditationBody ?? '',
+    '{{جهة_الاعتماد}}': values.accreditationBody ?? '',
+    '{{client_trade_name}}': values.clientTradeName ?? '',
+    '{{الاسم_التجاري_للعميل}}': values.clientTradeName ?? '',
+    '{{client_address}}': values.clientAddress ?? '',
+    '{{عنوان_العميل}}': values.clientAddress ?? '',
+    '{{currency}}': values.currency ?? '',
+    '{{العملة}}': values.currency ?? '',
+    '{{payment_terms}}': values.paymentTerms ?? '',
+    '{{شروط_السداد}}': values.paymentTerms ?? '',
+    '{{certification_cycle_years}}': values.certificationCycleYears != null ? String(values.certificationCycleYears) : '',
+    '{{مدة_دورة_الشهادة}}': values.certificationCycleYears != null ? String(values.certificationCycleYears) : '',
+    '{{offer_number}}': values.offerNumber ?? '',
+    '{{رقم_العرض}}': values.offerNumber ?? '',
+    '{{application_number}}': values.applicationNumber ?? '',
+    '{{رقم_الطلب}}': values.applicationNumber ?? '',
   }
-  return Object.entries(map).reduce(
-    (acc, [token, val]) => acc.split(token).join(val),
-    safeText,
-  )
+  return Object.entries(map).reduce((acc, [token, val]) => {
+    const missing = /[؀-ۿ]/.test(token) ? '[غير متوفر]' : '[not provided]'
+    return acc.split(token).join(markMissing && !val ? missing : val)
+  }, safeText)
 }

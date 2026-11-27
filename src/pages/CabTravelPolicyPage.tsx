@@ -10,7 +10,7 @@ import { TravelRailRoutesSection } from '@/components/dashboard/cab/travelPolicy
 import { AppIcon, CorrectiveActionIcon } from '@/components/icons'
 import { CabLayout } from '@/components/layout/CabLayout'
 import { Button } from '@/components/ui/Button'
-import { TRAVEL_POLICY_MOCK } from '@/lib/api/travelPolicyMockData'
+import { getTravelPolicyMock } from '@/lib/api/travelPolicyMockData'
 import { getTravelPolicy, saveTravelPolicy } from '@/lib/api/cabTravelPolicyApi'
 import { getUserErrorMessage } from '@/lib/errorMessages'
 import { toast } from '@/lib/toast'
@@ -38,7 +38,7 @@ export function CabTravelPolicyPage() {
   const { t, i18n } = useTranslation()
   const isArabic = i18n.language.startsWith('ar')
 
-  const [draft, setDraft] = useState<TravelPolicyDraft>(() => policyToDraft(TRAVEL_POLICY_MOCK))
+  const [draft, setDraft] = useState<TravelPolicyDraft>(() => policyToDraft(getTravelPolicyMock(isArabic)))
   const [baseline, setBaseline] = useState(() => serializeDraft(draft))
   const [savedAt, setSavedAt] = useState<string | null>(null)
   const [showErrors, setShowErrors] = useState(false)

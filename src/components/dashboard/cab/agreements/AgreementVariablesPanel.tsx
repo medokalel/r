@@ -2,19 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { AppIcon, EyeIcon, FileTextIcon } from '@/components/icons'
 import { Button } from '@/components/ui/Button'
 import { SearchableSelect } from '@/components/ui/SearchableSelect'
-import {
-  AGREEMENT_VARIABLES,
-  interpolateAgreementText,
-  type AgreementSection,
-  type AgreementVariable,
-} from '@/lib/api/cabAgreementTermsApi'
+import { AGREEMENT_VARIABLES, type AgreementVariable } from '@/lib/api/cabAgreementTermsApi'
 
 interface AgreementVariablesPanelProps {
   presetKey: string
   /** Every registered audit client of this CAB. */
-  presetOptions?: { value: string; label: string }[]
-  presets?: Record<string, Record<string, string>>
-  sections?: AgreementSection[]
+  presetOptions: { value: string; label: string }[]
   onPresetChange: (presetKey: string) => void
   showPreview: boolean
   onTogglePreview: () => void
@@ -23,9 +16,7 @@ interface AgreementVariablesPanelProps {
 
 export function AgreementVariablesPanel({
   presetKey,
-  presetOptions = [],
-  presets = {},
-  sections = [],
+  presetOptions,
   onPresetChange,
   showPreview,
   onTogglePreview,

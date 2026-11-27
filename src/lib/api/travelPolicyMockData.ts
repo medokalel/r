@@ -73,3 +73,24 @@ export const TRAVEL_POLICY_MOCK: TravelPolicyInput = {
     { from: 'cairo', to: 'alexandria', fare: 25, hours: 2.5, operator: 'Egyptian National Railways', sample: true },
   ],
 }
+
+const AR_TEXT: Record<string, string> = {
+  'Visit e-visa incl. medical insurance (sample)': 'تأشيرة زيارة إلكترونية تشمل التأمين الطبي (مثال)',
+  '30-day visit visa (sample)': 'تأشيرة زيارة لمدة 30 يوماً (مثال)',
+  'Visa on arrival / e-visa (sample)': 'تأشيرة عند الوصول / تأشيرة إلكترونية (مثال)',
+  'Depends on nationality (sample)': 'تعتمد على الجنسية (مثال)',
+  'Haramain High Speed Railway': 'قطار الحرمين السريع',
+  'Saudi Arabia Railways (SAR)': 'الخطوط الحديدية السعودية (سار)',
+  'Egyptian National Railways': 'السكك الحديدية المصرية',
+}
+
+/** The sample policy with its notes and operator names in the page language. */
+export function getTravelPolicyMock(isArabic: boolean): TravelPolicyInput {
+  if (!isArabic) return TRAVEL_POLICY_MOCK
+  const tr = <T extends string | undefined>(text: T): T => ((text && AR_TEXT[text]) || text) as T
+  return {
+    ...TRAVEL_POLICY_MOCK,
+    countries: TRAVEL_POLICY_MOCK.countries.map((row) => ({ ...row, note: tr(row.note) })),
+    railRoutes: TRAVEL_POLICY_MOCK.railRoutes.map((row) => ({ ...row, operator: tr(row.operator) })),
+  }
+}

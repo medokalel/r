@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { valueLabel } from '@/components/cab/auditPlanning/displayValue'
 import type {
   AttendeeRecord,
   AuditExecutionData,
@@ -134,13 +135,13 @@ export function ExecutionOpeningStep({
                       {act.startTime} – {act.endTime}
                     </td>
                     <td className="px-4 py-3.5 text-start text-[14px] font-medium text-neutral-900">
-                      {act.activity}
+                      {valueLabel(t, act.activity)}
                     </td>
                     <td className="px-4 py-3.5 text-start text-[13px] text-neutral-700">
                       {act.auditors.join(', ')}
                     </td>
                     <td className="px-4 py-3.5 text-start text-[13px] font-semibold text-primary">
-                      {act.durationHours.toFixed(1)} h
+                      {act.durationHours.toFixed(1)} {t('cab.auditExecution.hoursShort', 'h')}
                     </td>
                   </tr>
                 ))}
@@ -250,9 +251,9 @@ export function ExecutionTeamReviewStep({
               >
                 <div className="min-w-0">
                   <span className="me-2 inline-block rounded-[4px] bg-[#eef2ff] px-2 py-0.5 text-[11px] font-bold text-[#1236a3]">
-                    {item.clauseRef}
+                    {valueLabel(t, item.clauseRef)}
                   </span>
-                  <span className="font-medium text-neutral-900">{item.title}</span>
+                  <span className="font-medium text-neutral-900">{valueLabel(t, item.title)}</span>
                   <span className="ms-2 text-[12px] text-neutral-500">
                     {t(`execution.results.${RESULT_LABEL_KEYS[item.result] ?? 'notAudited'}`)}
                   </span>
