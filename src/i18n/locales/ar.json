@@ -3222,6 +3222,11 @@
         "leaveDays": "أيام عدم التوفر",
         "conflicts": "أيام التعارض"
       },
+      "roles": {
+        "leadAuditor": "كبير المدققين",
+        "auditor": "مدقق",
+        "technicalExpert": "خبير فني"
+      },
       "state": {
         "free": "متاح",
         "auditConfirmed": "تدقيق مؤكد",
@@ -3304,6 +3309,18 @@
           "label": "معتمد ثانٍ للاستثناءات (اختياري)",
           "hint": "معطّل افتراضيًا. عند تفعيله لا يستطيع المسؤول الذي طلب الاستثناء اعتماده أو رفضه، ويقرره مسؤول آخر في جهة المنح."
         }
+      },
+      "roles": {
+        "GENERAL_MANAGER": "المدير العام",
+        "APPLICATIONS_RECEIVER": "مسؤول استلام الطلبات",
+        "TECHNICAL_MANAGER": "المدير الفني",
+        "CERTIFICATION_MANAGER": "مدير منح الشهادات",
+        "BUSINESS_DEVELOPMENT_MANAGER": "مدير تطوير الأعمال",
+        "LEAD_AUDITOR": "كبير المدققين",
+        "AUDITOR": "مدقق",
+        "ACCOUNTANT": "محاسب",
+        "COMMITTEE_MEMBER": "عضو اللجنة",
+        "FREELANCE_AUDITOR": "مدقق مستقل"
       },
       "columns": {
         "person": "الشخص",

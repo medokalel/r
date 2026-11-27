@@ -64,6 +64,13 @@ const CELL_MARKS: Record<AvailabilityCellState, string> = {
 
 const STATE_ORDER: AvailabilityCellState[] = ['auditConfirmed', 'auditUnconfirmed', 'leave', 'conflict']
 
+/** The competence role shown under each name, keyed for translation. */
+const ROLE_LABEL_KEYS: Record<string, string> = {
+  'Lead Auditor': 'leadAuditor',
+  Auditor: 'auditor',
+  'Technical Expert': 'technicalExpert',
+}
+
 export function CabTeamAvailabilityPage() {
   const { t, i18n } = useTranslation()
   const [params] = useSearchParams()
@@ -289,7 +296,7 @@ export function CabTeamAvailabilityPage() {
                     <tr key={row.personId} className="border-b border-[#ececec] last:border-b-0">
                       <th scope="row" className="sticky start-0 z-10 bg-white px-3 py-2 text-start font-normal">
                         <p className="text-[13px] font-semibold text-neutral-900">{row.name}</p>
-                        <p className="text-[11px] text-neutral-500">{row.role}</p>
+                        <p className="text-[11px] text-neutral-500">{t(`cab.teamAvailability.roles.${ROLE_LABEL_KEYS[row.role] ?? 'other'}`, row.role)}</p>
                       </th>
                       {row.cells.map((cell) => (
                         <td

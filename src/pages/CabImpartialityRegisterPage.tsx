@@ -99,6 +99,12 @@ export function CabImpartialityRegisterPage() {
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [activeTab, setActiveTab] = useState<TabId>('people')
+  /** Keeps the selected tab readable on narrow screens, where the tab strip scrolls sideways. */
+  const activeTabRef = useRef<HTMLButtonElement | null>(null)
+
+  useEffect(() => {
+    activeTabRef.current?.scrollIntoView({ block: 'nearest', inline: 'nearest' })
+  }, [activeTab])
   const [search, setSearch] = useState('')
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -387,6 +393,7 @@ export function CabImpartialityRegisterPage() {
           {tabs.map((tab) => (
             <button
               key={tab.id}
+              ref={activeTab === tab.id ? activeTabRef : undefined}
               type="button"
               onClick={() => setActiveTab(tab.id)}
               className={cn(
@@ -493,7 +500,7 @@ export function CabImpartialityRegisterPage() {
                                 </div>
                                 {row.role && (
                                   <div className="text-[12px] text-neutral-400">
-                                    {getProfessionalRoleLabel(row.role)}
+                                    {t(`cab.impartialityRegister.roles.${row.role}`, getProfessionalRoleLabel(row.role))}
                                   </div>
                                 )}
                               </div>

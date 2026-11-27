@@ -3197,6 +3197,11 @@
         "leaveDays": "Unavailable days",
         "conflicts": "Conflicting days"
       },
+      "roles": {
+        "leadAuditor": "Lead Auditor",
+        "auditor": "Auditor",
+        "technicalExpert": "Technical Expert"
+      },
       "state": {
         "free": "Available",
         "auditConfirmed": "Confirmed audit",
@@ -3279,6 +3284,18 @@
           "label": "Second approver for exceptions (optional)",
           "hint": "Off by default. When on, the admin who requested an exception cannot approve or reject it; another CAB admin decides."
         }
+      },
+      "roles": {
+        "GENERAL_MANAGER": "General Manager",
+        "APPLICATIONS_RECEIVER": "Applications Receiver",
+        "TECHNICAL_MANAGER": "Technical Manager",
+        "CERTIFICATION_MANAGER": "Certification Manager",
+        "BUSINESS_DEVELOPMENT_MANAGER": "Business Development Manager",
+        "LEAD_AUDITOR": "Lead Auditor",
+        "AUDITOR": "Auditor",
+        "ACCOUNTANT": "Accountant",
+        "COMMITTEE_MEMBER": "Committee Member",
+        "FREELANCE_AUDITOR": "Freelance Auditor"
       },
       "columns": {
         "person": "Person",
